@@ -100,10 +100,10 @@ if (flag('stills')) {
 }
 
 const silent = path.join(out, DRAFT ? 'picture-draft.mp4' : 'picture.mp4');
-const enc = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
+const enc = flag('remux') && fs.existsSync(silent) ? null : spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
   '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'slow', '-crf', DRAFT ? '23' : '14', '-pix_fmt', 'yuv420p', silent], { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
-for (let f = f0; f < f1; f++) {
+for (let f = flag('remux') && fs.existsSync(silent) ? f1 : f0; f < f1; f++) {
   await page.evaluate((t) => window.__frame(t), f / fps);
   const buf = await page.screenshot({ type: 'png' });
   if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
@@ -112,8 +112,7 @@ for (let f = f0; f < f1; f++) {
     process.stdout.write(`\r[render] ${done}/${f1 - f0} frames  ${rate.toFixed(1)} fps  eta ${((f1 - f - 1) / rate).toFixed(0)}s   `);
   }
 }
-enc.stdin.end();
-await new Promise(r => enc.on('close', r));
+if (enc) { enc.stdin.end(); await new Promise(r => enc.on('close', r)); }
 await browser.close(); server.close();
 console.log(`\n[render] done in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 
@@ -131,11 +130,11 @@ const n = voFilters.length;
 const mix = path.join(out, 'mix.wav');
 const vMix = n ? `${voFilters.join(';')};${Array.from({ length: n }, (_, i) => `[v${i}]`).join('')}amix=inputs=${n}:normalize=0,` +
   // radio-doc voice chain: rumble cut, presence, gentle compression, a touch of room
-  `highpass=f=80,equalizer=f=3000:t=q:w=1:g=3,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,aecho=0.8:0.5:40:0.08,asplit[vo][vosc];` : '';
+  `highpass=f=80,equalizer=f=3000:t=q:w=1:g=3,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,aecho=0.8:0.5:40:0.08,apad,asplit[vo][vosc];` : '';
 const bedIn = `[0:a]atrim=start=${audioFrom}:duration=${audioLen},asetpts=PTS-STARTPTS[bed];`;
 const graph = n
   // duck the score under the narration
-  ? `${bedIn}${vMix}[bed][vosc]sidechaincompress=threshold=0.05:ratio=4:release=400[duck];[duck][vo]amix=inputs=2:normalize=0,loudnorm=I=-16:TP=-1.5[a]`
+  ? `${bedIn}${vMix}[bed][vosc]sidechaincompress=threshold=0.05:ratio=4:release=400[duck];[duck][vo]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5[a]`
   : `${bedIn}[bed]loudnorm=I=-16:TP=-1.5[a]`;
 sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', bed, ...voInputs, '-filter_complex', graph, '-map', '[a]', '-t', String(audioLen), mix]);
 
@@ -144,12 +143,15 @@ const finish = project.finish ?? {};
 const master = path.join(out, DRAFT ? 'draft.mp4' : `${path.basename(projDir)}.mp4`);
 const vf = [
   // halation: blurred highlights, tinted red-orange like Kodak's anti-halation-free stocks, screened back on
+  // blend must run in RGB; in YUV, screen-blending the chroma planes tints everything purple
+  'format=gbrp',
   `split[base][hl];[hl]curves=all='0/0 0.62/0 1/1',gblur=sigma=${(finish.halation ?? 18) * W / 1920},colorchannelmixer=rr=1:gg=0.45:bb=0.25[glow];[base][glow]blend=all_mode=screen:all_opacity=${finish.halationAmount ?? 0.55}`,
   // bloom: wide soft glow from everything bright
   `split[b2][bl];[bl]curves=all='0/0 0.5/0.05 1/1',gblur=sigma=${60 * W / 1920}[bloom];[b2][bloom]blend=all_mode=screen:all_opacity=${finish.bloom ?? 0.18}`,
   `vignette=angle=${finish.vignette ?? 0.55}`,
-  `noise=c0s=${finish.grain ?? 9}:c0f=t+u:c1s=${(finish.grain ?? 9) / 2}:c1f=t+u:c2s=${(finish.grain ?? 9) / 2}:c2f=t+u`,
   'format=yuv420p',
+  // grain on luma, a little on chroma
+  `noise=c0s=${finish.grain ?? 9}:c0f=t+u:c1s=${(finish.grain ?? 9) / 3}:c1f=t+u:c2s=${(finish.grain ?? 9) / 3}:c2f=t+u`,
 ].join(',');
 sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', silent, '-i', mix, '-filter_complex', `[0:v]${vf}[v]`, '-map', '[v]', '-map', '1:a',
   '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'slow', '-crf', DRAFT ? '23' : '16', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', master]);
