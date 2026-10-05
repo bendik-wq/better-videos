@@ -12,7 +12,8 @@ import numpy as np
 SR = 48000
 timeline = json.load(open(sys.argv[1]))
 out_path = sys.argv[2]
-cfg = json.loads(sys.argv[3]) if len(sys.argv) > 3 else {}
+arg = sys.argv[3] if len(sys.argv) > 3 else '{}'
+cfg = json.load(open(arg[1:])) if arg.startswith('@') else json.loads(arg)
 total = timeline[-1]["start"] + timeline[-1]["duration"] + 2.0
 N = int(total * SR)
 L = np.zeros(N); R = np.zeros(N)
@@ -124,16 +125,32 @@ def ticks(c):
     return s
 
 
-SYN = dict(boom=boom, clang=clang, clunk=clunk, whoosh=whoosh, swell=swell, horn=horn, hum=hum, water=water, ticks=ticks)
+def pulse(c):
+    n, d = span(c); s = np.zeros(n); period = 60 / c.get("bpm", 64)
+    k = int(0.5 * SR); tk = np.arange(k) / SR
+    beat = np.sin(2 * np.pi * 48 * tk) * np.exp(-tk / 0.12)
+    for b in range(int(d / period)):
+        for off, g in ((0, 1.0), (0.28, 0.6)):
+            i = int((b * period + off) * SR); j = min(n, i + k)
+            if i < n: s[i:j] += beat[: j - i] * g
+    return s * np.minimum(1, np.arange(n) / SR / 1.5) * np.minimum(1, (d - np.arange(n) / SR) / 1.0)
 
-# --- drone bed: minor-key partials breathing slowly, detuned for width ---
-roots = {"D": 73.42, "C": 65.41, "E": 82.41, "A": 55.0}
-r = roots.get(cfg.get("key", "D"), 73.42)
+
+SYN = dict(pulse=pulse, boom=boom, clang=clang, clunk=clunk, whoosh=whoosh, swell=swell, horn=horn, hum=hum, water=water, ticks=ticks)
+
+# --- drone bed: minor-key partials breathing slowly, detuned for width; key can change per section ---
+roots = {"C": 65.41, "C#": 69.30, "D": 73.42, "Eb": 77.78, "E": 82.41, "F": 87.31, "F#": 92.50, "G": 98.0, "Ab": 103.83, "A": 55.0, "Bb": 58.27, "B": 61.74}
 drone_gain = cfg.get("drone", 0.16)
-for mult, amp, lfo in [(0.5, 0.9, 0.05), (1, 0.7, 0.07), (1.5, 0.35, 0.09), (2, 0.3, 0.11), (2.378, 0.18, 0.13), (3, 0.08, 0.17)]:
-    a = amp * (0.6 + 0.4 * np.sin(2 * np.pi * lfo * t_all + mult))
-    L += drone_gain * a * np.sin(2 * np.pi * r * mult * t_all)
-    R += drone_gain * a * np.sin(2 * np.pi * r * mult * 1.003 * t_all + 0.7)
+sections = [(0.0, cfg.get("key", "D"))] + [(shots[x["shot"]]["start"], x["key"]) for x in cfg.get("sections", [])]
+for si, (s0, key) in enumerate(sections):
+    s1 = sections[si + 1][0] if si + 1 < len(sections) else total
+    i0, i1 = max(0, int((s0 - 1.5) * SR)), min(N, int((s1 + 1.5) * SR))
+    tt = t_all[i0:i1]; r = roots.get(key, 73.42)
+    w = np.minimum(1, np.minimum(tt - (s0 - 1.5), (s1 + 1.5) - tt) / 3.0).clip(0, 1)  # 3s crossfades
+    for mult, amp, lfo in [(0.5, 0.9, 0.05), (1, 0.7, 0.07), (1.5, 0.35, 0.09), (2, 0.3, 0.11), (2.378, 0.18, 0.13), (3, 0.08, 0.17)]:
+        a = amp * (0.6 + 0.4 * np.sin(2 * np.pi * lfo * tt + mult)) * w
+        L[i0:i1] += drone_gain * a * np.sin(2 * np.pi * r * mult * tt)
+        R[i0:i1] += drone_gain * a * np.sin(2 * np.pi * r * mult * 1.003 * tt + 0.7)
 room = lowpass(rs.standard_normal(N), 400) * 0.05
 L += room; R += np.roll(room, 2400)
 # drone ducks to near-silence on the title card for impact

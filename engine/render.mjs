@@ -1,158 +1,211 @@
 #!/usr/bin/env node
 // Narration-first video renderer.
 //
-//   node engine/render.mjs projects/the-box [--draft] [--only=shotId] [--frames=a:b]
+//   node engine/render.mjs projects/<name> [--draft] [--only=id,id] [--stills[=0.3,0.9]] [--workers=N] [--remux]
 //
-// 1. Synthesises each shot's voice-over with Piper (cached by text hash).
-// 2. Derives shot timing from the narration (pad_in + VO + pad_out).
-// 3. Renders every frame deterministically in headless Chromium (Three.js + DOM type).
-// 4. Builds the score/sound-design bed, mixes it under the VO.
-// 5. Applies the film finish (halation, grain, vignette) and muxes the master.
+// 1. Synthesises each shot's VO (Kokoro / ElevenLabs / Piper) and aligns it word by word.
+// 2. Derives shot timing from the narration; visuals and sound cues can key off words.
+// 3. Renders every frame deterministically in headless Chromium (Three.js + DOM type),
+//    optionally split across N parallel workers.
+// 4. Builds the score/sound-design bed and mixes it under the VO.
+// 5. Applies the film finish (halation, bloom, grain, vignette) and muxes the master.
 import { chromium } from 'playwright-core';
 import { spawn, execFileSync } from 'node:child_process';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = process.argv.slice(2);
 const projDir = path.resolve(args.find(a => !a.startsWith('--')) || 'projects/the-box');
-const flag = (k) => { const a = args.find(a => a.startsWith(`--${k}`)); return a ? (a.split('=')[1] ?? true) : undefined; };
+const flag = (k) => { const a = args.find(a => a === `--${k}` || a.startsWith(`--${k}=`)); return a ? (a.split('=')[1] ?? true) : undefined; };
 const DRAFT = !!flag('draft');
 const ONLY = flag('only');
+const SEGMENT = flag('segment'); // internal: "f0:f1:index" when running as a worker
 
-const project = JSON.parse(fs.readFileSync(path.join(projDir, 'project.json'), 'utf8'));
+const mjs = path.join(projDir, 'project.mjs');
+const project = fs.existsSync(mjs) ? (await import(pathToFileURL(mjs))).default : JSON.parse(fs.readFileSync(path.join(projDir, 'project.json'), 'utf8'));
 const fps = DRAFT ? 12 : project.fps;
 const [W, H] = DRAFT ? [960, 540] : [project.width, project.height];
 const out = path.join(projDir, 'out');
-const cache = path.join(ROOT, '.cache');
 fs.mkdirSync(out, { recursive: true });
-fs.mkdirSync(path.join(cache, 'vo'), { recursive: true });
+const sh = (cmd, a, opts = {}) => execFileSync(cmd, a, { stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 1 << 28, ...opts }).toString();
+const log = (...a) => console.log(...a);
+const pageShot = (s) => ({ id: s.id, set: s.set, params: s.params, start: s.start, duration: s.duration, voAt: s.voAt, voDur: s.voDur, words: s.words, chapter: s.chapter });
 
-const sh = (cmd, a, opts = {}) => execFileSync(cmd, a, { stdio: ['ignore', 'pipe', 'inherit'], ...opts }).toString();
-const probeDur = (f) => parseFloat(sh('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]));
-
-// ---------- 1. voice-over ----------
-const voice = path.join(cache, 'voices', `${project.voice.model}.onnx`);
-for (const s of project.shots) {
-  if (!s.vo) continue;
-  const key = crypto.createHash('sha1').update(JSON.stringify([project.voice, s.vo])).digest('hex').slice(0, 12);
-  s.voFile = path.join(cache, 'vo', `${s.id}-${key}.wav`);
-  if (!fs.existsSync(s.voFile)) {
-    console.log(`[vo] ${s.id}`);
-    execFileSync('python3', ['-m', 'piper', '-m', voice, '-f', s.voFile,
-      '--length-scale', String(project.voice.lengthScale ?? 1), '--sentence-silence', String(project.voice.sentenceSilence ?? 0.35)],
-      { input: s.vo, stdio: ['pipe', 'ignore', 'inherit'] });
-  }
-  s.voDur = probeDur(s.voFile);
+// ---------- 1 + 2. voice-over and timeline (skipped by workers, who read the timeline) ----------
+let shots;
+const tlPath = path.join(out, 'timeline.json');
+if (SEGMENT) {
+  shots = JSON.parse(fs.readFileSync(tlPath, 'utf8'));
+} else {
+  // pronunciation map: on-screen spelling stays, the voice gets the spoken form
+  const say = project.voice.say ?? {};
+  const speak = (t) => Object.entries(say).reduce((x, [k, v]) => x.replace(new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), v), t);
+  const v = project.voice.engine ? project.voice : { engine: 'piper', ...project.voice };
+  const jobs = path.join(out, 'vo-jobs.json');
+  fs.writeFileSync(jobs, JSON.stringify({ voice: v, root: ROOT, cache: path.join(ROOT, '.cache', 'vo'), shots: project.shots.filter(s => s.vo).map(s => ({ id: s.id, text: speak(s.vo) })) }));
+  const vo = JSON.parse(sh('python3', [path.join(ROOT, 'engine', 'voice.py'), jobs]));
+  const tm = { padIn: 0.25, padOut: 0.35, ...(project.timing ?? {}) };
+  let T = 0;
+  shots = project.shots.map((s0) => {
+    const s = { ...s0 };
+    const v = vo[s.id];
+    s.start = T;
+    s.voAt = T + (s.padIn ?? tm.padIn);
+    s.voDur = v?.dur ?? 0;
+    s.voFile = v?.wav;
+    s.duration = Math.max(s.min ?? 0, (s.padIn ?? tm.padIn) + s.voDur + (s.padOut ?? tm.padOut));
+    // words relative to shot start
+    s.words = (v?.words ?? []).map(w => ({ w: w.w, s: +(w.s + s.voAt - T).toFixed(3), e: +(w.e + s.voAt - T).toFixed(3) }));
+    T += s.duration;
+    return s;
+  });
+  fs.writeFileSync(tlPath, JSON.stringify(shots, null, 1));
+  const m = Math.floor(T / 60), sec = (T % 60).toFixed(1);
+  log(`[timeline] ${shots.length} shots, ${m}m${sec}s @ ${fps}fps ${W}x${H}`);
+  if (flag('vo-only')) process.exit(0);
 }
-
-// ---------- 2. timeline ----------
-let T = 0;
-for (const s of project.shots) {
-  s.start = T;
-  s.duration = Math.max(s.min ?? 0, (s.padIn ?? 0.6) + (s.voDur ?? 0) + (s.padOut ?? 0.6));
-  s.voAt = T + (s.padIn ?? 0.6);
-  T += s.duration;
-}
-const total = T;
-fs.writeFileSync(path.join(out, 'timeline.json'), JSON.stringify(project.shots.map(({ id, start, duration, voAt, voDur, vo }) => ({ id, start, duration, voAt, voDur, vo })), null, 2));
-console.log(`[timeline] ${project.shots.length} shots, ${total.toFixed(2)}s @ ${fps}fps ${W}x${H}`);
+const total = shots.at(-1).start + shots.at(-1).duration;
 
 // ---------- 3. frames ----------
-const server = http.createServer((req, res) => {
-  const p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
-  if (!p.startsWith(ROOT) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); return res.end(); }
-  const type = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json' }[path.extname(p)] || 'application/octet-stream';
-  res.writeHead(200, { 'content-type': type }); fs.createReadStream(p).pipe(res);
-}).listen(0);
-const port = server.address().port;
+let shotsToRender = shots;
+if (ONLY) shotsToRender = shots.filter(s => ONLY.split(',').includes(s.id));
+let f0 = Math.round(Math.min(...shotsToRender.map(s => s.start)) * fps);
+let f1 = Math.round(Math.max(...shotsToRender.map(s => s.start + s.duration)) * fps);
+let segIndex = null;
+if (SEGMENT) { const [a, b, i] = SEGMENT.split(':').map(Number); f0 = a; f1 = b; segIndex = i; }
 
-let shotsToRender = project.shots;
-if (ONLY) shotsToRender = project.shots.filter(s => ONLY.split(',').includes(s.id));
-const rangeStart = Math.min(...shotsToRender.map(s => s.start));
-const rangeEnd = Math.max(...shotsToRender.map(s => s.start + s.duration));
-let f0 = Math.round(rangeStart * fps), f1 = Math.round(rangeEnd * fps);
-const fr = flag('frames'); if (fr) [f0, f1] = fr.split(':').map(Number);
+async function openStage() {
+  const server = http.createServer((req, res) => {
+    const p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
+    if (!p.startsWith(ROOT) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); return res.end(); }
+    const type = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json' }[path.extname(p)] || 'application/octet-stream';
+    res.writeHead(200, { 'content-type': type }); fs.createReadStream(p).pipe(res);
+  }).listen(0);
+  const browser = await chromium.launch({
+    executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+    args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+  });
+  const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+  page.on('console', m => { if (m.type() === 'error' && !m.text().includes('404')) log('[page]', m.text()); if (m.text().startsWith('[scene]')) log('[page]', m.text()); });
+  page.on('pageerror', e => { console.error('[page error]', e); process.exit(1); });
+  await page.goto(`http://127.0.0.1:${server.address().port}/engine/stage.html?project=/${path.relative(ROOT, projDir)}`);
+  await page.evaluate(async (cfg) => window.__setup(cfg), { shots: shots.map(pageShot), width: W, height: H, fps, draft: DRAFT });
+  return { page, close: async () => { await browser.close(); server.close(); } };
+}
 
-const browser = await chromium.launch({
-  executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
-});
-const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
-page.on('console', m => { if (m.type() === 'error' || m.text().startsWith('[scene]')) console.log('[page]', m.text()); });
-page.on('pageerror', e => { console.error('[page error]', e); process.exit(1); });
-const rel = path.relative(ROOT, projDir);
-await page.goto(`http://127.0.0.1:${port}/engine/stage.html?project=/${rel}`);
-await page.evaluate(async (cfg) => window.__setup(cfg), { shots: project.shots.map(({ id, start, duration, voAt, voDur }) => ({ id, start, duration, voAt, voDur })), width: W, height: H, fps, draft: DRAFT });
+async function renderFrames(a, b, file) {
+  const { page, close } = await openStage();
+  const enc = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-',
+    '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'medium', '-crf', DRAFT ? '23' : '15', '-pix_fmt', 'yuv420p', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+  const t0 = Date.now();
+  for (let f = a; f < b; f++) {
+    await page.evaluate((t) => window.__frame(t), f / fps);
+    const buf = await page.screenshot({ type: 'jpeg', quality: 95 });
+    if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
+    if ((f - a) % (fps * 2) === 0) {
+      const done = f - a + 1, rate = done / ((Date.now() - t0) / 1000);
+      log(`[render${segIndex !== null ? ' w' + segIndex : ''}] ${done}/${b - a}  ${rate.toFixed(1)} fps  eta ${((b - f - 1) / rate / 60).toFixed(1)}m`);
+    }
+  }
+  enc.stdin.end(); await new Promise(r => enc.on('close', r));
+  await close();
+}
 
-// --stills[=0.3,0.8]: one PNG per shot at those fractions, for fast look-dev.
+if (SEGMENT) {
+  await renderFrames(f0, f1, path.join(out, `seg-${segIndex}.mp4`));
+  process.exit(0);
+}
+
 if (flag('stills')) {
+  const { page, close } = await openStage();
   const fr = flag('stills') === true ? [0.35, 0.85] : String(flag('stills')).split(',').map(Number);
   fs.mkdirSync(path.join(out, 'stills'), { recursive: true });
   for (const s of shotsToRender) for (const x of fr) {
     await page.evaluate((t) => window.__frame(t), s.start + s.duration * x);
-    await page.screenshot({ path: path.join(out, 'stills', `${s.id}-${Math.round(x * 100)}.png`) });
-    console.log(`[still] ${s.id} @ ${x}`);
+    await page.screenshot({ path: path.join(out, 'stills', `${s.id}-${Math.round(x * 100)}.jpg`), type: 'jpeg', quality: 85 });
   }
-  await browser.close(); server.close(); process.exit(0);
+  log(`[stills] ${shotsToRender.length} shots`);
+  await close(); process.exit(0);
 }
 
 const silent = path.join(out, DRAFT ? 'picture-draft.mp4' : 'picture.mp4');
-const enc = flag('remux') && fs.existsSync(silent) ? null : spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
-  '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'slow', '-crf', DRAFT ? '23' : '14', '-pix_fmt', 'yuv420p', silent], { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
-for (let f = flag('remux') && fs.existsSync(silent) ? f1 : f0; f < f1; f++) {
-  await page.evaluate((t) => window.__frame(t), f / fps);
-  const buf = await page.screenshot({ type: 'png' });
-  if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
-  if ((f - f0) % fps === 0) {
-    const done = f - f0 + 1, rate = done / ((Date.now() - t0) / 1000);
-    process.stdout.write(`\r[render] ${done}/${f1 - f0} frames  ${rate.toFixed(1)} fps  eta ${((f1 - f - 1) / rate).toFixed(0)}s   `);
+if (!(flag('remux') && fs.existsSync(silent))) {
+  const N = Number(flag('workers') ?? 1);
+  // split on shot boundaries near even chunk sizes so trails/step state rarely straddles a seam
+  const cuts = [f0];
+  for (let i = 1; i < N; i++) {
+    const target = f0 + Math.round((f1 - f0) * i / N);
+    const b = shots.map(s => Math.round(s.start * fps)).filter(x => x > cuts.at(-1) && x < f1).reduce((best, x) => Math.abs(x - target) < Math.abs(best - target) ? x : best, target);
+    cuts.push(b);
   }
+  cuts.push(f1);
+  await Promise.all(cuts.slice(0, -1).map((a, i) => new Promise((res, rej) => {
+    const p = spawn(process.execPath, [new URL(import.meta.url).pathname, projDir, `--segment=${a}:${cuts[i + 1]}:${i}`, ...(DRAFT ? ['--draft'] : [])], { stdio: 'inherit' });
+    p.on('close', c => c === 0 ? res() : rej(new Error(`worker ${i} exited ${c}`)));
+  })));
+  const list = path.join(out, 'segments.txt');
+  fs.writeFileSync(list, cuts.slice(0, -1).map((_, i) => `file 'seg-${i}.mp4'`).join('\n'));
+  sh('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', silent]);
+  log(`[render] ${f1 - f0} frames in ${((Date.now() - t0) / 60000).toFixed(1)}m with ${N} worker(s)`);
 }
-if (enc) { enc.stdin.end(); await new Promise(r => enc.on('close', r)); }
-await browser.close(); server.close();
-console.log(`\n[render] done in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 
 // ---------- 4. sound ----------
 const audioFrom = f0 / fps, audioLen = (f1 - f0) / fps;
-const bed = path.join(out, 'score.wav');
-execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), path.join(out, 'timeline.json'), bed, JSON.stringify(project.score ?? {})], { stdio: 'inherit' });
-const voInputs = [], voFilters = [];
-project.shots.filter(s => s.voFile).forEach((s, i) => {
-  voInputs.push('-i', s.voFile);
-  const d = Math.max(0, Math.round((s.voAt - audioFrom) * 1000));
-  voFilters.push(`[${i + 1}:a]aformat=channel_layouts=stereo,adelay=${d}|${d},volume=1.0[v${i}]`);
+const byId = Object.fromEntries(shots.map(s => [s.id, s]));
+const wordAt = (s, w, nth = 0) => {
+  const hits = s.words.filter(x => x.w.toLowerCase().replace(/[^a-z0-9.$%]/g, '').startsWith(w.toLowerCase()));
+  return hits[nth]?.s ?? hits.at(-1)?.s ?? s.voAt - s.start;
+};
+const cues = [...(project.score?.cues ?? []), ...(project.cues ? project.cues(shots) : [])].map(c => {
+  const s = byId[c.shot];
+  return { ...c, at: c.word ? wordAt(s, c.word, c.nth) + (c.offset ?? 0) : c.at ?? 0 };
 });
-const n = voFilters.length;
+const bed = path.join(out, 'score.wav');
+fs.writeFileSync(path.join(out, 'score-cfg.json'), JSON.stringify({ ...(project.score ?? {}), cues }));
+execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), tlPath, bed, '@' + path.join(out, 'score-cfg.json')], { stdio: 'inherit' });
+
+// VO: place each shot's wav on a silent track with numpy-free ffmpeg concat (handles hundreds of shots)
+const voTrack = path.join(out, 'vo.wav');
+{
+  const parts = []; let cursor = 0; const tmp = path.join(out, 'vo-parts'); fs.mkdirSync(tmp, { recursive: true });
+  const sil = (d, i) => { const f = path.join(tmp, `sil-${i}.wav`); sh('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', `anullsrc=r=24000:cl=mono`, '-t', d.toFixed(4), f]); return f; };
+  shots.filter(s => s.voFile).forEach((s, i) => {
+    const at = s.voAt - audioFrom;
+    if (at + s.voDur < 0 || at > audioLen) return;
+    if (at > cursor) { parts.push(sil(at - cursor, i)); cursor = at; }
+    const f = path.join(tmp, `vo-${i}.wav`);
+    sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', s.voFile, '-ar', '24000', '-ac', '1', f]);
+    parts.push(f); cursor += s.voDur;
+  });
+  if (cursor < audioLen) parts.push(sil(audioLen - cursor, 'end'));
+  fs.writeFileSync(path.join(tmp, 'list.txt'), parts.map(p => `file '${p}'`).join('\n'));
+  sh('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', path.join(tmp, 'list.txt'), '-c', 'pcm_s16le', voTrack]);
+}
 const mix = path.join(out, 'mix.wav');
-const vMix = n ? `${voFilters.join(';')};${Array.from({ length: n }, (_, i) => `[v${i}]`).join('')}amix=inputs=${n}:normalize=0,` +
-  // radio-doc voice chain: rumble cut, presence, gentle compression, a touch of room
-  `highpass=f=80,equalizer=f=3000:t=q:w=1:g=3,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,aecho=0.8:0.5:40:0.08,apad,asplit[vo][vosc];` : '';
-const bedIn = `[0:a]atrim=start=${audioFrom}:duration=${audioLen},asetpts=PTS-STARTPTS[bed];`;
-const graph = n
-  // duck the score under the narration
-  ? `${bedIn}${vMix}[bed][vosc]sidechaincompress=threshold=0.05:ratio=4:release=400[duck];[duck][vo]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5[a]`
-  : `${bedIn}[bed]loudnorm=I=-16:TP=-1.5[a]`;
-sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', bed, ...voInputs, '-filter_complex', graph, '-map', '[a]', '-t', String(audioLen), mix]);
+const graph = `[0:a]atrim=start=${audioFrom}:duration=${audioLen},asetpts=PTS-STARTPTS[bed];` +
+  // documentary voice chain: rumble cut, presence lift, gentle compression, a touch of room
+  `[1:a]aformat=channel_layouts=stereo,highpass=f=70,equalizer=f=180:t=q:w=1:g=2,equalizer=f=3200:t=q:w=1:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,aecho=0.8:0.4:35:0.06,apad,asplit[vo][vosc];` +
+  `[bed][vosc]sidechaincompress=threshold=0.04:ratio=5:release=450[duck];[duck][vo]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-15:TP=-1.5:LRA=9[a]`;
+sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', bed, '-i', voTrack, '-filter_complex', graph, '-map', '[a]', '-t', String(audioLen), mix]);
 
 // ---------- 5. film finish + mux ----------
 const finish = project.finish ?? {};
 const master = path.join(out, DRAFT ? 'draft.mp4' : `${path.basename(projDir)}.mp4`);
 const vf = [
-  // halation: blurred highlights, tinted red-orange like Kodak's anti-halation-free stocks, screened back on
   // blend must run in RGB; in YUV, screen-blending the chroma planes tints everything purple
   'format=gbrp',
+  // halation: blurred highlights, tinted red-orange like film stock without anti-halation backing
   `split[base][hl];[hl]curves=all='0/0 0.62/0 1/1',gblur=sigma=${(finish.halation ?? 18) * W / 1920},colorchannelmixer=rr=1:gg=0.45:bb=0.25[glow];[base][glow]blend=all_mode=screen:all_opacity=${finish.halationAmount ?? 0.55}`,
   // bloom: wide soft glow from everything bright
   `split[b2][bl];[bl]curves=all='0/0 0.5/0.05 1/1',gblur=sigma=${60 * W / 1920}[bloom];[b2][bloom]blend=all_mode=screen:all_opacity=${finish.bloom ?? 0.18}`,
   `vignette=angle=${finish.vignette ?? 0.55}`,
   'format=yuv420p',
-  // grain on luma, a little on chroma
   `noise=c0s=${finish.grain ?? 9}:c0f=t+u:c1s=${(finish.grain ?? 9) / 3}:c1f=t+u:c2s=${(finish.grain ?? 9) / 3}:c2f=t+u`,
 ].join(',');
 sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', silent, '-i', mix, '-filter_complex', `[0:v]${vf}[v]`, '-map', '[v]', '-map', '1:a',
-  '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'slow', '-crf', DRAFT ? '23' : '16', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', master]);
-console.log(`[master] ${master}`);
+  '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'medium', '-crf', DRAFT ? '23' : '18', '-tune', 'grain', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', master]);
+log(`[master] ${master}  (${(total / 60).toFixed(1)} min)`);
