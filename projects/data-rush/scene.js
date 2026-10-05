@@ -186,7 +186,7 @@ const SETS = {
     if (shot.params.counters) K.div(layer, 'left:0;right:0;top:0;height:42%;background:linear-gradient(#000e,#0000);opacity:1');
     const counters = (shot.params.counters || []).map((c, i) => K.div(layer, `left:${6 + i * 30}%;top:9%;${SERIF};line-height:1;text-shadow:0 0 30px #000`,
       `<div class="v" style="font-size:7em;letter-spacing:-.02em"></div><div style="${CAP};margin-top:.4em">${c.label}</div>`));
-    const speed = shot.params.mode === 'drift' ? 4 : 9;
+    const speed = shot.params.mode === 'drift' ? 2.5 : 5;
     return { ...b, update(t, p) {
       for (let i = 0; i < N; i++) { const [x, y, z0, rot, s] = seeds[i]; const z = ((z0 + t * speed * s) % 220) - 216;
         e.set(Math.sin(t * 0.3 + rot) * 0.4, rot + t * 0.1 * s, Math.cos(t * 0.2 + rot) * 0.3); q.setFromEuler(e);
@@ -673,14 +673,29 @@ export default async function create(ctx) {
     for (const [id, v] of live) if (v.index < index - 1) { dispose(v.inst.scene); v.inst.layer.remove(); live.delete(id); }
     return live.get(shot.id).inst;
   };
+  // short dissolve between consecutive shots (not into or out of chapter/title cards, which hard-cut on a hit)
+  const DISSOLVE = 0.3, HARD = new Set(['chapter', 'title']);
+  const prev = document.createElement('canvas'); prev.width = width; prev.height = height; const px = prev.getContext('2d');
+  let lastShot = null;
   return {
     frame({ shot, t, p, index }) {
       const inst = get(shot, index);
+      if (lastShot && lastShot.id !== shot.id) px.drawImage(comp, 0, 0); // freeze the outgoing frame
+      const before = lastShot && lastShot.id !== shot.id ? lastShot : null;
       for (const v of live.values()) v.inst.layer.style.display = v.inst === inst ? 'block' : 'none';
       inst.update(t, p);
       renderer.render(inst.scene, inst.camera);
-      if (inst.trails && last === inst) { cx.globalAlpha = 1 - inst.trails; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0);
-      last = inst;
+      const prevShot = index > 0 ? shots[index - 1] : null;
+      const blend = prevShot && !HARD.has(shot.set) && !HARD.has(prevShot.set) && t < DISSOLVE && (before || lastShot?.id === shot.id);
+      if (blend) {
+        const k = K.smooth(t / DISSOLVE);
+        cx.globalAlpha = 1; cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1;
+        inst.layer.style.opacity = k;
+      } else {
+        inst.layer.style.opacity = 1;
+        if (inst.trails && last === inst) { cx.globalAlpha = 1 - inst.trails; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0);
+      }
+      last = inst; lastShot = shot;
     },
   };
 }

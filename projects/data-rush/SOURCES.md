@@ -12,6 +12,7 @@ in the script ("Nobody knows", "expect", "could").
 | Hearing delayed after objections incl. a union | FourWeekMBA (hearing moved from Aug 19 to Sep 9 2026) |
 | Nick Heiner (Surge AI): "your agent is going to generalize into the rest of the economy" | TIME, Aug 25 2026 |
 | Links between records preserved ("referential integrity") made the data useful | TIME, Aug 25 2026 (paraphrased on screen) |
+| Thiel was Facebook's first outside investor ($500K, 2004) | Widely reported; Wikipedia: Peter Thiel |
 | PayPal sold to eBay in 2002 for ~$1.5B | Widely reported (eBay press release, July 2002) |
 | Palantir co-founded 2003; In-Q-Tel early backer | Wikipedia: Palantir Technologies |
 | Founders Fund: first institutional investor in Palantir; stakes in OpenAI and Anthropic | Tech Funding News (Founders Fund Growth IV), 2026 |
@@ -23,6 +24,7 @@ in the script ("Nobody knows", "expect", "could").
 | Reddit–Google ~$60M/yr; News Corp–OpenAI ~$250M/5 yrs | Reuters / WSJ, 2024; Troveo summary |
 | NYT sued OpenAI and Microsoft, Dec 2023 | Widely reported (NYT, Dec 27 2023) |
 | "Model collapse": Nature, 2024 | Shumailov et al., *Nature* 631 (2024) |
+| Mercor $10B valuation (Oct 2025 Series C); Surge AI ~$1.2B revenue in 2024 without VC | TechCrunch; Sacra; reported figures |
 | micro1 Data Partnerships: $100K–$2M+ per approved package; 30+ employees, US-prioritized, primarily English; SOPs, docs, knowledge bases, CRM metadata, project histories, QA, operational comms | micro1.ai/company-referral |
 | Process: apply → evaluation → onboarding → package → payout | micro1.ai/company-referral |
 

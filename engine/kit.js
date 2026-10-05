@@ -20,11 +20,12 @@ export function rng(seed = 1) {
 
 // Operator handheld: layered low-frequency sines, deterministic for a given t.
 export function handheld(t, amp = 1, seed = 0) {
+  // low frequencies only: a slow, floating operator, never jitter (judders at 24/30fps otherwise)
   const n = (f, p) => Math.sin(t * f + p + seed * 13.7);
   return {
-    x: amp * (0.6 * n(0.9, 0.0) + 0.3 * n(2.3, 1.1) + 0.1 * n(5.1, 2.2)),
-    y: amp * (0.6 * n(0.7, 3.0) + 0.3 * n(1.9, 4.2) + 0.1 * n(4.3, 0.7)),
-    r: amp * 0.004 * (n(0.5, 5.5) + 0.5 * n(1.7, 2.9)),
+    x: amp * (0.7 * n(0.5, 0.0) + 0.3 * n(1.1, 1.1)),
+    y: amp * (0.7 * n(0.4, 3.0) + 0.3 * n(0.9, 4.2)),
+    r: amp * 0.003 * (n(0.3, 5.5) + 0.5 * n(0.8, 2.9)),
   };
 }
 
