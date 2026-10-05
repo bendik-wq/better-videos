@@ -1,0 +1,38 @@
+{
+  "title": "The Box — cold open",
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "voice": { "model": "en_US-ryan-high", "lengthScale": 1.12, "sentenceSilence": 0.45 },
+  "finish": { "grain": 9, "halation": 18, "halationAmount": 0.5, "bloom": 0.16, "vignette": 0.55 },
+  "shots": [
+    { "id": "object", "padIn": 1.6, "padOut": 0.8,
+      "vo": "The most important invention in the history of global trade wasn't a machine. It was a steel box." },
+    { "id": "harbor", "padIn": 0.5, "padOut": 0.9,
+      "vo": "On April twenty-sixth, nineteen fifty-six, a converted oil tanker called the Ideal X left Port Newark, New Jersey, carrying fifty-eight of them." },
+    { "id": "numbers", "padIn": 0.5, "padOut": 1.0,
+      "vo": "Loading a ship by hand cost five dollars and eighty-three cents a ton. In a box, it would cost under sixteen cents." },
+    { "id": "canyon", "padIn": 0.5, "padOut": 0.8,
+      "vo": "The man behind it wasn't a shipping man. Malcom McLean was a trucker. And to get his ships, he bought a shipping company, largely with borrowed money." },
+    { "id": "title", "padIn": 0.3, "padOut": 0.4, "min": 4.5 }
+  ],
+  "score": {
+    "key": "D",
+    "drone": 0.16,
+    "silenceDrone": ["title"],
+    "cues": [
+      { "type": "clunk", "shot": "object", "at": 0.7, "gain": 0.7 },
+      { "type": "swell", "shot": "harbor", "at": 0, "dur": 2.0, "gain": 0.25 },
+      { "type": "boom", "shot": "harbor", "at": 0, "gain": 0.55 },
+      { "type": "water", "shot": "harbor", "at": 0, "gain": 0.35 },
+      { "type": "horn", "shot": "harbor", "at": 2.2, "dur": 4.0, "gain": 0.28, "pan": -0.3 },
+      { "type": "whoosh", "shot": "numbers", "at": 0, "dur": 0.8, "gain": 0.4 },
+      { "type": "ticks", "shot": "numbers", "at": 0, "gain": 0.22, "period": 0.5 },
+      { "type": "boom", "shot": "canyon", "at": 0, "gain": 0.45 },
+      { "type": "hum", "shot": "canyon", "at": 0, "gain": 0.18 },
+      { "type": "swell", "shot": "title", "at": 0, "dur": 3.0, "gain": 0.35 },
+      { "type": "clang", "shot": "title", "at": 0.0, "gain": 0.75 },
+      { "type": "boom", "shot": "title", "at": 0.0, "gain": 0.7 }
+    ]
+  }
+}

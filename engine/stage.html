@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="importmap">
+{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/",
+  "kit": "/engine/kit.js"
+} }
+</script>
+<style>
+  @font-face { font-family: 'Instrument Serif'; src: url(/assets/fonts/InstrumentSerif.woff2) format('woff2'); font-style: normal; }
+  @font-face { font-family: 'Instrument Serif'; src: url(/assets/fonts/InstrumentSerif-Italic.woff2) format('woff2'); font-style: italic; }
+  @font-face { font-family: 'Plex Mono'; src: url(/assets/fonts/IBMPlexMono-400.woff2) format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Plex Mono'; src: url(/assets/fonts/IBMPlexMono-500.woff2) format('woff2'); font-weight: 500; }
+  @font-face { font-family: 'Archivo Narrow'; src: url(/assets/fonts/ArchivoNarrow.woff2) format('woff2'); font-weight: 400 700; }
+  html, body { margin: 0; background: #000; overflow: hidden; }
+  #gl { position: absolute; inset: 0; }
+  #overlay { position: absolute; inset: 0; pointer-events: none; color: #ece6da; }
+  #overlay * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="overlay"></div>
+<script type="module">
+import * as THREE from 'three';
+const params = new URLSearchParams(location.search);
+let scene, shots;
+
+window.__setup = async (cfg) => {
+  shots = cfg.shots;
+  await document.fonts.load('40px "Instrument Serif"');
+  await document.fonts.load('italic 40px "Instrument Serif"');
+  await document.fonts.load('40px "Plex Mono"');
+  await document.fonts.load('500 40px "Plex Mono"');
+  await document.fonts.load('700 40px "Archivo Narrow"');
+  const canvas = document.getElementById('gl');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(1);
+  renderer.setSize(cfg.width, cfg.height, false);
+  canvas.style.width = cfg.width + 'px'; canvas.style.height = cfg.height + 'px';
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const overlay = document.getElementById('overlay');
+  overlay.style.fontSize = (cfg.height / 1080 * 16) + 'px'; // 1em == 16px at 1080p, scales with draft size
+  const mod = await import(params.get('project') + '/scene.js');
+  scene = await mod.default({ THREE, renderer, overlay, ...cfg });
+};
+
+window.__frame = (T) => {
+  let i = shots.findIndex(s => T >= s.start && T < s.start + s.duration);
+  if (i < 0) i = shots.length - 1;
+  const s = shots[i];
+  const t = T - s.start;
+  scene.frame({ T, shot: s, t, p: Math.min(1, t / s.duration), index: i });
+};
+</script>
+</body>
+</html>

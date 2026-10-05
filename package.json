@@ -1,0 +1,24 @@
+{
+  "name": "better-videos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bendik-wq/better-videos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bendik-wq/better-videos/issues"
+  },
+  "homepage": "https://github.com/bendik-wq/better-videos#readme",
+  "dependencies": {
+    "playwright-core": "^1.63.0",
+    "three": "^0.169.0"
+  }
+}
