@@ -15,6 +15,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import crypto from 'node:crypto';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = process.argv.slice(2);
@@ -22,7 +23,7 @@ const projDir = path.resolve(args.find(a => !a.startsWith('--')) || 'projects/th
 const flag = (k) => { const a = args.find(a => a === `--${k}` || a.startsWith(`--${k}=`)); return a ? (a.split('=')[1] ?? true) : undefined; };
 const DRAFT = !!flag('draft');
 const ONLY = flag('only');
-const SEGMENT = flag('segment'); // internal: "f0:f1:index" when running as a worker
+const SEGMENT = flag('chunks'); // internal: "a:b;c:d|index" — the chunk list a worker renders
 
 const mjs = path.join(projDir, 'project.mjs');
 const project = fs.existsSync(mjs) ? (await import(pathToFileURL(mjs))).default : JSON.parse(fs.readFileSync(path.join(projDir, 'project.json'), 'utf8'));
@@ -93,7 +94,10 @@ if (ONLY) shotsToRender = shots.filter(s => ONLY.split(',').includes(s.id));
 let f0 = Math.round(Math.min(...shotsToRender.map(s => s.start)) * fps);
 let f1 = Math.round(Math.max(...shotsToRender.map(s => s.start + s.duration)) * fps);
 let segIndex = null;
-if (SEGMENT) { const [a, b, i] = SEGMENT.split(':').map(Number); f0 = a; f1 = b; segIndex = i; }
+if (SEGMENT) segIndex = Number(SEGMENT.split('|')[1]);
+// chunks are cached by content: any change to code, assets timing or the shot list invalidates them
+const chunkKey = crypto.createHash('sha1').update([fs.readFileSync(tlPath), ...['engine/kit.js', 'engine/cine.js', 'engine/stage.html'].map(f => fs.readFileSync(path.join(ROOT, f))), ...fs.readdirSync(projDir).filter(f => /\.(m?js)$/.test(f)).map(f => fs.readFileSync(path.join(projDir, f))), `${W}x${H}@${fps}`].join('|')).digest('hex').slice(0, 10);
+const chunkDir = path.join(out, `chunks-${chunkKey}`);
 
 async function openStage() {
   const server = http.createServer((req, res) => {
@@ -114,26 +118,33 @@ async function openStage() {
   return { page, close: async () => { await browser.close(); server.close(); } };
 }
 
-async function renderFrames(a, b, file) {
+// Render a list of [a, b) frame chunks. Each chunk is written to a temp file and renamed when
+// complete, so an interrupted render resumes from the last finished chunk.
+async function renderChunks(list) {
+  const todo = list.filter(([a, b]) => !fs.existsSync(path.join(chunkDir, `c-${a}-${b}.mp4`)));
+  if (!todo.length) return;
   const { page, close } = await openStage();
-  const enc = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-',
-    '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'medium', '-crf', DRAFT ? '23' : '15', '-pix_fmt', 'yuv420p', file], { stdio: ['pipe', 'inherit', 'inherit'] });
-  const t0 = Date.now();
-  for (let f = a; f < b; f++) {
-    await page.evaluate((t) => window.__frame(t), f / fps);
-    const buf = await page.screenshot({ type: 'jpeg', quality: 95 });
-    if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
-    if ((f - a) % (fps * 2) === 0) {
-      const done = f - a + 1, rate = done / ((Date.now() - t0) / 1000);
-      log(`[render${segIndex !== null ? ' w' + segIndex : ''}] ${done}/${b - a}  ${rate.toFixed(1)} fps  eta ${((b - f - 1) / rate / 60).toFixed(1)}m`);
+  const t0 = Date.now(); let done = 0; const total = todo.reduce((n, [a, b]) => n + b - a, 0);
+  for (const [a, b] of todo) {
+    const file = path.join(chunkDir, `c-${a}-${b}.mp4`), tmp = file + '.tmp.mp4';
+    // warm up on the previous frame so dissolves, whips and trails have their outgoing image
+    if (a > 0) await page.evaluate((t) => window.__frame(t), (a - 1) / fps);
+    const enc = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-',
+      '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'medium', '-crf', DRAFT ? '23' : '15', '-pix_fmt', 'yuv420p', tmp], { stdio: ['pipe', 'inherit', 'inherit'] });
+    for (let f = a; f < b; f++) {
+      await page.evaluate((t) => window.__frame(t), f / fps);
+      const buf = await page.screenshot({ type: 'jpeg', quality: 95 });
+      if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
+      if (++done % (fps * 4) === 0) { const rate = done / ((Date.now() - t0) / 1000); log(`[render w${segIndex}] ${done}/${total}  ${rate.toFixed(1)} fps  eta ${((total - done) / rate / 60).toFixed(1)}m`); }
     }
+    enc.stdin.end(); await new Promise(r => enc.on('close', r));
+    fs.renameSync(tmp, file);
   }
-  enc.stdin.end(); await new Promise(r => enc.on('close', r));
   await close();
 }
 
 if (SEGMENT) {
-  await renderFrames(f0, f1, path.join(out, `seg-${segIndex}.mp4`));
+  await renderChunks(SEGMENT.split('|')[0].split(';').map(c => c.split(':').map(Number)));
   process.exit(0);
 }
 
@@ -153,20 +164,21 @@ const silent = path.join(out, DRAFT ? 'picture-draft.mp4' : 'picture.mp4');
 const t0 = Date.now();
 if (!(flag('remux') && fs.existsSync(silent))) {
   const N = Number(flag('workers') ?? 1);
-  // split on shot boundaries near even chunk sizes so trails/step state rarely straddles a seam
-  const cuts = [f0];
-  for (let i = 1; i < N; i++) {
-    const target = f0 + Math.round((f1 - f0) * i / N);
-    const b = shots.map(s => Math.round(s.start * fps)).filter(x => x > cuts.at(-1) && x < f1).reduce((best, x) => Math.abs(x - target) < Math.abs(best - target) ? x : best, target);
-    cuts.push(b);
-  }
-  cuts.push(f1);
-  await Promise.all(cuts.slice(0, -1).map((a, i) => new Promise((res, rej) => {
-    const p = spawn(process.execPath, [new URL(import.meta.url).pathname, projDir, `--segment=${a}:${cuts[i + 1]}:${i}`, ...(DRAFT ? ['--draft'] : [])], { stdio: 'inherit' });
+  fs.mkdirSync(chunkDir, { recursive: true });
+  // chunks of ~15s, cut on shot boundaries
+  const bounds = [...new Set([f0, ...shots.map(s => Math.round(s.start * fps)).filter(x => x > f0 && x < f1), f1])].sort((x, y) => x - y);
+  const chunks = []; let a = f0;
+  for (const b of bounds.slice(1)) { if (b - a >= fps * 15 || b === f1) { chunks.push([a, b]); a = b; } }
+  const left = chunks.filter(([x, y]) => !fs.existsSync(path.join(chunkDir, `c-${x}-${y}.mp4`)));
+  log(`[render] ${chunks.length} chunks, ${chunks.length - left.length} already done (cache ${path.basename(chunkDir)})`);
+  // deal remaining chunks out round-robin so every worker gets a mix of heavy and light shots
+  const per = Array.from({ length: N }, () => []); left.forEach((c, i) => per[i % N].push(c));
+  await Promise.all(per.filter(l => l.length).map((l, i) => new Promise((res, rej) => {
+    const p = spawn(process.execPath, [new URL(import.meta.url).pathname, projDir, `--chunks=${l.map(c => c.join(':')).join(';')}|${i}`, ...(DRAFT ? ['--draft'] : [])], { stdio: 'inherit' });
     p.on('close', c => c === 0 ? res() : rej(new Error(`worker ${i} exited ${c}`)));
   })));
   const list = path.join(out, 'segments.txt');
-  fs.writeFileSync(list, cuts.slice(0, -1).map((_, i) => `file 'seg-${i}.mp4'`).join('\n'));
+  fs.writeFileSync(list, chunks.map(([x, y]) => `file '${path.join(chunkDir, `c-${x}-${y}.mp4`)}'`).join('\n'));
   sh('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', silent]);
   log(`[render] ${f1 - f0} frames in ${((Date.now() - t0) / 60000).toFixed(1)}m with ${N} worker(s)`);
 }
