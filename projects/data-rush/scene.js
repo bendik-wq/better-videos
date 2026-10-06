@@ -3,6 +3,7 @@
 // scene + camera + typography layer, driven by shot time and the narration's word timings.
 import * as THREE from 'three';
 import * as K from 'kit';
+import { makeBroll } from './broll.js';
 
 const RED = 0xe0241b, SODIUM = 0xffa860, FLUO = 0x58ffa0, ICE = 0x9fc4ff, PAPER = '#efe7d6';
 const CAP = `font:500 .9em 'Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#d9d2c3;line-height:1.6`;
@@ -161,7 +162,8 @@ const SETS = {
       motes.update(t);
       lamps.forEach(([l, sh], i) => { let on = 1; if (mode === 'lightsOff') on = t < 1.0 + i * 1.2 ? 1 : t < 1.08 + i * 1.2 ? 0.3 : 0.0; if (mode === 'lightsOff' && i === 1 && t > 2.3) on = 0.06;
         l.intensity = 9000 * on; sh.material.uniforms.uI.value = 0.05 * on; });
-      if (mode === 'tail') { camOrbit(camera, { r: 26, a0: -2.1, a1: -1.75, y0: 2, y1: 7, target: [-10, 7, 0], p, t, hand: 0.05 }); }
+      if (mode === 'top') { const k = K.inOut(p); camera.position.set(K.lerp(-10, 10, k), 82, 14); camera.lookAt(K.lerp(-3, 3, k), 0, 0); }
+      else if (mode === 'tail') { camOrbit(camera, { r: 26, a0: -2.1, a1: -1.75, y0: 2, y1: 7, target: [-10, 7, 0], p, t, hand: 0.05 }); }
       else if (mode === 'lightsOff') { camOrbit(camera, { r: 52, a0: 0.95, a1: 0.85, y0: 17, y1: 19, target: [0, 3, 0], p, t, hand: 0.04 }); }
       else camOrbit(camera, { r: 50, a0: 0.45, a1: 0.8, y0: 10, y1: 15, target: [0, 3.5, 0], p, t, hand: 0.05 });
       if (cap) cap.style.opacity = K.range(t, 0.6, 1.4);
@@ -645,6 +647,8 @@ const SETS = {
     } };
   },
 };
+
+Object.assign(SETS, makeBroll({ THREE, K, base, mesh, std, camOrbit, caption, wt, canvasTex, fakeText, P, CAP, SERIF, RED }));
 
 // Instrument Serif draws '1' like an 'l', so the brand name gets a sans '1'.
 function brandify(el) {

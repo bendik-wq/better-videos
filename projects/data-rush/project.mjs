@@ -136,6 +136,79 @@ const shots = [
   { id: 'end', set: 'title', params: { title: 'The Data Rush', sub: 'micro1.ai/data-partnerships · LINK IN DESCRIPTION', end: true }, min: 9 },
 ];
 
+// ---------------------------------------------------------------------------
+// RE-CUT: more clips, no repeats. LOOK swaps a shot's opening visual; BEATS cut to
+// new visuals on spoken words. The renderer refuses to output any visual twice.
+const LOOK = {
+  s003: ['court', {}],
+  s009: ['balance', { from: 0.2, to: -0.12 }],
+  s010: ['vault', { open: [0, 0.5] }],
+  s012: ['terminal', {}],
+  s013: ['cash', { pallets: 6 }],
+  s021: ['globe', {}],
+  s025: ['tunnel', { color: 0x9fc4ff, speed: 1.5 }],
+  s030: ['rack', { color: 0x9fc4ff }],
+  s032: ['hourglass', { fill: [0.05, 0.2], close: true }],
+  s038: ['press', { masthead: 'The Daily Record', headline: 'THE COPYRIGHT WARS' }],
+  s039: ['lock', { word: 'licensed' }],
+  s044: ['conveyor', { color: 0xff4a3d }],
+  s047: ['rack', { color: 0xff9f6a }],
+  s048: ['boardroom', { cam: 'top' }],
+  s049: ['rack', { cam: 'low', color: 0x7dffb0 }],
+  s051: ['wall', { mode: 'dark', words: ['Wikipedia'] }],
+  s053: ['clock', {}],
+  s057: ['truck', { view: 'side' }],
+  s062: ['city', { mode: 'dawn', seed: 11 }],
+  s069: ['mine', { color: 0xffc040 }],
+  s074: ['tunnel', { color: 0xfff0dc, speed: 2.2 }],
+  s079: ['hero', { prop: 'drive', cam: 'top' }],
+  s089: ['cash', { pallets: 9, flip: true }],
+  s091: ['truck', { view: 'aerial', color: 0x1d4f7a }],
+  s093: ['contract', { title: 'MASTER SERVICES AGREEMENT' }],
+  s097: ['plane', { mode: 'top' }],
+  s098: ['vault', { open: [0.2, 1] }],
+  s040: ['merge', {}],
+};
+const BEATS = {
+  s002: [['gates', 'city', { mode: 'lightsoff', seed: 5 }]],
+  s003: [['powerful', 'auction', { bids: [{ label: 'PADDLE', amount: '07' }, { label: 'PADDLE', amount: '12' }, { label: 'PADDLE', amount: '31' }] }], ['planes', 'plane', { mode: 'tail' }]],
+  s010: [['one', 'chess', { close: true }]],
+  s012: [['first', 'city', { mode: 'lightson', seed: 9, caption: 'FACEBOOK · FIRST OUTSIDE INVESTOR · 2004' }], ['man', 'orb', { mode: 'reveal', word: 'crystal' }]],
+  s013: [['maybe', 'boardroom', {}], ['limited', 'hourglass', { fill: [0.5, 0.7] }]],
+  s015: [['enough', 'terminal', { red: true }]],
+  s016: [['same', 'magnifier', {}]],
+  s018: [['idea', 'tunnel', { color: 0xffc890, speed: 0.6 }]],
+  s022: [['critics', 'rack', { cam: 'low', color: 0x8fc8ff }]],
+  s023: [['who', 'crowd', {}]],
+  s024: [['remember', 'mine', {}]],
+  s025: [['every', 'city', { seed: 3 }]],
+  s030: [['feed', 'bubbles', {}]],
+  s038: [['december', 'hero', { prop: 'gavel', cam: 'top', caption: 'NYT v. OPENAI & MICROSOFT · DEC 2023' }]],
+  s039: [['paper', 'contract', { title: 'DATA LICENSE AGREEMENT' }]],
+  s047: [['nature', 'hero', { prop: 'chip', cam: 'push', caption: 'NATURE · 2024 · “MODEL COLLAPSE”' }], ['researchers', 'city', { mode: 'lightsoff', seed: 31 }]],
+  s048: [['biggest', 'wall', { mode: 'dark', question: true }]],
+  s052: [['hand', 'stamp', { word: 'approvals' }]],
+  s057: [['thousands', 'dispatch', {}], ['broke', 'truck', { view: 'front' }]],
+  s058: [['thousands', 'conveyor', { color: 0x7dffb0 }]],
+  s069: [['longer', 'hourglass', { fill: [0.6, 0.92] }]],
+  s071: [['bidding', 'auction', { flip: true, bids: [{ label: 'Google', amount: '$10M' }, { label: 'Mercor', amount: '$7.5M' }, { label: 'micro1', amount: '$12.5M', red: true }] }]],
+  s074: [['once', 'window', { close: [0.35, 0.55] }]],
+  s076: [['today', 'contract', { title: 'DATA PARTNERSHIP AGREEMENT' }], ['waiting', 'clock', { fast: true }]],
+  s082: [['package', 'conveyor', { color: 0xffffff, flip: true }]],
+  s086: [['identifying', 'lock', { word: 'stripped', close: true }]],
+  s088: [['approved', 'stamp', { word: 'approved', text: 'APPROVED' }]],
+  s020: [['objects', 'magnifier', { pos: 'palantir' }]],
+  s040: [['meta', '@orig']],
+  s059: [['which', 'dominoes', { word: 'outcome' }]],
+  s091: [['help', 'archive', { cam: 'desk' }], ['lab', 'corridor', { color: 'green', speed: 0.6 }]],
+};
+for (const s of shots) {
+  const orig = [s.set, s.params];
+  if (LOOK[s.id]) [s.set, s.params] = LOOK[s.id];
+  if (BEATS[s.id]) BEATS[s.id] = BEATS[s.id].map(b => b[1] === '@orig' ? [b[0], ...orig] : b);
+  if (BEATS[s.id]) s.beats = BEATS[s.id];
+}
+
 export default {
   title: 'The Data Rush',
   fps: 30,

@@ -45,7 +45,7 @@ if (SEGMENT) {
   const speak = (t) => Object.entries(say).reduce((x, [k, v]) => x.replace(new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), v), t);
   const v = project.voice.engine ? project.voice : { engine: 'piper', ...project.voice };
   const jobs = path.join(out, 'vo-jobs.json');
-  fs.writeFileSync(jobs, JSON.stringify({ voice: v, root: ROOT, cache: path.join(ROOT, '.cache', 'vo'), shots: project.shots.filter(s => s.vo).map(s => ({ id: s.id, text: speak(s.vo) })) }));
+  fs.writeFileSync(jobs, JSON.stringify({ voice: v, root: ROOT, cache: path.join(ROOT, '.cache', 'vo'), shots: project.shots.filter(s => s.vo).map(s => ({ id: s.id, text: speak(s.vo), display: s.vo })) }));
   const vo = JSON.parse(sh('python3', [path.join(ROOT, 'engine', 'voice.py'), jobs]));
   const tm = { padIn: 0.25, padOut: 0.35, ...(project.timing ?? {}) };
   let T = 0;
@@ -62,9 +62,27 @@ if (SEGMENT) {
     T += s.duration;
     return s;
   });
+  // beats: a shot's narration can cut to several visuals, each starting on a spoken word
+  shots = shots.flatMap((s) => {
+    if (!s.beats?.length) return [s];
+    const norm = (w) => w.toLowerCase().replace(/[^a-z0-9$%.]/g, '').replace(/\.$/, '');
+    const cuts = [0]; let from = 0;
+    for (const [word] of s.beats) { const i = s.words.findIndex((w, j) => j >= from && norm(w.w).startsWith(norm(word)));
+      if (i < 0) throw new Error(`beat word "${word}" not found in ${s.id}: ${s.vo}`); from = i + 1; cuts.push(s.words[i].s - 0.08); }
+    const looks = [[s.set, s.params], ...s.beats.map(([, set, params]) => [set, params ?? {}])];
+    return looks.map(([set, params], k) => {
+      const a = cuts[k], b = k + 1 < cuts.length ? cuts[k + 1] : s.duration;
+      return { ...s, id: k ? `${s.id}.${k}` : s.id, set, params, start: s.start + a, duration: b - a, beats: undefined,
+        voFile: k ? undefined : s.voFile, words: s.words.map(w => ({ ...w, s: +(w.s - a).toFixed(3), e: +(w.e - a).toFixed(3) })) };
+    });
+  });
+  // never show the same visual twice
+  const seen = new Map();
+  for (const s of shots) { if (['chapter'].includes(s.set)) continue; const key = s.set + JSON.stringify(s.params ?? {});
+    if (seen.has(key)) throw new Error(`repeated visual: ${s.id} duplicates ${seen.get(key)} (${s.set})`); seen.set(key, s.id); }
   fs.writeFileSync(tlPath, JSON.stringify(shots, null, 1));
   const m = Math.floor(T / 60), sec = (T % 60).toFixed(1);
-  log(`[timeline] ${shots.length} shots, ${m}m${sec}s @ ${fps}fps ${W}x${H}`);
+  log(`[timeline] ${shots.length} clips, ${m}m${sec}s @ ${fps}fps ${W}x${H}`);
   if (flag('vo-only')) process.exit(0);
 }
 const total = shots.at(-1).start + shots.at(-1).duration;

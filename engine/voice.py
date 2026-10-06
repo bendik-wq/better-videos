@@ -62,6 +62,34 @@ def align(path):
     return [{"w": w.word.strip(), "s": round(float(w.start), 3), "e": round(float(w.end), 3)} for s in segs for w in s.words]
 
 
+def script_align(text, heard):
+    """Map the script's own words onto whisper's timings. Whisper writes numbers as digits and
+    mishears names, so matched words take whisper's times and the rest are interpolated
+    between neighbouring anchors. Visual cues can then key off the words as written."""
+    import difflib, re
+    norm = lambda w: re.sub(r"[^a-z0-9]", "", w.lower())
+    toks = text.split()
+    a = [norm(t) for t in toks]; b = [norm(w["w"]) for w in heard]
+    times = [None] * len(toks)
+    for blk in difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
+        for k in range(blk.size):
+            times[blk.a + k] = (heard[blk.b + k]["s"], heard[blk.b + k]["e"])
+    end = heard[-1]["e"] if heard else 0.0
+    # character-weighted interpolation for unmatched runs
+    i = 0
+    while i < len(toks):
+        if times[i] is not None: i += 1; continue
+        j = i
+        while j < len(toks) and times[j] is None: j += 1
+        t0 = times[i - 1][1] if i > 0 else 0.0
+        t1 = times[j][0] if j < len(toks) else end
+        w = [max(1, len(a[k])) for k in range(i, j)]; tot = sum(w); acc = 0
+        for k in range(i, j):
+            s0 = t0 + (t1 - t0) * acc / tot; acc += w[k - i]; times[k] = (s0, t0 + (t1 - t0) * acc / tot)
+        i = j
+    return [{"w": t, "s": round(x[0], 3), "e": round(x[1], 3)} for t, x in zip(toks, times)]
+
+
 ENGINES = {"kokoro": say_kokoro, "elevenlabs": say_elevenlabs, "piper": say_piper}
 out = {}
 for s in jobs["shots"]:
@@ -73,5 +101,5 @@ for s in jobs["shots"]:
     if not os.path.exists(wj):
         json.dump(align(wav), open(wj, "w"))
     with wave.open(wav) as w: dur = w.getnframes() / w.getframerate()
-    out[s["id"]] = {"wav": wav, "words": json.load(open(wj)), "dur": dur}
+    out[s["id"]] = {"wav": wav, "words": script_align(s.get("display", s["text"]), json.load(open(wj))), "dur": dur}
 print(json.dumps(out))
