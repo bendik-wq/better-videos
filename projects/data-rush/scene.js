@@ -28,11 +28,27 @@ function fakeText(x, w, h, { seed = 1, color = 'rgba(40,40,40,.85)', lines = 22,
 }
 function std(color, o = {}) { return new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.2, ...o }); }
 function mesh(geo, mat, pos = [0, 0, 0], parent) { const m = new THREE.Mesh(geo, mat); m.position.set(...pos); m.castShadow = m.receiveShadow = true; parent?.add(m); return m; }
+// Camera language. The runtime picks an angle per shot (CAM.style); every set's move is
+// re-interpreted through it, so the same set never looks the same twice.
+export const CAM = { style: 'orbit' };
 function camOrbit(camera, { r = 10, a0 = -0.4, a1 = 0.1, y0 = 2, y1 = 3, target = [0, 1, 0], p, t, hand = 0.03, seed = 0 }) {
-  const k = K.inOut(p), a = K.lerp(a0, a1, k), h = K.handheld(t, hand, seed);
+  camera.userData.fov0 ??= camera.fov;
+  let fov = camera.userData.fov0, roll = 0; const ty = target[1];
+  let k = K.inOut(p), a = K.lerp(a0, a1, k), y = K.lerp(y0, y1, k); const h = K.handheld(t, hand, seed);
   r *= K.lerp(1.08, 0.93, k); // every move also creeps in, like a dolly on a long lens
-  camera.position.set(target[0] + Math.sin(a) * r + h.x, K.lerp(y0, y1, k) + h.y, target[2] + Math.cos(a) * r);
-  camera.lookAt(...target); camera.rotation.z += h.r;
+  switch (CAM.style) {
+    case 'low': r *= 0.72; y = Math.max(0.12, ty * 0.12); fov = fov * 1.25; break;                       // ground-level hero angle
+    case 'god': { const sweep = K.lerp(a0, a0 + 0.9, k); camera.position.set(target[0] + Math.sin(sweep) * r * 0.18, ty + r * 1.35, target[2] + Math.cos(sweep) * r * 0.18);
+      camera.up.set(Math.sin(sweep), 0, Math.cos(sweep)); camera.lookAt(...target); camera.up.set(0, 1, 0); camera.fov = fov; camera.updateProjectionMatrix(); return; }
+    case 'dutch': roll = K.lerp(0.1, 0.2, k) * (seed % 2 ? 1 : -1); break;
+    case 'crane': y = K.lerp(ty + r * 1.2, ty + r * 0.12, K.outCubic(p)); r *= K.lerp(1.15, 0.85, k); break;  // drop from high to eye level
+    case 'reveal': a = a0 - 1.7 * (1 - K.outCubic(p)) ; break;                                              // big sweep that lands and settles
+    case 'macro': r *= 0.42; y = ty + (y - ty) * 0.35; fov = fov * 0.7; break;                              // tight, long lens
+    case 'whip': a = a1 + 1.4 * Math.pow(1 - K.outExpo(K.clamp(p * 1.4)), 1); break;                         // snaps in from the side
+  }
+  camera.position.set(target[0] + Math.sin(a) * r + h.x, y + h.y, target[2] + Math.cos(a) * r);
+  camera.lookAt(...target); camera.rotation.z += h.r + roll;
+  if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
 }
 function dispose(obj) {
   obj.traverse(o => { o.geometry?.dispose?.(); const m = o.material; (Array.isArray(m) ? m : m ? [m] : []).forEach(mm => { for (const k in mm) if (mm[k]?.isTexture) mm[k].dispose(); mm.dispose(); }); });
@@ -187,7 +203,7 @@ const SETS = {
     const im = new THREE.InstancedMesh(geo, mat, N); scene.add(im);
     const seeds = Array.from({ length: N }, () => [(r() - 0.5) * 34, (r() - 0.5) * 16, r() * 220, r() * 6.28, 0.5 + r()]);
     const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), v = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1);
-    const glow = new THREE.PointLight(0x9fc4ff, 0, 0); scene.add(glow);
+    const glow = new THREE.PointLight(0x9fc4ff, 0, 0); scene.add(glow); let heroCard = null;
     if (shot.params.counters) K.div(layer, 'left:0;right:0;top:0;height:42%;background:linear-gradient(#000e,#0000);opacity:1');
     const counters = (shot.params.counters || []).map((c, i) => K.div(layer, `left:${6 + i * 30}%;top:9%;${SERIF};line-height:1;text-shadow:0 0 30px #000`,
       `<div class="v" style="font-size:7em;letter-spacing:-.02em"></div><div style="${CAP};margin-top:.4em">${c.label}</div>`));
@@ -197,7 +213,11 @@ const SETS = {
         e.set(Math.sin(t * 0.3 + rot) * 0.4, rot + t * 0.1 * s, Math.cos(t * 0.2 + rot) * 0.3); q.setFromEuler(e);
         v.set(x + Math.sin(z * 0.03 + rot) * 2, y + Math.cos(z * 0.025 + rot) * 1.5, z); m4.compose(v, q, one); im.setMatrixAt(i, m4); }
       im.instanceMatrix.needsUpdate = true;
-      const h = K.handheld(t, 0.08, 7); camera.position.set(h.x, h.y, 14); camera.lookAt(0, 0, -40); camera.rotation.z += h.r;
+      // ride alongside a single email as it tumbles through the storm
+      const hz = -30 + t * speed * 1.1; const hx = Math.sin(t * 0.4) * 2.5, hy = Math.cos(t * 0.33) * 1.2;
+      const h = K.handheld(t, 0.06, 7); camera.position.set(hx - 1.6 + h.x, hy + 0.6 + h.y, hz + 4.2); camera.lookAt(hx, hy, hz - 6); camera.rotation.z += h.r + Math.sin(t * 0.5) * 0.12;
+      if (!heroCard) { heroCard = new THREE.Mesh(geo, mat.clone()); heroCard.material.onBeforeCompile = () => {}; scene.add(heroCard); }
+      heroCard.position.set(hx, hy, hz); heroCard.rotation.set(Math.sin(t) * 0.4, t * 0.6, Math.cos(t * 0.8) * 0.3); heroCard.scale.setScalar(1.6);
       (shot.params.counters || []).forEach((c, i) => { const t0 = wt(shot, c.word); const k = K.range(t, t0, t0 + 1.1);
         counters[i].style.opacity = k > 0 ? 1 : 0; counters[i].querySelector('.v').textContent = Math.round(c.value * K.outExpo(k)) + c.unit; });
     } };
@@ -221,7 +241,11 @@ const SETS = {
     const loop = P0.highlight !== undefined ? K.markerLoop(svg, { cx: 0, cy: 0, rx: 100, ry: 100, seed: 3, width: 6 }) : null;
     loop?.setAttribute('vector-effect', 'non-scaling-stroke');
     return { ...b, update(t, p) {
-      camOrbit(camera, { r: 40, a0: -0.18, a1: 0.12, y0: 7, y1: 6, target: [0, 4.2, 0], p, t, hand: 0.03 });
+      // crane with the growth: the camera rises as the newest column rises, then settles wide
+      const grow = items.reduce((m, it, i) => { if (!it.word || P0.settled) return m; const t0 = wt(shot, it.word) - 0.1; const g = K.outExpo(K.range(t, t0, t0 + 1.2)); return t >= t0 ? { i, g, h: it.value * H * g } : m; }, null);
+      if (grow) { const x = cols[grow.i].position.x; const k2 = K.smooth(K.range(t, wt(shot, items[grow.i].word) + 1.4, shot.duration));
+        camera.position.set(K.lerp(x + 6, 0, k2), K.lerp(Math.max(1.2, grow.h * 0.9), 6, k2), K.lerp(16, 40, k2)); camera.lookAt(K.lerp(x, 0, k2), K.lerp(grow.h * 0.75, 4.2, k2), 0); }
+      else camOrbit(camera, { r: 40, a0: -0.18, a1: 0.12, y0: 7, y1: 6, target: [0, 4.2, 0], p, t, hand: 0.03 });
       title.style.opacity = K.range(t, 0, 0.5); if (src) src.style.opacity = K.range(t, 0.4, 1) * 0.9;
       items.forEach((it, i) => {
         const t0 = P0.settled || !it.word ? -1 : wt(shot, it.word) - 0.1;
@@ -684,24 +708,41 @@ export default async function create(ctx) {
     for (const [id, v] of live) if (v.index < index - 1) { dispose(v.inst.scene); v.inst.layer.remove(); live.delete(id); }
     return live.get(shot.id).inst;
   };
-  // short dissolve between consecutive shots (not into or out of chapter/title cards, which hard-cut on a hit)
-  const DISSOLVE = 0.3, HARD = new Set(['chapter', 'title']);
+  // Cuts carry motion: whip pans and push-throughs with smear, dissolves into/out of type.
+  const HARD = new Set(['chapter', 'title']);
+  const TEXT = new Set(['list', 'quote', 'numbers', 'curve', 'chapter', 'title', 'disclosure', 'endcard', 'name', 'scrub']);
+  const ANGLES = ['reveal', 'low', 'crane', 'dutch', 'orbit', 'god', 'macro', 'whip'];
+  const hash = (str) => { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+  const angleFor = (i) => { const sh = shots[i]; if (!sh) return 'orbit'; if (sh.params?.angle) return sh.params.angle; if (TEXT.has(sh.set) || sh.set === 'bars') return 'orbit';
+    let a = ANGLES[hash(sh.id) % ANGLES.length]; if (i > 0 && a === angleFor.cache?.[i - 1]) a = ANGLES[(hash(sh.id) + 3) % ANGLES.length]; (angleFor.cache ??= {})[i] = a; return a; };
+  for (let i = 0; i < shots.length; i++) angleFor(i);
+  const transFor = (i) => { const sh = shots[i], pv = shots[i - 1]; if (!pv || HARD.has(sh.set) || HARD.has(pv.set)) return 'cut';
+    if (sh.params?.trans) return sh.params.trans; if (TEXT.has(sh.set) || TEXT.has(pv.set)) return 'dissolve';
+    return ['whip', 'push', 'dissolve', 'whip', 'push'][hash(sh.id + 'x') % 5]; };
+  const DUR = { dissolve: 0.3, whip: 0.42, push: 0.38, cut: 0 };
   const prev = document.createElement('canvas'); prev.width = width; prev.height = height; const px = prev.getContext('2d');
+  const smear = (img, x0, dx, taps, alpha, sx = 1) => { for (let i = 0; i < taps; i++) { const f = taps > 1 ? i / (taps - 1) - 0.5 : 0; cx.globalAlpha = alpha / Math.max(1, taps * 0.55);
+    const w = width * sx, hgt = height * sx; cx.drawImage(img, x0 + f * dx - (w - width) / 2, -(hgt - height) / 2 + (sx !== 1 ? f * dx * 0.3 : 0), w, hgt); } cx.globalAlpha = 1; };
   let lastShot = null;
   return {
     frame({ shot, t, p, index }) {
       const inst = get(shot, index);
       if (lastShot && lastShot.id !== shot.id) px.drawImage(comp, 0, 0); // freeze the outgoing frame
-      const before = lastShot && lastShot.id !== shot.id ? lastShot : null;
+      const continuous = lastShot && (lastShot.id !== shot.id || lastShot.id === shot.id);
       for (const v of live.values()) v.inst.layer.style.display = v.inst === inst ? 'block' : 'none';
+      CAM.style = angleFor.cache[index] ?? 'orbit';
       inst.update(t, p);
       bars.forEach(d => { d.style.display = inst.scope ? 'block' : 'none'; });
       renderer.render(inst.scene, inst.camera);
-      const prevShot = index > 0 ? shots[index - 1] : null;
-      const blend = prevShot && !HARD.has(shot.set) && !HARD.has(prevShot.set) && t < DISSOLVE && (before || lastShot?.id === shot.id);
-      if (blend) {
-        const k = K.smooth(t / DISSOLVE);
-        cx.globalAlpha = 1; cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1;
+      const tr = transFor(index), T = DUR[tr];
+      if (continuous && T && t < T) {
+        const k = K.smooth(t / T), dir = hash(shot.id) % 2 ? 1 : -1;
+        cx.fillStyle = '#000'; cx.fillRect(0, 0, width, height);
+        if (tr === 'whip') { const e = K.inOut(t / T), blur = Math.sin(Math.PI * e) * width * 0.12;
+          smear(prev, -dir * e * width, blur, 9, 1); smear(gl, dir * (1 - e) * width, blur, 9, 1); }
+        else if (tr === 'push') { const e = K.inOut(t / T);
+          smear(prev, 0, Math.sin(Math.PI * e) * 60, 6, 1 - e, 1 + e * 0.6); smear(gl, 0, Math.sin(Math.PI * e) * 60, 6, e, 0.85 + e * 0.15); }
+        else { cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; }
         inst.layer.style.opacity = k;
       } else {
         inst.layer.style.opacity = 1;
