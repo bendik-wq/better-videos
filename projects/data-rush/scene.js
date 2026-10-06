@@ -4,6 +4,8 @@
 import * as THREE from 'three';
 import * as K from 'kit';
 import { makeBroll } from './broll.js';
+import { makeCinema } from './cinema.js';
+import * as C from '/engine/cine.js';
 
 const RED = 0xe0241b, SODIUM = 0xffa860, FLUO = 0x58ffa0, ICE = 0x9fc4ff, PAPER = '#efe7d6';
 const CAP = `font:500 .9em 'Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#d9d2c3;line-height:1.6`;
@@ -28,6 +30,7 @@ function std(color, o = {}) { return new THREE.MeshStandardMaterial({ color, rou
 function mesh(geo, mat, pos = [0, 0, 0], parent) { const m = new THREE.Mesh(geo, mat); m.position.set(...pos); m.castShadow = m.receiveShadow = true; parent?.add(m); return m; }
 function camOrbit(camera, { r = 10, a0 = -0.4, a1 = 0.1, y0 = 2, y1 = 3, target = [0, 1, 0], p, t, hand = 0.03, seed = 0 }) {
   const k = K.inOut(p), a = K.lerp(a0, a1, k), h = K.handheld(t, hand, seed);
+  r *= K.lerp(1.08, 0.93, k); // every move also creeps in, like a dolly on a long lens
   camera.position.set(target[0] + Math.sin(a) * r + h.x, K.lerp(y0, y1, k) + h.y, target[2] + Math.cos(a) * r);
   camera.lookAt(...target); camera.rotation.z += h.r;
 }
@@ -649,6 +652,7 @@ const SETS = {
 };
 
 Object.assign(SETS, makeBroll({ THREE, K, base, mesh, std, camOrbit, caption, wt, canvasTex, fakeText, P, CAP, SERIF, RED }));
+Object.assign(SETS, makeCinema({ THREE, K, base, mesh, std, caption, wt, canvasTex, fakeText, makeOrb, RED }));
 
 // Instrument Serif draws '1' like an 'l', so the brand name gets a sans '1'.
 function brandify(el) {
@@ -661,6 +665,9 @@ function brandify(el) {
 // ---------------------------------------------------------------- runtime
 export default async function create(ctx) {
   const { renderer, width, height, shots } = ctx;
+  await C.preload(renderer, { hdris: ['qwantani_dusk_2', 'moonless_golf', 'kloppenheim_06_puresky', 'industrial_sunset_puresky'] });
+  // 2.39:1 scope bars for cinematic sequences
+  const bars = [0, 1].map(i => { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:0;right:0;${i ? 'bottom' : 'top'}:0;height:${(height - width / 2.39) / 2}px;background:#000;display:none;z-index:5`; ctx.overlay.appendChild(d); return d; });
   const gl = renderer.domElement;
   const comp = document.createElement('canvas'); comp.width = width; comp.height = height;
   comp.style.cssText = `position:absolute;inset:0;width:${width}px;height:${height}px`;
@@ -688,6 +695,7 @@ export default async function create(ctx) {
       const before = lastShot && lastShot.id !== shot.id ? lastShot : null;
       for (const v of live.values()) v.inst.layer.style.display = v.inst === inst ? 'block' : 'none';
       inst.update(t, p);
+      bars.forEach(d => { d.style.display = inst.scope ? 'block' : 'none'; });
       renderer.render(inst.scene, inst.camera);
       const prevShot = index > 0 ? shots[index - 1] : null;
       const blend = prevShot && !HARD.has(shot.set) && !HARD.has(prevShot.set) && t < DISSOLVE && (before || lastShot?.id === shot.id);

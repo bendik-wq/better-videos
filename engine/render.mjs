@@ -109,7 +109,7 @@ async function openStage() {
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   page.on('console', m => { if (m.type() === 'error' && !m.text().includes('404')) log('[page]', m.text()); if (m.text().startsWith('[scene]')) log('[page]', m.text()); });
   page.on('pageerror', e => { console.error('[page error]', e); process.exit(1); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/engine/stage.html?project=/${path.relative(ROOT, projDir)}`);
+  await page.goto(`http://127.0.0.1:${server.address().port}/engine/stage.html?project=/${path.relative(ROOT, projDir)}${process.env.STAGE_QS ?? ''}`);
   await page.evaluate(async (cfg) => window.__setup(cfg), { shots: shots.map(pageShot), width: W, height: H, fps, draft: DRAFT });
   return { page, close: async () => { await browser.close(); server.close(); } };
 }
