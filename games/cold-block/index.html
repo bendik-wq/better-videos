@@ -112,6 +112,11 @@ body { font-family: var(--display); -webkit-user-select: none; user-select: none
 .servers button:hover { border-color: var(--hud); }
 .servers button span { font-family: var(--mono); font-size: 13px; font-weight: 400; color: var(--olive); }
 .servers .empty { font-family: var(--mono); font-size: 13px; color: var(--dim); }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 700 17px var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--hud); background: rgba(236,230,214,0.05); border: 1px solid var(--rule); padding: 8px 14px; cursor: pointer; }
+.seg button:hover { border-color: var(--hud); }
+.seg button[aria-pressed="true"] { background: var(--signal); border-color: var(--signal); color: var(--ink); }
+.hint { font-family: var(--mono); font-size: 12px; color: var(--dim); line-height: 1.5; }
 .check { display: flex; gap: 10px; align-items: center; font-size: 17px; color: var(--hud); cursor: pointer; }
 .check input { width: 18px; height: 18px; accent-color: var(--signal); }
 .keys { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 18px; font-size: 16px; color: var(--dim); }
@@ -448,7 +453,6 @@ const P = { pos: new V3(), vel: new V3(), yaw: 0, pitch: 0, onGround: true, crou
 const keys = {};
 let T = 0, state = "menu", mySrv = "main", myName = cleanName(store.get("name", "")) || "Player" + Math.floor(Math.random() * 900 + 100), myColor = store.get("color", COLORS[Math.floor(Math.random() * COLORS.length)]);
 if (!COLORS.includes(myColor)) myColor = COLORS[0];
-let botsWanted = store.get("bots", true);
 
 // ================= weapons =================
 const WEAPONS = [
@@ -671,14 +675,8 @@ function startReload() { const w = WEAPONS[wIdx]; if (reloadEnd || ammo[wIdx] >=
 function switchWeapon(i) { if (i === wIdx || i < 0 || i >= WEAPONS.length) return; wIdx = i; reloadEnd = 0; switchT = T + 0.35; buildViewmodel(); }
 const WNAME = (i) => (i === 5 ? "Knife" : i === 6 ? "Car" : (WEAPONS[i] || WEAPONS[0]).name);
 function dealDamage(who, dmg, head, w) {
-  if (who.isBot) {
-    who.hp -= dmg; who.lastHurt = T; who.alert = P.pos.clone();
-    const kill = who.hp <= 0;
-    hitmarker(kill);
-    if (kill) { who.dead = true; who.respawnT = T + 4; who.d++; creditKill(who.nm, who.c, w, head); killFeed(myName, myColor, who.nm, who.c, WNAME(w), head); }
-    return;
-  }
-  hSeq++; hitLog.push([who.id, hSeq, clamp(dmg, 1, 200), head ? 1 : 0, w]); while (hitLog.length > 10) hitLog.shift();
+  if (who.isBot && botAuth) { if (!botTakeDamage(who, dmg, myId(), w, head)) hitmarker(false); return; }
+  hSeq++; hitLog.push([who.id, hSeq, clamp(dmg, 1, 200), head ? 1 : 0, w]); while (hitLog.length > 16) hitLog.shift();
   hitmarker(false);
   pushPresence(true);
 }
@@ -701,7 +699,7 @@ function die(from, w, head) {
   P.killer = from;
   $("deathMsg").hidden = false; $("deathBy").textContent = from ? `by ${from.nm} · ${WNAME(w)}${head ? " · headshot" : ""}` : "";
   if (from) killFeed(from.nm, from.c, myName, myColor, WNAME(w), head);
-  if (from && from.isBot) { from.k++; from.score += 100; }
+  if (from && from.isBot && botAuth) { from.k++; from.score += 100; }
   pushPresence(true);
 }
 function respawn() {
@@ -792,38 +790,190 @@ function movePlayer(dt) {
 }
 
 // ================= bots =================
-const BOT_NAMES = ["Mason", "Woods", "Hudson", "Reznov", "Bowman", "Weaver"];
-function spawnBots() {
-  if (bots.length) return;
-  BOT_NAMES.slice(0, 5).forEach((nm, i) => { const b = makeAvatar("bot:" + nm, nm, COLORS[(i + 3) % COLORS.length], true); b.pos.copy(pick(SPAWNS)); b.rpos.copy(b.pos); b.node = pick(PATROL); b.fireT = 0; b.burst = 0; b.alert = null; b.lastHurt = -9; bots.push(b); });
+// The player who has been on the server longest is the host: their game simulates every bot and
+// shares bot state in its presence. Everyone else renders those bots and reports hits to the host.
+const BOT_NAMES = ["Mason", "Woods", "Hudson", "Reznov", "Bowman", "Weaver", "Dragovich", "Kravchenko", "Steiner", "Brooks", "Harris", "Lewis", "Clarke", "Petrenko", "Sokolov", "Volkov"];
+const DIFFS = [
+  { name: "Recruit", desc: "Slow to react, poor aim, 70 health.", hp: 70, react: 0.9, acc: 0.55, dmg: 0.55, sight: 45, speed: 0.85, strafe: 0, crouch: 0 },
+  { name: "Regular", desc: "A fair fight. Half-second reactions.", hp: 100, react: 0.55, acc: 0.8, dmg: 0.85, sight: 65, speed: 1, strafe: 0.3, crouch: 0.1 },
+  { name: "Hardened", desc: "Quick and accurate. Strafe and crouch in fights.", hp: 115, react: 0.32, acc: 1.05, dmg: 1.1, sight: 85, speed: 1.1, strafe: 0.7, crouch: 0.3 },
+  { name: "Veteran", desc: "Near-instant reactions, 130 health, and they hunt you down.", hp: 130, react: 0.18, acc: 1.35, dmg: 1.4, sight: 110, speed: 1.2, strafe: 1, crouch: 0.4, hunt: true },
+];
+const BOT_COUNTS = [0, 4, 8, 12, 16];
+// per-weapon behaviour: seconds between shots, burst length, pause between bursts, base damage, effective range
+const BOT_GUNS = [
+  { w: 2, rof: 0.12, burst: [4, 8], pause: [0.8, 1.6], dmg: 13, range: 55 },
+  { w: 1, rof: 0.08, burst: [6, 12], pause: [0.9, 1.5], dmg: 9, range: 28 },
+  { w: 3, rof: 0.95, burst: [1, 1], pause: [0, 0], dmg: 42, range: 12 },
+  { w: 4, rof: 2.4, burst: [1, 1], pause: [0, 0], dmg: 80, range: 160 },
+];
+const GUN_OF = [0, 1, 0, 2, 0, 3, 1, 0, 2, 0, 1, 3, 0, 1, 0, 2];
+let difIdx = clamp(store.get("dif", 1) | 0, 0, 3), botCount = BOT_COUNTS.includes(store.get("botCount", 8)) ? store.get("botCount", 8) : 8;
+let botAuth = true, botHostId = null, hostDif = difIdx, bkSeq = 0, bkFrom = null, hostBkSeen = 0, myJoinT = Date.now();
+const botKills = []; // [n, botIdx, killerId, weapon, head]
+const myId = () => NET.me || "me";
+function makeBot(idx) {
+  const b = makeAvatar("bot:" + idx, BOT_NAMES[idx], COLORS[(idx + 3) % COLORS.length], true);
+  b.idx = idx; b.gun = BOT_GUNS[GUN_OF[idx]]; b.w = b.gun.w; b.hp = DIFFS[difIdx].hp;
+  b.pos.copy(botSpawn()); b.rpos.copy(b.pos);
+  Object.assign(b, { node: pick(PATROL), fireT: 0, burst: 0, alertPos: null, lastHurt: -9, target: null, seenT: 0, thinkT: Math.random() * 0.3, strafeT: 0, strafeDir: 1, stuckT: 0, stuckP: b.pos.clone(), sc: 0 });
+  bots.push(b); bots.sort((x, y) => x.idx - y.idx); return b;
+}
+function humanPositions() { const a = []; if (state !== "menu" && !P.dead) a.push(P.pos); for (const r of remotes.values()) if (!r.dead) a.push(r.pos); return a; }
+function botSpawn() {
+  const hs = humanPositions(); let best = pick(SPAWNS), bd = -1;
+  for (let i = 0; i < 8; i++) { const s = pick(SPAWNS), d = hs.length ? Math.min(...hs.map((h) => h.distanceTo(s))) : 99; if (d > bd) { bd = d; best = s; } }
+  return best.clone();
 }
 function clearBots() { bots.forEach(dropAvatar); bots = []; }
+function setBotCount(n) { while (bots.length > n) dropAvatar(bots.pop()); for (let i = 0; bots.length < n && i < 16; i++) if (!bots.some((b) => b.idx === i)) makeBot(i); }
+function liveTarget(who) {
+  if (who === "me") return (state === "play" || state === "paused") && !P.dead && !P.passive ? new V3(P.pos.x, P.pos.y + P.eye - 0.25, P.pos.z) : null;
+  if (who.isBot) return who.dead || !bots.includes(who) ? null : new V3(who.pos.x, who.pos.y + (who.crouch ? 0.85 : 1.3), who.pos.z);
+  if (who.dead || who.pas || !remotes.has(who.id)) return null;
+  const p = avatarBase(who); return new V3(p.x, p.y + (who.car >= 0 ? 1.0 : who.crouch ? 0.85 : 1.3), p.z);
+}
+function botThink(b, D) {
+  const eye = new V3(b.pos.x, b.pos.y + 1.55, b.pos.z), cands = [];
+  for (const who of ["me", ...remotes.values(), ...bots]) { if (who === b) continue; const p = liveTarget(who); if (!p) continue; const d = p.distanceTo(eye); if (d < D.sight) cands.push({ who, d: who.isBot ? d * 1.25 : d, p }); }
+  cands.sort((x, y) => x.d - y.d);
+  let found = null;
+  for (let i = 0; i < Math.min(3, cands.length); i++) { const c = cands[i], dist = c.p.distanceTo(eye); if (rayWorld(eye, c.p.clone().sub(eye).normalize(), dist) >= dist - 0.6) { found = c; break; } }
+  if (found) { if (!b.target || b.target !== found.who) b.seenT = T; b.target = found.who; b.alertPos = found.p.clone(); } else b.target = null;
+}
+function nameColorOf(id) {
+  if (id === myId()) return { nm: myName, c: myColor };
+  if (typeof id === "string" && id.startsWith("bot:")) { const b = bots.find((x) => x.id === id); if (b) return { nm: b.nm, c: b.c }; }
+  const r = remotes.get(id); if (r) return { nm: r.nm, c: r.c };
+  return null;
+}
+function posOf(id) { if (id === myId()) return P.pos; const b = bots.find((x) => x.id === id); if (b) return b.pos; const r = remotes.get(id); return r ? r.pos : null; }
+function onBotKilled(b, killerId, w, head) {
+  const k = nameColorOf(killerId);
+  if (k) killFeed(k.nm, k.c, b.nm, b.c, WNAME(w), head); else feed(`${nameSpan(b.nm, b.c)}<span class="w">died</span>`);
+  if (killerId === myId()) creditKill(b.nm, b.c, w, head);
+  if (botAuth && typeof killerId === "string" && killerId.startsWith("bot:")) { const kb = bots.find((x) => x.id === killerId); if (kb) { kb.k++; kb.score += 100; } }
+}
+function botTakeDamage(b, dmg, killerId, w, head) {
+  if (b.dead) return false;
+  b.hp -= dmg; b.lastHurt = T;
+  const kp = posOf(killerId); if (kp) b.alertPos = kp.clone();
+  if (b.hp > 0) return false;
+  b.dead = true; b.respawnT = T + 4; b.d++; b.target = null;
+  bkSeq++; botKills.push([bkSeq, b.idx, killerId, w, head ? 1 : 0]); while (botKills.length > 8) botKills.shift();
+  onBotKilled(b, killerId, w, head);
+  return true;
+}
+function botFire(b, D, dist, tp) {
+  const g = b.gun, who = b.target;
+  b.sc++; b.lastShotSeen = T;
+  const eye = new V3(b.pos.x, b.pos.y + (b.crouch ? 1.0 : 1.45), b.pos.z);
+  let p = g.w === 4 ? 0.32 * D.acc : clamp(D.acc * 0.42 * (1 - dist / (g.range * 2.2)), 0.03, 0.85);
+  if (who === "me") p *= (P.crouch ? 0.8 : 1) * (Math.hypot(P.vel.x, P.vel.z) > 6 ? 0.65 : 1) * (P.car ? 0.6 : 1);
+  let dmg = g.dmg * D.dmg; if (g.w === 3 && dist > g.range) dmg *= 0.35;
+  const hit = Math.random() < p;
+  tracer(eye, hit ? tp : tp.clone().add(new V3((Math.random() - 0.5) * 2.4, (Math.random() - 0.5) * 1.6, (Math.random() - 0.5) * 2.4)));
+  gunSound(WEAPONS[g.w], clamp(1 / (1 + eye.distanceTo(P.pos) / 18), 0.03, 0.8));
+  if (!hit) return;
+  dmg = Math.round(dmg);
+  if (who === "me") takeDamage(dmg, b, false, g.w);
+  else if (who.isBot) botTakeDamage(who, dmg, b.id, g.w, false);
+  else { hSeq++; hitLog.push([who.id, hSeq, dmg, 0, g.w, b.id]); while (hitLog.length > 16) hitLog.shift(); }
+}
 function updateBots(dt) {
+  const D = DIFFS[difIdx];
   for (const b of bots) {
-    if (b.dead) { if (T > b.respawnT) { b.dead = false; b.hp = 100; b.pos.copy(pick(SPAWNS)); b.rpos.copy(b.pos); b.node = pick(PATROL); } animateAvatar(b, dt); continue; }
-    const eye = new V3(b.pos.x, 1.6, b.pos.z), me = new V3(P.pos.x, P.pos.y + P.eye, P.pos.z);
-    const toMe = me.clone().sub(eye), dist = toMe.length();
-    let sees = false;
-    if (state === "play" && !P.dead && !P.passive && dist < 75) { const d = toMe.clone().normalize(); sees = rayWorld(eye, d, dist) >= dist - 0.5; }
-    if (sees) {
-      b.yaw = Math.atan2(-toMe.x, -toMe.z); b.pitch = Math.atan2(toMe.y, Math.hypot(toMe.x, toMe.z));
-      b.fireT -= dt;
-      if (b.fireT <= 0) {
-        if (b.burst <= 0) { b.burst = 4 + Math.floor(Math.random() * 4); b.fireT = 0.9 + Math.random() * 0.8; continue; }
-        b.burst--; b.fireT = 0.12; b.lastShotSeen = T;
-        const pHit = clamp(0.42 - dist / 160, 0.06, 0.42) * (P.crouch ? 0.75 : 1) * (Math.hypot(P.vel.x, P.vel.z) > 6 ? 0.6 : 1) * (P.car ? 0.6 : 1);
-        const aim = me.clone().add(new V3((Math.random() - 0.5) * 2.4, (Math.random() - 0.5) * 1.6, (Math.random() - 0.5) * 2.4));
-        tracer(eye.clone().add(new V3(0, -0.2, 0)), Math.random() < pHit ? me.clone().add(new V3(0, -0.5, 0)) : aim);
-        gunSound(WEAPONS[2], clamp(1 / (1 + dist / 18), 0.05, 0.8));
-        if (Math.random() < pHit) takeDamage(12, b, false, 2);
+    if (b.dead) { if (T > b.respawnT) { b.dead = false; b.hp = D.hp; b.pos.copy(botSpawn()); b.rpos.copy(b.pos); b.node = pick(PATROL); b.alertPos = null; b.crouch = false; } animateAvatar(b, dt); continue; }
+    b.thinkT -= dt; if (b.thinkT <= 0) { b.thinkT = 0.25; botThink(b, D); }
+    let mx = 0, mz = 0, speed = 0;
+    const tp = b.target ? liveTarget(b.target) : null;
+    if (b.target && !tp) b.target = null;
+    if (tp) {
+      const eye = new V3(b.pos.x, b.pos.y + 1.55, b.pos.z), to = tp.clone().sub(eye), dist = to.length();
+      b.yaw = Math.atan2(-to.x, -to.z); b.pitch = Math.atan2(to.y, Math.hypot(to.x, to.z));
+      b.crouch = D.crouch > 0 && b.gun.w !== 1 && ((b.idx * 7 + Math.floor(T / 3)) % 10) < D.crouch * 10;
+      if (D.strafe > 0 && b.gun.w !== 4) {
+        b.strafeT -= dt; if (b.strafeT <= 0) { b.strafeT = 0.6 + Math.random(); b.strafeDir = Math.random() < 0.5 ? -1 : 1; }
+        mx = Math.cos(b.yaw) * b.strafeDir; mz = -Math.sin(b.yaw) * b.strafeDir; speed = 2.6 * D.strafe * (b.crouch ? 0.5 : 1);
+      }
+      if (dist > b.gun.range * 0.8 && b.gun.w !== 4) { mx += -Math.sin(b.yaw); mz += -Math.cos(b.yaw); speed = Math.max(speed, 3.5 * D.speed); b.crouch = false; }
+      if (T - b.seenT > D.react * (b.gun.w === 4 ? 2 : 1)) {
+        b.fireT -= dt;
+        if (b.fireT <= 0) {
+          const g = b.gun;
+          if (b.burst <= 0) b.burst = g.burst[0] + Math.floor(Math.random() * (g.burst[1] - g.burst[0] + 1));
+          botFire(b, D, dist, tp); b.burst--;
+          b.fireT = b.burst > 0 ? g.rof : g.rof + g.pause[0] + Math.random() * (g.pause[1] - g.pause[0]);
+        }
       }
     } else {
-      const to = new V3(b.node.x - b.pos.x, 0, b.node.z - b.pos.z), d = to.length();
-      if (d < 2) { const opts = PATROL.filter((n) => n.distanceTo(b.node) > 1 && n.distanceTo(b.node) < 80); b.node = pick(opts.length ? opts : PATROL); }
-      else { const sp = b.alert ? 5.5 : 3; b.pos.addScaledVector(to.normalize(), sp * dt); b.yaw = Math.atan2(-to.x, -to.z); b.pitch = 0; }
-      if (b.alert && b.pos.distanceTo(b.alert) < 4) b.alert = null;
+      b.crouch = false;
+      let goal = b.alertPos;
+      if (!goal && D.hunt) { let best = null, bd = 160; for (const h of humanPositions()) { const d = h.distanceTo(b.pos); if (d < bd) { bd = d; best = h; } } if (best && !P.passive) goal = best; }
+      const g = goal || b.node, to = new V3(g.x - b.pos.x, 0, g.z - b.pos.z), d = to.length();
+      if (d < 2.5) { if (goal === b.alertPos) b.alertPos = null; else if (!goal) { const opts = PATROL.filter((n) => n.distanceTo(b.node) > 1 && n.distanceTo(b.node) < 80); b.node = pick(opts.length ? opts : PATROL); } }
+      else { mx = to.x / d; mz = to.z / d; speed = (goal ? 5.2 : 3) * D.speed; b.yaw = Math.atan2(-to.x, -to.z); b.pitch = 0; }
+    }
+    const ml = Math.hypot(mx, mz);
+    if (ml > 0 && speed > 0) {
+      b.pos.x += mx / ml * speed * dt; b.pos.z += mz / ml * speed * dt;
+      for (const box of boxesNear(b.pos.x, b.pos.z)) collideBox(b.pos, box, 0.4, b.pos.y, b.pos.y + 1.8);
+      b.pos.x = clamp(b.pos.x, -BOUND, BOUND); b.pos.z = clamp(b.pos.z, -BOUND, BOUND);
+      b.pos.y = groundAt(b.pos.x, b.pos.z, b.pos.y, 0.3);
+      b.stuckT += dt;
+      if (b.stuckT > 1.5) { if (b.pos.distanceTo(b.stuckP) < 0.8) { b.alertPos = null; b.node = pick(PATROL); } b.stuckT = 0; b.stuckP.copy(b.pos); }
     }
     animateAvatar(b, dt);
+  }
+}
+function botPresence() {
+  if (!botAuth || !bots.length) return null;
+  const r1 = (v) => Math.round(v * 10) / 10;
+  return { dif: difIdx, l: bots.map((b) => [b.idx, r1(b.pos.x), r1(b.pos.y), r1(b.pos.z), r2(b.yaw), r2(b.pitch), Math.max(0, Math.round(b.hp)), b.dead ? 1 : 0, b.w, b.k, b.d, b.crouch ? 1 : 0, b.sc]), k: botKills };
+}
+function applyBotState(bt, hostId) {
+  if (!bt || typeof bt !== "object" || !Array.isArray(bt.l)) { if (bots.length) clearBots(); return; }
+  hostDif = num(bt.dif, 0, 3, 1) | 0;
+  const seen = new Set();
+  for (const s of bt.l.slice(0, 16)) {
+    if (!Array.isArray(s)) continue;
+    const idx = num(s[0], 0, 15, -1) | 0; if (idx < 0 || seen.has(idx)) continue; seen.add(idx);
+    let b = bots.find((x) => x.idx === idx), fresh = false; if (!b) { b = makeBot(idx); fresh = true; }
+    b.pos.set(num(s[1], -300, 300), num(s[2], -5, 80), num(s[3], -300, 300)); if (fresh) b.rpos.copy(b.pos);
+    b.yaw = num(s[4], -100, 100); b.pitch = num(s[5], -2, 2); b.hp = num(s[6], 0, 300);
+    const wasDead = b.dead; b.dead = s[7] === 1; if (wasDead && !b.dead) b.rpos.copy(b.pos);
+    b.w = num(s[8], 0, 4, 2) | 0; b.k = num(s[9], 0, 1e6) | 0; b.d = num(s[10], 0, 1e6) | 0; b.score = b.k * 100; b.crouch = s[11] === 1;
+    const sc = num(s[12], 0, 1e9);
+    if (!fresh && sc > b.sc && !b.dead) {
+      const eye = new V3(b.pos.x, b.pos.y + 1.45, b.pos.z), d = new V3(-Math.sin(b.yaw) * Math.cos(b.pitch), Math.sin(b.pitch), -Math.cos(b.yaw) * Math.cos(b.pitch));
+      tracer(eye, eye.clone().addScaledVector(d, rayWorld(eye, d, 150)));
+      gunSound(WEAPONS[b.w], clamp(1 / (1 + eye.distanceTo(P.pos) / 18), 0.03, 0.8)); b.lastShotSeen = T;
+    }
+    b.sc = sc;
+  }
+  for (const b of [...bots]) if (!seen.has(b.idx)) { dropAvatar(b); bots.splice(bots.indexOf(b), 1); }
+  const kills = Array.isArray(bt.k) ? bt.k.filter(Array.isArray) : [];
+  if (bkFrom !== hostId) { bkFrom = hostId; hostBkSeen = kills.reduce((m, e) => Math.max(m, num(e[0], 0, 1e9)), 0); return; }
+  for (const e of kills) {
+    const n = num(e[0], 0, 1e9); if (n <= hostBkSeen) continue; hostBkSeen = n;
+    const b = bots.find((x) => x.idx === (num(e[1], 0, 15, -1) | 0));
+    if (b) onBotKilled(b, String(e[2] || ""), num(e[3], 0, 6, 2) | 0, e[4] === 1);
+  }
+}
+function computeHost() {
+  let best = { id: myId(), js: myJoinT };
+  for (const a of remotes.values()) if (a.js && (a.js < best.js || (a.js === best.js && a.id < best.id))) best = { id: a.id, js: a.js };
+  return best.id === myId() ? "me" : best.id;
+}
+function runBots(dt) {
+  const host = computeHost();
+  if (host === "me") {
+    if (!botAuth) { botAuth = true; botHostId = null; bkSeq = Math.max(bkSeq, hostBkSeen); chatLine("Your game now runs the bots for this server.", true); }
+    setBotCount(botCount); updateBots(dt);
+  } else {
+    if (botAuth) { botAuth = false; clearBots(); }
+    if (botHostId !== host) { botHostId = host; const h = remotes.get(host); if (h && h.lastPres) applyBotState(h.lastPres.bt, host); }
+    for (const b of bots) animateAvatar(b, dt);
   }
 }
 
@@ -885,7 +1035,7 @@ function myPresence() {
     k: P.k, d: P.d, s: P.score,
     cv: c ? [c.id, r2(c.x), r2(c.z), r2(c.yaw), r2(c.speed)] : null,
     pk: [...parked.values()],
-    f: lastFire, h: hitLog, kb: lastKB, ch: lastChat, t: Date.now(),
+    f: lastFire, h: hitLog, kb: lastKB, ch: lastChat, t: Date.now(), js: myJoinT, bt: botPresence(),
   };
 }
 function pushPresence(force) {
@@ -908,6 +1058,8 @@ function baseline(a, pr) {
 }
 function applyPresence(a, pr) {
   const nm = cleanName(pr.nm) || "Player", c = COLORS.includes(pr.c) ? pr.c : COLORS[7], pas = pr.pas === 1;
+  a.js = num(pr.js, 0, 1e14, 0);
+  if (!botAuth && a.id === botHostId) applyBotState(pr.bt, a.id);
   if (nm !== a.nm || pas !== a.pas || c !== a.c) { a.nm = nm; a.pas = pas; a.c = c; setTag(a); a.upper.children[0].material.color.set(c); }
   if (Array.isArray(pr.p)) a.pos.set(num(pr.p[0], -300, 300), num(pr.p[1], -5, 80), num(pr.p[2], -300, 300));
   if (Array.isArray(pr.r)) { a.yaw = num(pr.r[0], -100, 100); a.pitch = num(pr.r[1], -2, 2); }
@@ -944,14 +1096,16 @@ function applyPresence(a, pr) {
     const n = num(h[1], 0, 1e9);
     if (n <= a.hn) continue;
     a.hn = Math.max(a.hn, n);
-    if (h[0] === NET.me && !a.pas) takeDamage(num(h[2], 0, 200), a, h[3] === 1, num(h[4], 0, 6, 2) | 0);
+    if (h[0] === NET.me) { const att = typeof h[5] === "string" ? bots.find((b) => b.id === h[5]) : null; if (att || !a.pas) takeDamage(num(h[2], 0, 200), att || a, h[3] === 1, num(h[4], 0, 6, 2) | 0); }
+    else if (botAuth && typeof h[0] === "string" && h[0].startsWith("bot:")) { const b = bots.find((x) => x.id === h[0]); if (b) botTakeDamage(b, num(h[2], 0, 200), a.id, num(h[4], 0, 6, 2) | 0, h[3] === 1); }
   }
   // deaths
   if (Array.isArray(pr.kb) && num(pr.kb[0], 0, 1e9) > a.kbn) {
     a.kbn = num(pr.kb[0], 0, 1e9);
-    const by = pr.kb[1], w = num(pr.kb[2], 0, 6, 2) | 0, head = pr.kb[3] === 1;
+    const by = String(pr.kb[1] || ""), w = num(pr.kb[2], 0, 6, 2) | 0, head = pr.kb[3] === 1;
     if (by === NET.me) { creditKill(a.nm, a.c, w, head); killFeed(myName, myColor, a.nm, a.c, WNAME(w), head); }
-    else { const k = remotes.get(by); if (k) killFeed(k.nm, k.c, a.nm, a.c, WNAME(w), head); else feed(`${nameSpan(a.nm, a.c)}<span class="w">died</span>`); }
+    else { const k = nameColorOf(by); if (k) killFeed(k.nm, k.c, a.nm, a.c, WNAME(w), head); else feed(`${nameSpan(a.nm, a.c)}<span class="w">died</span>`); }
+    if (botAuth && by.startsWith("bot:")) { const kb = bots.find((x) => x.id === by); if (kb) { kb.k++; kb.score += 100; } }
   }
   if (Array.isArray(pr.ch) && num(pr.ch[0], 0, 1e9) > a.chn) { a.chn = num(pr.ch[0], 0, 1e9); chatLine(`${a.nm}: ${String(pr.ch[1] || "").slice(0, 120)}`); }
 }
@@ -1035,7 +1189,7 @@ function renderBoard() {
   for (const a of remotes.values()) rows.push({ nm: a.nm, c: a.c, k: a.k, d: a.d, s: a.score });
   for (const b of bots) rows.push({ nm: b.nm + " · bot", c: b.c, k: b.k, d: b.d, s: b.score });
   rows.sort((a, b) => b.s - a.s || b.k - a.k);
-  $("boardTitle").textContent = `Server · ${mySrv} · ${remotes.size + 1} player${remotes.size ? "s" : ""}${bots.length ? " + bots" : ""}`;
+  $("boardTitle").textContent = `Server · ${mySrv} · ${remotes.size + 1} player${remotes.size ? "s" : ""}${bots.length ? ` + ${bots.length} bots · ${DIFFS[botAuth ? difIdx : hostDif].name}` : ""}`;
   const tb = $("boardBody"); tb.textContent = "";
   for (const r of rows) {
     const tr = document.createElement("tr"); if (r.me) tr.className = "me";
@@ -1088,15 +1242,28 @@ function keysHtml() {
     <div><kbd>T</kbd><span>Chat</span></div><div><kbd>Tab</kbd><span>Scoreboard</span></div>
     <div><kbd>P</kbd><span>Passive mode</span></div><div><kbd>Esc</kbd><span>Pause</span></div></div>`;
 }
+function botSettingsHtml() {
+  const hostName = !botAuth && botHostId && remotes.get(botHostId) ? remotes.get(botHostId).nm : null;
+  return `<div class="grid2">
+    <div class="field"><label>Bot difficulty</label><div class="seg" id="difSeg">${DIFFS.map((d, i) => `<button type="button" data-dif="${i}" aria-pressed="${i === difIdx}">${d.name}</button>`).join("")}</div><span class="hint" id="difHint">${esc(DIFFS[difIdx].desc)}</span></div>
+    <div class="field"><label>Bots</label><div class="seg" id="botSeg">${BOT_COUNTS.map((n) => `<button type="button" data-bots="${n}" aria-pressed="${n === botCount}">${n || "Off"}</button>`).join("")}</div>
+      <span class="hint">${hostName ? `${esc(hostName)} has been on this server longest, so their game runs the bots and their settings apply. Yours take over if they leave.` : "Bots fight everyone, including each other. With friends on the server, the player who has been on longest runs the bots for everyone."}</span></div>
+  </div>`;
+}
+function wireBotSettings(card) {
+  card.querySelectorAll("[data-dif]").forEach((b) => b.addEventListener("click", () => { difIdx = +b.dataset.dif; store.set("dif", difIdx); card.querySelectorAll("[data-dif]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); $("difHint").textContent = DIFFS[difIdx].desc; }));
+  card.querySelectorAll("[data-bots]").forEach((b) => b.addEventListener("click", () => { botCount = +b.dataset.bots; store.set("botCount", botCount); card.querySelectorAll("[data-bots]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); }));
+}
 function showMenu(kind) {
   const card = $("card");
   if (kind === "pause") {
-    card.innerHTML = `<span class="eyebrow">Server · ${esc(mySrv)} · paused for you only</span><h1>Holding</h1><p>The game keeps running for everyone else. You can still be shot while this is open.</p>${keysHtml()}<div class="row"><button class="go" id="go">Resume</button><button class="ghost" id="leave">Leave server</button></div>`;
+    card.innerHTML = `<span class="eyebrow">Server · ${esc(mySrv)} · paused for you only</span><h1>Holding</h1><p>The game keeps running for everyone else. You can still be shot while this is open.</p>${botSettingsHtml()}<div class="row"><button class="go" id="go">Resume</button><button class="ghost" id="leave">Leave server</button></div><details><summary>Controls</summary>${keysHtml()}</details>`;
+    wireBotSettings(card);
     $("go").onclick = () => { audio(); resume(); };
     $("leave").onclick = leave;
   } else {
     card.innerHTML = `<span class="eyebrow">Open-city deathmatch · 1968</span><h1>Cold Block</h1>
-      <p>A city block war with your friends. Everyone who opens this page and joins the <strong>same server name</strong> plays in the same city: Cold War guns, cars to steal, rooftops to hold. Bots fill in while you're alone.</p>
+      <p>A city block war with your friends. Everyone who opens this page and joins the <strong>same server name</strong> plays in the same city: Cold War guns, cars to steal, rooftops to hold. Bots join the fight at the difficulty you pick.</p>
       <div class="net" id="netLine"></div>
       <div class="grid2">
         <div class="field"><label for="nameIn">Callsign</label><input type="text" id="nameIn" maxlength="16" value="${esc(myName)}" autocomplete="off"></div>
@@ -1106,9 +1273,10 @@ function showMenu(kind) {
         <div class="field"><label for="srvIn">Server name</label><input type="text" id="srvIn" maxlength="20" value="${esc(mySrv)}" autocomplete="off"><span class="note net">Friends type the same name to join you.</span></div>
         <div class="field"><label>Servers running now</label><div class="servers" id="srvList"></div></div>
       </div>
-      <label class="check"><input type="checkbox" id="botsIn" ${botsWanted ? "checked" : ""}> Practice bots when no one else is on my server</label>
+      ${botSettingsHtml()}
       <div class="row"><button class="go" id="go">Join server</button></div>
       <details><summary>Controls</summary>${keysHtml()}</details>`;
+    wireBotSettings(card);
     card.querySelectorAll("#sw button").forEach((b) => b.addEventListener("click", () => { myColor = b.dataset.c; store.set("color", myColor); card.querySelectorAll("#sw button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); }));
     $("go").onclick = join;
     $("srvIn").addEventListener("keydown", (e) => { if (e.key === "Enter") join(); });
@@ -1121,7 +1289,7 @@ function join() {
   audio();
   myName = cleanName($("nameIn").value) || myName; store.set("name", myName);
   mySrv = cleanSrv($("srvIn").value) || "main";
-  botsWanted = $("botsIn").checked; store.set("bots", botsWanted);
+  myJoinT = Date.now();
   state = "play"; P.k = P.d = P.score = P.streak = 0; P.passive = false; $("mode").textContent = "Deathmatch";
   respawn();
   $("menu").hidden = true; $("hud").hidden = false;
@@ -1134,7 +1302,7 @@ function pause() { if (state !== "play") return; state = "paused"; triggerHeld =
 function leave() {
   if (P.car) exitCar(true);
   state = "menu"; $("hud").hidden = true; $("scope").hidden = true; setEngine(false);
-  for (const a of remotes.values()) dropAvatar(a); remotes.clear(); clearBots();
+  for (const a of remotes.values()) dropAvatar(a); remotes.clear(); clearBots(); botAuth = true; botHostId = null; bkFrom = null;
   for (const c of cars) if (c.drv && c.drv !== "me") c.drv = null;
   pushPresence(true); showMenu("start");
 }
@@ -1147,7 +1315,7 @@ function update(dt) {
   T += dt;
   syncRemotes();
   // practice bots only while nobody else is on this server
-  if (botsWanted && remotes.size === 0) { aloneT += dt; if (aloneT > 2) spawnBots(); } else { aloneT = 0; if (bots.length) { clearBots(); chatLine("Practice bots left: real players are here.", true); } }
+  runBots(dt);
   if (!P.dead) {
     if (P.car) driveCar(P.car, dt); else { const sp = movePlayer(dt); bob += dt * sp * 1.4; }
     if (P.hp < 100 && T - P.lastHurt > 4) P.hp = Math.min(100, P.hp + 30 * dt);
@@ -1186,7 +1354,6 @@ function update(dt) {
   vm.visible = !P.car && !P.dead && !(w.scope && adsT > 0.85);
   $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || P.dead;
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) flash.visible = false; }
-  updateBots(dt);
   for (const a of remotes.values()) animateAvatar(a, dt);
   updateRemoteCars(dt);
   for (const a of [...remotes.values(), ...bots]) a.tag.visible = !a.dead && a.rpos.distanceTo(P.pos) < 70;
@@ -1209,7 +1376,7 @@ function update(dt) {
     const pr = $("prompt"); pr.hidden = !(near || P.car); pr.innerHTML = P.car ? "<kbd>E</kbd> Get out" : "<kbd>E</kbd> Drive";
     if (P.car) pr.hidden = true;
     const online = NET.room && NET.status === "online";
-    $("srv").innerHTML = `SERVER <b>${esc(mySrv)}</b> · ${remotes.size + 1} PLAYER${remotes.size ? "S" : ""}${bots.length ? " + BOTS" : ""} · <b class="${online ? "" : "off"}">${online ? "ONLINE" : NET.status === "offline" ? "OFFLINE" : "RECONNECTING"}</b>`;
+    $("srv").innerHTML = `SERVER <b>${esc(mySrv)}</b> · ${remotes.size + 1} PLAYER${remotes.size ? "S" : ""}${bots.length ? ` + ${bots.length} BOTS · ${DIFFS[botAuth ? difIdx : hostDif].name.toUpperCase()}` : ""} · <b class="${online ? "" : "off"}">${online ? "ONLINE" : NET.status === "offline" ? "OFFLINE" : "RECONNECTING"}</b>`;
     if (boardOpen) renderBoard();
     drawMini();
   }
@@ -1231,6 +1398,6 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 resize(); buildViewmodel(); showMenu("start"); requestAnimationFrame(frame);
-if (location.hash === "#test") window.__cb = { P, remotes, cars, NET, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get state() { return state; }, get T() { return T; } };
+if (location.hash === "#test") window.__cb = { P, remotes, cars, NET, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; } };
 })();
 </script>
