@@ -830,11 +830,46 @@ function updateBots(dt) {
 // ================= networking (room capability) =================
 // Everything rides on presence: position, shots, damage reports, deaths, chat.
 // The shooter decides hits; the victim applies damage it is told about. Friends-grade trust.
+// Self-hosted transport (Cloudflare Worker + Durable Object at /ws), shaped like the room
+// capability so the rest of the game doesn't care which one it runs on.
+function wsRoom() {
+  let ws = null, me = null, mine = {}, open = false, everOpen = false, fails = 0, dead = false, snap = Object.freeze([]);
+  const others = new Map(), peerLs = [], connLs = [], errLs = [];
+  const build = () => { const a = []; if (me) a.push(Object.freeze({ peer: me, by: null, isMe: true, sameTab: true, kind: "viewer", guest: false, presence: mine, updatedAt: Date.now() })); for (const [p, v] of others) a.push(v); snap = Object.freeze(a); peerLs.forEach((f) => f({ peers: snap, joined: [], left: [], updated: [] })); };
+  const setOpen = (v) => { if (open !== v) { open = v; connLs.forEach((f) => f(v)); } };
+  const send = () => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "p", d: mine })); };
+  function connect() {
+    if (dead) return;
+    try { ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`); } catch (e) { return retry(); }
+    ws.onopen = () => { everOpen = true; fails = 0; };
+    ws.onmessage = (e) => {
+      let m; try { m = JSON.parse(e.data); } catch (err) { return; }
+      if (m.t === "hello") { me = String(m.me); others.clear(); for (const p of m.peers || []) others.set(p.peer, Object.freeze({ peer: p.peer, by: null, isMe: false, sameTab: false, kind: "viewer", guest: false, presence: Object.freeze(p.d || {}), updatedAt: Date.now() })); setOpen(true); send(); build(); }
+      else if (m.t === "p" && m.peer !== me) { others.set(m.peer, Object.freeze({ peer: m.peer, by: null, isMe: false, sameTab: false, kind: "viewer", guest: false, presence: Object.freeze(m.d || {}), updatedAt: Date.now() })); build(); }
+      else if (m.t === "leave") { others.delete(m.peer); build(); }
+    };
+    ws.onclose = () => { setOpen(false); others.clear(); build(); retry(); };
+  }
+  function retry() {
+    fails++;
+    if (!everOpen && fails >= 3) { dead = true; errLs.forEach((f) => f({ code: "not_granted", message: "No game server at /ws" })); return; }
+    setTimeout(connect, Math.min(8000, 500 * 2 ** fails));
+  }
+  connect();
+  return {
+    presence: async (patch) => { mine = { ...mine, ...patch }; for (const k in patch) if (patch[k] === null) delete mine[k]; mine = JSON.parse(JSON.stringify(mine)); send(); build(); },
+    peers: () => snap,
+    onPeers(fn, onErr) { peerLs.push(fn); if (onErr) errLs.push(onErr); setTimeout(() => fn({ peers: snap, joined: snap, left: [], updated: [] }), 0); return () => {}; },
+    onConnection(fn, onErr) { connLs.push(fn); if (onErr) errLs.push(onErr); setTimeout(() => fn(open), 0); return () => {}; },
+    connected: () => open,
+  };
+}
 const NET = { room: null, me: null, status: "connecting" };
 let presT = 0, menuPresSent = false;
 (async () => {
   let r = null;
   try { r = window.claude && typeof window.claude.use === "function" ? await window.claude.use("room") : null; } catch (e) { r = null; }
+  if (!r && !window.claude && /^https?:$/.test(location.protocol) && "WebSocket" in window) r = wsRoom();
   if (!r) { NET.status = "offline"; refreshMenuNet(); return; }
   NET.room = r;
   r.onConnection((c) => { NET.status = c ? "online" : "reconnecting"; refreshMenuNet(); }, () => { NET.status = "offline"; NET.room = null; refreshMenuNet(); });
@@ -1031,7 +1066,7 @@ function refreshMenuNet() {
   const el = $("netLine");
   if (el) {
     const n = NET.room ? NET.room.peers().filter((p) => !p.sameTab && p.kind === "viewer").length : 0;
-    el.innerHTML = NET.status === "online" ? `<b>Online</b> · ${n} other ${n === 1 ? "person has" : "people have"} this page open` : NET.status === "offline" ? `<b class="off">Offline</b> · multiplayer needs the published page opened on claude.ai. Practice with bots here.` : `<b class="off">Connecting…</b>`;
+    el.innerHTML = NET.status === "online" ? `<b>Online</b> · ${n} other ${n === 1 ? "person has" : "people have"} this page open` : NET.status === "offline" ? `<b class="off">Offline</b> · no game server reachable from this page. Practice with bots here.` : `<b class="off">Connecting…</b>`;
   }
   const list = $("srvList");
   if (list) {
