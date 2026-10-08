@@ -2,7 +2,7 @@
 // each player's state to everyone else over WebSockets. The game file itself lives in
 // games/cold-block/index.html (the same file published as a claude.ai artifact).
 
-const MAX_MSG = 6 * 1024; // bytes per player update
+const MAX_MSG = 16 * 1024; // bytes per player update
 const MAX_RATE = 60; // updates per second per player before we start dropping
 
 export default {
@@ -19,7 +19,7 @@ export default {
       const asset = await env.ASSETS.fetch(new Request(url, request));
       if (!asset.ok) return asset;
       const body = await asset.text();
-      const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>${body}</body></html>`;
+      const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0d0f0c"></head><body>${body}</body></html>`;
       return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" } });
     }
     return env.ASSETS.fetch(request);
@@ -51,8 +51,14 @@ export class GameRoom {
   }
 
   webSocketMessage(ws, msg) {
-    const p = this.players.get(ws);
-    if (!p || typeof msg !== "string" || msg.length > MAX_MSG) return;
+    if (msg === '{"t":"ping"}') { try { ws.send('{"t":"pong"}'); } catch { /* closed */ } return; }
+    let p = this.players.get(ws);
+    if (!p) { // socket from before this object woke up from hibernation
+      const att = ws.deserializeAttachment() || {};
+      p = { peer: att.peer || crypto.randomUUID().replace(/-/g, "").slice(0, 12), data: "{}", windowStart: 0, count: 0 };
+      this.players.set(ws, p);
+    }
+    if (typeof msg !== "string" || msg.length > MAX_MSG) return;
     const now = Date.now();
     if (now - p.windowStart > 1000) { p.windowStart = now; p.count = 0; }
     if (++p.count > MAX_RATE) return;

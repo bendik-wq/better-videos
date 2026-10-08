@@ -133,6 +133,52 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--hud); outli
 .net b.off { color: var(--signal); }
 details summary { cursor: pointer; font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hud); }
 details .keys { margin-top: 10px; }
+/* touch controls */
+#tc { position: fixed; inset: 0; touch-action: none; -webkit-touch-callout: none; }
+#joyBase { position: absolute; width: 124px; height: 124px; margin: -62px 0 0 -62px; border-radius: 50%; border: 2px solid rgba(236,230,214,0.35); background: rgba(0,0,0,0.18); left: 110px; top: calc(100% - 120px); pointer-events: none; opacity: 0.55; }
+#joyBase.on { opacity: 1; }
+#joyKnob { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%; background: rgba(236,230,214,0.55); }
+.tcb { position: absolute; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(236,230,214,0.35); background: rgba(16,18,14,0.5); color: var(--hud); font: 700 12px var(--display); letter-spacing: 0.08em; text-transform: uppercase; touch-action: none; -webkit-user-select: none; user-select: none; padding: 0; }
+.tcb.on, .tcb:active { background: rgba(240,125,42,0.55); border-color: var(--signal); }
+#tFire { width: 92px; height: 92px; right: calc(22px + env(safe-area-inset-right, 0px)); bottom: calc(52px + env(safe-area-inset-bottom, 0px)); background: rgba(216,57,43,0.45); font-size: 16px; }
+#tAim { width: 64px; height: 64px; right: calc(128px + env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+#tJump { width: 62px; height: 62px; right: calc(32px + env(safe-area-inset-right, 0px)); bottom: calc(158px + env(safe-area-inset-bottom, 0px)); }
+#tReload { right: calc(120px + env(safe-area-inset-right, 0px)); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+#tKnife { right: calc(200px + env(safe-area-inset-right, 0px)); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+#tCrouch { right: calc(204px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
+#tSwap { right: calc(104px + env(safe-area-inset-right, 0px)); bottom: calc(172px + env(safe-area-inset-bottom, 0px)); }
+#tCar { width: 70px; height: 70px; right: calc(26px + env(safe-area-inset-right, 0px)); bottom: calc(232px + env(safe-area-inset-bottom, 0px)); background: rgba(141,154,91,0.55); }
+#tTop { position: absolute; right: calc(10px + env(safe-area-inset-right, 0px)); top: calc(8px + env(safe-area-inset-top, 0px)); display: flex; gap: 6px; }
+#tTop .tcb { position: static; width: auto; height: 32px; border-radius: 16px; padding: 0 12px; font-size: 12px; }
+#rotate { position: fixed; left: 50%; top: 44%; transform: translateX(-50%); background: var(--panel); border: 1px solid var(--rule); padding: 10px 16px; font-size: 16px; letter-spacing: 0.06em; pointer-events: none; text-align: center; }
+body.touch #weap { top: calc(48px + env(safe-area-inset-top, 0px)); bottom: auto; right: calc(14px + env(safe-area-inset-right, 0px)); }
+body.touch #weap .a { font-size: 28px; }
+body.touch #weap .n { font-size: 14px; }
+body.touch #slots, body.touch #prompt { display: none; }
+body.touch #feed { top: calc(28px + env(safe-area-inset-top, 0px)); right: auto; left: 50%; transform: translateX(-50%); justify-items: center; font-size: 13px; }
+body.touch #mini { width: 112px; height: 112px; left: calc(10px + env(safe-area-inset-left, 0px)); top: calc(10px + env(safe-area-inset-top, 0px)); }
+body.touch #stats { left: calc(10px + env(safe-area-inset-left, 0px)); top: calc(130px + env(safe-area-inset-top, 0px)); bottom: auto; }
+body.touch #hp { width: 112px; }
+body.touch #chat { bottom: auto; top: calc(190px + env(safe-area-inset-top, 0px)); left: calc(10px + env(safe-area-inset-left, 0px)); font-size: 11px; max-width: 40vw; }
+body.touch #chatIn { bottom: auto; top: 50px; left: 50%; transform: translateX(-50%); width: min(420px, 80vw); }
+body.touch #carhud { bottom: auto; top: calc(48px + env(safe-area-inset-top, 0px)); right: calc(14px + env(safe-area-inset-right, 0px)); }
+body.touch #carhud b { font-size: 34px; }
+body.touch #srv { top: calc(6px + env(safe-area-inset-top, 0px)); font-size: 10px; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; }
+body.touch #center { top: 30%; }
+.joinrow { position: sticky; bottom: calc(-1 * clamp(18px, 3.5vw, 32px)); background: var(--panel); padding-block: 10px; margin-block: -10px; z-index: 1; }
+@media (max-height: 520px) {
+  .card { gap: 10px; padding: 14px 18px; }
+  .card h1 { font-size: 40px; }
+  .card p { font-size: 14px; }
+  .card > p:first-of-type { display: none; }
+  .field input[type=text] { font-size: 17px; padding: 7px 10px; }
+  .seg button { font-size: 14px; padding: 6px 10px; }
+  .swatches button { width: 28px; height: 28px; }
+  button.go, button.ghost { font-size: 17px; padding: 10px 22px; }
+}
+.invite { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.invite button { font: 700 14px var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--hud); background: transparent; border: 1px solid var(--rule); padding: 7px 12px; cursor: pointer; }
+.invite code { font-family: var(--mono); font-size: 12px; color: var(--dim); overflow-wrap: anywhere; -webkit-user-select: all; user-select: all; }
 @media (max-width: 640px) { #mini { width: 120px; height: 120px; } #weap .a { font-size: 34px; } #srv { top: 150px; left: 16px; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .big { animation-duration: 2.2s; } }
 </style>
@@ -169,6 +215,19 @@ details .keys { margin-top: 10px; }
   <div id="prompt" hidden></div>
   <div id="deathMsg" hidden><b>Killed</b><span id="deathBy"></span></div>
 </div>
+<div id="tc" hidden>
+  <div id="joyBase"><div id="joyKnob"></div></div>
+  <button class="tcb" id="tFire" type="button">Fire</button>
+  <button class="tcb" id="tAim" type="button">Aim</button>
+  <button class="tcb" id="tJump" type="button">Jump</button>
+  <button class="tcb" id="tReload" type="button">Reload</button>
+  <button class="tcb" id="tKnife" type="button">Knife</button>
+  <button class="tcb" id="tCrouch" type="button">Crouch</button>
+  <button class="tcb" id="tSwap" type="button">Swap</button>
+  <button class="tcb" id="tCar" type="button" hidden>Drive</button>
+  <div id="tTop"><button class="tcb" id="tChat" type="button">Chat</button><button class="tcb" id="tBoard" type="button">Scores</button><button class="tcb" id="tPause" type="button">Menu</button></div>
+</div>
+<div id="rotate" hidden>Turn your phone sideways for the best view</div>
 <div id="board" hidden><h3 id="boardTitle">Server</h3><table><thead><tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Score</th></tr></thead><tbody id="boardBody"></tbody></table></div>
 
 <div id="menu"><div class="card" id="card"></div></div>
@@ -193,10 +252,14 @@ const cleanSrv = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "")
 
 // ================= renderer =================
 const canvas = $("gl");
+const mq = (q) => !!(window.matchMedia && window.matchMedia(q).matches);
+const isTouch = mq("(pointer: coarse)") && !mq("(pointer: fine)");
+let touchMode = isTouch;
+if (touchMode) document.body.classList.add("touch");
 let renderer;
-try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); }
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !isTouch, powerPreference: "high-performance" }); }
 catch (e) { $("card").innerHTML = "<h1>No WebGL</h1><p>This browser could not start WebGL, which the game needs. Try a current desktop browser.</p>"; return; }
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouch ? 1.25 : 1.75));
 const scene = new THREE.Scene();
 const FOG = new THREE.Color("#b79c80");
 scene.fog = new THREE.Fog(FOG, 90, 520);
@@ -366,6 +429,29 @@ for (const s of [-1, 1]) {
 }
 for (const r of ROADS) for (let t = -210; t < 220; t += 60) { if (ROADS.some((x) => Math.abs(t - x) < 14)) continue; const s = rnd() < 0.5 ? 1 : -1; if (rnd() < 0.5) CAR_SPOTS.push([r + s * 3, t, s > 0 ? Math.PI : 0]); else CAR_SPOTS.push([t, r + s * 3, s > 0 ? Math.PI / 2 : -Math.PI / 2]); }
 scene.updateMatrixWorld(true);
+// The city never moves, so fold every static mesh that shares a material into one draw call.
+// Collisions and bullets use the box list above, not these meshes.
+(function mergeStatic() {
+  const groups = new Map();
+  for (const m of [...scene.children]) {
+    if (!m.isMesh || m.isInstancedMesh || m === sky || !m.material || !m.material.isMeshLambertMaterial) continue;
+    if (!groups.has(m.material)) groups.set(m.material, []);
+    groups.get(m.material).push(m);
+  }
+  for (const [mat, list] of groups) {
+    if (list.length < 2) continue;
+    const parts = list.map((m) => { const g = m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone(); g.applyMatrix4(m.matrixWorld); return g; });
+    let n = 0; for (const g of parts) n += g.attributes.position.count;
+    const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2);
+    let o = 0;
+    for (const g of parts) { pos.set(g.attributes.position.array, o * 3); nor.set(g.attributes.normal.array, o * 3); if (g.attributes.uv) uv.set(g.attributes.uv.array, o * 2); o += g.attributes.position.count; g.dispose(); }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setAttribute("normal", new THREE.BufferAttribute(nor, 3)); geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    geo.computeBoundingSphere();
+    for (const m of list) { scene.remove(m); m.geometry.dispose(); }
+    scene.add(new THREE.Mesh(geo, mat));
+  }
+})();
 
 // minimap base
 const miniBase = document.createElement("canvas"); miniBase.width = miniBase.height = 520;
@@ -451,7 +537,8 @@ function carCircles(c) { const fx = -Math.sin(c.yaw), fz = -Math.cos(c.yaw); ret
 // ================= player =================
 const P = { pos: new V3(), vel: new V3(), yaw: 0, pitch: 0, onGround: true, crouch: false, eye: 1.62, hp: 100, dead: false, deadT: 0, lastHurt: -99, k: 0, d: 0, score: 0, streak: 0, car: null, passive: false, killer: null };
 const keys = {};
-let T = 0, state = "menu", mySrv = "main", myName = cleanName(store.get("name", "")) || "Player" + Math.floor(Math.random() * 900 + 100), myColor = store.get("color", COLORS[Math.floor(Math.random() * COLORS.length)]);
+let invitedTo = (() => { try { return cleanSrv(new URLSearchParams(location.search).get("s")); } catch (e) { return ""; } })();
+let T = 0, state = "menu", mySrv = invitedTo || "main", myName = cleanName(store.get("name", "")) || "Player" + Math.floor(Math.random() * 900 + 100), myColor = store.get("color", COLORS[Math.floor(Math.random() * COLORS.length)]);
 if (!COLORS.includes(myColor)) myColor = COLORS[0];
 
 // ================= weapons =================
@@ -726,8 +813,8 @@ function exitCar(silent) {
 }
 const parked = new Map();
 function driveCar(c, dt) {
-  const thr = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0), steer = (keys.KeyA ? 1 : 0) - (keys.KeyD ? 1 : 0);
-  if (thr > 0) c.speed += (c.speed < 0 ? 30 : 15) * dt; else if (thr < 0) c.speed -= (c.speed > 0 ? 28 : 9) * dt; else c.speed *= Math.exp(-0.7 * dt);
+  const thr = clamp((keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0) - joy.y, -1, 1), steer = clamp((keys.KeyA ? 1 : 0) - (keys.KeyD ? 1 : 0) - joy.x, -1, 1);
+  if (thr > 0.15) c.speed += (c.speed < 0 ? 30 : 15) * thr * dt; else if (thr < -0.15) c.speed -= (c.speed > 0 ? 28 : 9) * -thr * dt; else c.speed *= Math.exp(-0.7 * dt);
   if (keys.Space) c.speed *= Math.exp(-3.5 * dt);
   c.speed = clamp(c.speed, -10, 36);
   c.yaw += steer * dt * clamp(c.speed / 5, -1, 1) * 1.9 * (1 - Math.min(Math.abs(c.speed) / 70, 0.45));
@@ -758,11 +845,11 @@ function driveCar(c, dt) {
 
 // ================= player movement =================
 function movePlayer(dt) {
-  const sprint = keys.ShiftLeft && !adsHeld && !P.crouch && keys.KeyW;
+  const sprint = !adsHeld && !P.crouch && ((keys.ShiftLeft && keys.KeyW) || (joy.y < -0.75 && Math.hypot(joy.x, joy.y) > 0.92));
   const sp = P.crouch ? 2.8 : adsT > 0.5 ? 3.4 : sprint ? 8.2 : 5.4;
   const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw), rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw);
-  const iF = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0), iR = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
-  let wx = fx * iF + rx * iR, wz = fz * iF + rz * iR; const wl = Math.hypot(wx, wz); if (wl > 0) { wx /= wl; wz /= wl; }
+  const iF = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0) - joy.y, iR = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0) + joy.x;
+  let wx = fx * iF + rx * iR, wz = fz * iF + rz * iR; const wl = Math.hypot(wx, wz); if (wl > 1) { wx /= wl; wz /= wl; }
   const acc = P.onGround ? 14 : 3;
   P.vel.x += (wx * sp - P.vel.x) * Math.min(1, acc * dt); P.vel.z += (wz * sp - P.vel.z) * Math.min(1, acc * dt);
   if (keys.Space && P.onGround) { P.vel.y = 7; P.onGround = false; }
@@ -983,28 +1070,36 @@ function runBots(dt) {
 // Self-hosted transport (Cloudflare Worker + Durable Object at /ws), shaped like the room
 // capability so the rest of the game doesn't care which one it runs on.
 function wsRoom() {
-  let ws = null, me = null, mine = {}, open = false, everOpen = false, fails = 0, dead = false, snap = Object.freeze([]);
+  let ws = null, me = null, mine = {}, open = false, fails = 0, snap = Object.freeze([]), lastRecv = 0, retryT = null;
   const others = new Map(), peerLs = [], connLs = [], errLs = [];
   const build = () => { const a = []; if (me) a.push(Object.freeze({ peer: me, by: null, isMe: true, sameTab: true, kind: "viewer", guest: false, presence: mine, updatedAt: Date.now() })); for (const [p, v] of others) a.push(v); snap = Object.freeze(a); peerLs.forEach((f) => f({ peers: snap, joined: [], left: [], updated: [] })); };
   const setOpen = (v) => { if (open !== v) { open = v; connLs.forEach((f) => f(v)); } };
   const send = () => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "p", d: mine })); };
   function connect() {
-    if (dead) return;
+    clearTimeout(retryT); retryT = null;
+    if (ws && ws.readyState <= 1) return;
     try { ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`); } catch (e) { return retry(); }
-    ws.onopen = () => { everOpen = true; fails = 0; };
-    ws.onmessage = (e) => {
+    const sock = ws;
+    sock.onopen = () => { fails = 0; lastRecv = Date.now(); };
+    sock.onmessage = (e) => {
+      lastRecv = Date.now();
       let m; try { m = JSON.parse(e.data); } catch (err) { return; }
+      if (m.t === "pong") return;
       if (m.t === "hello") { me = String(m.me); others.clear(); for (const p of m.peers || []) others.set(p.peer, Object.freeze({ peer: p.peer, by: null, isMe: false, sameTab: false, kind: "viewer", guest: false, presence: Object.freeze(p.d || {}), updatedAt: Date.now() })); setOpen(true); send(); build(); }
       else if (m.t === "p" && m.peer !== me) { others.set(m.peer, Object.freeze({ peer: m.peer, by: null, isMe: false, sameTab: false, kind: "viewer", guest: false, presence: Object.freeze(m.d || {}), updatedAt: Date.now() })); build(); }
       else if (m.t === "leave") { others.delete(m.peer); build(); }
     };
-    ws.onclose = () => { setOpen(false); others.clear(); build(); retry(); };
+    sock.onclose = () => { if (ws !== sock) return; ws = null; setOpen(false); others.clear(); build(); retry(); };
   }
-  function retry() {
-    fails++;
-    if (!everOpen && fails >= 3) { dead = true; errLs.forEach((f) => f({ code: "not_granted", message: "No game server at /ws" })); return; }
-    setTimeout(connect, Math.min(8000, 500 * 2 ** fails));
-  }
+  function retry() { fails++; clearTimeout(retryT); retryT = setTimeout(connect, Math.min(5000, 400 * 2 ** Math.min(fails, 4))); }
+  // Phones drop sockets when the screen locks or the network changes: ping to keep the line open,
+  // reconnect as soon as the page is visible again, and treat a silent socket as dead.
+  setInterval(() => {
+    if (ws && ws.readyState === 1) { ws.send('{"t":"ping"}'); if (Date.now() - lastRecv > 25000) { try { ws.close(); } catch (e) { /* closing */ } } }
+    else if (!ws) connect();
+  }, 8000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && (!ws || ws.readyState > 1)) connect(); });
+  window.addEventListener("online", () => connect());
   connect();
   return {
     presence: async (patch) => { mine = { ...mine, ...patch }; for (const k in patch) if (patch[k] === null) delete mine[k]; mine = JSON.parse(JSON.stringify(mine)); send(); build(); },
@@ -1047,7 +1142,7 @@ function pushPresence(force) {
 function serverCounts() {
   const m = new Map();
   if (!NET.room) return m;
-  for (const pe of NET.room.peers()) { const pr = pe.presence; if (!pr || pr.v !== 1 || pr.g !== 1 || pe.sameTab) continue; const s = cleanSrv(pr.srv); if (!s) continue; m.set(s, (m.get(s) || 0) + 1); }
+  for (const pe of NET.room.peers()) { const pr = pe.presence; if (!pr || pr.v !== 1 || pr.g !== 1 || pe.sameTab) continue; const s = cleanSrv(pr.srv); if (!s) continue; if (!m.has(s)) m.set(s, []); m.get(s).push(cleanName(pr.nm) || "Player"); }
   return m;
 }
 function baseline(a, pr) {
@@ -1136,7 +1231,8 @@ function updateRemoteCars(dt) {
 
 // ================= input =================
 const locked = () => document.pointerLockElement === canvas;
-let lockFailed = false, drag = null;
+let lockFailed = isTouch, drag = null;
+const joy = { x: 0, y: 0 };
 function requestLock() { if (lockFailed) return; try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => { lockFailed = true; }); } catch (e) { lockFailed = true; } }
 document.addEventListener("pointerlockerror", () => { lockFailed = true; });
 document.addEventListener("pointerlockchange", () => { if (!locked() && state === "play" && !lockFailed && !chatOpen) pause(); });
@@ -1170,17 +1266,82 @@ document.addEventListener("keydown", (e) => {
 });
 document.addEventListener("keyup", (e) => { keys[e.code] = false; if (e.code === "Tab") { boardOpen = false; $("board").hidden = true; } });
 window.addEventListener("blur", () => { for (const k in keys) keys[k] = false; triggerHeld = false; adsHeld = false; });
-function openChat() { chatOpen = true; for (const k in keys) keys[k] = false; triggerHeld = false; const i = $("chatIn"); i.hidden = false; i.value = ""; if (locked()) document.exitPointerLock(); setTimeout(() => i.focus(), 0); }
+function openChat() { chatOpen = true; for (const k in keys) keys[k] = false; triggerHeld = false; joy.x = joy.y = 0; const i = $("chatIn"); i.hidden = false; i.value = ""; $("tc").hidden = true; if (locked()) document.exitPointerLock(); i.focus(); setTimeout(() => i.focus(), 0); }
 function closeChat(send) {
   const i = $("chatIn"), text = i.value.replace(/[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u2028-\u202e\u2060-\u206f\ufeff]/g, "").trim().slice(0, 120);
-  i.hidden = true; chatOpen = false;
+  i.hidden = true; chatOpen = false; i.blur(); $("tc").hidden = !(touchMode && state === "play");
   if (send && text) { chatSeq++; lastChat = [chatSeq, text]; chatLine(`${myName}: ${text}`); pushPresence(true); }
   requestLock();
 }
 $("chatIn").addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") closeChat(true); else if (e.key === "Escape") closeChat(false); });
+$("chatIn").addEventListener("blur", () => { if (chatOpen && touchMode) setTimeout(() => { if (chatOpen) closeChat(true); }, 150); });
 function togglePassive() {
   if (T - P.lastHurt < 5 && !P.passive) { chatLine("Passive mode is locked for 5 s after taking damage.", true); return; }
   P.passive = !P.passive; $("mode").textContent = P.passive ? "Passive · can't shoot or be shot" : "Deathmatch"; chatLine(P.passive ? "Passive mode on" : "Passive mode off", true); pushPresence(true);
+}
+
+// ================= touch controls =================
+const touchRecs = new Map();
+function useCar() { if (P.car) exitCar(); else if (!P.dead) { const c = nearestCar(3.4); if (c) enterCar(c); } }
+function toggleBoard() { boardOpen = !boardOpen; if (boardOpen) renderBoard(); $("board").hidden = !boardOpen; }
+function touchButton(id, down) {
+  if (state !== "play" && id !== "tPause") return;
+  if (id === "tFire") { triggerHeld = down; if (down) triggerFresh = true; return; }
+  if (id === "tJump") { keys.Space = down; return; }
+  if (!down) return;
+  if (id === "tAim") adsHeld = !adsHeld;
+  else if (id === "tReload") startReload();
+  else if (id === "tKnife") knife();
+  else if (id === "tCrouch") { if (!P.car) P.crouch = !P.crouch; }
+  else if (id === "tSwap") { if (!P.car) switchWeapon((wIdx + 1) % WEAPONS.length); }
+  else if (id === "tCar") useCar();
+  else if (id === "tChat") openChat();
+  else if (id === "tBoard") toggleBoard();
+  else if (id === "tPause") pause();
+}
+function setTouchMode(on) {
+  touchMode = on; document.body.classList.toggle("touch", on);
+  $("tc").hidden = !(on && state === "play");
+}
+{
+  const tc = $("tc"), base = $("joyBase"), knob = $("joyKnob"), R = 52;
+  const resetJoy = () => { joy.x = joy.y = 0; knob.style.transform = ""; base.classList.remove("on"); base.style.left = ""; base.style.top = ""; };
+  tc.addEventListener("touchstart", (e) => {
+    e.preventDefault(); audio();
+    for (const t of e.changedTouches) {
+      const btn = t.target && t.target.closest ? t.target.closest("button") : null;
+      if (btn) { touchButton(btn.id, true); btn.classList.add("on"); touchRecs.set(t.identifier, { kind: btn.id === "tFire" ? "fire" : "btn", id: btn.id, el: btn, x: t.clientX, y: t.clientY }); continue; }
+      if (t.clientX < innerWidth * 0.42 && ![...touchRecs.values()].some((r) => r.kind === "joy")) {
+        touchRecs.set(t.identifier, { kind: "joy", x0: t.clientX, y0: t.clientY });
+        base.style.left = t.clientX + "px"; base.style.top = t.clientY + "px"; base.classList.add("on");
+      } else touchRecs.set(t.identifier, { kind: "look", x: t.clientX, y: t.clientY });
+    }
+  }, { passive: false });
+  tc.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    for (const t of e.changedTouches) {
+      const r = touchRecs.get(t.identifier); if (!r) continue;
+      if (r.kind === "joy") {
+        let dx = (t.clientX - r.x0) / R, dy = (t.clientY - r.y0) / R; const l = Math.hypot(dx, dy); if (l > 1) { dx /= l; dy /= l; }
+        joy.x = Math.abs(dx) < 0.12 ? 0 : dx; joy.y = Math.abs(dy) < 0.12 ? 0 : dy;
+        knob.style.transform = `translate(${dx * R}px, ${dy * R}px)`;
+      } else if (r.kind === "look" || r.kind === "fire") {
+        if (state === "play" && !P.car) look((t.clientX - r.x) * 1.5, (t.clientY - r.y) * 1.5);
+        r.x = t.clientX; r.y = t.clientY;
+      }
+    }
+  }, { passive: false });
+  const end = (e) => {
+    for (const t of e.changedTouches) {
+      const r = touchRecs.get(t.identifier); if (!r) continue;
+      if (r.kind === "joy") resetJoy();
+      if (r.kind === "fire" || r.kind === "btn") { touchButton(r.id, false); if (r.id !== "tAim") r.el.classList.remove("on"); }
+      touchRecs.delete(t.identifier);
+    }
+    $("tAim").classList.toggle("on", adsHeld);
+  };
+  tc.addEventListener("touchend", end); tc.addEventListener("touchcancel", end);
+  window.addEventListener("touchstart", () => { if (!touchMode) setTouchMode(true); }, { passive: true, capture: true });
 }
 
 // ================= scoreboard & minimap =================
@@ -1226,14 +1387,29 @@ function refreshMenuNet() {
   if (list) {
     const m = serverCounts(); list.textContent = "";
     if (!m.size) { const e = document.createElement("span"); e.className = "empty"; e.textContent = NET.room ? "No one is playing right now. Start a server and share its name." : "Server list appears when you're online."; list.append(e); }
-    for (const [s, n] of [...m.entries()].sort((a, b) => b[1] - a[1])) {
-      const b = document.createElement("button"); b.type = "button"; b.append(document.createTextNode(s)); const sp = document.createElement("span"); sp.textContent = `${n} playing`; b.append(sp);
+    for (const [s, names] of [...m.entries()].sort((a, b) => b[1].length - a[1].length)) {
+      const b = document.createElement("button"); b.type = "button"; b.append(document.createTextNode(s)); const sp = document.createElement("span"); sp.textContent = `${names.length} playing · ${names.slice(0, 3).join(", ")}${names.length > 3 ? "…" : ""}`; b.append(sp);
       b.onclick = () => { $("srvIn").value = s; join(); }; list.append(b);
     }
   }
   if (state === "menu" && NET.room && !menuPresSent) { menuPresSent = true; pushPresence(true); }
 }
+const CAN_INVITE = !window.claude && /^https?:$/.test(location.protocol);
+const inviteUrl = (srv) => `${location.origin}${location.pathname}?s=${encodeURIComponent(srv)}`;
+function inviteHtml() { return CAN_INVITE ? `<div class="invite"><button type="button" id="inviteBtn">Invite friends</button><code id="inviteUrl">${esc(inviteUrl(mySrv))}</code></div>` : ""; }
+function wireInvite(srvOf) {
+  const b = $("inviteBtn"); if (!b) return;
+  const upd = () => { $("inviteUrl").textContent = inviteUrl(srvOf()); };
+  if ($("srvIn")) $("srvIn").addEventListener("input", upd);
+  b.onclick = async () => {
+    const url = inviteUrl(srvOf());
+    try { if (navigator.share && touchMode) { await navigator.share({ title: "Cold Block", text: `Join my Cold Block server "${srvOf()}"`, url }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); b.textContent = "Link copied"; } catch (e) { b.textContent = "Copy the link"; const r = document.createRange(); r.selectNodeContents($("inviteUrl")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+    setTimeout(() => { b.textContent = "Invite friends"; }, 2500);
+  };
+}
 function keysHtml() {
+  if (touchMode) return `<div class="keys"><div><kbd>Left thumb</kbd><span>Move (push far up to sprint)</span></div><div><kbd>Right thumb</kbd><span>Look; drag from Fire to aim while shooting</span></div><div><kbd>Aim</kbd><span>Toggle aiming down sights</span></div><div><kbd>Swap</kbd><span>Next weapon</span></div><div><kbd>Drive</kbd><span>Appears next to a car</span></div><div><kbd>Menu</kbd><span>Pause, invite, leave</span></div></div>`;
   return `<div class="keys">
     <div><kbd>W A S D</kbd><span>Move · Shift sprint</span></div><div><kbd>Mouse</kbd><span>Look · left fire · right aim</span></div>
     <div><kbd>Space</kbd><span>Jump (handbrake in a car)</span></div><div><kbd>C / Ctrl</kbd><span>Crouch</span></div>
@@ -1257,33 +1433,33 @@ function wireBotSettings(card) {
 function showMenu(kind) {
   const card = $("card");
   if (kind === "pause") {
-    card.innerHTML = `<span class="eyebrow">Server · ${esc(mySrv)} · paused for you only</span><h1>Holding</h1><p>The game keeps running for everyone else. You can still be shot while this is open.</p>${botSettingsHtml()}<div class="row"><button class="go" id="go">Resume</button><button class="ghost" id="leave">Leave server</button></div><details><summary>Controls</summary>${keysHtml()}</details>`;
-    wireBotSettings(card);
+    card.innerHTML = `<span class="eyebrow">Server · ${esc(mySrv)} · paused for you only</span><h1>Holding</h1><p>The game keeps running for everyone else. You can still be shot while this is open.</p>${inviteHtml()}${botSettingsHtml()}<div class="row joinrow"><button class="go" id="go">Resume</button><button class="ghost" id="leave">Leave server</button></div><details><summary>Controls</summary>${keysHtml()}</details>`;
+    wireBotSettings(card); wireInvite(() => mySrv);
     $("go").onclick = () => { audio(); resume(); };
     $("leave").onclick = leave;
   } else {
-    card.innerHTML = `<span class="eyebrow">Open-city deathmatch · 1968</span><h1>Cold Block</h1>
+    card.innerHTML = `<span class="eyebrow">${invitedTo ? `Invited to server “${esc(invitedTo)}” · tap Join` : "Open-city deathmatch · 1968"}</span><h1>Cold Block</h1>
       <p>A city block war with your friends. Everyone who opens this page and joins the <strong>same server name</strong> plays in the same city: Cold War guns, cars to steal, rooftops to hold. Bots join the fight at the difficulty you pick.</p>
       <div class="net" id="netLine"></div>
       <div class="grid2">
-        <div class="field"><label for="nameIn">Callsign</label><input type="text" id="nameIn" maxlength="16" value="${esc(myName)}" autocomplete="off"></div>
+        <div class="field"><label for="nameIn">Callsign</label><input type="text" id="nameIn" maxlength="16" value="${esc(myName)}" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="field"><label>Colour</label><div class="swatches" id="sw">${COLORS.map((c) => `<button type="button" data-c="${c}" style="background:${c}" aria-label="Colour ${c}" aria-pressed="${c === myColor}"></button>`).join("")}</div></div>
       </div>
       <div class="grid2">
-        <div class="field"><label for="srvIn">Server name</label><input type="text" id="srvIn" maxlength="20" value="${esc(mySrv)}" autocomplete="off"><span class="note net">Friends type the same name to join you.</span></div>
+        <div class="field"><label for="srvIn">Server name</label><input type="text" id="srvIn" maxlength="20" value="${esc(mySrv)}" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"><span class="note net">Friends type the same name, or send them the invite link.</span>${inviteHtml()}</div>
         <div class="field"><label>Servers running now</label><div class="servers" id="srvList"></div></div>
       </div>
       ${botSettingsHtml()}
-      <div class="row"><button class="go" id="go">Join server</button></div>
+      <div class="row joinrow"><button class="go" id="go">Join server</button></div>
       <details><summary>Controls</summary>${keysHtml()}</details>`;
-    wireBotSettings(card);
+    wireBotSettings(card); wireInvite(() => cleanSrv($("srvIn").value) || "main");
     card.querySelectorAll("#sw button").forEach((b) => b.addEventListener("click", () => { myColor = b.dataset.c; store.set("color", myColor); card.querySelectorAll("#sw button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); }));
     $("go").onclick = join;
     $("srvIn").addEventListener("keydown", (e) => { if (e.key === "Enter") join(); });
     refreshMenuNet();
   }
   $("menu").hidden = false;
-  setTimeout(() => (kind === "pause" ? $("go") : $("nameIn"))?.focus({ preventScroll: true }), 0);
+  if (!touchMode) setTimeout(() => (kind === "pause" || invitedTo ? $("go") : $("nameIn"))?.focus({ preventScroll: true }), 0);
 }
 function join() {
   audio();
@@ -1292,16 +1468,17 @@ function join() {
   myJoinT = Date.now();
   state = "play"; P.k = P.d = P.score = P.streak = 0; P.passive = false; $("mode").textContent = "Deathmatch";
   respawn();
-  $("menu").hidden = true; $("hud").hidden = false;
+  $("menu").hidden = true; $("hud").hidden = false; $("tc").hidden = !touchMode;
   buildViewmodel(); requestLock();
-  chatLine(`Joined server "${mySrv}". Press T to chat, Tab for scores.`, true);
+  if (touchMode) { const de = document.documentElement; if (de.requestFullscreen && !document.fullscreenElement) de.requestFullscreen().then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock("landscape").catch(() => {})).catch(() => {}); }
+  chatLine(touchMode ? `Joined server "${mySrv}". Left thumb moves, right thumb looks.` : `Joined server "${mySrv}". Press T to chat, Tab for scores.`, true);
   pushPresence(true);
 }
-function resume() { state = "play"; $("menu").hidden = true; $("hud").hidden = false; requestLock(); }
-function pause() { if (state !== "play") return; state = "paused"; triggerHeld = adsHeld = false; for (const k in keys) keys[k] = false; if (locked()) document.exitPointerLock(); showMenu("pause"); }
+function resume() { state = "play"; $("menu").hidden = true; $("hud").hidden = false; $("tc").hidden = !touchMode; requestLock(); }
+function pause() { if (state !== "play") return; state = "paused"; $("tc").hidden = true; joy.x = joy.y = 0; triggerHeld = adsHeld = false; for (const k in keys) keys[k] = false; if (locked()) document.exitPointerLock(); showMenu("pause"); }
 function leave() {
   if (P.car) exitCar(true);
-  state = "menu"; $("hud").hidden = true; $("scope").hidden = true; setEngine(false);
+  state = "menu"; $("hud").hidden = true; $("tc").hidden = true; $("scope").hidden = true; setEngine(false);
   for (const a of remotes.values()) dropAvatar(a); remotes.clear(); clearBots(); botAuth = true; botHostId = null; bkFrom = null;
   for (const c of cars) if (c.drv && c.drv !== "me") c.drv = null;
   pushPresence(true); showMenu("start");
@@ -1374,6 +1551,13 @@ function update(dt) {
     const sp = 8 + (w.hip * 300) + bloom * 400; const xs = $("xh").children; xs[0].style.top = -sp - 9 + "px"; xs[1].style.top = sp + "px"; xs[2].style.left = -sp - 9 + "px"; xs[3].style.left = sp + "px";
     const near = !P.car && !P.dead ? nearestCar(3.4) : null;
     const pr = $("prompt"); pr.hidden = !(near || P.car); pr.innerHTML = P.car ? "<kbd>E</kbd> Get out" : "<kbd>E</kbd> Drive";
+    if (touchMode) {
+      const tcar = $("tCar"); tcar.hidden = !(near || P.car); tcar.textContent = P.car ? "Exit" : "Drive";
+      $("tJump").textContent = P.car ? "Brake" : "Jump";
+      for (const id of ["tAim", "tReload", "tKnife", "tCrouch", "tSwap"]) $(id).hidden = !!P.car;
+      $("tAim").classList.toggle("on", adsHeld); $("tCrouch").classList.toggle("on", P.crouch);
+      $("rotate").hidden = innerWidth > innerHeight || state !== "play";
+    }
     if (P.car) pr.hidden = true;
     const online = NET.room && NET.status === "online";
     $("srv").innerHTML = `SERVER <b>${esc(mySrv)}</b> · ${remotes.size + 1} PLAYER${remotes.size ? "S" : ""}${bots.length ? ` + ${bots.length} BOTS · ${DIFFS[botAuth ? difIdx : hostDif].name.toUpperCase()}` : ""} · <b class="${online ? "" : "off"}">${online ? "ONLINE" : NET.status === "offline" ? "OFFLINE" : "RECONNECTING"}</b>`;
