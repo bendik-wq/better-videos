@@ -48,8 +48,8 @@ body { font-family: var(--display); -webkit-user-select: none; user-select: none
 #weap .a { font-size: 46px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
 #weap .a small { font-size: 22px; color: var(--dim); }
 #weap .s { font-family: var(--mono); font-size: 12px; color: var(--signal); letter-spacing: 0.1em; min-height: 16px; }
-#slots { display: flex; gap: 4px; justify-content: flex-end; margin-top: 4px; }
-#slots span { font-family: var(--mono); font-size: 11px; padding: 1px 5px; border: 1px solid var(--rule); color: var(--dim); }
+#slots { display: flex; gap: 3px; justify-content: flex-end; flex-wrap: wrap; max-width: 470px; margin-top: 4px; }
+#slots span { font-family: var(--mono); font-size: 10px; padding: 1px 4px; border: 1px solid var(--rule); color: var(--dim); }
 #slots span.on { border-color: var(--signal); color: var(--hud); }
 #stats { position: absolute; left: 20px; bottom: 18px; display: grid; gap: 4px; }
 #hp { width: 200px; height: 6px; background: rgba(236,230,214,0.18); }
@@ -74,6 +74,8 @@ body { font-family: var(--display); -webkit-user-select: none; user-select: none
 @keyframes rise { 0% { opacity: 0; transform: translateY(8px); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
 #prompt { position: absolute; left: 50%; top: 66%; transform: translateX(-50%); font-size: 18px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.45); padding: 4px 12px; }
 #prompt kbd { font-family: var(--mono); color: var(--signal); }
+#nadeWarn { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); font-size: 20px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); animation: blink 0.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
 #deathMsg { position: absolute; left: 0; right: 0; top: 34%; text-align: center; display: grid; gap: 6px; }
 #deathMsg b { font-size: 44px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
 #deathMsg span { font-size: 18px; letter-spacing: 0.1em; color: var(--dim); }
@@ -144,6 +146,7 @@ details .keys { margin-top: 10px; }
 #tAim { width: 64px; height: 64px; right: calc(128px + env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
 #tJump { width: 62px; height: 62px; right: calc(32px + env(safe-area-inset-right, 0px)); bottom: calc(158px + env(safe-area-inset-bottom, 0px)); }
 #tReload { right: calc(120px + env(safe-area-inset-right, 0px)); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+#tNade { right: calc(190px + env(safe-area-inset-right, 0px)); bottom: calc(150px + env(safe-area-inset-bottom, 0px)); background: rgba(141,154,91,0.4); }
 #tKnife { right: calc(200px + env(safe-area-inset-right, 0px)); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 #tCrouch { right: calc(204px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
 #tSwap { right: calc(104px + env(safe-area-inset-right, 0px)); bottom: calc(172px + env(safe-area-inset-bottom, 0px)); }
@@ -204,6 +207,7 @@ body.touch #center { top: 30%; }
     <span class="n" id="wName">AK-47</span>
     <span class="a" id="wAmmo">30 <small>/ ∞</small></span>
     <span class="s" id="wState"></span>
+    <span class="s" id="wFrag"></span>
     <div id="slots"></div>
   </div>
   <div id="carhud" hidden><b id="kmh">0</b> <span>km/h</span></div>
@@ -213,6 +217,7 @@ body.touch #center { top: 30%; }
   <div id="dirs"></div>
   <div id="center"></div>
   <div id="prompt" hidden></div>
+  <div id="nadeWarn" hidden>Grenade</div>
   <div id="deathMsg" hidden><b>Killed</b><span id="deathBy"></span></div>
 </div>
 <div id="tc" hidden>
@@ -222,6 +227,7 @@ body.touch #center { top: 30%; }
   <button class="tcb" id="tJump" type="button">Jump</button>
   <button class="tcb" id="tReload" type="button">Reload</button>
   <button class="tcb" id="tKnife" type="button">Knife</button>
+  <button class="tcb" id="tNade" type="button">Nade</button>
   <button class="tcb" id="tCrouch" type="button">Crouch</button>
   <button class="tcb" id="tSwap" type="button">Swap</button>
   <button class="tcb" id="tCar" type="button" hidden>Drive</button>
@@ -544,13 +550,19 @@ if (!COLORS.includes(myColor)) myColor = COLORS[0];
 // ================= weapons =================
 const WEAPONS = [
   { id: "m1911", name: "M1911", type: "Pistol", dmg: 34, head: 2, rpm: 420, auto: false, mag: 8, reload: 1.5, hip: 0.02, ads: 0.005, range: 30, adsFov: 58, kick: 0.016, snd: [2800, 0.5, 130, 0.22] },
+  { id: "python", name: "Python", type: "Revolver", dmg: 52, head: 2, rpm: 170, auto: false, mag: 6, reload: 2.6, hip: 0.022, ads: 0.004, range: 35, adsFov: 56, kick: 0.04, snd: [2000, 0.8, 90, 0.35] },
   { id: "mp5k", name: "MP5K", type: "SMG", dmg: 24, head: 1.5, rpm: 780, auto: true, mag: 30, reload: 2.1, hip: 0.032, ads: 0.013, range: 26, adsFov: 55, kick: 0.01, snd: [3200, 0.4, 110, 0.16] },
   { id: "ak47", name: "AK-47", type: "Assault rifle", dmg: 33, head: 1.6, rpm: 600, auto: true, mag: 30, reload: 2.5, hip: 0.036, ads: 0.006, range: 60, adsFov: 48, kick: 0.019, snd: [2200, 0.6, 90, 0.3] },
+  { id: "commando", name: "Commando", type: "Assault rifle", dmg: 27, head: 1.5, rpm: 760, auto: true, mag: 30, reload: 2.2, hip: 0.033, ads: 0.008, range: 45, adsFov: 50, kick: 0.014, snd: [2600, 0.55, 100, 0.24] },
+  { id: "m60", name: "M60", type: "Machine gun", dmg: 31, head: 1.4, rpm: 560, auto: true, mag: 100, reload: 5.2, hip: 0.05, ads: 0.011, range: 60, adsFov: 50, kick: 0.017, heavy: 0.82, snd: [1900, 0.7, 80, 0.32] },
   { id: "stakeout", name: "Stakeout", type: "Shotgun", dmg: 17, head: 1.2, rpm: 75, auto: false, mag: 6, reload: 2.6, hip: 0.075, ads: 0.055, range: 12, pellets: 8, adsFov: 62, kick: 0.05, snd: [1600, 0.8, 70, 0.4] },
+  { id: "dragunov", name: "Dragunov", type: "Sniper", dmg: 72, head: 2, rpm: 160, auto: false, mag: 10, reload: 2.9, hip: 0.07, ads: 0.0012, range: 250, adsFov: 18, scope: true, kick: 0.045, snd: [2100, 0.85, 70, 0.4] },
   { id: "l96", name: "L96A1", type: "Sniper", dmg: 110, head: 2, rpm: 46, auto: false, mag: 5, reload: 3.0, hip: 0.09, ads: 0.0004, range: 400, adsFov: 13, scope: true, kick: 0.06, snd: [1900, 0.9, 60, 0.5] },
+  { id: "chinalake", name: "China Lake", type: "Grenade launcher", rpm: 55, auto: false, mag: 2, reload: 3.2, hip: 0.01, ads: 0.004, adsFov: 60, kick: 0.07, proj: { speed: 38, grav: 9.8, radius: 7, dmg: 160 }, snd: [900, 0.7, 60, 0.35] },
 ];
+const KNIFE = 20, CAR = 21, FRAG = 22; // damage sources that are not guns
 const ammo = WEAPONS.map((w) => w.mag);
-let wIdx = 2, nextShot = 0, reloadEnd = 0, triggerHeld = false, triggerFresh = false, adsHeld = false, adsT = 0, bloom = 0, knifeT = -9, recoilP = 0, recoilY = 0, switchT = 0;
+let wIdx = 3, nextShot = 0, reloadEnd = 0, triggerHeld = false, triggerFresh = false, adsHeld = false, adsT = 0, bloom = 0, knifeT = -9, recoilP = 0, recoilY = 0, switchT = 0;
 
 // viewmodel
 const vm = new THREE.Group(); vm.scale.setScalar(0.62); camera.add(vm);
@@ -561,12 +573,17 @@ function buildViewmodel() {
   vm.clear();
   const w = WEAPONS[wIdx], metal = lam("#1c1d1e"), wood = lam("#6a4628"), skin = lam("#c99a76"), sleeve = lam("#4a5236");
   const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); vm.add(m); return m; };
-  const len = { m1911: 0.2, mp5k: 0.32, ak47: 0.62, stakeout: 0.66, l96: 0.85 }[w.id];
+  const len = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56 }[w.id];
   add(new THREE.BoxGeometry(0.05, 0.075, len), metal, 0, 0, -len / 2);
   if (w.id === "ak47") { add(new THREE.BoxGeometry(0.055, 0.06, 0.26), wood, 0, -0.005, -0.42); add(new THREE.BoxGeometry(0.05, 0.08, 0.28), wood, 0, -0.03, 0.14); const mg = add(new THREE.BoxGeometry(0.04, 0.16, 0.07), metal, 0, -0.1, -0.2); mg.rotation.x = 0.35; }
   if (w.id === "mp5k") { add(new THREE.BoxGeometry(0.035, 0.14, 0.05), metal, 0, -0.1, -0.16); add(new THREE.BoxGeometry(0.04, 0.09, 0.04), metal, 0, -0.08, -0.05); }
   if (w.id === "m1911") add(new THREE.BoxGeometry(0.04, 0.1, 0.045), metal, 0, -0.07, -0.03);
   if (w.id === "stakeout") { add(new THREE.BoxGeometry(0.055, 0.055, 0.2), wood, 0, -0.04, -0.4); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); }
+  if (w.id === "python") { const cyl = add(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 8), metal, 0, -0.005, -0.05); cyl.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.04, 0.1, 0.05), wood, 0, -0.07, 0.01); }
+  if (w.id === "commando") { add(new THREE.BoxGeometry(0.05, 0.05, 0.2), metal, 0, 0.05, -0.15); const mg = add(new THREE.BoxGeometry(0.035, 0.15, 0.06), metal, 0, -0.1, -0.18); mg.rotation.x = 0.2; add(new THREE.BoxGeometry(0.03, 0.06, 0.24), metal, 0, -0.02, 0.12); }
+  if (w.id === "m60") { add(new THREE.BoxGeometry(0.09, 0.1, 0.22), metal, 0, -0.01, -0.12); add(new THREE.BoxGeometry(0.08, 0.14, 0.1), lam("#4d5a36"), 0.03, -0.11, -0.12); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.07, 0.06, 0.22), wood, 0, -0.03, -0.42); }
+  if (w.id === "dragunov") { add(new THREE.BoxGeometry(0.055, 0.06, 0.3), wood, 0, -0.01, -0.45); add(new THREE.BoxGeometry(0.04, 0.14, 0.06), metal, 0, -0.1, -0.2); add(new THREE.BoxGeometry(0.03, 0.09, 0.26), wood, 0, -0.04, 0.12); const sc = add(new THREE.CylinderGeometry(0.024, 0.024, 0.3, 12), metal, 0, 0.07, -0.15); sc.rotation.x = Math.PI / 2; }
+  if (w.id === "chinalake") { const tube = add(new THREE.CylinderGeometry(0.045, 0.045, 0.42, 12), lam("#3d4430"), 0, 0.01, -0.3); tube.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.06, 0.05, 0.2), wood, 0, -0.06, -0.38); }
   if (w.id === "l96") { add(new THREE.BoxGeometry(0.06, 0.09, 0.5), lam("#4d5a36"), 0, -0.02, -0.1); const sc = add(new THREE.CylinderGeometry(0.028, 0.028, 0.36, 12), metal, 0, 0.075, -0.2); sc.rotation.x = Math.PI / 2; }
   add(new THREE.BoxGeometry(0.07, 0.07, 0.22), sleeve, 0.03, -0.08, 0.12).rotation.x = 0.4;
   add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, 0, -0.06, -0.02);
@@ -702,7 +719,7 @@ function damageDir(fromPos) {
   const rel = ang - (P.yaw + Math.PI);
   const el = document.createElement("i"); el.style.transform = `rotate(${-rel}rad)`; $("dirs").append(el); setTimeout(() => el.remove(), 1600);
 }
-function renderSlots() { $("slots").innerHTML = WEAPONS.map((w, i) => `<span class="${i === wIdx ? "on" : ""}">${i + 1} ${w.name}</span>`).join(""); }
+function renderSlots() { $("slots").innerHTML = WEAPONS.map((w, i) => `<span class="${i === wIdx ? "on" : ""}">${(i + 1) % 10} ${w.name}</span>`).join(""); }
 
 // ================= combat =================
 let fSeq = 0, hSeq = 0, kbSeq = 0, chatSeq = 0, lastFire = null, lastKB = null, lastChat = null;
@@ -723,6 +740,15 @@ function fire() {
   const moving = Math.hypot(P.vel.x, P.vel.z) > 1;
   const spread = (w.hip + (w.ads - w.hip) * adsT) * (moving ? 1.6 : 1) * (P.crouch ? 0.75 : 1) + bloom * (1 - adsT * 0.6);
   const muzzle = vmMuzzle.getWorldPosition(new V3());
+  if (w.proj) {
+    const vel = fwd.clone().addScaledVector(upv, 0.05).normalize().multiplyScalar(w.proj.speed);
+    const from = eye.clone().addScaledVector(fwd, 0.6);
+    spawnProjectile({ pos: from, vel, grav: w.proj.grav, impact: true, fuse: 8, radius: w.proj.radius, dmg: w.proj.dmg, owner: myId(), w: wIdx, live: true });
+    fSeq++; lastFire = [fSeq, wIdx, r2(from.x), r2(from.y), r2(from.z), r2(from.x + vel.x), r2(from.y + vel.y), r2(from.z + vel.z)];
+    gunSound(w, 1); recoilP += w.kick; pushPresence(true);
+    if (ammo[wIdx] === 0) setTimeout(() => { if (ammo[wIdx] === 0) startReload(); }, 250);
+    return;
+  }
   let firstEnd = null;
   const dealt = new Map();
   for (let p = 0; p < (w.pellets || 1); p++) {
@@ -750,17 +776,105 @@ function fire() {
   if (ammo[wIdx] === 0) setTimeout(() => { if (ammo[wIdx] === 0) startReload(); }, 250);
 }
 let flashT = 0;
+// Grenades and launcher rounds. Whoever fired (or the host, for bots) owns the round: their game
+// flies it, works out blast damage and announces the explosion. Everyone else flies a copy for show.
+const projectiles = [], booms = []; // booms: [n, x, y, z] announced in presence
+let frags = 2, fragT = -9, bmSeq = 0, shakeT = 0;
+const projGeo = new THREE.SphereGeometry(0.1, 8, 6), projMat = lam("#2d3020");
+function spawnProjectile(o) { const m = new THREE.Mesh(projGeo, projMat); m.position.copy(o.pos); scene.add(m); projectiles.push({ ...o, pos: o.pos.clone(), vel: o.vel.clone(), mesh: m, t: 0 }); }
+function insideWorld(p) {
+  if (p.y <= 0.05) return "ground";
+  for (const b of boxesNear(p.x, p.z)) if (p.x > b.x0 && p.x < b.x1 && p.z > b.z0 && p.z < b.z1 && p.y < b.y1) return "box";
+  for (const c of cars) { const [lx, lz] = toLocal(c, p.x, p.z); if (Math.abs(lx) < 1 && Math.abs(lz) < 2.25 && p.y < 1.5) return "box"; }
+  return null;
+}
+function throwFrag() {
+  if (!canCombat() || frags <= 0 || T - fragT < 0.8) return;
+  frags--; fragT = T;
+  camera.updateMatrixWorld(); camera.getWorldDirection(fwd);
+  const eye = camera.getWorldPosition(new V3()), from = eye.clone().addScaledVector(fwd, 0.5);
+  const vel = fwd.clone().add(new V3(0, 0.3, 0)).normalize().multiplyScalar(17).add(new V3(P.vel.x, 0, P.vel.z));
+  spawnProjectile({ pos: from, vel, grav: 20, impact: false, fuse: 2.2, radius: 8, dmg: 150, owner: myId(), w: FRAG, live: true });
+  fSeq++; lastFire = [fSeq, FRAG, r2(from.x), r2(from.y), r2(from.z), r2(from.x + vel.x), r2(from.y + vel.y), r2(from.z + vel.z)];
+  noise(0.15, 1800, 0.2, "bandpass"); pushPresence(true);
+}
+function botThrow(b, tp) {
+  const from = new V3(b.pos.x, b.pos.y + 1.6, b.pos.z), t = 1.1, g = 20;
+  const vel = new V3((tp.x - from.x) / t, (tp.y - 1 - from.y + 0.5 * g * t * t) / t, (tp.z - from.z) / t);
+  spawnProjectile({ pos: from, vel, grav: g, impact: false, fuse: 1.6, radius: 8, dmg: 120, owner: b.id, w: FRAG, live: true });
+}
+function boomFx(pos) {
+  const fire = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), new THREE.MeshBasicMaterial({ color: "#ffb04a", transparent: true, opacity: 0.95 }));
+  fire.position.copy(pos); fire.scale.setScalar(0.6); scene.add(fire); fx.push({ m: fire, t: 0, life: 0.45, kind: "puff", size: 1.2 });
+  const smoke = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), new THREE.MeshBasicMaterial({ color: "#3a3631", transparent: true, opacity: 0.7 }));
+  smoke.position.copy(pos).add(new V3(0, 0.6, 0)); scene.add(smoke); fx.push({ m: smoke, t: 0, life: 1.4, kind: "puff", size: 1.4 });
+  const d = pos.distanceTo(P.pos), vol = clamp(1 / (1 + d / 25), 0.05, 1);
+  noise(1.3, 450, 0.95 * vol); tone(0.7, 48, 0.8 * vol); noise(0.3, 2500, 0.3 * vol, "lowpass", 0.02);
+  if (d < 25) shakeT = Math.max(shakeT, 0.5 * (1 - d / 25));
+}
+function applyBlast(pos, R, maxDmg, owner, w) {
+  const ownerBot = typeof owner === "string" && owner.startsWith("bot:") ? bots.find((b) => b.id === owner) : null;
+  const dmgAt = (p) => { const d = pos.distanceTo(p); return d < R ? Math.round(maxDmg * (1 - d / R) ** 1.3) : 0; };
+  let hitSomeone = false;
+  if (state === "play" || state === "paused") { const dm = dmgAt(new V3(P.pos.x, P.pos.y + 1, P.pos.z)); if (dm > 0) takeDamage(dm, owner === myId() ? null : ownerBot, false, w); }
+  for (const a of remotes.values()) {
+    if (a.dead || a.pas) continue;
+    const base = avatarBase(a), dm = dmgAt(new V3(base.x, base.y + 1, base.z));
+    if (dm > 0) { hSeq++; hitLog.push([a.id, hSeq, dm, 0, w, ownerBot ? owner : null]); hitSomeone = true; }
+  }
+  for (const b of bots) {
+    if (b.dead || b === ownerBot) continue;
+    const dm = dmgAt(new V3(b.pos.x, b.pos.y + 1, b.pos.z)); if (dm <= 0) continue;
+    if (botAuth) { botTakeDamage(b, dm, owner, w, false); hitSomeone = true; }
+    else if (owner === myId()) { hSeq++; hitLog.push([b.id, hSeq, dm, 0, w]); hitSomeone = true; }
+  }
+  while (hitLog.length > 16) hitLog.shift();
+  if (hitSomeone && owner === myId()) hitmarker(false);
+}
+function explode(pr) {
+  scene.remove(pr.mesh);
+  if (!pr.live) return; // a copy of someone else's round: their explosion arrives in their presence
+  boomFx(pr.pos);
+  applyBlast(pr.pos, pr.radius, pr.dmg, pr.owner, pr.w);
+  bmSeq++; booms.push([bmSeq, r2(pr.pos.x), r2(pr.pos.y), r2(pr.pos.z)]); while (booms.length > 4) booms.shift();
+  pushPresence(true);
+}
+function updateProjectiles(dt) {
+  let warn = false;
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const pr = projectiles[i]; let done = false;
+    for (let s = 0; s < 3 && !done; s++) {
+      const h = dt / 3; pr.t += h;
+      const prev = pr.pos.clone();
+      pr.vel.y -= pr.grav * h; pr.pos.addScaledVector(pr.vel, h);
+      const hit = insideWorld(pr.pos);
+      if (pr.impact) {
+        let direct = false;
+        if (pr.t > 0.12) for (const a of [...targets(), ...(pr.owner !== myId() ? ["me"] : [])]) { const p = a === "me" ? new V3(P.pos.x, P.pos.y + 1, P.pos.z) : (() => { const b = avatarBase(a); return new V3(b.x, b.y + 1, b.z); })(); if (p.distanceTo(pr.pos) < 0.9) direct = true; }
+        if (hit || direct || pr.t > pr.fuse) { pr.pos.copy(prev); done = true; }
+      } else {
+        if (hit === "ground") { pr.pos.y = 0.06; pr.vel.y = Math.abs(pr.vel.y) * 0.35; pr.vel.x *= 0.6; pr.vel.z *= 0.6; }
+        else if (hit === "box") { pr.pos.copy(prev); pr.vel.x *= -0.35; pr.vel.z *= -0.35; pr.vel.y *= 0.4; }
+        if (pr.t > pr.fuse) done = true;
+      }
+    }
+    pr.mesh.position.copy(pr.pos);
+    if (!pr.impact && pr.pos.distanceTo(P.pos) < 9 && !P.dead) warn = true;
+    if (done) { projectiles.splice(i, 1); explode(pr); }
+  }
+  $("nadeWarn").hidden = !warn || state !== "play";
+}
 function knife() {
   if (!canCombat() || T - knifeT < 0.9) return;
   knifeT = T; sfx.knife();
   camera.getWorldDirection(fwd); const eye = camera.getWorldPosition(new V3());
   let best = null;
   for (const a of targets()) { const b = avatarBase(a), to = new V3(b.x - eye.x, b.y + 1.2 - eye.y, b.z - eye.z), dist = to.length(); if (dist < 2.6 && to.normalize().dot(fwd) > 0.6 && (!best || dist < best.d)) best = { a, d: dist }; }
-  if (best) dealDamage(best.a, 150, false, 5);
+  if (best) dealDamage(best.a, 150, false, KNIFE);
 }
 function startReload() { const w = WEAPONS[wIdx]; if (reloadEnd || ammo[wIdx] >= w.mag || P.car) return; reloadEnd = T + w.reload; sfx.reload(); }
 function switchWeapon(i) { if (i === wIdx || i < 0 || i >= WEAPONS.length) return; wIdx = i; reloadEnd = 0; switchT = T + 0.35; buildViewmodel(); }
-const WNAME = (i) => (i === 5 ? "Knife" : i === 6 ? "Car" : (WEAPONS[i] || WEAPONS[0]).name);
+const WNAME = (i) => (i === KNIFE ? "Knife" : i === CAR ? "Car" : i === FRAG ? "Frag" : (WEAPONS[i] || WEAPONS[3]).name);
 function dealDamage(who, dmg, head, w) {
   if (who.isBot && botAuth) { if (!botTakeDamage(who, dmg, myId(), w, head)) hitmarker(false); return; }
   hSeq++; hitLog.push([who.id, hSeq, clamp(dmg, 1, 200), head ? 1 : 0, w]); while (hitLog.length > 16) hitLog.shift();
@@ -794,7 +908,7 @@ function respawn() {
   let best = SPAWNS[0], bestD = -1;
   for (let i = 0; i < 12; i++) { const s = pick(SPAWNS); const d = others.length ? Math.min(...others.map((o) => o.distanceTo(s))) : Math.random(); if (d > bestD) { bestD = d; best = s; } }
   P.pos.copy(best); P.vel.set(0, 0, 0); P.hp = 100; P.dead = false; P.crouch = false;
-  ammo.forEach((_, i) => (ammo[i] = WEAPONS[i].mag)); reloadEnd = 0;
+  ammo.forEach((_, i) => (ammo[i] = WEAPONS[i].mag)); reloadEnd = 0; frags = 2;
   P.yaw = Math.atan2(P.pos.x, P.pos.z); P.pitch = 0;
   $("deathMsg").hidden = true;
 }
@@ -837,7 +951,7 @@ function driveCar(c, dt) {
   if (Math.abs(c.speed) > 5 && !P.passive) for (const a of targets()) {
     if (a.car >= 0) continue;
     const [lx, lz] = toLocal(c, a.rpos.x, a.rpos.z);
-    if (Math.abs(lx) < 1.4 && Math.abs(lz) < 2.7 && (c.hitCd[a.id] || 0) < T) { c.hitCd[a.id] = T + 1; dealDamage(a, Math.round(Math.abs(c.speed) * 5), false, 6); }
+    if (Math.abs(lx) < 1.4 && Math.abs(lz) < 2.7 && (c.hitCd[a.id] || 0) < T) { c.hitCd[a.id] = T + 1; dealDamage(a, Math.round(Math.abs(c.speed) * 5), false, CAR); }
   }
   P.pos.set(c.x, 0, c.z);
   setEngine(true, c.speed);
@@ -846,7 +960,7 @@ function driveCar(c, dt) {
 // ================= player movement =================
 function movePlayer(dt) {
   const sprint = !adsHeld && !P.crouch && ((keys.ShiftLeft && keys.KeyW) || (joy.y < -0.75 && Math.hypot(joy.x, joy.y) > 0.92));
-  const sp = P.crouch ? 2.8 : adsT > 0.5 ? 3.4 : sprint ? 8.2 : 5.4;
+  const sp = (P.crouch ? 2.8 : adsT > 0.5 ? 3.4 : sprint ? 8.2 : 5.4) * (WEAPONS[wIdx].heavy || 1);
   const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw), rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw);
   const iF = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0) - joy.y, iR = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0) + joy.x;
   let wx = fx * iF + rx * iR, wz = fz * iF + rz * iR; const wl = Math.hypot(wx, wz); if (wl > 1) { wx /= wl; wz /= wl; }
@@ -879,23 +993,30 @@ function movePlayer(dt) {
 // ================= bots =================
 // The player who has been on the server longest is the host: their game simulates every bot and
 // shares bot state in its presence. Everyone else renders those bots and reports hits to the host.
-const BOT_NAMES = ["Mason", "Woods", "Hudson", "Reznov", "Bowman", "Weaver", "Dragovich", "Kravchenko", "Steiner", "Brooks", "Harris", "Lewis", "Clarke", "Petrenko", "Sokolov", "Volkov"];
+const BOT_NAMES = ["Mason", "Woods", "Hudson", "Reznov", "Bowman", "Weaver", "Dragovich", "Kravchenko", "Steiner", "Brooks", "Harris", "Lewis", "Clarke", "Petrenko", "Sokolov", "Volkov",
+  "Barnes", "Hayes", "Ivanov", "Orlov", "Kuznetsov", "Romanov", "Fischer", "Becker", "Wagner", "Moreau", "Laurent", "Silva", "Costa", "Torres", "Diaz", "Kane"];
+// claude.ai room presence is capped at 4 KB, which fits 16 bots; the Cloudflare server takes 32.
+const MAX_BOTS = window.claude ? 16 : 32;
 const DIFFS = [
   { name: "Recruit", desc: "Slow to react, poor aim, 70 health.", hp: 70, react: 0.9, acc: 0.55, dmg: 0.55, sight: 45, speed: 0.85, strafe: 0, crouch: 0 },
   { name: "Regular", desc: "A fair fight. Half-second reactions.", hp: 100, react: 0.55, acc: 0.8, dmg: 0.85, sight: 65, speed: 1, strafe: 0.3, crouch: 0.1 },
   { name: "Hardened", desc: "Quick and accurate. Strafe and crouch in fights.", hp: 115, react: 0.32, acc: 1.05, dmg: 1.1, sight: 85, speed: 1.1, strafe: 0.7, crouch: 0.3 },
   { name: "Veteran", desc: "Near-instant reactions, 130 health, and they hunt you down.", hp: 130, react: 0.18, acc: 1.35, dmg: 1.4, sight: 110, speed: 1.2, strafe: 1, crouch: 0.4, hunt: true },
 ];
-const BOT_COUNTS = [0, 4, 8, 12, 16];
+const BOT_COUNTS = [0, 4, 8, 16, 24, 32].filter((n) => n <= MAX_BOTS);
 // per-weapon behaviour: seconds between shots, burst length, pause between bursts, base damage, effective range
 const BOT_GUNS = [
-  { w: 2, rof: 0.12, burst: [4, 8], pause: [0.8, 1.6], dmg: 13, range: 55 },
-  { w: 1, rof: 0.08, burst: [6, 12], pause: [0.9, 1.5], dmg: 9, range: 28 },
-  { w: 3, rof: 0.95, burst: [1, 1], pause: [0, 0], dmg: 42, range: 12 },
-  { w: 4, rof: 2.4, burst: [1, 1], pause: [0, 0], dmg: 80, range: 160 },
+  { w: 3, rof: 0.12, burst: [4, 8], pause: [0.8, 1.6], dmg: 13, range: 55 }, // AK-47
+  { w: 2, rof: 0.08, burst: [6, 12], pause: [0.9, 1.5], dmg: 9, range: 28, smg: true }, // MP5K
+  { w: 6, rof: 0.95, burst: [1, 1], pause: [0, 0], dmg: 42, range: 12, shotgun: true }, // Stakeout
+  { w: 8, rof: 2.4, burst: [1, 1], pause: [0, 0], dmg: 80, range: 160, sniper: true }, // L96A1
+  { w: 4, rof: 0.085, burst: [5, 9], pause: [0.7, 1.3], dmg: 11, range: 45 }, // Commando
+  { w: 5, rof: 0.11, burst: [10, 20], pause: [1.2, 2], dmg: 12, range: 60 }, // M60
+  { w: 1, rof: 0.55, burst: [1, 1], pause: [0, 0], dmg: 30, range: 30 }, // Python
+  { w: 7, rof: 0.8, burst: [1, 1], pause: [0, 0], dmg: 45, range: 120, sniper: true }, // Dragunov
 ];
-const GUN_OF = [0, 1, 0, 2, 0, 3, 1, 0, 2, 0, 1, 3, 0, 1, 0, 2];
-let difIdx = clamp(store.get("dif", 1) | 0, 0, 3), botCount = BOT_COUNTS.includes(store.get("botCount", 8)) ? store.get("botCount", 8) : 8;
+const GUN_OF = [0, 1, 4, 2, 0, 3, 5, 6, 1, 7, 4, 0, 2, 3, 5, 1, 0, 4, 6, 7, 1, 0, 2, 5, 4, 3, 0, 1, 6, 7, 4, 2];
+let difIdx = clamp(store.get("dif", 1) | 0, 0, 3), botCount = BOT_COUNTS.includes(store.get("botCount", 8)) ? store.get("botCount", 8) : Math.min(16, MAX_BOTS);
 let botAuth = true, botHostId = null, hostDif = difIdx, bkSeq = 0, bkFrom = null, hostBkSeen = 0, myJoinT = Date.now();
 const botKills = []; // [n, botIdx, killerId, weapon, head]
 const myId = () => NET.me || "me";
@@ -903,7 +1024,7 @@ function makeBot(idx) {
   const b = makeAvatar("bot:" + idx, BOT_NAMES[idx], COLORS[(idx + 3) % COLORS.length], true);
   b.idx = idx; b.gun = BOT_GUNS[GUN_OF[idx]]; b.w = b.gun.w; b.hp = DIFFS[difIdx].hp;
   b.pos.copy(botSpawn()); b.rpos.copy(b.pos);
-  Object.assign(b, { node: pick(PATROL), fireT: 0, burst: 0, alertPos: null, lastHurt: -9, target: null, seenT: 0, thinkT: Math.random() * 0.3, strafeT: 0, strafeDir: 1, stuckT: 0, stuckP: b.pos.clone(), sc: 0 });
+  Object.assign(b, { nadeT: T + 6 + Math.random() * 14, node: pick(PATROL), fireT: 0, burst: 0, alertPos: null, lastHurt: -9, target: null, seenT: 0, thinkT: Math.random() * 0.3, strafeT: 0, strafeDir: 1, stuckT: 0, stuckP: b.pos.clone(), sc: 0 });
   bots.push(b); bots.sort((x, y) => x.idx - y.idx); return b;
 }
 function humanPositions() { const a = []; if (state !== "menu" && !P.dead) a.push(P.pos); for (const r of remotes.values()) if (!r.dead) a.push(r.pos); return a; }
@@ -913,7 +1034,7 @@ function botSpawn() {
   return best.clone();
 }
 function clearBots() { bots.forEach(dropAvatar); bots = []; }
-function setBotCount(n) { while (bots.length > n) dropAvatar(bots.pop()); for (let i = 0; bots.length < n && i < 16; i++) if (!bots.some((b) => b.idx === i)) makeBot(i); }
+function setBotCount(n) { while (bots.length > n) dropAvatar(bots.pop()); for (let i = 0; bots.length < n && i < MAX_BOTS; i++) if (!bots.some((b) => b.idx === i)) makeBot(i); }
 function liveTarget(who) {
   if (who === "me") return (state === "play" || state === "paused") && !P.dead && !P.passive ? new V3(P.pos.x, P.pos.y + P.eye - 0.25, P.pos.z) : null;
   if (who.isBot) return who.dead || !bots.includes(who) ? null : new V3(who.pos.x, who.pos.y + (who.crouch ? 0.85 : 1.3), who.pos.z);
@@ -955,9 +1076,9 @@ function botFire(b, D, dist, tp) {
   const g = b.gun, who = b.target;
   b.sc++; b.lastShotSeen = T;
   const eye = new V3(b.pos.x, b.pos.y + (b.crouch ? 1.0 : 1.45), b.pos.z);
-  let p = g.w === 4 ? 0.32 * D.acc : clamp(D.acc * 0.42 * (1 - dist / (g.range * 2.2)), 0.03, 0.85);
+  let p = g.sniper ? 0.32 * D.acc : clamp(D.acc * 0.42 * (1 - dist / (g.range * 2.2)), 0.03, 0.85);
   if (who === "me") p *= (P.crouch ? 0.8 : 1) * (Math.hypot(P.vel.x, P.vel.z) > 6 ? 0.65 : 1) * (P.car ? 0.6 : 1);
-  let dmg = g.dmg * D.dmg; if (g.w === 3 && dist > g.range) dmg *= 0.35;
+  let dmg = g.dmg * D.dmg; if (g.shotgun && dist > g.range) dmg *= 0.35;
   const hit = Math.random() < p;
   tracer(eye, hit ? tp : tp.clone().add(new V3((Math.random() - 0.5) * 2.4, (Math.random() - 0.5) * 1.6, (Math.random() - 0.5) * 2.4)));
   gunSound(WEAPONS[g.w], clamp(1 / (1 + eye.distanceTo(P.pos) / 18), 0.03, 0.8));
@@ -978,13 +1099,14 @@ function updateBots(dt) {
     if (tp) {
       const eye = new V3(b.pos.x, b.pos.y + 1.55, b.pos.z), to = tp.clone().sub(eye), dist = to.length();
       b.yaw = Math.atan2(-to.x, -to.z); b.pitch = Math.atan2(to.y, Math.hypot(to.x, to.z));
-      b.crouch = D.crouch > 0 && b.gun.w !== 1 && ((b.idx * 7 + Math.floor(T / 3)) % 10) < D.crouch * 10;
-      if (D.strafe > 0 && b.gun.w !== 4) {
+      b.crouch = D.crouch > 0 && !b.gun.smg && ((b.idx * 7 + Math.floor(T / 3)) % 10) < D.crouch * 10;
+      if (D.strafe > 0 && !b.gun.sniper) {
         b.strafeT -= dt; if (b.strafeT <= 0) { b.strafeT = 0.6 + Math.random(); b.strafeDir = Math.random() < 0.5 ? -1 : 1; }
         mx = Math.cos(b.yaw) * b.strafeDir; mz = -Math.sin(b.yaw) * b.strafeDir; speed = 2.6 * D.strafe * (b.crouch ? 0.5 : 1);
       }
-      if (dist > b.gun.range * 0.8 && b.gun.w !== 4) { mx += -Math.sin(b.yaw); mz += -Math.cos(b.yaw); speed = Math.max(speed, 3.5 * D.speed); b.crouch = false; }
-      if (T - b.seenT > D.react * (b.gun.w === 4 ? 2 : 1)) {
+      if (difIdx >= 1 && dist > 10 && dist < 38 && T > b.nadeT) { b.nadeT = T + 12 + Math.random() * 14 - difIdx * 2; botThrow(b, tp); }
+      if (dist > b.gun.range * 0.8 && !b.gun.sniper) { mx += -Math.sin(b.yaw); mz += -Math.cos(b.yaw); speed = Math.max(speed, 3.5 * D.speed); b.crouch = false; }
+      if (T - b.seenT > D.react * (b.gun.sniper ? 2 : 1)) {
         b.fireT -= dt;
         if (b.fireT <= 0) {
           const g = b.gun;
@@ -1022,14 +1144,14 @@ function applyBotState(bt, hostId) {
   if (!bt || typeof bt !== "object" || !Array.isArray(bt.l)) { if (bots.length) clearBots(); return; }
   hostDif = num(bt.dif, 0, 3, 1) | 0;
   const seen = new Set();
-  for (const s of bt.l.slice(0, 16)) {
+  for (const s of bt.l.slice(0, MAX_BOTS)) {
     if (!Array.isArray(s)) continue;
-    const idx = num(s[0], 0, 15, -1) | 0; if (idx < 0 || seen.has(idx)) continue; seen.add(idx);
+    const idx = num(s[0], 0, MAX_BOTS - 1, -1) | 0; if (idx < 0 || seen.has(idx)) continue; seen.add(idx);
     let b = bots.find((x) => x.idx === idx), fresh = false; if (!b) { b = makeBot(idx); fresh = true; }
     b.pos.set(num(s[1], -300, 300), num(s[2], -5, 80), num(s[3], -300, 300)); if (fresh) b.rpos.copy(b.pos);
     b.yaw = num(s[4], -100, 100); b.pitch = num(s[5], -2, 2); b.hp = num(s[6], 0, 300);
     const wasDead = b.dead; b.dead = s[7] === 1; if (wasDead && !b.dead) b.rpos.copy(b.pos);
-    b.w = num(s[8], 0, 4, 2) | 0; b.k = num(s[9], 0, 1e6) | 0; b.d = num(s[10], 0, 1e6) | 0; b.score = b.k * 100; b.crouch = s[11] === 1;
+    b.w = num(s[8], 0, WEAPONS.length - 1, 3) | 0; b.k = num(s[9], 0, 1e6) | 0; b.d = num(s[10], 0, 1e6) | 0; b.score = b.k * 100; b.crouch = s[11] === 1;
     const sc = num(s[12], 0, 1e9);
     if (!fresh && sc > b.sc && !b.dead) {
       const eye = new V3(b.pos.x, b.pos.y + 1.45, b.pos.z), d = new V3(-Math.sin(b.yaw) * Math.cos(b.pitch), Math.sin(b.pitch), -Math.cos(b.yaw) * Math.cos(b.pitch));
@@ -1043,8 +1165,8 @@ function applyBotState(bt, hostId) {
   if (bkFrom !== hostId) { bkFrom = hostId; hostBkSeen = kills.reduce((m, e) => Math.max(m, num(e[0], 0, 1e9)), 0); return; }
   for (const e of kills) {
     const n = num(e[0], 0, 1e9); if (n <= hostBkSeen) continue; hostBkSeen = n;
-    const b = bots.find((x) => x.idx === (num(e[1], 0, 15, -1) | 0));
-    if (b) onBotKilled(b, String(e[2] || ""), num(e[3], 0, 6, 2) | 0, e[4] === 1);
+    const b = bots.find((x) => x.idx === (num(e[1], 0, MAX_BOTS - 1, -1) | 0));
+    if (b) onBotKilled(b, String(e[2] || ""), num(e[3], 0, 30, 3) | 0, e[4] === 1);
   }
 }
 function computeHost() {
@@ -1130,7 +1252,7 @@ function myPresence() {
     k: P.k, d: P.d, s: P.score,
     cv: c ? [c.id, r2(c.x), r2(c.z), r2(c.yaw), r2(c.speed)] : null,
     pk: [...parked.values()],
-    f: lastFire, h: hitLog, kb: lastKB, ch: lastChat, t: Date.now(), js: myJoinT, bt: botPresence(),
+    f: lastFire, h: hitLog, kb: lastKB, bm: booms, ch: lastChat, t: Date.now(), js: myJoinT, bt: botPresence(),
   };
 }
 function pushPresence(force) {
@@ -1150,6 +1272,7 @@ function baseline(a, pr) {
   a.hn = Array.isArray(pr.h) ? pr.h.reduce((m, h) => Math.max(m, Array.isArray(h) ? num(h[1], 0, 1e9) : 0), 0) : 0;
   a.kbn = Array.isArray(pr.kb) ? num(pr.kb[0], 0, 1e9) : 0;
   a.chn = Array.isArray(pr.ch) ? num(pr.ch[0], 0, 1e9) : 0;
+  a.bmn = Array.isArray(pr.bm) ? pr.bm.reduce((m, e) => Math.max(m, Array.isArray(e) ? num(e[0], 0, 1e9) : 0), 0) : 0;
 }
 function applyPresence(a, pr) {
   const nm = cleanName(pr.nm) || "Player", c = COLORS.includes(pr.c) ? pr.c : COLORS[7], pas = pr.pas === 1;
@@ -1158,7 +1281,7 @@ function applyPresence(a, pr) {
   if (nm !== a.nm || pas !== a.pas || c !== a.c) { a.nm = nm; a.pas = pas; a.c = c; setTag(a); a.upper.children[0].material.color.set(c); }
   if (Array.isArray(pr.p)) a.pos.set(num(pr.p[0], -300, 300), num(pr.p[1], -5, 80), num(pr.p[2], -300, 300));
   if (Array.isArray(pr.r)) { a.yaw = num(pr.r[0], -100, 100); a.pitch = num(pr.r[1], -2, 2); }
-  a.crouch = pr.cr === 1; a.w = num(pr.w, 0, 4, 2) | 0; a.hp = num(pr.hp, 0, 100, 100);
+  a.crouch = pr.cr === 1; a.w = num(pr.w, 0, WEAPONS.length - 1, 3) | 0; a.hp = num(pr.hp, 0, 100, 100);
   a.k = num(pr.k, 0, 1e6) | 0; a.d = num(pr.d, 0, 1e6) | 0; a.score = num(pr.s, -1e7, 1e7) | 0;
   const wasDead = a.dead; a.dead = pr.dd === 1; if (wasDead && !a.dead) a.rpos.copy(a.pos);
   // the car they drive
@@ -1180,10 +1303,14 @@ function applyPresence(a, pr) {
   // shots
   if (Array.isArray(pr.f) && num(pr.f[0], 0, 1e9) > a.fn) {
     a.fn = num(pr.f[0], 0, 1e9);
-    const w = WEAPONS[num(pr.f[1], 0, 4, 2) | 0];
-    const from = new V3(num(pr.f[2], -300, 300), num(pr.f[3], -5, 90), num(pr.f[4], -300, 300)), to = new V3(num(pr.f[5], -300, 300), num(pr.f[6], -5, 90), num(pr.f[7], -300, 300));
-    tracer(from.clone().add(new V3(0, -0.15, 0)), to);
-    gunSound(w, clamp(1 / (1 + from.distanceTo(P.pos) / 20), 0.04, 0.9));
+    const wi = num(pr.f[1], 0, 30, 3) | 0, w = WEAPONS[wi];
+    const from = new V3(num(pr.f[2], -300, 300), num(pr.f[3], -5, 90), num(pr.f[4], -300, 300)), to = new V3(num(pr.f[5], -340, 340), num(pr.f[6], -50, 130), num(pr.f[7], -340, 340));
+    const vol = clamp(1 / (1 + from.distanceTo(P.pos) / 20), 0.04, 0.9);
+    if (wi === FRAG || (w && w.proj)) {
+      const vel = to.clone().sub(from); if (vel.length() > 60) vel.setLength(60);
+      spawnProjectile({ pos: from, vel, grav: wi === FRAG ? 20 : w.proj.grav, impact: wi !== FRAG, fuse: wi === FRAG ? 2.2 : 8, owner: a.id, w: wi, live: false });
+      if (w) gunSound(w, vol);
+    } else if (w) { tracer(from.clone().add(new V3(0, -0.15, 0)), to); gunSound(w, vol); }
   }
   // damage addressed to me
   if (Array.isArray(pr.h)) for (const h of pr.h) {
@@ -1191,16 +1318,20 @@ function applyPresence(a, pr) {
     const n = num(h[1], 0, 1e9);
     if (n <= a.hn) continue;
     a.hn = Math.max(a.hn, n);
-    if (h[0] === NET.me) { const att = typeof h[5] === "string" ? bots.find((b) => b.id === h[5]) : null; if (att || !a.pas) takeDamage(num(h[2], 0, 200), att || a, h[3] === 1, num(h[4], 0, 6, 2) | 0); }
-    else if (botAuth && typeof h[0] === "string" && h[0].startsWith("bot:")) { const b = bots.find((x) => x.id === h[0]); if (b) botTakeDamage(b, num(h[2], 0, 200), a.id, num(h[4], 0, 6, 2) | 0, h[3] === 1); }
+    if (h[0] === NET.me) { const att = typeof h[5] === "string" ? bots.find((b) => b.id === h[5]) : null; if (att || !a.pas) takeDamage(num(h[2], 0, 200), att || a, h[3] === 1, num(h[4], 0, 30, 3) | 0); }
+    else if (botAuth && typeof h[0] === "string" && h[0].startsWith("bot:")) { const b = bots.find((x) => x.id === h[0]); if (b) botTakeDamage(b, num(h[2], 0, 200), a.id, num(h[4], 0, 30, 3) | 0, h[3] === 1); }
   }
   // deaths
   if (Array.isArray(pr.kb) && num(pr.kb[0], 0, 1e9) > a.kbn) {
     a.kbn = num(pr.kb[0], 0, 1e9);
-    const by = String(pr.kb[1] || ""), w = num(pr.kb[2], 0, 6, 2) | 0, head = pr.kb[3] === 1;
+    const by = String(pr.kb[1] || ""), w = num(pr.kb[2], 0, 30, 3) | 0, head = pr.kb[3] === 1;
     if (by === NET.me) { creditKill(a.nm, a.c, w, head); killFeed(myName, myColor, a.nm, a.c, WNAME(w), head); }
     else { const k = nameColorOf(by); if (k) killFeed(k.nm, k.c, a.nm, a.c, WNAME(w), head); else feed(`${nameSpan(a.nm, a.c)}<span class="w">died</span>`); }
     if (botAuth && by.startsWith("bot:")) { const kb = bots.find((x) => x.id === by); if (kb) { kb.k++; kb.score += 100; } }
+  }
+  if (Array.isArray(pr.bm)) for (const e of pr.bm) {
+    if (!Array.isArray(e)) continue; const n = num(e[0], 0, 1e9); if (n <= a.bmn) continue; a.bmn = n;
+    boomFx(new V3(num(e[1], -300, 300), num(e[2], -5, 120), num(e[3], -300, 300)));
   }
   if (Array.isArray(pr.ch) && num(pr.ch[0], 0, 1e9) > a.chn) { a.chn = num(pr.ch[0], 0, 1e9); chatLine(`${a.nm}: ${String(pr.ch[1] || "").slice(0, 120)}`); }
 }
@@ -1254,7 +1385,8 @@ document.addEventListener("keydown", (e) => {
   keys[e.code] = true;
   if (["Space", "Tab", "ArrowUp", "ArrowDown"].includes(e.code)) e.preventDefault();
   if (e.repeat) return;
-  if (/^Digit[1-5]$/.test(e.code) && !P.car) switchWeapon(+e.code.slice(5) - 1);
+  if (/^Digit[0-9]$/.test(e.code) && !P.car) switchWeapon((+e.code.slice(5) + 9) % 10);
+  else if (e.code === "KeyG") throwFrag();
   else if (e.code === "KeyR") startReload();
   else if (e.code === "KeyC" || e.code === "ControlLeft") { if (!P.car) P.crouch = !P.crouch; }
   else if (e.code === "KeyV") knife();
@@ -1292,6 +1424,7 @@ function touchButton(id, down) {
   if (id === "tAim") adsHeld = !adsHeld;
   else if (id === "tReload") startReload();
   else if (id === "tKnife") knife();
+  else if (id === "tNade") throwFrag();
   else if (id === "tCrouch") { if (!P.car) P.crouch = !P.crouch; }
   else if (id === "tSwap") { if (!P.car) switchWeapon((wIdx + 1) % WEAPONS.length); }
   else if (id === "tCar") useCar();
@@ -1413,7 +1546,7 @@ function keysHtml() {
   return `<div class="keys">
     <div><kbd>W A S D</kbd><span>Move · Shift sprint</span></div><div><kbd>Mouse</kbd><span>Look · left fire · right aim</span></div>
     <div><kbd>Space</kbd><span>Jump (handbrake in a car)</span></div><div><kbd>C / Ctrl</kbd><span>Crouch</span></div>
-    <div><kbd>1–5 · Wheel</kbd><span>Switch weapon</span></div><div><kbd>R</kbd><span>Reload</span></div>
+    <div><kbd>1–0 · Wheel</kbd><span>Switch weapon (10 guns)</span></div><div><kbd>G</kbd><span>Frag grenade (2 per life)</span></div><div><kbd>R</kbd><span>Reload</span></div>
     <div><kbd>V</kbd><span>Knife</span></div><div><kbd>E</kbd><span>Get in or out of a car</span></div>
     <div><kbd>T</kbd><span>Chat</span></div><div><kbd>Tab</kbd><span>Scoreboard</span></div>
     <div><kbd>P</kbd><span>Passive mode</span></div><div><kbd>Esc</kbd><span>Pause</span></div></div>`;
@@ -1439,7 +1572,7 @@ function showMenu(kind) {
     $("leave").onclick = leave;
   } else {
     card.innerHTML = `<span class="eyebrow">${invitedTo ? `Invited to server “${esc(invitedTo)}” · tap Join` : "Open-city deathmatch · 1968"}</span><h1>Cold Block</h1>
-      <p>A city block war with your friends. Everyone who opens this page and joins the <strong>same server name</strong> plays in the same city: Cold War guns, cars to steal, rooftops to hold. Bots join the fight at the difficulty you pick.</p>
+      <p>A city block war with your friends. Everyone who opens this page and joins the <strong>same server name</strong> plays in the same city: ten Cold War guns, frag grenades, cars to steal, rooftops to hold. Bots join the fight at the difficulty you pick.</p>
       <div class="net" id="netLine"></div>
       <div class="grid2">
         <div class="field"><label for="nameIn">Callsign</label><input type="text" id="nameIn" maxlength="16" value="${esc(myName)}" autocomplete="off" autocorrect="off" spellcheck="false"></div>
@@ -1479,6 +1612,7 @@ function pause() { if (state !== "play") return; state = "paused"; $("tc").hidde
 function leave() {
   if (P.car) exitCar(true);
   state = "menu"; $("hud").hidden = true; $("tc").hidden = true; $("scope").hidden = true; setEngine(false);
+  for (const pr of projectiles) scene.remove(pr.mesh); projectiles.length = 0;
   for (const a of remotes.values()) dropAvatar(a); remotes.clear(); clearBots(); botAuth = true; botHostId = null; bkFrom = null;
   for (const c of cars) if (c.drv && c.drv !== "me") c.drv = null;
   pushPresence(true); showMenu("start");
@@ -1535,6 +1669,8 @@ function update(dt) {
   updateRemoteCars(dt);
   for (const a of [...remotes.values(), ...bots]) a.tag.visible = !a.dead && a.rpos.distanceTo(P.pos) < 70;
   updateFx(dt);
+  updateProjectiles(dt);
+  if (shakeT > 0) { shakeT -= dt; camera.rotation.x += (Math.random() - 0.5) * shakeT * 0.08; camera.rotation.y += (Math.random() - 0.5) * shakeT * 0.08; }
   pushPresence(false);
   // HUD
   if (hitmT > 0) { hitmT -= dt; if (hitmT <= 0) $("hitm").classList.remove("on"); }
@@ -1545,6 +1681,7 @@ function update(dt) {
     $("hp").firstElementChild.style.width = Math.max(0, P.hp) + "%";
     $("kd").innerHTML = `K <b>${P.k}</b> · D <b>${P.d}</b> · <b>${P.score}</b> pts`;
     $("wName").textContent = w.name; $("wAmmo").innerHTML = `${ammo[wIdx]} <small>/ ∞</small>`;
+    $("wFrag").textContent = `FRAG ×${frags}${touchMode ? "" : " · G"}`;
     $("wState").textContent = reloadEnd ? "RELOADING" : ammo[wIdx] === 0 ? "R · RELOAD" : P.passive ? "PASSIVE" : "";
     $("weap").hidden = !!P.car; $("carhud").hidden = !P.car; if (P.car) $("kmh").textContent = Math.round(Math.abs(P.car.speed) * 3.6);
     $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; $("dot").hidden = !(adsT > 0.5 && !w.scope && !P.car && !P.dead);
@@ -1554,7 +1691,7 @@ function update(dt) {
     if (touchMode) {
       const tcar = $("tCar"); tcar.hidden = !(near || P.car); tcar.textContent = P.car ? "Exit" : "Drive";
       $("tJump").textContent = P.car ? "Brake" : "Jump";
-      for (const id of ["tAim", "tReload", "tKnife", "tCrouch", "tSwap"]) $(id).hidden = !!P.car;
+      for (const id of ["tAim", "tReload", "tKnife", "tNade", "tCrouch", "tSwap"]) $(id).hidden = !!P.car;
       $("tAim").classList.toggle("on", adsHeld); $("tCrouch").classList.toggle("on", P.crouch);
       $("rotate").hidden = innerWidth > innerHeight || state !== "play";
     }
