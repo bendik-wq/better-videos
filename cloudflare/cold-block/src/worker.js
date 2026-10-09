@@ -69,7 +69,7 @@ export class GameRoom {
     server.send(`{"t":"hello","me":"${peer}","now":${Date.now()},"peers":[${peers.join(",")}]}`);
     return new Response(null, { status: 101, webSocket: client });
   }
-  webSocketMessage(ws, msg) {
+  async webSocketMessage(ws, msg) {
     if (msg === '{"t":"ping"}') { try { ws.send(`{"t":"pong","now":${Date.now()}}`); } catch { /* closed */ } return; }
     const p = this.players.get(ws) || this.adopt(ws);
     if (typeof msg !== "string" || msg.length > MAX_MSG) return;
@@ -83,24 +83,24 @@ export class GameRoom {
     const nm = typeof m.d.nm === "string" ? m.d.nm.slice(0, 16) : "", g = m.d.g === 1;
     const changed = nm !== p.nm || g !== p.g;
     p.nm = nm; p.g = g; p.dirty = true;
-    if (changed) this.report(false);
     if (!this.timer) this.timer = setTimeout(() => { this.timer = null; this.flush(); }, TICK_MS);
+    // subrequests must be awaited inside the handler, or the platform may cancel them
+    if (changed || Date.now() - this.lastReport > 15000) await this.report(changed ? false : true);
   }
   flush() {
     const ups = [];
     for (const p of this.players.values()) if (p.dirty) { p.dirty = false; ups.push(`{"peer":"${p.peer}","d":${p.data}}`); }
     if (ups.length) this.broadcast(`{"t":"b","u":[${ups.join(",")}]}`);
-    if (Date.now() - this.lastReport > 15000) this.report(true);
   }
-  webSocketClose(ws) { this.drop(ws); }
-  webSocketError(ws) { this.drop(ws); }
-  drop(ws) {
+  async webSocketClose(ws) { await this.drop(ws); }
+  async webSocketError(ws) { await this.drop(ws); }
+  async drop(ws) {
     const p = this.players.get(ws);
     if (!p) return;
     this.players.delete(ws);
     this.broadcast(`{"t":"leave","peer":"${p.peer}"}`);
     try { ws.close(1000, "bye"); } catch { /* already closed */ }
-    this.report(true);
+    await this.report(true);
   }
   broadcast(text) {
     for (const ws of this.players.keys()) {
@@ -108,14 +108,14 @@ export class GameRoom {
     }
   }
   // Tell the registry who is playing here, so the menu can list live servers.
-  report(force) {
+  async report(force) {
     if (!this.srv) return;
     const names = [...this.players.values()].filter((p) => p.g).map((p) => p.nm || "Player");
     const key = names.join("|");
     const now = Date.now();
     if (!force && (key === this.reported || now - this.lastReport < 1500)) return;
     this.lastReport = now; this.reported = key;
-    registry(this.env).fetch("https://reg/update", { method: "POST", body: JSON.stringify({ s: this.srv, names }) }).catch(() => {});
+    try { await registry(this.env).fetch("https://reg/update", { method: "POST", body: JSON.stringify({ s: this.srv, names }) }); } catch { /* registry busy: next report fixes it */ }
   }
 }
 
