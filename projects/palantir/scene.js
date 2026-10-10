@@ -1,4 +1,4 @@
-// THE DATA RUSH: scene library.
+// THE MOST DANGEROUS COMPANY IN THE WORLD: scene library (runtime copied from data-rush).
 // Every shot in project.mjs names a `set`; each set is a factory that builds a Three.js
 // scene + camera + typography layer, driven by shot time and the narration's word timings.
 import * as THREE from 'three';
@@ -6,6 +6,11 @@ import * as K from 'kit';
 import { makeBroll } from './broll.js';
 import { makeCinema } from './cinema.js';
 import * as C from '/engine/cine.js';
+import * as PP from '/engine/post.js';
+import * as PX from '/engine/parallax.js';
+import { makeStone } from './stone.js';
+import { makeOps } from './ops.js';
+import { makeGeo } from './geo.js';
 
 const RED = 0xe0241b, SODIUM = 0xffa860, FLUO = 0x58ffa0, ICE = 0x9fc4ff, PAPER = '#efe7d6';
 const CAP = `font:500 .9em 'Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#d9d2c3;line-height:1.6`;
@@ -677,6 +682,9 @@ const SETS = {
 
 Object.assign(SETS, makeBroll({ THREE, K, base, mesh, std, camOrbit, caption, wt, canvasTex, fakeText, P, CAP, SERIF, RED }));
 Object.assign(SETS, makeCinema({ THREE, K, base, mesh, std, caption, wt, canvasTex, fakeText, makeOrb, RED }));
+// Episode-specific sets. H is the shared helper kit every set library receives.
+const H = { THREE, K, C, PP, PX, base, mesh, std, camOrbit, caption, sourceLine, wt, vo0, voEnd, canvasTex, fakeText, makeOrb, props: P, CAP, SERIF, RED, SODIUM, FLUO, ICE, PAPER };
+Object.assign(SETS, makeStone(H), makeOps(H), makeGeo(H));
 
 // Instrument Serif draws '1' like an 'l', so the brand name gets a sans '1'.
 function brandify(el) {
