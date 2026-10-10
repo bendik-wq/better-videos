@@ -66,7 +66,7 @@ export function makeStone(H) {
   const STONE_FS = `
     precision highp float; precision highp sampler3D;
     uniform sampler3D uNoise; uniform sampler2D uCard; uniform sampler2D uVis;
-    uniform float uRound, uT, uEmber, uFlare, uSmoke, uThin, uIris, uCardAmt, uCardScale, uVisAmt, uVisScale, uFocus, uAperture, uKeyI, uSpin, uSeed, uTint, uRim, uExposure;
+    uniform int uSteps; uniform float uVisBlur; uniform float uRound, uT, uEmber, uFlare, uSmoke, uThin, uIris, uCardAmt, uCardScale, uVisAmt, uVisScale, uFocus, uAperture, uKeyI, uSpin, uSeed, uTint, uRim, uExposure;
     uniform vec3 uEmberCol, uHotCol, uSmokeCol, uKeyDir, uKeyCol, uAmbCol, uIrisDir, uVisDir;
     uniform vec2 uKeySize;
     varying vec3 vPos; varying vec3 vCam;
@@ -119,14 +119,15 @@ export function makeStone(H) {
       vec3 refl = env(reflect(rd, n), rb, 1.0);
       vec3 rr = refract(rd, n, 1.0 / 1.22);   // a gentler bend than real glass keeps the core small and deep
       float tE = max(0.0, -2.0 * dot(p0, rr));
-      const int N = 20;
+      int N = uSteps;
       float dt = tE / float(N), j = hash(gl_FragCoord.xy);
       float tv = dot(rr, uVisDir) != 0.0 ? -dot(p0, uVisDir) / dot(rr, uVisDir) : -1.0; bool vis = uVisAmt <= 0.0;
       vec3 vx = normalize(cross(vec3(0.0, 1.0, 0.0), uVisDir)), vy = cross(uVisDir, vx);
       vec3 ix = abs(uIrisDir.y) > 0.95 ? vec3(1.0, 0.0, 0.0) : normalize(cross(vec3(0.0, 1.0, 0.0), uIrisDir)), iy = cross(uIrisDir, ix);
       vec3 col = vec3(0.0); float T = 1.0;
       float hot = uEmber * (1.0 + uFlare * 6.0);
-      for (int i = 0; i < N; i++) {
+      for (int i = 0; i < 24; i++) {
+        if (i >= N) break;
         float t = (float(i) + j) * dt; vec3 p = p0 + rr * t; float r2 = dot(p, p);
         float blur = uAperture * abs(uFocus - (0.25 + t * 0.55)) * 1.4;
         vec2 dm = dens(p, blur); float d = dm.x;
@@ -148,8 +149,8 @@ export function makeStone(H) {
           sig = mix(sig, di * uSmoke * 0.6 + pupil * 30.0, uIris);
         }
         if (!vis && t > tv) { vis = true; vec3 x = p0 + rr * tv; vec2 uv = vec2(dot(x, vx), dot(x, vy)) * uVisScale + 0.5;
-          float m = smoothstep(0.46, 0.18, length(uv - 0.5)) * (1.0 - 0.7 * dm.y);
-          col += mix(T, 1.0, 0.65) * texture(uVis, uv, blur * 4.0).rgb * uVisAmt * m; }
+          float m = smoothstep(0.46, 0.18, length(uv - 0.5)) * (1.0 - 0.7 * dm.y) * smoothstep(tE, tE - 0.5, tv) * smoothstep(0.0, 0.3, tv);
+          col += mix(T, 1.0, 0.65) * texture(uVis, uv, blur * 4.0 + uVisBlur).rgb * uVisAmt * m; }
         col += T * em * dt; T *= exp(-sig * dt);
       }
       // the light behind the stone, refracted (and inverted) through the dark glass
@@ -166,7 +167,7 @@ export function makeStone(H) {
   function stoneMaterial(o = {}) {
     const u = {
       uNoise: { value: noise3D() }, uCard: { value: o.card ?? BLACK }, uVis: { value: o.vis ?? BLACK },
-      uRound: { value: o.round ?? 0 }, uT: { value: 0 }, uEmber: { value: o.ember ?? 0.05 }, uFlare: { value: 0 }, uSmoke: { value: o.smoke ?? 7 }, uThin: { value: o.thin ?? 0.35 },
+      uSteps: { value: 20 }, uVisBlur: { value: o.visBlur ?? 0 }, uRound: { value: o.round ?? 0 }, uT: { value: 0 }, uEmber: { value: o.ember ?? 0.05 }, uFlare: { value: 0 }, uSmoke: { value: o.smoke ?? 7 }, uThin: { value: o.thin ?? 0.35 },
       uIris: { value: 0 }, uCardAmt: { value: o.cardAmt ?? 0 }, uCardScale: { value: o.cardScale ?? 0.5 }, uVisAmt: { value: 0 }, uVisScale: { value: o.visScale ?? 0.62 },
       uFocus: { value: 0.6 }, uAperture: { value: 0 }, uKeyI: { value: o.keyI ?? 40 }, uSpin: { value: o.spin ?? 0.06 }, uSeed: { value: o.seed ?? 0 },
       uTint: { value: o.tint ?? 0.12 }, uRim: { value: o.rim ?? 0.05 }, uExposure: { value: o.exposure ?? 1 },
@@ -192,7 +193,10 @@ export function makeStone(H) {
       // per-frame: time, glow, and the camera-facing directions for the vision plane and iris
       update(t, camera, { ember, flare = 0, iris = 0, irisDir = null } = {}) {
         u.uT.value = t; if (ember !== undefined) u.uEmber.value = ember; u.uFlare.value = flare; u.uIris.value = iris;
-        tmp.copy(camera.position).sub(s.position).normalize(); u.uVisDir.value.copy(tmp);
+        tmp.copy(camera.position).sub(s.position); const dist = tmp.length(); tmp.normalize(); u.uVisDir.value.copy(tmp);
+        // fewer march steps as the stone fills more of the frame (cost is per pixel)
+        const frac = s.scale.x / Math.max(1e-3, dist * Math.tan(camera.fov * D2R / 2));
+        u.uSteps.value = frac > 0.75 ? 11 : frac > 0.4 ? 14 : 20;
         u.uIrisDir.value.copy(irisDir ?? tmp).normalize();
         pl.intensity = light * u.uEmber.value * (1 + flare * 9) * 12 * radius * radius / 0.25;
       },
@@ -308,7 +312,7 @@ export function makeStone(H) {
     const winA = 0.9, wx = Math.sin(winA) * (R - 0.05), wz = -Math.cos(winA) * (R - 0.05);
     const win = new THREE.Group(); win.position.set(wx * 0.995, 5.4, wz * 0.995); win.lookAt(0, 5.4, 0); scene.add(win);
     const slitA = slitCookie();
-    const skyM = new THREE.MeshBasicMaterial({ color: dark ? 0x05070c : 0x5a6a8c, alphaMap: slitA, transparent: true, fog: false, depthWrite: false });
+    const skyM = new THREE.MeshBasicMaterial({ color: dark ? 0x26304a : 0x9aaed8, alphaMap: slitA, transparent: true, fog: false, depthWrite: false });
     mesh(new THREE.PlaneGeometry(1.8, 3.2), skyM, [0, 0.1, 0.03], win).castShadow = false;
     const revealM = new THREE.MeshBasicMaterial({ color: 0x000000, alphaMap: slitA, transparent: true, depthWrite: false });
     const rv = mesh(new THREE.PlaneGeometry(2.3, 3.6), revealM, [0, 0.1, 0.02], win); rv.castShadow = false;
@@ -318,13 +322,13 @@ export function makeStone(H) {
     const iron = std(0x0c0c0c, { metalness: 0.8, roughness: 0.45 });
     for (let i = 0; i < 3; i++) { const a = i / 3 * Math.PI * 2 + 0.4; const pts = []; for (let k = 0; k <= 12; k++) { const u = k / 12, ang = -Math.PI / 2 - 0.15 + u * 1.25; pts.push(V3([Math.sin(a) * Math.cos(ang) * 0.45, 1.67 + Math.sin(ang) * 0.45, Math.cos(a) * Math.cos(ang) * 0.45])); }
       mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.018, 8), iron, [0, 0, 0], scene); }
-    const stone = makeStoneObj(scene, { radius: 0.42, pos: [0, 1.67, 0], keyDir: [wx, 5.4 - 1.67, wz], keySize: [0.035, 0.24], keyI: dark ? 9 : 70, keyCol: MOON, amb: dark ? 0x020203 : 0x07090d, ember: dark ? 0.09 : 0.06, light: 1.2, lightDist: 7, seed: 1.3 });
+    const stone = makeStoneObj(scene, { radius: 0.42, pos: [0, 1.67, 0], keyDir: [wx, 5.4 - 1.67, wz], keySize: [0.035, 0.24], keyI: dark ? 25 : 70, keyCol: MOON, amb: dark ? 0x05060a : 0x07090d, ember: dark ? 0.09 : 0.06, light: 1.2, exposure: 1.35, lightDist: 7, seed: 1.3 });
     // moonlight through the slit
     const moonPos = [wx * 2.2, 9.6, wz * 2.2];
-    const moon = K.keySpot(scene, { color: MOON, intensity: dark ? 180 : 2600, pos: moonPos, target: [-0.5, 0.4, 0.6], angle: 0.17, penumbra: 0.4, shadow: 2048 });
+    const moon = K.keySpot(scene, { color: MOON, intensity: dark ? 700 : 2600, pos: moonPos, target: [-0.5, 0.4, 0.6], angle: 0.17, penumbra: 0.4, shadow: 2048 });
     moon.shadow.camera.near = 4; moon.shadow.bias = -0.0008;
-    const shaft = K.lightShaft(scene, { pos: [wx * 0.98, 5.6, wz * 0.98], target: [-wx * 0.12, -0.8, -wz * 0.12], radius: 1.0, color: MOON, intensity: dark ? 0.012 : 0.11 });
-    scene.add(new THREE.HemisphereLight(0x223048, 0x050505, dark ? 0.02 : 0.12));
+    const shaft = K.lightShaft(scene, { pos: [wx * 0.98, 5.6, wz * 0.98], target: [-wx * 0.12, -0.8, -wz * 0.12], radius: 1.0, color: MOON, intensity: dark ? 0.04 : 0.11 });
+    scene.add(new THREE.HemisphereLight(0x223048, 0x050505, dark ? 0.08 : 0.12));
     // moonlight spilling off the reveal onto the stone wall around the window
     const spill = new THREE.PointLight(MOON, dark ? 0 : 7, 6, 1.6); spill.position.set(wx * 0.86, 5.0, wz * 0.86); scene.add(spill);
     const motes = K.dust(scene, { count: 900, box: [5, 6, 5], center: [wx * 0.45, 3.4, wz * 0.45], size: 0.025, opacity: dark ? 0.15 : 0.5, color: 0xcfd8ff });
@@ -332,12 +336,12 @@ export function makeStone(H) {
     const dur = shot.duration;
     const move = dark
       ? C.path([{ pos: [-1.6, 1.85, 2.0], look: [0, 1.62, 0], mm: 50 }, { pos: [-3.6, 2.6, 4.6], look: [0, 1.7, 0], mm: 40 }], { duration: dur, accel: 0.2, decel: 0.6, float: 0.012, seed: 4 })
-      : C.path([{ pos: [-3.0, 1.3, 5.9], look: [0.6, 2.4, -1], mm: 32 }, { pos: [-1.9, 1.5, 4.0], look: [0.3, 2.0, -0.5], mm: 35 }], { duration: dur, accel: 0.3, decel: 0.5, float: 0.012, seed: 2 });
+      : C.path([{ pos: [-3.0, 1.3, 5.9], look: [0.6, 2.4, -1], mm: 32 }, { pos: [-1.25, 1.62, 2.55], look: [0.1, 1.82, -0.3], mm: 40 }], { duration: dur, accel: 0.3, decel: 0.5, float: 0.012, seed: 2 });
     const cap = caption(layer, P0.caption, 'left:6%;top:17%');
     return scopeSet({ ...b, update(t, p) {
       motes.update(t); ember.update(t);
       move(camera, p, t);
-      stone.update(t, camera, { ember: dark ? 0.07 + 0.04 * K.smooth(K.range(t, 0.5, dur)) : 0.06 });
+      stone.update(t, camera, { ember: dark ? 0.1 + 0.08 * K.smooth(K.range(t, 0.5, dur)) : 0.075 });
       fade(cap, t, 0.8);
     } });
   }
@@ -363,7 +367,8 @@ export function makeStone(H) {
     const rows = near ? 14 : 30;
     for (let k = rows; k >= 0; k--) { const u = k / rows, y = hor + 4 + Math.pow(u, 1.8) * (h - hor), s = 3 + Math.pow(u, 1.8) * (near ? 150 : 70);
       const sp = s * 0.62, off = (r() * sp + t * s * 0.35) % sp;
-      for (let cx = -sp + off; cx < w + sp; cx += sp) figure2D(x, cx + (r() - 0.5) * sp * 0.3, y, s, { spear: true, color: '#000' }); }
+      if (s < 9) { x.fillStyle = '#000'; for (let cx = -sp + off; cx < w + sp; cx += sp) { const fx = cx + (r() - 0.5) * sp * 0.3; x.fillRect(fx - s * 0.17, y - s * 0.85, s * 0.34, s * 0.85); x.fillRect(fx + s * 0.14, y - s * 1.4, Math.max(0.6, s * 0.05), s * 1.3); } }
+      else for (let cx = -sp + off; cx < w + sp; cx += sp) figure2D(x, cx + (r() - 0.5) * sp * 0.3, y, s, { spear: true, color: '#000' }); }
   }
   function drawFleet(x, w, h, t, { seed = 5, glow = 1 } = {}) {
     const r = K.rng(seed), hor = h * 0.46;
@@ -522,12 +527,13 @@ export function makeStone(H) {
     return { ...b, update(t, p) {
       move(camera, p, t);
       if (offAt) { const on = o.tubes.map((_, i) => flick(t, [2, 4, 0, 5, 1, 3][i])); o.setTubes(on); const kk = on.reduce((a, v) => a + v, 0) / on.length; stone.u.uKeyI.value = 9 * kk; stone.u.uCardAmt.value = 0.5 * kk; }
-      const glow = look === 'dark' ? 0.05 + 0.05 * K.smooth(K.range(t, offAt[5], offAt[5] + 1.5)) : look === 'back' ? 0.07 : 0.05;
+      const glow = look === 'dark' ? 0.06 + 0.1 * K.smooth(K.range(t, offAt[5] - 1.5, offAt[5] + 1.0)) : look === 'back' ? 0.07 : 0.05;
       stone.update(t, camera, { ember: glow, iris: look === 'back' ? 0.22 * K.smooth(K.range(t, dur * 0.4, dur)) : 0 });
       stone.u.uVisAmt.value = look === 'back' ? 0.2 : look === 'dark' ? 0.6 : 1.1;
       // rack from the empty chair to the stone (on "stones"); the other looks hold on the stone
       const dS = stone.dist(camera) - stone.radius * 0.8, dC = camera.position.distanceTo(chairPos);
       fx.focus(look === 'front' ? 1 / K.lerp(1 / dC, 1 / dS, rack(t)) : dS);
+      if (look === 'dark') stone.u.uExposure.value = 1.6;
       fade(cap, t, 0.8);
     } };
   }
@@ -560,17 +566,17 @@ export function makeStone(H) {
   // NEXT: a slow pull-back from the stone on the desk; the office drains into darkness.
   function nextSet(ctx, shot) {
     const dur = shot.duration;
-    const b = base(ctx, { floor: null, fog: 0x000000, density: 0.06, fov: 30 });
+    const b = base(ctx, { floor: null, fog: 0x000000, density: 0.035, fov: 30 });
     const { scene, camera } = b;
     const o = office(scene, { spill: 0.8 });
-    const stone = makeStoneObj(scene, { radius: 0.13, pos: o.stonePos, keyDir: [-0.35, 0.6, -1], keySize: [0.22, 0.12], keyI: 6, keyCol: FLUO, amb: 0x010201, ember: 0.07, light: 0.5, lightDist: 3, seed: 6.2, card: blindsCard(), cardAmt: 0.25 });
+    const stone = makeStoneObj(scene, { radius: 0.13, pos: o.stonePos, keyDir: [-0.35, 0.6, -1], keySize: [0.22, 0.12], keyI: 6, keyCol: FLUO, amb: 0x010201, ember: 0.07, light: 0.8, lightDist: 3, seed: 6.2, card: blindsCard(), cardAmt: 0.25, exposure: 1.3 });
     const sp = o.stonePos;
-    const move = C.path([{ pos: [sp[0] + 0.15, sp[1] + 0.55, sp[2] + 0.55], look: sp, mm: 50 }, { pos: [sp[0] + 1.4, sp[1] + 2.0, sp[2] + 3.0], look: [sp[0], sp[1] - 0.1, sp[2]], mm: 40 }, { pos: [sp[0] + 2.4, 2.9, sp[2] + 6.2], look: [sp[0], sp[1] - 0.2, sp[2]], mm: 35 }], { duration: dur, accel: 0.15, decel: 0.55, float: 0.006, seed: 9 });
+    const move = C.path([{ pos: [sp[0] + 0.15, sp[1] + 0.55, sp[2] + 0.55], look: sp, mm: 50 }, { pos: [sp[0] + 1.4, sp[1] + 2.0, sp[2] + 3.0], look: [sp[0], sp[1] - 0.1, sp[2]], mm: 40 }, { pos: [sp[0] + 1.7, 2.4, sp[2] + 4.4], look: [sp[0], sp[1] - 0.15, sp[2]], mm: 35 }], { duration: dur, accel: 0.15, decel: 0.55, float: 0.006, seed: 9 });
     return { ...b, update(t, p) {
       move(camera, p, t);
       const k = 1 - K.smooth(K.range(t, 0.4, dur * 0.85));
-      o.setTubes(o.tubes.map((_, i) => K.clamp(k * 1.4 - i * 0.08))); stone.u.uKeyI.value = 6 * k; stone.u.uCardAmt.value = 0.25 * k;
-      stone.update(t, camera, { ember: 0.07 + 0.03 * (1 - k) });
+      o.setTubes(o.tubes.map((_, i) => K.clamp(0.25 + k * 1.2 - i * 0.06))); stone.u.uKeyI.value = 4 + 8 * k; stone.u.uCardAmt.value = 0.25 * k;
+      stone.update(t, camera, { ember: 0.09 + 0.06 * (1 - k) });
     } };
   }
 
@@ -580,7 +586,7 @@ export function makeStone(H) {
     const b = base(ctx, { floor: null, fog: 0x000000, density: 0.05, fov: 30 });
     const { scene, camera } = b;
     const stone = makeStoneObj(scene, empty
-      ? { radius: 0.5, pos: [0, 0, 0], keyDir: [0.6, 0.3, 0.75], keySize: [0.025, 0.14], keyI: 5, keyCol: FLUO, amb: 0x010302, ember: 0.04, card: watcherCard(false, '110,240,160'), cardAmt: 1.6, cardScale: 1.25, seed: 3.3 }
+      ? { radius: 0.5, pos: [0, 0, 0], keyDir: [0.6, 0.3, 0.75], keySize: [0.025, 0.14], keyI: 14, keyCol: FLUO, amb: 0x030806, ember: 0.04, exposure: 1.4, card: watcherCard(false, '110,240,160'), cardAmt: 1.6, cardScale: 1.25, seed: 3.3 }
       : { radius: 0.5, pos: [0, 0, 0], keyDir: [-0.7, 0.5, 0.5], keySize: [0.03, 0.22], keyI: 40, keyCol: MOON, amb: 0x020304, ember: 0.05, card: watcherCard(true), cardAmt: 1.8, cardScale: 0.8, seed: 7.7 });
     const ped = mesh(new THREE.CylinderGeometry(0.42, 0.5, 1.6, 48), std(0x111113, { roughness: 0.6 }), [0, -1.32, 0], scene);
     scene.add(new THREE.HemisphereLight(0x223040, 0x000000, 0.05));
@@ -593,9 +599,9 @@ export function makeStone(H) {
       move(camera, p, t);
       // rack inside the glass: from the smoke out to the reflection on "other side of the glass"
       const k = K.smooth(K.range(t, tw - 0.6, tw + 0.7));
-      stone.update(t, camera, { ember: K.lerp(0.05, 0.025, k) });
+      stone.update(t, camera, { ember: empty ? 0.06 : K.lerp(0.09, 0.03, k) });
       stone.u.uAperture.value = 1.6; stone.u.uFocus.value = K.lerp(1.0, 0.22, k);
-      stone.u.uCardAmt.value = (empty ? 1.4 : 3.0) * K.lerp(0.4, 1, k);
+      stone.u.uCardAmt.value = (empty ? 3.0 : 3.0) * K.lerp(0.4, 1, k);
       fx.focus(stone.dist(camera) - 0.5);
     } };
   }
@@ -608,8 +614,8 @@ export function makeStone(H) {
     const { scene, camera } = b;
     const armies = canvasTex(512, 512, () => {}); const ac = armies.image.getContext('2d');
     const stone = makeStoneObj(scene, q
-      ? { radius: 0.5, pos: [0, 0, 0], keyDir: [0.9, 0.15, 0.4], keySize: [0.32, 0.2], keyI: 14, keyCol: MONITOR, amb: 0x02040a, ember: 0.03, smokeCol: 0x6f9dff, seed: 5.5, emberCol: 0xff6a2a, thin: 0.18 }
-      : { radius: 0.5, pos: [0, 0, 0], keyDir: [-0.55, 0.62, 0.55], keySize: [0.03, 0.2], keyI: 60, keyCol: MOON, amb: 0x020305, ember: 0.05, seed: 1.9, vis: armies, visScale: 1.15 });
+      ? { radius: 0.5, pos: [0, 0, 0], keyDir: [0.9, 0.15, 0.4], keySize: [0.32, 0.2], keyI: 40, keyCol: MONITOR, amb: 0x060c1c, ember: 0.06, smokeCol: 0x8fb4ff, seed: 5.5, emberCol: 0xff6a2a, exposure: 1.5 }
+      : { radius: 0.5, pos: [0, 0, 0], keyDir: [-0.55, 0.62, 0.55], keySize: [0.03, 0.2], keyI: 60, keyCol: MOON, amb: 0x020305, ember: 0.05, seed: 1.9, vis: armies, visScale: 1.15, visBlur: 1.5 });
     if (q) { const mon = mesh(new THREE.PlaneGeometry(1.6, 1.0), new THREE.MeshBasicMaterial({ color: 0x3a5ab0 }), [3.6, 0.6, 1.6], scene); mon.lookAt(0, 0, 0); const ml = new THREE.RectAreaLight ? null : null;
       const key = new THREE.DirectionalLight(MONITOR, 0.6); key.position.set(3, 0.5, 1.4); scene.add(key); }
     else { const key = new THREE.DirectionalLight(MOON, 0.5); key.position.set(-2, 2.4, 2); scene.add(key); }
@@ -623,8 +629,8 @@ export function makeStone(H) {
       const k = K.smooth(K.range(t, ta, ta + 1.4));
       stone.u.uAperture.value = K.lerp(0.9, 0.45, k);
       stone.u.uFocus.value = q ? K.lerp(1.1, 0.24, k) : K.lerp(0.22, 1.05, k);
-      if (!q) { const kv = K.smooth(K.range(t, wt(shot, 'armies') - 0.5, wt(shot, 'armies') + 0.8)); drawArmy(ac, 512, 512, t, { seed: 4, glow: 1 }); armies.needsUpdate = true; stone.u.uVisAmt.value = 0.45 * kv * (1 - K.range(t, dur - 0.6, dur)); }
-      stone.update(t, camera, { ember: q ? 0.03 : 0.05 });
+      if (!q) { const kv = K.smooth(K.range(t, wt(shot, 'armies') - 0.5, wt(shot, 'armies') + 0.8)); const fk = Math.floor(t * 12); if (kv > 0 && armies.userData.k !== fk) { armies.userData.k = fk; drawArmy(ac, 512, 512, fk / 12, { seed: 4, glow: 1 }); armies.needsUpdate = true; } stone.u.uVisAmt.value = 0.45 * kv * (1 - K.range(t, dur - 0.6, dur)); }
+      stone.update(t, camera, { ember: q ? 0.06 : 0.05 });
       fx.focus(stone.dist(camera) - 0.48);
     } };
   }
@@ -634,14 +640,14 @@ export function makeStone(H) {
     const dur = shot.duration;
     const b = base(ctx, { floor: null, fog: 0x000000, density: 0.04, fov: 30 });
     const { scene, camera } = b;
-    const stone = makeStoneObj(scene, { radius: 0.5, pos: [0, 0, 0], keyDir: [0.6, 0.7, 0.35], keySize: [0.03, 0.18], keyI: 30, keyCol: MOON, amb: 0x010203, ember: 0.08, seed: 8.8, smoke: 9, thin: 0.12 });
+    const stone = makeStoneObj(scene, { radius: 0.5, pos: [0, 0, 0], keyDir: [0.6, 0.7, 0.35], keySize: [0.03, 0.18], keyI: 30, keyCol: MOON, amb: 0x010203, ember: 0.08, seed: 8.8, smoke: 9, thin: 0.12, exposure: 1.4 });
     const move = C.path([{ pos: [0.35, 0.12, 4.8], look: [0, 0, 0], mm: 65 }, { pos: [0.1, 0.03, 3.2], look: [0, 0, 0], mm: 65 }], { duration: dur, accel: 0.2, decel: 0.5, float: 0.004, seed: 3 });
     const d0 = V3([-0.85, 0.4, 0.35]).normalize(), d1 = V3([0, 0, 1]);
     return scopeSet({ ...b, update(t, p) {
       move(camera, p, t);
       const k = K.smooth(K.range(t, 0.1, dur * 0.7)), turn = K.smooth(K.range(t, dur * 0.25, dur * 0.95));
       const dir = d0.clone().lerp(d1.clone().copy(camera.position).normalize(), turn).normalize();
-      stone.update(t, camera, { ember: K.lerp(0.06, 0.11, k), iris: k, irisDir: dir });
+      stone.update(t, camera, { ember: K.lerp(0.1, 0.12, k), iris: k, irisDir: dir });
     } });
   }
 
@@ -661,7 +667,7 @@ export function makeStone(H) {
     return { ...b, update(t, p) {
       move(camera, p, t); motes.update(t);
       const f = K.outExpo(K.range(t, ta + 0.3, ta + 0.8)) * (1 - 0.25 * K.smooth(K.range(t, ta + 0.6, dur)));
-      stone.update(t, camera, { ember: 0.03 + f * 0.05, flare: f });
+      stone.update(t, camera, { ember: 0.05 + f * 0.04, flare: f });
       motes.material.opacity = 0.1 + 0.5 * f;
     } };
   }
@@ -800,11 +806,11 @@ export function makeStone(H) {
     const icam = new THREE.PerspectiveCamera(70, ctx.width / ctx.height, 0.02, 100);
     const wall = stoneWallTex(3, { rows: 14, light: 110 }).clone(); wall.repeat.set(5, 2);
     const tower = mesh(new THREE.CylinderGeometry(6.5, 6.5, 11, 48, 1, true), new THREE.MeshStandardMaterial({ color: 0x8a8c94, map: wall, roughness: 0.92, side: THREE.BackSide }), [0, 5.5, 0], inner); tower.castShadow = false;
-    const win = mesh(new THREE.PlaneGeometry(0.36, 2.6), new THREE.MeshBasicMaterial({ color: 0x8090b0, fog: false }), [0, 5.6, -6.4], inner);
+    const win = mesh(new THREE.PlaneGeometry(0.5, 2.8), new THREE.MeshBasicMaterial({ color: 0xc0d0f0, fog: false }), [0, 5.6, -6.4], inner);
     const fig = robe({ lean: 0.55, arms: 'reach', seed: 4, mat: clothMat(0x0a0a0c, 0x5a6478) }); fig.g.position.set(0, 0, -1.0); fig.g.scale.setScalar(1.1); inner.add(fig.g);
-    const moon = K.keySpot(inner, { color: MOON, intensity: 1800, pos: [0.4, 6.5, -6.6], target: [0, 1.4, -0.6], angle: 0.25, penumbra: 0.5, shadow: 0 });
-    K.lightShaft(inner, { pos: [0, 5.6, -6.3], target: [0, 1.4, -0.4], radius: 1.1, color: MOON, intensity: 0.12 });
-    const under = new THREE.PointLight(0xff7030, 0.6, 3, 2); under.position.set(0, 1.25, 0); inner.add(under);
+    const moon = K.keySpot(inner, { color: MOON, intensity: 4200, pos: [0.4, 6.5, -6.6], target: [0, 1.4, -0.6], angle: 0.25, penumbra: 0.5, shadow: 0 });
+    K.lightShaft(inner, { pos: [0, 5.6, -6.3], target: [0, 1.4, -0.4], radius: 1.4, color: MOON, intensity: 0.2 });
+    const under = new THREE.PointLight(0xff7030, 0.25, 3, 2); under.position.set(0, 1.25, 0); inner.add(under);
     inner.add(new THREE.HemisphereLight(0x223048, 0x050505, 0.08));
     const motes = K.dust(inner, { count: 500, box: [3, 4, 3], center: [0, 2.6, -1.5], size: 0.02, opacity: 0.45, color: 0xcfd8ff });
     const rt = new THREE.WebGLRenderTarget(ctx.width, ctx.height, { type: THREE.HalfFloatType, depthBuffer: true });
@@ -828,8 +834,8 @@ export function makeStone(H) {
           float sm = smoothstep(0.42, 0.85, texture(uNoise, q + (w.bab - 0.5) * 0.6).r);
           vec3 ember = vec3(1.0, 0.35, 0.1) * uEmber;
           float low = smoothstep(0.2, -0.75, c.y);
-          col = mix(col, col * 0.25, sm * 0.65) + ember * (sm * 0.12 + 0.05) * (0.3 + low * 1.3);
-          col += ember * edge * 0.18 * (0.5 + 0.5 * sm);   // light trapped in the glass at the rim
+          col = mix(col, col * 0.55, sm * 0.35) + ember * (sm * 0.05 + 0.01) * (0.1 + low * 1.6);
+          col += ember * edge * 0.1 * (0.5 + 0.5 * sm);   // light trapped in the glass at the rim
           col += vec3(0.7, 0.75, 0.9) * smoothstep(0.035, 0.0, abs(r - R)) * 0.12;
           gl_FragColor = vec4(col, 1.0);
           #include <tonemapping_fragment>
@@ -843,7 +849,7 @@ export function makeStone(H) {
       for (const [s, A] of [[-1, fig.L], [1, fig.R]]) { A.sg.rotation.set(-0.95, 0, s * 0.25); A.fore.rotation.set(-0.45, 0, -s * 0.35); }
       const h = K.handheld(t, 0.01, 4);
       icam.position.set(0.05 + h.x, 1.25 + h.y, 0.02 - k * 0.1); icam.lookAt(look0.clone().lerp(look1, k)); icam.rotation.z += 0.05 * Math.sin(t * 0.2);
-      icam.fov = K.lerp(84, 72, k); icam.updateProjectionMatrix();
+      icam.fov = K.lerp(86, 78, k); icam.updateProjectionMatrix();
       renderer.setRenderTarget(rt); renderer.render(inner, icam); renderer.setRenderTarget(null);
       quad.material.uniforms.uT.value = t; quad.material.uniforms.uEmber.value = 0.8 + 0.2 * Math.sin(t * 0.7);
       camera.position.set(0, 0, 1); camera.lookAt(0, 0, 0);
@@ -879,9 +885,9 @@ export function makeStone(H) {
     const r = K.rng(9); const xs = [-1.25, -0.85, -0.42, 0.0, 0.42, 0.85, 1.25];
     const fireDir = [1, 0.5, 0.6];
     const stones = xs.map((x, i) => { const rad = i === 3 ? 0.12 : 0.075 + r() * 0.025; const z = -0.25 + Math.pow(Math.abs(x), 1.6) * 0.32;
-      return makeStoneObj(scene, { radius: rad, pos: [x, 0.92 + rad, z], keyDir: fireDir, keySize: [0.12, 0.1], keyI: 18, keyCol: SODIUM, amb: 0x0c0604, ember: 0.03 + r() * 0.02, light: 0, seed: i * 1.7, rim: 0.03 }); });
+      return makeStoneObj(scene, { radius: rad, pos: [x, 0.92 + rad, z], keyDir: fireDir, keySize: [0.12, 0.1], round: 1, keyI: 30, keyCol: SODIUM, amb: 0x0c0604, ember: 0.05, light: 0, seed: i * 1.7, rim: 0.03, exposure: 1.4 }); });
     // the fire: off to the right, a flickering key and a glow in the haze
-    const fire = new THREE.PointLight(0xff9a50, 45, 14, 1.6); fire.position.set(4.0, 1.6, 1.5); fire.castShadow = true; fire.shadow.mapSize.set(1024, 1024); scene.add(fire);
+    const fire = new THREE.PointLight(0xff9a50, 75, 14, 1.6); fire.position.set(4.0, 1.6, 1.5); fire.castShadow = true; fire.shadow.mapSize.set(1024, 1024); scene.add(fire);
     const fill = new THREE.PointLight(0xff7a30, 30, 30, 1.2); fill.position.set(-2, 5, -10); scene.add(fill);
     const hearth = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex([[0, 'rgba(255,200,120,1)'], [0.3, 'rgba(255,120,40,.4)'], [1, 'rgba(255,80,20,0)']]), color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     hearth.position.set(kings ? 0 : 6, kings ? 4 : 1.4, kings ? -14 : 0.5); hearth.scale.setScalar(kings ? 14 : 6); scene.add(hearth);
@@ -898,7 +904,7 @@ export function makeStone(H) {
         const crown = new THREE.Group(); crown.position.set(x, 2.75, -6.5 - Math.abs(i - 3) * 0.5); scene.add(crown);
         mesh(new THREE.CylinderGeometry(0.28, 0.25, 0.18, 24, 1, true), crownM, [0, 0, 0], crown).material.side = THREE.DoubleSide;
         for (let k = 0; k < 7; k++) { const a = k / 7 * Math.PI * 2; mesh(new THREE.ConeGeometry(0.045, 0.2, 6), crownM, [Math.sin(a) * 0.27, 0.18, Math.cos(a) * 0.27], crown); } }
-      const back = K.keySpot(scene, { color: 0xffa060, intensity: 900, pos: [0, 9, -18], target: [0, 1, -4], angle: 0.6, penumbra: 0.8, shadow: 0 });
+      const back = K.keySpot(scene, { color: 0xffa060, intensity: 2200, pos: [0, 9, -18], target: [0, 1, -4], angle: 0.6, penumbra: 0.8, shadow: 0 });
       K.lightShaft(scene, { pos: [0, 10, -17], target: [0, 0, -4], radius: 5, color: 0xffa060, intensity: 0.05 });
       move = C.path([{ pos: [-0.9, 0.86, 2.4], look: [0.0, 1.6, -3], mm: 28 }, { pos: [0.5, 0.88, 2.15], look: [0.2, 1.7, -3], mm: 28 }], { duration: dur, accel: 0.3, decel: 0.5, float: 0.01, seed: 2 });
     } else {
@@ -907,8 +913,8 @@ export function makeStone(H) {
     return scopeSet({ ...b, update(t, p) {
       move(camera, p, t); motes.update(t);
       const fl = 0.85 + 0.1 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1) + 0.05 * Math.sin(t * 13.7);
-      fire.intensity = 45 * fl; hearth.material.opacity = 0.5 * fl;
-      stones.forEach((s, i) => s.update(t, camera, { ember: 0.035 + 0.01 * Math.sin(t * 0.8 + i) }));
+      fire.intensity = 75 * fl; hearth.material.opacity = 0.5 * fl;
+      stones.forEach((s, i) => s.update(t, camera, { ember: 0.06 + 0.012 * Math.sin(t * 0.8 + i) }));
     } });
   }
 
@@ -930,7 +936,7 @@ export function makeStone(H) {
     for (let i = 0; i < 4; i++) { const a = i / 4 * Math.PI * 2 + Math.PI / 8 * 0 + tw; const hg = new THREE.ConeGeometry(2.0, 24, 4); hg.translate(0, 12, 0);
       const h = new THREE.Mesh(hg, obs); h.position.set(Math.cos(a) * topR * 0.78, H - 1, -Math.sin(a) * topR * 0.78); h.lookAt(Math.cos(a) * 60, H + 200, -Math.sin(a) * 60); h.rotateX(Math.PI / 2); g.add(h); }
     const crown = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 6.6, 3, 8), obs); crown.position.y = H + 1; g.add(crown);
-    const win = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 2.2), new THREE.MeshBasicMaterial({ color: 0xff8a40 })); win.position.set(0, 104, 7.35); g.add(win);
+    const win = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 3.2), new THREE.MeshBasicMaterial({ color: 0xffa060, fog: false })); win.position.set(0, 104, 7.35); g.add(win);
     const rock = new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: 0.8, flatShading: true });
     const plinth = new THREE.Mesh(new THREE.CylinderGeometry(24, 30, 4, 16), rock); plinth.position.y = -1; g.add(plinth);
     g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -940,7 +946,10 @@ export function makeStone(H) {
     const dur = shot.duration;
     const b = base(ctx, { floor: 0x0e0f12, fog: 0x05070b, density: 0.0035, fov: 30 });
     const { scene, camera } = b;
-    C.sky(scene, 'kloppenheim_06_puresky', { intensity: 0.35, background: false }); scene.background = new THREE.Color(0x03050a);
+    C.sky(scene, 'kloppenheim_06_puresky', { intensity: 0.35, background: false });
+    scene.background = new THREE.Color(0x03060d);
+    const skyTex = canvasTex(16, 512, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#03060d'); g.addColorStop(0.42, '#1a2a46'); g.addColorStop(0.5, '#3a4c6e'); g.addColorStop(0.56, '#0a0e16'); g.addColorStop(1, '#05070b'); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+    const skyDome = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 24), new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide, fog: false, depthWrite: false })); skyDome.renderOrder = -1; scene.add(skyDome);
     const tw = towerGeometry(); scene.add(tw);
     // the ring wall of the plain
     const ring = mesh(new THREE.TorusGeometry(150, 3, 6, 128), std(0x08090b, { roughness: 0.7 }), [0, 1, 0], scene); ring.rotation.x = Math.PI / 2; ring.scale.z = 3;
@@ -948,9 +957,9 @@ export function makeStone(H) {
     Object.assign(moon.shadow.camera, { left: -60, right: 60, top: 150, bottom: -10, near: 10, far: 600 }); scene.add(moon);
     const rim = new THREE.DirectionalLight(0x8fa8e0, 2.2); rim.position.set(140, 90, -220); scene.add(rim);
     const moonDisc = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex([[0, 'rgba(255,255,255,1)'], [0.08, 'rgba(230,236,255,1)'], [0.1, 'rgba(180,200,240,.35)'], [0.4, 'rgba(120,140,200,.08)'], [1, 'rgba(0,0,0,0)']], 256), transparent: true, fog: false, depthWrite: false, blending: THREE.AdditiveBlending }));
-    moonDisc.position.set(-160, 300, -700); moonDisc.scale.setScalar(420); scene.add(moonDisc);
+    moonDisc.position.set(-230, 208, -376); moonDisc.scale.setScalar(150); moonDisc.renderOrder = 2; scene.add(moonDisc);
     const clouds = C.cloudLayer(scene, { y: 200, spread: 1400, count: 120, size: 260, color: 0x2c3448, seed: 4 });
-    clouds.children.forEach(s => { s.material.opacity = 0.75; s.material.fog = false; });
+    clouds.children.forEach(s => { s.material.opacity = 0.5; s.material.fog = false; s.material.color.set(0x56627e); });
     const low = C.cloudLayer(scene, { y: 40, spread: 500, count: 50, size: 120, color: 0x1a1f2a, seed: 9 }); low.children.forEach(s => { s.material.opacity = 0.35; });
     scene.add(new THREE.HemisphereLight(0x1c2436, 0x000000, 0.25));
     const move = C.path([{ pos: [95, 3, 235], look: [0, 62, 0], mm: 35 }, { pos: [78, 48, 200], look: [0, 84, 0], mm: 35 }, { pos: [62, 104, 165], look: [-8, 106, 0], mm: 40 }], { duration: dur, accel: 0.3, decel: 0.5, float: 0.08, seed: 5 });
@@ -967,9 +976,9 @@ export function makeStone(H) {
     const { scene, camera, layer } = b;
     b.ground.material.roughness = 0.4; b.ground.material.metalness = 0.4;
     const ped = mesh(new THREE.CylinderGeometry(0.22, 0.3, 0.95, 8), std(0x0c0c0e, { roughness: 0.3, metalness: 0.6, flatShading: true }), [0, 0.475, 0], scene);
-    const stone = makeStoneObj(scene, { radius: 0.17, pos: [0, 1.12, 0], keyDir: [-0.6, 0.6, -0.5], keySize: [0.04, 0.25], keyI: 25, keyCol: 0xcfe0ff, amb: 0x010203, ember: 0.08, light: 1.4, lightDist: 5, seed: 5.1, emberCol: 0xff6020 });
+    const stone = makeStoneObj(scene, { radius: 0.17, pos: [0, 1.12, 0], keyDir: [-0.6, 0.6, -0.5], keySize: [0.04, 0.25], keyI: 25, keyCol: 0xcfe0ff, amb: 0x010203, ember: 0.12, light: 1.4, lightDist: 5, seed: 5.1, emberCol: 0xff6020, exposure: 1.3 });
     const fig = robe({ lean: 0.35, arms: 'reach', seed: 11, mat: clothMat(0x0c0c0e, 0x6a7080) }); fig.g.position.set(0, 0, -0.55); fig.g.scale.setScalar(1.12); scene.add(fig.g);
-    const cold = K.keySpot(scene, { color: 0xbcd0ff, intensity: 600, pos: [-2.5, 7, -4], target: [0, 1.2, -0.5], angle: 0.3, penumbra: 0.6, shadow: 1024 });
+    const cold = K.keySpot(scene, { color: 0xbcd0ff, intensity: 1400, pos: [-2.5, 7, -4], target: [0, 1.2, -0.5], angle: 0.3, penumbra: 0.6, shadow: 1024 });
     K.lightShaft(scene, { pos: [-2.5, 7, -4], target: [0, 0.4, -0.3], radius: 1.5, color: 0xbcd0ff, intensity: 0.07 });
     // the web: threads from the stone wind up and around the figure
     const r = K.rng(12); const threadM = new THREE.MeshBasicMaterial({ color: 0xd8e6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
@@ -985,7 +994,7 @@ export function makeStone(H) {
     return scopeSet({ ...b, update(t, p) {
       move(camera, p, t);
       threads.forEach((th) => { const k = K.smooth(K.range(t, 0.2 + th.d * dur * 0.6, dur * 0.95)); th.m.geometry.setDrawRange(0, Math.floor(th.n * k / 3) * 3); });
-      stone.update(t, camera, { ember: 0.08 });
+      stone.update(t, camera, { ember: 0.12 });
       fade(q, t, 0.6, 1.6);
     } });
   }
@@ -1068,15 +1077,15 @@ export function makeStone(H) {
     const { scene, camera, layer } = b;
     const rock = mesh(new THREE.CylinderGeometry(9, 10, 0.6, 11), std(0x0a0a0b, { roughness: 1, flatShading: true }), [0, 0.3, 0], scene);
     const fig = robe({ lean: 0.04, arms: 'cup', hood: true, seed: 23, mat: clothMat(0x0a0a0b, 0x111111) }); fig.g.position.set(0, 0.6, 0); fig.g.scale.setScalar(1.12); scene.add(fig.g);
-    const stone = makeStoneObj(scene, { radius: 0.13, pos: handsCenter(fig, 0.06), keyDir: [0.2, 1, -0.4], keySize: [0.2, 0.2], keyI: 30, keyCol: WORK, amb: 0x030303, ember: 0.08, light: 1.0, lightDist: 2.5, seed: 4.1, emberCol: 0xffa050 });
-    const key = K.keySpot(scene, { color: WORK, intensity: 1500, pos: [0.8, 14, -5], target: [0, 1.4, 0], angle: 0.2, penumbra: 0.6, shadow: 1024 });
+    const stone = makeStoneObj(scene, { radius: 0.13, pos: handsCenter(fig, 0.06), keyDir: [0.2, 1, -0.4], keySize: [0.2, 0.2], keyI: 30, keyCol: WORK, amb: 0x030303, ember: 0.14, light: 1.5, lightDist: 2.5, seed: 4.1, emberCol: 0xffa050, exposure: 1.4 });
+    const key = K.keySpot(scene, { color: WORK, intensity: 2800, pos: [0.8, 14, -5], target: [0, 1.4, 0], angle: 0.2, penumbra: 0.6, shadow: 1024 });
     K.lightShaft(scene, { pos: [0.8, 14, -5], target: [0, -0.5, 0.2], radius: 2.2, color: WORK, intensity: 0.045 });
     const motes = K.dust(scene, { count: 600, box: [4, 8, 4], center: [0, 4, -1], size: 0.03, opacity: 0.5, color: 0xfff0dc });
     const q = quoteCard(layer, P0, 'left:6%;bottom:17%');
     const move = C.path([{ pos: [1.6, 0.35, 3.6], look: [0, 2.0, 0], mm: 24 }, { pos: [1.0, 0.45, 2.7], look: [0, 2.05, 0], mm: 24 }], { duration: dur, accel: 0.3, decel: 0.5, float: 0.01, seed: 3 });
     return scopeSet({ ...b, update(t, p) {
       move(camera, p, t); motes.update(t);
-      stone.update(t, camera, { ember: 0.08 });
+      stone.update(t, camera, { ember: 0.14 });
       fade(q, t, wt(shot, 'dangerous') - 0.3, wt(shot, 'dangerous') + 0.6);
     } });
   }
