@@ -1098,14 +1098,14 @@ export function makeOps(H) {
     const crack = (x) => { const rr = K.rng(9); x.lineCap = 'round'; for (let i = 0; i < 60; i++) { let px = rr() * RW, py = rr() * RH, ang = rr() * 6.28; x.strokeStyle = `rgba(0,0,0,${0.35 + rr() * 0.4})`; x.lineWidth = 0.6 + rr() * 1.6; x.beginPath(); x.moveTo(px, py);
       for (let k = 0; k < 14; k++) { ang += (rr() - 0.5) * 1.1; px += Math.cos(ang) * 9; py += Math.sin(ang) * 9; x.lineTo(px, py); } x.stroke(); }
       for (let i = 0; i < 16; i++) { x.fillStyle = `rgba(${20 + rr() * 20},${20 + rr() * 20},${22 + rr() * 20},.55)`; x.fillRect(rr() * RW, rr() * RH, 40 + rr() * 140, 20 + rr() * 60); } };
-    const colT = canvasTex(RW, RH, (x) => { x.fillStyle = '#0c0d0f'; x.fillRect(0, 0, RW, RH); const rr = K.rng(4); for (let i = 0; i < 9000; i++) { const v = 8 + rr() * 18; x.fillStyle = `rgb(${v},${v},${v + 2})`; x.fillRect(rr() * RW, rr() * RH, 1 + rr() * 2, 1 + rr() * 2); } crack(x);
+    const colT = canvasTex(RW, RH, (x) => { x.fillStyle = '#3a3b3e'; x.fillRect(0, 0, RW, RH); const rr = K.rng(4); for (let i = 0; i < 14000; i++) { const v = 44 + rr() * 34; x.fillStyle = `rgb(${v},${v},${v + 2})`; x.fillRect(rr() * RW, rr() * RH, 1 + rr() * 2, 1 + rr() * 2); } crack(x);
       x.globalAlpha = 0.5; drawPuddles(x, '#040506', 'rgba(0,0,0,0)'); x.globalAlpha = 1; x.strokeStyle = 'rgba(200,200,200,.18)'; x.setLineDash([60, 40]); x.lineWidth = 4; x.beginPath(); x.moveTo(0, RH / 2); x.lineTo(RW, RH / 2); x.stroke(); });
     // roughness in G, metalness in B: puddles are mirror-smooth, the dry asphalt dull
-    const roughT = canvasTex(RW, RH, (x) => { drawPuddles(x, 'rgb(0,6,255)', 'rgb(0,150,12)'); crack(x); });
+    const roughT = canvasTex(RW, RH, (x) => { drawPuddles(x, 'rgb(0,150,10)', 'rgb(0,150,10)'); const rr = K.rng(12); for (let i = 0; i < 5000; i++) { const g = 110 + rr() * 90; x.fillStyle = `rgba(0,${g | 0},10,.5)`; x.fillRect(rr() * RW, rr() * RH, 2 + rr() * 6, 2 + rr() * 6); } crack(x); drawPuddles(x, 'rgb(0,6,255)', 'rgba(0,0,0,0)'); });
     const maskT = canvasTex(RW, RH, (x) => { drawPuddles(x, 'rgb(255,255,255)', 'rgb(0,0,0)'); x.filter = 'blur(5px)'; x.drawImage(x.canvas, 0, 0); });
     for (const t of [colT, roughT, maskT]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(160 / RX, 1); }
     roughT.colorSpace = maskT.colorSpace = THREE.NoColorSpace;
-    const road = mesh(new THREE.PlaneGeometry(160, 9), new THREE.MeshStandardMaterial({ map: colT, color: 0x3c3c3c, roughnessMap: roughT, metalnessMap: roughT, roughness: 1, metalness: 1, envMapIntensity: 1.5 }), [20, 0, 0], scene); road.rotation.x = -Math.PI / 2;
+    const road = mesh(new THREE.PlaneGeometry(160, 9), new THREE.MeshPhysicalMaterial({ map: colT, color: 0xb4b4b4, roughnessMap: roughT, metalnessMap: roughT, roughness: 1, metalness: 1, envMapIntensity: 0.8, specularIntensity: 0.35 }), [20, 0, 0], scene); road.rotation.x = -Math.PI / 2;
     // puddles: a real planar reflection (half resolution) shown only through the puddle mask
     const puddleShader = { name: 'Puddle', uniforms: { color: { value: null }, tDiffuse: { value: null }, textureMatrix: { value: null }, tMask: { value: maskT }, uRep: { value: new THREE.Vector2(160 / RX, 1) } },
       vertexShader: `uniform mat4 textureMatrix; varying vec4 vUv; varying vec2 vUv2; void main(){ vUv = textureMatrix * vec4(position, 1.0); vUv2 = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
@@ -1185,10 +1185,10 @@ export function makeOps(H) {
       mesh(new THREE.CylinderGeometry(0.22, 0.3, 0.45, 8), ironM, [x, 5.85, z * 0.78], scene);
       heads.set(i * 2, [x, 5.6, z * 0.78], colArr(SODIUM, 2), 0.35); heads.set(i * 2 + 1, [x, 5.6, z * 0.78], colArr(SODIUM, 0.35), 2.2); streak(x, 5.6, z * 0.78, SODIUM, 1.4, 0.95); });
     heads.commit();
-    [0, 1, 2, 3].forEach(i => { const x = lampXs[i], z = (i % 2 ? 1 : -1) * 4.9 * 0.78; const l = new THREE.SpotLight(SODIUM, 1000, 26, 1.05, 0.8, 1.6); l.position.set(x, 5.6, z); l.target.position.set(x, 0, z * 0.4); if (i === 2) { l.castShadow = true; l.shadow.mapSize.set(1024, 1024); } scene.add(l, l.target); });
+    [0, 1, 2, 3].forEach(i => { const x = lampXs[i], z = (i % 2 ? 1 : -1) * 4.9 * 0.78; const l = new THREE.SpotLight(SODIUM, 420, 26, 0.7, 1.0, 1.6); l.position.set(x, 5.6, z); l.target.position.set(x, 0, z * 0.4); if (i === 2) { l.castShadow = true; l.shadow.mapSize.set(1024, 1024); } scene.add(l, l.target); });
     K.lightShaft(scene, { pos: [lampXs[1], 5.6, 4.9 * 0.78], target: [lampXs[1], 0, 1.6], radius: 3.6, color: SODIUM, intensity: 0.05 });
     K.lightShaft(scene, { pos: [lampXs[2], 5.6, -4.9 * 0.78], target: [lampXs[2], 0, -1.6], radius: 3.6, color: SODIUM, intensity: 0.04 });
-    scene.add(new THREE.HemisphereLight(0x2a3a5a, 0x050505, 0.35));
+    scene.add(new THREE.HemisphereLight(0x2a3a5a, 0x050505, 0.45));
     C.sky(scene, 'moonless_golf', { background: false, intensity: 0.35 });
     // ---- patrol car: an extruded sedan profile with real wheel arches, a glass cabin and a slim light bar
     const car = new THREE.Group(); car.position.set(mode === 'turn' ? 20 : 34, 0, 2.3); car.rotation.y = mode === 'turn' ? Math.PI * 0.93 : Math.PI; scene.add(car);
@@ -1222,11 +1222,11 @@ export function makeOps(H) {
       barL.material.color.setRGB(0.12 + 0.88 * flash * 0.4, 0.3 + 0.7 * flash * 0.7, 1); barR.material.color.setRGB(0.12 + 0.3 * (1 - flash), 0.3 + 0.5 * (1 - flash), 1);
       car.updateMatrixWorld(); camera.updateMatrixWorld();
       const sweep = V3(Math.cos(a) * 9, -1.5, Math.sin(a) * 9); const camLocal = car.worldToLocal(camera.position.clone()).sub(V3(-0.28, 1.6, 0));
-      const aim = sweep.lerp(camLocal.setLength(9), toCam); bt.position.set(-0.28 + aim.x, 1.6 + aim.y, aim.z); beacon.intensity = 900;
+      const aim = sweep.lerp(camLocal.setLength(9), toCam); bt.position.set(-0.28 + aim.x, 1.6 + aim.y, aim.z); beacon.intensity = 900 * (1 - 0.65 * toCam);
       beacon.getWorldPosition(wp); barGlow.set(0, wp.toArray(), [0.25, 0.45, 1.6], 0.3); barGlow.set(1, wp.toArray(), [0.05, 0.12, 0.6], 2.8); barGlow.commit();
       blueStreak.position.set(wp.x, -0.02, wp.z); blueStreak.material.opacity = 0.45 + 0.3 * flash;
       const dir = bt.getWorldPosition(cp).sub(wp).normalize(); const toC = camera.position.clone().sub(wp).normalize(); const f = Math.pow(Math.max(0, dir.dot(toC)), 6);
-      flare.position.copy(wp); const s = wp.distanceTo(camera.position) * (0.02 + f * 0.1); flare.scale.set(s * 2.4, s, 1); flare.material.opacity = 0.2 + 0.8 * f;
+      flare.position.copy(wp); const s = wp.distanceTo(camera.position) * (0.018 + f * 0.035); flare.scale.set(s * 2.2, s, 1); flare.material.opacity = 0.25 + 0.55 * f;
     };
     if (mode === 'street') {
       // low on the asphalt, long lens: the street stacks up, the puddles carry the light
