@@ -68,6 +68,48 @@ Defaults are the fast path; see `docs/research/render-speed.md` for the measurem
 - Scene code: anything that accumulates per frame (trails, smear decay) must scale with fps, e.g.
   `Math.pow(trails, 30 / fps)`, or it gets shorter in seconds at 60 fps.
 
+## Cinematic toolkit (opt-in per set; sets without it render exactly as before)
+Demo: `projects/fx-test` (library aisle rack focus + AO + god rays, follow-through walk, two
+archive-photo parallax moves). Costs below are llvmpipe, 1080p, 4 vCPU, on a 263 ms base frame.
+- **Lens and camera, `engine/cine.js`.** `C.lens(camera, mm)` (full-frame 16:9, `C.mmToFov`,
+  `C.fovToMm`, `C.frameDistance(size, mm, fill)`). `C.path(keys, { duration, accel, decel, vIn,
+  vOut, carry, float })` is the C1 rig: chord-length Hermite through `{pos, look, mm|fov}` keys
+  plus one ease-in/ease-out velocity profile over the whole shot, so there are no speed pops at
+  keys. Velocity carry-over on match cuts: build the outgoing rig with `duration` (and `vOut` if it
+  should leave moving), then the incoming one with `{ duration: shot.duration, carry: outgoingRig }`;
+  it enters at exactly the outgoing exit speed. `rig.velocity(p)`, `rig.exit()`.
+  Presets (lens in mm): `C.moves.slowPush / pullBack / float / orbitReveal / truck({ target, mm,
+  size|dist, az, el, ... })` and `C.moves.followThrough({ subject: t => [x,y,z], mm, offset, lag,
+  overshoot })`. Handheld stays `K.handheld` (low-frequency only); keep `float` <= 0.03 here.
+- **Characters.** `C.preload(renderer, { characters: ['UAL'] })`, `C.character('UAL', { clip:
+  'Walk_Loop' })`: Quaternius UAL mannequin, CC0, 43 clips (`ch.clips`). `ch.blend([[clip, time,
+  weight], ...])` crossfades purely in t. Pass a matte material (roughness ~0.85, near-black) for
+  the silhouette look; the default glossy one reads as a game. Mixamo pose names alias to UE bones,
+  but axes differ, so re-tune pose angles.
+- **Post, `engine/post.js`.** `const fx = P.post(ctx, scene, camera, { ao, dof, rays, lens,
+  quality, tone, hdr })`, then keep calling `renderer.render(scene, camera)`: stage.html routes it
+  through the chain, and FXAA and the 2D compositors keep working. In `update`: `fx.focus(d)`,
+  `fx.focusOn(obj)`, or a rack with `fx.focus(P.rack(t, [[0, near], [2.2, near], [3.5, far]]))`
+  (eased in dioptres). `dof: { fstop: 2, mm: 35, bokeh: 4 }` derives the focus range from a thin
+  lens. `rays: { light: bulbMesh }`, `lens: 'subtle' | 'vintage'`. The chain does its own ACES tone
+  map; grain, halation and vignette stay in the ffmpeg finish.
+  Measured adds per frame: DOF +240 ms (`low`, half-res) / +570 ms (`high`); N8AO +210 (`low`,
+  half-res) / +240 (`medium`) / +440 (`high`); god rays +110; lens distortion + CA +45; chain
+  overhead +11. Whole stack: `draft` +230 (no AO), `low` +470, `high` +1065 ms.
+  `quality` defaults to `draft` under `--draft`, else `low`. `STAGE_QS='&postq=off'` turns
+  every set's post off for a fast look-dev pass.
+- **Archive photo parallax, `engine/parallax.js` + `engine/depth.py`.** Put PD/licensed photos in
+  `projects/<p>/assets/archive/*.jpg` with a `SOURCES.md`, then run `python3 engine/depth.py
+  projects/<p>` (Depth Anything V2 **Small** only, Apache-2.0; about 6-20 s per photo on CPU,
+  cached; writes and commits `archive/depth/<stem>.depth.png|plate.jpg|json`). In the set: `const
+  ph = await PX.photo(scene, '/projects/<p>/assets/archive/x.jpg', { mm: 50, depth: 0.5, center:
+  [u, v], treatment: 'bw'|'sepia'|'selenium'|'slide', layers: 0|N })`, then `const move =
+  PX.moves.push|pull|lateral|rise(ph, { amount, opts: { duration } })` and `move(camera, p, t)`.
+  The edges where objects separate in depth are handled by fading stretched triangles over an
+  inpainted background plate. Keep moves small (the defaults). Cost is about the same as a plain
+  frame (~240 ms). Don't put a photo set through `post` with ACES unless you want its tones changed
+  (use `tone: 'linear'`).
+
 ## Gotchas
 - Call `camera.updateMatrixWorld()` before projecting (`K.toScreen` does it).
 - Overlay layers are hidden unless active; position with `window.innerHeight / 1080`.

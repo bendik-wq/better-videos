@@ -6,6 +6,9 @@
 { "imports": {
   "three": "/node_modules/three/build/three.module.js",
   "three/addons/": "/node_modules/three/examples/jsm/",
+  "three/examples/jsm/": "/node_modules/three/examples/jsm/",
+  "postprocessing": "/engine/vendor/postprocessing-6.39.5.js",
+  "n8ao": "/engine/vendor/n8ao-2.0.1.js",
   "kit": "/engine/kit.js"
 } }
 </script>
@@ -54,7 +57,9 @@ window.__setup = async (cfg) => {
   const overlay = document.getElementById('overlay');
   overlay.style.fontSize = (cfg.height / 1080 * 16) + 'px'; // 1em == 16px at 1080p, scales with draft size
   const mod = await import(params.get('project') + '/scene.js');
-  scene = await mod.default({ THREE, renderer, overlay, ...cfg });
+  // post.js quality override for every set: ?postq=draft|low|medium|high|off (e.g. STAGE_QS='&postq=off')
+  const postQuality = params.get('postq') ?? undefined;
+  scene = await mod.default({ THREE, renderer, overlay, postQuality, ...cfg });
 };
 
 // FXAA on the final, tone-mapped frame: after each render to the canvas, copy the drawing buffer

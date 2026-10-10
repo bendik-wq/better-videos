@@ -51,6 +51,45 @@ switch them off.
 installed for Kokoro. It took **0.8 s per image at 518×294** and **3.6 s at 1022×574**, on CPU.
 That is fast enough to batch-convert every archive photo in an episode in seconds.
 
+
+### post.js on llvmpipe (integrated 2026-10-10)
+
+`engine/post.js` vendors `postprocessing@6.39.5` and `n8ao@2.0.1` in `engine/vendor/` (importmap
+entries in `stage.html`, no CDN at render time). Measured in the `projects/fx-test` library aisle
+(about 10k instanced books, one 2048² spot shadow, a ray-marched shaft, dust) at 1920×1080 on Mesa
+llvmpipe, 4 vCPU. Each figure is the median of 6 frames, best of 3 interleaved rounds, with a forced
+readback. Per-frame cost with that effect alone:
+
+| Pipeline | ms/frame | Added |
+|---|---|---|
+| Plain render + FXAA + 2D comp | 263 | — |
+| Composer + ACES ToneMappingEffect only (HalfFloat) | 274 | +11 |
+| + DOF `low` (half-res bokeh, small kernel) | 502 | +240 |
+| + DOF `high` (full-res, medium kernel) | 829 | +566 |
+| + N8AO `low` (Low, half-res) | 475 | +212 |
+| + N8AO `medium` (Medium, half-res) | 502 | +239 |
+| + N8AO `high` (Medium, full-res) | 705 | +442 |
+| + God rays (0.4 res, 48 samples) | 374 | +111 |
+| + Lens distortion + chromatic aberration (2 passes) | 309 | +46 |
+| All, `draft` (DOF 0.35, rays, lens, no AO) | 492 | +229 |
+| All, `low` (default) | 735 | +472 |
+| All, `high` | 1328 | +1065 |
+
+Parallax photo sets (`engine/parallax.js`, 360-cell relief mesh + plate) cost ~240 ms per frame,
+the same as a plain frame. Determinism was verified by rendering the same frames out of order and
+comparing hashes; all four fx-test shots were identical. The full 23.5 s fx-test clip rendered
+in 5.1 min with 2 workers.
+
+**Depth model pin:** `https://huggingface.co/onnx-community/depth-anything-v2-small/resolve/main/onnx/model.onnx`,
+sha256 `afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c` (99 MB, Apache-2.0).
+`engine/depth.py` downloads it to `.cache/models/` and checks the hash. On this box: 6 s for a
+3000×2031 photo and 20 s for a 1920×2018 one, inference at 756 px plus the guided filter, plate and
+erosion at up to 1280 px.
+
+**Characters:** the Quaternius UAL Standard pack downloads without a login through itch.io's
+free-download flow (`POST /download_url`, then `POST /file/<upload_id>?source=game_download`).
+poly.pizza is behind a Cloudflare challenge from this box. `UAL1_Standard.glb` (CC0, 7.6 MB,
+65-joint UE skeleton, 43 clips) is now `assets/models/UAL_Mannequin.glb`.
 ---
 
 ## Tier 1: integrate now

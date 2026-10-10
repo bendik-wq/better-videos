@@ -1,0 +1,16 @@
+{
+  "title": "FX test: lens, light and archive parallax",
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "voice": { "engine": "kokoro", "name": "bm_george" },
+  "finish": { "grain": 9, "halation": 18, "halationAmount": 0.5, "bloom": 0.16, "vignette": 0.55 },
+  "settings": { "aa": "fxaa" },
+  "shots": [
+    { "id": "rack", "set": "aisle", "params": { "mode": "rack" }, "min": 6.5 },
+    { "id": "walk", "set": "aisle", "params": { "mode": "walk" }, "min": 5.0 },
+    { "id": "huey", "set": "photo", "params": { "src": "huey-1966.jpg", "move": "push", "treatment": "bw", "center": [0.5, 0.55] }, "min": 6.0 },
+    { "id": "monk", "set": "photo", "params": { "src": "monk-1947.jpg", "move": "lateral", "treatment": "sepia", "center": [0.45, 0.62], "depth": 0.55 }, "min": 6.0 }
+  ],
+  "score": { "key": "D", "drone": 0.12, "cues": [ { "type": "clunk", "shot": "rack", "at": 0.3, "gain": 0.5 } ] }
+}
