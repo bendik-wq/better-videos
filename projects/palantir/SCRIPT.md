@@ -106,8 +106,8 @@ Every fact is in RESEARCH.md. ⚑ marks a fact still to confirm before rendering
 87. Suddenly every big company on earth wanted to point AI at its own private data. And Palantir had spent twenty years doing exactly that, for spies.
 88. It launched a product called A.I.P., and started running what it calls bootcamps. Real workflows, on a customer's real data, in days.
 89. The numbers went vertical. In the second quarter of twenty twenty-six, revenue was up ninety-three percent. American commercial revenue, up a hundred and forty-nine. And, for the first time, more than a billion dollars of profit in a single quarter. [↺]
-90. But here's the strange part. In the first half of twenty twenty-six, the stock fell by about a third. By late July it had dropped to around a hundred and eighteen dollars.
-91. Ten weeks later, on October the ninth, it closed at a record. Two hundred and nine dollars. About half a trillion dollars in market value. More than twenty times its first price. [↺]
+90. But here's the strange part. From its peak, the stock fell by almost half. By late June twenty twenty-six, it had dropped to around a hundred and seven dollars.
+91. Then, in about fifteen weeks, it climbed all the way back. On October the ninth, it closed at a record. Two hundred and nine dollars. About half a trillion dollars in market value. More than twenty times its first price. [↺]
 92. That's roughly eighty times what the company brings in each year. Investors aren't paying for what Palantir is. They're paying for what they think it's becoming. **(opens L5)**
 93. And what is it becoming? Karp has told us. In August, he took aim at the big AI labs. He called their business model Marxist. Models that absorb a customer's most valuable knowledge, and sell it back to everyone. [↺]
 94. His promise was the opposite. A customer's competitive advantage, he wrote, should never become the training data for future models.
