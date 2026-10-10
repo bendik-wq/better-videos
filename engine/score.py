@@ -2,12 +2,39 @@
 """Procedural score + sound design bed.
 
 usage: score.py timeline.json out.wav '{"key": "D", "cues": [...]}'
+       score.py --vo timeline.json vo.wav <start s> <length s>   (sample-exact VO track)
 
 Every cue is {"type", "shot", "at" (seconds into shot, negative = before it), "gain", ...}.
 Types: boom, clang, clunk, whoosh, horn, hum, water, ticks, swell.
 """
 import json, sys, wave
 import numpy as np
+
+
+def place_vo(timeline_path, out_path, start, length):
+    """Lay every shot's VO wav on one mono track at its exact sample (voAt - start), clipped to
+    [start, start + length). Sample-exact, so VO never drifts against the picture however many
+    shots or whatever the frame rate."""
+    sr = 24000
+    n = int(round(float(length) * sr)); trk = np.zeros(n)
+    for s in json.load(open(timeline_path)):
+        if not s.get("voFile"): continue
+        with wave.open(s["voFile"]) as w:
+            a = np.frombuffer(w.readframes(w.getnframes()), "<i2").astype(float) / 32768
+            if w.getnchannels() > 1: a = a.reshape(-1, w.getnchannels()).mean(1)
+            if w.getframerate() != sr:  # linear resample (Kokoro and Piper already write 24 kHz)
+                a = np.interp(np.arange(int(len(a) * sr / w.getframerate())) * w.getframerate() / sr, np.arange(len(a)), a)
+        i = int(round((s["voAt"] - float(start)) * sr)); j0 = max(0, -i); i = max(0, i)
+        k = min(n - i, len(a) - j0)
+        if k > 0: trk[i:i + k] += a[j0:j0 + k]
+    with wave.open(out_path, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+        w.writeframes((np.clip(trk, -1, 1) * 32767).astype("<i2").tobytes())
+    print(f"[vo] {length}s placed from {start}s")
+
+
+if len(sys.argv) > 1 and sys.argv[1] == "--vo":  # usage: score.py --vo timeline.json out.wav start length
+    place_vo(*sys.argv[2:6]); sys.exit(0)
 
 SR = 48000
 timeline = json.load(open(sys.argv[1]))
