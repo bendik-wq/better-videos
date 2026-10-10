@@ -339,3 +339,36 @@ previous JPEG again without drawing or capturing.
 - [SVP: RIFE AI interpolation](https://svp-team.com/wiki/RIFE_AI_interpolation) · [Real-ESRGAN FAQ](https://mintlify.com/xinntao/Real-ESRGAN/resources/faq)
 - [Blender headless EGL commit](https://developer.blender.org/rB3195a38) · [Blender devtalk on EEVEE headless](https://devtalk.blender.org/t/blender-2-8-unable-to-open-a-display-by-the-rendering-on-the-background-eevee/1436)
 - GPU pricing: [deploybase](https://deploybase.ai/articles/cheapest-gpu-cloud-in-2026-provider-pricing-ranked), [computeprices](https://computeprices.com/providers/vast/gpus/rtx4090)
+
+---
+
+## 7. Follow-up (2026-10-10, after landing steps 1-4)
+
+**[measured]** on this container (4 vCPU), with other agents' jobs running at the same time, so
+CPU-seconds (summed over the render process tree) are the reliable number; wall is an upper bound.
+
+Film finish, 240 frames of *Data Rush*, single thread, decode excluded:
+
+| Finish | CPU-ms/frame | vs reference |
+|---|---|---|
+| reference (full-res RGB: 2 blurs, 2 screen blends, vignette, conversions) | ~123 | PSNR baseline |
+| **fast** (glows at 1/4 res, full-res YUV add + one lut2 for vignette and range) | **~18-20** | PSNR 44.2 dB (min 43.1), no visible difference in stills/crops |
+| x264 veryfast crf 18 `-tune grain` (unchanged) | ~47 | |
+
+Where the old time went: RGB conversions ~18 ms, each full-res screen blend ~19, `vignette` ~19
+(even in YUV), full-res gblur ~10-15 each, curves ~5.
+
+Shot mix: *Data Rush* `--only=ch1,s017` (37.7 s: chapter card, timeline, hero, terminal, network,
+magnifier, timeline), 3 workers, chunks of ~5 s, whole render phase including browser startup:
+
+| Mode | Output frames | CPU-s | CPU-s per film second | Wall (contended) | 16-min episode on a quiet 4 vCPU box* |
+|---|---|---|---|---|---|
+| 30 fps | 1130 | 675 | 17.9 | 262 s | ~1.3 h |
+| **60 fps native** | 2262 | 1254 | 33.2 | 373 s | **~2.5 h** |
+| 30 fps, 180° shutter, 2 samples | 1130 | 1200 | 31.9 | 318 s | ~2.4 h |
+
+\* CPU-s per film second x 960 s / 3.6 effective cores, plus ~3 min audio and mux.
+
+Audio sync at 60 fps: frame count = duration x fps exactly (2262 frames, 37.70 s), and 30 vs 60 fps
+renders of the same slice line up frame for frame with the audio shifted by the same 1/60 s
+(the slice's first frame rounds differently). Recommendation: native 60 fps, no shutter blur.

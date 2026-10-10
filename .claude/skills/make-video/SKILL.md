@@ -60,9 +60,12 @@ Defaults are the fast path; see `docs/research/render-speed.md` for the measurem
   a crash or a container restart just run the same command again. `--status` prints progress, rate,
   ETA, per-worker state and the exact resume command (from `out/progress.json`). For long renders,
   start it detached: `nohup node engine/render.mjs projects/<name> > projects/<name>/out/render.log 2>&1 &`.
-- Chunks are cached per settings in `out/chunks-<hash>`; the hash covers code (every `engine/*.js`
-  and `stage.html`, the project's `.js`), timeline, backend, AA, render scale, fps, shutter and
-  encode/finish settings, so changing any of them re-renders.
+- Chunks are cached per settings in `out/chunks-<hash>`; the hash covers code (every `engine/*.js`,
+  `stage.html`, `engine/vendor/**`, the project's `.js` and `assets/**`), timeline, backend, AA,
+  render scale, fps, shutter and encode/finish settings, so changing any of them re-renders.
+- Smoothness: final episodes render at `fps: 60` with no shutter (about 2.5 h for 16 min on
+  4 vCPU, ~1.85x the cost of 30 fps). A shutter blur at 30 fps costs as much as native 60 and
+  looks less smooth; use it only for a 30 fps deliverable.
 - `settings` lives at the top level of `project.json` / `project.mjs`:
   `settings: { fps: 60, aa: 'fxaa', renderScale: 1, workers: 3 }`.
 - Scene code: anything that accumulates per frame (trails, smear decay) must scale with fps, e.g.
