@@ -342,7 +342,7 @@ catch (e) { $("card").innerHTML = "<h1>No WebGL</h1><p>This browser could not st
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouch ? 1.25 : 1.75));
 const scene = new THREE.Scene();
 const FOG = new THREE.Color("#b79c80");
-scene.fog = new THREE.Fog(FOG, 70, 340);
+scene.fog = new THREE.Fog(FOG, 60, 300);
 scene.background = FOG;
 const camera = new THREE.PerspectiveCamera(75, 1, 0.05, 2000);
 camera.rotation.order = "YXZ";
@@ -385,8 +385,8 @@ const crateTex = canvasTex(64, 64, (g) => { g.fillStyle = "#fff"; g.fillRect(0, 
 // ================= city =================
 // Deterministic from a fixed seed, so every player on every machine walks the same streets.
 const lam = (c, extra) => new THREE.MeshLambertMaterial(Object.assign({ color: c }, extra || {}));
-const ROADS = [-108, -54, 0, 54, 108], RW = 12, BOUND = 121;
-const GROUND = 2 * BOUND + 40, ROADLEN = 2 * BOUND + 6, MINI = GROUND; // compact city: 4x4 blocks
+const ROADS = [-66, -22, 22, 66], RW = 12, BOUND = 79;
+const GROUND = 2 * BOUND + 40, ROADLEN = 2 * BOUND + 6, MINI = GROUND; // compact city: 3x3 blocks
 const boxes = []; // collision + bullet blockers: {x0,x1,z0,z1,y1}
 const GRID = 16, grid = new Map();
 function addBox(x0, x1, z0, z1, y1) {
@@ -436,7 +436,7 @@ const SPAWNS = [], CAR_SPOTS = [], PATROL = [];
 for (const x of ROADS) for (const z of ROADS) PATROL.push(new V3(x, 0, z));
 const blocks = [];
 for (let i = 0; i < ROADS.length - 1; i++) for (let j = 0; j < ROADS.length - 1; j++) blocks.push({ i, j, x0: ROADS[i] + RW / 2 + 4, x1: ROADS[i + 1] - RW / 2 - 4, z0: ROADS[j] + RW / 2 + 4, z1: ROADS[j + 1] - RW / 2 - 4 });
-const SPECIAL = { "1,1": "plaza", "2,2": "park", "0,3": "yard", "3,0": "lot" };
+const SPECIAL = { "1,1": "plaza", "0,2": "park", "2,0": "yard" };
 const trees = [];
 for (const b of blocks) {
   const kind = SPECIAL[b.i + "," + b.j] || "buildings";
@@ -445,7 +445,7 @@ for (const b of blocks) {
     for (let a = 0; a < 2; a++) for (let c = 0; c < 2; c++) {
       if (rnd() < 0.08) continue;
       const lw = W / 2 - 3, ld = D / 2 - 3;
-      const w = lw - rnd() * 6, d = ld - rnd() * 6;
+      const w = lw - rnd() * 3, d = ld - rnd() * 3;
       const low = rnd() < 0.2;
       const h = low ? 4.5 : rnd() < 0.15 ? 30 + rnd() * 18 : 8 + rnd() * 16;
       const x = b.x0 + 1.5 + lw / 2 + a * (lw + 3) + (rnd() - 0.5) * 2, z = b.z0 + 1.5 + ld / 2 + c * (ld + 3) + (rnd() - 0.5) * 2;
@@ -453,25 +453,25 @@ for (const b of blocks) {
       MAPDRAW.push(["bld", x - w / 2, z - d / 2, w, d]);
       if (low) { // stairs to the roof: each step is 0.45 m, walkable
         const side = a === 0 ? 1 : -1, sx = x + side * (w / 2 + 0.8);
-        for (let s = 1; s <= 10; s++) solid(sx, z - d / 2 + 0.5 + s * 0.85, 1.6, s * 0.45, 0.85, concrete);
+        for (let s = 1; s <= 10; s++) solid(sx, z - d / 2 + 0.3 + s * 0.6, 1.6, s * 0.45, 0.6, concrete);
       }
     }
   } else if (kind === "plaza") {
     const f = solid(cx, cz, 10, 0.9, 10, concrete); MAPDRAW.push(["prop", cx - 5, cz - 5, 10, 10]);
     const st = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.1, 5, 10), lam("#5a6655")); st.position.set(cx, 3.4, cz); scene.add(st); addBox(cx - 0.9, cx + 0.9, cz - 0.9, cz + 0.9, 5.9);
-    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; solid(cx + Math.cos(a) * 11, cz + Math.sin(a) * 11, 3, 0.5, 0.8, lam("#5c4a38")); }
-    for (const [dx, dz] of [[-13, -13], [13, -13], [-13, 13], [13, 13]]) solid(cx + dx, cz + dz, 6, 1.1, 1, barrierM);
+    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; solid(cx + Math.cos(a) * 8, cz + Math.sin(a) * 8, 2.4, 0.5, 0.8, lam("#5c4a38")); }
+    for (const [dx, dz] of [[-9.5, -9.5], [9.5, -9.5], [-9.5, 9.5], [9.5, 9.5]]) solid(cx + dx, cz + dz, 6, 1.1, 1, barrierM);
   } else if (kind === "park") {
     const g = new THREE.Mesh(new THREE.PlaneGeometry(W + 6, D + 6), lam("#ffffff", { map: grassTex })); grassTex.repeat.set(10, 10); g.rotation.x = -Math.PI / 2; g.position.set(cx, 0.03, cz); scene.add(g);
     MAPDRAW.push(["park", b.x0 - 3, b.z0 - 3, W + 6, D + 6]);
-    for (let k = 0; k < 14; k++) { const x = b.x0 + rnd() * W, z = b.z0 + rnd() * D; trees.push([x, z, 0.8 + rnd() * 0.6]); addBox(x - 0.35, x + 0.35, z - 0.35, z + 0.35, 6); }
-    for (let k = 0; k < 3; k++) solid(b.x0 + rnd() * W, b.z0 + rnd() * D, 6 + rnd() * 6, 1.1, 0.6, lam("#7a6a58"));
+    for (let k = 0; k < 8; k++) { const x = b.x0 + rnd() * W, z = b.z0 + rnd() * D; trees.push([x, z, 0.8 + rnd() * 0.6]); addBox(x - 0.35, x + 0.35, z - 0.35, z + 0.35, 6); }
+    for (let k = 0; k < 2; k++) solid(b.x0 + rnd() * W, b.z0 + rnd() * D, 6 + rnd() * 6, 1.1, 0.6, lam("#7a6a58"));
   } else if (kind === "yard") {
     MAPDRAW.push(["yard", b.x0, b.z0, W, D]);
     solid(b.x0 - 1, cz, 0.4, 2.6, D, lam("#5d5a52")); solid(b.x1 + 1, cz, 0.4, 2.6, D, lam("#5d5a52"));
-    for (let k = 0; k < 4; k++) { const x = b.x0 + 6 + rnd() * (W - 12), z = b.z0 + 6 + rnd() * (D - 12), rot = rnd() < 0.5; solid(x, z, rot ? 6 : 2.4, 2.6, rot ? 2.4 : 6, pick(contMats, rnd), 2.4, 2.6); MAPDRAW.push(["prop", x - 3, z - 3, 6, 6]); }
-    for (let k = 0; k < 10; k++) { const x = b.x0 + 3 + rnd() * (W - 6), z = b.z0 + 3 + rnd() * (D - 6); solid(x, z, 1.4, 1, 1.4, crateM, 1.4, 1); if (rnd() < 0.4) solid(x, z, 1.4, 1, 1.4, crateM, 1.4, 1, 1); }
-    solid(cx, cz, 4, 9, 4, lam("#6f6a5e")); for (let s = 1; s <= 20; s++) solid(cx + 2.9, cz + 17 - s * 0.8, 1.6, s * 0.45, 0.8, concrete);
+    for (let k = 0; k < 3; k++) { const x = b.x0 + 6 + rnd() * (W - 12), z = b.z0 + 6 + rnd() * (D - 12), rot = rnd() < 0.5; solid(x, z, rot ? 6 : 2.4, 2.6, rot ? 2.4 : 6, pick(contMats, rnd), 2.4, 2.6); MAPDRAW.push(["prop", x - 3, z - 3, 6, 6]); }
+    for (let k = 0; k < 6; k++) { const x = b.x0 + 3 + rnd() * (W - 6), z = b.z0 + 3 + rnd() * (D - 6); solid(x, z, 1.4, 1, 1.4, crateM, 1.4, 1); if (rnd() < 0.4) solid(x, z, 1.4, 1, 1.4, crateM, 1.4, 1, 1); }
+    solid(cx, cz, 4, 9, 4, lam("#6f6a5e")); for (let s = 1; s <= 20; s++) solid(cx + 2.9, cz + 13 - s * 0.6, 1.6, s * 0.45, 0.6, concrete);
   } else if (kind === "lot") {
     const g = new THREE.Mesh(new THREE.PlaneGeometry(W, D), lam("#ffffff", { map: asphTex })); g.rotation.x = -Math.PI / 2; g.position.set(cx, 0.03, cz); scene.add(g);
     MAPDRAW.push(["road", b.x0, b.z0, W, D]);
@@ -505,13 +505,13 @@ for (const s of [-1, 1]) {
   const m4 = new THREE.Matrix4();
   lamps.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); poles.setMatrixAt(i, m4); m4.makeTranslation(x, 7.1, z); bulbs.setMatrixAt(i, m4); addBox(x - 0.15, x + 0.15, z - 0.15, z + 0.15, 7); });
   scene.add(poles, bulbs);
-  for (let k = 0; k < 16; k++) {
+  for (let k = 0; k < 10; k++) {
     const r = pick(ROADS, rnd), t = -BOUND + 16 + rnd() * (2 * BOUND - 32); if (ROADS.some((x) => Math.abs(t - x) < 14)) continue;
     if (rnd() < 0.5) { rnd(); solid(r, t, 0.7, 1.05, 3.6, barrierM); } else { rnd(); solid(t, r, 3.6, 1.05, 0.7, barrierM); }
   }
-  for (let k = 0; k < 7; k++) { const r = pick(ROADS, rnd), t = -BOUND + 16 + rnd() * (2 * BOUND - 32); if (ROADS.some((x) => Math.abs(t - x) < 14)) continue; solid(r + RW / 2 + 2.2, t, 1.1, 2.4, 1.1, lam("#9a2f26")); }
+  for (let k = 0; k < 4; k++) { const r = pick(ROADS, rnd), t = -BOUND + 16 + rnd() * (2 * BOUND - 32); if (ROADS.some((x) => Math.abs(t - x) < 14)) continue; solid(r + RW / 2 + 2.2, t, 1.1, 2.4, 1.1, lam("#9a2f26")); }
 }
-for (const r of ROADS) for (let i = 0; i < ROADS.length - 1; i++) { const t = (ROADS[i] + ROADS[i + 1]) / 2 + (rnd() - 0.5) * 16; const s = rnd() < 0.5 ? 1 : -1; if (rnd() < 0.5) CAR_SPOTS.push([r + s * 4.4, t, s > 0 ? Math.PI : 0]); else CAR_SPOTS.push([t, r + s * 4.4, s > 0 ? Math.PI / 2 : -Math.PI / 2]); }
+for (const r of ROADS) for (let i = 0; i < ROADS.length - 1; i++) { const t = (ROADS[i] + ROADS[i + 1]) / 2 + (rnd() - 0.5) * 10; const s = rnd() < 0.5 ? 1 : -1; if (rnd() < 0.5) CAR_SPOTS.push([r + s * 4.4, t, s > 0 ? Math.PI : 0]); else CAR_SPOTS.push([t, r + s * 4.4, s > 0 ? Math.PI / 2 : -Math.PI / 2]); }
 scene.updateMatrixWorld(true);
 // The city never moves, so fold every static mesh that shares a material into one draw call.
 // Collisions and bullets use the box list above, not these meshes.
@@ -657,11 +657,11 @@ CAR_SPOTS.forEach(([x, z, yaw], i) => makeCar(i, x, z, yaw));
 // GTA-style traffic: cars loop the blocks on the inner lanes. Positions come from the shared clock, so
 // every player sees the same traffic without any network traffic of its own.
 const LOOPS = [];
-for (const [i0, i1] of [[0, 2], [2, 4]]) for (const [j0, j1] of [[0, 2], [2, 4]]) {
+for (const [i0, i1] of [[0, 3], [1, 2]]) for (const [j0, j1] of [[0, 3], [1, 2]]) {
   const x0 = ROADS[i0], x1 = ROADS[i1], z0 = ROADS[j0], z1 = ROADS[j1];
   LOOPS.push({ pts: [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], per: 2 * (x1 - x0 + z1 - z0) });
 }
-for (let i = 0; i < (isTouch ? 5 : 8); i++) {
+for (let i = 0; i < (isTouch ? 4 : 6); i++) {
   const c = makeCar(-1 - i, 0, 0, 0); c.traffic = true; c.loop = LOOPS[i % LOOPS.length]; c.phase = ((i * 0.618) % 1) * c.loop.per; c.spd = 8 + (i % 3) * 1.6; c.init = false;
   traffic.push(c);
 }
@@ -735,16 +735,24 @@ if (!COLORS.includes(myColor)) myColor = COLORS[0];
 
 // ================= weapons =================
 const WEAPONS = [
-  { id: "m1911", name: "M1911", type: "Pistol", dmg: 34, head: 2, rpm: 420, auto: false, mag: 8, reload: 1.5, hip: 0.02, ads: 0.005, range: 30, adsFov: 58, kick: 0.016, snd: [2800, 0.5, 130, 0.22] },
-  { id: "python", name: "Python", type: "Revolver", dmg: 52, head: 2, rpm: 170, auto: false, mag: 6, reload: 2.6, hip: 0.022, ads: 0.004, range: 35, adsFov: 56, kick: 0.04, snd: [2000, 0.8, 90, 0.35] },
-  { id: "mp5k", name: "MP5K", type: "SMG", dmg: 24, head: 1.5, rpm: 780, auto: true, mag: 30, reload: 2.1, hip: 0.032, ads: 0.013, range: 26, adsFov: 55, kick: 0.01, snd: [3200, 0.4, 110, 0.16] },
-  { id: "ak47", name: "AK-47", type: "Assault rifle", dmg: 33, head: 1.6, rpm: 600, auto: true, mag: 30, reload: 2.5, hip: 0.036, ads: 0.006, range: 60, adsFov: 48, kick: 0.019, snd: [2200, 0.6, 90, 0.3] },
-  { id: "commando", name: "Commando", type: "Assault rifle", dmg: 27, head: 1.5, rpm: 760, auto: true, mag: 30, reload: 2.2, hip: 0.033, ads: 0.008, range: 45, adsFov: 50, kick: 0.014, snd: [2600, 0.55, 100, 0.24] },
-  { id: "m60", name: "M60", type: "Machine gun", dmg: 31, head: 1.4, rpm: 560, auto: true, mag: 100, reload: 5.2, hip: 0.05, ads: 0.011, range: 60, adsFov: 50, kick: 0.017, heavy: 0.82, snd: [1900, 0.7, 80, 0.32] },
-  { id: "stakeout", name: "Stakeout", type: "Shotgun", dmg: 17, head: 1.2, rpm: 75, auto: false, mag: 6, reload: 2.6, hip: 0.075, ads: 0.055, range: 12, pellets: 8, adsFov: 62, kick: 0.05, snd: [1600, 0.8, 70, 0.4] },
-  { id: "dragunov", name: "Dragunov", type: "Sniper", dmg: 72, head: 2, rpm: 160, auto: false, mag: 10, reload: 2.9, hip: 0.07, ads: 0.0012, range: 250, adsFov: 18, scope: true, kick: 0.045, snd: [2100, 0.85, 70, 0.4] },
-  { id: "l96", name: "L96A1", type: "Sniper", dmg: 110, head: 2, rpm: 46, auto: false, mag: 5, reload: 3.0, hip: 0.09, ads: 0.0004, range: 400, adsFov: 13, scope: true, kick: 0.06, snd: [1900, 0.9, 60, 0.5] },
-  { id: "chinalake", name: "China Lake", type: "Grenade launcher", rpm: 55, auto: false, mag: 2, reload: 3.2, hip: 0.01, ads: 0.004, adsFov: 60, kick: 0.07, proj: { speed: 38, grav: 9.8, radius: 7, dmg: 160 }, snd: [900, 0.7, 60, 0.35] },
+  { id: "m1911", name: "M1911", type: "Pistol", dmg: 34, head: 2, rpm: 420, auto: false, mag: 12, reload: 1.5, hip: 0.02, ads: 0.005, range: 30, adsFov: 58, kick: 0.016, snd: [2800, 0.5, 130, 0.22] },
+  { id: "python", name: "Python", type: "Revolver", dmg: 52, head: 2, rpm: 170, auto: false, mag: 8, reload: 2.6, hip: 0.022, ads: 0.004, range: 35, adsFov: 56, kick: 0.04, snd: [2000, 0.8, 90, 0.35] },
+  { id: "mp5k", name: "MP5K", type: "SMG", dmg: 24, head: 1.5, rpm: 780, auto: true, mag: 40, reload: 2.1, hip: 0.032, ads: 0.013, range: 26, adsFov: 55, kick: 0.01, snd: [3200, 0.4, 110, 0.16] },
+  { id: "ak47", name: "AK-47", type: "Assault rifle", dmg: 33, head: 1.6, rpm: 600, auto: true, mag: 45, reload: 2.5, hip: 0.036, ads: 0.006, range: 60, adsFov: 48, kick: 0.019, snd: [2200, 0.6, 90, 0.3] },
+  { id: "commando", name: "Commando", type: "Assault rifle", dmg: 27, head: 1.5, rpm: 760, auto: true, mag: 45, reload: 2.2, hip: 0.033, ads: 0.008, range: 45, adsFov: 50, kick: 0.014, snd: [2600, 0.55, 100, 0.24] },
+  { id: "m60", name: "M60", type: "Machine gun", dmg: 31, head: 1.4, rpm: 560, auto: true, mag: 150, reload: 5.2, hip: 0.05, ads: 0.011, range: 60, adsFov: 50, kick: 0.017, heavy: 0.82, snd: [1900, 0.7, 80, 0.32] },
+  { id: "stakeout", name: "Stakeout", type: "Shotgun", dmg: 17, head: 1.2, rpm: 75, auto: false, mag: 10, reload: 2.6, hip: 0.075, ads: 0.055, range: 12, pellets: 8, adsFov: 62, kick: 0.05, snd: [1600, 0.8, 70, 0.4] },
+  { id: "dragunov", name: "Dragunov", type: "Sniper", dmg: 72, head: 2, rpm: 160, auto: false, mag: 15, reload: 2.9, hip: 0.07, ads: 0.0012, range: 250, adsFov: 18, scope: true, kick: 0.045, snd: [2100, 0.85, 70, 0.4] },
+  { id: "l96", name: "L96A1", type: "Sniper", dmg: 110, head: 2, rpm: 46, auto: false, mag: 8, reload: 3.0, hip: 0.09, ads: 0.0004, range: 400, adsFov: 13, scope: true, kick: 0.06, snd: [1900, 0.9, 60, 0.5] },
+  { id: "chinalake", name: "China Lake", type: "Grenade launcher", rpm: 55, auto: false, mag: 4, reload: 3.2, hip: 0.01, ads: 0.004, adsFov: 60, kick: 0.07, proj: { speed: 38, grav: 9.8, radius: 7, dmg: 160 }, snd: [900, 0.7, 60, 0.35] },
+  { id: "m4a1", name: "M4A1", type: "Assault rifle", dmg: 28, head: 1.5, rpm: 800, auto: true, mag: 45, reload: 2.1, hip: 0.032, ads: 0.005, range: 50, adsFov: 50, kick: 0.012, snd: [2500, 0.5, 105, 0.26] },
+  { id: "acr", name: "ACR", type: "Assault rifle", dmg: 30, head: 1.5, rpm: 700, auto: true, mag: 45, reload: 2.3, hip: 0.03, ads: 0.004, range: 55, adsFov: 50, kick: 0.01, snd: [2400, 0.5, 100, 0.27] },
+  { id: "ump45", name: "UMP45", type: "SMG", dmg: 30, head: 1.4, rpm: 620, auto: true, mag: 40, reload: 2.2, hip: 0.03, ads: 0.011, range: 30, adsFov: 55, kick: 0.012, snd: [2000, 0.45, 100, 0.22] },
+  { id: "vector", name: "Vector", type: "SMG", dmg: 21, head: 1.5, rpm: 1100, auto: true, mag: 45, reload: 1.9, hip: 0.03, ads: 0.012, range: 22, adsFov: 56, kick: 0.007, snd: [3000, 0.35, 120, 0.15] },
+  { id: "spas12", name: "SPAS-12", type: "Shotgun", dmg: 20, head: 1.2, rpm: 110, auto: false, mag: 10, reload: 2.8, hip: 0.07, ads: 0.05, range: 14, pellets: 8, adsFov: 62, kick: 0.055, snd: [1500, 0.85, 70, 0.42] },
+  { id: "barrett", name: "Barrett .50", type: "Sniper", dmg: 150, head: 2, rpm: 70, auto: false, mag: 10, reload: 3.4, hip: 0.1, ads: 0.0004, range: 500, adsFov: 12, scope: true, kick: 0.08, heavy: 0.88, snd: [1500, 1.0, 50, 0.6] },
+  { id: "deagle", name: "Desert Eagle", type: "Pistol", dmg: 58, head: 2, rpm: 220, auto: false, mag: 10, reload: 1.8, hip: 0.026, ads: 0.005, range: 35, adsFov: 56, kick: 0.05, snd: [1800, 0.8, 80, 0.4] },
+  { id: "g18", name: "G18", type: "Machine pistol", dmg: 20, head: 1.6, rpm: 1000, auto: true, mag: 33, reload: 1.6, hip: 0.034, ads: 0.014, range: 20, adsFov: 58, kick: 0.009, snd: [3100, 0.35, 130, 0.15] },
 ];
 const KNIFE = 20, CAR = 21, FRAG = 22, AIR = 23, FALL = 24, CARBOOM = 25; // damage sources that are not guns
 
@@ -754,8 +762,8 @@ const RANKS = []; for (const [n, c] of RANK_TIERS) for (let i = 0; i < c; i++) R
 const MAX_LVL = RANKS.length; // 50
 const LVL_XP = [0]; for (let l = 1; l < MAX_LVL; l++) LVL_XP.push(LVL_XP[l - 1] + 400 + 110 * (l - 1) + 5 * (l - 1) ** 2);
 const levelOf = (xp) => { let l = 1; while (l < MAX_LVL && xp >= LVL_XP[l]) l++; return l; };
-const UNLOCK = { m1911: 1, mp5k: 1, ak47: 1, stakeout: 2, python: 4, commando: 6, dragunov: 9, m60: 12, l96: 15, chinalake: 18 };
-const PRIMARIES = ["mp5k", "ak47", "commando", "m60", "stakeout", "dragunov", "l96"], SECONDARIES = ["m1911", "python", "chinalake"];
+const UNLOCK = { m1911: 1, mp5k: 1, ak47: 1, stakeout: 2, m4a1: 3, python: 4, ump45: 5, commando: 6, deagle: 7, dragunov: 9, spas12: 10, m60: 12, acr: 14, l96: 15, vector: 16, chinalake: 18, g18: 20, barrett: 22 };
+const PRIMARIES = ["mp5k", "ump45", "vector", "ak47", "m4a1", "commando", "acr", "m60", "stakeout", "spas12", "dragunov", "l96", "barrett"], SECONDARIES = ["m1911", "deagle", "python", "g18", "chinalake"];
 const widx = (id) => WEAPONS.findIndex((w) => w.id === id);
 const CAMOS = [[0, null, null], [15, "Woodland", "#4f5a3a"], [40, "Tiger", "#8a6a2c"], [80, "Red Tiger", "#7a2a22"], [150, "Gold", "#c9a227"]];
 const CHALLENGES = [
@@ -821,25 +829,48 @@ const vm = new THREE.Group(); vm.scale.setScalar(0.62); camera.add(vm);
 const vmMuzzle = new THREE.Object3D();
 const flash = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.22), new THREE.MeshBasicMaterial({ color: "#ffd27a", transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }));
 flash.visible = false;
+// Gun geometry shared by the first-person viewmodel and the guns other players carry. Returns the barrel length.
+const GUN_LEN = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56, m4a1: 0.56, acr: 0.58, ump45: 0.4, vector: 0.36, spas12: 0.68, barrett: 1.0, deagle: 0.25, g18: 0.2 };
+const GUN_POLY = lam("#2a2b2a"), GUN_TAN = lam("#8a7a5a"), GUN_OLIVE = lam("#4d5a36"), GUN_TUBE = lam("#3d4430");
+function gunModel(id, add, metal, wood) {
+  const len = GUN_LEN[id] || 0.5, poly = GUN_POLY, tan = GUN_TAN;
+  const body = id === "acr" ? tan : id === "ump45" || id === "vector" || id === "g18" || id === "m4a1" || id === "barrett" || id === "spas12" ? poly : metal;
+  add(new THREE.BoxGeometry(id === "barrett" ? 0.07 : id === "deagle" ? 0.055 : 0.05, id === "ump45" || id === "vector" ? 0.09 : 0.075, len), body, 0, 0, -len / 2);
+  const scope = (r, l, z) => { const sc = add(new THREE.CylinderGeometry(r, r, l, 12), metal, 0, 0.075, z); sc.rotation.x = Math.PI / 2; };
+  if (id === "ak47") { add(new THREE.BoxGeometry(0.055, 0.06, 0.26), wood, 0, -0.005, -0.42); add(new THREE.BoxGeometry(0.05, 0.08, 0.28), wood, 0, -0.03, 0.14); const mg = add(new THREE.BoxGeometry(0.04, 0.16, 0.07), metal, 0, -0.1, -0.2); mg.rotation.x = 0.35; }
+  if (id === "mp5k") { add(new THREE.BoxGeometry(0.035, 0.14, 0.05), metal, 0, -0.1, -0.16); add(new THREE.BoxGeometry(0.04, 0.09, 0.04), metal, 0, -0.08, -0.05); }
+  if (id === "m1911") add(new THREE.BoxGeometry(0.04, 0.1, 0.045), metal, 0, -0.07, -0.03);
+  if (id === "stakeout") { add(new THREE.BoxGeometry(0.055, 0.055, 0.2), wood, 0, -0.04, -0.4); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); }
+  if (id === "python") { const cyl = add(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 8), metal, 0, -0.005, -0.05); cyl.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.04, 0.1, 0.05), wood, 0, -0.07, 0.01); }
+  if (id === "commando") { add(new THREE.BoxGeometry(0.05, 0.05, 0.2), metal, 0, 0.05, -0.15); const mg = add(new THREE.BoxGeometry(0.035, 0.15, 0.06), metal, 0, -0.1, -0.18); mg.rotation.x = 0.2; add(new THREE.BoxGeometry(0.03, 0.06, 0.24), metal, 0, -0.02, 0.12); }
+  if (id === "m60") { add(new THREE.BoxGeometry(0.09, 0.1, 0.22), metal, 0, -0.01, -0.12); add(new THREE.BoxGeometry(0.08, 0.14, 0.1), GUN_OLIVE, 0.03, -0.11, -0.12); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.07, 0.06, 0.22), wood, 0, -0.03, -0.42); }
+  if (id === "dragunov") { add(new THREE.BoxGeometry(0.055, 0.06, 0.3), wood, 0, -0.01, -0.45); add(new THREE.BoxGeometry(0.04, 0.14, 0.06), metal, 0, -0.1, -0.2); add(new THREE.BoxGeometry(0.03, 0.09, 0.26), wood, 0, -0.04, 0.12); scope(0.024, 0.3, -0.15); }
+  if (id === "chinalake") { const tube = add(new THREE.CylinderGeometry(0.045, 0.045, 0.42, 12), GUN_TUBE, 0, 0.01, -0.3); tube.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.06, 0.05, 0.2), wood, 0, -0.06, -0.38); }
+  if (id === "l96") { add(new THREE.BoxGeometry(0.06, 0.09, 0.5), GUN_OLIVE, 0, -0.02, -0.1); scope(0.028, 0.36, -0.2); }
+  if (id === "m4a1" || id === "acr") { // rail, red-dot, curved mag, adjustable stock
+    add(new THREE.BoxGeometry(0.03, 0.02, 0.36), poly, 0, 0.048, -0.2); add(new THREE.BoxGeometry(0.035, 0.045, 0.05), poly, 0, 0.075, -0.12);
+    const mg = add(new THREE.BoxGeometry(0.035, 0.15, 0.06), poly, 0, -0.1, -0.17); mg.rotation.x = 0.22;
+    add(new THREE.BoxGeometry(0.06, 0.07, 0.22), body, 0, -0.005, -0.38); add(new THREE.BoxGeometry(0.035, 0.07, 0.24), body, 0, -0.02, 0.13);
+    add(new THREE.BoxGeometry(0.03, 0.08, 0.035), poly, 0, -0.07, -0.04);
+  }
+  if (id === "ump45") { add(new THREE.BoxGeometry(0.04, 0.16, 0.06), poly, 0, -0.12, -0.15); add(new THREE.BoxGeometry(0.03, 0.06, 0.22), poly, 0, -0.01, 0.12); add(new THREE.BoxGeometry(0.03, 0.08, 0.035), poly, 0, -0.08, -0.03); }
+  if (id === "vector") { const lo = add(new THREE.BoxGeometry(0.05, 0.1, 0.16), poly, 0, -0.08, -0.12); lo.rotation.x = -0.5; add(new THREE.BoxGeometry(0.035, 0.18, 0.05), poly, 0, -0.14, -0.22); add(new THREE.BoxGeometry(0.035, 0.035, 0.05), poly, 0, 0.065, -0.14); add(new THREE.BoxGeometry(0.03, 0.06, 0.2), poly, 0, -0.01, 0.11); }
+  if (id === "spas12") { add(new THREE.BoxGeometry(0.06, 0.06, 0.22), poly, 0, -0.045, -0.42); add(new THREE.BoxGeometry(0.03, 0.03, 0.26), metal, 0, -0.035, 0.12); add(new THREE.BoxGeometry(0.03, 0.08, 0.035), poly, 0, -0.07, -0.04); }
+  if (id === "barrett") { scope(0.032, 0.36, -0.22); add(new THREE.BoxGeometry(0.06, 0.16, 0.08), poly, 0, -0.12, -0.18); add(new THREE.BoxGeometry(0.05, 0.1, 0.28), poly, 0, -0.02, 0.15); add(new THREE.BoxGeometry(0.09, 0.05, 0.08), metal, 0, 0, -len - 0.02); }
+  if (id === "deagle") { add(new THREE.BoxGeometry(0.045, 0.11, 0.05), poly, 0, -0.075, -0.03); }
+  if (id === "g18") { add(new THREE.BoxGeometry(0.04, 0.18, 0.045), poly, 0, -0.1, -0.03); }
+  return len;
+}
 function buildViewmodel() {
   vm.clear();
-  const w = WEAPONS[wIdx], camo = camoOf(w.id), metal = lam(camo[2] || "#1c1d1e", camo[1] === "Gold" ? { emissive: "#3a2a00" } : {}), wood = lam(camo[2] ? camo[2] : "#6a4628"), skin = lam("#c99a76"), sleeve = lam(match.mode !== 0 && P.team >= 0 ? TEAM[P.team].c : "#4a5236");
+  const w = WEAPONS[wIdx], camo = camoOf(w.id), metal = lam(camo[2] || "#1c1d1e", camo[1] === "Gold" ? { emissive: "#3a2a00" } : {}), wood = lam(camo[2] ? camo[2] : "#6a4628"), skin = lam("#2e2c27"), sleeve = lam(match.mode !== 0 && P.team >= 0 ? TEAM[P.team].c : "#55583f");
   const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); vm.add(m); return m; };
-  const len = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56 }[w.id];
-  add(new THREE.BoxGeometry(0.05, 0.075, len), metal, 0, 0, -len / 2);
-  if (w.id === "ak47") { add(new THREE.BoxGeometry(0.055, 0.06, 0.26), wood, 0, -0.005, -0.42); add(new THREE.BoxGeometry(0.05, 0.08, 0.28), wood, 0, -0.03, 0.14); const mg = add(new THREE.BoxGeometry(0.04, 0.16, 0.07), metal, 0, -0.1, -0.2); mg.rotation.x = 0.35; }
-  if (w.id === "mp5k") { add(new THREE.BoxGeometry(0.035, 0.14, 0.05), metal, 0, -0.1, -0.16); add(new THREE.BoxGeometry(0.04, 0.09, 0.04), metal, 0, -0.08, -0.05); }
-  if (w.id === "m1911") add(new THREE.BoxGeometry(0.04, 0.1, 0.045), metal, 0, -0.07, -0.03);
-  if (w.id === "stakeout") { add(new THREE.BoxGeometry(0.055, 0.055, 0.2), wood, 0, -0.04, -0.4); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); }
-  if (w.id === "python") { const cyl = add(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 8), metal, 0, -0.005, -0.05); cyl.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.04, 0.1, 0.05), wood, 0, -0.07, 0.01); }
-  if (w.id === "commando") { add(new THREE.BoxGeometry(0.05, 0.05, 0.2), metal, 0, 0.05, -0.15); const mg = add(new THREE.BoxGeometry(0.035, 0.15, 0.06), metal, 0, -0.1, -0.18); mg.rotation.x = 0.2; add(new THREE.BoxGeometry(0.03, 0.06, 0.24), metal, 0, -0.02, 0.12); }
-  if (w.id === "m60") { add(new THREE.BoxGeometry(0.09, 0.1, 0.22), metal, 0, -0.01, -0.12); add(new THREE.BoxGeometry(0.08, 0.14, 0.1), lam("#4d5a36"), 0.03, -0.11, -0.12); add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.07, 0.06, 0.22), wood, 0, -0.03, -0.42); }
-  if (w.id === "dragunov") { add(new THREE.BoxGeometry(0.055, 0.06, 0.3), wood, 0, -0.01, -0.45); add(new THREE.BoxGeometry(0.04, 0.14, 0.06), metal, 0, -0.1, -0.2); add(new THREE.BoxGeometry(0.03, 0.09, 0.26), wood, 0, -0.04, 0.12); const sc = add(new THREE.CylinderGeometry(0.024, 0.024, 0.3, 12), metal, 0, 0.07, -0.15); sc.rotation.x = Math.PI / 2; }
-  if (w.id === "chinalake") { const tube = add(new THREE.CylinderGeometry(0.045, 0.045, 0.42, 12), lam("#3d4430"), 0, 0.01, -0.3); tube.rotation.x = Math.PI / 2; add(new THREE.BoxGeometry(0.05, 0.08, 0.26), wood, 0, -0.03, 0.12); add(new THREE.BoxGeometry(0.06, 0.05, 0.2), wood, 0, -0.06, -0.38); }
-  if (w.id === "l96") { add(new THREE.BoxGeometry(0.06, 0.09, 0.5), lam("#4d5a36"), 0, -0.02, -0.1); const sc = add(new THREE.CylinderGeometry(0.028, 0.028, 0.36, 12), metal, 0, 0.075, -0.2); sc.rotation.x = Math.PI / 2; }
-  add(new THREE.BoxGeometry(0.07, 0.07, 0.22), sleeve, 0.03, -0.08, 0.12).rotation.x = 0.4;
-  add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, 0, -0.06, -0.02);
-  if (len > 0.3) add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, -0.01, -0.05, -len * 0.65);
+  const len = gunModel(w.id, add, metal, wood);
+  const hands = [add(new THREE.BoxGeometry(0.07, 0.07, 0.22), sleeve, 0.03, -0.08, 0.12), add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, 0, -0.06, -0.02)];
+  hands[0].rotation.x = 0.4;
+  if (len > 0.3) hands.push(add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, -0.01, -0.05, -len * 0.65));
+  for (const h of hands) h.userData.boxHand = true;
+  vm.userData.len = len;
   vmMuzzle.position.set(0, 0.0, -len - 0.02); vm.add(vmMuzzle);
   flash.position.copy(vmMuzzle.position); vm.add(flash);
   renderSlots();
@@ -873,7 +904,7 @@ function makeAvatar(id, nm, color, isBot) {
   scene.add(g);
   return { id, nm, c: color, isBot, g, legs, upper, arms, tag, pos: new V3(), rpos: new V3(), yaw: 0, ryaw: 0, pitch: 0, crouch: false, dead: false, w: 2, hp: 100, k: 0, d: 0, score: 0, pas: false, car: -1, phase: 0, deadAnim: 0, seen: false, team: -1, shirt, lookKey: "", stepT: 0, speed: 0 };
 }
-function dropAvatar(a) { scene.remove(a.g); a.tag.material.map.dispose(); }
+function dropAvatar(a) { scene.remove(a.g); a.tag.material.map.dispose(); if (a.real) { a.real.mixer.stopAllAction(); a.real.mat.dispose(); } }
 function setTag(a, color) { a.g.remove(a.tag); a.tag.material.map.dispose(); a.tag = nameTag(a.nm, color || a.c, a.pas); a.g.add(a.tag); }
 function refreshLook(a) {
   const team = match.mode !== 0 && (a.team === 0 || a.team === 1);
@@ -882,6 +913,7 @@ function refreshLook(a) {
   if (key === a.lookKey) return;
   a.lookKey = key; setTag(a, tagC); a.shirt.color.set(shirtC);
   a.upper.scale.setScalar(a.jg ? 1.18 : 1);
+  if (a.real) tintSoldier(a, shirtC);
 }
 function avatarBase(a) {
   if (a.car >= 0 && cars[a.car]) { const c = cars[a.car], co = Math.cos(c.yaw), si = Math.sin(c.yaw); return new V3(c.x + (-0.45) * co + 0.2 * si, 0.35, c.z - (-0.45) * si + 0.2 * co); }
@@ -901,19 +933,256 @@ function animateAvatar(a, dt) {
   const k = 1 - Math.exp(-dt * 14);
   if (a.rpos.distanceToSquared(a.pos) > 64) a.rpos.copy(a.pos); else a.rpos.lerp(a.pos, k);
   let dy = a.yaw - a.ryaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); a.ryaw += dy * k;
-  const speed = a.rpos.distanceTo(a.lastPos || a.rpos) / Math.max(dt, 1e-3); a.lastPos = a.rpos.clone(); a.speed = speed;
+  const last = a.lastPos || a.rpos, speed = a.rpos.distanceTo(last) / Math.max(dt, 1e-3);
+  // forward speed (negative when backing up), so the walk cycle can run in reverse
+  const fwd = speed > 0.1 ? ((a.rpos.x - last.x) * -Math.sin(a.ryaw) + (a.rpos.z - last.z) * -Math.cos(a.ryaw)) / Math.max(dt, 1e-3) : 0;
+  a.lastPos = a.rpos.clone(); a.speed = speed;
   const g = a.g;
-  if (a.car >= 0 && cars[a.car]) { const c = cars[a.car]; const b = avatarBase(a); g.position.copy(b); g.rotation.set(0, c.yaw, 0); a.legs.forEach((l) => (l.visible = false)); a.upper.position.y = 0.45; g.visible = true; return; }
-  a.legs.forEach((l) => (l.visible = true));
+  if (SOLDIER.ready && !a.real) upgradeAvatar(a);
+  const real = a.real;
+  if (real) { a.legs.forEach((l) => (l.visible = false)); a.upper.visible = false; }
+  if (a.car >= 0 && cars[a.car]) {
+    const c = cars[a.car]; const b = avatarBase(a); g.position.copy(b); g.rotation.set(0, c.yaw, 0); a.legs.forEach((l) => (l.visible = false)); a.upper.position.y = 0.45; g.visible = true;
+    if (real) poseSoldier(a, dt, 0, 0, "seat");
+    return;
+  }
+  if (!real) a.legs.forEach((l) => (l.visible = true));
   g.position.copy(a.rpos); g.rotation.y = a.ryaw;
-  if (a.dead) { a.deadAnim = Math.min(1, a.deadAnim + dt * 2.5); g.rotation.x = -Math.PI / 2 * a.deadAnim; g.position.y = a.rpos.y + 0.15; a.tag.visible = false; return; }
+  if (a.dead) {
+    a.deadAnim = Math.min(1, a.deadAnim + dt * 2.5); a.tag.visible = false;
+    if (real) { g.rotation.x = 0; poseSoldier(a, dt, 0, 0, "dead"); return; }
+    g.rotation.x = -Math.PI / 2 * a.deadAnim; g.position.y = a.rpos.y + 0.15; return;
+  }
   a.deadAnim = 0; g.rotation.x = 0; a.tag.visible = true;
   a.upper.position.y = a.crouch ? 0.45 : 0.9; a.tag.position.y = a.crouch ? 1.75 : 2.2;
+  if (real) { poseSoldier(a, dt, speed, fwd, a.crouch ? "crouch" : "stand"); return; }
   a.arms.rotation.x = clamp(a.pitch, -1, 1);
   a.phase += dt * Math.min(speed, 9) * 1.6;
   const sw = speed > 0.5 ? Math.sin(a.phase) * Math.min(0.7, speed / 8) : 0;
   a.legs[0].rotation.x = a.crouch ? 1.2 : sw; a.legs[1].rotation.x = a.crouch ? 1.2 : -sw;
   a.legs.forEach((l) => (l.position.y = a.crouch ? 0.45 : 0.9));
+}
+
+// ================= soldiers: a rigged, textured, motion-captured character =================
+// The model (soldier.glb, next to this page) streams in after the game starts; until it arrives, or if it
+// cannot load, everyone keeps the simple box figure. Legs come from the walk/run captures; the arms are
+// solved with two-bone IK onto the gun each frame, and the spine and head follow where the player aims.
+// Hit detection never looks at the mesh, so this is visual only.
+const SOLDIER = { ready: false, scene: null, clips: null };
+const SOLDIER_SCALE = 0.97;
+function loadScript(src) { return new Promise((res, rej) => { const el = document.createElement("script"); el.src = src; el.onload = res; el.onerror = rej; document.head.appendChild(el); }); }
+(async function loadSoldier() {
+  try {
+    const base = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/";
+    await loadScript(base + "loaders/GLTFLoader.js"); await loadScript(base + "utils/SkeletonUtils.js");
+    new THREE.GLTFLoader().load("soldier.glb", (gltf) => {
+      SOLDIER.scene = gltf.scene; SOLDIER.clips = {};
+      for (const c of gltf.animations) SOLDIER.clips[c.name] = c;
+      // the rest of the city renders in linear colour, so read the uniform texture the same way
+      gltf.scene.traverse((m) => { if (m.isMesh && m.material.map) { m.material.map.encoding = THREE.LinearEncoding; m.material.needsUpdate = true; } });
+      SOLDIER.ready = !!(SOLDIER.clips.Idle && SOLDIER.clips.Walk && SOLDIER.clips.Run);
+    }, undefined, () => {});
+  } catch (e) { /* offline or blocked: keep the box figures */ }
+})();
+const _v1 = new V3(), _v2 = new V3(), _v3 = new V3(), _v4 = new V3(), _v5 = new V3(), _q1 = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion();
+function upgradeAvatar(a) {
+  const root = THREE.SkeletonUtils.clone(SOLDIER.scene);
+  let mat = null;
+  root.traverse((m) => {
+    if (!m.isMesh) return;
+    m.castShadow = true;
+    if (m.name.includes("visor")) return;
+    if (!mat) { mat = m.material.clone(); if (mat.metalness !== undefined) { mat.metalness = 0.15; mat.roughness = 0.75; } }
+    m.material = mat;
+  });
+  const bone = (n) => root.getObjectByName("mixamorig" + n);
+  const B = {};
+  for (const n of ["Hips", "Spine2", "Neck", "Head", "HeadTop_End", "LeftArm", "LeftForeArm", "LeftHand", "LeftHandMiddle1", "RightArm", "RightForeArm", "RightHand", "RightHandMiddle1", "LeftUpLeg", "LeftLeg", "LeftFoot", "RightUpLeg", "RightLeg", "RightFoot"]) B[n] = bone(n);
+  if (Object.values(B).some((b) => !b)) { SOLDIER.ready = false; return; }
+  const mixer = new THREE.AnimationMixer(root), act = {};
+  for (const n of ["Idle", "Walk", "Run"]) { act[n] = mixer.clipAction(SOLDIER.clips[n]); act[n].play(); act[n].setEffectiveWeight(n === "Idle" ? 1 : 0); act[n].time = Math.random() * SOLDIER.clips[n].duration; }
+  const gun = new THREE.Group(); gun.rotation.order = "YXZ";
+  const gunPivot = new THREE.Group(); gunPivot.add(gun);
+  a.g.add(root, gunPivot);
+  a.real = { root, mixer, act, B, mat, gun, gunPivot, gunId: null, len: 0.5, feet: [new V3(), new V3()], H: rigHands(root, B) };
+  tintSoldier(a, a.shirt.color.getStyle());
+}
+function tintSoldier(a, color) {
+  // the uniform keeps its texture; team or player colour is mixed in like a dyed camo pattern
+  a.real.mat.color.set("#ffffff").lerp(new THREE.Color(color), a.jg ? 0.1 : 0.16);
+  if (a.jg) a.real.mat.color.multiplyScalar(0.55);
+  a.real.root.scale.setScalar(SOLDIER_SCALE * (a.jg ? 1.12 : 1));
+}
+// Rotate a bone so the direction to its child points at a world-space target.
+function aimBone(bone, child, target) {
+  const bw = bone.getWorldPosition(_v1);
+  const want = _v2.subVectors(target, bw); if (want.lengthSq() < 1e-8) return; want.normalize();
+  const wq = bone.getWorldQuaternion(_q1);
+  const cur = _v3.copy(child.position).normalize().applyQuaternion(wq);
+  _q2.setFromUnitVectors(cur, want); wq.premultiply(_q2);
+  bone.parent.getWorldQuaternion(_q3).invert();
+  bone.quaternion.copy(_q3.multiply(wq));
+  bone.updateMatrixWorld(true);
+}
+// Two-bone IK: place the elbow (or knee) on the side the pole points to, then aim both bones.
+function ik2(up, mid, end, target, pole) {
+  const A = up.getWorldPosition(new V3()), M = mid.getWorldPosition(new V3()), E = end.getWorldPosition(new V3());
+  const la = A.distanceTo(M), lb = M.distanceTo(E);
+  const dir = _v4.subVectors(target, A); const d = clamp(dir.length(), 0.05, (la + lb) * 0.999); dir.normalize();
+  const x = (la * la - lb * lb + d * d) / (2 * d), h = Math.sqrt(Math.max(0, la * la - x * x));
+  const pl = _v5.copy(pole).addScaledVector(dir, -pole.dot(dir)); if (pl.lengthSq() < 1e-6) pl.set(0, -1, 0); pl.normalize();
+  const elbow = A.clone().addScaledVector(dir, x).addScaledVector(pl, h);
+  aimBone(up, mid, elbow);
+  aimBone(mid, end, A.clone().addScaledVector(dir, d));
+}
+// Hands: record, in the model's default pose, which way each hand's fingers and palm point and which axis
+// curls each finger joint, so a grip can be posed from two world directions and a curl amount.
+function rigHands(root, B) {
+  root.updateMatrixWorld(true);
+  const H = {};
+  for (const side of ["Left", "Right"]) {
+    const hand = B[side + "Hand"], hq = hand.getWorldQuaternion(new THREE.Quaternion()), inv = hq.clone().invert();
+    const f = B[side + "HandMiddle1"].position.clone().normalize();
+    const p = new V3(0, -1, 0).applyQuaternion(inv); p.addScaledVector(f, -p.dot(f)).normalize();
+    const fw = f.clone().applyQuaternion(hq), pw = p.clone().applyQuaternion(hq), axisW = fw.clone().cross(pw).normalize();
+    const fingers = [];
+    for (const n of ["Index", "Middle", "Ring", "Pinky"]) for (let j = 1; j <= 3; j++) {
+      const b = root.getObjectByName(`mixamorig${side}Hand${n}${j}`); if (!b) continue;
+      const bq = b.getWorldQuaternion(new THREE.Quaternion()).invert();
+      fingers.push({ b, rest: b.quaternion.clone(), axis: axisW.clone().applyQuaternion(bq).normalize() });
+    }
+    H[side] = { hand, f, p, fingers };
+  }
+  return H;
+}
+const _m1 = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _qc = new THREE.Quaternion();
+function gripHand(h, fingerDir, palmDir, curl) {
+  const fw = fingerDir.clone().normalize(), pw = palmDir.clone().addScaledVector(fw, -palmDir.dot(fw)).normalize();
+  _m1.makeBasis(fw, pw, fw.clone().cross(pw)); _m2.makeBasis(h.f, h.p, h.f.clone().cross(h.p)).transpose();
+  const wq = new THREE.Quaternion().setFromRotationMatrix(_m1.multiply(_m2));
+  h.hand.parent.getWorldQuaternion(_q3).invert();
+  h.hand.quaternion.copy(_q3.multiply(wq)); h.hand.updateMatrixWorld(true);
+  for (const k of h.fingers) k.b.quaternion.copy(k.rest).multiply(_qc.setFromAxisAngle(k.axis, curl));
+}
+// right hand on the pistol grip, left hand under the handguard (or cupping the grip for pistols)
+// where each wrist must be so the palm, not the wrist, lands on the grip / handguard
+function wristTargets(grip, fore, fw, right, down, pistol) {
+  const rw = grip.clone().addScaledVector(down, -0.05).addScaledVector(fw, -0.035).addScaledVector(right, 0.03);
+  const lw = pistol ? fore.clone().addScaledVector(right, -0.03).addScaledVector(down, 0.02) : fore.clone().addScaledVector(right, -0.055).addScaledVector(down, 0.035).addScaledVector(fw, -0.03);
+  return [rw, lw];
+}
+function gripGun(H, fw, right, down, pistol) {
+  gripHand(H.Right, down.clone().multiplyScalar(0.8).addScaledVector(fw, 0.6), right.clone().negate(), 1.2);
+  if (pistol) gripHand(H.Left, down.clone().multiplyScalar(0.7).addScaledVector(fw, 0.5).addScaledVector(right, 0.4), right.clone().addScaledVector(down, -0.5), 1.1);
+  else gripHand(H.Left, fw.clone().multiplyScalar(0.6).addScaledVector(right, 0.8), down.clone().negate(), 1.0);
+}
+function setGun(a) {
+  const R = a.real, w = WEAPONS[a.w] || WEAPONS[3];
+  if (R.gunId === w.id) return;
+  R.gunId = w.id; R.gun.clear();
+  R.len = gunModel(w.id, (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; R.gun.add(m); return m; }, AV_METAL, AV_WOOD);
+  R.gun.scale.setScalar(1.35);
+  R.pistol = R.len < 0.3;
+}
+const AV_METAL = lam("#1c1d1e"), AV_WOOD = lam("#6a4628");
+// First-person arms: the same soldier, head and legs folded away, shoulders just under the camera,
+// hands solved onto the viewmodel gun every frame.
+let fpArms = null;
+const FP_SCALE = 0.75;
+function updateFpArms() {
+  if (!SOLDIER.ready) return;
+  if (!fpArms) {
+    const root = THREE.SkeletonUtils.clone(SOLDIER.scene), B = {};
+    for (const n of ["Neck", "LeftUpLeg", "RightUpLeg", "LeftArm", "LeftForeArm", "LeftHand", "LeftHandMiddle1", "RightArm", "RightForeArm", "RightHand", "RightHandMiddle1"]) B[n] = root.getObjectByName("mixamorig" + n);
+    if (Object.values(B).some((b) => !b)) { fpArms = false; return; }
+    for (const n of ["Neck", "LeftUpLeg", "RightUpLeg"]) B[n].scale.setScalar(1e-4);
+    // longer arms (bone offsets only, so nothing gets thicker) let the shoulders stay out of view
+    B.LeftForeArm.position.multiplyScalar(1.6); B.LeftHand.position.multiplyScalar(1.45);
+    B.RightForeArm.position.multiplyScalar(1.3); B.RightHand.position.multiplyScalar(1.2);
+    root.traverse((m) => { if (m.isMesh) { m.frustumCulled = false; m.castShadow = false; m.renderOrder = 1; } });
+    root.scale.setScalar(FP_SCALE * SOLDIER_SCALE);
+    const rest = {}; for (const n of ["LeftArm", "LeftForeArm", "LeftHand", "RightArm", "RightForeArm", "RightHand"]) rest[n] = B[n].quaternion.clone();
+    camera.add(root);
+    fpArms = { root, B, rest, H: rigHands(root, B) };
+  }
+  if (fpArms === false) return;
+  const F = fpArms, B = F.B, on = vm.visible;
+  F.root.visible = on;
+  vm.traverse((m) => { if (m.userData.boxHand) m.visible = false; });
+  if (!on) return;
+  // shoulders sit just under the eye, bladed like a rifle stance (left shoulder forward)
+  F.root.position.set(0.04, -0.34 - 1.42 * FP_SCALE * SOLDIER_SCALE, 0.0); F.root.rotation.set(0, -0.6, 0);
+  for (const n in F.rest) B[n].quaternion.copy(F.rest[n]);
+  camera.updateMatrixWorld(true);
+  const len = vm.userData.len || 0.5, pistol = len < 0.3;
+  const k = vm.scale.x / 0.62 * 0.75; // hand offsets are tuned for a 0.75 m-scale hand on a 0.62-scale gun
+  const grip = vm.localToWorld(new V3(0, -0.07, -0.03)), fore = vm.localToWorld(pistol ? new V3(-0.02, -0.08, 0.0) : new V3(0, -0.04, -len * 0.5));
+  const cq = camera.getWorldQuaternion(new THREE.Quaternion()), vq = vm.getWorldQuaternion(new THREE.Quaternion());
+  const right = new V3(1, 0, 0).applyQuaternion(cq), down = new V3(0, -1, 0).applyQuaternion(vq), fw = new V3(0, 0, -1).applyQuaternion(vq);
+  const [rw, lw] = wristTargets(grip, fore, fw, right, down.clone().multiplyScalar(k), pistol);
+  ik2(B.RightArm, B.RightForeArm, B.RightHand, rw, right.clone().multiplyScalar(0.9).add(down));
+  ik2(B.LeftArm, B.LeftForeArm, B.LeftHand, lw, right.clone().multiplyScalar(-0.5).add(down));
+  gripGun(F.H, fw, right, down, pistol);
+}
+function poseSoldier(a, dt, speed, fwd, mode) {
+  const R = a.real, B = R.B, g = a.g;
+  setGun(a);
+  // locomotion blend: idle -> walk -> run, played backwards when backing up
+  const s = mode === "stand" || mode === "crouch" ? speed : 0;
+  const wIdle = clamp(1 - s / 1.4, 0, 1), wRun = clamp((s - 4) / 2, 0, 1), wWalk = clamp(1 - wIdle - wRun, 0, 1);
+  R.act.Idle.setEffectiveWeight(wIdle); R.act.Walk.setEffectiveWeight(wWalk); R.act.Run.setEffectiveWeight(wRun);
+  const dirSign = fwd < -0.3 ? -1 : 1;
+  R.act.Walk.timeScale = dirSign * clamp(s / 1.5, 0.6, 1.8) * (mode === "crouch" ? 0.8 : 1); R.act.Run.timeScale = dirSign * clamp(s / 5.5, 0.8, 1.5);
+  if (mode !== "dead") R.mixer.update(dt);
+  R.root.position.set(0, 0, 0); R.root.rotation.set(0, 0, 0);
+  g.updateMatrixWorld(true);
+  const drop = mode === "crouch" ? 0.5 : mode === "seat" ? 0.62 : 0;
+  const right = _v1.set(Math.cos(g.rotation.y), 0, -Math.sin(g.rotation.y)).clone(), forward = new V3(-Math.sin(g.rotation.y), 0, -Math.cos(g.rotation.y));
+  if (drop) {
+    // remember where the feet were, lower the body, then bend the knees to keep the feet planted
+    const lf = B.LeftFoot.getWorldPosition(R.feet[0]), rf = B.RightFoot.getWorldPosition(R.feet[1]);
+    if (mode === "seat") { lf.y = rf.y = g.position.y + 0.1; lf.addScaledVector(forward, 0.45); rf.addScaledVector(forward, 0.45); }
+    else { lf.addScaledVector(forward, 0.22); rf.addScaledVector(forward, -0.18); rf.y += 0.05; }
+    R.root.position.y = -drop; R.root.updateMatrixWorld(true);
+    const knee = forward.clone().add(new V3(0, 0.3, 0));
+    ik2(B.LeftUpLeg, B.LeftLeg, B.LeftFoot, lf, knee); ik2(B.RightUpLeg, B.RightLeg, B.RightFoot, rf, mode === "seat" ? knee : forward.clone().add(new V3(0, -0.6, 0)));
+  }
+  if (mode === "dead") {
+    // crumple: knees give out, then the body tips over backwards
+    const t = a.deadAnim;
+    R.root.position.y = -0.1 * t; R.root.rotation.x = Math.PI / 2 * clamp((t - 0.15) / 0.85, 0, 1) * 0.98; R.root.position.z = 0.4 * t;
+    R.gunPivot.visible = t < 0.3;
+    return;
+  }
+  R.gunPivot.visible = mode !== "seat";
+  const pitch = clamp(a.pitch, -1.1, 1.1);
+  // lean the chest and tilt the head with the aim
+  const upAim = (k) => new V3(0, Math.cos(pitch * k), Math.sin(pitch * k)).applyQuaternion(g.quaternion);
+  const sp = B.Spine2.getWorldPosition(new V3()); aimBone(B.Spine2, B.Neck, sp.add(upAim(0.45)));
+  const hp = B.Head.getWorldPosition(new V3()); aimBone(B.Head, B.HeadTop_End, hp.add(upAim(0.6)));
+  // the gun sits on the right shoulder and pitches with the aim
+  const sh = B.RightArm.getWorldPosition(new V3());
+  g.worldToLocal(sh);
+  R.gunPivot.position.set(sh.x - 0.12, sh.y - 0.06, sh.z - 0.08);
+  R.gun.rotation.set(pitch, 0, 0);
+  R.gun.position.set(0, 0, 0);
+  if (mode === "seat") {
+    const wheel = g.localToWorld(new V3(0, sh.y - 0.25, sh.z - 0.45));
+    ik2(B.RightArm, B.RightForeArm, B.RightHand, wheel.clone().addScaledVector(right, 0.17), right.clone().add(new V3(0, -1, 0)));
+    ik2(B.LeftArm, B.LeftForeArm, B.LeftHand, wheel.clone().addScaledVector(right, -0.17), right.clone().multiplyScalar(-1).add(new V3(0, -1, 0)));
+    return;
+  }
+  // pistols are held out in front with both hands; long guns with the stock in the shoulder
+  const gz = R.pistol ? -0.36 : -0.05, gx = R.pistol ? 0.1 : 0;
+  R.gun.position.set(gx, 0, 0); R.gun.translateZ(gz);
+  R.gun.updateMatrixWorld(true);
+  const grip = R.gun.localToWorld(new V3(0, -0.06, -0.03)), fore = R.gun.localToWorld(R.pistol ? new V3(-0.02, -0.07, 0.0) : new V3(0, -0.03, -R.len * 0.55));
+  const gq = R.gun.getWorldQuaternion(new THREE.Quaternion()), gfw = new V3(0, 0, -1).applyQuaternion(gq), gdown = new V3(0, -1, 0).applyQuaternion(gq);
+  const [rw, lw] = wristTargets(grip, fore, gfw, right, gdown, R.pistol);
+  const down = new V3(0, -1, 0);
+  ik2(B.RightArm, B.RightForeArm, B.RightHand, rw, right.clone().multiplyScalar(0.8).add(down));
+  ik2(B.LeftArm, B.LeftForeArm, B.LeftHand, lw, right.clone().multiplyScalar(-0.4).add(down));
+  gripGun(R.H, gfw, right, gdown, R.pistol);
 }
 
 // ================= audio =================
@@ -1427,8 +1696,14 @@ const BOT_GUNS = [
   { w: 5, rof: 0.11, burst: [10, 20], pause: [1.2, 2], dmg: 12, range: 60 }, // M60
   { w: 1, rof: 0.55, burst: [1, 1], pause: [0, 0], dmg: 30, range: 30 }, // Python
   { w: 7, rof: 0.8, burst: [1, 1], pause: [0, 0], dmg: 45, range: 120, sniper: true }, // Dragunov
+  { w: 10, rof: 0.075, burst: [5, 10], pause: [0.7, 1.3], dmg: 11, range: 50 }, // M4A1
+  { w: 12, rof: 0.1, burst: [5, 10], pause: [0.8, 1.4], dmg: 12, range: 30, smg: true }, // UMP45
+  { w: 13, rof: 0.055, burst: [8, 14], pause: [0.9, 1.5], dmg: 8, range: 22, smg: true }, // Vector
+  { w: 14, rof: 0.6, burst: [1, 1], pause: [0, 0], dmg: 46, range: 14, shotgun: true }, // SPAS-12
+  { w: 11, rof: 0.085, burst: [5, 9], pause: [0.7, 1.3], dmg: 12, range: 55 }, // ACR
+  { w: 15, rof: 1.6, burst: [1, 1], pause: [0, 0], dmg: 95, range: 160, sniper: true }, // Barrett
 ];
-const GUN_OF = [0, 1, 4, 2, 0, 3, 5, 6, 1, 7, 4, 0, 2, 3, 5, 1, 0, 4, 6, 7, 1, 0, 2, 5, 4, 3, 0, 1, 6, 7, 4, 2];
+const GUN_OF = Array.from({ length: 32 }, (_, i) => [0, 1, 8, 4, 9, 2, 12, 3, 10, 5, 0, 11, 6, 8, 7, 13][i % 16]);
 let difIdx = clamp(store.get("dif", 1) | 0, 0, 3), botCount = BOT_COUNTS.includes(store.get("botCount", 8)) ? store.get("botCount", 8) : Math.min(16, MAX_BOTS);
 let botAuth = true, botHostId = null, hostDif = difIdx, bkSeq = 0, bkFrom = null, hostBkSeen = 0, myJoinT = Date.now();
 const botKills = []; // [n, botIdx, killerId, weapon, head]
@@ -2199,7 +2474,7 @@ function showMenu(kind, notice) {
   const head = kind === "pause"
     ? `<span class="eyebrow">Server · ${esc(mySrv)} · ${MODES[match.mode].name} · the game keeps running</span><h1>Holding</h1>`
     : `<span class="eyebrow">${invitedTo ? `Invited to server “${esc(invitedTo)}” · tap Join` : `${profile.pr ? `Prestige ${profile.pr} · ` : ""}Level ${lvl} · ${esc(RANKS[lvl - 1])}`}</span><h1>Cold Block</h1>
-      <p>Open-city warfare, 1968. Squad up with friends on the <strong>same server name</strong>, rank up from Private to General, unlock guns and camos, earn killstreaks, steal cars.</p>`;
+      <p>Close-quarters city warfare. Squad up with friends on the <strong>same server name</strong>, rank up from Private to General, unlock guns and camos, earn killstreaks, steal cars.</p>`;
   const actions = kind === "pause" ? `<button class="go" id="go">Resume</button><button class="ghost" id="leave">Leave server</button>` : `<button class="go" id="go">Join server</button>`;
   card.innerHTML = `${head}${tabBar}${body}<div class="row joinrow">${actions}</div>`;
   wireMenu(card, kind);
@@ -2245,16 +2520,17 @@ function leave() {
   pushPresence(true); showMenu("start");
 }
 
-// ================= day and night =================
-// A 20-minute day on the shared server clock, so every player sees the same sky.
+// ================= daylight =================
+// The sun drifts from morning to late afternoon and back over 20 minutes on the shared server clock,
+// so every player sees the same sky. It never sets.
 const DAY_LEN = 1200;
 const C = (h) => new THREE.Color(h);
 const SKYC = { day: [C("#4d6d92"), C("#aebfcc"), C("#b8c0c2")], dusk: [C("#3b4a5e"), C("#c79673"), C("#b79c80")], night: [C("#05070d"), C("#151c2b"), C("#1a2029")] };
 const tmpC = [new THREE.Color(), new THREE.Color(), new THREE.Color()];
 let nightK = 0, skyT = -1;
 function updateSky() {
-  const ph = ((serverNow() / 1000) % DAY_LEN) / DAY_LEN, elev = Math.sin(ph * Math.PI * 2);
-  const dayK = clamp(elev / 0.45, 0, 1), nk = clamp(-elev / 0.3, 0, 1);
+  const ph = ((serverNow() / 1000) % DAY_LEN) / DAY_LEN, elev = 0.55 + 0.35 * Math.sin(ph * Math.PI * 2);
+  const dayK = clamp(elev / 0.45, 0, 1), nk = 0;
   nightK = nk;
   for (let i = 0; i < 3; i++) { tmpC[i].copy(SKYC.dusk[i]); if (dayK > 0) tmpC[i].lerp(SKYC.day[i], dayK); if (nk > 0) tmpC[i].lerp(SKYC.night[i], nk); }
   const u = sky.material.uniforms; u.top.value.copy(tmpC[0]); u.mid.value.copy(tmpC[1]); u.bot.value.copy(tmpC[2]);
@@ -2335,12 +2611,13 @@ function update(dt) {
   // sun shadow follows the player
   if (SHADOWS) { sun.position.set(P.pos.x + sunDir.x * 250, sunDir.y * 250, P.pos.z + sunDir.z * 250); sun.target.position.set(P.pos.x, 0, P.pos.z); }
   // viewmodel
-  const hip = new V3(0.15, -0.16, -0.3), ads = new V3(0, -0.085, -0.22);
+  const hip = new V3(0.14, -0.15, -0.36), ads = new V3(0, -0.085, -0.26);
   vm.position.lerpVectors(hip, ads, adsT);
   vm.position.y += Math.sin(bob * 2) * 0.008 * (1 - adsT) - (reloadEnd ? 0.12 : 0) - Math.max(0, switchT - T) * 0.5;
   vm.position.z += recoilP * 2.2;
   vm.rotation.x = reloadEnd ? -0.6 : 0; vm.rotation.y = T - knifeT < 0.25 ? 0.6 : 0;
   vm.visible = !P.car && !P.dead && !(w.scope && adsT > 0.85);
+  updateFpArms();
   $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || P.dead;
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) flash.visible = false; }
   for (const a of remotes.values()) animateAvatar(a, dt);
@@ -2428,6 +2705,6 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 resize(); buildViewmodel(); showMenu("start"); requestAnimationFrame(frame);
-if (location.hash === "#test") window.__cb = { P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId };
+if (location.hash === "#test") window.__cb = { get fp() { return fpArms; }, camera, vm, P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId };
 })();
 </script>
