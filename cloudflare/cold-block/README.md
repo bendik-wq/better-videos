@@ -8,7 +8,7 @@ Hosts the multiplayer game at your own `*.workers.dev` URL (or a custom domain).
   claude.ai artifact. Inside claude.ai it uses the artifact `room` capability; anywhere else
   it connects to `/ws` on the host it was loaded from.
 - Durable Objects on the SQLite backend run on the Workers free plan.
-- `soldier.glb` (next to the page) is the rigged, motion-captured soldier from the three.js examples
+- `soldier.json` + `soldier_0.jpg`/`soldier_1.jpg` (next to the page) is the rigged, motion-captured soldier from the three.js examples
   (`examples/models/gltf/Soldier.glb`, originally from Mixamo). If it fails to load, players fall back
   to simple box figures.
 

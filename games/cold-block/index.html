@@ -964,7 +964,7 @@ function animateAvatar(a, dt) {
 }
 
 // ================= soldiers: a rigged, textured, motion-captured character =================
-// The model (soldier.glb, next to this page) streams in after the game starts; until it arrives, or if it
+// The model (soldier.json and its two .jpg textures, next to this page) streams in after the game starts; until it arrives, or if it
 // cannot load, everyone keeps the simple box figure. Legs come from the walk/run captures; the arms are
 // solved with two-bone IK onto the gun each frame, and the spine and head follow where the player aims.
 // Hit detection never looks at the mesh, so this is visual only.
@@ -975,7 +975,7 @@ function loadScript(src) { return new Promise((res, rej) => { const el = documen
   try {
     const base = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/";
     await loadScript(base + "loaders/GLTFLoader.js"); await loadScript(base + "utils/SkeletonUtils.js");
-    new THREE.GLTFLoader().load("soldier.glb", (gltf) => {
+    new THREE.GLTFLoader().load("soldier.json", (gltf) => {
       SOLDIER.scene = gltf.scene; SOLDIER.clips = {};
       for (const c of gltf.animations) SOLDIER.clips[c.name] = c;
       // the rest of the city renders in linear colour, so read the uniform texture the same way
