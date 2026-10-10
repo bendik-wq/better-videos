@@ -180,7 +180,7 @@ for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
 
 export default {
   title: 'The Most Dangerous Company in the World',
-  fps: 30,
+  fps: 60,
   width: 1920,
   height: 1080,
   voice: { engine: 'kokoro', name: 'af_heart', speed: 0.96,
