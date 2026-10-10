@@ -16,12 +16,12 @@ const MAX_TEX = 2560; // long side: the plate never needs more at 1080p with the
 // Per-photo framing: center = photo point on the optical axis (u, v up), zoom crops off borders
 // and printed captions, depth = relief. Chosen by looking at each print.
 const FRAMING = {
-  'cia-hq-aerial-1.jpg': { center: [0.6, 0.36], zoom: 1.35, depth: 0.42 },
-  'cia-hq-aerial-2.jpg': { center: [0.56, 0.38], zoom: 1.3, depth: 0.42 },
-  'census-tabulator-1939.jpg': { center: [0.52, 0.5], zoom: 1.12, depth: 0.5 },
-  'census-keypunch-operators-1940.jpg': { center: [0.5, 0.58], zoom: 1.22, depth: 0.55 },
+  'cia-hq-aerial-1.jpg': { center: [0.6, 0.4], zoom: 1.12, depth: 0.42 },
+  'cia-hq-aerial-2.jpg': { center: [0.56, 0.42], zoom: 1.1, depth: 0.42, exposure: 1.12 },
+  'census-tabulator-1939.jpg': { center: [0.52, 0.56], zoom: 1.04, depth: 0.5 },
+  'census-keypunch-operators-1940.jpg': { center: [0.5, 0.6], zoom: 1.14, depth: 0.55 },
   'pentagon-aerial-2003.jpg': { center: [0.5, 0.45], zoom: 1.08, depth: 0.45 },
-  'pentagon-aerial-1973.jpg': { center: [0.47, 0.5], zoom: 1.16, depth: 0.45 },
+  'pentagon-aerial-1973.jpg': { center: [0.47, 0.5], zoom: 1.16, depth: 0.45, exposure: 1.45 }, // a dark red slide: luma is low
   'ibm704-langley-1957.jpg': { center: [0.42, 0.5], zoom: 1.06, depth: 0.5 },
   'ibm-edpm-1957.jpg': { center: [0.5, 0.48], zoom: 1.06, depth: 0.5 },
 };
@@ -55,7 +55,10 @@ export async function preloadPhotos(H, ctx, shots) {
       const F = { ...(FRAMING[file] ?? { center: [0.5, 0.5], zoom: 1.05, depth: 0.5 }) };
       if (P0.center) F.center = P0.center; if (P0.zoom) F.zoom = P0.zoom; if (P0.depth) F.depth = P0.depth;
       const scene = new THREE.Scene(); scene.background = new THREE.Color(0x000000);
-      const ph = await PX.photo(scene, url, { treatment: P0.treatment ?? 'bw', mm: 50, dist: 10, depth: F.depth, center: F.center, zoom: F.zoom });
+      // parallax.js divides the photo's extent by `zoom`, so >1 shrinks it inside the frame (its doc
+      // says the opposite); pass the reciprocal to crop in as intended
+      const ph = await PX.photo(scene, url, { treatment: P0.treatment ?? 'bw', mm: 50, dist: 10, depth: F.depth, center: F.center, zoom: 1 / Math.max(1, F.zoom) });
+      ph.exposure = F.exposure ?? 1;
       const kind = PX.moves[P0.move] ? P0.move : 'push';
       // amounts a touch under the presets: slow and smooth; long shots travel no farther
       const amount = P0.amount ?? { push: 0.15, pull: 0.13, lateral: 0.03, rise: 0.025 }[kind];
@@ -90,7 +93,7 @@ export function makePhoto(H) {
           camera.setViewOffset(W, Hh, wx, wy, W, Hh);
           // print density breathes ~1 %: the projector lamp, not a flicker
           const ex = 1 + 0.008 * n(0.9, 3.1) + 0.004 * n(2.3, 0.2);
-          for (const m of mats) m.uniforms.exposure.value = ex;
+          for (const m of mats) m.uniforms.exposure.value = ex * (ph.exposure ?? 1);
           if (cap) { cap.style.opacity = 1; K.typeOn(cap, P0.caption, K.range(t, 0.45, 1.6)); }
           if (src) src.style.opacity = K.range(t, 0.9, 1.6) * 0.9;
         },

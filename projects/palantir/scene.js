@@ -11,6 +11,7 @@ import * as PX from '/engine/parallax.js';
 import { makeStone } from './stone.js';
 import { makeOps } from './ops.js';
 import { makeGeo } from './geo.js';
+import { makePhoto, preloadPhotos } from './photo.js';
 
 const RED = 0xe0241b, SODIUM = 0xffa860, FLUO = 0x58ffa0, ICE = 0x9fc4ff, PAPER = '#efe7d6';
 const CAP = `font:500 .9em 'Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#d9d2c3;line-height:1.6`;
@@ -36,20 +37,23 @@ function mesh(geo, mat, pos = [0, 0, 0], parent) { const m = new THREE.Mesh(geo,
 // Camera language. The runtime picks an angle per shot (CAM.style); every set's move is
 // re-interpreted through it, so the same set never looks the same twice.
 export const CAM = { style: 'orbit' };
+// smootherstep: zero velocity AND zero acceleration at both ends, so no move ever pops at a cut
+const ease = (p) => { p = K.clamp(p); return p * p * p * (p * (6 * p - 15) + 10); };
 function camOrbit(camera, { r = 10, a0 = -0.4, a1 = 0.1, y0 = 2, y1 = 3, target = [0, 1, 0], p, t, hand = 0.03, seed = 0 }) {
   camera.userData.fov0 ??= camera.fov;
   let fov = camera.userData.fov0, roll = 0; const ty = target[1];
-  let k = K.inOut(p), a = K.lerp(a0, a1, k), y = K.lerp(y0, y1, k); const h = K.handheld(t, hand, seed);
+  // one ease in / ease out over the whole shot for every angle
+  let k = ease(p), a = K.lerp(a0, a1, k), y = K.lerp(y0, y1, k); const h = K.handheld(t, hand, seed);
   r *= K.lerp(1.08, 0.93, k); // every move also creeps in, like a dolly on a long lens
   switch (CAM.style) {
     case 'low': r *= 0.72; y = Math.max(0.12, ty * 0.12); fov = fov * 1.25; break;                       // ground-level hero angle
-    case 'god': { const sweep = K.lerp(a0, a0 + 0.9, k); camera.position.set(target[0] + Math.sin(sweep) * r * 0.18, ty + r * 1.35, target[2] + Math.cos(sweep) * r * 0.18);
+    case 'god': { const sweep = K.lerp(a0, a0 + 0.6, k); camera.position.set(target[0] + Math.sin(sweep) * r * 0.18, ty + r * 1.35, target[2] + Math.cos(sweep) * r * 0.18);
       camera.up.set(Math.sin(sweep), 0, Math.cos(sweep)); camera.lookAt(...target); camera.up.set(0, 1, 0); camera.fov = fov; camera.updateProjectionMatrix(); return; }
-    case 'dutch': roll = K.lerp(0.1, 0.2, k) * (seed % 2 ? 1 : -1); break;
-    case 'crane': y = K.lerp(ty + r * 1.2, ty + r * 0.12, K.outCubic(p)); r *= K.lerp(1.15, 0.85, k); break;  // drop from high to eye level
-    case 'reveal': a = a0 - 1.7 * (1 - K.outCubic(p)) ; break;                                              // big sweep that lands and settles
-    case 'macro': r *= 0.42; y = ty + (y - ty) * 0.35; fov = fov * 0.7; break;                              // tight, long lens
-    case 'whip': a = a1 + 1.4 * Math.pow(1 - K.outExpo(K.clamp(p * 1.4)), 1); break;                         // snaps in from the side
+    case 'dutch': roll = K.lerp(0.08, 0.14, k) * (seed % 2 ? 1 : -1); break;
+    case 'crane': y = K.lerp(ty + r * 0.9, ty + r * 0.12, k); r *= K.lerp(1.12, 0.88, k); break;          // drop from high to eye level
+    case 'reveal': a = K.lerp(a0 - 0.9, a1, k); break;                                                  // wider arc, lands and settles
+    case 'macro': r *= 0.42; y = ty + (y - ty) * 0.35; fov = fov * 0.7; break;                          // tight, long lens
+    case 'whip': a = K.lerp(a1 + 1.0, a1, k); break;                                                    // explicit only: a long swing, still eased
   }
   camera.position.set(target[0] + Math.sin(a) * r + h.x, y + h.y, target[2] + Math.cos(a) * r);
   camera.lookAt(...target); camera.rotation.z += h.r + roll;
@@ -152,6 +156,10 @@ function base(ctx, { fog = 0x000000, density = 0.03, floor = 0x1a1918, fov = 32 
 }
 const caption = (layer, text, css = 'left:6%;top:8%') => text ? K.div(layer, `${css};${CAP}`, text) : null;
 const sourceLine = (layer, text) => text ? K.div(layer, `right:5%;bottom:5%;font:400 .72em 'Plex Mono',monospace;letter-spacing:.14em;color:#8f897d`, text) : null;
+// order of this shot among the film's shots of the same set (beats included): picks a variant so a
+// set that recurs never repeats its composition. An '@self' return (_again) keeps its parent's.
+const nthOfSet = (ctx, shot) => { const id = shot.params?._again ? shot.id.split('.')[0] : shot.id;
+  const i = (ctx.shots || []).filter(s => s.set === shot.set && !s.params?._again).findIndex(s => s.id === id); return Math.max(0, i); };
 
 const SETS = {
   // ---------- airliner in a dark hangar ----------
@@ -232,37 +240,38 @@ const SETS = {
   bars(ctx, shot) {
     const b = base(ctx, { floor: 0x141414, density: 0.02, fov: 30 });
     const { scene, camera, layer } = b; const P0 = shot.params; const items = P0.items; const n = items.length;
-    const svg = K.svgLayer(layer);
     K.keySpot(scene, { intensity: 5200, pos: [0, 24, 10], target: [0, 0, 0], angle: 0.55, penumbra: 0.7, shadow: 2048 });
+    K.lightShaft(scene, { pos: [0, 24, 10], target: [0, 0, 0], radius: 9, intensity: 0.035 });
     scene.add(new THREE.HemisphereLight(0x334455, 0x080808, 0.4));
     const spacing = 5.2, cols = items.map((it, i) => {
       const m = std(it.red ? RED : 0xd8d2c4, { roughness: 0.5, metalness: 0.1, emissive: it.red ? 0x3a0503 : 0x000000 });
       const c = mesh(new THREE.BoxGeometry(3, 1, 3), m, [(i - (n - 1) / 2) * spacing, 0, 0], scene); c.geometry.translate(0, 0.5, 0); return c; });
     const H = 9.5 / P0.max;
-    const title = K.div(layer, `left:0;right:0;top:7%;text-align:center;${CAP}`, P0.title);
+    const title = K.div(layer, `left:6%;top:7%;${CAP}`, P0.title);
     const src = sourceLine(layer, P0.source);
     const labels = items.map(it => K.div(layer, `width:16em;margin-left:-8em;text-align:center;line-height:1.05`,
-      `<div class="v" style="${SERIF};font-size:4.4em;${it.red ? `color:#ff4a3d` : ''}"></div><div style="${CAP};margin-top:.3em">${it.label}</div>`));
-    const loop = P0.highlight !== undefined ? K.markerLoop(svg, { cx: 0, cy: 0, rx: 100, ry: 100, seed: 3, width: 6 }) : null;
-    loop?.setAttribute('vector-effect', 'non-scaling-stroke');
+      `<div class="v" style="font:700 4.6em 'Archivo Narrow',sans-serif;letter-spacing:-.01em;color:${it.red ? '#ff4a3d' : PAPER}"></div><div style="${CAP};margin-top:.3em">${it.label}</div>`));
+    // count the displayed figure up in its own format: '$480M', '≈ $1.3B', '+149%'
+    const fmt = (it, k) => { const d = it.display; if (!d) return '$' + Math.round(it.value * k) + 'M';
+      return d.replace(/[\d][\d,]*(\.\d+)?/, (m, dec) => { const v = parseFloat(m.replace(/,/g, '')) * k; return dec ? v.toFixed(dec.length - 1) : Math.round(v).toLocaleString('en-US'); }); };
+    const t0s = items.map((it, i) => it.word ? wt(shot, it.word) - 0.1 : 0.3 + i * 0.5);
+    const grow = (i, t) => K.outCubic(K.range(t, t0s[i], t0s[i] + 1.3));
     return { ...b, update(t, p) {
-      // crane with the growth: the camera rises as the newest column rises, then settles wide
-      const grow = items.reduce((m, it, i) => { if (!it.word || P0.settled) return m; const t0 = wt(shot, it.word) - 0.1; const g = K.outExpo(K.range(t, t0, t0 + 1.2)); return t >= t0 ? { i, g, h: it.value * H * g } : m; }, null);
-      if (grow) { const x = cols[grow.i].position.x; const k2 = K.smooth(K.range(t, wt(shot, items[grow.i].word) + 1.4, shot.duration));
-        camera.position.set(K.lerp(x + 6, 0, k2), K.lerp(Math.max(1.2, grow.h * 0.9), 6, k2), K.lerp(16, 40, k2)); camera.lookAt(K.lerp(x, 0, k2), K.lerp(grow.h * 0.75, 4.2, k2), 0); }
-      else camOrbit(camera, { r: 40, a0: -0.18, a1: 0.12, y0: 7, y1: 6, target: [0, 4.2, 0], p, t, hand: 0.03 });
+      // the frame follows the newest column (eased from column to column), then settles wide
+      let fx = cols[0].position.x, fh = items[0].value * H;
+      items.forEach((it, i) => { if (!i) return; const w = ease(K.range(t, t0s[i] - 0.2, t0s[i] + 1.4)); fx = K.lerp(fx, cols[i].position.x, w); fh = K.lerp(fh, it.value * H, w); });
+      const wide = ease(K.range(t, t0s.at(-1) + 1.2, shot.duration)), k = ease(p), h = K.handheld(t, 0.02, 4);
+      camera.position.set(K.lerp(fx + 7, 2, wide) + h.x, K.lerp(K.lerp(1.4, 3, k), 6.5, wide) + h.y, K.lerp(K.lerp(22, 18, k), 34, wide));
+      camera.lookAt(K.lerp(fx, 0, wide), K.lerp(fh * 0.55, 4.6, wide), 0);
       title.style.opacity = K.range(t, 0, 0.5); if (src) src.style.opacity = K.range(t, 0.4, 1) * 0.9;
+      const s = window.innerHeight / 1080;
       items.forEach((it, i) => {
-        const t0 = P0.settled || !it.word ? -1 : wt(shot, it.word) - 0.1;
-        const k = t0 < 0 ? 1 : K.outExpo(K.range(t, t0, t0 + 1.2));
-        cols[i].scale.y = Math.max(0.001, it.value * H * k);
-        cols[i].visible = k > 0;
-        const [sx, sy] = K.toScreen(new THREE.Vector3(cols[i].position.x, it.value * H * k + 1.2, 0), camera);
-        const s = window.innerHeight / 1080; labels[i].style.left = sx * s + 'px'; labels[i].style.top = Math.max(150, sy - 150) * s + 'px';
-        labels[i].style.opacity = k > 0 ? 1 : 0;
-        labels[i].querySelector('.v').textContent = it.display ? (k > 0.98 ? it.display : '$' + Math.round(it.value * k) + 'M') : '$' + (it.value * k).toFixed(it.value % 1 ? 1 : 0) + 'M';
-        if (loop && i === P0.highlight) { const [, ty] = K.toScreen(new THREE.Vector3(cols[i].position.x, it.value * H, 0), camera); const [cx, by] = K.toScreen(new THREE.Vector3(cols[i].position.x, 0, 0), camera);
-          loop.setAttribute('transform', `translate(${cx} ${(ty + by) / 2}) scale(1.5 ${((by - ty) / 2 + 60) / 100})`); loop.draw(K.outCubic(K.range(t, 0.8, 1.8))); }
+        const g = grow(i, t);
+        cols[i].scale.y = Math.max(0.001, it.value * H * g); cols[i].visible = g > 0;
+        const [sx, sy] = K.toScreen(new THREE.Vector3(cols[i].position.x, it.value * H * g + 1.2, 0), camera);
+        labels[i].style.left = sx * s + 'px'; labels[i].style.top = Math.max(150, sy - 150) * s + 'px';
+        labels[i].style.opacity = K.range(t, t0s[i], t0s[i] + 0.2);
+        labels[i].querySelector('.v').textContent = fmt(it, K.outExpo(K.range(t, t0s[i], t0s[i] + 1.3)));
       });
     } };
   },
@@ -285,7 +294,7 @@ const SETS = {
     return { ...b, update(t, p) {
       motes.update(t); if (platter) platter.rotation.y = t * 9; if (orb) orb.material.uniforms.uT.value = t;
       const tgt = [mid.x, mid.y * 0.8, mid.z]; const r = R * 2.6;
-      if (P0.cam === 'top') { const k = K.inOut(p); camera.position.set(mid.x + R * 0.2, R * K.lerp(3.2, 2.6, k), mid.z + R * K.lerp(0.9, 0.6, k)); camera.lookAt(...tgt); camera.rotation.z += K.lerp(0, 0.15, k); }
+      if (P0.cam === 'top') { const k = ease(p); camera.position.set(mid.x + R * 0.2, R * K.lerp(3.2, 2.6, k), mid.z + R * K.lerp(0.9, 0.6, k)); camera.lookAt(...tgt); camera.rotation.z += K.lerp(0, 0.15, k); }
       else if (P0.cam === 'orbit') camOrbit(camera, { r, a0: -0.9, a1: 0.2, y0: R * 0.5, y1: R * 0.8, target: tgt, p, t });
       else if (P0.cam === 'rise') camOrbit(camera, { r, a0: -0.35, a1: -0.15, y0: R * 0.15, y1: R * 1.2, target: tgt, p, t });
       else camOrbit(camera, { r: K.lerp(r * 1.35, r * 0.95, K.inOut(p)), a0: -0.5, a1: -0.3, y0: R * 0.45, y1: R * 0.6, target: tgt, p: 0, t });
@@ -333,13 +342,16 @@ const SETS = {
     const b = base(ctx, { floor: 0x000000, density: 0.03, fov: 28 });
     const { scene, camera, layer } = b; const P0 = shot.params;
     const orb = makeOrb(1.6); orb.position.set(0, 1.7, -6); scene.add(orb); orb.material.uniforms.uGlow.value = 0.55;
-    const t1 = K.div(layer, `left:0;right:0;top:34%;text-align:center;${SERIF};font-size:11em;line-height:1;letter-spacing:-.01em`, P0.title);
-    const sub = K.div(layer, `left:0;right:0;top:60%;text-align:center;${CAP};letter-spacing:.32em`, P0.sub);
-    const ep = K.div(layer, `left:5.5%;bottom:6%;font:700 1.1em 'Archivo Narrow',sans-serif;letter-spacing:.3em;color:#e0241b`, P0.end ? '' : 'EPISODE 01');
+    const t1 = K.div(layer, `left:8%;right:8%;top:${P0.end ? 38 : 34}%;text-align:center;text-wrap:balance;${SERIF};font-size:${P0.end ? 9 : 10}em;line-height:1;letter-spacing:-.01em`, P0.title);
+    const sub = P0.sub ? K.div(layer, `left:0;right:0;top:62%;text-align:center;${CAP};letter-spacing:.32em`, P0.sub) : null;
+    const ep = P0.end ? null : K.div(layer, `left:5.5%;bottom:6%;font:700 1.1em 'Archivo Narrow',sans-serif;letter-spacing:.3em;color:#e0241b`, 'EPISODE 02');
+    const veil = K.div(layer, 'inset:0;background:#000');
     return { ...b, update(t, p) {
-      orb.material.uniforms.uT.value = t; camera.position.set(K.lerp(-1, 1, p), 1.6, 12 - p); camera.lookAt(0, 1.6, -6);
+      orb.material.uniforms.uT.value = t; const k = ease(p); camera.position.set(K.lerp(-1, 1, k), 1.6, 12 - k); camera.lookAt(0, 1.6, -6);
+      if (P0.end) { // hold on the title, then a slow, clean fade to black
+        t1.style.opacity = K.range(t, 0.3, 1.4); veil.style.opacity = K.range(t, shot.duration - 2.2, shot.duration - 0.2); orb.visible = true; return; }
       const on = t > 0.06 && t < shot.duration - 0.3 ? 1 : 0;
-      t1.style.opacity = on; sub.style.opacity = on * K.range(t, 0.9, 1.0); ep.style.opacity = on * K.range(t, 1.3, 1.4);
+      t1.style.opacity = on; if (sub) sub.style.opacity = on * K.range(t, 0.9, 1.0); ep.style.opacity = on * K.range(t, 1.3, 1.4); veil.style.opacity = 0;
     } };
   },
 
@@ -372,7 +384,7 @@ const SETS = {
     K.keySpot(scene, { intensity: 3000, pos: [X(ev[P0.focus].year), 18, 6], target: [X(ev[P0.focus].year), 0, 0], angle: 0.5, penumbra: 0.9, shadow: 0 });
     scene.add(new THREE.HemisphereLight(0x445566, 0x050505, 0.5));
     return { ...b, update(t, p) {
-      const k = K.inOut(p); const fx = P0.track ? K.lerp(X(ev[0].year), X(ev.at(-1).year), K.inOut(K.range(t, wt(shot, ev[0].word) || 0.5, wt(shot, ev.at(-1).word) + 1))) : X(ev[P0.focus].year);
+      const k = ease(p); const fx = P0.track ? K.lerp(X(ev[0].year), X(ev.at(-1).year), K.inOut(K.range(t, wt(shot, ev[0].word) || 0.5, wt(shot, ev.at(-1).word) + 1))) : X(ev[P0.focus].year);
       const h = K.handheld(t, 0.05, 3); camera.position.set(fx + K.lerp(-6, -2, k) + h.x, 4.5 + h.y, 17); camera.lookAt(fx, 1.5, 0);
       const s = window.innerHeight / 1080;
       ev.forEach((e, i) => { const t0 = e.word ? wt(shot, e.word) : 0.2 + i * 0.15; const kk = K.outCubic(K.range(t, t0, t0 + 0.8)); const hgt = 3 + (i % 2) * 1.2;
@@ -383,25 +395,46 @@ const SETS = {
   },
 
   // ---------- quotation ----------
+  // Eleven quotes in this film, so four compositions rotate by order of appearance; words light up
+  // as the narrator says them when the quote is in the VO, else they spread across the line.
   quote(ctx, shot) {
     const b = base(ctx, { floor: 0x0e0e0e, density: 0.04, fov: 30 });
     const { scene, camera, layer } = b; const P0 = shot.params;
-    if (P0.book) { const book = new THREE.Group(); mesh(new THREE.BoxGeometry(3.2, 0.55, 4.6), std(0x1a1a1a, { roughness: 0.6 }), [0, 0.28, 0], book);
-      mesh(new THREE.BoxGeometry(3.1, 0.48, 4.45), std(0xe8e0cc, { roughness: 0.9 }), [0.06, 0.28, 0], book); book.rotation.y = 0.5; scene.add(book); }
-    K.keySpot(scene, { intensity: 1600, pos: [0, 14, 4], target: [0, 0, 0], angle: 0.35, penumbra: 0.9, shadow: P0.book ? 1024 : 0 });
+    const v = nthOfSet(ctx, shot) % 4;
+    const key = [[0, 14, 4], [-9, 11, 2], [8, 12, -3], [2, 16, 9]][v];
+    K.keySpot(scene, { intensity: 1600, color: P0.red ? 0xffd2c0 : 0xfff0dc, pos: key, target: [0, 0, 0], angle: 0.35, penumbra: 0.9, shadow: 0 });
+    K.lightShaft(scene, { pos: key, target: [0, 0, 0], radius: 3.4, intensity: 0.05, color: P0.red ? 0xffb8a0 : 0xfff0dc });
     const motes = K.dust(scene, { count: 500, box: [12, 10, 8], center: [0, 4, 0], size: 0.035, opacity: 0.4 });
-    const words = (P0.text || '').split(' ');
-    const q = K.div(layer, `left:12%;right:12%;top:30%;text-align:center;${SERIF};font-size:${P0.text.length > 70 ? 4.6 : 5.8}em;line-height:1.12;${P0.red ? 'color:#ff4a3d' : ''}`,
-      words.map(w => `<span style="opacity:0">${w} </span>`).join(''));
-    const by = K.div(layer, `left:0;right:0;bottom:16%;text-align:center;${CAP};letter-spacing:.3em`, P0.by || '');
-    const book = P0.book ? K.div(layer, `left:0;right:0;bottom:18%;text-align:center;${SERIF};font-style:italic;font-size:3.2em`, 'Zero to One <span style="font-style:normal;font-size:.5em;letter-spacing:.2em;font-family:Plex Mono">· 2014</span>') : null;
+    const text = P0.text || ''; const words = text.split(' '); const long = text.length > 70;
+    const fs = long ? 4.4 : text.length < 22 ? 8.2 : 5.8;
+    const box = [
+      `left:12%;right:12%;top:${long ? 28 : 33}%;text-align:center`,
+      `left:8%;right:30%;top:${long ? 24 : 30}%;text-align:left`,
+      `left:30%;right:8%;top:${long ? 30 : 36}%;text-align:right`,
+      `left:14%;right:14%;top:${long ? 22 : 26}%;text-align:center`][v];
+    const q = K.div(layer, `${box};${SERIF};font-size:${fs}em;line-height:1.12;${P0.red ? 'color:#ff4a3d' : ''}`, words.map(w => `<span style="opacity:0">${w} </span>`).join(''));
+    const byCss = [`left:0;right:0;bottom:16%;text-align:center`, `left:8%;bottom:14%`, `right:8%;bottom:14%;text-align:right`, `left:0;right:0;bottom:22%;text-align:center`][v];
+    const by = P0.by ? K.div(layer, `${byCss};${CAP};letter-spacing:.3em`, P0.by) : null;
+    const rule = v === 1 || v === 2 ? K.div(layer, `${v === 1 ? 'left:8%' : 'right:8%'};top:${long ? 20 : 26}%;width:4em;height:2px;background:#e0241b`) : null;
     const spans = [...q.children];
+    // word sync: match quote words to the narration in order
+    const nw = (w) => w.toLowerCase().replace(/[^a-z0-9]/g, '');
+    let j = 0, hits = 0; const vw = shot.words || [];
+    const times = words.map(w => { const k = nw(w); if (!k) return null; for (let i = j; i < Math.min(vw.length, j + 6); i++) if (nw(vw[i].w) === k) { j = i + 1; hits++; return vw[i].s; } return null; });
+    const synced = hits >= Math.max(1, words.length * 0.6);
+    const a = vo0(shot), e = Math.max(a + 0.6, voEnd(shot) - 0.4);
+    let last = a; const at = words.map((_, i) => { if (synced && times[i] !== null) last = times[i] - 0.05; else if (!synced) last = a + (e - a) * (i / words.length); return last; });
+    const pending = synced && at[0] > shot.duration - 0.3; // the quote is spoken after this cut: hold it dim
+    const done = Math.max(...at) + 0.3;
     return { ...b, update(t, p) {
-      motes.update(t); camera.position.set(Math.sin(t * 0.15) * 0.6, K.lerp(5, 4, p), K.lerp(15, 13, p)); camera.lookAt(0, 0.6, 0);
-      q.style.opacity = P0.dim ? 0.35 : 1;
-      const a = P0.dim ? -1 : vo0(shot), e = P0.dim ? -1 : Math.max(a + 0.6, voEnd(shot) - 0.4);
-      spans.forEach((sp, i) => { const ti = a + (e - a) * (i / spans.length); sp.style.opacity = K.range(t, ti, ti + 0.25); });
-      by.style.opacity = K.range(t, e, e + 0.6) * (P0.dim ? 0.5 : 1); if (book) book.style.opacity = K.range(t, 0.6, 1.4);
+      motes.update(t); const k = ease(p), h = K.handheld(t, 0.02, v);
+      const cam = [[0, 5, 15, 0, 4, 13], [-1.2, 4.6, 14, 0.4, 4.2, 13], [1.2, 3.6, 15, -0.3, 4.4, 13.5], [0, 6.5, 16, 0, 5.2, 13]][v];
+      camera.position.set(K.lerp(cam[0], cam[3], k) + h.x, K.lerp(cam[1], cam[4], k) + h.y, K.lerp(cam[2], cam[5], k)); camera.lookAt(0, 0.6, 0);
+      const dim = P0.dim === true || pending;
+      q.style.opacity = dim ? 0.35 : 1;
+      spans.forEach((sp, i) => { sp.style.opacity = dim ? 1 : K.range(t, at[i], at[i] + 0.25); });
+      if (by) by.style.opacity = (dim ? K.range(t, 0.2, 0.8) * 0.5 : K.range(t, done, done + 0.6));
+      if (rule) rule.style.opacity = K.range(t, 0.2, 0.7);
     } };
   },
 
@@ -431,9 +464,10 @@ const SETS = {
       for (let i = 0; i < 90; i++) { const n = addNode(new THREE.Vector3((r() - 0.5) * 34, (r() - 0.5) * 18, (r() - 0.5) * 20 - 6), 0x3a3d42, 0.5); }
     }
     const motes = K.dust(scene, { count: 500, box: [40, 20, 30], center: [0, 0, 0], size: 0.06, opacity: 0.3 });
+    const cap = caption(layer, P0.caption, 'left:6%;top:8%'), src = sourceLine(layer, P0.source);
     return { ...b, update(t, p) {
-      motes.update(t);
-      const k = K.inOut(p), a = K.lerp(-0.35, 0.35, k), R = P0.mode === 'thiel' ? 26 : 32;
+      motes.update(t); if (cap) { cap.style.opacity = 1; K.typeOn(cap, P0.caption, K.range(t, 0.4, 1.6)); } if (src) src.style.opacity = K.range(t, 1, 1.6) * 0.9;
+      const k = ease(p), a = K.lerp(-0.35, 0.35, k), R = P0.mode === 'thiel' ? 26 : 32;
       camera.position.set(Math.sin(a) * R, P0.mode === 'ontology' ? K.lerp(22, 16, k) : K.lerp(5, 2, k), Math.cos(a) * R); camera.lookAt(0, 0, 0);
       const s = window.innerHeight / 1080;
       nodes.forEach(n => { const vis = t >= n.t0; n.m.visible = vis || !n.label; if (P0.pulse && n.m.material.color.getHex() === RED) n.m.scale.setScalar(2.2 + Math.sin(t * 4) * 0.2);
@@ -462,7 +496,7 @@ const SETS = {
     const motes = K.dust(scene, { count: 500, box: [4, 4, 40], center: [0, 2.2, -20], size: 0.03, opacity: 0.45, color: tint });
     const sp = P0.speed ?? 1;
     return { ...b, update(t, p) {
-      motes.update(t); const z = K.lerp(4, -6 * sp - 4, p); const h = K.handheld(t, 0.04, 5);
+      motes.update(t); const z = K.lerp(4, -6 * sp - 4, ease(p)); const h = K.handheld(t, 0.04, 5);
       camera.position.set(0.3 + h.x, 1.6 + h.y, z); camera.lookAt(0.1, 1.9, z - 12); camera.rotation.z += h.r;
       const base6 = Math.ceil((z + 2) / 6) * 6 - 2; pls.forEach((l, j) => l.position.set(0, 4.4, base6 - j * 6));
     } };
@@ -499,21 +533,25 @@ const SETS = {
   },
 
   // ---------- big numbers ----------
+  // Six of these in the film: three compositions (centred, left, right) by order of appearance.
   numbers(ctx, shot) {
     const b = base(ctx, { floor: 0x161514, density: 0.03, fov: 30 });
     const { scene, camera, layer } = b; const P0 = shot.params; const n = P0.items.length;
-    P0.items.forEach((_, i) => { const x = (i - (n - 1) / 2) * 13; K.keySpot(scene, { intensity: 1800, pos: [x, 15, 3], target: [x, 0, 0], angle: 0.32, penumbra: 0.7, shadow: 0 });
+    const v = nthOfSet(ctx, shot) % 3; const kx = [0, -7, 7][v];
+    P0.items.forEach((_, i) => { const x = (i - (n - 1) / 2) * 13 + kx; K.keySpot(scene, { intensity: 1800, pos: [x, 15, 3], target: [x, 0, 0], angle: 0.32, penumbra: 0.7, shadow: 0 });
       K.lightShaft(scene, { pos: [x, 15, 3], target: [x, 0, 0], radius: 5, intensity: 0.05 }); });
     const motes = K.dust(scene, { count: 500, box: [30, 12, 10], center: [0, 5, 0], size: 0.04, opacity: 0.4 });
-    const head = K.div(layer, `left:0;right:0;top:9%;text-align:center;${CAP};letter-spacing:.26em`, P0.header);
-    const els = P0.items.map((it, i) => K.div(layer, `left:${(i / n) * 100}%;width:${100 / n}%;top:24%;text-align:center;line-height:1`,
-      `<div class="v" style="${SERIF};font-size:${n > 1 ? 13 : 16}em;letter-spacing:-.02em"></div><div style="${SERIF};font-style:italic;font-size:2.4em;margin-top:.2em;color:#cfc8ba">${it.sub || ''}</div>`));
+    const align = ['center', 'left', 'right'][v];
+    const head = K.div(layer, `${v === 2 ? 'right:7%;text-align:right' : v === 1 ? 'left:7%' : 'left:0;right:0;text-align:center'};top:9%;${CAP};letter-spacing:.26em`, P0.header);
+    const els = P0.items.map((it, i) => K.div(layer, `${v === 0 ? `left:${(i / n) * 100}%;width:${100 / n}%` : v === 1 ? 'left:7%;width:80%' : 'right:7%;width:80%'};top:${v ? 30 : 24}%;text-align:${align};line-height:1`,
+      `<div class="v" style="font:700 ${n > 1 ? 12 : 15}em 'Archivo Narrow',sans-serif;letter-spacing:-.02em;color:${PAPER}"></div><div style="${SERIF};font-style:italic;font-size:2.4em;margin-top:.2em;color:#cfc8ba">${it.sub || ''}</div>`));
     const src = sourceLine(layer, P0.source);
     return { ...b, update(t, p) {
-      motes.update(t); const h = K.handheld(t, 0.02, 2); camera.position.set(h.x, K.lerp(3.4, 2.8, p) + h.y, K.lerp(28, 23, p)); camera.lookAt(0, 2, 0);
+      motes.update(t); const k = ease(p), h = K.handheld(t, 0.02, 2);
+      camera.position.set(K.lerp(-kx * 0.15, kx * 0.1, k) + h.x, K.lerp(3.4, 2.8, k) + h.y, K.lerp(28, 23, k)); camera.lookAt(kx * 0.4, 2, 0);
       head.style.opacity = K.range(t, 0, 0.5); if (src) src.style.opacity = K.range(t, 1, 1.6) * 0.9;
-      P0.items.forEach((it, i) => { const t0 = wt(shot, it.word) - 0.1; const k = K.range(t, t0, t0 + 1.3); els[i].style.opacity = k > 0 ? 1 : 0;
-        els[i].querySelector('.v').textContent = (it.prefix || '') + (it.value * K.outExpo(k)).toFixed(it.dec ?? 0) + (it.suffix || ''); });
+      P0.items.forEach((it, i) => { const t0 = wt(shot, it.word) - 0.1; const kk = K.range(t, t0, t0 + 1.3); els[i].style.opacity = K.range(t, t0, t0 + 0.12);
+        els[i].querySelector('.v').textContent = (it.prefix || '') + (it.value * K.outExpo(kk)).toFixed(it.dec ?? 0) + (it.suffix || ''); });
     } };
   },
 
@@ -534,7 +572,7 @@ const SETS = {
         `<span style="font:500 .2em 'Plex Mono',monospace;letter-spacing:.2em;color:${P0.check ? '#ff4a3d' : '#8f897d'};vertical-align:middle;margin-right:1.6em">${P0.check ? '✓' : P0.steps ? 'STEP ' + (i + 1) : String(i + 1).padStart(2, '0')}</span>${label}`); });
     return { ...b, update(t, p) {
       papers.children.forEach((m, i) => { m.rotation.x += 0; m.position.y = (m.userData.y0 ??= m.position.y) - t * (0.15 + m.userData.s * 0.3); m.rotation.z = t * 0.1 * (m.userData.s - 0.5); });
-      camera.position.set(K.lerp(-2, 1, p), 4, 18); camera.lookAt(6, 4, -8);
+      { const k = ease(p), h = K.handheld(t, 0.02, 4); camera.position.set(K.lerp(-2, 1, k) + h.x, 4 + h.y, 18); camera.lookAt(6, 4, -8); }
       head.style.opacity = K.range(t, 0, 0.4);
       items.forEach(([w], i) => { const t0 = wt(shot, w) - 0.05; els[i].style.opacity = K.range(t, t0, t0 + 0.2); els[i].style.transform = `translateY(${(1 - K.outCubic(K.range(t, t0, t0 + 0.5))) * 0.4}em)`; });
     } };
@@ -566,8 +604,10 @@ const SETS = {
     const tubeM = new THREE.MeshBasicMaterial({ color: 0xe8ffe8 }); for (let z = 0; z > -56; z -= 6) mesh(new THREE.BoxGeometry(0.08, 0.05, 2.2), tubeM, [0, 6.9, z], scene);
     const pls = [0, 1, 2].map(() => { const l = new THREE.PointLight(0xd8ffe0, 50, 16, 1.6); scene.add(l); return l; });
     const motes = K.dust(scene, { count: 500, box: [4, 6, 30], center: [0, 3, -12], size: 0.03, opacity: 0.4 });
+    const cap = caption(b.layer, P0.caption, 'left:6%;top:8%'), src = sourceLine(b.layer, P0.source);
     return { ...b, update(t, p) {
-      motes.update(t); const k = K.inOut(p); const h = K.handheld(t, 0.04, 6); let z;
+      if (cap) { cap.style.opacity = 1; K.typeOn(cap, P0.caption, K.range(t, 0.5, 1.8)); } if (src) src.style.opacity = K.range(t, 1, 1.6) * 0.9;
+      motes.update(t); const k = ease(p); const h = K.handheld(t, 0.04, 6); let z;
       if (P0.cam === 'desk') { z = -2.2; camera.position.set(K.lerp(1.3, 0.8, k) + h.x, K.lerp(1.9, 1.7, k) + h.y, K.lerp(-3.4, -4.4, k)); camera.lookAt(-0.1, 1.05, -6); }
       else if (P0.cam === 'rise') { z = -20; camera.position.set(0 + h.x, K.lerp(1.5, 9, k) + h.y, -30 + 8); camera.lookAt(0, K.lerp(2, 1, k), -40); }
       else { z = K.lerp(8, -14, k); camera.position.set(0.2 + h.x, 1.7 + h.y, z); camera.lookAt(0, 1.9, z - 10); }
@@ -595,96 +635,25 @@ const SETS = {
     const [c0, c1] = P0.close;
     return { ...b, update(t, p) {
       motes.update(t);
-      const c = K.lerp(c0, c1, K.inOut(p)); const open = 1 - c;
+      const c = K.lerp(c0, c1, ease(p)); const open = 1 - c;
       // shutter drops from the top of the opening
       shutter.scale.y = Math.max(0.001, c); shutter.position.y = 1 + Hh - (Hh * c) / 2;
       sun.intensity = 9000 * open; shaft.material.uniforms.uI.value = 0.1 * open; backdrop.material.color.setScalar(0.4 + 0.6 * open);
-      const h = K.handheld(t, 0.03, 8); camera.position.set(K.lerp(-3, -1.5, p) + h.x, 2.2 + h.y, K.lerp(14, 11, p)); camera.lookAt(0, 3.4, -6);
-      lbl.style.opacity = K.range(t, 0.4, 1); lbl.textContent = `THE WINDOW · ${Math.round(open * 100)}% OPEN`; bar.style.opacity = 1; bar.style.width = `${open * 20}%`;
+      const h = K.handheld(t, 0.03, 8), k = ease(p); camera.position.set(K.lerp(-3, -1.5, k) + h.x, 2.2 + h.y, K.lerp(14, 11, k)); camera.lookAt(0, 3.4, -6);
+      bar.style.opacity = K.range(t, 0.4, 1); bar.style.width = `${open * 20}%`;
     } };
   },
 
-  // ---------- value of the Nth dataset ----------
-  curve(ctx, shot) {
-    const b = base(ctx, { floor: null, fog: 0x030303, density: 0.02 });
-    const { scene, camera, layer } = b; const P0 = shot.params;
-    const motes = K.dust(scene, { count: 500, box: [24, 14, 10], center: [0, 0, -8], size: 0.04, opacity: 0.3 });
-    const svg = K.svgLayer(layer); const X0 = 300, X1 = 1650, Y0 = 860, Y1 = 220;
-    const f = (u) => Y0 - (Y0 - Y1) * Math.exp(-u * 4.2) * 0.98;
-    svg.make('line', { x1: X0, y1: Y0, x2: X1, y2: Y0, stroke: '#8f897d', 'stroke-width': 1.5 }); svg.make('line', { x1: X0, y1: Y0, x2: X0, y2: Y1 - 40, stroke: '#8f897d', 'stroke-width': 1.5 });
-    const pts = Array.from({ length: 120 }, (_, i) => { const u = i / 119; return `${X0 + (X1 - X0) * u},${f(u)}`; });
-    const path = svg.make('polyline', { points: pts.join(' '), fill: 'none', stroke: '#efe7d6', 'stroke-width': 4 }); const len = 2200; path.style.strokeDasharray = len;
-    const dot = svg.make('circle', { r: 11, fill: '#e0241b' });
-    K.div(layer, `left:${X0 / 19.2}%;top:${(Y1 - 110) / 10.8}%;${CAP}`, 'VALUE OF THE DATASET TO AN AI LAB').style.opacity = 1;
-    K.div(layer, `left:${X1 / 19.2 - 22}%;top:${(Y0 + 24) / 10.8}%;width:22%;text-align:right;${CAP}`, 'NUMBER OF SIMILAR DATASETS SOLD →').style.opacity = 1;
-    K.div(layer, `left:${X0 / 19.2}%;top:${(Y0 + 60) / 10.8}%;width:60%;font:400 .72em 'Plex Mono',monospace;letter-spacing:.14em;color:#8f897d`, 'ILLUSTRATIVE · NOT TO SCALE').style.opacity = 1;
-    const tags = (P0.mark || []).map(([, u], i) => K.div(layer, `${SERIF};font-size:3em;line-height:1`, i === 0 && u === 0 ? 'The first' : u >= 1 ? 'The fiftieth' : ''));
-    return { ...b, update(t, p) {
-      motes.update(t); camera.position.set(0, 0, 8); camera.lookAt(0, 0, -8);
-      path.style.strokeDashoffset = len * (1 - K.outCubic(K.range(t, 0.1, 1.6)));
-      let u = 0; (P0.mark || []).forEach(([w, uu], i) => { const t0 = wt(shot, w); if (t >= t0) u = K.lerp(u, uu, K.inOut(K.range(t, t0, t0 + 1.2)));
-        const tx = X0 + (X1 - X0) * uu, ty = f(uu); const s = window.innerHeight / 1080; tags[i].style.left = (tx + 24) * s + 'px'; tags[i].style.top = (ty - 70) * s + 'px'; tags[i].style.opacity = K.range(t, t0, t0 + 0.4); });
-      const x = X0 + (X1 - X0) * u; dot.setAttribute('cx', x); dot.setAttribute('cy', f(u)); dot.style.opacity = K.range(t, 0.6, 1);
-    } };
-  },
-
-  // ---------- affiliate disclosure ----------
-  disclosure(ctx, shot) {
-    const b = base(ctx, { floor: null, fog: 0x000000, density: 0.02 });
-    const { scene, camera, layer } = b;
-    const motes = K.dust(scene, { count: 400, box: [20, 12, 10], center: [0, 0, -8], size: 0.04, opacity: 0.3 });
-    K.div(layer, `left:12%;top:24%;${CAP};letter-spacing:.3em;color:#ff4a3d;opacity:1`, 'DISCLOSURE');
-    const t1 = K.div(layer, `left:12%;right:12%;top:33%;${SERIF};font-size:4.6em;line-height:1.15`, 'micro1 is a partner of this channel. The link in the description is an affiliate link.');
-    return { ...b, update(t) { motes.update(t); camera.position.set(0, 0, 8); camera.lookAt(0, 0, -8); t1.style.opacity = K.range(t, 0.2, 0.6); } };
-  },
-
-  // ---------- anonymisation ----------
-  scrub(ctx, shot) {
-    const b = base(ctx, { floor: 0x121212, density: 0.03, fov: 30 });
-    const { scene, camera, layer } = b;
-    const pages = []; const r = K.rng(2);
-    for (let i = 0; i < 3; i++) {
-      const c = document.createElement('canvas'); c.width = 600; c.height = 780; const x = c.getContext('2d');
-      const names = Array.from({ length: 9 }, () => [60 + r() * 300, 80 + Math.floor(r() * 26) * 26, 60 + r() * 120]);
-      const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-      const m = mesh(new THREE.PlaneGeometry(3.6, 4.68), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }), [(i - 1) * 4.1, 2.6, -i * 0.3], scene);
-      m.rotation.y = (1 - i) * 0.12; pages.push({ c, x, tex, names, seed: i });
-    }
-    K.keySpot(scene, { intensity: 2600, pos: [0, 16, 8], target: [0, 2, 0], angle: 0.5, penumbra: 0.8, shadow: 0 });
-    scene.add(new THREE.HemisphereLight(0x556677, 0x050505, 0.4));
-    const cap = K.div(layer, `left:6%;bottom:9%;${CAP}`, 'IDENTIFYING DETAILS REMOVED BEFORE TRANSFER');
-    return { ...b, update(t, p) {
-      const k = K.range(t, 1.0, shot.duration * 0.7);
-      pages.forEach((pg, i) => { const { x } = pg; x.fillStyle = '#ebe4d4'; x.fillRect(0, 0, 600, 780); fakeText(x, 600, 780, { seed: pg.seed + 20, lines: 28, margin: 50 });
-        x.fillStyle = '#7a1410'; x.fillRect(50, 40, 200, 18);
-        pg.names.forEach(([nx, ny, nw], j) => { const kk = K.range(k * pg.names.length - j, 0, 1); x.fillStyle = '#0b0b0b'; x.fillRect(nx, ny - 4, nw * kk, 20); });
-        pg.tex.needsUpdate = true; });
-      camera.position.set(K.lerp(-1.5, 1.5, p), 3.2, K.lerp(13, 11, p)); camera.lookAt(0, 2.5, 0);
-      cap.style.opacity = K.range(t, 1.2, 2);
-    } };
-  },
-
-  // ---------- call to action ----------
-  endcard(ctx, shot) {
-    const b = base(ctx, { floor: 0x0a0a0a, density: 0.03, fov: 28 });
-    const { scene, camera, layer } = b; const P0 = shot.params;
-    const orb = makeOrb(1.4); orb.position.set(5, 1.8, -4); scene.add(orb);
-    const lead = K.div(layer, `left:8%;top:22%;${CAP};letter-spacing:.3em;color:#ff4a3d`, 'FOR COMPANY OWNERS & ADVISORS');
-    const url = K.div(layer, `left:8%;top:30%;${SERIF};font-size:6.4em;line-height:1`, P0.url);
-    const sub = K.div(layer, `left:8%;top:46%;${SERIF};font-style:italic;font-size:2.6em;color:#cfc8ba`, 'Find out what your operational data is worth.');
-    const note = K.div(layer, `left:8%;top:56%;${CAP}`, P0.note);
-    return { ...b, update(t, p) {
-      orb.material.uniforms.uT.value = t; camera.position.set(K.lerp(-1, 0.5, p), 1.6, 12); camera.lookAt(1, 1.6, -4);
-      lead.style.opacity = K.range(t, 0.2, 0.5); url.style.opacity = K.range(t, 0.5, 0.9); sub.style.opacity = K.range(t, 1.1, 1.6); note.style.opacity = K.range(t, 1.6, 2.1);
-    } };
-  },
 };
 
-Object.assign(SETS, makeBroll({ THREE, K, base, mesh, std, camOrbit, caption, wt, canvasTex, fakeText, P, CAP, SERIF, RED }));
-Object.assign(SETS, makeCinema({ THREE, K, base, mesh, std, caption, wt, canvasTex, fakeText, makeOrb, RED }));
-// Episode-specific sets. H is the shared helper kit every set library receives.
-const H = { THREE, K, C, PP, PX, base, mesh, std, camOrbit, caption, sourceLine, wt, vo0, voEnd, canvasTex, fakeText, makeOrb, props: P, CAP, SERIF, RED, SODIUM, FLUO, ICE, PAPER };
-Object.assign(SETS, makeStone(H), makeOps(H), makeGeo(H));
+// H is the shared helper kit every set library receives.
+const H = { THREE, K, C, PP, PX, base, mesh, std, camOrbit, caption, sourceLine, wt, vo0, voEnd, canvasTex, fakeText, makeOrb, props: P, P, CAP, SERIF, RED, SODIUM, FLUO, ICE, PAPER, ease, nthOfSet };
+const LIBS = [makeBroll(H), makeCinema(H), makePhoto(H)];
+Object.assign(SETS, ...LIBS);
+// Episode-specific sets (written in parallel). A library may expose an async `preload(ctx, shots)`
+// for its own assets; it is awaited before the first frame and never registered as a set.
+const EP = [makeStone(H), makeOps(H), makeGeo(H)];
+for (const lib of EP) { const { preload, ...sets } = lib; Object.assign(SETS, sets); }
 
 // Instrument Serif draws '1' like an 'l', so the brand name gets a sans '1'.
 function brandify(el) {
@@ -695,9 +664,62 @@ function brandify(el) {
 }
 
 // ---------------------------------------------------------------- runtime
+function slate(ctx, shot, msg) {
+  const b = base(ctx, { floor: null, fog: 0x200404, density: 0.01 });
+  K.div(b.layer, `left:6%;top:40%;${CAP};color:#ff4a3d;opacity:1`, `MISSING · ${shot.id} · ${shot.set} · ${String(msg).slice(0, 80)}`);
+  return { ...b, update() { b.camera.position.set(0, 0, 8); b.camera.lookAt(0, 0, 0); } };
+}
+// Cutting policy (deterministic, every shot's transition is decided from the shot list alone):
+//   hard cut  on chapter and title cards (in and out), and into a shot whose first spoken word
+//             carries a boom (name reveals, number slams, red quotes, "Then came September...").
+//   whip      only where the subject changes place: into a map.
+//   dissolve  into or out of type, and into archive photographs (time passing).
+//   otherwise consecutive 3D shots inside a chapter alternate push-through (going deeper) and
+//             dissolve (time passing). params.trans / params.angle always win.
+const HARD = new Set(['chapter', 'title']);
+const TEXT = new Set(['list', 'quote', 'numbers', 'chapter', 'title', 'name']);
+const PLACE = new Set(['map']);
+const WIDE = new Set(['balance', 'cash']); // props that only read whole: never the tight 'macro' angle
+const normW = (w) => w.toLowerCase().replace(/[^a-z0-9]/g, '');
+function firstWord(sh) { return (sh.words || []).find(w => w.s >= -0.15); }
+function boomOnFirstWord(sh) {
+  const P0 = sh.params || {}, fw = firstWord(sh); if (!fw) return false; const w = normW(fw.w);
+  if (fw.s > 0.9) return false;
+  if (sh.set === 'quote' && P0.red) return true;
+  if (sh.set === 'name' && P0.word && w.startsWith(normW(P0.word))) return true;
+  if ((sh.set === 'numbers' || sh.set === 'bars') && (P0.items || []).some(it => it.word && w.startsWith(normW(it.word)))) return true;
+  const ws = (sh.words || []).filter(x => x.s >= -0.15).slice(0, 3).map(x => normW(x.w)).join(' ');
+  return ws.startsWith('then came september'); // the 9/11 boom (project cues)
+}
+// Camera angles for camOrbit sets, cycled in a fixed order (no 'whip': too aggressive by default).
+const ANGLES = ['orbit', 'low', 'reveal', 'crane', 'macro']; // 'god' and 'dutch' only on request: they misread props like scales and clocks
+function planCuts(shots) {
+  const trans = [], angle = []; let chapter = 0, alt = 0, ai = 0;
+  shots.forEach((sh, i) => {
+    const pv = shots[i - 1], P0 = sh.params || {};
+    if (sh.set === 'chapter') { chapter++; alt = 0; }
+    let tr;
+    if (P0.trans) tr = P0.trans;
+    else if (!pv || HARD.has(sh.set) || HARD.has(pv.set) || boomOnFirstWord(sh)) tr = 'cut';
+    else if (PLACE.has(sh.set) && !PLACE.has(pv.set)) tr = 'whip';
+    else if (TEXT.has(sh.set) || TEXT.has(pv.set) || sh.set === 'photo' || pv.set === 'photo') tr = 'dissolve';
+    else tr = alt++ % 2 ? 'dissolve' : 'push';
+    trans.push(tr);
+    let a = P0.angle;
+    if (!a) { if (TEXT.has(sh.set) || sh.set === 'bars') a = 'orbit'; else { a = ANGLES[ai++ % ANGLES.length]; if (a === angle[i - 1]) a = ANGLES[ai++ % ANGLES.length]; }
+      if (a === 'macro' && WIDE.has(sh.set)) a = 'reveal'; }
+    angle.push(a);
+  });
+  return { trans, angle };
+}
+
 export default async function create(ctx) {
   const { renderer, width, height, shots } = ctx;
-  await C.preload(renderer, { hdris: ['qwantani_dusk_2', 'moonless_golf', 'kloppenheim_06_puresky', 'industrial_sunset_puresky'] });
+  await C.preload(renderer, { characters: ['UAL'], hdris: ['qwantani_dusk_2', 'moonless_golf', 'kloppenheim_06_puresky', 'industrial_sunset_puresky'] });
+  // async assets: every archive photo the shot list uses (beats are already expanded in ctx.shots),
+  // plus whatever the episode libraries ask for, all loaded before the first frame
+  await preloadPhotos(H, ctx, shots);
+  for (const lib of EP) if (typeof lib.preload === 'function') await lib.preload(ctx, shots);
   // 2.39:1 scope bars for cinematic sequences
   const bars = [0, 1].map(i => { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:0;right:0;${i ? 'bottom' : 'top'}:0;height:${(height - width / 2.39) / 2}px;background:#000;display:none;z-index:5`; ctx.overlay.appendChild(d); return d; });
   const gl = renderer.domElement;
@@ -709,52 +731,47 @@ export default async function create(ctx) {
   let last = null;
   const get = (shot, index) => {
     if (!live.has(shot.id)) {
-      const f = SETS[shot.set]; if (!f) throw new Error(`[scene] unknown set ${shot.set}`);
-      const inst = f(ctx, shot); brandify(inst.layer); live.set(shot.id, { inst, index });
+      const f = SETS[shot.set];
+      // drafts keep going past a set that is missing or throws (a labelled slate, logged); finals fail loudly
+      let inst;
+      try { if (!f) throw new Error(`unknown set ${shot.set}`); inst = f(ctx, shot); }
+      catch (e) { if (!ctx.draft) throw e; console.error(`[scene] ${shot.id} (${shot.set}): ${e.message}`); inst = slate(ctx, shot, e.message); } brandify(inst.layer); live.set(shot.id, { inst, index });
     }
-    // free anything more than one shot behind
-    for (const [id, v] of live) if (v.index < index - 1) { dispose(v.inst.scene); v.inst.layer.remove(); live.delete(id); }
+    // free anything more than one shot behind (preloaded photo scenes stay; only their layer goes)
+    for (const [id, v] of live) if (v.index < index - 1 || v.index > index + 1) { if (!v.inst.scene.persistent) { v.inst.dispose?.(); dispose(v.inst.scene); } v.inst.layer.remove(); live.delete(id); }
     return live.get(shot.id).inst;
   };
-  // Cuts carry motion: whip pans and push-throughs with smear, dissolves into/out of type.
-  const HARD = new Set(['chapter', 'title']);
-  const TEXT = new Set(['list', 'quote', 'numbers', 'curve', 'chapter', 'title', 'disclosure', 'endcard', 'name', 'scrub']);
-  const ANGLES = ['reveal', 'low', 'crane', 'dutch', 'orbit', 'god', 'macro', 'whip'];
-  const hash = (str) => { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
-  const angleFor = (i) => { const sh = shots[i]; if (!sh) return 'orbit'; if (sh.params?.angle) return sh.params.angle; if (TEXT.has(sh.set) || sh.set === 'bars') return 'orbit';
-    let a = ANGLES[hash(sh.id) % ANGLES.length]; if (i > 0 && a === angleFor.cache?.[i - 1]) a = ANGLES[(hash(sh.id) + 3) % ANGLES.length]; (angleFor.cache ??= {})[i] = a; return a; };
-  for (let i = 0; i < shots.length; i++) angleFor(i);
-  const transFor = (i) => { const sh = shots[i], pv = shots[i - 1]; if (!pv || HARD.has(sh.set) || HARD.has(pv.set)) return 'cut';
-    if (sh.params?.trans) return sh.params.trans; if (TEXT.has(sh.set) || TEXT.has(pv.set)) return 'dissolve';
-    return ['whip', 'push', 'dissolve', 'whip', 'push'][hash(sh.id + 'x') % 5]; };
-  const DUR = { dissolve: 0.3, whip: 0.42, push: 0.38, cut: 0 };
+  const plan = planCuts(shots);
+  const DUR = { dissolve: 0.45, whip: 0.42, push: 0.4, cut: 0 };
   const prev = document.createElement('canvas'); prev.width = width; prev.height = height; const px = prev.getContext('2d');
   const smear = (img, x0, dx, taps, alpha, sx = 1) => { for (let i = 0; i < taps; i++) { const f = taps > 1 ? i / (taps - 1) - 0.5 : 0; cx.globalAlpha = alpha / Math.max(1, taps * 0.55);
     const w = width * sx, hgt = height * sx; cx.drawImage(img, x0 + f * dx - (w - width) / 2, -(hgt - height) / 2 + (sx !== 1 ? f * dx * 0.3 : 0), w, hgt); } cx.globalAlpha = 1; };
+  const hash = (str) => { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
   let lastShot = null;
   return {
     frame({ shot, t, p, index }) {
       const inst = get(shot, index);
       if (lastShot && lastShot.id !== shot.id) px.drawImage(comp, 0, 0); // freeze the outgoing frame
-      const continuous = lastShot && (lastShot.id !== shot.id || lastShot.id === shot.id);
-      for (const v of live.values()) v.inst.layer.style.display = v.inst === inst ? 'block' : 'none';
-      CAM.style = angleFor.cache[index] ?? 'orbit';
+      const tr = plan.trans[index], T = DUR[tr], inTr = !!(lastShot && T && t < T);
+      const prevInst = inTr ? [...live.values()].find(v => v.index === index - 1)?.inst : null;
+      for (const v of live.values()) v.inst.layer.style.display = v.inst === inst || v.inst === prevInst ? 'block' : 'none';
+      CAM.style = plan.angle[index] ?? 'orbit';
       inst.update(t, p);
       bars.forEach(d => { d.style.display = inst.scope ? 'block' : 'none'; });
       renderer.render(inst.scene, inst.camera);
-      const tr = transFor(index), T = DUR[tr];
-      if (continuous && T && t < T) {
-        const k = K.smooth(t / T), dir = hash(shot.id) % 2 ? 1 : -1;
+      if (inTr) {
+        const e = ease(t / T), dir = hash(shot.id) % 2 ? 1 : -1;
         cx.fillStyle = '#000'; cx.fillRect(0, 0, width, height);
-        if (tr === 'whip') { const e = K.inOut(t / T), blur = Math.sin(Math.PI * e) * width * 0.12;
+        if (tr === 'whip') { const blur = Math.sin(Math.PI * e) * width * 0.1;
           smear(prev, -dir * e * width, blur, 9, 1); smear(gl, dir * (1 - e) * width, blur, 9, 1); }
-        else if (tr === 'push') { const e = K.inOut(t / T);
-          smear(prev, 0, Math.sin(Math.PI * e) * 60, 6, 1 - e, 1 + e * 0.6); smear(gl, 0, Math.sin(Math.PI * e) * 60, 6, e, 0.85 + e * 0.15); }
-        else { cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; }
-        inst.layer.style.opacity = k;
+        else if (tr === 'push') { // push-through: the outgoing frame grows past the lens as the new one settles in
+          smear(prev, 0, Math.sin(Math.PI * e) * 50, 6, 1 - e, 1 + e * 0.5); smear(gl, 0, Math.sin(Math.PI * e) * 50, 6, e, 0.88 + e * 0.12); }
+        else { cx.drawImage(prev, 0, 0); cx.globalAlpha = e; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; }
+        inst.layer.style.opacity = e; if (prevInst) prevInst.layer.style.opacity = 1 - e;
       } else {
         inst.layer.style.opacity = 1;
-        if (inst.trails && last === inst) { cx.globalAlpha = 1 - inst.trails; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0, width, height);
+        if (inst.trails && last === inst) { cx.globalAlpha = 1 - Math.pow(inst.trails, 30 / (ctx.fps || 30)); // trails decay per second, not per frame
+        cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0, width, height);
       }
       last = inst; lastShot = shot;
     },
