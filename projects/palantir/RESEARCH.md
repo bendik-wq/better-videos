@@ -169,7 +169,7 @@ All files are in `assets/archive/` and are recorded in `CREDITS.json`. Every one
 | nsa-night-2013-paglen.jpg | NSA at night, 2013 (Trevor Paglen) | CC0 |
 | ibm704-langley-1957.jpg | IBM 704 computer operations, NACA Langley, 16 Dec 1957 | PD (NASA) |
 | ibm704-ames-1958.jpg | IBM 704 room, NASA Ames, 3 Oct 1958 | PD (NASA) |
-| ibm-edpm-1957.jpg | IBM electronic data processing machine, 1957 (NASA GPN-2000-001881), if the download completed | PD (NASA) |
+| ibm-edpm-1957.jpg | IBM electronic data processing machine, 21 Mar 1957 (NASA GPN-2000-001881) | PD (NASA) |
 | census-tabulator-1939.jpg | "New machine to speed up statistics of census of 1940" (Harris & Ewing, LOC) | PD |
 | census-card-puncher-1940.jpg | Census Bureau card puncher, c. 1940 (NARA 513295) | PD (US gov) |
 | census-keypunch-operators-1940.jpg | Census Bureau keypunch operators, 1940 (segregated "Negro section"; handle with context or skip) | PD (US gov) |

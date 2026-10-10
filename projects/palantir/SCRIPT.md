@@ -27,7 +27,7 @@ Every fact is in RESEARCH.md. ⚑ marks a fact still to confirm before rendering
 ## 1. THE SEEING STONE (1:25–4:40)
 15. To understand Palantir, you have to start with a fraud problem. [↺]
 16. Around two thousand, PayPal was being bled by fraud. Stolen cards. Fake accounts. Organised crime.
-17. Its engineers built a system that didn't replace human investigators. It made them faster. The software found the patterns. Humans made the call. Inside PayPal, it got a nickname. Igor.
+17. Its engineers built a system that didn't replace human investigators. It made them faster. The software found the patterns. Humans made the call. Inside PayPal, it was named after a Russian fraudster the team had been chasing. Igor.
 18. It saved the company. And it gave Peter Thiel, PayPal's co-founder, an idea.
 19. Then came September the eleventh. [↺]
 20. The clues had been there. Scattered across agencies that didn't share what they knew.
@@ -56,7 +56,7 @@ Every fact is in RESEARCH.md. ⚑ marks a fact still to confirm before rendering
 41. And it won. In October two thousand sixteen, a federal judge ruled the Army had broken the law by failing to consider commercial software like Palantir's.
 42. Suing your own customer should have been suicide. Instead, it opened the door to the Pentagon. [↺]
 43. Two years later, Google pushed that door wide open.
-44. In two thousand eighteen, thousands of Google employees protested a Pentagon project called Maven, which used AI to analyse drone footage. Google walked away.
+44. In two thousand eighteen, more than three thousand Google employees signed a letter against a Pentagon project called Maven, which used AI to analyse drone footage. Google walked away.
 45. Palantir picked it up. Internally, according to Business Insider, the project got a new code name. Tron. [↺]
 46. Maven grew into something much bigger. A system that pulls in satellite images, drone video and sensor data, and helps commanders find and prioritise targets.
 47. In twenty twenty-four, the contract was worth four hundred and eighty million dollars. A year later, the Pentagon raised the ceiling to about one point three billion.
@@ -69,7 +69,7 @@ Every fact is in RESEARCH.md. ⚑ marks a fact still to confirm before rendering
 54. In January twenty twenty-four, Palantir's board flew to Tel Aviv and agreed a strategic partnership with Israel's Ministry of Defense. To support, as one executive put it, war-related missions. [↺]
 55. Most tech companies run from this kind of work. Palantir runs toward it. That's the brand.
 56. In the letter Karp wrote when Palantir went public, he put down four words most CEOs never would. We have chosen sides.
-57. Which brings us back to that earnings call. Scare enemies. On occasion, kill them. ⚑ Investors didn't flinch. The stock jumped the next day. [↺]
+57. Which brings us back to that earnings call. Scare enemies. On occasion, kill them. Investors didn't flinch. The stock jumped the next day. [↺]
 58. But a stone that can find enemies abroad can be pointed somewhere else. And Palantir's first test of that wasn't on a battlefield. It was in New Orleans. **(opens L4)**
 
 ## 3. POINTED INWARD (8:20–12:10)
@@ -138,8 +138,5 @@ Every fact is in RESEARCH.md. ⚑ marks a fact still to confirm before rendering
 ### Re-hook audit
 Gaps between `[↺]` marks run about 20–40 s throughout. The longest stretch is 32–37 (the mechanism explanation, about 45 s); it is held by a visual build-up (the link graph assembling).
 
-### ⚑ To confirm before render
-- Line 57: did PLTR rise the day after the Feb 3 2025 call? I believe it rose about 24% on Feb 4 2025. Confirm it, or cut the sentence.
-- Line 44: "thousands of Google employees" (petition signatures, 2018). Widely reported; confirm the count.
-- Line 23: Karp and Thiel met at Stanford Law. Widely reported; confirm.
-- Line 17: "Igor" is Medium confidence. Keep it as "it got a nickname" either way.
+### Fact checks
+All ⚑ items confirmed (RESEARCH.md): PLTR +24.0% on Feb 4 2025; 3,100+ Google signatures; Karp and Thiel at Stanford Law; “Igor” after a Russian fraudster. Karp quote matched to the Motley Fool transcript (ellipsis marks the cut).
