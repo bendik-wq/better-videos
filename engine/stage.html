@@ -26,6 +26,7 @@
 <div id="overlay"></div>
 <script type="module">
 import * as THREE from 'three';
+import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 const params = new URLSearchParams(location.search);
 let scene, shots;
 
@@ -37,9 +38,14 @@ window.__setup = async (cfg) => {
   await document.fonts.load('500 40px "Plex Mono"');
   await document.fonts.load('700 40px "Archivo Narrow"');
   const canvas = document.getElementById('gl');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(1);
+  // aa: 'msaa' = 4x MSAA (very slow on CPU rasterizers), 'fxaa' = one cheap post pass, 'none'
+  const aa = cfg.aa ?? 'msaa';
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: aa === 'msaa', preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+  // renderScale < 1 renders the GL canvas smaller and lets CSS upscale it; the DOM overlay stays
+  // full-res. Scenes that copy the canvas into a 2D comp must drawImage(gl, 0, 0, width, height).
+  renderer.setPixelRatio(cfg.renderScale ?? 1);
   renderer.setSize(cfg.width, cfg.height, false);
+  if (aa === 'fxaa') fxaa(renderer);
   canvas.style.width = cfg.width + 'px'; canvas.style.height = cfg.height + 'px';
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -50,6 +56,26 @@ window.__setup = async (cfg) => {
   const mod = await import(params.get('project') + '/scene.js');
   scene = await mod.default({ THREE, renderer, overlay, ...cfg });
 };
+
+// FXAA on the final, tone-mapped frame: after each render to the canvas, copy the drawing buffer
+// into a texture and draw it back through FXAAShader. Renders into render targets (PMREM, etc.)
+// pass through untouched, and scenes keep calling renderer.render() as before.
+function fxaa(renderer) {
+  const size = renderer.getDrawingBufferSize(new THREE.Vector2());
+  const tex = new THREE.FramebufferTexture(size.x, size.y);
+  tex.minFilter = tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+  const mat = new THREE.ShaderMaterial({ ...FXAAShader, uniforms: THREE.UniformsUtils.clone(FXAAShader.uniforms), depthTest: false, depthWrite: false });
+  mat.uniforms.tDiffuse.value = tex; mat.uniforms.resolution.value.set(1 / size.x, 1 / size.y);
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  quad.frustumCulled = false;
+  const render = renderer.render.bind(renderer);
+  renderer.render = (scene, camera) => {
+    render(scene, camera);
+    if (renderer.getRenderTarget() !== null) return;
+    renderer.copyFramebufferToTexture(tex);
+    render(quad, cam);
+  };
+}
 
 window.__frame = (T) => {
   let i = shots.findIndex(s => T >= s.start && T < s.start + s.duration);

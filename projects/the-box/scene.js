@@ -362,8 +362,8 @@ export default async function create({ renderer, overlay, width, height, shots }
       for (const id in groups) groups[id].style.display = id === shot.id ? 'block' : 'none';
       set.update(tt, set.step ? tt / shot.duration : p, shot);
       renderer.render(set.scene, set.camera);
-      if (set.trails && lastSet === set) { cx.globalAlpha = 1 - set.trails; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; }
-      else { cx.globalAlpha = 1; cx.drawImage(gl, 0, 0); }
+      if (set.trails && lastSet === set) { cx.globalAlpha = 1 - set.trails; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; }
+      else { cx.globalAlpha = 1; cx.drawImage(gl, 0, 0, width, height); }
       lastSet = set;
     },
   };

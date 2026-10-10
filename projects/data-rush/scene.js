@@ -742,11 +742,11 @@ export default async function create(ctx) {
           smear(prev, -dir * e * width, blur, 9, 1); smear(gl, dir * (1 - e) * width, blur, 9, 1); }
         else if (tr === 'push') { const e = K.inOut(t / T);
           smear(prev, 0, Math.sin(Math.PI * e) * 60, 6, 1 - e, 1 + e * 0.6); smear(gl, 0, Math.sin(Math.PI * e) * 60, 6, e, 0.85 + e * 0.15); }
-        else { cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; }
+        else { cx.drawImage(prev, 0, 0); cx.globalAlpha = k; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; }
         inst.layer.style.opacity = k;
       } else {
         inst.layer.style.opacity = 1;
-        if (inst.trails && last === inst) { cx.globalAlpha = 1 - inst.trails; cx.drawImage(gl, 0, 0); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0);
+        if (inst.trails && last === inst) { cx.globalAlpha = 1 - inst.trails; cx.drawImage(gl, 0, 0, width, height); cx.globalAlpha = 1; } else cx.drawImage(gl, 0, 0, width, height);
       }
       last = inst; lastShot = shot;
     },
