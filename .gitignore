@@ -2,3 +2,4 @@ node_modules/
 .cache/
 projects/*/out/
 refs/
+__pycache__/
