@@ -6,8 +6,10 @@ description: Packaging-first ideation. Generate and score YouTube titles and thu
 # Packaging, before scripting
 
 If you can't title and thumbnail an idea clearly, it isn't an idea yet (Paddy Galloway).
-Sources and evidence are in `docs/research/retention-playbook.md` §8–9. The visual taste is in
-`docs/style-bible.md`, and its rules override generic YouTube thumbnail habits.
+Sources and evidence are in `docs/research/retention-playbook.md` §8–9. The formula banks below
+come from `docs/research/channel-breakdowns.md` (top-video data for 20 channels, pulled
+2026-10-11). The visual taste is in `docs/style-bible.md`, and its rules override generic
+YouTube thumbnail habits.
 
 ## Inputs
 
@@ -30,6 +32,14 @@ four of these frames:
 - **Mystery object:** one physical object that holds the whole story. This is Fern's strongest
   frame and suits our renderer.
 - **Countdown:** "the N days / decisions / mistakes that…"
+
+Each frame has a matching cold-open mechanism in `docs/research/hooks.md` and a story structure
+in `docs/research/script-patterns.md` §1; note both, so `retention-script` starts aligned.
+
+What made the outliers in our 20-channel data explode (`channel-breakdowns.md` §0): one absurd
+concrete object with a number on it; a belief the viewer already holds, reopened; timeliness plus
+the best explainer; a villain or disaster with a known name; a familiar frame with one twist.
+**An idea should hit at least two of these.**
 
 Check **core / casual / new**: would each group click? If only the core would, broaden the
 frame. If it no longer fits the channel, aim for about 80% audience overlap and treat the rest
@@ -63,6 +73,47 @@ different thumbnails, kill or reframe the idea now, before research money is spe
 | Accurate: the video can deliver it in full | 2 (gate) |
 | Clear to casual and new viewers with no jargon | 1 |
 
+### Title formula bank
+
+Use these as starting shapes for the 25–50 titles. They come from the top 25 videos of each of 20
+channels (`channel-breakdowns.md`); the median top title was **39 characters**. Fill slots with
+concrete nouns and numbers; never ship a formula with a vague slot. The fills below are
+illustrations of the shape: any number or claim in a real title must come from the research pack.
+
+| Formula | Source pattern | Our fill (tech, AI, money) |
+|---|---|---|
+| The [Company] That [Unexpected Verb] [Everything] | Fern, MagnatesMedia | The Company That Sees Everything |
+| The Most [Dangerous/Powerful] [Thing] in the World | MrBeast-style superlative | The Most Dangerous Company in the World |
+| Why Are [Exact Big Number] [Objects] [in Odd Place]? | Veritasium (112M) | Why Are 10,000 GPUs Hidden in a Cornfield? |
+| Why [Mega-Thing] Is Still [Empty/Losing Money] | Neo (34M), PolyMatter | Why OpenAI Still Loses Money |
+| The Hunt for [Villain] | Fern | The Hunt for Crypto's Missing Billions |
+| The Kids Who [Beat Giant] | Fern (20M) | The Teenagers Who Hacked Twitter |
+| How [Agency] Found [Person/Thing] | Neo | How the FBI Traced the Bitcoin |
+| [Company]'s [Money/Geography] Problem | PolyMatter, Wendover | Nvidia's China Problem |
+| The Economics of [Everyday Thing] | Wendover | The Economics of Your Card Tap |
+| The $[Exact Number] [Odd Unit] [System] | Wendover ($2,614 Per Minute) | The $700,000-a-Day Chatbot |
+| [X] Is Worse Than You Thought | Moon (13×), ColdFusion | Your Credit Score Is Worse Than You Thought |
+| [Familiar Thing] Is Way [Bigger] Than You Think | RealLifeLore (17×) | The Cloud Is Way Bigger Than You Think |
+| Why People Think [Belief] | Johnny Harris (6×) | Why People Think AI Is Conscious |
+| The Simplest [X] No One Can [Y] | Veritasium | The Simplest Trade No One Can Beat |
+| [Company] Was Worth $[N]. Then [Reversal] | ColdFusion | FTX Was Worth $32 Billion. Then It Wasn't |
+| $1 vs $[Huge] [Thing] | MrBeast (600M) | $20 AI vs $200,000 Analyst |
+| [Thing] Tried To Warn You | Moon (12×) | The 2008 Crash Tried To Warn You |
+| Inside [Famous Company]'s [Secret Place] | Bloomberg Originals (28×) | Inside the Room Where Your Loan Gets Decided |
+| They Named It After [Ominous Reference] | Palantir episode | They Named It After Sauron's Crystal Ball |
+
+**Data-backed title rules:**
+
+- **One formula per season.** Each top channel owns one or two shapes (Neo "How…", PolyMatter
+  "Why…", MrBeast "$X"). Repetition is recognition.
+- **Name the size of the idea, not the topic** (Veritasium's survey: "The Biggest Myth in
+  Education" crushed "You Are NOT a Visual Learner"). Jargon goes after a dash, if at all.
+- **No colons as a lecture separator.** The two most colon-heavy channels sit in the bottom four
+  for median views in our set.
+- **No caps-lock adjectives** ("INSANE", "IDIOT") and no profanity-led titles: both cluster on the
+  lower-view channels (Hindsight's profane titles get a fraction of its "Impossible" titles).
+- **Legitbait, not click traps** (Veritasium): enticing, and fully delivered.
+
 ## Step 3: thumbnail concepts. Sketch 10, keep 3 "adequately different" ones
 
 Each concept must pass the **glance test**: understood in 1–2 s at 168×94 px (mobile size).
@@ -77,8 +128,8 @@ House style, following the style bible: photographic, not graphic design. Each c
   deadpan.
 - **Red `#e0241b` only as annotation**: a hand-drawn marker loop or leader line on the one
   detail that carries the question. One red element at most.
-- **Text is optional, and ≤3 words** (the house limit, stricter than the usual 2–4). Use
-  *Instrument Serif* for a word or a number; an *Archivo Narrow Bold* red numeral is allowed
+- **Text is optional, and ≤3 words** (the house limit, stricter than the usual 2–4; a Palantir
+  gate, below). Use *Instrument Serif* for a word or a number; an *Archivo Narrow Bold* red numeral is allowed
   for counts. Put it in a corner or edge, never centred, with no gradients, glow or outlines.
 - Show a **tension**: an object where it shouldn't be, a number that's too big, a calm figure
   inside chaos (the stoic-operator theme), or danger.
@@ -96,11 +147,45 @@ For each concept, write:
    `node engine/render.mjs projects/<name> --stills=0.5 --only=thumb`, at 1280×720), or use an
    archive photo on a 3D card.
 
+### Thumbnail formula bank
+
+Each grammar is a different *idea*, so picking 3 from different rows gives "adequately
+different" Test & Compare variants.
+
+| Grammar | Seen at | House version |
+|---|---|---|
+| **Object in the void** | Fern, LEMMiNO | One hero object, one key light, black around it, a red loop on the telling detail |
+| **Absurd quantity** | Veritasium (black balls), PolyMatter ($100T bill) | Hundreds of identical objects receding into haze; one circled in red |
+| **Aerial with a marker** | Neo, hoog | A top-down or orbital view of a place; one red marker or leader line; sodium night palette |
+| **The document** | Bloomberg, Fern | A filing or memo on a dark desk under a work light; one line looped in red; ≤3 words |
+| **The lone operator** | Style bible theme | A silhouette in a pool of fluorescent light inside a huge dark space (never a realistic CG face) |
+| **The matchup** | MrBeast "$1 vs" | Two objects side by side, one tiny and one huge, under the same light; a red numeral |
+| **Scale ladder** | Kurzgesagt, RealLifeLore | Small object in the foreground, its giant counterpart looming behind in haze |
+| **Map with an arrow** | Johnny Harris, RealLifeLore | A dark 3D map with one red route or leader line; one place name in Instrument Serif |
+| **Logo in darkness** | Moon | A recognisable shape (not a trademark copy) half-lit and half-swallowed by black |
+| **Deadpan flash** | Style bible | Direct flash on an absurd object (a badge, a server, cash) against black |
+
+### The Palantir lesson: three gates every concept must pass
+
+From the Palantir Test & Compare set (`projects/palantir/thumbs/`, `mobile.jpg`): at mobile size
+the concept that read instantly was the one with **three words or fewer, a high-contrast hero and
+one red annotation**. In our mobile check, the four-word variant ("THE CIA FUNDED THIS", over an
+abstract swirl for a hero) read weakest. So, before scoring:
+
+1. **≤3 words**, counted strictly ("THE CIA FUNDED THIS" is 4 and fails). Zero is allowed.
+2. **High-contrast hero**: the hero is the brightest, sharpest thing in the frame and fills at
+   least about a third of the frame height. Check a **grayscale version at 168×94**: the hero's
+   silhouette must be identifiable in about 1 s. Abstract textures and swirls fail.
+3. **Exactly one red annotation** (`#e0241b`): a marker loop or leader line on the one detail
+   that carries the question. Red text counts toward this one element.
+
+A concept that fails any gate is redrawn, not scored.
+
 **Score each concept out of 10:**
 
 | Criterion | Pts |
 |---|---|
-| Glance test: readable at mobile size in about 1 s | 3 |
+| Glance test: readable at mobile size in about 1 s (after the three Palantir gates) | 3 |
 | Plants a question the title doesn't already answer | 2 |
 | Psychology of the click: tension, danger, novelty or an unusual object | 2 |
 | On-taste: one key light, one palette, red only as annotation, ≤3 words | 2 |
@@ -133,6 +218,8 @@ Write `projects/<name>/packaging.md` containing:
 - the angle;
 - the C/C/N check;
 - all titles with scores, top 5 starred;
-- 3 thumbnail concepts with scores;
+- the title formula(s) used, from the bank;
+- 3 thumbnail concepts from 3 different grammars, each marked as passing the three Palantir
+  gates, with scores;
 - the chosen pair, the promise list and the prediction;
 - the A/B plan.
