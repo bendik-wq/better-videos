@@ -5,7 +5,11 @@ description: Turn script beats or narration lines into a shot plan (shot type, c
 
 # Shot design: from a script beat to a shot plan
 
-Evidence and the full shot vocabulary are in `docs/research/visual-craft.md` §5. Taste is in
+**Shots come from the catalog.** `docs/shots/catalog.json` holds 200 named camera moves (ids like
+`FOL-012`), each a real `engine/camera.js` recipe with purpose, scale, energy, lens, duration range,
+cost tier and the sets it suits. Read `docs/shots/catalog.md` to browse it and
+`docs/shots/camera-language.md` for what each move does emotionally and why.
+Evidence and the older shot vocabulary are in `docs/research/visual-craft.md` §5. Taste is in
 `docs/style-bible.md`, and it overrides everything here. Pacing is in
 `docs/research/retention-playbook.md`. Assets and licences are in
 `docs/research/asset-sources.md`.
@@ -40,6 +44,29 @@ Use one of: **place**, **object/evidence**, **person**, **number/data**, **mecha
 | memory/interior | Step-printed smear (`step: 3, trails: 0.4`) | Slow lateral truck with dust and haze |
 | time jump | Dissolve or hard cut on sound | Crane rise out, then a new establishing wide |
 | chapter/reset | Chapter card, hard cut, drone drops | n/a |
+
+### 3b. Pick the catalog shot by beat purpose
+Each beat's job (step 2) is the `purpose` to search for. The catalog's purposes are: place, object,
+person, number, mechanism, tension, reveal, memory, time, chapter, ending, transition.
+1. Write the beats as `plan.json`: `[{ "t": start_s, "dur": s, "job": "reveal", "energy"?, "scale"?, "category"? }]`.
+2. Run `node docs/shots/pick.mjs plan.json`. It ranks candidates by purpose match, duration fit and the
+   energy/scale you asked for, prefers the least recently used, and writes `plan.picked.json`.
+   Browse by keyword with `node docs/shots/pick.mjs --search window reveal`.
+3. Override any pick by hand (set `"shot": "REV-010"` on the beat), then validate the whole plan with
+   `node docs/shots/pick.mjs plan.picked.json --check`. It must print `variety rules OK`.
+4. Category hints: `EST` establishing/scale, `REV` reveal, `FOL` follow, `ONE` oner/bridge between two
+   scenes or scales, `CHR` character/silhouette, `OBJ` object/macro, `DAT` data/map, `TRN` transition
+   camera, `END` ending. Bridges (sky-to-car, map-to-globe, screen-push-into-world, document-zoom-into-
+   scene, eye-to-world) are `ONE-*`: use at most one per chapter and only where it carries story.
+
+**Variety rules (hard, `pick.mjs --check` enforces them):**
+- **No shot id twice within 10 minutes** of running time.
+- **Scale alternates:** never the same scale (wide / medium / close) twice in a row.
+- **Energy alternates:** never the same energy (low / mid / high) three times in a row, never high-high.
+- **Cost:** the rolling mean over any 10 shots stays <= 450 ms/frame (T1 = 250, T2 = 380, T3 = 600
+  estimated; measured shot-lab mean is ~350 ms/frame at 1080p). Put T3 shots (planet-scale oners, DOF
+  racks) next to T1 ones.
+- **Rations:** dolly zoom <= 1 per episode, Dutch/roll <= 2, whip <= 1 per minute.
 
 ### 4. Give every move a motivation (Deakins: "if the camera moves it's got to be for a reason")
 Write the motivation as **"<move> because <word or event>"**, e.g. "push-in because VO says
@@ -95,6 +122,7 @@ For audio, start the incoming ambience 0.3–1.0 s before the picture cut (J-cut
 the cut frame.
 
 ### 8. Run the no-repeat rules
+- **Catalog (hard):** `node docs/shots/pick.mjs plan.picked.json --check` passes (step 3b).
 - **Engine (hard):** the same `set + params` never appears twice. `render.mjs` throws.
 - **Plan (soft, enforce by review):**
   - Not the same shot type twice in a row, and not the same camera move three times in a row.
@@ -111,7 +139,21 @@ Plan table, one row per beat:
 
 `id | VO (first words) | job | shot | set | lens/fov | move + motivation (word) | float | key light | annotation | trans in | sound cue | est. dur`
 
-Then translate it into `project.mjs`. For example (illustrative: the `gates` mode doesn't exist yet):
+Then translate it into `project.mjs`. Put the catalog id in the params (`shot: 'REV-010'`) and build the
+camera from the recipe in the set, against the episode's handles `W` (same names as
+`projects/shot-lab/world-handles.mjs`: `W.hero`, `W.car`, `W.figure`, `W.window`, ...):
+```js
+import * as M from '/engine/camera.js';
+const entry = catalog.shots.find(s => s.id === shot.params.shot);       // fetch('/docs/shots/catalog.json')
+const move = M.retime(new Function('M', 'W', `return (${entry.recipe});`)(M, W), shot.duration);
+// update(t): M.apply(camera, move.at(t, worldTime), { fx });           // fx = post.js chain, for focus pulls
+```
+Recipes are starting points: change targets, lens and az/el to fit the set, keep the move type, and
+note the id so the no-repeat check still works. Compose oners with `M.seq([...], { overlap })` (velocity
+hand-off, no pops) and hidden cuts with `M.cut([...])` (only inside a fully black/white frame).
+Run `node projects/shot-lab/test-camera.mjs` after writing new recipes: it proves C1/C2 smoothness.
+
+For example (illustrative: the `gates` mode doesn't exist yet):
 ```js
 S('hero', 'Twelve and a half million dollars. For the inbox of an airline…',
   { prop: 'drive', cam: 'push', angle: 'macro', trans: 'cut', caption: 'FIG. 1 …' }),
@@ -126,6 +168,7 @@ pattern in `projects/data-rush/scene.js` (`camOrbit` and `transFor`).
 stills in shot order and check them against the checklist.
 
 ## Checklist (every shot)
+- [ ] Is it a catalog id (or a documented variant of one), with its motivation word written down?
 - [ ] Does it show something the VO doesn't say word for word? (style bible)
 - [ ] Is there one motivated key light, with darkness as the default?
 - [ ] Is the move motivated and started on its word? Or is it deliberately static?
@@ -143,6 +186,7 @@ stills in shot order and check them against the checklist.
 ## Sequence-level review (every chapter)
 - [ ] Section ASL is within target, and no run of five equal-length shots.
 - [ ] Shot types, angles and scales pass the no-repeat rules. Rationed effects stay within budget.
+- [ ] `pick.mjs --check` prints `variety rules OK` (no id within 10 min, scale and energy alternate, cost).
 - [ ] At least one held, static or near-static shot per chapter, so the moves mean something.
 - [ ] Tension sections slow down and reveals burst, then hold.
 - [ ] The chapter ends on an image that sets up the next question.
