@@ -8,6 +8,42 @@ description: Build or edit a documentary video in this repo (3D scenes, narratio
 Read `docs/style-bible.md` first; it is the user's taste, encoded. `docs/fern-breakdown.md`
 explains the reference and where we're trying to beat it.
 
+## Production library: use it, don't reinvent it
+Every episode is built from this library. Read the index entries before planning shots.
+- **Script and packaging.** Use the `packaging` skill, then `retention-script`. Their source
+  material is `docs/research/hooks.md` (103 hook templates), `script-patterns.md` (7 story
+  structures plus TTS rules), `channel-breakdowns.md` (20 channels) and `editing-library.md`
+  (cut rate, a re-hook every 30–40 s, visual-change budget).
+- **Shots.** Use the `shot-design` skill. It picks shots from `docs/shots/catalog.json` (200 shots
+  in EST/REV/FOL/ONE/CHR/OBJ/DAT/TRN/END) with `docs/shots/pick.mjs`, and checks variety with
+  `pick.mjs --check`. Camera moves come from `engine/camera.js` (`import * as CAM from
+  '/engine/camera.js'`). It has 50 primitives, plus `seq`, `blend`, `follow`, `lookAt`,
+  `frameSubject` and `apply(camera, state, {fx})`. Every move is smooth in acceleration and
+  covered by tests (`projects/shot-lab/test-camera.mjs`). Demo: `projects/shot-lab`.
+- **Worlds and oners.** `engine/world/` (`W.create({place, tod, clouds})` →
+  `road / city / tower / traffic / route`, plus a map layer, labels, pins and a NASA globe) and
+  `engine/oner.js` (one continuous camera across scales and world states, keyed to spoken
+  words). The world-lab hero oner goes sky → clouds → car chase → HQ tower → map → globe. New
+  places come from `python3 engine/world/bake.py place <name> <lat> <lon>`. Demo:
+  `projects/world-lab`, `renders/world-lab/`.
+- **Transitions.** `engine/transitions.js` (`TR.create`, `fx.composite`, `TR.meta[name]`) has 36
+  transitions with exact alpha coverage, each under 40 ms per frame. Give the comp canvas
+  `getContext('2d', { willReadFrequently: true })`, which is 3–10x faster here. Set
+  `settings.cutGuard` ≥ 1.5 when you use ink-bleed or film-burn.
+- **Motion graphics.** `engine/motion.js` (`M.stage(layer)`) has kinetic type (split, mask,
+  scramble, counter, slam, highlight, redact), callouts (doc, route, arrow), chapter-card variants
+  and data (barRace, line, pie, waffle, bigNumber), all keyed to word times.
+- **Sound.** `engine/sfx.py` has 33 presets. In `cues()` use
+  `{type:'sfx', name:'whoosh.m', shot, at}`, and add `score.transitions = [{shot, name, dur}]` so
+  every planned transition gets its matching sound automatically.
+- **Cinematic post.** `engine/post.js` (DOF/AO/god rays/lens) and `engine/parallax.js`
+  (archive-photo 2.5D); see the toolkit section below.
+- **Reference episode.** `projects/palantir` (stone/ops/geo set libraries, `photo.js`, deliberate
+  cut planner in `scene.js`, thumbnails in `thumbs/make.mjs`).
+- **Smoothness QA after every final render.** Run the frame-difference check
+  (`projects/world-lab/framediff.py`, or the motion script used on the Palantir episode). There
+  should be no spikes inside a shot except deliberate hits.
+
 ## Layout
 - `engine/render.mjs`: narration-first renderer (Piper VO → timing → frames in headless
   Chromium → score → film finish → mp4).
