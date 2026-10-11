@@ -26,3 +26,24 @@ whenever you add an asset. CC0 and PD items need no on-screen credit; the rest s
 ## Archive photos
 
 Archive photos live in `projects/<p>/assets/archive/` with their own `SOURCES.md`.
+
+## World kit (`assets/world/`, built by `engine/world/bake.py`)
+
+All public domain. NASA imagery: "NASA material is not protected by copyright unless noted"
+(https://www.nasa.gov/nasa-brand-center/images-and-media/); credit is appreciated, not required.
+
+| File | What | Licence | Source |
+|---|---|---|---|
+| `world/earth/day.jpg` | Blue Marble Next Generation, Dec 2004, topography + bathymetry, 5400x2700 resampled to 4096x2048 | Public domain (NASA Earth Observatory, Reto Stöckli) | https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg |
+| `world/earth/night.jpg` | Black Marble 2016 (Earth at Night), 3 km, greyscale 4096x2048 | Public domain (NASA Earth Observatory, Joshua Stevens / Miguel Román, NASA GSFC) | https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_3km.jpg |
+| `world/earth/clouds.jpg` | Cloud composite, 8192x4096 resampled to 4096x2048 greyscale | Public domain (NASA Goddard / Reto Stöckli) | https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_8192.tif |
+| `world/earth/map.png` | Map mask (R land minus lakes, G coast/rivers, B borders/states) rasterised from Natural Earth 1:50m | Public domain (Natural Earth) | via `projects/palantir/assets/geo/vectors.json` (see its SOURCES.md) |
+| `world/places/denver/image.jpg` | Blue Marble NG 500 m tile A1 (Dec 2004), cropped ±2° lat around 39.745 N, 104.99 W | Public domain (NASA) | https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x21600x21600.A1.jpg |
+| `world/places/denver/night.jpg` | Black Marble 2016 500 m tile A1, same crop | Public domain (NASA) | https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_A1.jpg |
+| `world/places/denver/dem-region.png`, `dem-local.png` | Elevation, AWS Terrain Tiles (terrarium) z9 / z12, stitched, equirectangular; (m+500)*10 in R,G | Public data (SRTM, GMTED2010, ETOPO1 and others; attribution list at https://github.com/tilezen/joerd/blob/master/docs/attribution.md) | https://registry.opendata.aws/terrain-tiles/ |
+| `world/places/denver/map.png` | Map mask from Natural Earth 1:10m (US region) | Public domain (Natural Earth) | as above |
+
+Vehicles, buildings, trees, clouds and roads in `engine/world/` are procedural (no third-party
+models). Kenney Car Kit (CC0, https://kenney.nl/assets/car-kit) was downloaded and evaluated but
+not used: toy proportions read as a game; the procedural cars are built to real dimensions.
+Poly Pizza returned 403 from this box.
