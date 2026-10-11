@@ -3,7 +3,7 @@
 - **File:** `out/deliver/palantir-1080p60.mp4` (1080p, 60 fps, 14:02)
 - **Title:** The Most Dangerous Company in the World
 - **Title test (Test & Compare) alternatives:** The Company That Sees Everything · Why the CIA Funded a Crystal Ball
-- **Thumbnail:** the stone on the desk in green fluorescent light, from shot s005 at 95%. Render a 1280×720 still with `--stills=0.95 --only=s005`, add a red marker loop around the tiny figure inside the stone, and set "IT SEES" in Instrument Serif in a corner.
+- **Thumbnails (Test & Compare, title fixed):** `thumbs/B.jpg` “THE CIA FUNDED THIS” (lead) · `thumbs/A.jpg` “IT SEES YOU” · `thumbs/C.jpg` “THIS IS YOUR FILE”. Rebuild with `node projects/palantir/thumbs/make.mjs`.
 
 ## Description
 
