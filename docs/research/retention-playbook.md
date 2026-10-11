@@ -118,8 +118,8 @@ company, then an industry, then a country.
 - **Vary the emotional register.** Peak up and down rather than flatlining.
   ([summify](https://summify.io/discover/killer-youtube-scripts-explained-xdR1YXg_JXI/)) [unattributed]
 - **Re-hook cadence.** The memo has big re-engagements at about 3 and 6 minutes. For 15–20 min
-  narration, we add a **small re-hook every ~90 s**: a new question, a reveal, a stakes jump,
-  a gear change in picture or sound. The 90 s figure is [house]; the principle is [memo].
+  narration, we add a **small re-hook every 30–40 s** (never more than 45 s apart; updated from ~90 s, see `editing-library.md`): a new question, a reveal, a stakes jump,
+  a gear change in picture or sound. The 30–40 s figure is [house]; the principle is [memo].
 - **Pattern interrupts must be motivated** (style bible: cuts land on sound, flash frames only
   on a tonal shift). Random zooms and whooshes break the house style.
 - **Read the graph after every upload.** Find the "danger zones" where viewers leave
@@ -295,6 +295,6 @@ Never put the full read in the first 60 s.
   default for its users (about 2M+ on Chrome, per a vendor), which is another reason to keep
   value inside the read.
   ([makeinfluence](https://www.makeinfluence.com/en/academy/sponsorblock-and-sponsor-skip-extensions-do-they-undercut-a-paid-youtube-placement))
-- The 90 s re-hook cadence, ad-slot spacing and 150 wpm budget are house heuristics. Verify
+- The 30–40 s re-hook cadence, ad-slot spacing and 150 wpm budget are house heuristics. Verify
   them against our own retention graphs after 3–5 uploads.
 - This isn't legal advice. Check the disclosure rules for each market (EU and UK rules differ).
