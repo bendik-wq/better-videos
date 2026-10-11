@@ -5,7 +5,8 @@ usage: score.py timeline.json out.wav '{"key": "D", "cues": [...]}'
        score.py --vo timeline.json vo.wav <start s> <length s>   (sample-exact VO track)
 
 Every cue is {"type", "shot", "at" (seconds into shot, negative = before it), "gain", ...}.
-Types: boom, clang, clunk, whoosh, horn, hum, water, ticks, swell.
+Types: boom, clang, clunk, whoosh, horn, hum, water, ticks, swell, pulse, and sfx (any engine/sfx.py preset).
+cfg.transitions = [{shot, name, dur}] adds the matching transition sound for each planned cut.
 """
 import json, sys, wave
 import numpy as np
@@ -189,8 +190,23 @@ for s in timeline:
 fade = np.convolve(fade, np.ones(2400) / 2400, mode="same")
 L *= fade; R *= fade
 
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+import sfx  # engine/sfx.py: the sound-design library (48 kHz, anchor-placed)
+
+def place_sfx(name, at, gain=0.5, pan=0.0, seed=0, params=None):
+    sig, anchor = sfx.render(name, seed=seed, **(params or {}))
+    sfx.place(L, R, sig, anchor, at, gain, pan)
+
+# every planned transition gets its matching sound, sized to the move
+for tr in cfg.get("transitions", []):
+    for q in sfx.for_transition(tr["name"], shots[tr["shot"]]["start"], tr.get("dur", 0.4)):
+        place_sfx(q["name"], q["at"], q.get("gain", 0.4), 0.0, q.get("seed", 0))
+
 for c in cfg.get("cues", []):
     s = shots[c["shot"]]
+    if c["type"] == "sfx":  # {"type":"sfx","name":"whoosh.m","shot","at","seed"?,"params"?,"gain"?,"pan"?}
+        place_sfx(c["name"], s["start"] + c.get("at", 0), c.get("gain", 0.5), c.get("pan", 0.0), c.get("seed", 0), c.get("params"))
+        continue
     sig = SYN[c["type"]](c)
     at = s["start"] + c.get("at", 0)
     if c["type"] in ("whoosh", "swell"):
