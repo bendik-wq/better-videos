@@ -344,7 +344,8 @@ const walk = (d) => !fs.existsSync(d) ? [] : fs.readdirSync(d, { withFileTypes: 
   .flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
 // everything a frame can depend on: engine page code, vendored libraries, the project's own assets
 const engineFiles = [...fs.readdirSync(path.join(ROOT, 'engine')).filter(f => /\.(js|html)$/.test(f)).sort().map(f => path.join(ROOT, 'engine', f)),
-  ...walk(path.join(ROOT, 'engine', 'vendor')), ...walk(path.join(projDir, 'assets'))];
+  ...walk(path.join(ROOT, 'engine', 'vendor')), ...walk(path.join(ROOT, 'engine', 'world')), ...walk(path.join(ROOT, 'assets', 'world')),
+  ...walk(path.join(projDir, 'assets'))];
 const fileHash = (f) => crypto.createHash('sha1').update(fs.readFileSync(f)).digest('hex') + path.relative(ROOT, f);
 const chunkKey = crypto.createHash('sha1').update([fs.readFileSync(tlPath), ...engineFiles.map(fileHash), ...fs.readdirSync(projDir).filter(f => /\.(m?js)$/.test(f)).sort().map(f => fs.readFileSync(path.join(projDir, f))), `${W}x${H}@${fps}`,
   JSON.stringify({ gl: GL, aa: AA, scale: RSCALE, finish: FINISH, look: LOOK, shutter: SHUTTER, ns: NS, enc: encArgs, vf: chunkGraph(0), capture: 'cdp-jpeg95' })].join('|')).digest('hex').slice(0, 10);
