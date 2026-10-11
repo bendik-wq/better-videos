@@ -1218,7 +1218,7 @@ export function makeOps(H) {
     const out = { ...b }; const cap = caption(layer, P0.caption, SCOPE_TOP); const src = scopeSource(layer, P0.source);
     const wp = V3(), cp = V3();
     const lightBar = (t, toCam = 0) => {
-      const a = (t * 5.2) % (Math.PI * 2); const flash = 0.5 + 0.5 * Math.sign(Math.sin(t * 9));
+      const a = (t * 5.2) % (Math.PI * 2); const flash = 0.5 + 0.5 * Math.sin(t * 6); // smooth pulse, not a square-wave strobe
       barL.material.color.setRGB(0.12 + 0.88 * flash * 0.4, 0.3 + 0.7 * flash * 0.7, 1); barR.material.color.setRGB(0.12 + 0.3 * (1 - flash), 0.3 + 0.5 * (1 - flash), 1);
       car.updateMatrixWorld(); camera.updateMatrixWorld();
       const sweep = V3(Math.cos(a) * 9, -1.5, Math.sin(a) * 9); const camLocal = car.worldToLocal(camera.position.clone()).sub(V3(-0.28, 1.6, 0));

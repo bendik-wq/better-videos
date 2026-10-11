@@ -350,7 +350,7 @@ const SETS = {
       orb.material.uniforms.uT.value = t; const k = ease(p); camera.position.set(K.lerp(-1, 1, k), 1.6, 12 - k); camera.lookAt(0, 1.6, -6);
       if (P0.end) { // hold on the title, then a slow, clean fade to black
         t1.style.opacity = K.range(t, 0.3, 1.4); veil.style.opacity = K.range(t, shot.duration - 2.2, shot.duration - 0.2); orb.visible = true; return; }
-      const on = t > 0.06 && t < shot.duration - 0.3 ? 1 : 0;
+      const on = (t > 0.06 ? 1 : 0) * (1 - ease(K.range(t, shot.duration - 0.7, shot.duration - 0.15))); // snap on with the hit, ease out before the cut
       t1.style.opacity = on; if (sub) sub.style.opacity = on * K.range(t, 0.9, 1.0); ep.style.opacity = on * K.range(t, 1.3, 1.4); veil.style.opacity = 0;
     } };
   },
@@ -365,7 +365,7 @@ const SETS = {
     const tt = K.div(layer, `right:7%;bottom:12%;text-align:right;${SERIF};font-size:8em;line-height:1`, P0.title);
     return { ...b, update(t) {
       motes.update(t); camera.position.set(0, 0, 8); camera.lookAt(0, 0, -8);
-      const on = t > 0.04 && t < shot.duration - 0.25 ? 1 : 0;
+      const on = (t > 0.04 ? 1 : 0) * (1 - ease(K.range(t, shot.duration - 0.7, shot.duration - 0.15)));
       num.style.opacity = on; lbl.style.opacity = on * K.range(t, 0.5, 0.6); tt.style.opacity = on * K.range(t, 0.25, 0.35);
     } };
   },
@@ -744,7 +744,8 @@ export default async function create(ctx) {
   const plan = planCuts(shots);
   const DUR = { dissolve: 0.45, whip: 0.42, push: 0.4, cut: 0 };
   const prev = document.createElement('canvas'); prev.width = width; prev.height = height; const px = prev.getContext('2d');
-  const smear = (img, x0, dx, taps, alpha, sx = 1) => { for (let i = 0; i < taps; i++) { const f = taps > 1 ? i / (taps - 1) - 0.5 : 0; cx.globalAlpha = alpha / Math.max(1, taps * 0.55);
+  // per-tap alpha chosen so the stacked taps cover exactly `alpha` (no brightness pop when the transition ends)
+  const smear = (img, x0, dx, taps, alpha, sx = 1) => { const a = 1 - Math.pow(1 - Math.min(1, Math.max(0, alpha)), 1 / taps); for (let i = 0; i < taps; i++) { const f = taps > 1 ? i / (taps - 1) - 0.5 : 0; cx.globalAlpha = a;
     const w = width * sx, hgt = height * sx; cx.drawImage(img, x0 + f * dx - (w - width) / 2, -(hgt - height) / 2 + (sx !== 1 ? f * dx * 0.3 : 0), w, hgt); } cx.globalAlpha = 1; };
   const hash = (str) => { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
   let lastShot = null;
