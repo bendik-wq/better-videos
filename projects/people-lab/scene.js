@@ -62,7 +62,8 @@ export default async function create(ctx) {
   for (const s of shots) live.set(s.id, SH[s.set] ? await SH[s.set](ctx, s) : s.set === 'base' ? base(ctx) : s.set === 'crowd' ? await crowdDev(ctx, s) : await dev(ctx, s));
   if (new URLSearchParams(location.search).get('bench')) {
     const gl = renderer.getContext(); const px = new Uint8Array(4);
-    for (const s of shots) { const i = live.get(s.id); const ts = [];
+    const benchShots = [...shots, { id: 'base', set: 'base', duration: 1 }]; live.set('base', base(ctx));
+    for (const s of benchShots) { const i = live.get(s.id); const ts = [];
       // per sample time: best of 3 renders (contention from other processes only ever adds time)
       for (let k = 0; k < 10; k++) { const t = s.duration * (k + 0.5) / 10; let best = 1e9;
         for (let rep = 0; rep < 3; rep++) { const a = performance.now(); i.update(t, t / s.duration); renderer.render(i.scene, i.camera); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); best = Math.min(best, performance.now() - a); }

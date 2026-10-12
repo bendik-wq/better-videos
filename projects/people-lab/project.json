@@ -1,5 +1,5 @@
 {
- "title": "People lab",
+ "title": "People lab: real bodies, mocap, crowds",
  "fps": 30,
  "width": 1920,
  "height": 1080,
@@ -53,12 +53,6 @@
    "set": "command",
    "params": {},
    "min": 6
-  },
-  {
-   "id": "base",
-   "set": "base",
-   "params": {},
-   "min": 1
   }
  ]
 }

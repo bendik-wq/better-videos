@@ -270,7 +270,8 @@ export async function office(ctx, shot) {
     if (rr() < 0.5) { const mg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.038, 0.1, 12), mugM); mg.position.set(0.5 + rr() * 0.15, 0.79, rr() * 0.2 - 0.1); g.add(mg); }
   });
   for (let k = -3; k <= 3; k++) { const dv = new THREE.Mesh(new THREE.BoxGeometry(9 * 1.62, 0.4, 0.03), divMat); dv.position.set(0, 0.94, k * 3.4); scene.add(dv); }
-  const cr = await PE.crowd(scene, { renderer, agents, clips: ['sit_type', 'sit_idle', 'sit_think', 'walk', 'walk_b', 'walk_slow'], impostors: false, lod: { nearPx: 0, midPx: 0, maxNear: 6, maxMid: 400 } });
+  const cr = await PE.crowd(scene, { renderer, agents, clips: ['sit_type', 'sit_idle', 'sit_think', 'walk', 'walk_b', 'walk_slow'], impostors: false, lod: { nearPx: 260, midPx: 0, maxNear: 8, maxMid: 400 } });
+  scene.fog = new THREE.FogExp2(0x1a1d22, 0.035);
   // overhead: one soft key straight down (fluorescent grid), ceiling light panels out of frame
   // evening: the overhead grid at half, each row of panels pooling light on the desks below,
   // the screens adding their own cool spill; a low warm sun through the west windows rakes in
@@ -281,13 +282,13 @@ export async function office(ctx, shot) {
   for (let k = -3; k <= 3; k++) { const pool = glow(0xcfe0ff, 18, 3.0, 0.06); pool.rotation.x = -Math.PI / 2; pool.position.set(0, 0.77, k * 3.4); scene.add(pool); }
   await PR.ready();
   const rig = C.path([
-    { pos: [-1.8, 13.0, 1.2], look: [-1.6, 0, 0.9], mm: 35 },
-    { pos: [1.6, 12.4, -0.2], look: [1.8, 0, -0.5], mm: 35 },
+    { pos: [-6.5, 8.2, 12.5], look: [-0.6, 0.4, -0.8], mm: 45 },
+    { pos: [-3.2, 7.6, 13.4], look: [1.4, 0.4, -1.4], mm: 45 },
   ], { duration: D, accel: 0.4, decel: 0.4, float: 0.01, seed: 2, roll: 0 });
   // screens only redraw every few seconds: 48 canvases per frame is wasted CPU
   mons.forEach((m, i) => { if (i < 1) m.draw(i); });
   console.log('[scene] office freeze', JSON.stringify(PR.freeze(scene)));
-  return { scene, camera, crowd: cr, update(t, p) { rig(camera, p, t); camera.rotation.z += shot.params.noroll ? 0 : 0.35 + 0.1 * (p - 0.5); cr.update(t, camera); } };
+  return { scene, camera, crowd: cr, update(t, p) { rig(camera, p, t);  cr.update(t, camera); } };
 }
 
 // ===================================================================== soldier in a command centre
