@@ -59,7 +59,7 @@ export async function nightPatch(w, { region = 'ivano-frankivsk' } = {}) {
       uniform sampler2D tNight; uniform vec2 uSeeds[${NSEED}]; uniform float uOn[${NSEED}]; uniform vec3 uCirc[3]; uniform float uGain, uBorder; varying vec2 vUv, vLL;
       void main() {
         float v = texture2D(tNight, vUv).r;
-        float L = smoothstep(.2, .95, v); float land = smoothstep(.03, .14, v);
+        float land = smoothstep(.03, .12, v);
         // in a failing region, the nearest district seed decides
         float inside = 0.; for (int k = 0; k < 3; k++) if (uCirc[k].z > 0.) { vec2 d = (vLL - uCirc[k].xy) * vec2(cos(radians(uCirc[k].y)), 1.); inside = max(inside, 1. - smoothstep(uCirc[k].z * .92, uCirc[k].z * 1.08, length(d))); }
         float best = 1e9, on = 1., second = 1e9;
@@ -67,12 +67,15 @@ export async function nightPatch(w, { region = 'ivano-frankivsk' } = {}) {
         on = mix(1., on, inside);
         // district borders glow faintly red as they fail (annotation, not light)
         float edge = (1. - smoothstep(0., .0025, sqrt(second) - sqrt(best))) * inside * uBorder * (1. - on);
-        // the patch only covers where there is light (so the globe's own coarser lights are replaced, its land kept)
-        float Ls = smoothstep(.24, 1., v);
-        vec3 col = vec3(1., .6, .28) * pow(Ls, 2.2) * 1.5 * uGain * on;
-        col += vec3(1., .17, .12) * edge * .06;
+        // Black Marble 2016 is a composite: moonlit land ~0.1-0.25, city light above ~0.35. Lights become crisp
+        // sodium points; the land stays a faint moonlit blue-grey so the coastline reads against the black sea.
+        float Ls = smoothstep(.34, .92, v);
+        float core = smoothstep(.75, 1., v);
+        vec3 col = vec3(1., .55, .2) * pow(Ls, 1.6) * 1.25 * uGain * on + vec3(1., .78, .48) * core * .45 * uGain * on;
+        col += vec3(1., .17, .12) * edge * .05;
         float fe = smoothstep(0., .04, vUv.x) * smoothstep(1., .96, vUv.x) * smoothstep(0., .06, vUv.y) * smoothstep(1., .94, vUv.y);
-        float a = fe * max(smoothstep(.1, .5, v), edge * .5);
+        // cover only where there is light: the globe's own land, coast and sea show through
+        float a = fe * max(smoothstep(.26, .5, v), edge * .5);
         gl_FragColor = vec4(col, a);
       }` });
   const mesh = new THREE.Mesh(geo, mat); mesh.frustumCulled = false; mesh.renderOrder = -45;
@@ -96,9 +99,9 @@ export async function nightPatch(w, { region = 'ivano-frankivsk' } = {}) {
 export default function makeOrbit(H) {
   // ---------------------------------------------------------------- orbit-lights
   const VIEWS = {
-    europe: { focus: [49.5, 20], alt: [5.2e6, 4.2e6], tilt: [26, 24], heading: [10, 16], mm: 35 },
+    europe: { focus: [50.5, 18], alt: [4.6e6, 3.9e6], tilt: [30, 28], heading: [8, 14], mm: 35 },
     ukraine: { focus: [48.9, 27.5], alt: [1.5e6, 1.15e6], tilt: [18, 22], heading: [0, 6], mm: 35 },
-    region: { focus: [48.8, 25.0], alt: [4.2e5, 3.3e5], tilt: [8, 14], heading: [0, 4], mm: 40 },
+    region: { focus: [48.9, 25.4], alt: [8.5e5, 7.0e5], tilt: [14, 18], heading: [0, 4], mm: 40 },
     kyiv: { focus: [50.4, 30.5], alt: [1.6e5, 1.25e5], tilt: [6, 12], heading: [0, 4], mm: 40 },
     poland: { focus: [52.0, 19.4], alt: [1.4e6, 1.15e6], tilt: [16, 20], heading: [0, 5], mm: 35 },
   };
@@ -116,11 +119,11 @@ export default function makeOrbit(H) {
     const tA = H.cue(shot, P.at, Math.min(1.2, D * 0.2)), span = P.span ?? Math.max(1.5, Math.min(5, D - tA - 1)), tR = H.cue(shot, P.restore, Infinity);
     const cap = P.caption ? H.caption(layer, P.caption) : null;
     const lbls = (P.labels === false ? [] : LABELS).map(([n, lo, la]) => { const el = H.K.div(layer, `opacity:1;font:400 1.25em ${FONT.term};letter-spacing:.08em;color:${PAL.fluoro};text-shadow:0 0 8px rgba(0,0,0,.9);white-space:nowrap`, n); return { el, p: F.toLocal(la, lo, 0) }; });
-    const tod = { ...W.TOD.night, sunEl: -75, cityGlow: [1, 0.55, 0.25].map(x => x * 0.3), stars: 0.7 };
+    const tod = { ...W.TOD.night, sunEl: -27, sunAz: 258, cityGlow: [1, 0.55, 0.25].map(x => x * 0.3), stars: 0.7 };
     return { scene: w.scene, camera, layer, toneMapping: THREE.NoToneMapping,
       update(t) {
         const s = cam(t); camera.position.copy(s.pos); camera.quaternion.copy(s.quat); camera.fov = s.fov; camera.updateProjectionMatrix(); camera.updateMatrixWorld();
-        w.setState({ t, tod, exposure: 1.25 });
+        w.setState({ t, tod, exposure: 1.05 });
         patch.set(t, { k: range(t, tA, tA + span), frac: P.frac ?? 1, restore: range(t, tR, tR + (P.restoreSpan ?? 3)) });
         const v = new THREE.Vector3();
         for (const L of lbls) { v.copy(L.p).project(camera); const vis = v.z < 1 && Math.abs(v.x) < 0.95 && Math.abs(v.y) < 0.9; L.el.style.display = vis ? '' : 'none';

@@ -45,7 +45,7 @@ const LISTS = {
     S('flash-mouse', 'flash', { object: 'mouse', caption: 'A MOUSE. NOBODY TOUCHING IT.' }, { min: 2.4 }), S('flash-breaker', 'flash', { object: 'breaker-handle', caption: 'BREAKER HANDLE' }, { min: 2.2 }),
     S('flash-phone', 'flash', { object: 'phone', caption: 'OFF THE HOOK' }, { min: 2.2 }), S('flash-usb', 'flash', { object: 'usb' }, { min: 2 }),
     S('flash-transformer', 'flash', { object: 'transformer', caption: 'SNOW ON THE TRANSFORMER' }, { min: 2.2 }), S('flash-server', 'flash', { object: 'server', caption: 'ONE SERVER. GHANA.' }, { min: 2.4 }),
-    S('flash-led', 'flash', { object: 'led' }, { min: 2 }), S('flash-printout', 'flash', { object: 'printout', caption: 'THE EVENT LOG' }, { min: 2.2 }),
+    S('flash-led', 'flash', { object: 'led' }, { min: 2 }), S('flash-printout', 'flash', { object: 'printout', caption: 'THE EVENT LOG' }, { min: 2.2 }), S('flash-usb2', 'flash', { object: 'usb', stamp: '15 06 05' }, { min: 2 }),
     S('doc-ind', 'doc', { mode: 'indictment', highlight: true }, { min: 6 }), S('doc-adv', 'doc', { mode: 'advisory', highlight: true }, { min: 6 }),
     S('terminal', 'terminal', { text: 'open_breaker --rtu SS-07 --cb Q13', mode: 'enter', caption: 'RECONSTRUCTION' }, { min: 6 }),
     S('printout', 'quote', { mode: 'printout', text: 'The outage was caused by people. Using the power company’s own software.', by: 'SANS / E-ISAC, 2016' }, { min: 6 }),
