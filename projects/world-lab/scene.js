@@ -13,6 +13,8 @@ import * as O from '/engine/oner.js';
 
 const qs = new URLSearchParams(location.search);
 const DEBUG = qs.get('wl') ?? '';
+if (DEBUG.includes('warn')) { const cw = console.warn.bind(console), ce = console.error.bind(console); console.warn = (...a) => cw('[scene] warn', ...a.map(String)); console.error = (...a) => ce('[scene] err', ...a.map(x => String(x).slice(0, 3000))); }
+const WLO = JSON.parse(qs.get('wlo') ?? '{}'); // world option overrides for look-dev, e.g. &wlo={"mirror":false}
 const V3 = (a) => new THREE.Vector3(...a);
 const RED = '#e0241b';
 const CAP = `font:500 .78em 'Plex Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#bdb6a8;white-space:nowrap`;
@@ -27,7 +29,7 @@ let DENVER = null;
 function denverWorld() { return DENVER ??= makeDenver(); }
 async function makeDenver({ tod = 'blue', clouds = true, seed = 4 } = {}) {
   const w = await W.create({ place: 'denver', tod, seed, wet: 0.7,
-    clouds: clouds ? { base: 2300, thick: 520, coverage: 0.6, fog: 0 } : null });
+    clouds: clouds ? { base: 2300, thick: 520, coverage: 0.6, fog: 0 } : null, renderScale: 0.8, ...WLO });
   const hwy = w.road({ kind: 'highway', name: 'I-70', points: [[30000, 2900], [18000, 2500], [9000, 2150], [4000, 1950], [0, 1960], [-5000, 2250], [-11000, 2900], [-20000, 3900]] });
   // exit ramp: leaves the westbound outer lane and curls north into the HQ forecourt
   const qE = hwy.nearest(2600, 1950, 200), sE = qE.s;
@@ -129,8 +131,10 @@ async function hero(ctx, shot) {
   { const p = oner.cam(4.65).pos; w.clouds.setHole(0, p.x, p.z, -2600); }
   if (DEBUG.includes('trace')) { const tr = oner.trace(60, 0, 29.5); const r = O.smoothness(tr, { scale: (p) => Math.max(2, F.altitude(new THREE.Vector3(...p)) - F.elev - 0) }); console.log('[scene] smooth', JSON.stringify({ speed: r.worstSpeedChange, ang: r.worstAngularChange, sp: r.speed.map(x => +x.toFixed(4)), an: r.angular.map(x => +x.toFixed(3)) })); }
   // ---- map layer: route line, labels
-  const pts = rt.points.filter((_, i) => i % 2 === 0);
-  const line = W.routeLine(w, pts, { width: 4.5 }); w.root.add(line.mesh);
+  // the map route is the whole trip: ~9 km of interstate before the shot picks the car up, then the exit
+  const rtMap = w.route([{ road: hwy, from: Math.max(0, s0 - 9000), to: w.sE, lane: 2 }, { road: ramp, from: 30, to: ramp.L - 2 }], { smooth: 16, step: 6 });
+  const pts = rtMap.points;
+  const line = W.routeLine(w, pts, { width: 6 }); w.root.add(line.mesh);
   const L = W.labels(el);
   const [lat, lon] = F.geoOf(w.hq.gx, w.hq.gz);
   const lHQ = L.add('Headquarters', T.top, { kind: 'hq', dx: 110, dy: -80, size: 1.3, sub: `${lat.toFixed(4)}° N · ${Math.abs(lon).toFixed(4)}° W` });
@@ -156,7 +160,7 @@ async function hero(ctx, shot) {
       w.fleet.add('sedan', pose, { paint: [0.035, 0.04, 0.05], lights: 1, brake, wheelAngle: S(t) / 0.34 });
       for (const tr of w.traffics) tr(t, w.fleet);
       w.fleet.end();
-      line.set(st.route, Math.min(1, st.map * 1.5), res);
+      line.set(st.route, Math.min(1, st.map * 1.5), res, t, st.route > 0.999 ? ((t - oner.T('leads+4.2')) / 3.2) % 1 : -1);
       w.render(ctx.renderer, camera);
       L.update(camera, (l) => l === lG ? st.globeLabel : l === lHQ ? Math.min(st.labels, 1) : st.labels * (1 - st.globeLabel));
     },
@@ -187,7 +191,7 @@ async function dive(ctx, shot) {
     { t: 9.6, pos: cam(9.6).pos.toArray(), look: fwdOf(cam(9.6)).toArray(), mm: 28 },
     { t: 11.3, pos: F.surface(gx, gz - 40, gy + 14).toArray(), look: F.surface(gx, gz + 160, gy + 8).toArray(), mm: 27 },
     { t: 13.0, pos: F.surface(gx, gz + 6, gy + 1.7).toArray(), look: ahead.toArray(), mm: 26 }], { vIn: 'auto' }) }],
-    tracks: { exposure: [[0, 0.95], [5, 0.9], [9, 0.85]] } });
+    tracks: { exposure: [[0, 0.95], [5, 0.9], [9, 0.9], [13, 1.15]] } });
   w.clouds.setHole(1, gx, gz, 2500);
   const L = W.labels(el);
   const lC = L.add('Colorado', F.surface(-60000, -40000, 3000), { kind: 'place', dx: 70, dy: -50, size: 1.2 });
@@ -198,7 +202,7 @@ async function dive(ctx, shot) {
     update(t) {
       el.style.display = '';
       const st = oner.state(t); oner.camera(t, camera);
-      w.setState({ t, tod: 'golden', exposure: st.exposure });
+      w.setState({ t, tod: 'golden', exposure: st.exposure, wet: 0.35 });
       w.fleet.begin(); for (const tr of [...traf, w.traffics[0]]) tr(t, w.fleet); w.fleet.end();
       w.render(ctx.renderer, camera);
       L.update(camera, (l) => K.smooth(K.range(t, 4.6, 5.4)) * (1 - K.smooth(K.range(t, 6.6, 7.4))));
@@ -280,7 +284,7 @@ async function truck(ctx, shot) {
     { t: 4, pos: [-3.5, 0.75, -18.2], look: [-5, 0.2, 0], mm: 32 },
     { t: 8, pos: [-10.5, 0.45, -19], look: [-10.5, 0.4, 0], mm: 30 },
   ]), { lag: 0.8 });
-  const oner = O.oner({ segments: [{ from: 0, to: 8, cam: side }], tracks: { exposure: [[0, 1.15]] } });
+  const oner = O.oner({ segments: [{ from: 0, to: 8, cam: side }], tracks: { exposure: [[0, 1.35]] } });
   const traf = W.traffic(w, hwy, { lanes: [0, 1, 2], perKm: 6, seed: 9, speed: [30, 34] });
   corner(el, 'I-70 EASTBOUND · 02:14', 'right:4.2%;bottom:6%');
   return {
@@ -288,7 +292,7 @@ async function truck(ctx, shot) {
     update(t) {
       el.style.display = '';
       const st = oner.state(t); oner.camera(t, camera);
-      w.setState({ t, tod: 'night', exposure: st.exposure });
+      w.setState({ t, tod: 'night', exposure: st.exposure, wet: 0.25 });
       w.fleet.begin();
       const s = sT(t);
       W.groundPose(w, pathE, s, {}, pa); w.fleet.add('tractor', pa, { paint: [0.32, 0.03, 0.02].map(x => x * 0.6), lights: 1, wheelAngle: -s / 0.52 });
@@ -296,7 +300,7 @@ async function truck(ctx, shot) {
       // pathE.at takes road s; the trailer trails behind (larger s, since we drive towards smaller s)
       const kp = hwy.pose(s + 2.85, hwy.lane(lane)), rp = hwy.pose(s + 2.85 + 13.8, hwy.lane(lane));
       F.surface(kp.gx, kp.gz, kp.h, pb.pos); pb.quat.setFromEuler(new THREE.Euler(0, Math.atan2(-(kp.gz - rp.gz), kp.gx - rp.gx), 0, 'YZX'));
-      w.fleet.add('trailer', pb, { paint: [0.6, 0.6, 0.58], lights: 1, wheelAngle: -s / 0.52, beam: false });
+      w.fleet.add('trailer', pb, { paint: [0.45, 0.46, 0.47], lights: 1, wheelAngle: -s / 0.52, beam: false });
       traf(t, w.fleet);
       w.fleet.end();
       w.render(ctx.renderer, camera);
@@ -306,12 +310,34 @@ async function truck(ctx, shot) {
 }
 
 // ---------------------------------------------------------------- runtime
+// ---------------------------------------------------------------- GARAGE (look-dev, not in the cut): every vehicle model
+// parked on a street in the Denver world, orbit camera. window.__garage(t, { tod, angle, dist, h, kind }) renders one frame.
+async function garage(ctx) {
+  const w = await denverWorld();
+  const camera = new THREE.PerspectiveCamera(30, ctx.width / ctx.height, 0.1, 1e7);
+  const city = w.city0, F = w.frame;
+  const iz = city.nearestLine('z', -1100), ix = city.nearestLine('x', -300);
+  const ln = city.line('z', iz);
+  const q = ln.nearest(...city.toG(city.LX[ix].c + 40, city.LZ[iz].c), 400);
+  const kinds = ['sedan', 'suv', 'van', 'tractor'];
+  const poses = kinds.map((k, i) => { const pa = { pos: new THREE.Vector3(), quat: new THREE.Quaternion() }; W.groundPose(w, { at: (x) => ln.pose(x, ln.lane(0)) }, q.s + i * (k === 'tractor' ? 12 : 8) - 8, {}, pa); return pa; });
+  return (t, { tod = 'golden', angle = 30, dist = 7, h = 1.4, kind = 0, mm = 50 } = {}) => {
+    const c = poses[kind].pos, a = angle * Math.PI / 180;
+    camera.position.set(c.x + Math.cos(a) * dist, c.y + h, c.z + Math.sin(a) * dist); camera.fov = O.mmToFov(mm); camera.updateProjectionMatrix(); camera.lookAt(c.x, c.y + 0.8, c.z);
+    w.setState({ t, tod, wet: 0 });
+    w.fleet.begin();
+    kinds.forEach((k, i) => { w.fleet.add(k, poses[i], { paint: [[0.5, 0.02, 0.02], [0.02, 0.03, 0.05], [0.7, 0.7, 0.68], [0.3, 0.03, 0.02]][i], lights: 0.3, wheelAngle: 0 }); if (k === 'tractor') { const pb = { pos: poses[i].pos.clone().addScaledVector(new THREE.Vector3(1, 0, 0).applyQuaternion(poses[i].quat), -2.85), quat: poses[i].quat.clone() }; w.fleet.add('trailer', pb, { paint: [0.6, 0.6, 0.58], lights: 0.3, beam: false }); } });
+    w.fleet.end();
+    w.render(ctx.renderer, camera);
+  };
+}
 const SETS = { hero, dive, pin: pinSet, truck };
 export default async function create(ctx) {
   const { shots } = ctx;
   const live = new Map(); let cur = null;
   // build every set up front (textures load once; worlds are deterministic)
   for (const s of shots) live.set(s.id, await SETS[s.set](ctx, s));
+  window.__garage = async (t, o) => { const g = (window.__garageFn ??= await garage(ctx)); live.forEach(x => x.hide?.()); g(t, o); };
   return {
     frame({ shot, t }) {
       const inst = live.get(shot.id); window.__wl = inst;
@@ -328,7 +354,8 @@ export default async function create(ctx) {
       }
       const t0 = performance.now();
       inst.update(t);
-      if (DEBUG.includes('time')) { const g = ctx.renderer.getContext(); g.readPixels(0, 0, 1, 1, g.RGBA, g.UNSIGNED_BYTE, new Uint8Array(4)); console.log('[scene] ms', shot.id, t.toFixed(2), (performance.now() - t0).toFixed(0)); }
+      if (DEBUG.includes('glerr')) { const g = ctx.renderer.getContext(); console.log('[scene] glerr', g.getError()); const w = inst.world; if (w?.rt) { const b = new Uint16Array(4); ctx.renderer.readRenderTargetPixels(w.rt, 960, 300, 1, 1, b); console.log('[scene] px', [...b].map(x => THREE.DataUtils.fromHalfFloat(x).toFixed(4)).join(',')); } }
+      if (DEBUG.includes('time')) { const g = ctx.renderer.getContext(); g.readPixels(0, 0, 1, 1, g.RGBA, g.UNSIGNED_BYTE, new Uint8Array(4)); console.log('[scene] ms', shot.id, t.toFixed(2), (performance.now() - t0).toFixed(0), JSON.stringify(Object.fromEntries(Object.entries(inst.world?.last?.ms ?? {}).map(([k, v]) => [k, Math.round(v)])))); }
     },
   };
 }

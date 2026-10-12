@@ -79,3 +79,38 @@ Video files are git-ignored and rebuilt from `assets/footage/pack.json`. Each cl
 | `weather-erin-goes`, `weather-milton-hurricane-hunter` | NOAA NESDIS / NOAA AOC via Wikimedia Commons | Public domain (US Government) | NOAA |
 | `crowd-causeway-bay-timelapse`, `highway-tullamarine` | Wikimedia Commons | CC0 1.0 | per file page |
 | `oil-rig-drilling` ("Move It: Rig Move Safety for Roughnecks", 2012) | Wikimedia Commons | Public domain (US Government work) | National Institute for Occupational Safety and Health (NIOSH) |
+
+
+## PBR library (`assets/pbr/`, built by `engine/world/pbr.py`)
+
+All CC0: Poly Haven (https://polyhaven.com/license) and ambientCG (https://docs.ambientcg.com/license/), downloaded
+2026-10-12 through their public download APIs (`api.polyhaven.com/files/<id>`, `ambientcg.com/get?file=<id>_1K-JPG.zip`),
+no login. `layers.json` lists each layer's source id, tile size and average colour.
+
+| File | What | Licence | Source |
+|---|---|---|---|
+| `pbr/asphalt.a.jpg`, `pbr/asphalt.n.jpg` | asphalt_02: albedo (AO folded in) + normal (GL) / roughness, 1K, 3.0 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/asphalt_02 |
+| `pbr/asphalt_wet.a.jpg`, `pbr/asphalt_wet.n.jpg` | Asphalt025C: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.5 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Asphalt025C |
+| `pbr/pavers.a.jpg`, `pbr/pavers.n.jpg` | concrete_pavement: albedo (AO folded in) + normal (GL) / roughness, 1K, 1.8 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/concrete_pavement |
+| `pbr/concrete.a.jpg`, `pbr/concrete.n.jpg` | concrete_wall_008: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.71 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/concrete_wall_008 |
+| `pbr/brick.a.jpg`, `pbr/brick.n.jpg` | brick_wall_006: albedo (AO folded in) + normal (GL) / roughness, 1K, 3.0 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/brick_wall_006 |
+| `pbr/stone.a.jpg`, `pbr/stone.n.jpg` | large_sandstone_blocks: albedo (AO folded in) + normal (GL) / roughness, 1K, 3.0 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/large_sandstone_blocks |
+| `pbr/curtain.a.jpg`, `pbr/curtain.n.jpg` | Facade001: albedo (AO folded in) + normal (GL) / roughness, 1K, facade, 16x10 window grid per tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Facade001 |
+| `pbr/ribbon.a.jpg`, `pbr/ribbon.n.jpg` | Facade006: albedo (AO folded in) + normal (GL) / roughness, 1K, facade, 14x8 window grid per tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Facade006 |
+| `pbr/brickwin.a.jpg`, `pbr/brickwin.n.jpg` | Facade018A: albedo (AO folded in) + normal (GL) / roughness, 1K, facade, 6x6 window grid per tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Facade018A |
+| `pbr/piers.a.jpg`, `pbr/piers.n.jpg` | Facade020A: albedo (AO folded in) + normal (GL) / roughness, 1K, facade, 6x6 window grid per tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Facade020A |
+| `pbr/gravel.a.jpg`, `pbr/gravel.n.jpg` | Gravel043: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.0 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Gravel043 |
+| `pbr/grass.a.jpg`, `pbr/grass.n.jpg` | Grass004: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.0 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Grass004 |
+| `pbr/dirt.a.jpg`, `pbr/dirt.n.jpg` | dirt: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.0 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/dirt |
+| `pbr/metal.a.jpg`, `pbr/metal.n.jpg` | CorrugatedSteel009: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.0 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=CorrugatedSteel009 |
+| `pbr/chrome.a.jpg`, `pbr/chrome.n.jpg` | Metal049A: albedo (AO folded in) + normal (GL) / roughness, 1K, 1.0 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Metal049A |
+| `pbr/rubber.a.jpg`, `pbr/rubber.n.jpg` | Rubber004: albedo (AO folded in) + normal (GL) / roughness, 1K, 1.0 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Rubber004 |
+| `pbr/markings.a.jpg`, `pbr/markings.n.jpg` | Road007: albedo (AO folded in) + normal (GL) / roughness, 1K, 8.2 m tile | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=Road007 |
+| `pbr/sheet.a.jpg`, `pbr/sheet.n.jpg` | box_profile_metal_sheet: albedo (AO folded in) + normal (GL) / roughness, 1K, 2.0 m tile | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/box_profile_metal_sheet |
+| `pbr/trees.png` | 4 tree-crown impostors scattered from the LeafSet010 leaf scans (built by `engine/world/pbr.py trees`) | CC0 1.0 (ambientCG) | https://ambientcg.com/view?id=LeafSet010 |
+| `pbr/hdri/modern_buildings_1k.hdr` | HDRI `modern_buildings`, 1K Radiance .hdr (ambient SH + reflections at low altitude; sun clamped out at load) | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/modern_buildings |
+| `pbr/hdri/modern_buildings_night_1k.hdr` | HDRI `modern_buildings_night`, 1K Radiance .hdr (ambient SH + reflections at low altitude; sun clamped out at load) | CC0 1.0 (Poly Haven) | https://polyhaven.com/a/modern_buildings_night |
+
+Vehicles stay procedural (lofted bodies in `engine/world/vehicles.js`): no CC0 or CC-BY realistic car, truck or bus
+model was found that downloads without a login. Poly Haven has none (only `covered_car`); Khronos' CarConcept is
+CC-BY 4.0 but a logo-covered concept car; Sketchfab downloads need an account.

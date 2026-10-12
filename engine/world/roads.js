@@ -115,11 +115,19 @@ export function roadMaterial(world) {
       void main() {
         float kind = fRoad.x, laneW = fRoad.y, lanes = fRoad.z, len = fRoad.w;
         float s = vSU.x, u = vSU.y, au = abs(u);
-        vec3 n = normalize(vN);
+        vec3 n0 = normalize(vN);
         float n1 = texture(uNoise, vec2(s, u) / 9.).g, n2 = texture(uNoise, vec2(s, u * 3.) / 180.).r, n3 = texture(uNoise, vec2(s, u) / 1.3).a;
         float lanePos = fract((au - fHalf.y) / laneW);
         float track = smoothstep(.12, .25, abs(lanePos - .5)) * step(fHalf.y, au) * step(au, fHalf.z);
-        vec3 alb = vec3(.055, .055, .058) * (.75 + .35 * n2 + .15 * n3) * mix(.8, 1., track);
+        // ---- PBR asphalt (Poly Haven asphalt_02, 3 m tile) with a macro breakup sample; wet patches from ambientCG Asphalt025C
+        vec2 auv = vec2(u, s) / 3.;
+        vec4 A0 = pbrA(L_ASPHALT, auv), N0 = pbrN(L_ASPHALT, auv);
+        float macro = luma(pbrA(L_ASPHALT, vec2(u, s) / 41. + .31).rgb) / .2;
+        float wetM = clamp(uWetness * (.35 + .65 * n2) * 1.4, 0., 1.);
+        vec4 AW = pbrA(L_ASPHALT_WET, vec2(u, s) / 2.5), NW = pbrN(L_ASPHALT_WET, vec2(u, s) / 2.5);
+        vec3 alb = mix(A0.rgb * .55, AW.rgb * .7, wetM * .6) * mix(.85, 1.15, clamp(macro, 0., 2.) * .5) * mix(.82, 1., track) * (.9 + .2 * n2);
+        float rough = mix(N0.b, NW.b, wetM * .6);
+        vec4 nt = mix(N0, NW, wetM * .5);
         float ink = 0.; vec3 inkCol = vec3(.75, .74, .7);
         bool cut = kind > 4.5;  // city segments: ends at junctions
         float k = kind < -.5 ? 9. : mod(kind, 5.);  // -1 = plain asphalt (junctions)
@@ -139,19 +147,33 @@ export function roadMaterial(world) {
           ink += band(au, fHalf.z - .12, fHalf.z + .02) + band(u, -fHalf.z - .02, -fHalf.z + .12);
         } else if (k < 4.5) { ink += band(au, -.06, .06) * dash(s, 3., 12.); }
         if (cut) { float cw = (1. - step(7.5, s)) * step(3., s) + (1. - step(7.5, len - s)) * step(3., len - s); ink += cw * step(.5, fract(u / 1.2)) * step(au, fHalf.w - .6) * step(.5, len - 16.); }
-        ink = clamp(ink, 0., 1.) * (.75 + .25 * n1);
-        alb = mix(alb, inkCol * .6, ink);
-        vec3 col = alb * lightDiffuse(n, vLocal) + alb * headlights(vLocal, n) * 1.5;
-        vec3 v = normalize(-vRel); vec3 rf = reflect(-v, n);
-        float fres = .04 + .96 * pow(1. - max(dot(n, v), 0.), 5.);
-        float wet = uWet * (.55 + .45 * n2) * (1. - ink * .6);
-        // wet asphalt: the sky in puddles and damp patches, not a uniform mirror
-        float puddle = smoothstep(.45, .7, texture(uNoise, vec2(s, u) / 23. + .5).r) * .8 + .2;
-        vec3 rsky = mix(uHorizon, uZenith, clamp(dot(rf, n) * 2., 0., 1.)) + uGlow * .15 + uCityGlow * .12;
-        col += rsky * fres * wet * puddle * .35;
+        // worn paint: the real wear along a painted line (ambientCG Road007's solid edge line) and the aggregate showing through
+        float wearAlong = smoothstep(.28, .55, luma(pbrA(L_MARKINGS, vec2(.0732 + (fract(u * .37) - .5) * .012, s / 8.2)).rgb));
+        ink = clamp(ink, 0., 1.) * mix(.35, 1., wearAlong) * smoothstep(.05, .35, luma(A0.rgb) + .15);
+        alb = mix(alb, inkCol * .62, ink);
+        rough = mix(rough, .55, ink);
+        // ---- standing water: low spots fill first; flat, dark, mirror-like
+        float pud = puddles(vec2(u * 1.3, s), wetM) * (1. - ink) * step(.01, uWetness);
+        alb *= mix(1., .45, max(wetM * .6, pud));
+        rough = mix(rough * mix(1., .45, wetM), .02, pud);
+        vec3 T = normalize(vT), B = normalize(cross(T, n0));
+        vec3 n = perturb(n0, B, T, nt, mix(.9, .1, pud) * mix(1., .4, ink));
+        vec3 v = normalize(-vRel); float nv = max(dot(n, v), 1e-3);
+        vec3 rf = reflect(-v, n);
+        float fade = smoothstep(4000., 600., length(vRel));
+        float sv = sunVis(vLocal, n0);
+        vec3 col = alb * lightDiffuseV(n, vLocal, sv) + alb * headlights(vLocal, n) * 1.5;
+        // specular: sun (GGX), environment (sky / HDRI / the night mirror in puddles)
+        vec3 F = fresnelR(nv, vec3(.04), rough);
+        col += ggxSun(n, v, rough, vec3(.04)) * sv;
+        vec3 env = skyEnv(normalize(vec3(rf.x, max(rf.y, .02), rf.z))) * (.5 + .5 * smoothstep(0., .25, rf.y));
+        if (uEnvW > .001) env = mix(env, envHdri(rf, rough), uEnvW * .8);
+        if (uReflOn > .001) { vec3 m = planarRefl(vRel, (nt.xy - .5) * .02 * (1. - pud * .8)); env = mix(env, m, uReflOn * mix(.25, 1., max(pud, wetM * .5)) * (1. - rough * .7)); }
+        col += env * F * mix(.25, 1., 1. - rough) * fade + env * F * .15 * (1. - fade);
+        float wet = max(wetM * .6, pud);
         vec3 sod = vec3(1., .52, .2);
         if (fLamp.x > 0. && uNight > .01) {
-          vec3 rgt = normalize(cross(vT, n));
+          vec3 rgt = normalize(cross(vT, n0));
           for (int r = 0; r < 2; r++) {
             if (float(r) >= fLamp.w) break;
             float ru = r == 0 ? fLampU.x : fLampU.y;
@@ -161,10 +183,10 @@ export function roadMaterial(world) {
               float ls = ph + (k0 + float(j)) * fLamp.x;
               if (ls < fLampU.z || ls > fLampU.w) continue;
               float lu = ru == 0. ? (u > 0. ? 1.6 : -1.6) : ru - sign(ru) * 1.8;
-              vec3 L = vT * (ls - s) + rgt * (lu - u) + n * fLamp.z;
+              vec3 L = vT * (ls - s) + rgt * (lu - u) + n0 * fLamp.z;
               float d2 = dot(L, L); vec3 Ld = L * inversesqrt(d2);
-              col += alb * sod * 38. * max(dot(n, Ld), 0.) / (d2 + 25.) * uNight;
-              col += sod * pow(max(dot(rf, Ld), 0.), 24.) * wet * fres * 3.5 * uNight;
+              col += alb * sod * 38. * max(dot(n0, Ld), 0.) / (d2 + 25.) * uNight;
+              col += sod * pow(max(dot(rf, Ld), 0.), mix(24., 400., pud)) * wet * F.r * mix(3.5, 12., pud) * uNight * (1. - uReflOn * .5);
             }
           }
         }

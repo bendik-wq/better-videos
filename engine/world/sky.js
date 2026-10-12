@@ -8,21 +8,25 @@ export function buildSky(world) {
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
   const mat = worldMaterial(world.U, {
-    uniforms: { uInvProj: { value: new THREE.Matrix4() }, uCamRot: { value: new THREE.Matrix4() } },
+    uniforms: { uInvProj: { value: new THREE.Matrix4() }, uCamRot: { value: new THREE.Matrix4() }, uGlobeH: { value: world.globeH } },
     vertex: /* glsl */`
       uniform mat4 uInvProj, uCamRot; varying vec3 vDir;
       void main() { vec4 v = uInvProj * vec4(position.xy, 1., 1.); vDir = (uCamRot * vec4(v.xyz / v.w, 0.)).xyz; gl_Position = vec4(position.xy, .99999, 1.); }`,
     fragment: /* glsl */`
-      varying vec3 vDir;
-      void main() { vec3 d = normalize(vDir); vec3 c = skyColor(d);
+      uniform float uGlobeH; varying vec3 vDir;
+      void main() { vec3 d = normalize(vDir);
+        // the earth (globe, terrain patch) is drawn before the sky; pixels whose ray hits it are left alone
+        { vec3 oc = uOrigin - uCenter; float rr = uR + uElev0 + uGlobeH; float b = dot(oc, d), c2 = dot(oc, oc) - rr * rr; if (c2 > 0. && b < 0. && b * b - c2 > 0.) discard; }
+        vec3 c = skyColor(d);
         float Tc = (uCloudFog > 0. ? exp(-uCloudFog * 4000.) : 1.) * (1. - uWhite); c = c * Tc + uCloudCol * (1. - Tc);
         if (uMap > .001) c = mix(c, uMapBg, uMap);
         gl_FragColor = vec4(c, 1.);
         ${GLSL_TONE} }`,
-    depthWrite: false, depthTest: false,
+    depthWrite: false, depthTest: true,
   });
   const mesh = new THREE.Mesh(geo, mat);
-  mesh.frustumCulled = false; mesh.renderOrder = -100; mesh.name = 'sky';
+  // drawn last with a depth test (renderOrder 9, set by World.build): only pixels nothing covered pay for the sky
+  mesh.frustumCulled = false; mesh.renderOrder = 9; mesh.name = 'sky';
   mesh.onBeforeRender = (r, s, cam) => { mat.uniforms.uInvProj.value.copy(cam.projectionMatrixInverse); mat.uniforms.uCamRot.value.extractRotation(cam.matrixWorld); };
   return mesh;
 }

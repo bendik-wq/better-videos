@@ -37,7 +37,7 @@ export function buildGlobe(world, earth, { segW = 512, segH = 256, clouds = true
         vec3 col = globeShade(day, nl, uCloudsOn * texture(uClouds, vUv).r, mk.r, n, vRel);
         col = applyFog(col, vRel, vLocal);
         if (uMap > .001) {
-          vec3 m = mix(uMapWater, uMapLand * 1.6, mk.r);
+          vec3 m = mix(uMapWater, (uMapLand * 1.5 + vec3(dot(day, vec3(.2126, .7152, .0722))) * .09) * 1.03, mk.r);
           m = mix(m, uMapInk * .6, mk.g * .8); m = mix(m, uMapInk * .45, mk.b * .7);
           vec2 gr = vUv * vec2(36., 18.); vec2 fw = fwidth(gr);
           vec2 gl = 1. - smoothstep(vec2(0.), fw * 1.2, abs(fract(gr + .5) - .5));

@@ -57,7 +57,7 @@ export function tower(world, { gx = 0, gz = 0, w = 40, d = 30, c = 5, h = 190, a
           float u = vFac.x, y = vFac.y; bool crownTier = vFac.z > .5;
           float fres = .04 + .96 * pow(1. - max(dot(n, v), 0.), 5.);
           vec3 rf = reflect(-v, n);
-          vec3 refl = skyColor(normalize(rf + vec3(0., .015, 0.)));
+          vec3 refl = skyEnv(normalize(rf + vec3(0., .015, 0.)));
           // city below reflected in the lower glass: warm haze when the reflected ray points down
           refl = mix(refl, uCityGlow * .35 + uHazeCol * .25, smoothstep(.0, -.25, rf.y));
           refl += uSunCol * pow(max(dot(rf, uSunDir), 0.), 300.) * 4.;

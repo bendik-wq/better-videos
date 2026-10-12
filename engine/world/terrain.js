@@ -70,6 +70,16 @@ export function terrainMaterial(world, { polygonOffset = 0 } = {}) {
         }
         vec3 alb = img * mix(vec3(1.), det, near * (1. - smoothstep(.35, .6, slope) * .5));
         alb = mix(alb, vec3(.92, .94, 1.) * .9, smoothstep(.75, .9, dot(img, vec3(.33))) * near * .5); // keep snow clean
+        // close to the camera: real ground (ambientCG Grass004 / Poly Haven dirt), dry and patchy, normal-mapped
+        float nk = (1. - smoothstep(120., 900., dist)) * (1. - uMap);
+        if (nk > .001) {
+          vec2 tp = vG;
+          vec4 Gr = pbrA(L_GRASS, tp / 2.), Di = pbrA(L_DIRT, tp / 2.5);
+          float dry = smoothstep(.35, .75, texture(uNoise, tp / 37.).r * .8 + texture(uNoise, tp / 5.).b * .2 + slope * 2.);
+          vec3 tex = mix(Gr.rgb * vec3(1.05, .92, .62), Di.rgb * .8, dry);
+          alb = mix(alb, tex * (.45 + .5 * luma(alb) / .2) * .7, nk * .75);
+          n = perturb(n, vec3(1., 0., 0.), vec3(0., 0., 1.), mix(pbrN(L_GRASS, tp / 2.), pbrN(L_DIRT, tp / 2.5), dry), nk * .8);
+        }
         vec3 col = alb * lightDiffuse(n, vLocal) + alb * headlights(vLocal, n) * .35;
         // ---- night: suburb street lights on a street grid (160 m blocks, a lamp every 42 m), dense where
         // Black Marble is bright; they average out to the Black Marble glow from altitude.
@@ -106,8 +116,11 @@ export function terrainMaterial(world, { polygonOffset = 0 } = {}) {
         // ---- map
         if (uMap > .001) {
           vec3 mk = uImgOn > .5 ? texture(uMapTex, vUv).rgb : vec3(1., 0., 0.);
-          float shade = .85 + .3 * dot(n, normalize(vec3(-.5, .8, -.3)));
-          vec3 mcol = mix(uMapWater, uMapLand * 1.6 * shade, mk.r);
+          // land: the satellite image desaturated into the map palette + a hillshade, so the regional map
+          // keeps its texture (plains, the Front Range) instead of going flat and dark between city and globe
+          float shade = .7 + .6 * clamp(dot(n, normalize(vec3(-.5, .8, -.3))), 0., 1.);
+          vec3 landC = (uMapLand * 1.4 + vec3(luma(img)) * .09) * shade;
+          vec3 mcol = mix(uMapWater, landC, mk.r);
           float fwm = length(fwidth(vUv)) * 1024.;  // map texels per pixel: lines stay ~1 px, fade when sub-pixel
           mcol = mix(mcol, uMapInk * .45, mk.g * .8);
           mcol = mix(mcol, uMapInk * .85, clamp(mk.b * 1.6, 0., 1.) * .9);

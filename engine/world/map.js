@@ -59,11 +59,14 @@ export function labels(overlay) {
   return api;
 }
 
-// ---------------------------------------------------------------- route line (screen-constant width, drawn on)
-export function routeLine(world, pts, { width = 7, color = [0.88, 0.02, 0.012], lift = 1.5 } = {}) {
-  // pts: [[gx, gz, h], ...]
+// ---------------------------------------------------------------- route line
+// A thick glowing ribbon (screen-constant width: a red core, a soft halo), traced back from the destination,
+// with dashes that crawl forward and a travelling dot with a pulse. The dash period is chosen in
+// screen pixels with a two-octave blend (log2 of metres-per-pixel), so the pattern reads the same
+// from a street corner to a whole state and never pops between scales.
+export function routeLine(world, pts, { width = 9, color = [0.88, 0.02, 0.012], lift = 1.5, halo = 3.2 } = {}) {
   const F = world.frame, n = pts.length, P = [], T = [], S = [], side = [];
-  const v = new THREE.Vector3(), w = new THREE.Vector3();
+  const v = new THREE.Vector3();
   let acc = 0;
   for (let i = 0; i < n; i++) {
     const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
@@ -77,21 +80,45 @@ export function routeLine(world, pts, { width = 7, color = [0.88, 0.02, 0.012], 
   g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('aT', new THREE.Float32BufferAttribute(T, 3)); g.setAttribute('aS', new THREE.Float32BufferAttribute(S, 1)); g.setAttribute('aSide', new THREE.Float32BufferAttribute(side, 1));
   g.setIndex(idx);
   const mat = worldMaterial(world.U, {
-    uniforms: { uDraw: { value: 0 }, uLen: { value: acc }, uWidth: { value: width }, uRes: { value: new THREE.Vector2(1920, 1080) }, uColor: { value: new THREE.Vector3(...color) }, uAlpha: { value: 1 } },
+    uniforms: { uDraw: { value: 0 }, uLen: { value: acc }, uWidth: { value: width }, uHalo: { value: halo }, uRes: { value: new THREE.Vector2(1920, 1080) }, uColor: { value: new THREE.Vector3(...color) }, uAlpha: { value: 1 }, uT: { value: 0 }, uDot: { value: -1 } },
     vertex: /* glsl */`
-      attribute vec3 aT; attribute float aS, aSide; uniform float uWidth; uniform vec2 uRes; varying float vS;
+      attribute vec3 aT; attribute float aS, aSide; uniform float uWidth, uHalo; uniform vec2 uRes; varying float vS, vSide, vMpp;
       void main() {
         vec4 wp = modelMatrix * vec4(position, 1.); vec3 local = wp.xyz + uOrigin; local.y = mix(local.y, flatY(local) + 2., uFlat); wp.y = local.y - uOrigin.y;
         vec4 c0 = projectionMatrix * viewMatrix * wp, c1 = projectionMatrix * viewMatrix * vec4(wp.xyz + aT * 5., 1.);
-        vec2 s0 = c0.xy / c0.w * uRes, s1 = c1.xy / c1.w * uRes; vec2 dir = normalize(s1 - s0 + 1e-6); vec2 nrm = vec2(-dir.y, dir.x);
-        c0.xy += nrm * aSide * uWidth / uRes * c0.w; vS = aS; gl_Position = c0; }`,
+        vec2 s0 = c0.xy / c0.w * uRes * .5, s1 = c1.xy / c1.w * uRes * .5; vec2 dir = normalize(s1 - s0 + 1e-6); vec2 nrm = vec2(-dir.y, dir.x);
+        vMpp = 5. / max(length(s1 - s0), 1e-3);                       // metres per pixel along the line here
+        c0.xy += nrm * aSide * uWidth * uHalo / (uRes * .5) * c0.w; vS = aS; vSide = aSide; gl_Position = c0; }`,
     fragment: /* glsl */`
-      uniform float uDraw, uLen, uAlpha; uniform vec3 uColor; varying float vS;
-      void main() { float d = uDraw * uLen; if (vS > d) discard; gl_FragColor = vec4(uColor, uAlpha); ${GLSL_TONE} }`,
-    transparent: true, depthTest: false, depthWrite: false,
+      uniform float uDraw, uLen, uAlpha, uT, uDot, uWidth, uHalo; uniform vec3 uColor; varying float vS, vSide, vMpp;
+      float dashes(float s, float period) { float x = fract((s - uT * period * .9) / period); return smoothstep(.0, .06, x) * (1. - smoothstep(.55, .61, x)); }
+      void main() {
+        // drawn back from the destination (the end of the route) towards its start
+        float d = (1. - uDraw) * uLen; if (vS < d) discard;
+        float r = abs(vSide) * uHalo;                                  // distance from the centre in core half-widths
+        float core = 1. - smoothstep(.75, 1., r);
+        float glow = exp(-r * r * .55) * .55;
+        // dash period ~ 46 px at any scale: blend the two nearest power-of-two periods in metres
+        float k = log2(max(vMpp * 46., 1e-3)), fk = fract(k);
+        float p0 = exp2(floor(k)), p1 = p0 * 2.;
+        float dash = mix(dashes(vS, p0), dashes(vS, p1), smoothstep(.2, .8, fk));
+        float inner = 1. - smoothstep(.2, .45, r);
+        vec3 c = uColor * (core * (.45 + .2 * dash) + glow * .6) + vec3(1., .5, .4) * inner * dash * .3;
+        // the head of the line and the travelling dot (radius ~ 1.6 core widths, a soft pulse ring)
+        float head = exp(-pow((vS - d) / (vMpp * 18.), 2.)) * step(.002, uDraw) * step(uDraw, .999);
+        float ds = uDot >= 0. ? (vS - uDot * uLen) / vMpp / uWidth : 99.;
+        float rr = length(vec2(ds, r));
+        float dot = 1. - smoothstep(1.5, 1.8, rr);
+        float ring = exp(-pow(rr - 2.4 - 1.2 * fract(uT * .8), 2.) * 3.) * (1. - fract(uT * .8));
+        c += vec3(1., .95, .9) * dot * 1.6 + uColor * ring * .9 + vec3(1., .6, .5) * head * core;
+        float a = max(max(core, glow), max(dot, ring * .8)) * uAlpha;
+        gl_FragColor = vec4(c * a, a); ${GLSL_TONE} }`,
+    transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
   });
   const mesh = new THREE.Mesh(g, mat); mesh.frustumCulled = false; mesh.renderOrder = 100;
-  return { mesh, mat, length: acc, set(draw, alpha = 1, res = null) { mat.uniforms.uDraw.value = draw; mat.uniforms.uAlpha.value = alpha; if (res) mat.uniforms.uRes.value.copy(res); mesh.visible = alpha > 0.001 && draw > 0; } };
+  return { mesh, mat, length: acc,
+    // draw 0..1 drawn on; alpha; res (canvas px); t (s) animates the dashes and pulse; dot 0..1 along the route or < 0 for none
+    set(draw, alpha = 1, res = null, t = 0, dot = -1) { const u = mat.uniforms; u.uDraw.value = draw; u.uAlpha.value = alpha; if (res) u.uRes.value.copy(res); u.uT.value = t; u.uDot.value = dot; mesh.visible = alpha > 0.001 && draw > 0; } };
 }
 
 // ---------------------------------------------------------------- map pin (DOM): drops onto an anchor

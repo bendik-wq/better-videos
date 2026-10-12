@@ -142,7 +142,7 @@ export function buildTrees(world, trees, { fadeFrom = 1500, fadeTo = 3200 } = {}
   trees.forEach((t, i) => { F.surface(t.gx, t.gz, t.h, v); aP.set([v.x, v.y, v.z], i * 3); aS.set([t.size, t.kind ?? 0, t.tint ?? 1, (i * 0.618) % 1], i * 4); });
   g.setAttribute('aP', new THREE.InstancedBufferAttribute(aP, 3)); g.setAttribute('aS', new THREE.InstancedBufferAttribute(aS, 4)); g.instanceCount = n;
   const mat = worldMaterial(world.U, {
-    uniforms: { uAtlas: { value: treeAtlas() }, uFade: { value: new THREE.Vector2(fadeFrom, fadeTo) } },
+    uniforms: { uAtlas: { value: world.lib?.trees ?? treeAtlas() }, uFade: { value: new THREE.Vector2(fadeFrom, fadeTo) } },
     vertex: /* glsl */`
       attribute vec3 aP; attribute vec4 aS; uniform vec2 uFade;
       varying vec2 vUv; varying vec3 vRel, vLocal; varying float vTint, vH;
@@ -160,7 +160,7 @@ export function buildTrees(world, trees, { fadeFrom = 1500, fadeTo = 3200 } = {}
     fragment: /* glsl */`
       uniform sampler2D uAtlas; varying vec2 vUv; varying vec3 vRel, vLocal; varying float vTint, vH;
       void main() { vec4 a = texture(uAtlas, vUv); if (a.a < .5) discard;
-        vec3 alb = a.rgb * vTint;
+        vec3 alb = a.rgb * vTint * 1.9;
         vec3 n = normalize(upAt(vLocal) * .6 - normalize(vRel) * .8);
         vec3 col = alb * lightDiffuse(n, vLocal) * (.6 + .5 * vH) + alb * headlights(vLocal, n);
         col += alb * vec3(1., .6, .28) * .35 * uNight * exp(-length(vLocal.xz - uCityPos.xz) / uCityR) * (1. - vH * .6);
