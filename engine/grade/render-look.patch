@@ -1,0 +1,65 @@
+--- a/engine/render.mjs	2026-10-12 10:33:53.239111146 +0000
++++ b/engine/render.mjs	2026-10-12 10:33:53.249639591 +0000
+@@ -39,6 +39,8 @@
+ import path from 'node:path';
+ import { pathToFileURL } from 'node:url';
+ import crypto from 'node:crypto';
++import * as LK from './looks.js';
++import { lookFinish, finishParams } from './grade/finish.mjs';
+ 
+ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+ const SCRIPT = new URL(import.meta.url).pathname;
+@@ -67,7 +69,11 @@
+ const AA = String(flag('aa') ?? settings.aa ?? 'fxaa');
+ const RSCALE = Number(flag('render-scale') ?? settings.renderScale ?? 1);
+ const FINISH = String(flag('finish') ?? 'chunk'); // 'chunk': finish inside each chunk encode; 'pass': old separate pass
+-const LOOK = String(flag('look') ?? settings.look ?? 'fast');
++const LOOK0 = String(flag('look') ?? settings.look ?? 'fast');
++// settings.look is either the finish chain ('fast' | 'reference') or a grade preset from engine/looks.js
++// ('bright-day', ...): a preset means the fast chain with that look's LUT and finish defaults
++const GRADE = LK.names().includes(LOOK0) ? LOOK0 : (settings.grade ?? null);
++const LOOK = LK.names().includes(LOOK0) ? 'fast' : LOOK0;
+ const SHUTTER = Number(flag('shutter') ?? settings.shutter ?? 0);
+ const NS = SHUTTER > 0 ? Math.max(2, Math.round(Number(flag('samples') ?? settings.shutterSamples ?? 2))) : 1;
+ const CHUNK_S = Number(flag('chunk-seconds') ?? settings.chunkSeconds ?? 5);
+@@ -159,7 +165,7 @@
+ 
+ // ---------- film finish (shared by the chunk encoders and the old separate pass) ----------
+ const finish = project.finish ?? {};
+-const FIN = { hal: finish.halation ?? 18, halA: finish.halationAmount ?? 0.55, bloom: finish.bloom ?? 0.18, vig: finish.vignette ?? 0.55, grain: finish.grain ?? 9 };
++const FIN = GRADE ? finishParams(GRADE, finish) : { hal: finish.halation ?? 18, halA: finish.halationAmount ?? 0.55, bloom: finish.bloom ?? 0.18, vig: finish.vignette ?? 0.55, grain: finish.grain ?? 9 };
+ // `seed` is the absolute frame number the encoder starts at, so a chunk's grain never depends on
+ // which worker rendered it or in what order. Everything else in the chain is per-frame and stateless.
+ const noiseF = (seed) => `noise=c0s=${FIN.grain}:c0f=t+u:c1s=${FIN.grain / 3}:c1f=t+u:c2s=${FIN.grain / 3}:c2f=t+u${seed === undefined ? '' : `:all_seed=${seed}`}`;
+@@ -203,7 +209,7 @@
+   ].join(';');
+ }
+ // [src] (full-range yuvj420p) -> finished picture
+-const finishBody = (seed) => LOOK === 'reference' ? referenceChain(seed) : fastChain(seed);
++const finishBody = (seed) => LOOK === 'reference' ? referenceChain(seed) : GRADE ? lookFinish({ W, H, look: GRADE, fin: FIN, seed, lutQuality: settings.lutQuality ?? 'high' }) : fastChain(seed);
+ // Chunk encoder graph: [0:v] (JPEGs at fps*NS) -> optional shutter blend -> optional finish -> [v]
+ const chunkGraph = (seed) => {
+   const blur = NS > 1 ? `,tmix=frames=${NS},select='eq(mod(n\\,${NS})\\,${NS - 1})',setpts=N/(${fps}*TB)` : '';
+@@ -344,11 +350,11 @@
+   .flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
+ // everything a frame can depend on: engine page code, vendored libraries, the project's own assets
+ const engineFiles = [...fs.readdirSync(path.join(ROOT, 'engine')).filter(f => /\.(js|html)$/.test(f)).sort().map(f => path.join(ROOT, 'engine', f)),
+-  ...walk(path.join(ROOT, 'engine', 'vendor')), ...walk(path.join(ROOT, 'engine', 'world')), ...walk(path.join(ROOT, 'assets', 'world')),
++  ...walk(path.join(ROOT, 'engine', 'vendor')), ...walk(path.join(ROOT, 'engine', 'grade')), ...walk(path.join(ROOT, 'engine', 'world')), ...walk(path.join(ROOT, 'assets', 'world')),
+   ...walk(path.join(projDir, 'assets'))];
+ const fileHash = (f) => crypto.createHash('sha1').update(fs.readFileSync(f)).digest('hex') + path.relative(ROOT, f);
+ const chunkKey = crypto.createHash('sha1').update([fs.readFileSync(tlPath), ...engineFiles.map(fileHash), ...fs.readdirSync(projDir).filter(f => /\.(m?js)$/.test(f)).sort().map(f => fs.readFileSync(path.join(projDir, f))), `${W}x${H}@${fps}`,
+-  JSON.stringify({ gl: GL, aa: AA, scale: RSCALE, finish: FINISH, look: LOOK, shutter: SHUTTER, ns: NS, enc: encArgs, vf: chunkGraph(0), capture: 'cdp-jpeg95' })].join('|')).digest('hex').slice(0, 10);
++  JSON.stringify({ gl: GL, aa: AA, scale: RSCALE, finish: FINISH, look: LOOK, grade: GRADE, shutter: SHUTTER, ns: NS, enc: encArgs, vf: chunkGraph(0), capture: 'cdp-jpeg95' })].join('|')).digest('hex').slice(0, 10);
+ const chunkDir = path.join(out, `chunks-${chunkKey}`);
+ const chunkFile = (a, b) => path.join(chunkDir, `c-${a}-${b}.mp4`);
+ 
+@@ -416,7 +422,7 @@
+   progress.framesDone = doneBefore; progress.phase = 'render'; progress.workers = N; writeProgress(true);
+   log(`[render] ${chunks.length} chunks of ~${CHUNK_S}s, ${chunksDone} already done (cache ${path.basename(chunkDir)}), ${N} worker(s)`);
+   if (!queue.length) return;
+-  const passArgs = [projDir, '--worker', `--gl=${GL}`, `--fps=${fps}`, `--shutter=${SHUTTER}`, `--samples=${NS}`, `--aa=${AA}`, `--render-scale=${RSCALE}`, `--finish=${FINISH}`, `--look=${LOOK}`, ...(DRAFT ? ['--draft'] : [])];
++  const passArgs = [projDir, '--worker', `--gl=${GL}`, `--fps=${fps}`, `--shutter=${SHUTTER}`, `--samples=${NS}`, `--aa=${AA}`, `--render-scale=${RSCALE}`, `--finish=${FINISH}`, `--look=${LOOK0}`, ...(DRAFT ? ['--draft'] : [])];
+   const tries = new Map(); const workers = new Map();
+   const rT0 = Date.now();
+   const tick = (force) => {
