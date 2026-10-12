@@ -35,7 +35,9 @@ bake (`engine/world/bake.py`), a map, a document. 5 = the thumbnail and the cold
 and buildable; 3 = mostly charts and talk; 1 = abstract with no object.
 
 **5. Saturation (Sat), 0 to −2.** −1 if a strong video or documentary on the same angle exists; −2 if
-a top channel in our set already has a multi-million-view video on it (named in the row). A
+a top channel in our set already has a multi-million-view video on it (named in the row). Sat was
+set from our channel lists and general knowledge on 2026-10-12; "none noted" means we didn't find a
+strong competitor, not that none exists. `idea-engine` Step 4 re-checks it with a YouTube search. A
 saturated topic needs a genuinely new angle or primary material to be worth making.
 
 **Total = Out + Life + Res + Vis + Sat.** Ties are broken by lower saturation, then outlier score,
@@ -48,38 +50,38 @@ How to use the score: ≥22 is a candidate; 19–21 needs a sharper angle (try t
 
 ## ★ The top 30
 
-| ★ | Title | Total | Out | F | Life | Res | Vis | Sat | Competition |
+| ★ | Title | Total | Out | F | Life | Res | Vis | Sat | Competition noted |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | How Sanctions on Russia Actually Work | **23** | 9 | 12222 | H | 5 | 5 | 0 | Open lane |
-| 2 | Why Tariffs Don't Work the Way You Think | **23** | 9 | 12222 | H | 5 | 5 | 0 | Open lane |
-| 3 | The Pipeline That Exploded Under the Baltic | **23** | 9 | 22212 | E | 4 | 5 | 0 | Open lane |
-| 4 | How AI Finds a Face in a Billion Photos | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 5 | The Hackers Who Can Turn Off the Power | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 6 | The Uber Files | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 7 | The Bank That Collapsed Over a Weekend | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 8 | How Archegos Lost $20 Billion in Two Days | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 9 | How a Ransomware Gang Shut Down America's Biggest Pipeline | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 10 | The Company That Sells Your Driving to Insurers | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 11 | The Secret Room in an AT&T Building | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 12 | How Hackers Found the Russian Spies Who Poisoned Navalny | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 13 | How a Chinese Balloon Crossed America | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 14 | How Billionaires Hide Their Wealth | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 15 | The Leak That Exposed the Panama Papers | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 16 | The Strait That Controls a Fifth of the World's Oil | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 17 | Why the Dollar Is a Weapon | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 18 | The Hidden Monopoly in Your Glasses | **23** | 8 | 21212 | E | 5 | 5 | 0 | Open lane |
-| 19 | Why Insulin Costs So Much in America | **23** | 8 | 12212 | E | 5 | 5 | 0 | Open lane |
-| 20 | How Boeing Lost Its Way | **23** | 10 | 22222 | H | 5 | 5 | -1 | Netflix Downfall; many |
-| 21 | How a Bank Collapses in 48 Hours | **23** | 9 | 21222 | E | 5 | 5 | -1 | overlaps the SVB idea |
-| 22 | The Fraud Hidden in a German Payment Company | **23** | 9 | 22212 | E | 5 | 5 | -1 | Netflix Skandal! |
-| 23 | The Truck That Rolled Down a Hill | **23** | 9 | 22212 | E | 5 | 5 | -1 | ColdFusion 6.4M |
-| 24 | The Company That Was Worth $47 Billion Then Wasn't | **23** | 9 | 22212 | E | 5 | 5 | -1 | MagnatesMedia, Hulu |
-| 25 | The Collapse of the Bank That Funded Silicon Valley | **23** | 9 | 21222 | E | 5 | 5 | -1 | many explainers 2023 |
-| 26 | The Private Military Company That Fought for Russia | **23** | 9 | 22212 | E | 5 | 5 | -1 | many 2023 |
-| 27 | Why the Suez Canal Got Blocked by One Ship | **23** | 9 | 22212 | E | 5 | 5 | -1 | many explainers 2021 |
-| 28 | The $19 Blood Test That Fooled Silicon Valley | **23** | 10 | 22222 | E | 5 | 5 | -2 | ColdFusion 12M, HBO, Bad Blood |
-| 29 | How FTX Lost $8 Billion of Customer Money | **23** | 10 | 22222 | E | 5 | 5 | -2 | ColdFusion 8.7M, Bloomberg 4.1M |
-| 30 | Nvidia's Monopoly Problem | **22** | 8 | 21212 | H | 5 | 5 | 0 | Open lane |
+| 1 | How Sanctions on Russia Actually Work | **23** | 9 | 12222 | H | 5 | 5 | 0 | none noted |
+| 2 | Why Tariffs Don't Work the Way You Think | **23** | 9 | 12222 | H | 5 | 5 | 0 | none noted |
+| 3 | The Pipeline That Exploded Under the Baltic | **23** | 9 | 22212 | E | 4 | 5 | 0 | none noted |
+| 4 | How AI Finds a Face in a Billion Photos | **23** | 8 | 12212 | E | 5 | 5 | 0 | none noted |
+| 5 | The Hackers Who Can Turn Off the Power | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 6 | The Uber Files | **23** | 8 | 12212 | E | 5 | 5 | 0 | none noted |
+| 7 | The Bank That Collapsed Over a Weekend | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 8 | How Archegos Lost $20 Billion in Two Days | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 9 | How a Ransomware Gang Shut Down America's Biggest Pipeline | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 10 | The Company That Sells Your Driving to Insurers | **23** | 8 | 12212 | E | 5 | 5 | 0 | none noted |
+| 11 | The Secret Room in an AT&T Building | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 12 | The Strait That Controls a Fifth of the World's Oil | **23** | 8 | 21212 | E | 5 | 5 | 0 | none noted |
+| 13 | Why the Dollar Is a Weapon | **23** | 8 | 12212 | E | 5 | 5 | 0 | none noted |
+| 14 | How Boeing Lost Its Way | **23** | 10 | 22222 | H | 5 | 5 | -1 | Netflix Downfall; many |
+| 15 | How a Bank Collapses in 48 Hours | **23** | 9 | 21222 | E | 5 | 5 | -1 | overlaps the SVB idea |
+| 16 | The Fraud Hidden in a German Payment Company | **23** | 9 | 22212 | E | 5 | 5 | -1 | Netflix Skandal! |
+| 17 | The Truck That Rolled Down a Hill | **23** | 9 | 22212 | E | 5 | 5 | -1 | ColdFusion 6.4M |
+| 18 | The Company That Was Worth $47 Billion Then Wasn't | **23** | 9 | 22212 | E | 5 | 5 | -1 | MagnatesMedia, Hulu |
+| 19 | The Collapse of the Bank That Funded Silicon Valley | **23** | 9 | 21222 | E | 5 | 5 | -1 | many explainers 2023 |
+| 20 | The Private Military Company That Fought for Russia | **23** | 9 | 22212 | E | 5 | 5 | -1 | many 2023 |
+| 21 | Why the Suez Canal Got Blocked by One Ship | **23** | 9 | 22212 | E | 5 | 5 | -1 | many explainers 2021 |
+| 22 | The $19 Blood Test That Fooled Silicon Valley | **23** | 10 | 22222 | E | 5 | 5 | -2 | ColdFusion 12M, HBO, Bad Blood |
+| 23 | How FTX Lost $8 Billion of Customer Money | **23** | 10 | 22222 | E | 5 | 5 | -2 | ColdFusion 8.7M, Bloomberg 4.1M |
+| 24 | Nvidia's Monopoly Problem | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
+| 25 | Why AI Needs Nuclear Power | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
+| 26 | The War Over AI Chips at the Border | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
+| 27 | Why Google Pays Apple $20 Billion a Year | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
+| 28 | The $34 Trillion Question | **22** | 8 | 22202 | H | 5 | 5 | 0 | none noted |
+| 29 | The Chinese Developer That Owed $300 Billion | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
+| 30 | How the Houthis Rerouted World Trade | **22** | 8 | 21212 | H | 5 | 5 | 0 | none noted |
 
 The top 30 lean toward investigations with primary documents (court records, leaks, filings) and named events, which is where our research moat and our 3D reconstruction pay off most. AI ideas score lower on outlier factors but higher on visual potential; pair one with a known villain or event (F4) to lift it.
 
@@ -96,8 +98,8 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 6 |  | **The People Who Teach AI to Be Polite** | A desk in a dark room in Nairobi, one screen glowing, thumbs-up/down cards | Behind the chatbot's manners are people paid by the hour to read the worst things online. | 12112 | 7 | E | 4 | 4 | 0 | **20** | TIME investigation (2023) on outsourced labelling; Scale AI reporting |
 | 7 |  | **Why AI Makes Things Up** | A confident tour guide silhouette pointing at a building that dissolves into fog | It cited six court cases. None of them existed. | 12112 | 7 | E | 5 | 4 | 0 | **21** | Mata v. Avianca sanctions order (2023); hallucination research |
 | 8 |  | **The AI That Learned to Lie in a Test** | A chess piece casting the shadow of a different piece | In a safety test, the model was asked if it was a robot. It said no. | 12212 | 8 | E | 4 | 4 | 0 | **21** | OpenAI GPT-4 system card (TaskRabbit CAPTCHA anecdote); Apollo Research evals |
-| 9 | ★30 | **Nvidia's Monopoly Problem** | One chip on a pedestal, every road on a dark map leading to it | One company sells most of the shovels in the biggest gold rush of the century. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Nvidia 10-K; DOJ/EU antitrust reporting; CUDA history |
-| 10 |  | **Why AI Needs Nuclear Power** | A cooling tower beside a server hall under one sodium light | Tech companies are now restarting nuclear reactors. One of them is Three Mile Island. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Constellation–Microsoft PPA (2024); NRC filings; Amazon/Google SMR deals |
+| 9 | ★24 | **Nvidia's Monopoly Problem** | One chip on a pedestal, every road on a dark map leading to it | One company sells most of the shovels in the biggest gold rush of the century. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Nvidia 10-K; DOJ/EU antitrust reporting; CUDA history |
+| 10 | ★25 | **Why AI Needs Nuclear Power** | A cooling tower beside a server hall under one sodium light | Tech companies are now restarting nuclear reactors. One of them is Three Mile Island. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Constellation–Microsoft PPA (2024); NRC filings; Amazon/Google SMR deals |
 | 11 |  | **The Hidden Water Bill of a Chatbot** | A glass of water on a server rack, red loop on the waterline | Every conversation with a chatbot comes with a glass of water. Nobody sees the glass. | 11212 | 7 | H | 4 | 5 | 0 | **20** | Li et al. "Making AI Less Thirsty"; company sustainability reports; local water board records |
 | 12 |  | **What Happens When AI Trains on AI** | A photocopy of a photocopy fading into grey | Feed a model its own output and within a few generations it forgets what a dog looks like. | 11102 | 5 | E | 5 | 4 | 0 | **19** | Shumailov et al., Nature 2024 (model collapse) |
 | 13 |  | **The Race to Build AGI Has No Finish Line** | Two rockets on two lit pads, countdown clocks on both | The people building it say it could be the most dangerous technology ever made. They're building it anyway. | 12212 | 8 | H | 4 | 4 | 0 | **20** | CAIS extinction-risk statement (2023); lab charters; interviews on record |
@@ -120,7 +122,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 30 |  | **Why Chatbots Agree With Everything You Say** | A mirror on a pedestal reflecting a nodding silhouette | The model was trained to be liked. So it learned to flatter. | 12102 | 6 | E | 4 | 4 | 0 | **19** | OpenAI sycophancy rollback post (2025); Anthropic sycophancy paper |
 | 31 |  | **The Most Expensive Mistake in AI History** | A gavel over a chat bubble, red loop on one word | One wrong answer in a demo wiped about a hundred billion dollars off a company's value. | 21212 | 8 | E | 5 | 4 | 0 | **22** | Google Bard demo, Feb 2023; market data |
 | 32 | ★4 | **How AI Finds a Face in a Billion Photos** | A crowd frozen as boxes snap onto heads, one turning red | A start-up scraped billions of photos from the internet. The police were its customers. | 12212 | 8 | E | 5 | 5 | 0 | **23** | Clearview AI lawsuits; regulators' fines (UK ICO, EU DPAs); NYT reporting |
-| 33 |  | **The War Over AI Chips at the Border** | A single crate under a floodlight at a checkpoint | A graphics card the size of a book is now treated like a weapon. | 21212 | 8 | H | 5 | 5 | 0 | **22** | BIS export control rules (2022–25); smuggling prosecutions |
+| 33 | ★26 | **The War Over AI Chips at the Border** | A single crate under a floodlight at a checkpoint | A graphics card the size of a book is now treated like a weapon. | 21212 | 8 | H | 5 | 5 | 0 | **22** | BIS export control rules (2022–25); smuggling prosecutions |
 | 34 |  | **Where AI Data Centres Get Their Power** | Power lines on a dark map bending toward one site | Utilities are delaying coal plant closures to keep the chatbots running. | 21212 | 8 | H | 4 | 5 | 0 | **21** | Utility IRPs; FERC filings; IEA "Energy and AI" (2025) |
 | 35 |  | **The Real Cost of One AI Answer** | A single droplet of light falling into a power meter | Ask a chatbot one question. Now count the electricity. | 21102 | 6 | H | 4 | 5 | 0 | **19** | IEA; Epoch AI; academic energy estimates |
 | 36 |  | **The AI Company That Was Worth Billions With No Product** | An empty glass box on a pedestal with a price tag | It raised more than a billion dollars before it shipped a single thing. | 21211 | 7 | T | 3 | 4 | 0 | **16** | Funding announcements (various labs) |
@@ -168,7 +170,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | # | ★ | Title | Thumbnail concept | Hook | F | Out | Life | Res | Vis | Sat | Total | Key sources |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 70 |  | **How Google Makes Money From Your Searches** | A single search bar on black with coins falling through it | You've never paid Google a cent. It made over two hundred billion dollars from you last year. | 21102 | 6 | E | 5 | 4 | -1 (many) | **19** | Alphabet 10-K; US v. Google ruling (2024) |
-| 71 |  | **Why Google Pays Apple $20 Billion a Year** | Two towers on a skyline with a thick golden cable between them | Every year, one rival writes the other a cheque bigger than most countries' budgets. | 21212 | 8 | H | 5 | 5 | 0 | **22** | US v. Google trial testimony; ruling (Aug 2024) |
+| 71 | ★27 | **Why Google Pays Apple $20 Billion a Year** | Two towers on a skyline with a thick golden cable between them | Every year, one rival writes the other a cheque bigger than most countries' budgets. | 21212 | 8 | H | 5 | 5 | 0 | **22** | US v. Google trial testimony; ruling (Aug 2024) |
 | 72 |  | **The Monopoly Trial That Could Break Up Google** | A gavel striking a search bar | A judge has ruled that Google is a monopolist. Now comes the hard part. | 12222 | 9 | T | 5 | 4 | 0 | **20** | Court opinions; remedies decision |
 | 73 |  | **Amazon's Secret Second Business** | A cloud above a warehouse, the cloud lit gold and the warehouse dark | The online store isn't where Amazon makes most of its profit. | 21102 | 6 | E | 5 | 5 | 0 | **21** | Amazon 10-K segment data |
 | 74 |  | **Why Amazon Sells Things at a Loss** | A cheap item on a pedestal, a pull-back reveals a vault of Prime cards | Amazon will lose money on what you buy. It wants something else. | 11101 | 4 | E | 5 | 4 | 0 | **18** | Amazon 10-K; FTC v. Amazon complaint (2023) |
@@ -203,9 +205,9 @@ The top 30 lean toward investigations with primary documents (court records, lea
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 99 |  | **Why Are Prices Never Going Back Down?** | A loaf on a pedestal while its price tag re-prints higher | Inflation slowed. Prices didn't fall. That's not a bug. | 12202 | 7 | H | 5 | 5 | 0 | **21** | BLS CPI; Fed communications |
 | 100 |  | **Who Actually Prints Money?** | A server rack where the printing press should be | Most money isn't printed. It's typed by your bank. | 12102 | 6 | E | 5 | 4 | 0 | **20** | Bank of England "Money creation in the modern economy" (2014) |
-| 101 |  | **The $34 Trillion Question** | A national debt clock on a dark wall, digits blurring | America owes more than ever. Who is it actually owed to? | 22202 | 8 | H | 5 | 5 | 0 | **22** | Treasury Monthly Statement; TIC data (foreign holders) |
+| 101 | ★28 | **The $34 Trillion Question** | A national debt clock on a dark wall, digits blurring | America owes more than ever. Who is it actually owed to? | 22202 | 8 | H | 5 | 5 | 0 | **22** | Treasury Monthly Statement; TIC data (foreign holders) |
 | 102 |  | **Why Gold Is Suddenly Expensive Again** | A gold bar in a vault under one bulb, price above it | Central banks are buying gold faster than at any time in decades. What do they know? | 21202 | 7 | H | 5 | 5 | 0 | **21** | World Gold Council data; IMF reserve data |
-| 103 | ★21 | **How a Bank Collapses in 48 Hours** | A queue outside a bank at dawn in time-lapse | In March 2023, depositors pulled forty-two billion dollars from one bank in a single day. | 21222 | 9 | E | 5 | 5 | -1 (overlaps the SVB idea) | **23** | FDIC/Fed SVB reviews; Barr report (2023) |
+| 103 | ★15 | **How a Bank Collapses in 48 Hours** | A queue outside a bank at dawn in time-lapse | In March 2023, depositors pulled forty-two billion dollars from one bank in a single day. | 21222 | 9 | E | 5 | 5 | -1 (overlaps the SVB idea) | **23** | FDIC/Fed SVB reviews; Barr report (2023) |
 | 104 |  | **The Fed's Secret Bailout** | A crane lifting a sinking ship labelled "bank" | In 2008, the Fed lent trillions. For years, it wouldn't say to whom. | 12212 | 8 | E | 5 | 4 | 0 | **22** | Bloomberg FOIA case; Fed disclosures (2011) |
 | 105 |  | **Why Housing Got So Expensive** | A small house on a pedestal with a price tag that keeps growing | A house is the same house it was in 1990. The price isn't. | 22102 | 7 | E | 5 | 5 | -1 (many) | **21** | FHFA HPI; Case-Shiller; zoning research |
 | 106 |  | **The Company That Owns Your Rent** | A tower block where every door has the same logo | Your landlord might be a software program. | 12212 | 8 | H | 5 | 4 | 0 | **21** | DOJ v. RealPage (2024); ProPublica investigation (2022) |
@@ -242,10 +244,10 @@ The top 30 lean toward investigations with primary documents (court records, lea
 
 | # | ★ | Title | Thumbnail concept | Hook | F | Out | Life | Res | Vis | Sat | Total | Key sources |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 135 | ★28 | **The $19 Blood Test That Fooled Silicon Valley** | A tiny vial on a pedestal, the machine behind it hollow | Fifty tests from one drop of blood. It was worth nine billion dollars. It didn't work. | 22222 | 10 | E | 5 | 5 | -2 (ColdFusion 12M, HBO, Bad Blood) | **23** | US v. Holmes trial record; Carreyrou "Bad Blood"; SEC complaint |
-| 136 | ★29 | **How FTX Lost $8 Billion of Customer Money** | A glass lobby in the Bahamas, a chair turned over | The customers' money was supposed to sit untouched. It didn't. | 22222 | 10 | E | 5 | 5 | -2 (ColdFusion 8.7M, Bloomberg 4.1M) | **23** | US v. Bankman-Fried trial; bankruptcy filings (Ray) |
-| 137 | ★22 | **The Fraud Hidden in a German Payment Company** | A bank statement for €1.9 billion with a red loop on a missing account | Its auditors signed off for a decade. Then €1.9 billion turned out not to exist. | 22212 | 9 | E | 5 | 5 | -1 (Netflix Skandal!) | **23** | Wirecard insolvency; FT investigation (McCrum); Bundestag inquiry |
-| 138 | ★23 | **The Truck That Rolled Down a Hill** | A truck on a slope at dawn, no engine sound | The promotional video showed a truck driving. It was rolling downhill. | 22212 | 9 | E | 5 | 5 | -1 (ColdFusion 6.4M) | **23** | SEC v. Nikola; Milton trial; Hindenburg report |
+| 135 | ★22 | **The $19 Blood Test That Fooled Silicon Valley** | A tiny vial on a pedestal, the machine behind it hollow | Fifty tests from one drop of blood. It was worth nine billion dollars. It didn't work. | 22222 | 10 | E | 5 | 5 | -2 (ColdFusion 12M, HBO, Bad Blood) | **23** | US v. Holmes trial record; Carreyrou "Bad Blood"; SEC complaint |
+| 136 | ★23 | **How FTX Lost $8 Billion of Customer Money** | A glass lobby in the Bahamas, a chair turned over | The customers' money was supposed to sit untouched. It didn't. | 22222 | 10 | E | 5 | 5 | -2 (ColdFusion 8.7M, Bloomberg 4.1M) | **23** | US v. Bankman-Fried trial; bankruptcy filings (Ray) |
+| 137 | ★16 | **The Fraud Hidden in a German Payment Company** | A bank statement for €1.9 billion with a red loop on a missing account | Its auditors signed off for a decade. Then €1.9 billion turned out not to exist. | 22212 | 9 | E | 5 | 5 | -1 (Netflix Skandal!) | **23** | Wirecard insolvency; FT investigation (McCrum); Bundestag inquiry |
+| 138 | ★17 | **The Truck That Rolled Down a Hill** | A truck on a slope at dawn, no engine sound | The promotional video showed a truck driving. It was rolling downhill. | 22212 | 9 | E | 5 | 5 | -1 (ColdFusion 6.4M) | **23** | SEC v. Nikola; Milton trial; Hindenburg report |
 | 139 |  | **The Man Who Faked a Gold Mine** | A core sample under a microscope sprinkled with gold flakes | A Canadian mining company was worth six billion dollars. The gold had been added to the samples. | 21212 | 8 | E | 4 | 5 | 0 | **22** | Bre-X histories; Indonesian investigation; court records |
 | 140 |  | **How Enron Hid Billions in Plain Sight** | A tower of glass where one floor is painted black | The seventh-largest company in America collapsed in about six weeks. | 21212 | 8 | E | 5 | 5 | -2 (ColdFusion 8.7M) | **21** | Powers Report; SEC filings; trial records |
 | 141 |  | **Madoff: The Biggest Ponzi Scheme Ever** | A pyramid of champagne glasses filled from the bottom row | He promised steady returns every single month. That was the clue. | 21212 | 8 | E | 5 | 4 | -2 (Netflix, many YouTube docs) | **20** | SEC OIG report (2009); Markopolos testimony |
@@ -254,14 +256,14 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 144 |  | **The Hackers Who Robbed a Central Bank** | A SWIFT terminal glowing in an empty office at night | A typo stopped the hackers from stealing a billion dollars. They still got eighty-one million. | 21212 | 8 | E | 5 | 5 | -1 (BBC podcast Lazarus Heist) | **22** | Bangladesh Bank heist; DOJ complaint v. Park Jin Hyok (2018) |
 | 145 |  | **The Biggest Crypto Heist in History** | A vault drained through a pinhole into the dark | North Korean hackers stole about one and a half billion dollars in one afternoon. | 21212 | 8 | H | 5 | 4 | 0 | **21** | FBI statement on Bybit hack (2025); chain analytics |
 | 146 |  | **The Crypto King Who Died With the Passwords** | A laptop in a sealed evidence bag under a lamp | The only person with the keys died in India. Two hundred million dollars went with him. | 21212 | 8 | E | 4 | 4 | 0 | **21** | QuadrigaCX: Ontario Securities Commission report (2020) |
-| 147 | ★24 | **The Company That Was Worth $47 Billion Then Wasn't** | A deflating office chair in an empty co-working space | WeWork rented offices. It said it was a tech company. | 22212 | 9 | E | 5 | 5 | -1 (MagnatesMedia, Hulu) | **23** | WeWork S-1 (2019); bankruptcy filings |
+| 147 | ★18 | **The Company That Was Worth $47 Billion Then Wasn't** | A deflating office chair in an empty co-working space | WeWork rented offices. It said it was a tech company. | 22212 | 9 | E | 5 | 5 | -1 (MagnatesMedia, Hulu) | **23** | WeWork S-1 (2019); bankruptcy filings |
 | 148 |  | **The Fake Billionaire Heiress** | A forged bank letter on a hotel desk | She convinced New York's banks and hotels she was worth sixty million dollars. | 11212 | 7 | E | 4 | 4 | 0 | **20** | People v. Sorokin trial records |
 | 149 |  | **How Two Friends Built the Dark Web's Biggest Market** | A laptop in a public library with a single lit screen | The FBI caught him in a library, with his laptop open. | 21212 | 8 | E | 5 | 5 | -2 (MagnatesMedia 6.0M, Fern 16.8M) | **21** | US v. Ulbricht; DOJ complaints; Bearman's reporting |
 | 150 |  | **The Biggest Accounting Fraud in China** | A coffee cup on a pedestal with a fake receipt | A coffee chain faked over three hundred million dollars in sales. It survived. | 21212 | 8 | E | 4 | 4 | 0 | **21** | Luckin Coffee SEC settlement (2020); Muddy Waters report |
-| 151 | ★20 | **How Boeing Lost Its Way** | A loose door plug on a hangar floor under a work light | A door plug blew out of a new plane at sixteen thousand feet. Four bolts were missing. | 22222 | 10 | H | 5 | 5 | -1 (Netflix Downfall; many) | **23** | NTSB report (Alaska 1282); House 737 MAX report (2020); DOJ agreement |
+| 151 | ★14 | **How Boeing Lost Its Way** | A loose door plug on a hangar floor under a work light | A door plug blew out of a new plane at sixteen thousand feet. Four bolts were missing. | 22222 | 10 | H | 5 | 5 | -1 (Netflix Downfall; many) | **23** | NTSB report (Alaska 1282); House 737 MAX report (2020); DOJ agreement |
 | 152 |  | **The Deadliest Software Bug in Aviation** | A cockpit instrument nudging down on its own | A single sensor could push the nose of a plane down. Pilots weren't told it existed. | 21212 | 8 | E | 5 | 5 | -1 (Netflix Downfall) | **22** | House Transportation Committee MAX report; Ethiopian and Indonesian accident reports |
-| 153 | ★25 | **The Collapse of the Bank That Funded Silicon Valley** | A tech campus with one bank tower going dark | The bank of start-ups failed because of the safest investment there is. | 21222 | 9 | E | 5 | 5 | -1 (many explainers 2023) | **23** | Fed SVB review; FDIC report |
-| 154 |  | **The Chinese Developer That Owed $300 Billion** | A ghost city at night with only streetlights | It built cities for a million people. It owed more than many countries' GDP. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Evergrande filings; HK court liquidation order (2024) |
+| 153 | ★19 | **The Collapse of the Bank That Funded Silicon Valley** | A tech campus with one bank tower going dark | The bank of start-ups failed because of the safest investment there is. | 21222 | 9 | E | 5 | 5 | -1 (many explainers 2023) | **23** | Fed SVB review; FDIC report |
+| 154 | ★29 | **The Chinese Developer That Owed $300 Billion** | A ghost city at night with only streetlights | It built cities for a million people. It owed more than many countries' GDP. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Evergrande filings; HK court liquidation order (2024) |
 | 155 |  | **Why 1MDB Is the Heist of the Century** | A superyacht in a dark harbour, red loop on the name | A Malaysian development fund paid for a Hollywood film, a yacht and a Picasso. | 21212 | 8 | E | 5 | 5 | -1 (book, Netflix) | **22** | DOJ kleptocracy forfeiture complaints; Goldman settlement; Billion Dollar Whale |
 | 156 | ★8 | **How Archegos Lost $20 Billion in Two Days** | A tall stack of chips on a narrow plinth swaying | One family office borrowed so much that when it fell, banks lost ten billion dollars. | 21212 | 8 | E | 5 | 5 | 0 | **23** | SEC v. Hwang; Credit Suisse report (Paul Weiss) |
 | 157 |  | **The Collapse of the World's Biggest Shipping Company** | A container ship at anchor with sealed holds | In 2016 a shipping giant went bankrupt and its ships were stranded at sea with cargo nobody could unload. | 21102 | 6 | E | 4 | 5 | 0 | **20** | Hanjin bankruptcy filings; port reports |
@@ -292,23 +294,23 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 177 |  | **How Facial Recognition Got a Man Arrested for Nothing** | A mugshot board where the wrong face is circled in red | The software picked him. He'd never been to the shop. | 12212 | 8 | E | 4 | 4 | 0 | **21** | Williams v. City of Detroit settlement (2024); ACLU |
 | 178 |  | **Who Watches the Watchmen: Palantir Part Two** | A single lit window in a dark ministry building | (Follow-up episode) Palantir's government contracts since 2024 | 11212 | 7 | T | 4 | 5 | 0 | **18** | USAspending; NHS FDP contract; ICE contracts |
 | 179 |  | **The Private Spies Who Work for Billionaires** | A hotel lobby where one guest's newspaper has eye holes | Former intelligence officers now work for whoever pays. | 12212 | 8 | E | 4 | 4 | 0 | **21** | Black Cube/Weinstein reporting (New Yorker 2017); court cases |
-| 180 | ★12 | **How Hackers Found the Russian Spies Who Poisoned Navalny** | A phone bill printout with one line circled red | The team was found using leaked phone records and flight manifests bought online. | 21212 | 8 | E | 5 | 5 | 0 | **23** | Bellingcat/The Insider investigation (2020); Navalny call recording |
+| 180 |  | **How Hackers Found the Russian Spies Who Poisoned Navalny** | A phone bill printout with one line circled red | The team was found using leaked phone records and flight manifests bought online. | 21212 | 8 | E | 5 | 5 | -1 (Oscar-winning documentary Navalny (2022)) | **22** | Bellingcat/The Insider investigation (2020); Navalny call recording |
 | 181 |  | **The Man Who Built the World's Chip Factory** | A silhouette at the end of a long dark table, a wafer glowing in front of him | At fifty-four, passed over at Texas Instruments, he moved to Taiwan and built a company the world now can't live without. | 11112 | 6 | E | 5 | 4 | 0 | **20** | TSMC histories; Chang interviews on record; Chip War |
 | 182 |  | **The Secret Courts That Approve Surveillance** | A courtroom with no audience and the blinds down | A court that almost never says no, meeting in secret. | 12212 | 8 | E | 4 | 4 | 0 | **21** | FISC annual statistics; declassified opinions (278,000 misuse figure, 2023) |
 | 183 |  | **Why the CIA Bought a Venture Capital Firm** | A briefcase full of start-up business plans under a desk lamp | The CIA has its own venture capital fund. It invested in a company you use. | 21112 | 7 | E | 5 | 4 | 0 | **21** | In-Q-Tel portfolio; Google Earth/Keyhole history |
-| 184 | ★13 | **How a Chinese Balloon Crossed America** | A white balloon over Montana in sodium dusk light | For a week, a balloon the size of three buses drifted over military bases. | 21212 | 8 | E | 5 | 5 | 0 | **23** | Pentagon statements (Feb 2023); flight track reconstructions |
+| 184 |  | **How a Chinese Balloon Crossed America** | A white balloon over Montana in sodium dusk light | For a week, a balloon the size of three buses drifted over military bases. | 21212 | 8 | E | 5 | 5 | -1 (heavy 2023 news coverage) | **22** | Pentagon statements (Feb 2023); flight track reconstructions |
 | 185 |  | **The Hidden Fees Politicians Get From Lobbyists** | A corridor of doors where one figure holds every key | One hour of a former senator's time can cost more than a teacher's salary. | 12112 | 7 | E | 5 | 4 | 0 | **21** | Senate LDA filings; OpenSecrets revolving door data |
 | 186 |  | **Why Companies Spend Billions on Lobbying** | A bill on a desk moving through doors collecting stamps | For every dollar spent on lobbying, some companies get back a hundred. | 12112 | 7 | E | 4 | 4 | 0 | **20** | OpenSecrets; academic returns-on-lobbying studies (Alexander et al.) |
-| 187 | ★14 | **How Billionaires Hide Their Wealth** | A letterbox wall with ten thousand company names | The Pandora Papers named over three hundred politicians and officials. | 12212 | 8 | E | 5 | 5 | 0 | **23** | ICIJ Pandora/Panama Papers databases |
+| 187 |  | **How Billionaires Hide Their Wealth** | A letterbox wall with ten thousand company names | The Pandora Papers named over three hundred politicians and officials. | 12212 | 8 | E | 5 | 5 | -1 (ICIJ and many explainers) | **22** | ICIJ Pandora/Panama Papers databases |
 | 188 |  | **The Island Where Companies Have No Owners** | A tiny island at night with one lit office among palm trees | One building in the Cayman Islands is the registered home of thousands of companies. | 21112 | 7 | E | 5 | 5 | 0 | **22** | Ugland House reporting; GAO report (2008) |
 | 189 |  | **Why Your Country Can't Find Its Own Billionaires** | A redacted ownership register, one line unredacted | EU countries built registers of who really owns companies. A court closed them to the public. | 12212 | 8 | E | 4 | 4 | 0 | **21** | CJEU ruling (Nov 2022) on beneficial ownership registers |
 | 190 |  | **The Spy Who Sold America's Secrets for Diamonds** | A dead-drop brick in a park wall | He worked inside the FBI and sold secrets for twenty years. | 11212 | 7 | E | 5 | 4 | 0 | **21** | Robert Hanssen: DOJ OIG report (2003) |
-| 191 | ★15 | **The Leak That Exposed the Panama Papers** | A hard drive on a pedestal glowing like a reactor core | An anonymous source sent a journalist 2.6 terabytes of data. | 21212 | 8 | E | 5 | 5 | 0 | **23** | ICIJ; Süddeutsche Zeitung; "The Panama Papers" (Obermayer) |
+| 191 |  | **The Leak That Exposed the Panama Papers** | A hard drive on a pedestal glowing like a reactor core | An anonymous source sent a journalist 2.6 terabytes of data. | 21212 | 8 | E | 5 | 5 | -1 (Netflix film The Laundromat; ICIJ explainers) | **22** | ICIJ; Süddeutsche Zeitung; "The Panama Papers" (Obermayer) |
 | 192 |  | **How Governments Shut Down the Internet** | A map where one country's lights blink out | In 2019, a country switched off the internet for over five months. | 21212 | 8 | E | 4 | 5 | 0 | **22** | Access Now #KeepItOn; NetBlocks; Kashmir shutdown |
 | 193 |  | **The Firewall Around China** | A great wall of light across the map with one gap | The world's largest country has its own internet. Here's how the wall works. | 11112 | 6 | E | 4 | 5 | 0 | **20** | Academic studies; Citizen Lab; GreatFire |
 | 194 |  | **Who Really Owns the News?** | One hand holding strings to dozens of newspaper mastheads | A handful of companies own most of what you read. | 12112 | 7 | E | 4 | 4 | 0 | **20** | Pew Research; FCC ownership data |
 | 195 |  | **How Elections Are Hacked Without Touching a Vote** | A map swarming with identical dots converging on one state | Nobody changed a ballot. They changed what people saw. | 12212 | 8 | E | 5 | 4 | 0 | **22** | Mueller report (2019) vol. 1; Senate Intelligence report |
-| 196 | ★26 | **The Private Military Company That Fought for Russia** | A shipping container in a desert with a skull painted on it | It was a company. It had tanks. It marched on Moscow. | 22212 | 9 | E | 5 | 5 | -1 (many 2023) | **23** | Wagner Group reporting; US Treasury sanctions; mutiny June 2023 |
+| 196 | ★20 | **The Private Military Company That Fought for Russia** | A shipping container in a desert with a skull painted on it | It was a company. It had tanks. It marched on Moscow. | 22212 | 9 | E | 5 | 5 | -1 (many 2023) | **23** | Wagner Group reporting; US Treasury sanctions; mutiny June 2023 |
 | 197 |  | **How Big Tobacco Wrote the Playbook for Big Tech** | A cigarette on a pedestal beside a phone, same lighting | The internal memos said "doubt is our product". | 12112 | 7 | E | 5 | 4 | 0 | **21** | Truth Tobacco Industry Documents (UCSF); "Merchants of Doubt" |
 
 ## Geopolitics, trade and war
@@ -316,9 +318,9 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | # | ★ | Title | Thumbnail concept | Hook | F | Out | Life | Res | Vis | Sat | Total | Key sources |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 198 |  | **Why Russia's Invasion Logistics Failed** | A convoy stuck on a muddy road, drone view | A forty-mile convoy sat outside Kyiv for days. The reason was tyres. | 21212 | 8 | E | 5 | 5 | -2 (Wendover 10M) | **21** | OSINT tyre analysis (Trent Telenko); Maxar imagery; RUSI reports |
-| 199 | ★16 | **The Strait That Controls a Fifth of the World's Oil** | A narrow strait with tankers in single file at dusk | One narrow channel. If it closes, the price of everything changes. | 21212 | 8 | E | 5 | 5 | 0 | **23** | EIA chokepoint data (Hormuz) |
-| 200 |  | **How the Houthis Rerouted World Trade** | A container ship turning away from a red-lit strait | A rebel group with drones forced the world's biggest shipping companies to sail around Africa. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Suez Canal Authority revenue; shipping line statements; UKMTO |
-| 201 | ★27 | **Why the Suez Canal Got Blocked by One Ship** | A ship wedged across a canal, a digger tiny beside it | For six days, one ship held up about ten billion dollars of trade a day. | 22212 | 9 | E | 5 | 5 | -1 (many explainers 2021) | **23** | Lloyd's List estimate; SCA statements (Ever Given, 2021) |
+| 199 | ★12 | **The Strait That Controls a Fifth of the World's Oil** | A narrow strait with tankers in single file at dusk | One narrow channel. If it closes, the price of everything changes. | 21212 | 8 | E | 5 | 5 | 0 | **23** | EIA chokepoint data (Hormuz) |
+| 200 | ★30 | **How the Houthis Rerouted World Trade** | A container ship turning away from a red-lit strait | A rebel group with drones forced the world's biggest shipping companies to sail around Africa. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Suez Canal Authority revenue; shipping line statements; UKMTO |
+| 201 | ★21 | **Why the Suez Canal Got Blocked by One Ship** | A ship wedged across a canal, a digger tiny beside it | For six days, one ship held up about ten billion dollars of trade a day. | 22212 | 9 | E | 5 | 5 | -1 (many explainers 2021) | **23** | Lloyd's List estimate; SCA statements (Ever Given, 2021) |
 | 202 |  | **The Panama Canal Is Running Out of Water** | A lock gate with a dark waterline far above the water | The canal needs a lake to fill its locks. The lake is drying up. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Panama Canal Authority draft restrictions (2023) |
 | 203 |  | **China's Plan to Win Without Fighting** | A chess piece casting a long shadow across a map of ports | China has built or financed ports on every continent. | 12212 | 8 | E | 4 | 5 | 0 | **22** | AidData; Belt and Road databases; CFR trackers |
 | 204 |  | **Why China Builds Islands in the Sea** | A sandbar becoming a runway in a satellite time-lapse | In three years, reefs became airfields. | 21212 | 8 | E | 5 | 5 | -1 (many) | **22** | CSIS AMTI satellite imagery; tribunal ruling (2016) |
@@ -335,7 +337,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 215 |  | **How North Korea Pays for Its Missiles** | A laptop in a dark room linked by a red line to a missile on a map | Its biggest export may be stolen cryptocurrency. | 21212 | 8 | E | 5 | 5 | -1 (PolyMatter 5.1M) | **22** | UN Panel of Experts reports; Chainalysis |
 | 216 |  | **Why Saudi Arabia Is Building a 170 km City** | A glowing line across a desert at dusk | It's a city in a straight line. Two hundred metres wide. In the desert. | 21102 | 6 | H | 4 | 5 | -2 (Neo 8.6M) | **17** | NEOM plans; Bloomberg/WSJ reporting on scaling back |
 | 217 |  | **The Country That Sells Its Passport** | A passport on a pedestal with a price tag | For a few hundred thousand dollars, you can become a citizen of a Caribbean island. | 21112 | 7 | E | 4 | 4 | 0 | **20** | CBI program data; EU statements; Henley index |
-| 218 | ★17 | **Why the Dollar Is a Weapon** | A bank door with a flag taped over the lock | With one decision, America froze about three hundred billion dollars of Russia's reserves. | 12212 | 8 | E | 5 | 5 | 0 | **23** | G7 statements (2022); Euroclear filings |
+| 218 | ★13 | **Why the Dollar Is a Weapon** | A bank door with a flag taped over the lock | With one decision, America froze about three hundred billion dollars of Russia's reserves. | 12212 | 8 | E | 5 | 5 | 0 | **23** | G7 statements (2022); Euroclear filings |
 | 219 |  | **The Cold War Over Undersea Cables** | Two submarines circling a cable on the seabed | Whoever controls the cables can listen to the world. | 11212 | 7 | E | 4 | 5 | 0 | **21** | Reports on cable tapping (Operation Ivy Bells); NATO statements |
 | 220 |  | **Why Africa's Borders Are Straight** | A ruler laid across a map of Africa | In 1884, European diplomats drew lines through a continent most had never seen. | 12102 | 6 | E | 5 | 5 | 0 | **21** | Berlin Conference histories |
 | 221 |  | **How China Became the World's Factory** | A shoe on a pedestal with orbiting labels of where it was made | In 1990, China made about three percent of the world's goods. Now it's close to a third. | 21102 | 6 | E | 5 | 5 | 0 | **21** | UNIDO/World Bank manufacturing value-added data |
@@ -363,7 +365,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 238 |  | **Why Ticketmaster Fees Are So High** | A ticket on a pedestal growing extra fees like barnacles | A ticket priced at fifty dollars can cost eighty at checkout. | 12212 | 8 | H | 5 | 5 | 0 | **22** | DOJ v. Live Nation complaint (2024); Senate hearing (2023) |
 | 239 |  | **How Casinos Design You to Stay** | A casino floor with no clocks and no windows, top-down maze | There are no clocks. There are no windows. That's not an accident. | 11102 | 5 | E | 4 | 5 | 0 | **19** | Casino design literature (Friedman); Schüll "Addiction by Design" |
 | 240 |  | **Why Supermarkets Put Milk at the Back** | A supermarket aisle with a path of arrows painted on the floor | You came in for milk. The route was designed. | 11101 | 4 | E | 4 | 5 | 0 | **18** | Retail design studies; Underhill "Why We Buy" |
-| 241 | ★18 | **The Hidden Monopoly in Your Glasses** | One logo on every pair of glasses in a dark shop window | Dozens of brands, one company behind many of them. | 21212 | 8 | E | 5 | 5 | 0 | **23** | EssilorLuxottica annual report; 60 Minutes (2012) |
+| 241 |  | **The Hidden Monopoly in Your Glasses** | One logo on every pair of glasses in a dark shop window | Dozens of brands, one company behind many of them. | 21212 | 8 | E | 5 | 5 | -1 (60 Minutes (2012); several YouTube explainers) | **22** | EssilorLuxottica annual report; 60 Minutes (2012) |
 | 242 |  | **Why Diamonds Are Worthless** | A diamond on a pedestal next to a lab-grown twin; a price tag on only one | A diamond's value is a story told by one company for a century. | 12102 | 6 | E | 5 | 5 | 0 | **21** | De Beers histories; lab-grown price data (Paul Zimnisky) |
 | 243 |  | **The Economics of Pizza Delivery Apps** | A pizza box on a doorstep with three hands reaching for the money | A restaurant sold a pizza to a delivery app for less than the app charged for it. | 21101 | 5 | E | 3 | 4 | 0 | **17** | Ranjan Roy's "DoorDash and Pizza Arbitrage" (2020) |
 | 244 |  | **How Supermarkets Make Money on Rotting Food** | A pallet of fruit in a cold warehouse under a timer | Supermarkets plan for food to rot. It's in the price. | 11102 | 5 | E | 3 | 5 | 0 | **18** | WRAP and USDA food waste data |
@@ -375,7 +377,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 250 |  | **How Lego Survived Bankruptcy** | A single brick on a pedestal with a crack in it | In 2003 Lego was close to bankruptcy. Then it said no to almost everything. | 11112 | 6 | E | 5 | 5 | 0 | **21** | Robertson "Brick by Brick"; Lego annual reports |
 | 251 |  | **Why IKEA Is Owned by a Charity** | A flat-pack box whose label leads to a foundation in the Netherlands | One of the world's biggest retailers is technically owned by a foundation. | 21112 | 7 | E | 4 | 5 | 0 | **21** | Economist (2006); INGKA Foundation structure |
 | 252 |  | **The Business of Selling Blood Plasma** | A plasma bag on a pedestal, a map of donation centres along a border | America supplies most of the world's plasma, paid for by donors at fifty dollars a visit. | 21212 | 8 | E | 4 | 5 | 0 | **22** | PPTA data; ProPublica/academic reporting on border centres |
-| 253 | ★19 | **Why Insulin Costs So Much in America** | A vial on a pedestal with two price tags | The same vial costs ten times more in one country than another. | 12212 | 8 | E | 5 | 5 | 0 | **23** | RAND drug price comparisons; congressional reports |
+| 253 |  | **Why Insulin Costs So Much in America** | A vial on a pedestal with two price tags | The same vial costs ten times more in one country than another. | 12212 | 8 | E | 5 | 5 | -1 (many news explainers) | **22** | RAND drug price comparisons; congressional reports |
 | 254 |  | **How Pharmacy Middlemen Set Your Drug Prices** | A pill passing through three hands on its way to a counter | Three companies you've never heard of decide what most Americans pay for medicine. | 21212 | 8 | H | 5 | 4 | 0 | **21** | FTC PBM interim reports (2024–25) |
 | 255 |  | **Why Gas Prices Go Up Like a Rocket and Down Like a Feather** | A rocket and a feather side by side under the same light | Prices rise fast and fall slowly. Economists have a name for it. | 11102 | 5 | E | 4 | 5 | 0 | **19** | Borenstein et al. (1997) asymmetric pricing; EIA data |
 | 256 |  | **Why Funerals Cost So Much** | A coffin on a pedestal under a work light with a price tag | Many family-named funeral homes are owned by one company. The name on the sign stays the same. | 11112 | 6 | E | 4 | 4 | 0 | **19** | Service Corporation International 10-K; FTC Funeral Rule |

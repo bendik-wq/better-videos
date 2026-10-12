@@ -33,7 +33,7 @@ pulled, for each video, with `yt-dlp --skip-download` (player client `android_vr
 - the **watch-page metadata**: title, views, likes, length, publish date, description and the
   creator's **chapters**;
 - the **caption track** (manual where published, otherwise YouTube's auto captions) with word
-  timings, for **49 of the 70** videos (the rest hit YouTube's rate limit; those entries are built
+  timings, for **51 of the 70** videos (the rest hit YouTube's rate limit; those entries are built
   from metadata, chapters and the heatmap, and say so);
 - YouTube's **"most replayed" heatmap** (100 points per video), for 64 of the 70;
 - the **thumbnail** image, which we looked at for every video.
@@ -72,9 +72,9 @@ Pace requests at 60 s or more apart; at shorter gaps YouTube answers 429 and dro
 | Measure | Result | What it means for us |
 |---|---|---|
 | Length (70 videos) | Median **19.4 min**; 6–79 min | Our 12–20 min target sits in the middle. Median views by length: <10 min 5.8M (12 videos), 10–15 min 12.2M (14), 15–20 min 10.8M (10), 20–30 min 11.2M (22), 30+ min 8.3M (12). No length penalty from 10 to 30 min in this sample of winners |
-| Pacing (49 with captions) | Median **163 wpm of runtime**; 122 (Neo) to 216 (Moon) | Our 150 wpm budget is on the calm side of normal; calm channels (Neo, LEMMiNO, Bloomberg) win with imagery carrying the pace |
-| Turn-word gap (49) | Median **26.7 s**; middle half 20–37 s | Confirms the 30–40 s re-hook cadence as a ceiling, with smaller "but" turns in between (`narration-style.md` §1.2) |
-| First turn word (49) | Median **0:31**; 24 of 49 turn by 0:30 | Our "turn by 0:22" rule is stricter than half the winners. Keep it; it's a strength |
+| Pacing (51 with captions) | Median **163 wpm of runtime**; 122 (Neo) to 216 (Moon) | Our 150 wpm budget is on the calm side of normal; calm channels (Neo, LEMMiNO, Bloomberg) win with imagery carrying the pace |
+| Turn-word gap (51) | Median **26.7 s**; middle half 20–38 s | Confirms the 30–40 s re-hook cadence as a ceiling, with smaller "but" turns in between (`narration-style.md` §1.2) |
+| First turn word (51) | Median **0:31**; 25 of 51 turn by 0:30 | Our "turn by 0:22" rule is stricter than half the winners. Keep it; it's a strength |
 | Chapters (70) | **45** publish chapters; median **9** per video | More than our 4–6 on-screen chapter cards. See pattern 9 |
 | Heat shape (64) | First quarter hotter than the last in **53 of 64**; median last/first ratio **0.63** | Front-load; every video loses replay energy. The exceptions rise at the end because of a late reveal (Veritasium's leaded-petrol video, Neo's Saudi critic) |
 | Top-peak position (64) | Spread across the whole runtime; the most common decile is the middle (40–60%) | There is no single "wow minute"; plan two or three wow beats, not one |
@@ -84,8 +84,8 @@ Pace requests at 60 s or more apart; at shorter gaps YouTube answers 429 and dro
 
 **1. The sponsor-skip landing is the most replayed moment in a large share of videos.**
 In the videos with a mid-roll sponsor read, the first line after the read is the top heatmap peak
-in five (Fern's *Bank Heist* 9:01, Moon's *BlackRock* 7:58 and *Instagram* 13:44, Johnny Harris's
-*McDonald's* 8:37, hoog's *Kidnapping* 7:45) and the second peak in three more (Fern's *CIA* 7:23,
+in six (Fern's *Bank Heist* 9:01, Moon's *BlackRock* 7:58 and *Instagram* 13:44, Johnny Harris's
+*McDonald's* 8:37, hoog's *Kidnapping* 7:45, Vox's *Why can't prices just stay the same?* 3:50) and the second peak in three more (Fern's *CIA* 7:23,
 *Dark Web* 6:46, *President* 7:37) [observed]. Viewers skip the read and land there. **So the
 return line is the most-heard line after the hook**: write it as a re-hook (`retention-script` §8
 step 5), give it a hard visual change, and keep the read itself skippable in one gesture (a clean
@@ -96,14 +96,14 @@ Two to five explicit questions in a row that become the video's contract: Verita
 (why black? safe? cost? evaporation? real purpose?, 0:57–1:05), Fern's three-question loops
 (*Bank Heist* 1:33, *President* 1:03, *Scariest Building* 1:06), LEMMiNO's triad in *Cicada* (2:03,
 repeated word for word at 5:08), hoog's three in *Tokyo* (0:30), Vox's two in *EV war* (1:39),
-Bloomberg's two in *Singapore* (0:44), Moon's two in *Instagram* (1:00). An automatic count (two or more questions within 15 s, between 0:15 and 1:50) finds the stack in **12 of 49** captioned videos, plus LEMMiNO's at 2:03 [observed].
+Bloomberg's two in *Singapore* (0:44), Moon's two in *Instagram* (1:00). An automatic count (two or more questions within 15 s, between 0:15 and 1:50) finds the stack in **12 of the first 49** captioned videos, plus LEMMiNO's at 2:03 [observed].
 The questions then map onto chapters. It's the visible form of our open-loop ledger.
 
 **3. The dated present-tense cold open.**
 "It's October 2015…" (Fern), "On the 4th of January, 2012…" (LEMMiNO), "In 2003, the construction
 of… The World was announced" (Neo), "In 1929 in Chicago, people kept mysteriously dying…"
 (Veritasium), "July 2026. Thousands of AIs are placed in solitary confinement…" (Kurzgesagt). An automatic
-count finds a year or month in the first 20 s of **about 15 of 49** captioned videos [observed]. A date plus a place plus one action is the fastest way to a scene in narration
+count finds a year or month in the first 20 s of **about 15 of the first 49** captioned videos [observed]. A date plus a place plus one action is the fastest way to a scene in narration
 alone, which suits a faceless channel. Kurzgesagt's AI outlier (17.9M in about a week) uses it for
 software [observed].
 
@@ -236,7 +236,7 @@ least one primary record on screen.**
 
 ### E. Gaps
 
-- 21 videos have no caption analysis (rate limit). Their entries use metadata, chapters, heatmap
+- 19 videos have no caption analysis (rate limit). Their entries use metadata, chapters, heatmap
   and thumbnails. Re-run the fetch with 60–90 s gaps to fill them.
 - The heatmap is "most replayed", not audience retention; no public source gives retention curves.
 - View counts are a snapshot (2026-10-12) and favour old videos.
@@ -309,9 +309,9 @@ Sorted by views. Measured on 2026-10-12. "Turn gap" and "wpm" need captions; "�
 | 57 | [economicsexplained](economicsexplained.md) | How the World's Richest Country Lost 90% of its GDP | 5.3M | 14:16 | — | — | — | 7 | — |
 | 58 | [polymatter](polymatter.md) | How North Korea Makes Money | 5.1M | 13:02 | 154 | 37.4 | 0:51 | — | 8:04 |
 | 59 | [bloomberg](bloomberg.md) | How Singapore Got So Crazy Rich | 4.9M | 7:01 | 129 | 95.1 | 0:06 | 6 | 2:39 |
-| 60 | [hoog](hoog.md) | The Most Genius Kidnapping in History | 4.7M | 31:00 | — | — | — | 15 | 7:45 |
+| 60 | [hoog](hoog.md) | youtube video #FRdeyrfhVIg | 4.7M | 31:00 | — | — | — | 15 | 7:45 |
 | 61 | [polymatter](polymatter.md) | Why 50 Million Chinese Homes are Empty | 4.5M | 12:30 | 144 | 25.3 | 0:12 | 6 | 12:00 |
-| 62 | [bloomberg](bloomberg.md) | How China's 'Perfect' Spy Got Caught / Bloomberg Investigates | 4.3M | 25:39 | — | — | — | 17 | 18:12 |
+| 62 | [bloomberg](bloomberg.md) | How China's 'Perfect' Spy Got Caught / Bloomberg Investigates | 4.3M | 25:39 | 132 | 42.9 | 2:37 | 17 | 18:12 |
 | 63 | [polymatter](polymatter.md) | Why Costco is Cheaper than Amazon | 4.2M | 8:57 | 151 | 16.6 | 0:56 | 2 | 8:19 |
 | 64 | [moon](moon.md) | BlackRock: The Most Evil Business In The World | 4.2M | 15:39 | 204 | 24.4 | 0:48 | 8 | 7:58 |
 | 65 | [moon](moon.md) | How Instagram Changed Society Forever | 3.7M | 23:41 | 216 | 12.1 | 0:02 | — | 13:44 |
@@ -319,4 +319,4 @@ Sorted by views. Measured on 2026-10-12. "Turn gap" and "wpm" need captions; "�
 | 67 | [bloomberg](bloomberg.md) | This Is How Huawei Shocked America With a Smartphone | 3.2M | 7:57 | — | — | — | 5 | 3:48 |
 | 68 | [hoog](hoog.md) | The $41 Billion Plan for Tokyo | 3.0M | 12:43 | 146 | 13.4 | 0:20 | 8 | 2:47 |
 | 69 | [fern](fern.md) | The Scariest Building in Europe | 2.7M | 24:50 | 153 | 29.4 | 0:16 | — | — |
-| 70 | [vox](vox.md) | Why can’t prices just stay the same? | 2.5M | 7:31 | — | — | — | — | 3:50 |
+| 70 | [vox](vox.md) | Why can’t prices just stay the same? | 2.5M | 7:30 | 174 | 17.9 | 0:20 | — | 3:50 |

@@ -34,7 +34,7 @@ to our renderer's strengths. Four videos. Labels as in `fern.md`.
 - **Ending:** Not measured.
 - **What we steal:** **'Design' framed as moral** ("Evil Design"): a room, a button, a red outline on the one detail that matters. Buildable as a single set with `OBJ-004`/`REV-013`.
 
-## 3. The Most Genius Kidnapping in History
+## 3. youtube video #FRdeyrfhVIg
 
 `https://www.youtube.com/watch?v=FRdeyrfhVIg` · **4.7M views** · 31:00 · published 2024-11-15 · 154K likes (3.3%)
 

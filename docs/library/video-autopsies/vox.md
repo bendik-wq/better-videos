@@ -51,18 +51,18 @@ recent money explainers. Labels as in `fern.md`.
 
 ## 4. Why can’t prices just stay the same?
 
-`https://www.youtube.com/watch?v=NLtnm_bRzPw` · **2.5M views** · 7:31 · published 2024-05-15 · 63K likes (2.54%)
+`https://www.youtube.com/watch?v=NLtnm_bRzPw` · **2.5M views** · 7:30 · published 2024-05-15 · 63K likes (2.54%)
 
-**Measured** [observed, from captions and YouTube's most-replayed data]: most-replayed peaks 3:50 (1.0), 1:39 (0.57), 1:57 (0.39), 2:24 (0.26).
+**Measured** [observed, from captions and YouTube's most-replayed data]: 1,305 caption words, **174 wpm** of runtime (manual captions); turn words ('but', 'however', 'until'…) every **17.9 s** median, first at 0:20; most-replayed peaks 3:50 (1.0), 1:39 (0.57), 1:57 (0.39), 2:24 (0.26).
 
 - **Title and thumbnail:** Title `Why can't prices just stay the same?`; thumbnail text 0% Inflation? over stacks of coins on green, with a red underline [observed].
-- **Hook (0:00–0:30):** No captions available to us. From the description: "If high inflation hurts just about everyone, why can't we have no inflation?" [observed]. A child's question taken seriously.
-- **Structure:** Short explainer (7.5 min). The heatmap's third quarter is the hottest (0.31) [observed]: the answer lands late.
+- **Hook (0:00–0:30):** News audio about prices, then "In 2022 much of the world experienced a period of uncommonly high inflation with the US, UK and Euro Zone all peaking at around 10%…" and the naive question: if inflation hurts, why not zero? [observed].
+- **Structure:** Explainer of two spirals: the inflation cycle (expectations → spending → demand → prices) → sponsor → the deflation cycle (waiting for lower prices → less spending) → why central banks target about 2% [observed].
 - **Chapters:** none published.
-- **Re-hooks and timing:** Not measured.
-- **Wow moments:** Top peak 3:50 [observed].
-- **Ending:** Not measured. A sponsor presented with an editorial-independence note in the description [observed].
-- **What we steal:** **The naive question as a title** ('Why can't prices just stay the same?') is legitbait for inflation explainers; pair it with a concrete coin-stack thumbnail.
+- **Re-hooks and timing:** The second half answers the title by flipping to the opposite danger (deflation) [observed].
+- **Wow moments:** Top peak 3:50: the first line after the sponsor (DCU, about 3:15–3:50), the skip-landing again, which here is also the start of the mechanism: interest rates. 1:39–1:57: the inflation cycle drawn as a loop [observed].
+- **Ending:** An interviewee's "it's mind-blowing" and the 2% target as the safety margin against deflation [observed].
+- **What we steal:** **Answer a naive question by showing the opposite danger** (why not zero? because deflation). **Cycles drawn as loops** are our `DAT-018` flow-line follow.
 
 ## Channel patterns
 

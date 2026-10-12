@@ -26,13 +26,13 @@ available, chapters and most-replayed data pulled 2026-10-12. Labels as in `fern
 **Measured** [observed, from captions and YouTube's most-replayed data]: 2,146 caption words, **178 wpm** of runtime (manual captions); turn words ('but', 'however', 'until'…) every **39.5 s** median, first at 0:56; most-replayed peaks 11:26 (1.0), 11:12 (0.2), 2:53 (0.13), 5:10 (0.12).
 
 - **Title and thumbnail:** `The [Person]'s $[exact] Per Minute [System]`. The thumbnail text is different from the title: HOW THE PRESIDENT TRAVELS over Air Force One on a street map [observed]. Title carries the absurd exact number; thumbnail carries the plain promise.
-- **Hook (0:00–0:30):** No captions available to us. The title's number implies the hook is the per-minute cost [inferred]. The heatmap is nearly flat apart from the end (11:26, the sponsor/outro), so the body held evenly [observed].
-- **Structure:** System explainer (Air Force One, Marine One, the motorcade, advance teams) [inferred from the title and the channel's format].
+- **Hook (0:00–0:30):** Sponsor line, then "Moving the president of the United States from one location to another is a logistical nightmare that happens every single day… there is no time when the president is more exposed than when they're in transport" [observed]. Stakes plus routine in 20 s.
+- **Structure:** A guided tour down the length of the motorcade, vehicle by vehicle (route security → the secure package → the control car → support units and press → variants) → Marine One → Air Force One → the cost [observed]. **The convoy is the chapter list.**
 - **Chapters (from the description):** 0:00 The logistical nightmare · 0:38 Motorcade route security · 2:03 The secure package · 3:48 Presidential protection · 4:45 Motorcade support units · 6:02 Efficiency and Marine One · 6:58 Helicopter transport · 7:49 Air Force One logistics · 8:56 The cost of transport · 10:33 Sponsor and outro
-- **Re-hooks and timing:** Not measured.
-- **Wow moments:** Not measurable from the heatmap: an even curve with no single spike [observed].
-- **Ending:** Squarespace sponsor read at the end [observed in the description].
-- **What we steal:** **An oddly exact number in the title** ($2,614 per minute) beats a round one; the per-minute unit makes a huge total feel concrete. Thumbnail and title split the job: number in one, plain promise in the other.
+- **Re-hooks and timing:** Each vehicle is a new reveal with one striking detail (the limousine's only opening window is the driver's, "reportedly so they can pay tolls", 2:53). The cost chapter (8:56) pays off the title with public figures: Air Force One at an estimated $206,337 per flight hour [observed].
+- **Wow moments:** The body peaks are modest and spread (2:53 the sealed car's equipment, 5:10 the hazmat unit) [observed]. The top peak, 11:26, is inside the sponsor read, which re-uses the video's unit: a $20 domain is "the cost of 1/3 of a second on Air Force One" [observed].
+- **Ending:** Squarespace read that ends on the video's own cost unit [observed].
+- **What we steal:** **The tour-down-the-object structure** (front to back of a convoy, a ship, a chip); **an oddly exact per-unit number** in the title, paid off with a public figure; **convert the sponsor's price into the video's unit** so the read stays on topic.
 
 ## 3. The Economics of Airline Class
 

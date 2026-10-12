@@ -38,16 +38,16 @@ Four videos across three formats. Labels as in `fern.md`.
 
 `https://www.youtube.com/watch?v=Ox8HVWjboww` · **4.3M views** · 25:39 · published 2026-02-24 · 38K likes (0.88%)
 
-**Measured** [observed, from captions and YouTube's most-replayed data]: most-replayed peaks 18:12 (1.0), 6:55 (0.93), 24:52 (0.82), 22:03 (0.71).
+**Measured** [observed, from captions and YouTube's most-replayed data]: 3,389 caption words, **132 wpm** of runtime (manual captions); turn words ('but', 'however', 'until'…) every **42.9 s** median, first at 2:37; most-replayed peaks 18:12 (1.0), 6:55 (0.93), 24:52 (0.82), 22:03 (0.71).
 
 - **Title and thumbnail:** `How [Country]'s '[Ironic Adjective]' Spy Got Caught | Bloomberg Investigates`. Thumbnail: THE MAKING OF A CHINESE SPY on a strip of label tape over pixelated, documentary-style photos [observed]. An investigative-file look.
-- **Hook (0:00–0:30):** No captions available to us. From the description: "Ji Chaoqun was a promising young engineer from Beijing heading to the US to study. Then China's Ministry of State Security came calling with bags of cash…" and "Student, Mormon, gamer, spy – who was Ji Chaoqun…?" [observed]. A four-noun identity list as the hook.
-- **Structure:** 17 chapters across 26 minutes, chronological: target → recruitment → training → life in Chicago → the handler → the MAVNI shortcut → the handler's arrest and an FBI ruse → undercover interviews → arrest → trial → verdict → spy swap [observed]. Built from a Bloomberg podcast (*The Sixth Bureau*) [observed].
+- **Hook (0:00–0:30):** Interview voices before any narration: "He was kind of awkward. He was very goofy. He does not read like a Chinese spy… I at least had in my head this idea of a spy of James Bond… and that is not Ji", then the stakes: jet-engine trade secrets China "wants very badly" [observed]. **The misconception (spies are James Bond) is the hook.** The description adds the four-noun identity line: "Student, Mormon, gamer, spy" [observed].
+- **Structure:** 17 chapters in 26 minutes, chronological and told almost entirely by interviewees (reporters, a defence lawyer): target → recruitment → training → ordinary life in Chicago → conversion → the handler → taskings → the MAVNI enlistment shortcut → the handler's arrest and an FBI ruse → wired undercover meetings → arrest → trial → verdict → spy swap. Built from Bloomberg's podcast *The Sixth Bureau* [observed].
 - **Chapters (from the description):** 0:00 The unexpected spy · 0:35 The target: aviation secrets · 2:47 Recruitment by the MSS · 4:01 Training and undercover mission · 5:39 Digital evidence and excitement · 6:36 Life in Chicago and a turning point · 7:13 Conversion and community · 8:31 The role of handler Xu · 9:33 Gathering intelligence · 10:47 The MAVNI program shortcut · 11:52 Handler arrest and FBI ruse · 13:53 FBI undercover interviews · 15:04 Arrest and charges · 17:06 Media attention and reaction · 17:57 The trial and defense · 18:47 Guilty verdict and sentencing · 21:11 Spy swap and final outcome
-- **Re-hooks and timing:** Not measured. Heat is strongest in the middle (quarters 0.24, 0.32, 0.36, 0.19) [observed].
-- **Wow moments:** Top peak 18:12 (around the guilty verdict and sentencing chapter at 18:47). 6:55: life in Chicago and a turning point [observed].
+- **Re-hooks and timing:** Chapter-opening lines are small cliffhangers ("Ji was really enjoying his life in America… But he does have a secret", 8:31; "In April of 2018, a guy in a red car outside Ji's apartment gets out and accosts him", 11:52). Slow, interview-led pacing (132 wpm of runtime) [observed].
+- **Wow moments:** Top peak 18:12: the defence lawyer introduces himself (a Chicago trial lawyer who had represented Harvey Weinstein) as China lobbies behind the scenes. 6:55: his deliberately ordinary routine (school, gym, games). The middle half is the hottest (0.32, 0.36) [observed]: the FBI ruse and the recorded meetings hold.
 - **Ending:** The spy swap as the final chapter [observed].
-- **What we steal:** **The four-noun identity list** ("Student, Mormon, gamer, spy") as a cold-open line; build a video from a long-form podcast or court record you can credit.
+- **What we steal:** **Open on witnesses describing the subject against type** ("He does not read like a spy"); build from a credited long-form source; a recorded undercover meeting is a primary record that carries a whole chapter.
 
 ## 4. This Is How Huawei Shocked America With a Smartphone
 

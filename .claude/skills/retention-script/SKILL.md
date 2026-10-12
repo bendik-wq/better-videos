@@ -32,7 +32,7 @@ narration draft; `shot-design` and `make-video` turn them into shots.
 Measured on 70 top videos (`docs/library/video-autopsies/README.md`); each rule below is wired into
 the steps that follow.
 
-1. **The sponsor return line is the most-replayed line after the hook.** In 8 of the videos with a
+1. **The sponsor return line is the most-replayed line after the hook.** In 9 of the videos with a
    mid-roll read, the first line after it is a top-two heatmap peak, because viewers skip the read
    and land there. Write it as the strongest re-hook in the video (§8 step 5).
 2. **State a question stack by ~1:00**: 2–4 questions in the viewer's words, back to back, that
@@ -46,7 +46,7 @@ the steps that follow.
 5. **Endings are one of four types**: callback to the thumbnail or cold open, widen to the viewer,
    honest open question, or an archive voice. Never a recap (§ self-check 14).
 6. **Turn-word cadence**: the winners' median gap between "but"-type turns is ~27 s (middle half
-   20–37 s). Our 30–40 s re-hooks are the big turns; smaller but/therefore turns fill between them.
+   20–38 s). Our 30–40 s re-hooks are the big turns; smaller but/therefore turns fill between them.
 7. **Publish 8–12 description chapters** (the winners' median is 9) while keeping 4–6 on-screen
    chapter cards for the acts (§7).
 
@@ -214,7 +214,7 @@ Never put the full read inside the first 60 s. Run 45–75 s, about 110–180 wo
 4. **One call to action:** one link and one reason to act now.
 5. **Return line:** reopen L1 with a sharper question than before. It counts as a re-hook, and
    it is **the most-heard line after the hook**: viewers who skip the read land exactly here (the
-   top or second heatmap peak in 8 autopsied videos, `video-autopsies/README.md` pattern 1). Pair it
+   top or second heatmap peak in 9 autopsied videos, `video-autopsies/README.md` pattern 1). Pair it
    with a hard change of picture and sound, and make the read's start and end visually unmistakable
    so a skip lands cleanly on it.
 

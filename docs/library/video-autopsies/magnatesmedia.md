@@ -71,13 +71,13 @@ minutes. Five of them. Labels as in `fern.md`.
 **Measured** [observed, from captions and YouTube's most-replayed data]: 4,485 caption words, **148 wpm** of runtime (auto captions); turn words ('but', 'however', 'until'…) every **36.8 s** median, first at 0:24; most-replayed peaks 20:20 (1.0), 10:01 (0.91), 16:05 (0.83), 19:26 (0.79).
 
 - **Title and thumbnail:** `How [App] Makes Money: The INSANE Story of [App]`. Thumbnail: THE WHATSAPP BETRAYAL in green and red boxes, a giant WhatsApp icon with a notification badge, a hand holding a padlock [observed].
-- **Hook (0:00–0:30):** From the description: "Imagine this: you go for a job at Facebook and get rejected. A few years later, Facebook buy your company for $19 billion" [observed]. Rejection-to-revenge is the hook.
-- **Structure:** Founders' story → the app's no-ads philosophy → the Facebook acquisition → the founders' exit and the privacy fight → how it makes money [inferred from title, description and heatmap].
+- **Hook (0:00–0:30):** "If you're not paying for the product, you are the product… How does WhatsApp make money? What started out as a very simple business question led me down a rabbit hole much darker than I would have imagined" then "it's 2009…" [observed]. A quote, a simple question and a promise of darkness in 25 s.
+- **Structure:** Year-stamped chapters (2009 birth → 2010 the money problem → 2011 the business model → 2014 the acquisition → 2016 'Free?' → 2017 #deletefacebook → present) → intermission → **"In Defence of WhatsApp & Facebook"** → watch next [observed]. The title question is restated at 19:29 and answered.
 - **Chapters (from the description):** 0:00 Prologue · 0:36 2009 - The Birth of WhatsApp · 1:33 2010 - The Money Problem · 4:32 2011 - The Business Model · 6:55 2014 - The Acquisition · 10:10 2016 - Free? · 14:22 2017 - #deletefacebook · 19:29 Present Day & Future · 23:57 Intermission · 24:55 In Defence of WhatsApp & Facebook · 30:04 Watch Next From MagnatesMedia
-- **Re-hooks and timing:** Not measured (no captions).
-- **Wow moments:** Peaks at 20:20, 10:01, 16:05 and 19:26: the back half is hotter than the front (quarters 0.19, 0.24, 0.28, 0.19) [observed]. The betrayal arc pays off late.
-- **Ending:** Not measured.
-- **What we steal:** **Rejection-then-revenge** as the hook shape (`hooks.md` villain/matchup); a betrayal word in the thumbnail paired with a 'how it makes money' title.
+- **Re-hooks and timing:** Year labels on every chapter make the timeline a countdown to the present; the title question returns verbatim ("let's again return to the original question", 19:26) [observed].
+- **Wow moments:** Top peak 20:20: the actual answer, businesses paying to message customers. 10:01: the 2016 decision to drop the $1 fee. 16:05: a founder walking away from about $850 million [observed]. The back half is hotter than the front (0.19 → 0.28): **the answer to the title is the most replayed moment**.
+- **Ending:** A 'watch next' hand-off [observed].
+- **What we steal:** **Return to the title question by name** before answering it; a **steelman chapter** ("In Defence of…") after the critique, which is also defamation-safe balance; year-stamped chapter names.
 
 ## Channel patterns
 
