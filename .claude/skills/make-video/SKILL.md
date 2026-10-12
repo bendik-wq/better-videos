@@ -40,6 +40,13 @@ Every episode is built from this library. Read the index entries before planning
   - **Footage:** `engine/footage.js`. The CLI covers `search`, `fetch`, `pack` and `prep`, and enforces the PD/CC0 licence policy with provenance per clip. The catalog is in `assets/footage/catalog.json` and the 27-clip starter pack in `pack.json`. In a set, call `await FT.footage(ctx, shot, {file, in, out, speed|ramp, grade, reframe, caption, source, stab})`. Every clip needs a SOURCE line.
   - **Aerials:** `engine/imagery/` bakes USGS NAIP plus 3DEP for any US place, or Sentinel-2 elsewhere: `python3 engine/imagery/bake.py <name> <lat> <lon>`. Load it with `IM.terrain(scene, name, {...})`. Keep the camera at 400 m or higher over cities, because buildings are flat photos.
   - Docs are in `docs/assets/` and the demo in `projects/footage-lab`.
+- **People.** `engine/people/` (`import * as PE from '/engine/people/index.js'`, also exposed in `cine.js`).
+  - **Assets:** 15 MakeHuman-based outfits (CC0, plus some CC-BY garments; credit strings are in `assets/people/wardrobe/manifest.json` and go in the description) and 25 CMU mocap clips.
+  - **People:** `PE.person(id, {dress})` creates one; `.blend` and `.play` animate it, and are pure in t. `PE.walker` walks along a path with distance-driven gait and foot locking, so there is no sliding.
+  - **Crowds:** `PE.crowd` handles 100–2000 people with GPU skinning and LOD down to impostors.
+  - **Lighting:** `PE.look.rig(scene, 'backlit'|'doubleRim'|'monitor'|'dusk'|'overhead')`.
+  - **Rules:** keep faces hooded, backlit or turned away. Keep protest and office crowd shots short, because they cost about 2.5–3x a normal frame.
+  - Demo: `projects/people-lab`.
 - **Context library.** Use `docs/library/` for the 70 video autopsies with measured replay heatmaps, 428 visual metaphors, a 256-idea topic bank, the narration style guide, sound and music, and the fact-check playbook. To pick a topic, run the `idea-engine` skill first.
 - **Cinematic post.** `engine/post.js` (DOF/AO/god rays/lens) and `engine/parallax.js`
   (archive-photo 2.5D); see the toolkit section below.
