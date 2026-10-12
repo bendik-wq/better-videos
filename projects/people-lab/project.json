@@ -1,0 +1,64 @@
+{
+ "title": "People lab",
+ "fps": 30,
+ "width": 1920,
+ "height": 1080,
+ "voice": {
+  "engine": "kokoro",
+  "name": "bm_george"
+ },
+ "finish": {
+  "grain": 9,
+  "halation": 18,
+  "halationAmount": 0.5,
+  "bloom": 0.16,
+  "vignette": 0.55
+ },
+ "settings": {
+  "aa": "fxaa"
+ },
+ "shots": [
+  {
+   "id": "corridor",
+   "set": "corridor",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "analyst",
+   "set": "analyst",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "protest",
+   "set": "protest",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "orb",
+   "set": "orb",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "office",
+   "set": "office",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "command",
+   "set": "command",
+   "params": {},
+   "min": 6
+  },
+  {
+   "id": "base",
+   "set": "base",
+   "params": {},
+   "min": 1
+  }
+ ]
+}

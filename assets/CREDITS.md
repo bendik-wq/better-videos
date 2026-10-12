@@ -114,3 +114,33 @@ no login. `layers.json` lists each layer's source id, tile size and average colo
 Vehicles stay procedural (lofted bodies in `engine/world/vehicles.js`): no CC0 or CC-BY realistic car, truck or bus
 model was found that downloads without a login. Poly Haven has none (only `covered_car`); Khronos' CarConcept is
 CC-BY 4.0 but a logo-covered concept car; Sketchfab downloads need an account.
+
+## People (`assets/people/`, built by `engine/people/build/`)
+
+Bodies, clothes and hair were assembled offline in Blender 4.2.23 with the MPFB2 extension (both
+GPL, used as offline tools like ffmpeg; no GPL code ships) from MakeHuman asset packs downloaded
+2026-10-12 from https://files2.makehumancommunity.org/asset_packs/ (no login). Per-asset author and
+licence are also in `people/wardrobe/manifest.json`, which carries a ready-made attribution line
+per wardrobe id. **Any video showing a CC BY item must credit it** (description is enough), e.g.
+"3D clothing: Elvaerwyn, punkduck, Mindfront, culturalibre (MakeHuman community), CC BY".
+Licence pages checked: https://static.makehumancommunity.org/about/license.html (core assets CC0)
+and each pack page under https://static.makehumancommunity.org/assets/assetpacks/ (per-asset
+licence column; also the `# license` line inside every .mhclo). Pack sha256 (prefix): dress03_cc-by.zip `d35487edda8347ac`; equipment03_cc-by.zip `9513ab6059363778`; hair01_cc0.zip `49445d69848a313e`; hats02_cc0.zip `838b9b51ba31d27f`; hats03_cc-by.zip `2702d58fa04e5723`; makehuman_system_assets_cc0.zip `b542127a8e25547c`; mpfb2-20261011.zip `7cb1366da87e810a`; pants01_cc0.zip `e4e0ec60db34f279`; pants02_ccby.zip `9dbcd65e03ab1009`; shirts01_cc0.zip `a5a723b0e84a109b`; shirts02_ccby.zip `d711ca9f73212de8`; shoes01_cc0.zip `ded3f70428505eab`; shoes02_ccby.zip `1b544d87dd8b3d3a`; suits01_cc0.zip `2b1d8676f3863b18`; suits02_cc0.zip `437f4d7ab92b698c`; suits03_cc-by.zip `74ace28794d27186`; 
+
+| File | What | Author | Licence | Source |
+|---|---|---|---|---|
+| `people/wardrobe/<id>.glb`, `<id>_lod1.glb` | MakeHuman base mesh hm08 with macro targets, skins, eyes, eyebrows, eyelashes, hair (short01-04, bob02, ponytail01, long01), system clothes (male_elegantsuit01, female_elegantsuit01, male_casualsuit01/05, shoes02/04), rigged to the MPFB "game_engine" skeleton | MakeHuman team | CC0 | makehuman_system_assets_cc0.zip |
+| same | toigo_male_suit_3, toigo_female_suit, toigo_flats, toigo_ankle_boots_female, toigo_fisherman_sweater | Margaret Toigo | CC0 | suits01, shoes01, shirts01 |
+| same | culturalibre_male_boots | culturalibre | CC0 | shoes01 |
+| same | donitz_monk_robe, donitz_monk_robe_hood (the hooded robe) | Donitz | CC0 | suits02 |
+| same | punkduck_winter_coat (overcoat / lab coat), punkduck_running_shoes_01 | punkduck | CC BY 3.0 | dress03, shoes02 |
+| same | punkduck_male_classic_jeans | punkduck | CC BY 4.0 | pants02 |
+| same | elvs_male_coveralls_1, elvs_hooded_sweat_jacket1, elvs_male_shirt_tie_tucked1, elvs_male_trouser, elvs_jeans_straight_leg, elvs_slouchy_beanie1 | Elvaerwyn | CC BY | suits03, shirts02, pants02, hats03 |
+| same | mindfront_tactical_vest_male, mindfront_patrol_cap, mindfront_shoes_oxford_male | Mindfront | CC BY 4.0 | equipment03, hats03, shoes02 |
+| same | culturalibre_sneakers | culturalibre | CC BY | shoes02 |
+| `people/clips.glb` | 25 motion clips retargeted from the CMU Graphics Lab Motion Capture Database (subjects 07, 08, 09, 13, 16, 17, 18, 19, 35, 36, 40, 56, 77, 79, 80, 82, 91, 111, 113, 137, 138, 139; see `engine/people/build/clips.py`) | Carnegie Mellon University; BVH conversion by Bruce Hahne (cgspeed) | Free for any use. Please cite: "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217." | BVH via https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/ (READMEFIRST.txt there carries CMU's and Hahne's terms) |
+| `people/env/{Asphalt026A,Concrete034,PaintedPlaster017,Carpet016,Metal032,Wood049,Fabric026,Plaster001}/` | PBR sets (colour, normal GL, roughness), 1K | ambientCG (Lennart Demes) | CC0 | https://ambientcg.com/get?file=<name>_1K-JPG.zip |
+
+Not used: Quaternius Universal Base Characters [Standard] (CC0, downloaded and evaluated: only
+superhero proportions are free); Sketchfab rigged humans (downloads need a login); Mixamo (Adobe
+account and no redistribution).

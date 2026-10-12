@@ -5,12 +5,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import * as K from 'kit';
+import * as PE from './people/index.js';
 
 const chars = {}, skies = {}, envs = {};
 
-export async function preload(renderer, { characters = ['Soldier', 'Xbot'], hdris = [] } = {}) {
+export async function preload(renderer, { characters = ['Soldier', 'Xbot'], hdris = [], people = null } = {}) {
   const gl = new GLTFLoader(), rl = new RGBELoader();
   await Promise.all([
+    ...(people ? [PE.preload({ wardrobe: people })] : []),
     ...characters.map(async (n) => { chars[n] = await gl.loadAsync(`/assets/models/${MODEL_FILES[n] ?? n}.glb`); }),
     ...hdris.map(async (n) => {
       const tex = await rl.loadAsync(`/assets/hdri/${n}.hdr`); tex.mapping = THREE.EquirectangularReflectionMapping; skies[n] = tex;
@@ -24,6 +26,19 @@ export function sky(scene, name, { background = true, intensity = 1, bgIntensity
   scene.environment = envs[name]; scene.environmentIntensity = intensity;
   if (background) { scene.background = skies[name]; scene.backgroundIntensity = bgIntensity; scene.backgroundBlurriness = blur; }
 }
+
+// ---------- people (engine/people: real bodies, CMU mocap, crowds) ----------
+// The realistic replacement for the mannequins below. C.preload(renderer, { people: ['suit'] }), then
+//   const p = C.person('suit', { dress: { outfit: { fabric: 'wool' } } }); scene.add(p.root);
+//   p.blend([['walk', t, 1 - k], ['idle', t - stop, k]]).update();   // clip blending, pure in t
+//   const w = C.walk(p, [[0, 0], [0, 10]], { clip: 'walk', t0: 0 }); w.update(t);
+// C.walk drives the gait phase by distance (phase = s / stride) so the planted foot never slides,
+// eases speed with C1 cosine ramps, turns along the path tangent, and pins planted ankles with
+// two-bone IK (foot locking) to remove the residual slide from turns and blends.
+export const people = PE;
+export const person = (id, opts) => PE.person(id, opts);
+export const walk = (p, path, opts) => PE.walker(p, path, opts);
+export const crowd = (scene, opts) => PE.crowd(scene, opts);
 
 // ---------- characters ----------
 const SILHOUETTE = () => new THREE.MeshStandardMaterial({ color: 0x15161a, roughness: 0.55, metalness: 0.1 });
@@ -50,7 +65,7 @@ export function character(name = 'Soldier', { clip = 'Idle', material = 'silhoue
   const bones = {}; root.traverse(o => { if (o.isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o; });
   for (const k in UE_ALIAS) if (!bones[k] && bones[UE_ALIAS[k]]) bones[k] = bones[UE_ALIAS[k]];
   return {
-    root, bones, clips: Object.keys(actions),
+    root, bones, clips: Object.keys(actions), durations: Object.fromEntries(src.animations.map(c => [c.name, c.duration])),
     play(c) { const a = find(c); if (a && a !== current) { current?.stop(); current = a; current.play(); } },
     update(t) { mixer.setTime(Math.max(0, t * speed + phase)); root.updateMatrixWorld(true); },
     // Crossfade, pure in t: blend([[clip, localTime, weight], ...]); weights should sum to 1.
@@ -64,6 +79,20 @@ export function character(name = 'Soldier', { clip = 'Idle', material = 'silhoue
     // add rotations (radians) on top of the animated pose, e.g. { RightArm: [x, y, z] }
     pose(map, k = 1) { for (const b in map) { const n = bones[b]; if (!n) continue; const [x, y, z] = map[b]; n.rotation.x += x * k; n.rotation.y += y * k; n.rotation.z += z * k; } },
   };
+}
+
+// Walk an old-style C.character (UAL mannequin) along a path with distance-driven gait phase, so its
+// feet don't skate: `stride` = metres the clip covers in one loop (UAL Walk_Loop ~1.6 m).
+export function walkCharacter(ch, path, { clip = 'Walk_Loop', idle = 'Idle_Loop', stride = 1.6, speed = 1.3, t0 = 0, accel = 0.9, decel = 1.1 } = {}) {
+  const P = Array.isArray(path) ? PE.groundPath(path) : path;
+  const g = PE.gait({ dist: P.length, speed, t0, accel, decel });
+  const find = (c) => ch.clips.find(n => n === c || n === c + '_Loop') ?? c;
+  return { gait: g, path: P, update(t) {
+    const s = g.s(t), p = P.at(s), d = P.tangent(Math.min(s + 0.25, P.length - 0.01));
+    ch.root.position.set(p.x, p.y, p.z); ch.root.rotation.set(0, Math.atan2(d.x, d.z), 0);
+    const w = Math.min(1, g.v(t) / (0.45 * g.speed)), k = w * w * (3 - 2 * w);
+    ch.blend([[find(clip), s / stride * (ch.durations?.[find(clip)] ?? 1), k], [find(idle), t - t0, 1 - k]]);
+  } };
 }
 
 // Skydiver arch: arms out and up, legs bent back.
