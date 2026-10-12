@@ -47,3 +47,35 @@ Vehicles, buildings, trees, clouds and roads in `engine/world/` are procedural (
 models). Kenney Car Kit (CC0, https://kenney.nl/assets/car-kit) was downloaded and evaluated but
 not used: toy proportions read as a game; the procedural cars are built to real dimensions.
 Poly Pizza returned 403 from this box.
+
+## Real imagery (`assets/imagery/`, built by `engine/imagery/bake.py`)
+
+On-screen credit: each set's `set.json` → `attribution` (shown as the SOURCE line by `projects/footage-lab`).
+
+| Set | Imagery | Elevation | Licence | Source |
+|---|---|---|---|---|
+| `imagery/pentagon/` (38.8710 N, 77.0559 W; 4 levels, 0.6–38 m/px) | USDA NAIP orthoimagery via USGS The National Map | USGS 3DEP bare earth (1 m lidar) | Public domain (US Government works) | https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer , https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer (exportImage, fetched 2026-10-12) |
+| `imagery/hoover/` (36.0125 N, 114.7390 W; 4 levels) | same | same | Public domain | same |
+| Sentinel-2 sets (any baked with `--source s2`) | Copernicus Sentinel-2 L2A TCI, AWS Open Data `sentinel-cogs` via Element 84 Earth Search | AWS Terrain Tiles (terrarium) | Copernicus Sentinel data licence (free, attribution "Contains modified Copernicus Sentinel data <year>"); Terrain Tiles: attribution of SRTM/GMTED/ETOPO1 etc. | https://registry.opendata.aws/sentinel-2-l2a-cogs/ , https://github.com/tilezen/joerd/blob/master/docs/attribution.md . EOX s2cloudless (CC BY-NC-SA) is not used. |
+
+## Code (engine/imagery)
+
+| File | Licence | Source |
+|---|---|---|
+| `engine/imagery/jpeg.js` | Apache-2.0 (decoder core, © 2011 notmasteryet, from pdf.js) + BSD-3-Clause (jpeg-js package, © 2014 Eugene Ware) | npm `jpeg-js@0.4.4`, `lib/decoder.js`, converted to an ES module (synchronous fallback decoder for `engine/footage.js`) |
+
+## Footage (`assets/footage/`, fetched by `node engine/footage.js pack`)
+
+Video files are git-ignored and rebuilt from `assets/footage/pack.json`. Each clip's provenance
+(source URL, page, download URL, licence, licence evidence, credit, sha1) is committed as
+`assets/footage/clips/<id>.json`. Source catalogue with licence notes: `docs/assets/footage-library.md`.
+
+| Clips | Source | Licence | Credit |
+|---|---|---|---|
+| `server-nasa-ames-modular`, `orbit-*` (Earth in 4K, Expeditions 65 and 67/68), `weather-helene-iss`, `aircraft-x59-takeoff`, `crowd-apollo-launch-1969`, `command-apollo-mcc-1969`, `command-artemis-flight-control` | NASA Image and Video Library, https://images.nasa.gov | Public domain (NASA media guidelines) | NASA / JSC, Ames, Armstrong |
+| `computing-sage-1956`, `command-sage-consoles-1956`, `computing-sage-panels-1956` ("On Guard! The Story of SAGE", 1956), `typing-hands-1940s` ("Basic Typing"), `highway-green-light-1954` ("Give Yourself the Green Light") | Prelinger Archives, https://archive.org/details/prelinger | CC Public Domain Dedication on each item | Prelinger Archives (courtesy Internet Archive) |
+| `office-treasury-1969`, `money-treasury-press-1969` ("The Treasury Story", 1969) | US National Archives upload on archive.org, `gov.archives.arc.11865` | US Government work / CC0 mark | National Archives and Records Administration |
+| `ships-lcs-formation`, `ships-comfort-underway`, `command-space-ops-center-dod` | US Navy / US Space Force via DVIDS, mirrored on Wikimedia Commons | Public domain (PD-USGov-Military); DoW endorsement disclaimer applies | US Navy / US Space Force (DVIDS) |
+| `weather-erin-goes`, `weather-milton-hurricane-hunter` | NOAA NESDIS / NOAA AOC via Wikimedia Commons | Public domain (US Government) | NOAA |
+| `crowd-causeway-bay-timelapse`, `highway-tullamarine` | Wikimedia Commons | CC0 1.0 | per file page |
+| `oil-rig-drilling` ("Move It: Rig Move Safety for Roughnecks", 2012) | Wikimedia Commons | Public domain (US Government work, per file page) | per file page |

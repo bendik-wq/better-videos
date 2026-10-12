@@ -1,0 +1,31 @@
+{
+ "id": "orbit-earth-limb-exp65",
+ "title": "Earth from Space in 4K – Expedition 65 Edition",
+ "source": "nasa",
+ "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "page": "https://images.nasa.gov/details/jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "download": "https://images-assets.nasa.gov/video/jsc2022m000172_Earth_in_4K_Expedition_65_Edition/jsc2022m000172_Earth_in_4K_Expedition_65_Edition~large.mp4",
+ "date": "2022-08-05",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "earth-orbit",
+  "iss"
+ ],
+ "trim": [
+  78,
+  112
+ ],
+ "file": "assets/footage/clips/orbit-earth-limb-exp65.mp4",
+ "bytes": 21918995,
+ "sha1": "29bf2791cf8d5c50ac18ff81c918d039f0c81159",
+ "duration": 34,
+ "width": 1920,
+ "height": 1012,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}
