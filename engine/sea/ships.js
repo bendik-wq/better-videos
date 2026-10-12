@@ -148,7 +148,7 @@ function hullAtlas(o, dims, paint) {
       // dents and fender scrapes near the waterline amidships, touched-up paint patches
       for (let i = 0; i < 26; i++) { const px = col(0.2 + r() * 0.6), py = row(r() * (D - T) * 0.6), rr = (0.6 + r() * 2.2) * pxPerM; const g = hx.createRadialGradient(px, py, 0, px, py, rr); g.addColorStop(0, 'rgba(0,0,0,0.22)'); g.addColorStop(1, 'rgba(0,0,0,0)'); hx.fillStyle = g; hx.fillRect(px - rr, py - rr, rr * 2, rr * 2); }
       for (let i = 0; i < 40; i++) { const px = r() * W, py = oy + r() * h * 0.7, ww = (2 + r() * 8) * pxPerM, hh = (0.8 + r() * 3) * pyPerM; x.fillStyle = `rgba(${r() < 0.5 ? '255,255,255' : '0,0,0'},${0.012 + r() * 0.02})`; x.fillRect(px, py, ww, hh); }
-      for (let i = 0; i < 18; i++) { const px = col(0.15 + r() * 0.7), py = row(1 + r() * 4), ww = (1 + r() * 5) * pxPerM; x.fillStyle = `rgba(150,140,130,${0.08 + r() * 0.1})`; x.fillRect(px, py, ww, (0.1 + r() * 0.3) * pyPerM); rx.fillStyle = 'rgba(230,0,0,0.5)'; rx.fillRect(px, py, ww, 0.4 * pyPerM); } }
+      for (let i = 0; i < 18; i++) { const px = col(0.15 + r() * 0.7), py = row(1 + r() * 4), ww = (1 + r() * 5) * pxPerM; x.fillStyle = `rgba(150,140,130,${0.03 + r() * 0.04})`; x.fillRect(px, py, ww, (0.1 + r() * 0.3) * pyPerM); rx.fillStyle = 'rgba(230,0,0,0.5)'; rx.fillRect(px, py, ww, 0.4 * pyPerM); } }
     // scupper rust streaks from the deck edge, hawse pipe streaks at the bow, weeping welds
     const rust = paint.rust ?? 0.6;
     const streak = (s, y0, len, wd, a) => { const cx = col(s), ry = row(y0), ry1 = row(y0 - len);
@@ -495,7 +495,7 @@ export function defineKind(name, fn) { BUILD[name] = fn; if (!KINDS.includes(nam
 export { Ship, hullAtlas, std, meshOf };
 export function ship(kind, o = {}) { const b = BUILD[kind]; if (!b) throw new Error('sea: unknown ship kind ' + kind + ' (' + KINDS.join(', ') + ')'); const S = b(o);
   S.group.traverse(m => { if (!m.isMesh || !m.material) return; const list = Array.isArray(m.material) ? m.material : [m.material];
-    for (const mt of list) { if (!Array.isArray(m.material)) mt.side = THREE.DoubleSide; if (o.weather !== false) DT.weather(mt, mt.userData.grime ?? (mt.map ? 0.55 : 1)); } }); return S; }
+    for (const mt of list) { if (!Array.isArray(m.material)) mt.side = THREE.DoubleSide; if (o.weather !== false) DT.weather(mt, mt.userData.grime ?? (mt.normalMap ? 0.22 : mt.map ? 0.55 : 1)); } }); return S; }
 
 // ============================================================ lanes
 // A sea lane through [x, z] points (metres, local frame): natural spline resampled by arc length, so

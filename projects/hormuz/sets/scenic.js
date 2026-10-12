@@ -149,17 +149,17 @@ export function makeScenic(H = {}) {
       S.sea.environment();
       const cliffs = await fjord(S.sea);
       const boats = [], r = rng(17), n = P.n ?? 14;
-      for (let i = 0; i < n; i++) { const b = SEA.ship('speedboat', { seed: 120 + i, color: ['#e9e6de', '#dfe4e8', '#ece7da', '#c9d3d8'][i % 4], stripe: ['#2a4f7a', '#8a2c22', '#2f6b5a', '#2a4f7a'][i % 4] }); S.sea.addShip(b); boats.push({ b, lane: (r() - 0.5) * 220 + 10, start: 170 + i * 85 + r() * 50, v: 15 + r() * 4 }); }
+      for (let i = 0; i < n; i++) { const b = SEA.ship('speedboat', { seed: 120 + i, color: ['#e9e6de', '#dfe4e8', '#ece7da', '#c9d3d8'][i % 4], stripe: ['#2a4f7a', '#8a2c22', '#2f6b5a', '#2a4f7a'][i % 4] }); S.sea.addShip(b); boats.push({ b, lane: -45 + r() * 95, start: 150 + i * 70 + r() * 40, v: 15 + r() * 4 }); }
       const dh = []; for (let i = 0; i < 5; i++) { const d = SEA.ship('dhow', { seed: 140 + i }); S.sea.addShip(d); d.place(-260 - i * 28, 380 + i * 14, 175 + i * 3, 0); d.wake = 0.2; dh.push(d); }
       const spray = sprayPts(S.sea, n);
       const cap = captions(S.layer, shot, {}, H);
       return S.out((t, p) => {
         // boats run south (heading 182) down the bay towards the camera at the harbour mouth, then swing to port for the quay
-        boats.forEach(({ b, lane, start, v }) => { const d = start - v * (t + 2); const turn = smoother(clamp((120 - d) / 200));
-          const x = lane * (1 - turn * 0.6) - turn * 140, z = -d; b.place(x, z, 182 + turn * 40, v * (1 - turn * 0.4)); b.fixed.x -= Math.sin(b.fixed.heading) * b.fixed.speed * t; b.fixed.z += Math.cos(b.fixed.heading) * b.fixed.speed * t; b.pose(t, S.sea); });
+        boats.forEach(({ b, lane, start, v }) => { const d = start - v * (t + 2); const turn = 0;
+          const x = lane, z = -d; b.place(x, z, 182, v); b.fixed.x -= Math.sin(b.fixed.heading) * b.fixed.speed * t; b.fixed.z += Math.cos(b.fixed.heading) * b.fixed.speed * t; b.pose(t, S.sea); });
         spray(t, boats.map(o => o.b));
         const k = smoother(p), b = CAM.breath(t, 0.25, 7);
-        apply(S.camera, { pos: [70 + b.x, 2.6 + b.y, 160], look: [lerp(-10, 40, k), 14, -900], mm: P.mm ?? 50, roll: b.r });
+        apply(S.camera, { pos: [62 + b.x, 2.2 + b.y, 40], look: [lerp(-70, -20, k), 10, -900], mm: P.mm ?? 40, roll: b.r });
         S.pres.draw(S.camera, t);
         cap(t);
       });
@@ -631,8 +631,8 @@ async function helium(ctx, shot, H) {
   const key = new THREE.RectAreaLight ? null : null;
   const dl = new THREE.DirectionalLight(0xffffff, 1.6); dl.position.set(2, 5, 3); dl.castShadow = true; dl.shadow.mapSize.set(1024, 1024); mri.add(dl); mri.add(new THREE.HemisphereLight(0xffffff, 0xd8dcdc, 0.6));
   // the wafer: 300 mm disk, die grid with thin-film colour (angle-dependent hue), a holder
-  const { tex } = canvasTex(1024, 1024, (x, w, h) => { x.fillStyle = '#000'; x.fillRect(0, 0, w, h); const n = 22, s = w / n;
-    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const cx = (i + 0.5) * s - w / 2, cy = (j + 0.5) * s - h / 2; if (Math.hypot(cx, cy) > w / 2 - s * 0.7) continue; x.fillStyle = `hsl(${(i * 13 + j * 7) % 30 + 205}, 12%, ${46 + ((i + j) % 3) * 5}%)`; x.fillRect(i * s + 2, j * s + 2, s - 4, s - 4);
+  const { tex } = canvasTex(1024, 1024, (x, w, h) => { x.fillStyle = '#000'; x.fillRect(0, 0, w, h); const n = 34, s = w / n;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const cx = (i + 0.5) * s - w / 2, cy = (j + 0.5) * s - h / 2; if (Math.hypot(cx, cy) > w / 2 - s * 0.7) continue; x.fillStyle = `hsl(${(i * 13 + j * 7) % 30 + 205}, 6%, ${58 + ((i + j) % 3) * 4}%)`; x.fillRect(i * s + 2, j * s + 2, s - 4, s - 4);
       x.fillStyle = 'rgba(255,255,255,0.18)'; for (let k = 0; k < 6; k++) x.fillRect(i * s + 6 + k * (s - 12) / 6, j * s + 8, (s - 12) / 8, s - 16); } });
   const wm = new THREE.ShaderMaterial({ uniforms: { map: { value: tex }, uCam: { value: new THREE.Vector3() } },
     vertexShader: 'varying vec2 vUv; varying vec3 vW, vN; void main(){ vUv = uv; vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * viewMatrix * w; }',
@@ -642,7 +642,7 @@ async function helium(ctx, shot, H) {
         float die = step(.05, dot(tx, vec3(1.)));
         vec3 base = mix(vec3(.62, .64, .68), tx * 1.2, die);
         vec3 irid = mix(vec3(dot(film(c * 1.6 + vUv.x * .3 + vUv.y * .2), vec3(.333))), film(c * 1.6 + vUv.x * .3 + vUv.y * .2), .45) * .3;
-        vec3 col = base * (.55 + .45 * c) + irid * die * (1. - c * .6) + pow(1. - c, 4.) * .4;
+        vec3 col = base * (.7 + .4 * c) + irid * die * (1. - c * .5) + pow(1. - c, 4.) * .5;
         if (length(vUv - .5) > .5) discard;
         gl_FragColor = vec4(col, 1.); }` });
   const disk = new THREE.Mesh(new THREE.CircleGeometry(1.5, 96), wm); disk.rotation.x = -Math.PI / 2; disk.position.y = 0.02; wafer.add(disk);
@@ -660,7 +660,7 @@ async function helium(ctx, shot, H) {
     lab1.style.opacity = ease(t, 0.6, 1.1) * (1 - ease(t, tC - 0.4, tC)); lab2.style.opacity = ease(t, tC + 0.4, tC + 0.9); src.style.opacity = ease(t, 0.8, 1.3);
     if (!second) { const k = smoother(clamp(t / tC)); apply(S.camera, { pos: [lerp(1.9, 1.2, k), lerp(1.55, 1.4, k), lerp(3.4, 2.6, k)], look: [lerp(0, -0.1, k), 1.05, -0.8], mm: 28 }); }
     else { const k = smoother(clamp((t - tC) / (D - tC))); const a = lerp(-0.5, 0.2, k); disk.rotation.z = t * 0.12;
-      const pos = [100 + Math.sin(a) * 2.6, lerp(1.6, 1.15, k), Math.cos(a) * 2.6]; apply(S.camera, { pos, look: [100, 0, 0.1], mm: 45 }); }
+      const pos = [100 + Math.sin(a) * 3.4, lerp(1.25, 0.9, k), Math.cos(a) * 3.4]; apply(S.camera, { pos, look: [100, 0, -0.2], mm: 40 }); }
     wm.uniforms.uCam.value.copy(S.camera.position);
   });
 }

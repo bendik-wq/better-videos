@@ -54,7 +54,7 @@ export function makeHormuz(H = {}) {
       const alt = P.alt ?? 2600;
       const view = P.view ?? (P.empty ? 'telephoto' : alt >= 8500 ? 'establish' : mode === 'smoke' ? 'north' : P.sparse ? 'west' : (P.drift ?? 1) < 0 ? 'east' : 'open');
       // the sun sits ahead of each view (a glitter road on the water), high enough for short shadows
-      const SUN = { open: [56, 300], telephoto: [34, 25], establish: [55, 345], east: [52, 120], north: [44, 330], west: [55, 268] };
+      const SUN = { open: [56, 300], telephoto: [36, 75], establish: [55, 345], east: [52, 120], north: [44, 330], west: [55, 268] };
       const [sEl, sAz] = SUN[view] ?? [60, 170];
       const lk = P.golden ? look('golden') : mode === 'smoke' ? look('smoke', { sunEl: sEl, sunAz: sAz }) : look('bright-day', { sunEl: sEl, sunAz: sAz });
       const S = seaSet(ctx, shot, { look: lk, spectrum: mode === 'empty' ? { hs: 0.7, wind: 6 } : {} });
@@ -663,8 +663,8 @@ export function makeHormuz(H = {}) {
     return S.out((t, p) => {
       const st = d1.pose(t, S.sea), [fx, fz] = fwdOf(st.heading), sx = -fz, sz = fx, k = smoother(p), b = CAM.breath(t, 0.6, 7);
       // a camera boat pacing the lead ship 260 m off its starboard beam, the line receding behind it
-      const pos = [st.x + sx * 260 + fx * lerp(-40, 30, k) + b.x, 9 + b.y, st.z + sz * 260 + fz * lerp(-40, 30, k)];
-      apply(S.camera, { pos, look: [st.x + fx * lerp(-30, -10, k), 9, st.z + fz * lerp(-30, -10, k)], mm: P.mm ?? 85, roll: b.r });
+      const pos = [st.x + sx * 520 + fx * lerp(260, 330, k) + b.x, 14 + b.y, st.z + sz * 520 + fz * lerp(260, 330, k)];
+      apply(S.camera, { pos, look: [st.x - fx * lerp(120, 80, k), 10, st.z - fz * lerp(120, 80, k)], mm: P.mm ?? 70, roll: b.r });
       S.sea.shadows(V(st.x, 0, st.z), 140);
       S.pres.draw(S.camera, t);
       cap(t);
