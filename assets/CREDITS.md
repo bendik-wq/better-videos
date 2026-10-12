@@ -78,4 +78,4 @@ Video files are git-ignored and rebuilt from `assets/footage/pack.json`. Each cl
 | `ships-lcs-formation`, `ships-comfort-underway`, `command-space-ops-center-dod` | US Navy / US Space Force via DVIDS, mirrored on Wikimedia Commons | Public domain (PD-USGov-Military); DoW endorsement disclaimer applies | US Navy / US Space Force (DVIDS) |
 | `weather-erin-goes`, `weather-milton-hurricane-hunter` | NOAA NESDIS / NOAA AOC via Wikimedia Commons | Public domain (US Government) | NOAA |
 | `crowd-causeway-bay-timelapse`, `highway-tullamarine` | Wikimedia Commons | CC0 1.0 | per file page |
-| `oil-rig-drilling` ("Move It: Rig Move Safety for Roughnecks", 2012) | Wikimedia Commons | Public domain (US Government work, per file page) | per file page |
+| `oil-rig-drilling` ("Move It: Rig Move Safety for Roughnecks", 2012) | Wikimedia Commons | Public domain (US Government work) | National Institute for Occupational Safety and Health (NIOSH) |

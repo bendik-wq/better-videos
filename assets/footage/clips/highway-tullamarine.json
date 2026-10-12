@@ -1,0 +1,32 @@
+{
+ "id": "highway-tullamarine",
+ "title": "Tullamarine Freeway northbound near Calder Freeway",
+ "source": "commons",
+ "sourceId": "Tullamarine Freeway northbound near Calder Freeway.ogv",
+ "page": "https://commons.wikimedia.org/wiki/File:Tullamarine_Freeway_northbound_near_Calder_Freeway.ogv",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7d/Tullamarine_Freeway_northbound_near_Calder_Freeway.ogv/Tullamarine_Freeway_northbound_near_Calder_Freeway.ogv.720p.vp9.webm",
+ "date": "2014-01-10",
+ "licence": "CC0",
+ "licenceEvidence": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+ "credit": "Evad37",
+ "tags": [
+  "highways",
+  "traffic",
+  "modern"
+ ],
+ "trim": [
+  0,
+  50
+ ],
+ "file": "assets/footage/clips/highway-tullamarine.mp4",
+ "bytes": 26456516,
+ "sha1": "9d832927affb27916350af670a0d7b324967b0fe",
+ "duration": 50.016633,
+ "width": 1280,
+ "height": 720,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": false,
+ "fetched": "2026-10-12"
+}

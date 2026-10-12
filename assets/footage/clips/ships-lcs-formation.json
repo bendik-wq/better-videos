@@ -1,0 +1,32 @@
+{
+ "id": "ships-lcs-formation",
+ "title": "LCS Formation Displays One of Navy's Newest Platforms",
+ "source": "commons",
+ "sourceId": "LCS Formation Displays One of Navy's Newest Platforms.ogv",
+ "page": "https://commons.wikimedia.org/wiki/File:LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv/LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv.720p.vp9.webm",
+ "date": "2014-04-26",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv",
+ "credit": "Keith DeVinney",
+ "tags": [
+  "ships",
+  "military",
+  "aerial"
+ ],
+ "trim": [
+  0,
+  61
+ ],
+ "file": "assets/footage/clips/ships-lcs-formation.mp4",
+ "bytes": 31867901,
+ "sha1": "216de9972cc853f580b4bf7f69d40747c34fa0ec",
+ "duration": 61.027633,
+ "width": 1280,
+ "height": 720,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

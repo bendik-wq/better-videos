@@ -1,0 +1,141 @@
+{
+ "format": "bv-imagery/1",
+ "name": "matterhorn",
+ "center": {
+  "lat": 45.9763,
+  "lon": 7.6586,
+  "elev": 4256.2
+ },
+ "crs": "EPSG:4326 (equal-angle pixels, north up)",
+ "tile": 1024,
+ "demEncoding": "(elev_m + 500) * 10 = R*256 + G",
+ "levels": [
+  {
+   "id": 0,
+   "bbox": [
+    7.581030830039525,
+    45.92240132950054,
+    7.736169169960474,
+    46.030198670499466
+   ],
+   "size": [
+    1727,
+    1200
+   ],
+   "mpp": 10.0,
+   "degPerPx": 8.983111749910169e-05,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L0/{row}_{col}.jpg",
+   "dem": {
+    "file": "L0/dem.png",
+    "size": [
+     576,
+     400
+    ],
+    "mpp": 20.83661062164731,
+    "min": 1678.5,
+    "max": 4351.3,
+    "terrariumZoom": 12
+   }
+  },
+  {
+   "id": 1,
+   "bbox": [
+    7.348323320158102,
+    45.76070531800216,
+    7.968876679841897,
+    46.191894681997844
+   ],
+   "size": [
+    1727,
+    1200
+   ],
+   "mpp": 40.0,
+   "degPerPx": 0.00035932446999640676,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L1/{row}_{col}.jpg",
+   "dem": {
+    "file": "L1/dem.png",
+    "size": [
+     576,
+     400
+    ],
+    "mpp": 83.346442486589,
+    "min": 653.2,
+    "max": 4510.7,
+    "terrariumZoom": 10
+   },
+   "colorMatch": {
+    "gain": [
+     1.0151,
+     1.013,
+     1.0191
+    ],
+    "offset": [
+     -3.04,
+     -2.63,
+     -3.46
+    ]
+   }
+  }
+ ],
+ "sources": {
+  "imagery": {
+   "name": "Copernicus Sentinel-2 L2A true colour (TCI), AWS Open Data / Element 84 Earth Search",
+   "licence": "Copernicus Sentinel data licence: free, full and open; attribution required",
+   "credit": "Contains modified Copernicus Sentinel data 2025",
+   "url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+   "scenes": [
+    {
+     "id": "S2A_32TLS_20250808_1_L2A",
+     "date": "2025-08-08",
+     "cloud": 0.004884
+    },
+    {
+     "id": "S2B_32TLR_20250709_1_L2A",
+     "date": "2025-07-09",
+     "cloud": 0.026937
+    },
+    {
+     "id": "S2A_32TLS_20250808_1_L2A",
+     "date": "2025-08-08",
+     "cloud": 0.004884
+    },
+    {
+     "id": "S2B_32TLR_20250709_1_L2A",
+     "date": "2025-07-09",
+     "cloud": 0.026937
+    },
+    {
+     "id": "S2A_32TLR_20250709_2_L2A",
+     "date": "2025-07-09",
+     "cloud": 0.034353
+    },
+    {
+     "id": "S2B_32TMS_20250609_0_L2A",
+     "date": "2025-06-09",
+     "cloud": 0.061292
+    },
+    {
+     "id": "S2B_32TMR_20250709_2_L2A",
+     "date": "2025-07-09",
+     "cloud": 0.192756
+    }
+   ]
+  },
+  "elevation": {
+   "name": "AWS Terrain Tiles (Mapzen terrarium)",
+   "licence": "Free to use with attribution of the underlying sources (SRTM and GMTED2010 public domain, ETOPO1 public domain, EU-DEM, etc.)",
+   "credit": "Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)",
+   "url": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md"
+  }
+ },
+ "baked": "2026-10-12",
+ "attribution": "Contains modified Copernicus Sentinel data 2025. Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)."
+}

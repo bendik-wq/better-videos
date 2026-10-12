@@ -1,0 +1,33 @@
+{
+ "id": "orbit-aurora-exp65",
+ "title": "Earth from Space in 4K – Expedition 65 Edition",
+ "source": "nasa",
+ "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "page": "https://images.nasa.gov/details/jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "download": "https://images-assets.nasa.gov/video/jsc2022m000172_Earth_in_4K_Expedition_65_Edition/jsc2022m000172_Earth_in_4K_Expedition_65_Edition~large.mp4",
+ "date": "2022-08-05",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "earth-orbit",
+  "iss",
+  "night",
+  "aurora"
+ ],
+ "trim": [
+  1578,
+  1610
+ ],
+ "file": "assets/footage/clips/orbit-aurora-exp65.mp4",
+ "bytes": 28750683,
+ "sha1": "389078d136dc806d58f78a25c6416f88db96c19a",
+ "duration": 32,
+ "width": 1920,
+ "height": 1012,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

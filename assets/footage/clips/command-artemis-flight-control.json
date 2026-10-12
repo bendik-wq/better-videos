@@ -1,0 +1,31 @@
+{
+ "id": "command-artemis-flight-control",
+ "title": "jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101",
+ "source": "nasa",
+ "sourceId": "jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101",
+ "page": "https://images.nasa.gov/details/jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101",
+ "download": "https://images-assets.nasa.gov/video/jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101/jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101~large.mp4",
+ "date": "2021-11-02",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "command-centre",
+  "modern"
+ ],
+ "trim": [
+  34,
+  104
+ ],
+ "file": "assets/footage/clips/command-artemis-flight-control.mp4",
+ "bytes": 53060645,
+ "sha1": "1193ff816d6e8c490b42f4c9e3540e4b3d7cf576",
+ "duration": 70,
+ "width": 1920,
+ "height": 1080,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

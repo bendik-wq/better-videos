@@ -1,0 +1,32 @@
+{
+ "id": "weather-erin-goes",
+ "title": "Category 5 Erin is the First Atlantic Hurricane of 2025 (NESDIS 2025-08-22 2025 08 21 HurricaneErin NO TEXT)",
+ "source": "commons",
+ "sourceId": "Category 5 Erin is the First Atlantic Hurricane of 2025 (NESDIS 2025-08-22 2025 08 21 HurricaneErin NO TEXT).webm",
+ "page": "https://commons.wikimedia.org/wiki/File:Category_5_Erin_is_the_First_Atlantic_Hurricane_of_2025_(NESDIS_2025-08-22_2025_08_21_HurricaneErin_NO_TEXT).webm",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/60/Category_5_Erin_is_the_First_Atlantic_Hurricane_of_2025_%28NESDIS_2025-08-22_2025_08_21_HurricaneErin_NO_TEXT%29.webm/Category_5_Erin_is_the_First_Atlantic_Hurricane_of_2025_%28NESDIS_2025-08-22_2025_08_21_HurricaneErin_NO_TEXT%29.webm.1080p.vp9.webm",
+ "date": "22 August ",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:Category_5_Erin_is_the_First_Atlantic_Hurricane_of_2025_(NESDIS_2025-08-22_2025_08_21_HurricaneErin_NO_TEXT).webm",
+ "credit": "NOAA",
+ "tags": [
+  "weather",
+  "hurricane",
+  "satellite"
+ ],
+ "trim": [
+  0,
+  40
+ ],
+ "file": "assets/footage/clips/weather-erin-goes.mp4",
+ "bytes": 34920809,
+ "sha1": "b342cca6bb69d1b6279fb68b8b3d2a7d25e34f6f",
+ "duration": 40.006633,
+ "width": 1920,
+ "height": 1080,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": false,
+ "fetched": "2026-10-12"
+}

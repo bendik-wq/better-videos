@@ -1,0 +1,33 @@
+{
+ "id": "computing-sage-1956",
+ "title": "On Guard! The Story of SAGE",
+ "source": "archive",
+ "sourceId": "OnGuard1956",
+ "page": "https://archive.org/details/OnGuard1956",
+ "download": "https://archive.org/download/OnGuard1956/OnGuard1956.mp4",
+ "date": "ca. 1956",
+ "licence": "Public domain (http://creativecommons.org/licenses/publicdomain/)",
+ "licenceEvidence": "http://creativecommons.org/licenses/publicdomain/",
+ "credit": "Prelinger Archives / Internet Archive / IBM Corporation, Military Products Division",
+ "tags": [
+  "computing",
+  "archive",
+  "1950s",
+  "office"
+ ],
+ "trim": [
+  96,
+  178
+ ],
+ "file": "assets/footage/clips/computing-sage-1956.mp4",
+ "bytes": 11999143,
+ "sha1": "3abd171abdeeca65d4dd420dcdd64debbd80472c",
+ "duration": 82.015267,
+ "width": 640,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

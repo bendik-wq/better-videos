@@ -8,6 +8,7 @@
 //                node engine/footage.js list   [tag]                          the local library with licences
 //                node engine/footage.js prep   projects/<name> [--force]      extract graded frame sequences for every footage shot
 //                node engine/footage.js still  <file> <seconds> [--grade house] graded still (+ depth for engine/parallax.js)
+//                node engine/footage.js cuts   <file|id> [--threshold 0.3]       source edit points (pick in/out between them)
 //                node engine/footage.js lut    [name]                         write the house LUTs (.cube) to .cache/footage/luts
 //   BROWSER      import * as FT from '/engine/footage.js';
 //                const set = await FT.footage(ctx, shot, { file, in, out, speed, grade, reframe, caption, source });
@@ -251,7 +252,7 @@ export async function footage(ctx, shot, P = {}) {
     const sc = height / 1080;
     // a soft scrim under corner type: keeps it legible on busy footage without a visible box
     const scrim = (corner) => { const d = document.createElement('div'); const [v, h] = [corner[0] === 't' ? 'top' : 'bottom', corner[1] === 'l' ? 'left' : 'right'];
-      d.style.cssText = `position:absolute;${v}:0;${h}:0;width:${1100 * sc}px;height:${420 * sc}px;background:radial-gradient(ellipse at ${v} ${h}, rgba(0,0,0,.42), rgba(0,0,0,.18) 45%, rgba(0,0,0,0) 72%);opacity:0`; layer.appendChild(d); return d; };
+      d.style.cssText = `position:absolute;${v}:0;${h}:0;width:${1100 * sc}px;height:${420 * sc}px;background:radial-gradient(ellipse at ${v} ${h}, rgba(0,0,0,.5), rgba(0,0,0,.22) 45%, rgba(0,0,0,0) 72%);opacity:0`; layer.appendChild(d); return d; };
     if (P.caption) {
       const C0 = typeof P.caption === 'string' ? { text: P.caption } : P.caption; cap = { at: 0.5, dur: Infinity, corner: 'tl', kind: 'serif', ...C0 };
       const pos = { tl: 'left:96px;top:84px', tr: 'right:96px;top:84px;text-align:right', bl: 'left:96px;bottom:120px', br: 'right:96px;bottom:120px;text-align:right' }[cap.corner];
@@ -639,9 +640,15 @@ async function cli(argv) {
     const fps = +(opt.fps ?? project.footageFps ?? project.settings?.fps ?? project.fps ?? 30), W = project.width ?? 1920, H = project.height ?? 1080;
     const list = footageParams(project);
     log(`${list.length} footage sequence(s) @ ${fps} fps`);
-    for (const P of list) { prepOne(P, fps, W, H); if (P.parallax) stillOne(P.file, P.parallax.at, P.grade ?? 'house'); }
+    let bad = 0; for (const P of list) { try { prepOne(P, fps, W, H); if (P.parallax) stillOne(P.file, P.parallax.at, P.grade ?? 'house'); } catch (e) { bad++; log(`FAILED ${P.file}: ${e.message.split('\n')[0]}`); } }
+    if (bad) { log(`${bad} sequence(s) failed`); process.exitCode = 1; }
   } else if (cmd === 'still') {
     stillOne(pos[1], +pos[2], opt.grade ?? 'house');
+  } else if (cmd === 'cuts') {
+    // source edits (scene changes) so in/out points can avoid an unplanned cut inside a shot
+    const out = cp.spawnSync('ffmpeg', ['-hide_banner', '-i', resolveFile(pos[1]), '-vf', `select='gt(scene,${opt.threshold ?? 0.3})',showinfo`, '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
+    const ts = [...out.matchAll(/pts_time:([0-9.]+)/g)].map(m => +(+m[1]).toFixed(2));
+    console.log(JSON.stringify(ts));
   } else if (cmd === 'lut') {
     for (const n of pos[1] ? [pos[1]] : Object.keys(GRADES).filter(k => GRADES[k])) log('lut', lutFile(n));
   } else {

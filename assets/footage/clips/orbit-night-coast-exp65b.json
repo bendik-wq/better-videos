@@ -1,0 +1,32 @@
+{
+ "id": "orbit-night-coast-exp65b",
+ "title": "Earth from Space in 4K – Expedition 65 Edition",
+ "source": "nasa",
+ "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "page": "https://images.nasa.gov/details/jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "download": "https://images-assets.nasa.gov/video/jsc2022m000172_Earth_in_4K_Expedition_65_Edition/jsc2022m000172_Earth_in_4K_Expedition_65_Edition~large.mp4",
+ "date": "2022-08-05",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "iss-night",
+  "cities-at-night",
+  "earth-orbit"
+ ],
+ "trim": [
+  2516,
+  2550
+ ],
+ "file": "assets/footage/clips/orbit-night-coast-exp65b.mp4",
+ "bytes": 24962554,
+ "sha1": "2ad32f6cc430fbbef526bde5fa3766de9df9c368",
+ "duration": 34,
+ "width": 1920,
+ "height": 1012,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

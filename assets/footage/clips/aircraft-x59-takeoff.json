@@ -1,0 +1,31 @@
+{
+ "id": "aircraft-x59-takeoff",
+ "title": "X-59 Second Flight B-Roll",
+ "source": "nasa",
+ "sourceId": "AFRC-2026-14579-X-59_Flight2_B-Roll_V2_3-20-26",
+ "page": "https://images.nasa.gov/details/AFRC-2026-14579-X-59_Flight2_B-Roll_V2_3-20-26",
+ "download": "https://images-assets.nasa.gov/video/AFRC-2026-14579-X-59_Flight2_B-Roll_V2_3-20-26/AFRC-2026-14579-X-59_Flight2_B-Roll_V2_3-20-26~large.mp4",
+ "date": "2026-03-26",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / AFRC",
+ "tags": [
+  "aircraft",
+  "modern"
+ ],
+ "trim": [
+  96,
+  162
+ ],
+ "file": "assets/footage/clips/aircraft-x59-takeoff.mp4",
+ "bytes": 40049971,
+ "sha1": "c566328966be0ba95d893c0089e06bd796dde3e2",
+ "duration": 66,
+ "width": 1920,
+ "height": 1080,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

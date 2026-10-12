@@ -1,0 +1,33 @@
+{
+ "id": "crowd-causeway-bay-timelapse",
+ "title": "Causeway Bay Time-lapse videos (afternoon)",
+ "source": "commons",
+ "sourceId": "Causeway Bay Time-lapse videos (afternoon).ogv",
+ "page": "https://commons.wikimedia.org/wiki/File:Causeway_Bay_Time-lapse_videos_(afternoon).ogv",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0c/Causeway_Bay_Time-lapse_videos_%28afternoon%29.ogv/Causeway_Bay_Time-lapse_videos_%28afternoon%29.ogv.720p.vp9.webm",
+ "date": "2016-04-01",
+ "licence": "CC0",
+ "licenceEvidence": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+ "credit": "鄒延",
+ "tags": [
+  "crowds",
+  "city",
+  "traffic",
+  "timelapse"
+ ],
+ "trim": [
+  0,
+  26
+ ],
+ "file": "assets/footage/clips/crowd-causeway-bay-timelapse.mp4",
+ "bytes": 5557651,
+ "sha1": "2b7faa07ed6d40e6a150e80043f01229bd0825e9",
+ "duration": 26,
+ "width": 854,
+ "height": 480,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": false,
+ "fetched": "2026-10-12"
+}

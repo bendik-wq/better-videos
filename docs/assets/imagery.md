@@ -132,8 +132,15 @@ each view ray, with in-scatter warming towards the sun. A sky dome uses the same
 fade over their outer 6 % onto the coarser level underneath, with polygon offset so they always win
 the depth test.
 
-Cost (llvmpipe, 1080p, Pentagon set, 4 levels, 96 tiles): about 0.6–0.9 s to load and upload the
-textures per worker, then roughly 120–200 ms per frame. `lod: 1` halves the texture memory
-(~250 MB → ~120 MB).
+Cost (llvmpipe, 1080p): a 4-level NAIP set is 96–120 tiles of 1024² (~0.5 GB of RGBA + mips in
+system memory per worker); loading takes a few seconds per worker. In the footage-lab final render,
+on a 4-vCPU box shared with other renders (load 10–14), aerial chunks ran at 0.7–1.1 fps per worker
+including capture, finish and encode; expect roughly 0.5–0.8 s per frame under that load and
+less on an idle box. Knobs: `lod: 1` (skip the 0.6 m level, about ¼ of the texture memory),
+`levels: 3`, `segments: 32`. A GPU would make this trivially real-time; nothing here needs one.
+
+Sentinel-2 sets are 10 m/px, and the TCI product clips snow and bright cloud (it saturates near
+30 % reflectance). They hold up from about 2 km AGL and above. Lower and they read soft. A future
+improvement is to bake from the 16-bit B04/B03/B02 bands with our own tone curve.
 
 Demo: `projects/footage-lab` (the `aerial` set: Pentagon drift-in and the Hoover Dam canyon run).

@@ -1,0 +1,31 @@
+{
+ "id": "oil-rig-drilling",
+ "title": "Move It Rig Move Safety for Roughnecks",
+ "source": "commons",
+ "sourceId": "Move It Rig Move Safety for Roughnecks.webm",
+ "page": "https://commons.wikimedia.org/wiki/File:Move_It_Rig_Move_Safety_for_Roughnecks.webm",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Move_It_Rig_Move_Safety_for_Roughnecks.webm",
+ "date": "2012",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:Move_It_Rig_Move_Safety_for_Roughnecks.webm",
+ "credit": "National Institute for Occupational Safety and Health",
+ "tags": [
+  "oil-rigs",
+  "industry"
+ ],
+ "trim": [
+  590,
+  650
+ ],
+ "file": "assets/footage/clips/oil-rig-drilling.mp4",
+ "bytes": 14005365,
+ "sha1": "c629474e0ce8bc014cda76fcfc0def44cea39f43",
+ "duration": 60.026633,
+ "width": 640,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

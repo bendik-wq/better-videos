@@ -42,6 +42,7 @@ node engine/footage.js files  nasa <nasa_id>                       # every downl
 node engine/footage.js get    archive OnGuard1956 --trim 96,178 --id computing-sage-1956 --tag computing
 node engine/footage.js pack   [--only command-centre,weather] [--dry]
 node engine/footage.js list   [tag]
+node engine/footage.js cuts   <id>                                 # source edit points: keep in/out between them
 ```
 
 * `fetch` keeps only items whose licence passes the policy above (`--force` overrides after you
@@ -57,8 +58,9 @@ node engine/footage.js list   [tag]
 
 ## Starter pack (`assets/footage/pack.json`)
 
-28 clips, ~25–90 s each, around 1 GB on disk. Every item was looked at on a contact sheet before it
-was chosen.
+28 clips listed, 25–90 s each; 27 fetched here (0.67 GB, 26 min of footage). `command-space-ops-center-dod`
+kept failing on Commons rate limits (HTTP 429); rerun `pack` later. Every item was checked on a contact
+sheet before it was chosen.
 
 | Need | Clips | Source · licence |
 |---|---|---|
@@ -72,7 +74,7 @@ was chosen.
 | 1950s–60s office and computing | `computing-sage-1956`, `computing-sage-panels-1956`, `office-treasury-1969` | Prelinger "On Guard! The Story of SAGE" (IBM/USAF) · PD dedication; NARA "The Treasury Story" · CC0/US Gov |
 | Military command centres | `command-sage-consoles-1956`, `command-space-ops-center-dod`, `command-apollo-mcc-1969`, `command-artemis-flight-control` | Prelinger · PD; US Space Force via Commons (DVIDS) · PD; NASA · PD |
 | Money printing | `money-treasury-press-1969` | NARA "The Treasury Story" (US Treasury film) · US Gov |
-| Oil rigs | `oil-rig-drilling` (land rig, derrick work) | OSHA/industry safety film on Commons · PD |
+| Oil rigs | `oil-rig-drilling` (land rig, derrick work) | NIOSH (CDC) safety film via Commons · PD (US Gov) |
 | Highways | `highway-tullamarine`, `highway-green-light-1954` | Commons · CC0; Prelinger · PD |
 | Weather | `weather-helene-iss`, `weather-erin-goes`, `weather-milton-hurricane-hunter` | NASA · PD; NOAA NESDIS via Commons · PD |
 
@@ -125,9 +127,16 @@ const set = await FT.footage(ctx, shot, {
 * **Parallax.** `FT.parallaxStill(ctx, shot, { file, grade, parallax: { at, move, depth, center } })`
   turns one graded frame into an `engine/parallax.js` photo move. `prep` extracts the still and runs
   `engine/depth.py` on it.
-* **Cost.** A footage frame is a JPEG fetch + browser decode + one texture upload + one quad, about
-  25–45 ms at 1080p on llvmpipe (a plain 3D frame is ~250 ms). Disk: ~0.25–0.45 MB per prepared
-  1080p frame (≈ 0.5 GB per minute at 30 fps).
+* **Cost.** A footage frame is a JPEG fetch + browser decode + one texture upload + one quad. The
+  footage-lab final render (1080p30, 3 workers, on a box shared with other renders at load 10–14)
+  ran footage-only chunks at 1.5–2.2 fps per worker including capture, film finish and encode,
+  i.e. no more expensive than a plain 3D frame; the NAIP aerial chunks ran at 0.7–1.1 fps per
+  worker (texture-heavy, plus the dissolve renders two shots). Disk: ~0.07–0.3 MB per prepared
+  1080p frame at q 3 (archive SD film is small, 4K-sourced detail is large), about 0.3–0.5 GB per
+  minute at 30 fps. `prep` takes 3–60 s per shot.
+* **Edits inside sources.** Compilations and archive films are cut; run `footage.js cuts <id>` and
+  keep each shot's `[in, in + duration·speed]` between two edit points, or the shot will carry an
+  unplanned cut.
 * **Captions.** House type only: Instrument Serif title wiped on from the left, Plex Mono tracked
   caps for the sub line and for the bottom-left SOURCE line. Captions sit in the corners, never
   centred in the lower third, and never repeat the VO.

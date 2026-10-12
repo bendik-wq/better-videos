@@ -1,0 +1,33 @@
+{
+ "id": "highway-green-light-1954",
+ "title": "Give Yourself the Green Light",
+ "source": "archive",
+ "sourceId": "GiveYour1954",
+ "page": "https://archive.org/details/GiveYour1954",
+ "download": "https://archive.org/download/GiveYour1954/GiveYour1954.mp4",
+ "date": "1954",
+ "licence": "Public domain (http://creativecommons.org/licenses/publicdomain/)",
+ "licenceEvidence": "http://creativecommons.org/licenses/publicdomain/",
+ "credit": "Prelinger Archives / Internet Archive / Handy (Jam) Organization",
+ "tags": [
+  "highways",
+  "traffic",
+  "archive",
+  "1950s"
+ ],
+ "trim": [
+  0,
+  60
+ ],
+ "file": "assets/footage/clips/highway-green-light-1954.mp4",
+ "bytes": 9999225,
+ "sha1": "1435cdd8b2e2909c749bc0f8dc2b46436c23faab",
+ "duration": 60.026633,
+ "width": 640,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}
