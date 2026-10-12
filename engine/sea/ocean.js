@@ -180,6 +180,17 @@ export function oceanMaterial(U, spectrum, o = {}) {
             float spray = exp(-pow(side / (3. + Bm * .2), 2.)) * smoothstep(-L * .18, 0., bu) * (1. - smoothstep(0., Bm * .8, bu));
             wakeFoam = max(wakeFoam, (bw * .7 + spray) * smoothstep(.3, .65, n2 + .2) * clamp(Vs / 6., 0., 1.) * fk);
           }
+          // hull contact: water piles against the plating and breaks along the waterline, the whole length
+          // (at anchor too: the swell laps the hull); widest at the shoulders, a churn under the counter
+          if (fk > 0. && abs(u) < L * .56 && abs(vv) < Bm * 1.3) {
+            float hwc = Bm * .5 * clamp(1. - pow(max(u - L * .2, 0.) / (L * .31), 2.), 0., 1.) * clamp(1. - pow(max(-u - L * .3, 0.) / (L * .22), 2.), .55, 1.);
+            float dc = abs(vv) - hwc;
+            float n3 = noiseA(vec2(u * .55, vv) / 2.3 + A.xy * .003 + vec2(uTime * .07, 0.)) * .6 + noiseA(vec2(u, vv) / .9 + .17) * .4;
+            float wdt = .45 + Bm * .01 + Vs * .09;
+            float cf = exp(-pow(max(dc, 0.) / wdt, 2.)) * smoothstep(-1.2, -.2, dc);
+            float shoulder = 1. + smoothstep(L * .15, L * .4, u) * 1.2 + smoothstep(-L * .35, -L * .5, u) * .8;
+            wakeFoam = max(wakeFoam, cf * smoothstep(.42, .72, n3 * (.8 + .2 * shoulder)) * (.45 + .55 * clamp(Vs / 6., 0., 1.)) * min(fk, 1.));
+          }
         }
         s += ws;
         s *= (1. - calm * .5); var *= (1. - calm * .55);
@@ -237,7 +248,7 @@ export function oceanMaterial(U, spectrum, o = {}) {
         if (uDepthOn > .5 || bedT < 1e8) {
           float t = uDepthOn > .5 && bedT > 1e8 ? depthHere / mu : bedT;
           vec3 T = exp(-(uAbsorb + (bedKind > .9 ? .22 : .03)) * t);
-          vec3 floorCol = bedT < 1e8 ? bed : uSand * Ed * .35;
+          vec3 floorCol = bedT < 1e8 ? bed : uSand * Ed * .2;
           if (bedKind > .45 && bedKind < .55) T = mix(vec3(1.), T, .35);    // photo seabed: the water column is already in it
           vec3 shallowScatter = uShallow * Ed * .12 * (1. - exp(-t * .25));
           if (bedKind > .9 && bedT < 1e8) body = floorCol * T * .6 + body * (1. - T);                  // a submerged hull: just fades into the water
@@ -281,8 +292,10 @@ export class Ocean {
     this.U.uR0.value = Math.min(400, Math.max(0.12, h * 0.025));
     this.U.uFar.value = Math.sqrt(2 * 6371000 * h + h * h) * 1.25 + 30000;
   }
-  setShips(list) {
+  setShips(list, cam) {
     const U = this.U; let n = 0;
+    // nearest first: the shader only sees MAX_SHIPS ships (a fleet at anchor can be larger)
+    if (cam && list.length > MAX_SHIPS) list = [...list].sort((a, b) => ((a.state.x - cam.x) ** 2 + (a.state.z - cam.z) ** 2) / (a.length || 1) - ((b.state.x - cam.x) ** 2 + (b.state.z - cam.z) ** 2) / (b.length || 1));
     for (const s of list) { if (n >= MAX_SHIPS) break; const st = s.state; if (!st) continue;
       U.uShipA.value[n].set(st.x, st.z, Math.sin(st.heading), -Math.cos(st.heading));
       U.uShipB.value[n].set(s.length, s.beam, st.speed, s.wake ?? 1);

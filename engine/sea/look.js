@@ -15,10 +15,33 @@ export const LOOKS = {
   },
   // Golden hour: low sun across the strait, warm haze, long glitter road, cooler water.
   golden: {
-    sunEl: 7.5, sunAz: 252, sun: C(1.0, 0.64, 0.36, 3.6), zenith: C(0.06, 0.13, 0.30), horizon: C(0.98, 0.70, 0.47), sunHalo: 1.5,
+    sunEl: 7.5, sunAz: 252, sun: C(1.0, 0.66, 0.38, 3.6), zenith: C(0.045, 0.15, 0.34), horizon: C(0.98, 0.76, 0.52), sunHalo: 1.5,
     hazeDensity: 1 / 15000, hazeScale: 1100, hazeTint: C(0.95, 0.72, 0.52), skyAmb: C(0.25, 0.27, 0.36),
     deep: C(0.0035, 0.014, 0.024), scatter: C(0.02, 0.05, 0.05), shallow: C(0.10, 0.36, 0.36), sand: C(0.80, 0.62, 0.42), absorb: C(0.42, 0.075, 0.06),
     foam: C(1.0, 0.86, 0.72), exposure: 1.05, contrast: 1.08, sat: 1.04, warm: 0.06, bloom: 0.75, landTint: C(1.0, 0.80, 0.62), landGain: 0.8, sunDisc: 1,
+  },
+  // The Tanker War, 1980s (within the bright grade): a warm, hazy summer evening over the Gulf, faded
+  // like Ektachrome: lower saturation, lifted blacks, warm tint, grain, a soft vignette.
+  archive: {
+    sunEl: 10, sunAz: 250, sun: C(1.0, 0.74, 0.5, 3.3), zenith: C(0.09, 0.18, 0.34), horizon: C(0.9, 0.78, 0.62), sunHalo: 1.4,
+    hazeDensity: 1 / 11000, hazeScale: 1300, hazeTint: C(0.92, 0.78, 0.62), skyAmb: C(0.28, 0.28, 0.32),
+    deep: C(0.004, 0.015, 0.021), scatter: C(0.02, 0.05, 0.048), shallow: C(0.12, 0.36, 0.34), sand: C(0.80, 0.64, 0.45), absorb: C(0.42, 0.075, 0.06),
+    foam: C(1.0, 0.9, 0.78), exposure: 1.04, contrast: 1.03, sat: 0.86, warm: 0.06, bloom: 0.7, landTint: C(1.0, 0.84, 0.68), landGain: 0.85, sunDisc: 1,
+    lift: 0.03, grain: 0.03, vignette: 0.28, tint: [1.03, 0.99, 0.91],
+  },
+  // Dawn over the Musandam fjords: the sun just up in the east, pink-gold haze, cool water.
+  dawn: {
+    sunEl: 4, sunAz: 95, sun: C(1.0, 0.6, 0.42, 3.1), zenith: C(0.075, 0.12, 0.26), horizon: C(0.96, 0.72, 0.6), sunHalo: 1.6,
+    hazeDensity: 1 / 9000, hazeScale: 900, hazeTint: C(0.95, 0.75, 0.66), skyAmb: C(0.24, 0.26, 0.36),
+    deep: C(0.003, 0.012, 0.022), scatter: C(0.016, 0.045, 0.05), shallow: C(0.1, 0.33, 0.35), sand: C(0.78, 0.6, 0.45), absorb: C(0.42, 0.075, 0.06),
+    foam: C(1.0, 0.88, 0.8), exposure: 1.05, contrast: 1.05, sat: 1.02, warm: 0.04, bloom: 0.8, landTint: C(0.98, 0.78, 0.68), landGain: 0.75, sunDisc: 1,
+  },
+  // Bright day with smoke in the air (28 Feb 2026): the same sun, a browner, thicker horizon.
+  smoke: {
+    sunEl: 50, sunAz: 165, sun: C(1.0, 0.93, 0.84, 3.1), zenith: C(0.05, 0.19, 0.48), horizon: C(0.72, 0.71, 0.68), sunHalo: 1.0,
+    hazeDensity: 1 / 24000, hazeScale: 1600, hazeTint: C(0.74, 0.70, 0.64), skyAmb: C(0.30, 0.38, 0.52),
+    deep: C(0.0025, 0.018, 0.026), scatter: C(0.012, 0.075, 0.068), shallow: C(0.10, 0.48, 0.44), sand: C(0.80, 0.70, 0.52), absorb: C(0.42, 0.075, 0.06),
+    foam: C(0.9, 0.9, 0.88), exposure: 1.0, contrast: 1.05, sat: 0.98, warm: 0.03, bloom: 0.5, landTint: C(0.96, 0.93, 0.88), landGain: 0.95, sunDisc: 1,
   },
   // Overcast-free "map" daylight for data shots: flatter, cleaner, higher key.
   map: {

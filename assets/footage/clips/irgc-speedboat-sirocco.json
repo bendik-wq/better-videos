@@ -1,0 +1,28 @@
+{
+ "id": "irgc-speedboat-sirocco",
+ "title": "Iranian IRGC speedboat approaching USS Sirocco and USNS Choctaw",
+ "source": "commons",
+ "sourceId": "Iranian IRGC speedboat approaching USS Sirocco and USNS Choctaw.webm",
+ "page": "https://commons.wikimedia.org/wiki/File:Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm/Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm.720p.vp9.webm",
+ "date": "2022-06-20",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm",
+ "credit": "U.S. Navy",
+ "tags": [
+  "hormuz"
+ ],
+ "trim": null,
+ "file": "assets/footage/clips/irgc-speedboat-sirocco.mp4",
+ "bytes": 5605005,
+ "sha1": "a98c4f9c4f6ab04a471175c254fbf3b43d4bbbf7",
+ "duration": 22.64,
+ "width": 1280,
+ "height": 720,
+ "fps": 25,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12",
+ "aliasOf": "commons-iranian-irgc-speedboat-approaching-uss-sirocco-a"
+}

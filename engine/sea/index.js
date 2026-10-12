@@ -7,3 +7,6 @@ export { Ocean, noiseTexture, MAX_SHIPS } from './ocean.js';
 export { LOOKS, sunDir, mixLook, GLSL } from './look.js';
 export { land } from './land.js';
 export { ship, lane, hullGeometry, KINDS } from './ships.js';
+export * as SMOKE from './smoke.js';
+export * as DETAIL from './detail.js';
+import './navy.js';

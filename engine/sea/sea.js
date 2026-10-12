@@ -48,11 +48,12 @@ function postMaterial(U, sea) {
     uniforms: { ...U, tC: { value: null }, tZ: { value: null }, tB1: { value: null }, tB2: { value: null }, uInvProj: { value: new THREE.Matrix4() }, uCamWorld: { value: new THREE.Matrix4() },
       uExposure: { value: 1 }, uContrast: { value: 1 }, uSat: { value: 1 }, uWarm: { value: 0 }, uBloom: { value: 0.5 }, uHaze: { value: 1 },
       tD0: { value: C[0].tD }, tD1: { value: C[1].tD }, uL: { value: new THREE.Vector3(C[0].L, C[1].L, C[2].L) }, uNear: { value: 0.1 }, uWaterOn: { value: 1 },
-      uUnderCol: { value: new THREE.Vector3(0.02, 0.16, 0.18) }, uUnderK: { value: 0.07 }, uLift: { value: 0 }, uFade: { value: 0 }, uFadeCol: { value: new THREE.Vector3() } },
+      uUnderCol: { value: new THREE.Vector3(0.02, 0.16, 0.18) }, uUnderK: { value: 0.07 }, uLift: { value: 0 }, uFade: { value: 0 }, uFadeCol: { value: new THREE.Vector3() },
+      uGrain: { value: 0 }, uVig: { value: 0 }, uTint: { value: new THREE.Vector3(1, 1, 1) } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }',
     fragmentShader: /* glsl */`${GLSL}
       uniform sampler2D tC, tZ, tB1, tB2, tD0, tD1; uniform mat4 uInvProj, uCamWorld; uniform vec3 uL, uUnderCol, uFadeCol;
-      uniform float uExposure, uContrast, uSat, uWarm, uBloom, uHaze, uNear, uWaterOn, uUnderK, uLift, uFade;
+      uniform float uExposure, uContrast, uSat, uWarm, uBloom, uHaze, uNear, uWaterOn, uUnderK, uLift, uFade, uGrain, uVig; uniform vec3 uTint;
       varying vec2 vUv;
       vec3 neutral(vec3 c) { // Khronos PBR Neutral
         float sc = .8 - .04, d = .15; float x = min(c.r, min(c.g, c.b)); float off = x < .08 ? x - 6.25 * x * x : .04; c -= off;
@@ -92,6 +93,9 @@ function postMaterial(U, sea) {
         c = (c - .45) * uContrast + .45;
         c *= vec3(1. + uWarm, 1. + uWarm * .3, 1. - uWarm * .8);
         c = uLift + (1. - uLift) * c;
+        c *= uTint;
+        if (uVig > 0.) { vec2 q = vUv - .5; c *= 1. - uVig * smoothstep(.2, .85, dot(q, q) * 2.2); }
+        if (uGrain > 0.) { float g = hash12(gl_FragCoord.xy + floor(uTime * 24.) * vec2(37.1, 17.7)) + hash12(gl_FragCoord.xy * 1.37 + 11.3 + floor(uTime * 24.)) - 1.; c += g * uGrain * (.4 + .6 * (1. - abs(l * 2. - 1.))); }
         c = mix(c, uFadeCol, uFade);
         gl_FragColor = vec4(srgb(c), 1.);
       }`,
@@ -209,7 +213,7 @@ export class Sea {
     if (this.water) this.spectrum.update(t);
     // ships: state at t, wakes into the ocean
     for (const s of this.ships) { s.update?.(t, this); s.curve?.(camera.position); }
-    this.ocean.setShips(this.ships.filter(s => s.group.visible !== false));
+    this.ocean.setShips(this.ships.filter(s => s.group.visible !== false), camera.position);
     this.ocean.update(camera);
     // near/far from the altitude
     const hgt = Math.max(0.3, Math.abs(camera.position.y));
@@ -247,6 +251,7 @@ export class Sea {
     P.uInvProj.value.copy(camera.projectionMatrixInverse); P.uCamWorld.value.copy(camera.matrixWorld);
     P.uExposure.value = (o.exposure ?? 1) * L.exposure; P.uContrast.value = L.contrast; P.uSat.value = L.sat; P.uWarm.value = L.warm; P.uHaze.value = o.haze ?? 1;
     P.uWaterOn.value = this.water ? 1 : 0; P.uFade.value = o.fade ?? 0; if (o.fadeCol) P.uFadeCol.value.set(...o.fadeCol);
+    P.uGrain.value = o.grain ?? L.grain ?? 0; P.uVig.value = o.vignette ?? L.vignette ?? 0; P.uLift.value = o.lift ?? L.lift ?? 0; P.uTint.value.set(...(o.tint ?? L.tint ?? [1, 1, 1]));
     r.setRenderTarget(o.target ?? null);
     r.render(this.post.scene, ORTHO);
     r.setRenderTarget(null);

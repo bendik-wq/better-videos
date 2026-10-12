@@ -41,7 +41,7 @@ export function labels(layer, { color = '#f6f2ea' } = {}) {
   const list = []; const v = new THREE.Vector3();
   return {
     add(text, at, { dx = 0, dy = -46, sub = '', size = 0.95, dot = true, align = 'center', t0 = 0, t1 = 1e9, accent = null, show = null } = {}) {
-      const el = document.createElement('div'); el.style.cssText = `position:absolute;white-space:nowrap;font:500 ${size}em 'Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:${color};text-shadow:0 1px 8px rgba(0,0,0,.55),0 0 2px rgba(0,0,0,.4)`;
+      const el = document.createElement('div'); el.style.cssText = `position:absolute;white-space:nowrap;font:500 ${size * 1.3}em 'Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:${color};text-shadow:0 1px 8px rgba(0,0,0,.55),0 0 2px rgba(0,0,0,.4)`;
       el.innerHTML = text + (sub ? `<div style="font-size:.68em;letter-spacing:.14em;opacity:.8;margin-top:.25em">${sub}</div>` : ''); layer.appendChild(el);
       const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line'); ln.setAttribute('stroke', accent ?? 'rgba(255,255,255,.75)'); ln.setAttribute('stroke-width', '1.3'); svg.appendChild(ln);
       const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('r', dot ? '3.5' : '0'); c.setAttribute('fill', accent ?? '#fff'); svg.appendChild(c);
@@ -83,3 +83,75 @@ export function ribbon(pts, { width = 400, y = 30, color = 0xffffff, opacity = 0
     transparent: true, depthWrite: false, depthTest, side: THREE.DoubleSide });
   const mesh = new THREE.Mesh(g, m); mesh.frustumCulled = false; mesh.renderOrder = 50; mesh.userData.length = acc; return mesh;
 }
+
+// ================================================================== shared set kit (index.js + scenic.js)
+import * as CAMK from '/engine/camera.js';
+export const smoother = CAMK.smoother, lerp = (a, b, t) => a + (b - a) * t, clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+export const V = (x, y, z) => new THREE.Vector3(x, y, z);
+export const range = (t, a, b) => clamp((t - a) / (b - a));
+export const ease = (t, a, b) => smoother(range(t, a, b));
+export const MONO = (size = 0.9, color = '#fbf8f2', ls = 0.18) => `font:500 ${size}em 'Plex Mono',monospace;letter-spacing:${ls}em;text-transform:uppercase;color:${color};text-shadow:0 1px 18px rgba(8,20,38,.35),0 0 2px rgba(8,20,38,.3)`;
+export const SERIF = (size = 3.2, color = '#fbf8f2') => `font:400 ${size}em/1.04 'Instrument Serif',serif;color:${color};text-shadow:0 2px 18px rgba(8,20,38,.35)`;
+export const NAVY = '#0f1e33', NAVY_SOFT = '#46536a', PAPER = '#f4efe6', RED = '#e0241b', SAND = '#e6cf9f', TURQ = '#17a3a6', DEEP = '#0b6f86';
+const norm = (w) => String(w).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9$%.]/g, '').replace(/\.$/, '');
+// shot-relative time of the nth spoken word starting with `word` (narration timing), or `fb`
+export function wt(shot, word, fb = 1.2, nth = 0) {
+  if (word == null) return fb; if (typeof word === 'number') return word;
+  const hits = (shot.words || []).filter(x => norm(x.w).startsWith(norm(word)));
+  return (hits[nth] ?? hits.at(-1))?.s ?? fb;
+}
+export function layerOf(ctx) { const l = document.createElement('div'); l.style.cssText = 'position:absolute;inset:0;display:none;overflow:hidden'; ctx.overlay.appendChild(l); return l; }
+export function div(layer, css, html = '') { const d = document.createElement('div'); d.style.cssText = 'position:absolute;' + css; d.innerHTML = html; layer.appendChild(d); return d; }
+// bright-mode type on pictures: light type on a soft navy shadow plate from its corner (never a box)
+export function plate(layer, corner = 'tl', k = 0.58) {
+  const at = { tl: '0% 0%', tr: '100% 0%', bl: '0% 100%', br: '100% 100%' }[corner];
+  return div(layer, `inset:0;pointer-events:none;background:radial-gradient(ellipse 62% 52% at ${at}, rgba(8,20,38,${k}) 0%, rgba(8,20,38,${k * 0.45}) 38%, rgba(8,20,38,0) 72%)`);
+}
+// caption (top-left, typed on) + source line (bottom-right) with their plates; returns update(t)
+export function captions(layer, shot, { caption, source, at = 0.5, corner = 'tl', css } = {}, H = {}) {
+  const P = shot.params ?? {}; caption = caption ?? P.caption; source = source ?? P.source;
+  if (H.captions === false) return () => {};
+  const els = [];
+  if (caption) { const pl = plate(layer, corner === 'tl' ? 'tl' : corner); const d = div(layer, `${css ?? (corner === 'tl' ? 'left:6%;top:8%' : 'left:6%;bottom:9%')};${MONO(1.15)};line-height:1.6;white-space:nowrap`, '');
+    els.push((t) => { const k = range(t, at, at + 0.25 + caption.length * 0.035); d.textContent = caption.slice(0, Math.round(caption.length * k)); pl.style.opacity = range(t, at - 0.4, at + 0.4); }); }
+  if (source) { const pl = plate(layer, 'br', 0.42); const d = div(layer, `right:4.2%;bottom:4.6%;${MONO(0.72, 'rgba(251,248,242,.88)', 0.16)}`, source);
+    els.push((t) => { const k = range(t, at + 0.6, at + 1.2); d.style.opacity = k; pl.style.opacity = k; }); }
+  return (t) => els.forEach(f => f(t));
+}
+const LOOKC = (name, o = {}) => ({ ...SEA.LOOKS[name], ...o });
+export { LOOKC as look };
+// a Sea + presenter (house set format), a camera and a DOM layer
+export function seaSet(ctx, shot, o = {}) {
+  const P = shot.params ?? {};
+  const sea = new SEA.Sea(ctx.renderer, { look: P.look ? (typeof P.look === 'string' ? SEA.LOOKS[P.look] : P.look) : o.look ?? 'bright-day', spectrum: { ...(o.spectrum ?? {}), ...(P.spectrum ?? {}) }, ocean: { ...(o.ocean ?? {}), ...(P.ocean ?? {}) }, renderScale: P.renderScale ?? o.renderScale ?? 1, bloom: o.bloom });
+  const pres = sea.presenter();
+  const camera = new THREE.PerspectiveCamera(o.fov ?? 40, ctx.width / ctx.height, 0.1, 1e6);
+  const layer = layerOf(ctx);
+  const disposers = [];
+  return { sea, pres, camera, layer, W: ctx.width, H: ctx.height, ctx, onDispose: (f) => disposers.push(f),
+    out(update) { return { scene: pres.scene, camera, layer, update, sea, dispose() { disposers.forEach(f => f()); pres.dispose(); sea.dispose(); layer.remove(); } }; } };
+}
+export async function withLand(S, { levels = 99, lod = 0, depthLevel = 1, root } = {}) {
+  const L = await SEA.land(S.sea, 'hormuz', { root: root ?? ROOT + 'imagery/', lod, levels });
+  S.sea.scene.add(L.group);
+  const b = L.bathy[Math.min(depthLevel, L.bathy.length - 1)], U = S.sea.ocean.U;
+  U.uDepthTex.value = b.tex; U.uDepthBox.value.copy(b.box); U.uDepthOn.value = 1;
+  const c = L.bathy.at(-1); if (c !== b) { U.uDepthTex2.value = c.tex; U.uDepthBox2.value.copy(c.box); }
+  return L;
+}
+// camera from a target, a compass azimuth (deg, the way the camera LOOKS), a pitch (deg below horizontal) and altitude
+export function aerial(target, az, pitch, alt) { const a = az * Math.PI / 180, d = alt / Math.tan(pitch * Math.PI / 180); return { pos: [target[0] - Math.sin(a) * d, alt, target[2] + Math.cos(a) * d], look: [target[0], 0, target[2]] }; }
+// fixed ships at anchor (heading into the wind, no way on), deterministic layout around a centre
+export function anchorage(sea, c, { n = 12, r = 4000, kinds = ['vlcc', 'container', 'lng', 'vlcc', 'vlcc'], seed = 5, heading = 320, lite = true, minGap = 700, avoid = null } = {}) {
+  const rnd = K_rng(seed), out = [], pts = [];
+  for (let i = 0; i < n * 8 && out.length < n; i++) { const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r, x = c[0] + Math.cos(a) * d * 1.5, z = c[2] + Math.sin(a) * d;
+    if (pts.some(([px, pz]) => Math.hypot(px - x, pz - z) < minGap) || (avoid && Math.hypot(avoid[0] - x, avoid[1] - z) < avoid[2])) continue; pts.push([x, z]);
+    const kind = kinds[out.length % kinds.length];
+    const s = SEA.ship(kind, { seed: seed * 31 + out.length, lite, loaded: kind === 'vlcc' ? (rnd() < 0.5 ? 0.3 : 0.95) : undefined, anchored: true, hullColor: kind === 'vlcc' ? ['#1e1f22', '#5a1d1a', '#22303f', '#3b2725'][out.length % 4] : undefined, deckColor: kind === 'vlcc' ? ['#4d5649', '#6b4436', '#4d5649', '#555b55'][out.length % 4] : undefined });
+    s.wake = 0.35; sea.addShip(s); s.place(x, z, heading + (rnd() - 0.5) * 24, 0); out.push(s); }
+  return out;
+}
+function K_rng(seed) { let a = (seed * 2654435761) >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+export const rng = K_rng;
+// canvas -> texture helper for paper cards and screens
+export function canvasTex(w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); draw?.(x, w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return { c, x, tex: t }; }

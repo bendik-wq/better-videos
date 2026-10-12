@@ -10,3 +10,9 @@
 
 Downloaded 2026-10-12 from images-assets.nasa.gov (~large.jpg). For engine/parallax.js run
 `python3 engine/depth.py projects/hormuz`.
+
+## US Navy (public domain, US Government work)
+
+| File | What | Page |
+|---|---|---|
+| roberts.jpg | USS Samuel B. Roberts (FFG-58) in dry dock at Dubai, May 1988: the hull damage from the Iranian mine of 14 April 1988. Photo PH2 Rudy D. Pahoyo, U.S. Navy (DoD/NARA). 1920 px copy of the Commons original (sha1 of this copy 4a7ea566e197b2d2f65ad6f947b8fada3e935d1a) | https://commons.wikimedia.org/wiki/File:Ffg58minedamage.jpg |
