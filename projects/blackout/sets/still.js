@@ -78,7 +78,7 @@ export default function makeStill(H) {
   // the camera: deadpan, frontal-ish, a little high, the subject centred low; power: flash intensity at that distance
   const framing = (obj) => ({
     mouse: { pos: [0.03, 0.34, 0.46], look: [0, 0.02, -0.03], mm: 55, power: 2.0, wall: -0.45, up: 0.13 },
-    'breaker-handle': { pos: [0.14, 1.0, 1.75], look: [0, 0.98, -0.06], mm: 42, power: 9, wall: -0.08, up: 0.12 },
+    'breaker-handle': { pos: [0.14, 1.0, 1.75], look: [0, 0.98, -0.06], mm: 42, power: 15, wall: -0.08, up: 0.12 },
     phone: { pos: [0.1, 0.62, 0.86], look: [0.06, 0.03, -0.02], mm: 42, power: 4.5, wall: -0.5, up: 0.12 },
     usb: { pos: [0.02, 0.22, 0.26], look: [0, 0.01, -0.01], mm: 60, power: 1.2, wall: -0.4 },
     transformer: { pos: [0.3, 1.25, 2.6], look: [0, 0.9, 0], mm: 40, power: 26, wall: -3.5, up: 0.1 },
@@ -133,7 +133,7 @@ export default function makeStill(H) {
       g.rotation.y = -0.6; }
     else if (obj === 'breaker-handle') {
       // a switchgear door: grey enamel steel, rivets, a label plate, a black lever in a moulded housing, OFF
-      const steel = PE.props.pbr('Metal032', { repeat: [1.5, 1.5], color: 0x7e8a86, roughness: 0.55, metalness: 0.35 });
+      const steel = PE.props.pbr('Metal032', { repeat: [1.5, 1.5], color: 0x8a958f, roughness: 0.72, metalness: 0.08 });
       const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.6, 0.04), steel); door.position.set(0, 0.85, -0.06); g.add(door);
       for (const [x, y] of [[-0.55, 1.6], [0.55, 1.6], [-0.55, 0.1], [0.55, 0.1]]) { const r = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), M(0x6a6e6a, 0.4, 0.8)); r.position.set(x, y, -0.035); g.add(r); }
       const house = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.26, 0.06, 2, 2, 2), PH(0x161616, 0.5)); house.position.set(0, 0.85, -0.01); g.add(house);

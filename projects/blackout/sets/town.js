@@ -12,8 +12,8 @@ import * as LW from './lw.js';
 
 const { clamp, lerp, hash, rng } = LW;
 export const NDIST = 12;
-const GRID = 112, STREET = 16, ANG = 0.21; // block pitch, street width, grid rotation (rad)
-const rot = (x, z, a = ANG) => [x * Math.cos(a) - z * Math.sin(a), x * Math.sin(a) + z * Math.cos(a)];
+export const GRID = 112, STREET = 16, ANG = 0.21; // block pitch, street width, grid rotation (rad)
+export const rot = (x, z, a = ANG) => [x * Math.cos(a) - z * Math.sin(a), x * Math.sin(a) + z * Math.cos(a)];
 
 const COMMON = /* glsl */`
 uniform float uPow[${NDIST}]; uniform float uTime, uFogDen, uSnowGlow; uniform vec3 uFog, uMoon, uSodium;
@@ -143,8 +143,9 @@ export function buildTown(scene, opts = {}) {
     uGrid: { value: GRID }, uStreet: { value: STREET }, uAng: { value: ANG } };
   const group = new THREE.Group(); scene.add(group);
   // districts: Voronoi seeds; district 0 is the dispatch centre's own block (it keeps power longest)
-  const seeds = [[0, -60]]; for (let i = 1; i < NDIST; i++) { const a = i / (NDIST - 1) * Math.PI * 2 + r() * 0.4, d = 300 + r() * (R - 400); seeds.push([Math.cos(a) * d, Math.sin(a) * d]); }
-  const district = (x, z) => { let b = 0, bd = 1e18; seeds.forEach(([sx, sz], i) => { const d = (x - sx) ** 2 + (z - sz) ** 2 * (i === 0 ? 6 : 1); if (d < bd) { bd = d; b = i; } }); return b; };
+  const seeds = opts.seeds ? opts.seeds.slice(0, NDIST) : [[0, -60]]; if (!opts.seeds) for (let i = 1; i < NDIST; i++) { const a = i / (NDIST - 1) * Math.PI * 2 + r() * 0.4, d = 300 + r() * (R - 400); seeds.push([Math.cos(a) * d, Math.sin(a) * d]); }
+  while (seeds.length < NDIST) seeds.push([1e6, 1e6]);
+  const district = (x, z) => { let b = 0, bd = 1e18; seeds.forEach(([sx, sz], i) => { const d = (x - sx) ** 2 + (z - sz) ** 2 * (i === 0 && !opts.seeds ? 6 : 1); if (d < bd) { bd = d; b = i; } }); return b; };
   // ground
   const ground = new THREE.Mesh(new THREE.CircleGeometry(30000, 64), groundMaterial(U)); ground.rotation.x = -Math.PI / 2; group.add(ground);
   // buildings: in each block (grid cell) 1-4 slabs; panel blocks outside the old centre, brick blocks inside
