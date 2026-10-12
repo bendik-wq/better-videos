@@ -1,0 +1,62 @@
+{
+ "format": "bv-imagery/1",
+ "name": "arabia",
+ "center": {
+  "lat": 23.5,
+  "lon": 48.0,
+  "elev": 0.0
+ },
+ "crs": "EPSG:4326 (equal-angle pixels, north up)",
+ "tile": 1024,
+ "demEncoding": "(elev_m + 500) * 10 = R*256 + G",
+ "levels": [
+  {
+   "id": 0,
+   "bbox": [
+    34.0,
+    14.0,
+    62.0,
+    33.0
+   ],
+   "size": [
+    4096,
+    2779
+   ],
+   "mpp": 697.861223011586,
+   "degPerPx": 0.0068359375,
+   "tiles": [
+    4,
+    3
+   ],
+   "image": "L0/{row}_{col}.jpg",
+   "dem": {
+    "file": "L0/dem.png",
+    "size": [
+     2048,
+     1390
+    ],
+    "mpp": 1395.722446023172,
+    "min": -5349.7,
+    "max": 4200.6,
+    "terrariumZoom": 7
+   }
+  }
+ ],
+ "relief": "relief.jpg",
+ "sources": {
+  "imagery": {
+   "name": "NASA Blue Marble Next Generation (+ Shaded Relief and Bathymetry) via NASA GIBS",
+   "licence": "Public domain (NASA)",
+   "credit": "NASA Earth Observatory / GIBS",
+   "url": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi"
+  },
+  "elevation": {
+   "name": "AWS Terrain Tiles (Mapzen terrarium)",
+   "licence": "Free to use with attribution of the underlying sources (SRTM and GMTED2010 public domain, ETOPO1 public domain, EU-DEM, etc.)",
+   "credit": "Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)",
+   "url": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md"
+  }
+ },
+ "attribution": "Blue Marble: NASA Earth Observatory. Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others).",
+ "baked": "2026-10-12"
+}

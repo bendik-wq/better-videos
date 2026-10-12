@@ -1,0 +1,37 @@
+{
+ "hormuzFlow2024": {
+  "value": 20,
+  "unit": "million b/d",
+  "share": "about 20% of global petroleum liquids consumption",
+  "source": "EIA Today in Energy, 16 June 2025, https://www.eia.gov/todayinenergy/detail.php?id=65504"
+ },
+ "lngShare2024": {
+  "value": "about one-fifth of global LNG trade",
+  "source": "EIA, same article"
+ },
+ "bypass": {
+  "value": 2.6,
+  "unit": "million b/d available to bypass (Saudi East-West + UAE ADCOP)",
+  "eastWest": "5 million b/d rated, temporarily 7 in 2019",
+  "uae": "1.8 million b/d to Fujairah",
+  "source": "EIA, same article"
+ },
+ "width": {
+  "value": 21,
+  "unit": "nautical miles at the narrowest point; two 2-mile lanes with a 2-mile buffer",
+  "source": "EIA World Oil Transit Chokepoints"
+ },
+ "narrowest": {
+  "a": [
+   26.8275,
+   56.3572
+  ],
+  "b": [
+   26.5039,
+   56.5082
+  ],
+  "km": 38.8,
+  "nmi": 21.0,
+  "how": "minimum land-to-land distance across the strait in the baked terrarium DEM (L2, 160 m): Larak Island to the Quoin Islands (Musandam, Oman)"
+ }
+}

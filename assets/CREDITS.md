@@ -144,3 +144,25 @@ licence column; also the `# license` line inside every .mhclo). Pack sha256 (pre
 Not used: Quaternius Universal Base Characters [Standard] (CC0, downloaded and evaluated: only
 superhero proportions are free); Sketchfab rigged humans (downloads need a login); Mixamo (Adobe
 account and no redistribution).
+
+
+## Episode 3: Strait of Hormuz (`engine/sea`, `projects/hormuz`, `projects/hormuz-lab`)
+
+Everything in `engine/sea` (FFT ocean, sky, ships, land, post) is original code (MIT-compatible, no
+third-party code); the ships, hull atlases, decks and the tank farm are procedural (no models used:
+no CC0 tanker/LNG/destroyer model good enough at 50 m was found on Poly Haven / ambientCG / Quaternius;
+Sketchfab needs a login). The bridge crew are `engine/people` bodies (see People above for their credits).
+
+| File | What | Licence | Source |
+|---|---|---|---|
+| `projects/hormuz/assets/imagery/hormuz/L0-L2/*.jpg` | Sentinel-2 L2A true colour (TCI) mosaics, Nov-Mar winter scenes, 10/40/160 m per px, centred 26.56 N 56.45 E (the TSS between Larak and the Quoin Islands); nodata filled from the next coarser level | Copernicus Sentinel data licence (free, full and open; attribution required). **Credit: "Contains modified Copernicus Sentinel data 2024, 2025"** | AWS Open Data sentinel-cogs via Element 84 Earth Search STAC, fetched 2026-10-12. Scenes: S2A_40RCP_20250318_1_L2A (2025-03-18); S2A_40RCQ_20241106_0_L2A (2024-11-06); S2A_40REP_20241113_0_L2A (2024-11-13); S2A_40REQ_20241103_0_L2A (2024-11-03); S2A_40RER_20241223_0_L2A (2024-12-23); S2B_40RCP_20241101_0_L2A (2024-11-01); S2B_40RCP_20250127_0_L2A (2025-01-27); S2B_40RCQ_20250110_0_L2A (2025-01-10); S2B_40RCQ_20250127_0_L2A (2025-01-27); S2B_40RCR_20241111_0_L2A (2024-11-11); S2B_40RCR_20241211_0_L2A (2024-12-11); S2B_40RCR_20250318_0_L2A (2025-03-18); S2B_40RDP_20250318_0_L2A (2025-03-18); S2B_40REP_20241105_0_L2A (2024-11-05); S2B_40REP_20250318_0_L2A (2025-03-18); S2B_40REQ_20241108_0_L2A (2024-11-08); S2C_40RCP_20250221_0_L2A (2025-02-21); S2C_40RDQ_20250221_0_L2A (2025-02-21); S2C_40RDR_20241103_1_L2A (2024-11-03) |
+| `projects/hormuz/assets/imagery/hormuz/L3/*.jpg` | NASA Blue Marble Next Generation (500 m), +-512 km around the strait | Public domain (NASA) | NASA GIBS WMS layer BlueMarble_NextGeneration, https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi |
+| `projects/hormuz/assets/imagery/hormuz/L*/dem.png`, `arabia/L0/dem.png` | Elevation and bathymetry | Attribution of the underlying sources: SRTM, GMTED2010, ETOPO1 (public domain) and others | AWS Terrain Tiles (Mapzen terrarium), https://github.com/tilezen/joerd/blob/master/docs/attribution.md . Credit: "Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)" |
+| `projects/hormuz/assets/imagery/arabia/` | Arabian Peninsula map base (34-62 E, 14-33 N), Blue Marble NG + Blue Marble Shaded Relief and Bathymetry | Public domain (NASA) | NASA GIBS WMS (as above) |
+| `projects/hormuz/assets/geo/vectors.json` (coast, countries) | Natural Earth 1:10m coastline and admin-0 countries, clipped and simplified | Public domain | https://github.com/nvkelso/natural-earth-vector (naturalearthdata.com) |
+| `projects/hormuz/assets/geo/vectors.json` (tss) | Traffic separation scheme in the strait: OSM ways 220138722 (separation zone), 220138785 and 220138843 (boundaries), 220138792 and 220138816 (lanes) | ODbL: **credit "(c) OpenStreetMap contributors"** (produced work) | Overpass API, https://www.openstreetmap.org/way/220138792 |
+| `projects/hormuz/assets/geo/vectors.json` (pipelines, places) | Pipeline routes are schematic lines through published end points; capacities from EIA | Facts (no licence needed); EIA text public domain | EIA Today in Energy 16 June 2025, https://www.eia.gov/todayinenergy/detail.php?id=65504 |
+| `projects/hormuz/assets/geo/brent-monthly.json` | Europe Brent spot price FOB, monthly, 1987-2026-09 | Public domain (US Government work) | U.S. EIA, https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=RBRTE&f=M (fetched 2026-10-12) |
+| `projects/hormuz/assets/geo/facts.json` | 20 million b/d (2024, ~20 % of world liquids consumption), ~1/5 of LNG trade, 2.6 million b/d bypass capacity; the 21 nmi narrowest crossing measured on the baked DEM | EIA public domain; measurement ours | EIA (as above) |
+| `projects/hormuz/assets/archive/iss064e046338.jpg`, `iss067e270600.jpg`, `iss069e056918.jpg`, `iss063e002679.jpg`, `s04-37-716.jpg` | ISS and STS-4 crew photographs of the Strait of Hormuz, Musandam and the Gulf | Public domain (NASA; credit "NASA") | https://images.nasa.gov/details/<id> |
+| `assets/footage/clips/commons-iranian-irgc-speedboat-approaching-uss-sirocco-a.mp4` (+ provenance copy in `projects/hormuz/assets/footage/`) | IRGC Navy fast boat approaching USS Sirocco and USNS Choctaw County, Strait of Hormuz, 20 June 2022 (U.S. Naval Forces Central Command, 220620-N-NO146-1001) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm |
