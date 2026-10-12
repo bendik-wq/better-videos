@@ -103,14 +103,17 @@ export default async function create(ctx) {
     for (const [id, v] of live) if (v.index < index - 1 || v.index > index + 1) { v.inst.dispose?.(); v.inst.layer?.remove(); live.delete(id); }
     return live.get(shot.id).inst;
   };
+  // draw a full opaque frame into a 2D context: plain source-over with the state reset. (A 'copy'
+  // composite of the WebGL canvas into the comp canvas after a transition captured as black frames.)
+  const put = (x, src) => { x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none'; x.globalCompositeOperation = 'source-over'; x.drawImage(src, 0, 0, width, height); };
   // paint a set's picture for shot time t into the 2D context x (or leave it in the GL canvas when x is null)
   async function paint(inst, t, p, x) {
     await inst.update(t, p);
-    if (inst.canvas) { if (x) { x.globalCompositeOperation = 'copy'; x.drawImage(inst.canvas, 0, 0, width, height); x.globalCompositeOperation = 'source-over'; } return inst.canvas; }
+    if (inst.canvas) { if (x) put(x, inst.canvas); return inst.canvas; }
     renderer.toneMapping = inst.toneMapping ?? ACES;
     if (inst.render) inst.render(renderer); else renderer.render(inst.scene, inst.camera);
     renderer.toneMapping = ACES;
-    if (x) { x.globalCompositeOperation = 'copy'; x.drawImage(gl, 0, 0, width, height); x.globalCompositeOperation = 'source-over'; }
+    if (x) put(x, gl);
     return gl;
   }
 
