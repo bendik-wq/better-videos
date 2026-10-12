@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
 """Procedural score + sound design bed.
 
-usage: score.py timeline.json out.wav '{"key": "D", "cues": [...]}'
+usage: score.py timeline.json out.wav '{"key": "D", "cues": [...], "music": [...]}'
        score.py --vo timeline.json vo.wav <start s> <length s>   (sample-exact VO track)
+       score.py --mix bed.wav vo.wav out.wav <start s> <length s> [--plots]
+                 dialogue-priority mix (music/SFX/VO buses, multiband ducking, -14 LUFS, -1 dBTP)
+                 + an audio QA report next to the output (out.qa.json)
+
+cfg.music = [{shot, mood, key, intensity, until, at?, bpm?, clock?, riser?, hit?, ending?, layers?}]
+  composes a real score with engine/music (moods: tension, wonder/discovery, urgency, melancholy,
+  triumph, mystery). Chapter cards (set "chapter") drop to silence automatically (cfg.dropOnChapters,
+  default true; extra drops via cfg.drops = [shot ids]). Entries {type:"track", file, licence, source}
+  place CC0/public-domain recordings (see engine/music/tracks.py). With cfg.music the old drone is
+  off unless cfg.drone is given. Writes <out>.music.wav, <out>.sfx.wav stems and <out>.licences.json.
 
 Every cue is {"type", "shot", "at" (seconds into shot, negative = before it), "gain", ...}.
 Types: boom, clang, clunk, whoosh, horn, hum, water, ticks, swell, pulse, and sfx (any engine/sfx.py preset).
@@ -16,15 +26,24 @@ def place_vo(timeline_path, out_path, start, length):
     """Lay every shot's VO wav on one mono track at its exact sample (voAt - start), clipped to
     [start, start + length). Sample-exact, so VO never drifts against the picture however many
     shots or whatever the frame rate."""
-    sr = 24000
+    tl = json.load(open(timeline_path))
+    rates = set()
+    for s in tl:
+        if s.get("voFile"):
+            with wave.open(s["voFile"]) as w: rates.add(w.getframerate())
+    sr = max(rates) if rates else 24000  # 48 kHz when voice.py's fx chain is on, else Kokoro's 24 kHz
     n = int(round(float(length) * sr)); trk = np.zeros(n)
-    for s in json.load(open(timeline_path)):
+    for s in tl:
         if not s.get("voFile"): continue
         with wave.open(s["voFile"]) as w:
             a = np.frombuffer(w.readframes(w.getnframes()), "<i2").astype(float) / 32768
             if w.getnchannels() > 1: a = a.reshape(-1, w.getnchannels()).mean(1)
-            if w.getframerate() != sr:  # linear resample (Kokoro and Piper already write 24 kHz)
-                a = np.interp(np.arange(int(len(a) * sr / w.getframerate())) * w.getframerate() / sr, np.arange(len(a)), a)
+            if w.getframerate() != sr:
+                try:  # band-limited polyphase resample
+                    from scipy.signal import resample_poly
+                    g = np.gcd(sr, w.getframerate()); a = resample_poly(a, sr // g, w.getframerate() // g)
+                except ImportError:  # linear fallback
+                    a = np.interp(np.arange(int(len(a) * sr / w.getframerate())) * w.getframerate() / sr, np.arange(len(a)), a)
         i = int(round((s["voAt"] - float(start)) * sr)); j0 = max(0, -i); i = max(0, i)
         k = min(n - i, len(a) - j0)
         if k > 0: trk[i:i + k] += a[j0:j0 + k]
@@ -36,6 +55,41 @@ def place_vo(timeline_path, out_path, start, length):
 
 if len(sys.argv) > 1 and sys.argv[1] == "--vo":  # usage: score.py --vo timeline.json out.wav start length
     place_vo(*sys.argv[2:6]); sys.exit(0)
+
+
+def mix_main(bed_path, vo_path, out_path, start, length, plots=False, opts=None):
+    """Bus mix of a score.py bed (+ its stems if present) and the --vo track."""
+    import os, soundfile as sf
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from music import mix as MX, qa as QA
+    SRm = 48000
+    a, n = int(round(float(start) * SRm)), int(round(float(length) * SRm))
+
+    def load(p):
+        x, sr = sf.read(p, always_2d=True)
+        x = MX.to_stereo48(x if x.shape[1] > 1 else x[:, 0], sr)
+        return x
+
+    stem = bed_path[:-4]
+    if os.path.exists(stem + ".music.wav") and os.path.exists(stem + ".sfx.wav"):
+        music, sfx = load(stem + ".music.wav")[a:a + n], load(stem + ".sfx.wav")[a:a + n]
+    else:  # legacy bed: treat it all as music
+        music, sfx = load(bed_path)[a:a + n], None
+    vo = load(vo_path)[:n]
+    out, buses = MX.mix(music=music, sfx=sfx, vo=vo[:, 0], n=n, opts=opts)
+    sf.write(out_path, out, SRm, subtype="PCM_24")
+    rep = QA.report(out, vo=buses["vo"], music=buses["music"], name=os.path.basename(out_path))
+    json.dump(rep, open(out_path[:-4] + ".qa.json", "w"), indent=1)
+    if plots:
+        QA.plots(out, out_path[:-4], title=os.path.basename(out_path), vo=buses["vo"])
+    print(f"[mix] {rep['integrated_lufs']} LUFS, TP {rep['true_peak_dbtp']} dBTP, LRA {rep['lra_lu']}, "
+          f"clipped runs {rep['clipped_runs']}, VO over music {rep.get('vo_over_music_lu', {}).get('median')} LU, "
+          f"{'PASS' if rep['pass'] else 'CHECK ' + str([k for k, v in rep['checks'].items() if not v])}")
+    return rep
+
+
+if len(sys.argv) > 1 and sys.argv[1] == "--mix":  # usage: score.py --mix bed.wav vo.wav out.wav start length [--plots]
+    mix_main(*sys.argv[2:7], plots="--plots" in sys.argv); sys.exit(0)
 
 SR = 48000
 timeline = json.load(open(sys.argv[1]))
@@ -168,7 +222,7 @@ SYN = dict(pulse=pulse, boom=boom, clang=clang, clunk=clunk, whoosh=whoosh, swel
 
 # --- drone bed: minor-key partials breathing slowly, detuned for width; key can change per section ---
 roots = {"C": 65.41, "C#": 69.30, "D": 73.42, "Eb": 77.78, "E": 82.41, "F": 87.31, "F#": 92.50, "G": 98.0, "Ab": 103.83, "A": 55.0, "Bb": 58.27, "B": 61.74}
-drone_gain = cfg.get("drone", 0.16)
+drone_gain = cfg.get("drone", 0.16 if not cfg.get("music") else 0.0)
 sections = [(0.0, cfg.get("key", "D"))] + [(shots[x["shot"]]["start"], x["key"]) for x in cfg.get("sections", [])]
 for si, (s0, key) in enumerate(sections):
     s1 = sections[si + 1][0] if si + 1 < len(sections) else total
@@ -179,8 +233,9 @@ for si, (s0, key) in enumerate(sections):
         a = amp * (0.6 + 0.4 * np.sin(2 * np.pi * lfo * tt + mult)) * w
         L[i0:i1] += drone_gain * a * np.sin(2 * np.pi * r * mult * tt)
         R[i0:i1] += drone_gain * a * np.sin(2 * np.pi * r * mult * 1.003 * tt + 0.7)
-room = lowpass(rs.standard_normal(N), 400) * 0.05
-L += room; R += np.roll(room, 2400)
+if drone_gain > 0:
+    room = lowpass(rs.standard_normal(N), 400) * 0.05
+    L += room; R += np.roll(room, 2400)
 # drone ducks to near-silence on the title card for impact
 fade = np.ones(N)
 for s in timeline:
@@ -202,8 +257,67 @@ for tr in cfg.get("transitions", []):
     for q in sfx.for_transition(tr["name"], shots[tr["shot"]]["start"], tr.get("dur", 0.4)):
         place_sfx(q["name"], q["at"], q.get("gain", 0.4), 0.0, q.get("seed", 0))
 
+MUS = np.zeros((N, 2)); licences = []
+
+
+def music_sections():
+    """cfg.music -> composer sections + drop windows (chapter cards). Every entry (tracks too)
+    starts at its shot (+at); a composed entry runs until `until` (a shot id) or the next entry."""
+    ents = list(cfg.get("music", []))
+    drops = []
+    if cfg.get("dropOnChapters", True):
+        drops += [(s["start"], s["start"] + s["duration"]) for s in timeline if s.get("set") == "chapter"]
+    drops += [(shots[d]["start"], shots[d]["start"] + shots[d]["duration"]) for d in cfg.get("drops", [])]
+    end_all = timeline[-1]["start"] + timeline[-1]["duration"]
+    starts = [shots[m["shot"]]["start"] + m.get("at", 0) for m in ents]
+    secs = []
+    for i, m in enumerate(ents):
+        if m.get("type") == "track": continue
+        a = starts[i]
+        b = shots[m["until"]]["start"] + m.get("untilAt", 0) if m.get("until") else (starts[i + 1] if i + 1 < len(ents) else end_all)
+        sec = {k: v for k, v in m.items() if k not in ("shot", "until", "at", "untilAt", "type")}
+        for d0, d1 in drops:  # a cue that starts on a chapter card comes in after it, on a hit
+            if d0 - 0.05 <= a < d1:
+                a = d1; sec["after_drop"] = True
+        if b - a > 0.5:
+            secs.append(dict(sec, start=a, end=b))
+    return secs, drops
+
+
+if cfg.get("music"):
+    try:
+        import music as M
+        secs, drops = music_sections()
+        if secs:
+            bed = M.compose(secs, total, seed=cfg.get("seed", 0), drops=drops)
+            k = min(N, len(bed)); MUS[:k] += bed[:k]
+            from music import composer as _C
+            if out_path.endswith(".wav"):
+                json.dump(dict(sections=_C.LAST["sections"], drops=drops, harmony=_C.LAST["harmony"]),
+                          open(out_path[:-4] + ".music.json", "w"), indent=1)
+            print(f"[score] music: {len(secs)} sections, {len(drops)} drops")
+    except ImportError as e:  # numpy-only box: keep the legacy drone so renders never break
+        print(f"[score] engine/music unavailable ({e}); pip install scipy. Falling back to the drone.", file=sys.stderr)
+
+
+def place_track(c, at):
+    from music import tracks
+    if c.get("until") and not c.get("dur"):
+        c = dict(c, dur=shots[c["until"]]["start"] + c.get("untilAt", 0) - at, fadeOut=c.get("fadeOut", 1.0))
+    sig, meta = tracks.render(c, root=cfg.get("root", "."))
+    i = int(max(0, at) * SR); j = min(N, i + len(sig))
+    if j > i: MUS[i:j] += sig[: j - i]
+    licences.append(dict(meta, at=round(at, 3)))
+
+
+for m in cfg.get("music", []):
+    if m.get("type") == "track":
+        place_track(m, shots[m["shot"]]["start"] + m.get("at", 0))
+
 for c in cfg.get("cues", []):
     s = shots[c["shot"]]
+    if c["type"] == "track":
+        place_track(c, s["start"] + c.get("at", 0)); continue
     if c["type"] == "sfx":  # {"type":"sfx","name":"whoosh.m","shot","at","seed"?,"params"?,"gain"?,"pan"?}
         place_sfx(c["name"], s["start"] + c.get("at", 0), c.get("gain", 0.5), c.get("pan", 0.0), c.get("seed", 0), c.get("params"))
         continue
@@ -213,9 +327,25 @@ for c in cfg.get("cues", []):
         at -= c.get("dur", 1.2 if c["type"] == "whoosh" else 3.0)
     add(sig, at, c.get("gain", 0.5), c.get("pan", 0))
 
-mix = np.stack([L, R], 1)
-mix /= max(1e-9, np.abs(mix).max()) / 0.8
+SFX = np.stack([L, R], 1)
+if np.abs(MUS).max() > 0:
+    # sit the music bus where the legacy drone sat relative to the SFX (about -20 LUFS before the peak
+    # normalise below), so render.mjs's existing ffmpeg mix still balances
+    MUS *= 10 ** (cfg.get("musicDb", 0.0) / 20) * 0.3
+mix = SFX + MUS
+k = max(1e-9, np.abs(mix).max()) / 0.8
+mix /= k
 with wave.open(out_path, "wb") as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
-    w.writeframes((mix * 32767).astype("<i2").tobytes())
+    w.writeframes((np.clip(mix, -1, 1) * 32767).astype("<i2").tobytes())
+if out_path.endswith(".wav"):  # stems for the bus mix (score.py --mix), same scale as the bed
+    try:
+        import soundfile as sf
+        sf.write(out_path[:-4] + ".music.wav", (MUS / k).astype(np.float32), SR, subtype="FLOAT")
+        sf.write(out_path[:-4] + ".sfx.wav", (SFX / k).astype(np.float32), SR, subtype="FLOAT")
+    except ImportError:
+        pass
+    if licences:
+        json.dump(licences, open(out_path[:-4] + ".licences.json", "w"), indent=1)
+        for x in licences: print(f"[score] track {x['file']}: {x['licence']} ({x.get('source')})")
 print(f"[score] {total:.1f}s, {len(cfg.get('cues', []))} cues")

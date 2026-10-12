@@ -1,0 +1,558 @@
+[
+ {
+  "id": "open",
+  "set": "title",
+  "start": 0.0,
+  "duration": 10.8793,
+  "voAt": 4.0,
+  "voDur": 5.479333333333333,
+  "voFile": "/home/user/better-videos/.cache/vo/open-40d4fd1b6480.wav",
+  "words": [
+   {
+    "w": "This",
+    "s": 0.0,
+    "e": 0.22
+   },
+   {
+    "w": "is",
+    "s": 0.22,
+    "e": 0.4
+   },
+   {
+    "w": "the",
+    "s": 0.4,
+    "e": 0.56
+   },
+   {
+    "w": "Strait",
+    "s": 0.56,
+    "e": 0.78
+   },
+   {
+    "w": "of",
+    "s": 0.78,
+    "e": 0.94
+   },
+   {
+    "w": "Hormuz.",
+    "s": 0.94,
+    "e": 1.32
+   },
+   {
+    "w": "From",
+    "s": 2.08,
+    "e": 2.16
+   },
+   {
+    "w": "orbit,",
+    "s": 2.16,
+    "e": 2.42
+   },
+   {
+    "w": "it's",
+    "s": 2.96,
+    "e": 3.1
+   },
+   {
+    "w": "a",
+    "s": 3.1,
+    "e": 3.14
+   },
+   {
+    "w": "ribbon",
+    "s": 3.14,
+    "e": 3.34
+   },
+   {
+    "w": "of",
+    "s": 3.34,
+    "e": 3.52
+   },
+   {
+    "w": "turquoise",
+    "s": 3.52,
+    "e": 4.0
+   },
+   {
+    "w": "between",
+    "s": 4.0,
+    "e": 4.34
+   },
+   {
+    "w": "two",
+    "s": 4.34,
+    "e": 4.6
+   },
+   {
+    "w": "deserts.",
+    "s": 4.6,
+    "e": 4.9
+   }
+  ],
+  "vo": "This is the Strait of Hormuz. From orbit, it's a ribbon of *turquoise* between two deserts.",
+  "label": "WONDER / DISCOVERY",
+  "sub": "D lydian \u00b7 pluck arpeggio \u00b7 bright pads"
+ },
+ {
+  "id": "depth",
+  "set": "map",
+  "start": 10.8793,
+  "duration": 6.822,
+  "voAt": 11.8793,
+  "voDur": 3.222,
+  "voFile": "/home/user/better-videos/.cache/vo/depth-0f9a0c29a7d2.wav",
+  "words": [
+   {
+    "w": "But",
+    "s": 0.0,
+    "e": 0.12
+   },
+   {
+    "w": "this",
+    "s": 0.12,
+    "e": 0.28
+   },
+   {
+    "w": "narrow",
+    "s": 0.28,
+    "e": 0.58
+   },
+   {
+    "w": "water",
+    "s": 0.58,
+    "e": 1.04
+   },
+   {
+    "w": "holds",
+    "s": 1.04,
+    "e": 1.52
+   },
+   {
+    "w": "a",
+    "s": 1.52,
+    "e": 1.7
+   },
+   {
+    "w": "strange",
+    "s": 1.7,
+    "e": 2.02
+   },
+   {
+    "w": "kind",
+    "s": 2.02,
+    "e": 2.4
+   },
+   {
+    "w": "of",
+    "s": 2.4,
+    "e": 2.52
+   },
+   {
+    "w": "power.",
+    "s": 2.52,
+    "e": 2.82
+   }
+  ],
+  "vo": "But this narrow water holds a strange kind of power.",
+  "label": "MYSTERY",
+  "sub": "C harmonic minor \u00b7 celesta \u00b7 long hall"
+ },
+ {
+  "id": "ch1",
+  "set": "chapter",
+  "start": 17.7013,
+  "duration": 3.2,
+  "voAt": 17.9513,
+  "voDur": 0,
+  "voFile": null,
+  "words": [],
+  "vo": null,
+  "label": "CHAPTER ONE",
+  "sub": "drop to silence on the chapter card"
+ },
+ {
+  "id": "clock",
+  "set": "tankers",
+  "start": 20.9013,
+  "duration": 16.382,
+  "voAt": 23.1013,
+  "voDur": 7.182,
+  "voFile": "/home/user/better-videos/.cache/vo/clock-dfb62ceb213a.wav",
+  "words": [
+   {
+    "w": "About",
+    "s": 0.0,
+    "e": 0.2
+   },
+   {
+    "w": "a",
+    "s": 0.2,
+    "e": 0.28
+   },
+   {
+    "w": "fifth",
+    "s": 0.28,
+    "e": 0.5
+   },
+   {
+    "w": "of",
+    "s": 0.5,
+    "e": 0.66
+   },
+   {
+    "w": "the",
+    "s": 0.66,
+    "e": 0.74
+   },
+   {
+    "w": "world's",
+    "s": 0.74,
+    "e": 1.16
+   },
+   {
+    "w": "oil",
+    "s": 1.16,
+    "e": 1.52
+   },
+   {
+    "w": "passes",
+    "s": 1.52,
+    "e": 2.0
+   },
+   {
+    "w": "through",
+    "s": 2.0,
+    "e": 2.3
+   },
+   {
+    "w": "here.",
+    "s": 2.3,
+    "e": 2.6
+   },
+   {
+    "w": "Every",
+    "s": 3.24,
+    "e": 3.32
+   },
+   {
+    "w": "tanker,",
+    "s": 3.32,
+    "e": 3.8
+   },
+   {
+    "w": "in",
+    "s": 3.8,
+    "e": 4.16
+   },
+   {
+    "w": "single",
+    "s": 4.16,
+    "e": 4.36
+   },
+   {
+    "w": "file.",
+    "s": 4.36,
+    "e": 4.72
+   },
+   {
+    "w": "And",
+    "s": 5.48,
+    "e": 5.58
+   },
+   {
+    "w": "the",
+    "s": 5.58,
+    "e": 5.68
+   },
+   {
+    "w": "clock",
+    "s": 5.68,
+    "e": 5.84
+   },
+   {
+    "w": "never",
+    "s": 5.84,
+    "e": 6.18
+   },
+   {
+    "w": "stops.",
+    "s": 6.18,
+    "e": 6.62
+   }
+  ],
+  "vo": "About a fifth of the world's oil passes through here. Every tanker, in single file. | And the clock never stops.",
+  "label": "TENSION",
+  "sub": "D phrygian \u00b7 ticking clock \u2192 double time \u00b7 Shepard riser"
+ },
+ {
+  "id": "war",
+  "set": "war",
+  "start": 37.2833,
+  "duration": 8.5873,
+  "voAt": 38.6833,
+  "voDur": 4.5873333333333335,
+  "voFile": "/home/user/better-videos/.cache/vo/war-3548d3d0a397.wav",
+  "words": [
+   {
+    "w": "In",
+    "s": 0.0,
+    "e": 0.1
+   },
+   {
+    "w": "the",
+    "s": 0.1,
+    "e": 0.18
+   },
+   {
+    "w": "nineteen-eighties,",
+    "s": 0.18,
+    "e": 1.24
+   },
+   {
+    "w": "the",
+    "s": 1.24,
+    "e": 1.44
+   },
+   {
+    "w": "Tanker",
+    "s": 1.44,
+    "e": 1.62
+   },
+   {
+    "w": "War",
+    "s": 1.62,
+    "e": 1.96
+   },
+   {
+    "w": "turned",
+    "s": 1.96,
+    "e": 2.3
+   },
+   {
+    "w": "these",
+    "s": 2.3,
+    "e": 2.52
+   },
+   {
+    "w": "shipping",
+    "s": 2.52,
+    "e": 2.76
+   },
+   {
+    "w": "lanes",
+    "s": 2.76,
+    "e": 3.14
+   },
+   {
+    "w": "into",
+    "s": 3.14,
+    "e": 3.52
+   },
+   {
+    "w": "a",
+    "s": 3.52,
+    "e": 3.62
+   },
+   {
+    "w": "battlefield.",
+    "s": 3.62,
+    "e": 3.92
+   }
+  ],
+  "vo": "In the nineteen-eighties, the Tanker War turned these shipping lanes into a battlefield.",
+  "label": "URGENCY",
+  "sub": "E minor \u00b7 spiccato 16ths \u00b7 taiko \u00b7 braaam"
+ },
+ {
+  "id": "loss",
+  "set": "loss",
+  "start": 45.8707,
+  "duration": 7.7727,
+  "voAt": 47.4707,
+  "voDur": 3.772666666666667,
+  "voFile": "/home/user/better-videos/.cache/vo/loss-69ba7fbb0c5e.wav",
+  "words": [
+   {
+    "w": "Hundreds",
+    "s": 0.0,
+    "e": 0.36
+   },
+   {
+    "w": "of",
+    "s": 0.36,
+    "e": 0.56
+   },
+   {
+    "w": "ships",
+    "s": 0.56,
+    "e": 0.74
+   },
+   {
+    "w": "were",
+    "s": 0.74,
+    "e": 1.0
+   },
+   {
+    "w": "hit.",
+    "s": 1.0,
+    "e": 1.26
+   },
+   {
+    "w": "And",
+    "s": 1.62,
+    "e": 2.08
+   },
+   {
+    "w": "sailors",
+    "s": 2.08,
+    "e": 2.4
+   },
+   {
+    "w": "paid",
+    "s": 2.4,
+    "e": 2.78
+   },
+   {
+    "w": "the",
+    "s": 2.78,
+    "e": 2.98
+   },
+   {
+    "w": "price.",
+    "s": 2.98,
+    "e": 3.26
+   }
+  ],
+  "vo": "Hundreds of ships were hit. And sailors paid the price.",
+  "label": "MELANCHOLY",
+  "sub": "A aeolian \u00b7 piano motif \u00b7 strings"
+ },
+ {
+  "id": "archive",
+  "set": "archive",
+  "start": 53.6433,
+  "duration": 7.9313,
+  "voAt": 55.2433,
+  "voDur": 4.331333333333333,
+  "voFile": "/home/user/better-videos/.cache/vo/archive-c2b2bf07cc53.wav",
+  "words": [
+   {
+    "w": "Sometimes",
+    "s": 0.0,
+    "e": 0.38
+   },
+   {
+    "w": "the",
+    "s": 0.38,
+    "e": 0.72
+   },
+   {
+    "w": "right",
+    "s": 0.72,
+    "e": 0.92
+   },
+   {
+    "w": "music",
+    "s": 0.92,
+    "e": 1.26
+   },
+   {
+    "w": "already",
+    "s": 1.26,
+    "e": 1.72
+   },
+   {
+    "w": "exists,",
+    "s": 1.72,
+    "e": 2.1
+   },
+   {
+    "w": "and",
+    "s": 2.66,
+    "e": 2.82
+   },
+   {
+    "w": "it",
+    "s": 2.82,
+    "e": 2.9
+   },
+   {
+    "w": "belongs",
+    "s": 2.9,
+    "e": 3.16
+   },
+   {
+    "w": "to",
+    "s": 3.16,
+    "e": 3.52
+   },
+   {
+    "w": "everyone.",
+    "s": 3.52,
+    "e": 3.88
+   }
+  ],
+  "vo": "Sometimes the right music already exists, and it belongs to everyone.",
+  "label": "LICENSED TRACK",
+  "sub": "Chopin, Op. 69 No. 1 \u00b7 Musopen \u00b7 public domain"
+ },
+ {
+  "id": "moving",
+  "set": "end",
+  "start": 61.5747,
+  "duration": 11.3233,
+  "voAt": 62.7747,
+  "voDur": 3.6233333333333335,
+  "voFile": "/home/user/better-videos/.cache/vo/moving-04e4780abe20.wav",
+  "words": [
+   {
+    "w": "And",
+    "s": 0.0,
+    "e": 0.14
+   },
+   {
+    "w": "yet,",
+    "s": 0.14,
+    "e": 0.34
+   },
+   {
+    "w": "the",
+    "s": 0.34,
+    "e": 0.62
+   },
+   {
+    "w": "oil",
+    "s": 0.62,
+    "e": 0.8
+   },
+   {
+    "w": "kept",
+    "s": 0.8,
+    "e": 1.08
+   },
+   {
+    "w": "moving.",
+    "s": 1.08,
+    "e": 1.48
+   },
+   {
+    "w": "Every",
+    "s": 1.48,
+    "e": 2.26
+   },
+   {
+    "w": "single",
+    "s": 2.26,
+    "e": 2.68
+   },
+   {
+    "w": "day.",
+    "s": 2.68,
+    "e": 3.1
+   }
+  ],
+  "vo": "And yet, the oil kept moving. | Every single day.",
+  "label": "TRIUMPH",
+  "sub": "D major \u00b7 \u266dVI\u2013\u266dVII\u2013I \u00b7 resolve"
+ }
+]

@@ -1,0 +1,168 @@
+{
+ "sections": [
+  {
+   "start": 0.0,
+   "end": 10.879,
+   "mood": "wonder",
+   "key": "D lydian",
+   "bpm": 110.3,
+   "bars": 5,
+   "chords": [
+    "D",
+    "Asus",
+    "Bm",
+    "E",
+    "D"
+   ],
+   "breakdown_bar": null,
+   "ending": "flow",
+   "layers": [
+    "bass",
+    "keys",
+    "ostinato",
+    "strings"
+   ]
+  },
+  {
+   "start": 10.879,
+   "end": 20.901,
+   "mood": "mystery",
+   "key": "C harmonic",
+   "bpm": 71.84,
+   "bars": 3,
+   "chords": [
+    "Cm",
+    "Ddim"
+   ],
+   "breakdown_bar": null,
+   "ending": "flow",
+   "layers": [
+    "bass",
+    "keys",
+    "ostinato"
+   ]
+  },
+  {
+   "start": 20.901,
+   "end": 37.283,
+   "mood": "tension",
+   "key": "D phrygian",
+   "bpm": 102.55,
+   "bars": 7,
+   "chords": [
+    "Dm",
+    "Bb",
+    "Gm",
+    "Adim"
+   ],
+   "breakdown_bar": 4,
+   "ending": "flow",
+   "layers": [
+    "bass",
+    "clock",
+    "ostinato",
+    "perc",
+    "strings"
+   ]
+  },
+  {
+   "start": 37.283,
+   "end": 45.871,
+   "mood": "urgency",
+   "key": "E minor",
+   "bpm": 139.74,
+   "bars": 5,
+   "chords": [
+    "Em",
+    "C",
+    "D",
+    "Bm",
+    "Em"
+   ],
+   "breakdown_bar": null,
+   "ending": "flow",
+   "layers": [
+    "bass",
+    "braaam",
+    "clock",
+    "ostinato",
+    "perc",
+    "strings"
+   ]
+  },
+  {
+   "start": 45.871,
+   "end": 53.643,
+   "mood": "melancholy",
+   "key": "A aeolian",
+   "bpm": 61.76,
+   "bars": 2,
+   "chords": [
+    "Am"
+   ],
+   "breakdown_bar": null,
+   "ending": "flow",
+   "layers": [
+    "bass",
+    "keys",
+    "strings"
+   ]
+  },
+  {
+   "start": 61.575,
+   "end": 72.898,
+   "mood": "triumph",
+   "key": "D major",
+   "bpm": 84.78,
+   "bars": 4,
+   "chords": [
+    "G",
+    "D",
+    "Asus",
+    "D"
+   ],
+   "breakdown_bar": null,
+   "ending": "resolve",
+   "layers": [
+    "bass",
+    "keys",
+    "ostinato",
+    "perc",
+    "strings"
+   ]
+  }
+ ],
+ "drops": [
+  [
+   17.7013,
+   20.9013
+  ]
+ ],
+ "harmony": {
+  "bass": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  },
+  "keys": {
+   "chord_tone": 0.915,
+   "scale_only": 0.085,
+   "outside": 0.0
+  },
+  "ostinato": {
+   "chord_tone": 0.97,
+   "scale_only": 0.03,
+   "outside": -0.0
+  },
+  "pad": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  },
+  "strings": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  }
+ }
+}
