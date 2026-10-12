@@ -15,9 +15,40 @@ Read once per session, in this order:
    affiliate disclosure law).
 4. `docs/research/channel-breakdowns.md` and `docs/research/editing-library.md`: skim the
    sections relevant to the topic.
+5. `docs/library/video-autopsies/README.md`: 70 top documentary videos measured from captions,
+   chapters and YouTube's most-replayed data (the 12 cross-video patterns), then the **two channel
+   files closest to this episode's topic or structure** (e.g. a fraud rise-and-fall → `coldfusion.md`
+   and `fern.md`; a place mystery → `neo.md` and `hoog.md`).
+6. `docs/library/narration-style.md`: the voice, 200 verbs and transitions, banned clichés,
+   rhythm patterns P1–P16, the TTS number table and 50 before/after rewrites.
+7. `docs/library/fact-check-playbook.md` (source tiers, the source table) and
+   `docs/library/sound-and-music.md` (the cue grammar for the beat sheet's sound column).
 
 Visual and sound rules are in `docs/style-bible.md`. This skill produces the outline and the
 narration draft; `shot-design` and `make-video` turn them into shots.
+
+## What the autopsies change (apply these on every script)
+
+Measured on 70 top videos (`docs/library/video-autopsies/README.md`); each rule below is wired into
+the steps that follow.
+
+1. **The sponsor return line is the most-replayed line after the hook.** In 8 of the videos with a
+   mid-roll read, the first line after it is a top-two heatmap peak, because viewers skip the read
+   and land there. Write it as the strongest re-hook in the video (§8 step 5).
+2. **State a question stack by ~1:00**: 2–4 questions in the viewer's words, back to back, that
+   become the chapter list (Veritasium, Fern, LEMMiNO). They are L1–L3 of the open-loop ledger (§6).
+3. **Wow beats come in four kinds**, the kinds that get replayed: a mechanism made simple, a
+   comparison we computed, a single clue or primary record, a hidden origin. The ~3:00 and ~6:00
+   re-engagements (§5) must each be one of them, and different from each other.
+4. **At least one primary record on screen per chapter** (a filing, a court record, a recording, a
+   dataset). Fern's own warning about AI copycat channels is that the look is now cheap; research
+   is the moat.
+5. **Endings are one of four types**: callback to the thumbnail or cold open, widen to the viewer,
+   honest open question, or an archive voice. Never a recap (§ self-check 14).
+6. **Turn-word cadence**: the winners' median gap between "but"-type turns is ~27 s (middle half
+   20–37 s). Our 30–40 s re-hooks are the big turns; smaller but/therefore turns fill between them.
+7. **Publish 8–12 description chapters** (the winners' median is 9) while keeping 4–6 on-screen
+   chapter cards for the acts (§7).
 
 ## Inputs (ask only for what's missing)
 
@@ -61,6 +92,11 @@ countdown, duel, mystery box, or explainer-with-twist. Write:
 1. **Pick 3 templates from 3 different mechanism groups** in `hooks.md` (§1–§15). At least one
    must be the mechanism that matches the thumbnail (usually mystery object, shocking number or
    villain). Don't reuse a mechanism used in either of the last 2 episodes' cold opens.
+   Before writing, read the cold opens of the 2–3 closest videos in `docs/library/video-autopsies/`
+   (each entry quotes its first 30 s). The two shapes that recur most among the winners are the
+   **dated present-tense scene** ("It's October 2015. John Brennan's phone rings.") and the
+   **misconception first** ("contrary to what you may have heard…"); at least one variant should
+   use one of them.
 2. **Write 3 full cold opens (0:00–~1:00)**, one per template, each following the anatomy in
    `hooks.md` §0:
    - **0:00–0:05, image**: the thumbnail's hero object or scene, lit by its one motivated key
@@ -124,7 +160,10 @@ Rules:
   kind twice in a row.
 - **The big re-engagements at ~3:00 and ~6:00 must be wow factor**: something the viewer can't
   get elsewhere, such as a tracked 3D reconstruction, a primary document, or a number we computed
-  ourselves. Use a reveal (R23–R28) or a stakes jump (R09–R14).
+  ourselves. Use a reveal (R23–R28) or a stakes jump (R09–R14). Each must be one of the four
+  replayed kinds (mechanism made simple, computed comparison, single clue or primary record,
+  hidden origin; `video-autopsies/README.md` pattern 4), and the two must be different kinds.
+  Hold the wow shot long enough to read (3–5 s minimum): replayed moments are paused on.
 - In `SCRIPT.md`, mark each re-hook line with `[↺]`, as Palantir does.
 - After writing, **list every gap** between consecutive re-hooks. Any gap over 45 s must be fixed
   before scoring.
@@ -145,7 +184,9 @@ Rules (`script-patterns.md` §2.1):
 
 ### 7. Chapter cards
 
-- Use 4–6 chapters, each **≥10 s** apart.
+- Use 4–6 chapters, each **≥10 s** apart. These are the on-screen chapter cards (the acts). In
+  the description, also list 8–12 sub-beat chapters (the autopsied winners publish a median of 9),
+  so search and navigation see more entry points; keep them curiosity-named where possible.
 - The description list starts at **00:00**, with at least 3 entries, in ascending order.
 - Names are curiosity, not labels. Each chapter **ends on a cliffhanger** (a question or a
   reversal), never a summary, because the card is also a mid-roll slot.
@@ -171,7 +212,11 @@ Never put the full read inside the first 60 s. Run 45–75 s, about 110–180 wo
 3. **Mechanism:** what the offer does for the kind of company in this story, with **one
    concrete number**. Show it in our own visual language; keep the picture moving.
 4. **One call to action:** one link and one reason to act now.
-5. **Return line:** reopen L1 with a sharper question than before. It counts as a re-hook.
+5. **Return line:** reopen L1 with a sharper question than before. It counts as a re-hook, and
+   it is **the most-heard line after the hook**: viewers who skip the read land exactly here (the
+   top or second heatmap peak in 8 autopsied videos, `video-autopsies/README.md` pattern 1). Pair it
+   with a hard change of picture and sound, and make the read's start and end visually unmistakable
+   so a skip lands cleanly on it.
 
 Optional **option B**: a 10–15 s callback inside the payoff chapter, only where it's genuinely
 on-topic. It also needs a short disclosure.
@@ -210,6 +255,13 @@ Write `SCRIPT.md` following `script-patterns.md` §3:
   line and give the line before it `padOut` 0.7–1.2 s.
 - **Fact-safety**: phrase each claim to match its status (`script-patterns.md` §4.2), attribute
   it (§4.3), include the accused party's response, and never write what a real person thought.
+  Build `projects/<name>/SOURCES.md` with the template in `docs/library/fact-check-playbook.md` §7
+  as you write, not after.
+- **Wording pass** (`docs/library/narration-style.md` §6): remove every banned cliché and hype word
+  (§2), convert each "and then" to but/therefore using the transitions in §1.2, replace half the
+  weak verbs with §1.1 verbs, check every number against the §4 table, and use at least three
+  rhythm patterns (§3 P1–P16) per chapter. When a line is flat, find its type in the 50 rewrites
+  (§5: openers, turns, mechanisms, numbers, people, endings) and apply the same fix.
 
 ## Self-check: score the draft out of 100
 
@@ -238,7 +290,7 @@ a declared structure and a fact-safety gate.**
 | 17 | 4–6 chapters with curiosity names, each ending on a cliffhanger; the 00:00 list is valid | 2 |
 | 18 | Every number has a source line; no unsourced claims | 4 (gate) |
 | 19 | Fact-safety pass (`script-patterns.md` §4.5): status phrasing, responses, no mind-reading, packaging checked | 4 (gate) |
-| 20 | TTS-ready: numbers spelled out, no abbreviations or stage directions, sentences ≤25 words (avg 10–14), pauses via lines/`padOut` | 3 |
+| 20 | TTS-ready: numbers spelled out, no abbreviations or stage directions, sentences ≤25 words (avg 10–14), pauses via lines/`padOut`; no banned cliché from `narration-style.md` §2 (−1 each) | 3 |
 | 21 | Word count within ±10% of the budget; reads aloud cleanly | 2 |
 | 22 | Cut pass done: at least 10% of the first draft removed | — (note it) |
 

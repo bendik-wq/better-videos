@@ -68,6 +68,24 @@ person, number, mechanism, tension, reveal, memory, time, chapter, ending, trans
   racks) next to T1 ones.
 - **Rations:** dolly zoom <= 1 per episode, Dutch/roll <= 2, whip <= 1 per minute.
 
+### 3c. Abstract beats: look up the visual metaphor
+When a beat's VO names an abstract concept (inflation, leverage, surveillance, compute, network
+effects, a bubble, regulation…), don't invent a picture. Look it up in
+`docs/library/visual-metaphors.md` (428 concepts in 20 sections, 2–3 buildable options each, every
+option tied to a catalog shot id and a set or asset).
+1. Search the file for the concept or its nearest neighbour in the same section.
+2. Prefer the option that reuses a set already built for the episode, with a new angle, lens and
+   light state (step 8).
+3. Copy its shot id into the beat as `"shot"`, then let `pick.mjs --check` judge variety. If the id
+   is rejected, take the next option on the row.
+4. **Literal first, lateral second**: put the real thing (the filing, the chip, the building) before
+   or after the metaphor, about 60/40 literal to lateral per chapter (`editing-library.md` §3).
+5. **Keep a metaphor once chosen.** Log the episode's metaphors in the plan header
+   (`metaphors: { debt: 'backpack (OBJ-…)' }`) and reuse the same one for every later mention, so
+   the callback works in pictures.
+6. If a concept is missing, add a row to `visual-metaphors.md` in the same format after the
+   episode ships.
+
 ### 4. Give every move a motivation (Deakins: "if the camera moves it's got to be for a reason")
 Write the motivation as **"<move> because <word or event>"**, e.g. "push-in because VO says
 *inbox*". Valid motivations:
@@ -170,6 +188,7 @@ stills in shot order and check them against the checklist.
 ## Checklist (every shot)
 - [ ] Is it a catalog id (or a documented variant of one), with its motivation word written down?
 - [ ] Does it show something the VO doesn't say word for word? (style bible)
+- [ ] If the VO is abstract, is the picture a `visual-metaphors.md` option (or a logged new one), and is it the same metaphor used earlier in the episode?
 - [ ] Is there one motivated key light, with darkness as the default?
 - [ ] Is the move motivated and started on its word? Or is it deliberately static?
 - [ ] Is the lens from the kit, with no unmotivated zoom?

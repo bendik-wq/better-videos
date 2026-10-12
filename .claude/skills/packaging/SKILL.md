@@ -11,6 +11,11 @@ come from `docs/research/channel-breakdowns.md` (top-video data for 20 channels,
 2026-10-11). The visual taste is in `docs/style-bible.md`, and its rules override generic
 YouTube thumbnail habits.
 
+Ideas usually arrive from the `idea-engine` skill (scored against `docs/library/topic-bank.md`).
+The title and thumbnail patterns measured on 70 top videos are in
+`docs/library/video-autopsies/README.md` §B–C; read pattern 6 (thumbnails) and §C (title shapes)
+before Step 2.
+
 ## Inputs
 
 - The idea or topic.
@@ -102,6 +107,28 @@ illustrations of the shape: any number or claim in a real title must come from t
 | Inside [Famous Company]'s [Secret Place] | Bloomberg Originals (28×) | Inside the Room Where Your Loan Gets Decided |
 | They Named It After [Ominous Reference] | Palantir episode | They Named It After Sauron's Crystal Ball |
 
+More shapes, each with its measured views, are in `docs/library/video-autopsies/README.md` §C
+(23 title shapes from the 70 autopsied videos). Shapes we hadn't used, mapped to our lanes (the
+fills are illustrations; every number in a real title comes from the research pack):
+
+| Formula | Seen at (views) | Our fill |
+|---|---|---|
+| [Topic] Explained & What You Should Do | Kurzgesagt (89.6M, timely) | The AI Chip Ban Explained & What It Means for You |
+| The Man Who Accidentally [Huge Consequence] | Veritasium (43.4M) | The Engineer Who Accidentally Built Mass Surveillance |
+| [Tech] Just Crossed the [Adjective] Line – Now What? | Kurzgesagt (17.9M in a week) | AI Agents Just Crossed the Money Line – Now What? |
+| Why [Mega-Project] Is Still Empty | Neo (34.8M) | Why This $10 Billion Data Centre Is Still Empty |
+| Why no [place] has a [thing] | Vox (32.8M) | Why No Bank Will Hold This Money |
+| [Metaphor]: How [System] Works | Wendover (14.1M) | Cities of Silicon: How Data Centres Work |
+| The REAL Reason [Everyday Annoyance] | Johnny Harris (13.6M) | The Real Reason Your Rent Is Set by Software |
+| Why [Place] Has [Exact Odd Number] [Objects] (and likely more) | Johnny Harris (9.6M) | Why Virginia Has 340 Data Centres (and Counting) |
+
+**Title A/B pairs, modelled on tests we caught live.** Three autopsied videos served two different
+titles on the same day [observed]: a **superlative vs a $-number question** (Fern: *The Scariest
+Building in Europe* / *Why Did China Buy This $343,000,000 Building?*) and **a label vs a narrative
+claim** (Veritasium: *The Biggest Chemical Coverup In History* / *How One Company Secretly Poisoned
+The Planet*; *How A Single Color (Almost) Stopped Technology From Progressing* / *Why It Was Almost
+Impossible to Make the Blue LED*). When testing titles in Step 5, test one of these shape pairs.
+
 **Data-backed title rules:**
 
 - **One formula per season.** Each top channel owns one or two shapes (Neo "How…", PolyMatter
@@ -164,6 +191,24 @@ different" Test & Compare variants.
 | **Map with an arrow** | Johnny Harris, RealLifeLore | A dark 3D map with one red route or leader line; one place name in Instrument Serif |
 | **Logo in darkness** | Moon | A recognisable shape (not a trademark copy) half-lit and half-swallowed by black |
 | **Deadpan flash** | Style bible | Direct flash on an absurd object (a badge, a server, cash) against black |
+| **The case board** | Fern (20.1M, 16.8M), Neo (16.2M) [observed] | Cork board under a work light, red string, one document or silhouette (no realistic faces; archive photo only) under a red stamp word (≤2 words, e.g. WANTED) |
+| **The absence drawn** | Vox (32.8M) [observed] | The empty place lit, with a red dashed outline where the missing object should be |
+| **The stair-step triptych** | Veritasium blue LED (56.3M) [observed] | Three versions of one object in a row under one light; two labelled as easy, the third circled in red |
+| **Model city, one red building** | hoog (6.9M), its biggest [observed] | Our world-kit city in grey miniature, one building lit red; one coined word in a corner |
+| **Money as a tower on a map** | Bloomberg (4.9M) [observed] | A banknote stack standing on a dark map of the place, sodium key light, the red annotation on the stack's height |
+| **The blueprint** | Johnny Harris (13.6M) [observed] | A white technical line drawing of the hero object on black; one part looped in red |
+| **The comment / quote card** | Fern (5.8M) [observed] | A real quote or document line on paper, with the red loop on the phrase the video ends on |
+
+**What the 70 autopsied thumbnails add** (`docs/library/video-autopsies/README.md` pattern 6) [observed]:
+- **54 of 70 carry words, and the words usually complement the title rather than repeat it**
+  (title "How North Korea Makes Money" / thumbnail "HOW NORTH KOREA WORKS"; title asks "Why China
+  is winning the EV war" / thumbnail answers "IT'S THE BATTERY"). Our ≤3-word rule stands; use the
+  words to answer or sharpen the title, never to echo it.
+- **Faces are not required**: about 21 of 70 show a real face, concentrated in four presenter or
+  commentary channels; the biggest place, mystery and object videos use none.
+- **Fern 7 of 7 and hoog 4 of 4 use exactly one red element**, the same rule as our Palantir gate 3.
+- **End the video on the thumbnail's words when you can** (Fern's heist thumbnail quotes "the money
+  was never recovered", which is also the final line). Note it in the promise list.
 
 ### The Palantir lesson: three gates every concept must pass
 
