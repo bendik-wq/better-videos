@@ -1,0 +1,125 @@
+// THE 21 MILES THAT CONTROL THE WORLD. Episode 3: the Strait of Hormuz. BRIGHT mode.
+// Every fact in the VO is in projects/hormuz/RESEARCH.md. ⏱ = live fact, captioned "AS OF 12 OCT 2026".
+// Sets: projects/hormuz/sets/index.js (sea, ships, maps, footage) + projects/hormuz/sets/story.js
+// (bright graphics, history, people). Transitions: engine/transitions.js names via params.trans.
+let n = 0;
+const S = (set, vo, params = {}, extra = {}) => ({ id: `s${String(++n).padStart(3, '0')}`, set, vo, params, ...extra });
+const CH = (num, title, sub) => ({ id: `ch${num}`, set: 'chapter', params: { num, title, sub }, min: 4.2, chapter: num });
+const LIVE = 'AS OF 12 OCT 2026';
+
+const shots = [
+  // ================= COLD OPEN =================
+  S('strait-aerial', 'Before this year, around a hundred ships a day sailed through one gap of water between Iran and Oman.', { alt: 2600, drift: 1, caption: 'STRAIT OF HORMUZ' }, { padIn: 1.0 }),
+  S('tanker-hero', 'Together they carried oil equal to a fifth of everything the world burns.', { side: 'port', mm: 50, caption: '≈ 20 MILLION BARRELS A DAY · 2024', source: 'SOURCE: EIA' }),
+  S('chokepoint-map', 'At its narrowest, the gap is about twenty-one nautical miles. The lanes the tankers actually use are narrower still. Two nautical miles in. Two nautical miles out.', { widthAt: 'twenty', lanesAt: 'lanes' }),
+  S('strait-aerial', 'On the twenty-eighth of February, twenty twenty-six, the ships stopped.', { alt: 1800, empty: true, mm: 85, caption: '28 FEB 2026', trans: 'dip-to-black' }, { padOut: 1.0 }),
+  S('open-water', 'Nobody built a wall across the water. Nobody sank a fleet in the channel. The strait stayed open.', { mode: 'empty-lanes' }),
+  S('numbers', 'And yet, within weeks, the oil flowing through it fell by more than three quarters.', { items: [{ word: 'three', value: 77, prefix: '−', suffix: '%', sub: 'oil through the strait · Q2 2026 vs Q4 2025' }], source: 'SOURCE: EIA STEO, AUG 2026' }),
+  S('tanker-hero', 'So what actually closed it?', { mode: 'anchored', h: 3, mm: 35, golden: true }, { padOut: 0.8 }),
+  S('flows', 'To answer that, you need to know why this one strait matters more than any other place on the map. And why the country that guards it most barely uses it.', { mode: 'world', highlight: 'us' }),
+  { id: 'title', set: 'title', params: { title: 'The 21 Miles That Control the World', sub: 'THE STRAIT OF HORMUZ' }, min: 5.5 },
+
+  // ================= 1. THE GAP =================
+  CH(1, 'The Gap', 'ONE WAY OUT'),
+  S('globe-dive', 'Start with the shape of the water.', {}),
+  S('gulf-map', 'The Persian Gulf is a long, shallow sea, closed on almost every side. Kuwait, Iraq, Bahrain, Qatar. Most of Saudi Arabia’s oil. The Emirates. Iran. All of it sits around one body of water.', { mode: 'countries', words: ['Kuwait', 'Iraq', 'Bahrain', 'Qatar', 'Saudi', 'Emirates', 'Iran'] }),
+  S('gulf-map', 'And that water has exactly one way out to the open ocean.', { mode: 'exit' }),
+  S('strait-aerial', 'The Strait of Hormuz.', { alt: 9000, mm: 24, caption: 'THE STRAIT OF HORMUZ' }, { padOut: 0.7 }),
+  S('chokepoint-map', 'At its narrowest, between Iran’s Larak Island and Oman’s Great Quoin, it is about twenty-one nautical miles across. Under forty kilometres.', { mode: 'width', labels: ['Larak', 'Great Quoin'], caption: '≈ 21 NAUTICAL MILES · < 40 KM' }),
+  S('lanes-law', 'Iran and Oman each claim twelve nautical miles of sea from their coasts. Twelve plus twelve is more than twenty-one. So at its tightest point, there is no open sea here at all. Every metre of it belongs to somebody.', { mode: 'territorial' }),
+  S('lanes-law', 'In nineteen sixty-eight, the International Maritime Organization drew the lanes ships still follow. Two nautical miles inbound. A two-mile buffer. Two nautical miles outbound.', { mode: 'tss', caption: 'IMO TRAFFIC SEPARATION SCHEME · 1968' }),
+  S('lanes-law', 'And here is the detail almost nobody knows. At the narrowest point, those lanes don’t run through Iran’s waters. They run through Oman’s.', { mode: 'oman', ring: 'oman' }),
+  S('navy-escort', 'Remember that. It matters later.', { mode: 'lanes-low', golden: false }, { padOut: 0.6 }),
+  S('flows', 'In twenty twenty-four, about twenty million barrels of oil a day moved through this water. That’s equal to roughly a fifth of all the oil the world consumes, and more than a quarter of all the oil shipped by sea.', { mode: 'river', source: 'SOURCE: EIA, JUNE 2025' },
+    { beats: [['quarter', 'numbers', { items: [{ word: 'quarter', value: 25, prefix: '> ', suffix: '%', sub: 'of all oil shipped by sea' }], source: 'SOURCE: EIA' }]] }),
+  S('lng-carrier', 'It’s not only oil. About a fifth of the world’s liquefied natural gas came through here too, most of it from one country. Qatar.', { caption: 'LNG CARRIER · QATAR' }),
+  S('flows', 'Now look at where it goes. Eighty-four percent of the crude went to Asia. China, India, Japan and South Korea alone took more than two thirds.', { mode: 'asia', source: 'SOURCE: EIA (2024)' }),
+  S('flows', 'And the United States? About seven percent of its crude imports.', { mode: 'us', source: 'SOURCE: EIA (2024)' }),
+  S('footage', 'Yet for forty years, the United States Navy has treated this strait as if its own economy depended on it.', { file: 'ships-lcs-formation', caption: 'U.S. NAVY · ARABIAN GULF', source: 'U.S. NAVY · PUBLIC DOMAIN' }),
+  S('pipeline-bypass', 'Is there another way out? A little. Saudi Arabia built a pipeline across the desert to the Red Sea. The Emirates built one to a port beyond the strait.', {}),
+  S('bars', 'The U.S. Energy Information Administration estimated that together they could carry about two point six million extra barrels a day in a crisis. Against twenty.', { title: 'SPARE BYPASS CAPACITY vs NORMAL FLOW (mb/d)', items: [{ label: 'Bypass pipelines (spare)', value: 2.6, word: 'two', display: '2.6' }, { label: 'Normal flow through Hormuz', value: 20, word: 'twenty', display: '20', red: true }], max: 21, source: 'SOURCE: EIA, JUNE 2025' }),
+  S('quote', 'In the agency’s words, most of the oil that moves through the strait has no alternative means of exiting the region.', { text: '“Most volumes that transit the strait have no alternative means of exiting the region.”', by: 'U.S. ENERGY INFORMATION ADMINISTRATION · 2025' }, { padOut: 0.8 }),
+
+  // ================= 2. THE TANKER WAR =================
+  CH(2, 'The Tanker War', '1984 – 1988'),
+  S('tanker-war', 'The last time someone tried to choke this water, it lasted four years.', { mode: 'burning', golden: true }),
+  S('timeline', 'In the nineteen eighties, Iran and Iraq were at war. In nineteen eighty-four, the war moved to the sea. Each side began attacking the other’s oil trade, and anyone carrying it.', { events: [{ year: 1980, label: 'IRAN–IRAQ WAR', word: 'iran' }, { year: 1984, label: 'WAR AT SEA', word: 'moved' }, { year: 1988, label: 'CEASEFIRE' }], focus: 1 }),
+  S('numbers', 'Historians call it the Tanker War. By the end of nineteen eighty-seven, more than four hundred and fifty ships had been attacked.', { items: [{ word: 'four', value: 451, sub: 'ships attacked, 1984–87' }], source: 'SOURCE: USNI PROCEEDINGS, MAY 1988' }),
+  S('bars', 'Here’s what surprises people. Most of those attacks weren’t by Iran. By the published tallies, Iraq hit about three ships in every five.', { title: 'SHIPS ATTACKED, 1984–87', items: [{ label: 'Iraq', value: 283, word: 'iraq', red: true }, { label: 'Iran', value: 168, word: 'iran' }], max: 300, source: 'SOURCE: USNI PROCEEDINGS, MAY 1988' }),
+  S('tanker-war', 'In May nineteen eighty-seven, an Iraqi jet fired two missiles into an American frigate, the U.S.S. Stark. Thirty-seven sailors died. Iraq said the pilot had mistaken it for a tanker.', { mode: 'stark', caption: 'USS STARK · 17 MAY 1987' }),
+  S('tanker-war', 'That same year, Kuwait asked for protection. America answered by putting Kuwaiti tankers under the American flag and escorting them with warships.', { mode: 'convoy', caption: 'OPERATION EARNEST WILL · 1987' }),
+  S('tanker-war', 'On the very first convoy, the lead tanker, the Bridgeton, struck a mine.', { mode: 'mine', word: 'mine' }),
+  S('photo', 'The next spring, the U.S.S. Samuel B. Roberts hit another. The Navy’s own history says the ship should have sunk. Its crew kept it afloat.', { file: 'roberts', fallback: 'tanker-war:frigate', quote: '“The ship should have sunk…”', by: 'NAVAL HISTORY AND HERITAGE COMMAND' }),
+  S('tanker-war', 'Four days later, the U.S. Navy struck back. Operation Praying Mantis. The Navy calls it the largest of its major surface battles since the Second World War.', { mode: 'mantis', caption: 'OPERATION PRAYING MANTIS · 18 APR 1988' }),
+  S('tanker-war', 'And then, in July nineteen eighty-eight, came the moment nobody involved has ever forgotten.', { mode: 'dawn-cruiser' }, { padOut: 0.6 }),
+  S('tanker-war', 'The cruiser U.S.S. Vincennes, fighting Iranian boats in the strait, fired two missiles at an aircraft it believed was an attacking fighter jet.', { mode: 'radar', caption: 'USS VINCENNES · 3 JUL 1988' }),
+  S('tanker-war', 'It was Iran Air Flight six fifty-five. A passenger plane. All two hundred and ninety people on board were killed, sixty-six of them children.', { mode: 'airliner', caption: 'IRAN AIR 655 · 290 KILLED', trans: 'dip-to-black' }, { padOut: 1.2 }),
+  S('quote', 'The United States called it a tragic mistake. Iran has never accepted that. Eight years later, America paid compensation to the families, without admitting legal liability.', { text: 'Compensation paid ex gratia, without admission of legal liability.', by: 'US–IRAN SETTLEMENT · 1996' }),
+  S('open-water', 'Weeks after the shootdown, the war ended. But the lesson stayed.', { mode: 'calm-golden' }, { padOut: 0.8 }),
+  S('quote', 'You don’t close a strait by blocking it. You close it by making it frightening.', { text: 'You don’t close a strait by blocking it. You close it by making it frightening.', big: true }, { padOut: 0.9 }),
+
+  // ================= 3. THE LEVER =================
+  CH(3, 'The Lever', 'A TREATY NOBODY JOINED'),
+  S('doc', 'To understand the next forty years, you need one document.', { mode: 'unclos-cover' }),
+  S('doc', 'In nineteen eighty-two, Iran signed the United Nations Convention on the Law of the Sea. That’s the treaty that gives every ship the right to pass through straits like this one.', { mode: 'unclos', caption: 'UNCLOS · SIGNED BY IRAN 10 DEC 1982' }),
+  S('doc', 'But Iran never ratified it. And when it signed, it attached a declaration saying that right belongs only to countries that join the treaty.', { mode: 'declaration', highlight: 'Transit passage', source: 'SOURCE: UN TREATY COLLECTION' }),
+  S('doc', 'The United States never joined either.', { mode: 'parties', stamp: 'NOT A PARTY' }),
+  S('lanes-law', 'So both sides of today’s standoff stand outside the treaty meant to govern this water.', { mode: 'both-outside' }),
+  S('tanker-hero', 'For decades, that gap was used as a lever. Pulled, then released.', { mode: 'seizure-wide', golden: true }),
+  S('footage', 'In June twenty nineteen, Iran shot down an American surveillance drone. The U.S. said it was over international waters. Iran said it was over Iran.', { file: 'iran-drone-2019', fallback: 'drone-sky', caption: 'RQ-4 SHOOTDOWN · 20 JUN 2019', source: 'U.S. CENTCOM · IRAN DISPUTES LOCATION' }),
+  S('fast-boats', 'A month later, Iran’s Revolutionary Guard seized a British tanker, the Stena Impero, with twenty-three crew on board.', { n: 6, caption: 'STENA IMPERO · 19 JUL 2019' }),
+  S('footage', 'In twenty twenty-three, a dozen fast attack boats swarmed a tanker inside the strait and took it. The next year, commandos rappelled from a helicopter onto a container ship.', { file: 'irgc-speedboat-sirocco', caption: 'IRGC FAST BOATS · STRAIT OF HORMUZ', source: 'U.S. NAVY · PUBLIC DOMAIN' }),
+  S('photo', 'And in June twenty twenty-five, after American strikes on its nuclear sites, Iran’s parliament voted to back closing the strait.', { mode: 'parliament-card', caption: '22 JUN 2025' }),
+  S('strait-aerial', 'The final decision lay with Iran’s security council. The ships kept moving. Oil barely flinched.', { alt: 3200, drift: -1 }),
+  S('open-water', 'So, until this year, the lever was always pulled halfway.', { mode: 'lever' }),
+  S('insurance', 'One more number to remember. Before this year, insuring a tanker against war for a single trip through the strait cost about a tenth to a quarter of one percent of the ship’s value.', { mode: 'before', source: 'SOURCE: SINGAPORE MINISTRY OF TRANSPORT' }, { padOut: 0.8 }),
+
+  // ================= 4. THE CLOSING =================
+  CH(4, 'The Closing', LIVE),
+  S('strait-aerial', 'On the twenty-eighth of February, twenty twenty-six, the United States and Israel struck Iran. Iran’s Supreme Leader was killed in the strikes.', { alt: 5000, mm: 35, caption: '28 FEB 2026', haze: 'smoke' }),
+  S('bridge', 'Iran’s Revolutionary Guard warned ships away from the strait. Then it began attacking them.', { mode: 'radio', crew: 2 }),
+  S('tanker-hero', 'On the first of March, the first seafarers died, on tankers hit off the coast of Oman.', { mode: 'smoke', caption: '1 MAR 2026', source: 'SOURCE: IMO' }),
+  S('gulf-terminal', 'Days later, Qatar stopped producing liquefied natural gas. An attack later knocked out seventeen percent of its export capacity, for what Qatar says could be up to five years.', { mode: 'lng-dark', caption: 'RAS LAFFAN · QATAR', source: 'SOURCE: EIA STEO, APR 2026' }),
+  S('open-water', 'And here is the answer to our first question.', { mode: 'empty-lanes-high' }, { padOut: 0.6 }),
+  S('quote', 'The U.S. Energy Information Administration put it plainly. The strait is not physically blocked. The threat of attack, and the cancellation of insurance, made most tankers stay away.', { text: '“…not physically blocked, the threat of attack by Iran and the cancellation of insurance coverage have led most tankers to avoid transiting.”', by: 'EIA · SHORT-TERM ENERGY OUTLOOK · MARCH 2026', red: true }),
+  S('insurance', 'Remember that insurance number? A tenth to a quarter of one percent. By the summer, war cover for one transit was quoted at between three and a half and seven and a half percent of the ship’s value.', { mode: 'jump', source: 'SOURCE: SINGAPORE MINISTRY OF TRANSPORT, AUG 2026' }),
+  S('insurance', 'For a tanker worth a hundred million dollars, that’s up to seven and a half million dollars. For one trip.', { mode: 'cheque', caption: 'ILLUSTRATIVE · $100M HULL VALUE' }),
+  S('bars', 'So the oil stopped. Flows through the strait fell from about twenty-one and a half million barrels a day before the war to under five million. A fall of more than three quarters.', { title: 'OIL THROUGH HORMUZ (mb/d)', items: [{ label: 'Q4 2025', value: 21.6, word: 'twenty' }, { label: 'Q2 2026', value: 4.9, word: 'five', red: true }], max: 23, source: 'SOURCE: EIA STEO, AUG 2026' }),
+  S('numbers', 'Thirty-two countries released four hundred million barrels from emergency stocks. The largest release in the history of the International Energy Agency.', { items: [{ word: 'four', value: 400, suffix: 'M', sub: 'barrels released · IEA, 11 MAR 2026' }], source: 'SOURCE: IEA' }),
+  S('flows', 'It sounds enormous. It’s about twenty days of what normally sails through Hormuz.', { mode: 'days', days: 20 }),
+  S('price-shock', 'The official forecasters expected a short disruption. In March, the E.I.A. assumed it would last about a month.', { mode: 'forecast', from: 2025 }),
+  S('seafarers', 'It didn’t. Around twenty thousand seafarers were trapped on ships inside the Gulf. The head of the International Maritime Organization pleaded: Seafarers must not be targets.', { quote: '“Seafarers must not be targets.”', by: 'IMO SECRETARY-GENERAL · 6 MAR 2026' }),
+  S('lanes-law', 'Then Iran did something revealing. It set up its own authority to approve ships and collect fees. And it redrew the shipping lanes. Out of Oman’s waters. Into its own.', { mode: 'redrawn', caption: 'IRAN’S REDRAWN LANES · APR 2026' }),
+  S('navy-escort', 'In April, America answered with a naval blockade of Iran’s ports. In June, a deal. Oil fell back toward seventy dollars.', { mode: 'blockade' }),
+  S('price-shock', 'In July, the attacks resumed, and the blockade returned.', { mode: 'july', from: 2026 }),
+  S('pipeline-bypass', 'In September, drones hit the escape route itself. Saudi Arabia’s pipeline across the desert. Who sent them is disputed.', { mode: 'hit', caption: 'EAST–WEST PIPELINE · 10 SEP 2026' }),
+  S('price-shock', 'Brent oil touched a hundred and thirty-one dollars a barrel. The worst price of the war didn’t come in the first week. It came six months in, when the way around was hit.', { mode: 'peak', source: 'BRENT DAILY SPOT · SOURCE: EIA' }),
+  S('smugglers', 'Through all of it, one trade never stopped. Every morning, smugglers’ speedboats still raced across to Oman’s port of Khasab. Washing machines one way. Pistachios and sheep the other.', { caption: 'KHASAB · MUSANDAM, OMAN', source: 'SOURCE: MARITIME EXECUTIVE, APR 2026' }, { padOut: 0.8 }),
+
+  // ================= 5. WHO PAYS =================
+  CH(5, 'Who Pays', LIVE),
+  S('flows', 'So who pays?', { mode: 'world-dim' }, { padOut: 0.4 }),
+  S('flows', 'First, Asia, where the oil was going. Then everyone else, because oil has one world price.', { mode: 'one-price' }),
+  S('pump', 'In September, Americans paid an average of four dollars and thirty-five cents for a gallon of gasoline, and over six dollars for diesel.', { gas: '4.35', diesel: '6.29', source: 'SOURCE: EIA STEO, OCT 2026' }),
+  S('helium', 'It reaches further than fuel. Qatar produces around a third of the world’s helium, alongside its gas. Helium cools M.R.I. scanners. It’s used to make computer chips.', { source: 'SOURCE: USGS (2024)' }),
+  S('navy-escort', 'And the answer to our second question? America guards a strait it barely uses because oil has one price. Close this water, and every pump on earth feels it.', { mode: 'golden-pass', golden: true }),
+  S('strait-aerial', 'As of today, the strait is largely shut, with traffic on Iran’s terms. Both sides claim control. The ship counts say neither fully has it.', { alt: 7000, sparse: true, caption: LIVE }),
+  S('globe-dive', 'For fifty years, the world built its economy on one assumption. That this gap would always be open.', { reverse: true }),
+  S('open-water', 'It was never the water that kept it open. It was everyone’s belief that it would stay that way.', { mode: 'final', golden: true }, { padOut: 2.5 }),
+  { id: 'end', set: 'title', params: { title: 'The 21 Miles That Control the World', sub: '', end: true }, min: 7 },
+];
+for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
+
+export default {
+  title: 'The 21 Miles That Control the World',
+  fps: 60, width: 1920, height: 1080,
+  settings: { fps: 60, aa: 'fxaa', look: 'bright-day', cutGuard: 1.5 },
+  voice: { engine: 'kokoro', name: 'af_heart', speed: 0.96,
+    say: { 'U.S.S.': 'U.S.S.', 'E.I.A.': 'E.I.A.', 'M.R.I.': 'M.R.I.', Khasab: 'Kha-sab', Larak: 'La-rak', Musandam: 'Moo-san-dam', Hormuz: 'Hor-mooz', Qatar: 'Kuh-tar' } },
+  timing: { padIn: 0.15, padOut: 0.4 },
+  shots,
+  // music and cues: filled in once engine/music lands (score.music = [{shot, mood, key, intensity}])
+  score: { key: 'D', drone: 0.12,
+    sections: [{ shot: 'ch1', key: 'E' }, { shot: 'ch2', key: 'C' }, { shot: 'ch3', key: 'D' }, { shot: 'ch4', key: 'A' }, { shot: 'ch5', key: 'D' }],
+    silenceDrone: ['title', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'end'] },
+};
