@@ -37,7 +37,7 @@ export class World {
     this.mods = []; this.roads = []; this.cityRoads = []; this.lamps = []; this.trees = []; this.cities = []; this.extra = [];
     this.globeH = opts.globeH ?? -40; // globe surface relative to the anchor's elevation
     this.seed = opts.seed ?? 1;
-    this.tod = TOD[opts.tod ?? 'blue'];
+    this.tod = typeof opts.tod === 'object' ? opts.tod : TOD[opts.tod ?? 'blue'];
     this.built = false;
     const U = this.U;
     if (lib.pbr) { U.uPbrA.value = lib.pbr.A; U.uPbrN.value = lib.pbr.N; this.pbr = lib.pbr; }
