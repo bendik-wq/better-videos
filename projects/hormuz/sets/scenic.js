@@ -369,8 +369,8 @@ async function lanesLaw(ctx, shot, H) {
         float dI = d.r * 40000., dO = d.g * 40000., aa = 220.;
         float bi = smoothstep(uR + aa, uR - aa, dI), bo = smoothstep(uR + aa, uR - aa, dO);
         float ei = smoothstep(260., 0., abs(dI - uR)) * step(1., uR), eo = smoothstep(260., 0., abs(dO - uR)) * step(1., uR);
-        vec3 ci = vec3(.90, .74, .45), co = vec3(.12, .72, .72);
-        float ai = bi * uI * .34, ao = bo * uO * .34;
+        vec3 ci = vec3(.96, .78, .46), co = vec3(.12, .74, .74);
+        float ai = bi * uI * .44, ao = bo * uO * .40;
         vec3 c = ci * ai + co * ao * (1. - ai); float a = ai + ao * (1. - ai);
         float ov = bi * bo * uOv; float hatch = smoothstep(.45, .55, fract((vXZ.x + vXZ.y) / 1400.));
         float ah = ov * (.18 + .5 * hatch); c = c * (1. - ah) + vec3(1.) * ah; a = a + ah * (1. - a);
@@ -430,7 +430,7 @@ async function lanesLaw(ctx, shot, H) {
   if (mode === 'territorial' || mode === 'oman' || mode === 'tss') GEO.div(S.layer, `right:4.2%;bottom:4.6%;${MONO(0.62, 'rgba(251,248,242,.85)', 0.16)}`, mode === 'tss' ? 'LANES: IMO / OPENSTREETMAP · IMAGERY: COPERNICUS SENTINEL-2' : '12 NM FROM THE COAST, SIMPLIFIED (NATURAL EARTH) · ILLUSTRATIVE');
   if (['territorial', 'oman'].includes(mode)) { lb.add('IRAN', V(30000, 0, -60000), { dot: false, size: 1.3, dy: 0, t0: 0.4 }); lb.add('OMAN', G.place('Musandam'), { dot: false, size: 1.3, dy: 40, t0: 0.4 }); }
   const cap = captions(S.layer, shot, { source: null }, H);
-  const view = { territorial: [92e3, 0.3, 0.2], tss: [52e3, 0.5, 0.42], oman: [62e3, 0.2, 0.15], 'both-outside': [120e3, 0.1, 0.1], redrawn: [85e3, -0.15, -0.05] }[mode];
+  const view = { territorial: [92e3, 0.3, 0.2], tss: [72e3, 0.5, 0.42], oman: [62e3, 0.2, 0.15], 'both-outside': [120e3, 0.1, 0.1], redrawn: [85e3, -0.15, -0.05] }[mode];
   const c0 = mode === 'redrawn' ? (() => { const [x, z] = G.P.xz(26.78, 56.42); return V(x, 0, z); })() : mid;
   return S.out((t, p) => {
     const k = smoother(p), alt = view[0] * lerp(1.06, 0.94, k), az = lerp(view[1], view[2], k);
@@ -592,9 +592,7 @@ function dateCard(ctx, shot, H) {
   let drawn = false;
   const paint = async () => { const G = await G0; const w = 2400, h = 1350;
     // the strait's coastline, faint, as a watermark on the right
-    x.save(); x.beginPath(); x.rect(1500, 0, 900, 1350); x.clip(); x.strokeStyle = 'rgba(70,83,106,0.16)'; x.lineWidth = 2.5; const c0 = [26.6, 56.3], sc = 1500;
-    for (const line of [...G.vec.coast, ...(G.vec.coastFine ?? [])]) { x.beginPath(); line.forEach(([lo, la], i) => { const px = 1650 + (lo - c0[1]) * sc * Math.cos(c0[0] * D2R), py = 700 - (la - c0[0]) * sc; i ? x.lineTo(px, py) : x.moveTo(px, py); }); x.stroke(); }
-    x.restore(); x.fillStyle = NAVY; x.textAlign = 'left'; x.font = '400 190px "Instrument Serif", serif'; x.fillText(P.title ?? '22 June 2025', 190, 520);
+    x.fillStyle = NAVY; x.textAlign = 'left'; x.font = '400 190px "Instrument Serif", serif'; x.fillText(P.title ?? '22 June 2025', 190, 520);
     x.fillStyle = RED; x.fillRect(196, 580, 150, 6);
     x.fillStyle = NAVY; x.font = '400 74px "Instrument Serif", serif'; x.fillText(P.line ?? 'Iran’s parliament votes to back', 190, 720); x.fillText(P.line2 ?? 'closing the Strait of Hormuz.', 190, 810);
     x.fillStyle = NAVY_SOFT; x.font = '500 34px "Plex Mono", monospace'; x.fillText(P.sub ?? 'THE FINAL DECISION: THE SUPREME NATIONAL SECURITY COUNCIL', 196, 930);
@@ -634,7 +632,7 @@ async function helium(ctx, shot, H) {
   const dl = new THREE.DirectionalLight(0xffffff, 1.6); dl.position.set(2, 5, 3); dl.castShadow = true; dl.shadow.mapSize.set(1024, 1024); mri.add(dl); mri.add(new THREE.HemisphereLight(0xffffff, 0xd8dcdc, 0.6));
   // the wafer: 300 mm disk, die grid with thin-film colour (angle-dependent hue), a holder
   const { tex } = canvasTex(1024, 1024, (x, w, h) => { x.fillStyle = '#000'; x.fillRect(0, 0, w, h); const n = 22, s = w / n;
-    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const cx = (i + 0.5) * s - w / 2, cy = (j + 0.5) * s - h / 2; if (Math.hypot(cx, cy) > w / 2 - s * 0.7) continue; x.fillStyle = `hsl(${(i * 13 + j * 7) % 40 + 200}, 30%, ${40 + ((i + j) % 3) * 6}%)`; x.fillRect(i * s + 2, j * s + 2, s - 4, s - 4);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const cx = (i + 0.5) * s - w / 2, cy = (j + 0.5) * s - h / 2; if (Math.hypot(cx, cy) > w / 2 - s * 0.7) continue; x.fillStyle = `hsl(${(i * 13 + j * 7) % 30 + 205}, 12%, ${46 + ((i + j) % 3) * 5}%)`; x.fillRect(i * s + 2, j * s + 2, s - 4, s - 4);
       x.fillStyle = 'rgba(255,255,255,0.18)'; for (let k = 0; k < 6; k++) x.fillRect(i * s + 6 + k * (s - 12) / 6, j * s + 8, (s - 12) / 8, s - 16); } });
   const wm = new THREE.ShaderMaterial({ uniforms: { map: { value: tex }, uCam: { value: new THREE.Vector3() } },
     vertexShader: 'varying vec2 vUv; varying vec3 vW, vN; void main(){ vUv = uv; vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * viewMatrix * w; }',
@@ -643,7 +641,7 @@ async function helium(ctx, shot, H) {
       void main(){ vec3 v = normalize(uCam - vW); float c = abs(dot(v, vN)); vec3 tx = texture2D(map, vUv).rgb;
         float die = step(.05, dot(tx, vec3(1.)));
         vec3 base = mix(vec3(.62, .64, .68), tx * 1.2, die);
-        vec3 irid = film(c * 1.6 + vUv.x * .3 + vUv.y * .2) * .55;
+        vec3 irid = mix(vec3(dot(film(c * 1.6 + vUv.x * .3 + vUv.y * .2), vec3(.333))), film(c * 1.6 + vUv.x * .3 + vUv.y * .2), .45) * .3;
         vec3 col = base * (.55 + .45 * c) + irid * die * (1. - c * .6) + pow(1. - c, 4.) * .4;
         if (length(vUv - .5) > .5) discard;
         gl_FragColor = vec4(col, 1.); }` });

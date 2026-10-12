@@ -169,3 +169,17 @@ Sketchfab needs a login). The bridge crew are `engine/people` bodies (see People
 
 ## Music (engine/music, audio-lab)
 - Chopin, Waltz Op. 69 No. 1, performed by Luke Faulkner (Musopen). Public Domain Mark 1.0. https://archive.org/details/MusopenChopinWaltzOp69no1
+
+## Episode 3, round 3: Hormuz scenic sets (`projects/hormuz/sets/scenic.js`, `index.js`, `engine/sea` ships, navy, smoke)
+
+All ships (VLCC, LNG, container, Arleigh Burke, FFG-7, Ticonderoga, speedboats, mine, platform, buoy), the RQ-4 and A300
+silhouettes, the LNG plant, the MRI room, the wafer, the fjord walls, the smoke and the cards are procedural, original
+code (no third-party models). Flags are drawn in code. Crew silhouettes are `engine/people` bodies (credits above).
+
+| File | What | Licence | Source |
+|---|---|---|---|
+| `projects/hormuz/assets/archive/roberts.jpg` (+ `depth/roberts.*` made by `engine/depth.py`) | USS Samuel B. Roberts (FFG-58) in dry dock at Dubai, May 1988: the hull damage from the Iranian mine of 14 April 1988. Photo PH2 Rudy D. Pahoyo, U.S. Navy (DoD photo via NARA) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:Ffg58minedamage.jpg (1920 px Commons rendition, fetched 2026-10-12) |
+| `assets/footage/clips/iran-drone-2019.mp4` (provenance `iran-drone-2019.json`) | The smoke trail of the U.S. Navy RQ-4A (BAMS-D) falling after the IRGC missile hit, 20 June 2019, U.S. Navy imagery released by U.S. Central Command (DVIDS DOD_106930698) | Public domain (US Government work) | https://commons.wikimedia.org/wiki/File:U.S._Navy_RQ-4_smoke.webm |
+| `assets/footage/clips/irgc-speedboat-sirocco.mp4` | Alias copy (same bytes) of `commons-iranian-irgc-speedboat-approaching-uss-sirocco-a.mp4` under the id the shot list uses | Public domain (US Navy work) | as above |
+| `assets/footage/clips/ships-lcs-formation.mp4` | Starter-pack clip (USS Independence LCS 2 and USS Coronado LCS 4, Pacific, 23 April 2014; MCSC Keith DeVinney, U.S. Navy) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv |
+| `assets/pbr/stone.*` (used by the Khasab fjord walls) | Poly Haven `large_sandstone_blocks` (already in the PBR library) | CC0 | https://polyhaven.com/a/large_sandstone_blocks |

@@ -1,0 +1,28 @@
+{
+ "id": "iran-drone-2019",
+ "title": "U.S. Navy RQ-4 smoke",
+ "source": "commons",
+ "sourceId": "U.S. Navy RQ-4 smoke.webm",
+ "page": "https://commons.wikimedia.org/wiki/File:U.S._Navy_RQ-4_smoke.webm",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c9/U.S._Navy_RQ-4_smoke.webm/U.S._Navy_RQ-4_smoke.webm.720p.vp9.webm",
+ "date": "2019-06-20",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:U.S._Navy_RQ-4_smoke.webm",
+ "credit": "U.S. Navy imagery (a P-8A Poseidon, per the New York Times), released by U.S. Central Command Public Affairs, 20 June 2019",
+ "tags": [
+  "hormuz"
+ ],
+ "trim": null,
+ "file": "assets/footage/clips/iran-drone-2019.mp4",
+ "bytes": 3342202,
+ "sha1": "2c115b227120ed84a28e3d01b8b9b372c38a5cc5",
+ "duration": 15.587,
+ "width": 1280,
+ "height": 720,
+ "fps": 23.976023976023978,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12",
+ "origin": "DVIDS DOD_106930698 (https://cdn.dvidshub.net/media/video/1906/DOD_106930698/DOD_106930698-1280x720-2765k.mp4)"
+}

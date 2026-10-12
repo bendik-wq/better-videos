@@ -66,25 +66,25 @@ export function makeHormuz(H = {}) {
         telephoto: { tgt: (() => { const q = G.laneIn.at(G.laneIn.nearest(...xz(26.57, 56.50))); return [q.x, 0, q.z]; })(), az: 25, pitch: 13 },
         establish: { tgt: [...(() => { const [x, z] = xz(26.66, 56.43); return [x, 0, z]; })()], az: 350, pitch: 27 },
         east: { tgt: [...(() => { const [x, z] = xz(26.53, 56.58); return [x, 0, z]; })()], az: 108, pitch: 21 },
-        north: { tgt: [...(() => { const [x, z] = xz(26.78, 56.40); return [x, 0, z]; })()], az: 342, pitch: 13 },
+        north: { tgt: [...(() => { const [x, z] = xz(27.0, 56.33); return [x, 0, z]; })()], az: 344, pitch: 3.2, alt: 1400 },
         west: { tgt: [...(() => { const [x, z] = xz(26.62, 56.36); return [x, 0, z]; })()], az: 292, pitch: 26 },
       };
       const Vw = VIEWS[view];
       let base;
       if (Vw.from) { const [cx, cz] = Vw.from, [lx, lz] = Vw.to; base = { pos: [cx, alt, cz], look: [lx, 0, lz] }; }
-      else base = aerial(Vw.tgt, Vw.az, Vw.pitch, alt);
+      else base = aerial(Vw.tgt, Vw.az, Vw.pitch, Vw.alt ?? alt);
       const dir = [base.look[0] - base.pos[0], base.look[2] - base.pos[2]], dl = Math.hypot(...dir), ux = dir[0] / dl, uz = dir[1] / dl;
       const drift = P.drift == null ? 1 : P.drift, speed = Math.abs(drift) > 3 ? drift : Math.sign(drift || 1) * alt * 0.011;
       // traffic
       const sIn = G.laneIn.nearest(base.look[0], base.look[2]), sOut = G.laneOut.nearest(base.look[0], base.look[2]);
       if (mode === 'traffic' || mode === 'smoke') {
-        GEO.convoy(S.sea, G.laneIn, { n: P.nIn ?? 7, s0: sIn - 7500, gap: 2300, speed: 7.2, seed: 2, names: ['ARABIAN DAWN', 'GULF STAR', 'SEA PEARL', 'NORDIC HORIZON', 'MARAN ORION', 'DESERT ROSE', 'AL SAFLIYA'] });
-        GEO.convoy(S.sea, G.laneOut, { n: P.nOut ?? 6, s0: sOut - 7000, gap: 2600, speed: 7.5, seed: 9, kinds: ['vlcc', 'lng', 'container', 'vlcc'] });
+        GEO.convoy(S.sea, G.laneIn, { lite: true, n: P.nIn ?? 7, s0: sIn - 7500, gap: 2300, speed: 7.2, seed: 2, names: ['ARABIAN DAWN', 'GULF STAR', 'SEA PEARL', 'NORDIC HORIZON', 'MARAN ORION', 'DESERT ROSE', 'AL SAFLIYA'] });
+        GEO.convoy(S.sea, G.laneOut, { lite: true, n: P.nOut ?? 6, s0: sOut - 7000, gap: 2600, speed: 7.5, seed: 9, kinds: ['vlcc', 'lng', 'container', 'vlcc'] });
         // small traffic crossing (dhows between Musandam and Iran)
         for (let i = 0; i < 3; i++) { const d = SEA.ship('dhow', { seed: 70 + i }); S.sea.addShip(d); d.place(base.look[0] + (i - 1) * 2500, base.look[2] + 1500 - i * 1300, 20 + i * 150, 4.5); }
       } else if (mode === 'sparse') {
-        GEO.convoy(S.sea, G.laneIn, { n: 1, s0: sIn - 1500, gap: 3000, speed: 6.5, seed: 4 });
-        GEO.convoy(S.sea, G.laneOut, { n: 2, s0: sOut - 4000, gap: 5200, speed: 6.8, seed: 12, kinds: ['vlcc', 'lng'] });
+        GEO.convoy(S.sea, G.laneIn, { lite: true, n: 1, s0: sIn - 1500, gap: 3000, speed: 6.5, seed: 4 });
+        GEO.convoy(S.sea, G.laneOut, { lite: true, n: 2, s0: sOut - 4000, gap: 5200, speed: 6.8, seed: 12, kinds: ['vlcc', 'lng'] });
       }
       // empty: ghost lines where the lanes are (the scheme's boundaries, dashed), fading in
       const ghosts = [];
@@ -98,7 +98,7 @@ export function makeHormuz(H = {}) {
       const plumes = [];
       if (mode === 'smoke') {
         const sites = [['Bandar Abbas', 0, 0], ['Bandar Abbas', -9000, 2500], ['Bandar Abbas', 14000, -1500], ['Qeshm', 6000, 3000]];
-        sites.forEach(([n, dx, dz], i) => { const p = G.place(n); plumes.push(SMOKE.smoke(S.sea, { at: [p.x + dx, 20, p.z + dz], height: 2200 + i * 400, radius: 170 + i * 30, spread: 3.0, rise: 16, wind: [20, 6], dark: 0.2, n: 120, seed: 11 + i, opacity: 1, fire: 0 })); });
+        sites.forEach(([n, dx, dz], i) => { const p = G.place(n); plumes.push(SMOKE.smoke(S.sea, { at: [p.x + dx, 20, p.z + dz], height: 2600 + i * 400, radius: 260 + i * 30, spread: 2.6, rise: 18, wind: [24, 8], dark: 0.16, n: 140, seed: 11 + i, opacity: 1, fire: 0 })); });
         const bp = G.place('Bandar Abbas'); plumes.push(SMOKE.smoke(S.sea, { at: [bp.x + 2000, 300, bp.z + 6000], area: [60000, 9000], height: 700, radius: 1800, spread: 1.0, rise: 6, wind: [8, 2], dark: 0.36, n: 70, seed: 41, opacity: 0.5 }));
       }
       const cap = captions(S.layer, shot, {}, H);
@@ -130,7 +130,7 @@ export function makeHormuz(H = {}) {
       if (P.land !== false) await withLand(S, { lod: 1 });
       const sh = SEA.ship('vlcc', { name: P.name ?? 'ARABIAN DAWN', seed: 4, loaded: 1, hullColor: P.hull ?? '#24262a', deckColor: '#5a4136' }); S.sea.addShip(sh);
       sh.follow(G.laneIn, { s0: P.s0 ?? 30000, speed: 7.5 });
-      GEO.convoy(S.sea, G.laneIn, { n: 2, s0: (P.s0 ?? 30000) + 2600, gap: 2500, speed: 7.3, seed: 5 });
+      GEO.convoy(S.sea, G.laneIn, { lite: true, n: 2, s0: (P.s0 ?? 30000) + 2600, gap: 2500, speed: 7.3, seed: 5 });
       const cap = captions(S.layer, shot, {}, H);
       return S.out((t, p) => {
         const st = sh.pose(t, S.sea), k = smoother(p), L = sh.length;
@@ -158,22 +158,27 @@ export function makeHormuz(H = {}) {
       S.sea.environment();
       await withLand(S, { lod: 1 });
       const sh = SEA.ship('vlcc', { name: 'ARABIAN DAWN', seed: 4 }); S.sea.addShip(sh); sh.follow(G.laneIn, { s0: P.s0 ?? 26000, speed: 7.4 });
-      GEO.convoy(S.sea, G.laneIn, { n: 2, s0: (P.s0 ?? 26000) + 2200, gap: 2600, speed: 7.2, seed: 7 });
+      GEO.convoy(S.sea, G.laneIn, { lite: true, n: 2, s0: (P.s0 ?? 26000) + 2200, gap: 2600, speed: 7.2, seed: 7 });
       const A = sh.parts.A; A.wh.visible = false;                       // the wheelhouse box goes; a real room takes its place
       const room = bridgeRoom(A, P);
       sh.body.add(room.group);
       const crew = [], ids = ['military', 'casual_a', 'office'];
-      const spots = radio ? [[A.whX + 0.5, -2.6, Math.PI / 2 - 0.2], [A.whX - 1.2, 4.2, Math.PI / 2 + 0.4]] : [[A.whX + 1.6, -3.8, Math.PI / 2 - 0.3], [A.whX + 0.4, 3.2, Math.PI / 2 + 0.2], [A.whX + 2.0, 0.4, Math.PI / 2]];
+      const spots = radio ? [[A.whX + 3.9, -3.4, Math.PI / 2 - 0.2], [A.whX + 3.3, 2.8, Math.PI / 2 + 0.3]] : [[A.whX + 4.0, -3.8, Math.PI / 2 - 0.3], [A.whX + 3.0, 3.2, Math.PI / 2 + 0.2], [A.whX + 4.4, 0.6, Math.PI / 2]];
       for (let i = 0; i < Math.min(P.crew ?? 3, spots.length); i++) { const m = PE.person(ids[i % 3], { dress: { silhouette: true } }); m.root.position.set(spots[i][0], room.floor + 0.06, spots[i][1]); m.root.rotation.y = spots[i][2]; sh.body.add(m.root); crew.push(m); }
-      const cap = captions(S.layer, shot, { caption: P.caption ?? (radio ? 'VHF CHANNEL 16 · 28 FEB 2026' : undefined) }, H);
+      const cap = captions(S.layer, shot, { caption: P.caption ?? (radio ? '28 FEB 2026' : undefined) }, H);
+      // radio: the VHF set's display as a panel on a plate, bottom-left: channel 16, live receive waveform
+      let vhf = null;
+      if (radio) { plate(S.layer, 'bl', 0.6); const box = div(S.layer, `left:6%;bottom:9%;${MONO(0.8)}`, '<div style="font-size:3.6em;letter-spacing:.04em;line-height:1">CH 16</div><div style="opacity:.8;margin-top:.4em">VHF · DISTRESS, SAFETY AND CALLING · RX</div>');
+        const c = document.createElement('canvas'); c.width = 520; c.height = 90; c.style.cssText = 'display:block;margin-top:1em;width:26em;height:4.5em'; box.appendChild(c); const x = c.getContext('2d');
+        vhf = (t) => { x.clearRect(0, 0, 520, 90); x.strokeStyle = 'rgba(251,248,242,.95)'; x.lineWidth = 2.4; x.beginPath(); const on = 0.35 + 0.65 * Math.abs(Math.sin(t * 0.9));
+          for (let i = 0; i < 520; i += 2) { const a = Math.sin(i * 0.21 + t * 11) * Math.sin(i * 0.033 + t * 2.7) * on * (0.6 + 0.4 * Math.sin(i * 0.011 + t)); x.lineTo(i, 45 + a * 38); } x.stroke(); }; }
       return S.out((t, p) => {
         const st = sh.pose(t, S.sea); sh.update(t, S.sea);
         crew.forEach((m, i) => m.blend([[i === 1 ? 'idle_b' : 'idle', t + i * 3, 1]]).update());
-        room.update(t);
+        room.update(t); vhf?.(t);
         const k = smoother(p), b = CAM.breath(t, 0.035, 9);
         let loc, aim, mm;
-        if (radio) { const R = room.radio; loc = V(R.x - 1.05 + k * 0.18, R.y + 0.5 + b.y, R.z - 0.75 + k * 0.1 + b.x); aim = V(R.x + 2.2, R.y + 0.15, R.z + 1.6); mm = P.mm ?? 28; }
-        else { loc = V(A.whX - 2.4 + k * 1.1, room.floor + 1.62 + b.y, lerp(-1.2, 0.6, k) + b.x); aim = V(A.whX + 60, room.floor - 10, lerp(-6, 2, k)); mm = P.mm ?? 24; }
+        { loc = V(A.whX - 2.4 + k * 1.1, room.floor + 1.62 + b.y, lerp(-1.2, 0.6, k) + b.x); aim = V(A.whX + 60, room.floor - 10, lerp(-6, 2, k)); mm = P.mm ?? 24; }
         const wp = sh.worldOf(loc.toArray()), wa = sh.worldOf(aim.toArray());
         apply(S.camera, { pos: wp.toArray(), look: wa.toArray(), mm, roll: b.r });
         S.sea.shadows(V(st.x, 0, st.z), 180);
@@ -255,8 +260,8 @@ export function makeHormuz(H = {}) {
       const S = seaSet(ctx, shot, { look: look('bright-day', { sunEl: 64, sunAz: 150 }) });
       S.sea.environment();
       await withLand(S, { lod: 0 });
-      GEO.convoy(S.sea, G.laneIn, { n: 6, s0: 15000, gap: 2600, speed: 7.2, seed: 3 });
-      GEO.convoy(S.sea, G.laneOut, { n: 4, s0: 22000, gap: 3200, speed: 7.4, seed: 11 });
+      GEO.convoy(S.sea, G.laneIn, { lite: true, n: 6, s0: 15000, gap: 2600, speed: 7.2, seed: 3 });
+      GEO.convoy(S.sea, G.laneOut, { lite: true, n: 4, s0: 22000, gap: 3200, speed: 7.4, seed: 11 });
       const globe = await makeGlobe(ctx, G);
       const rt = S.pres.rt, blend = blendQuad();
       const tgt = G.laneIn.at(28000);
@@ -609,7 +614,7 @@ export function makeHormuz(H = {}) {
     await withLand(S, { lod: 1 });
     const s0 = 32000, q = G.laneIn.at(s0);
     const sh = SEA.ship('vlcc', { name: 'STENA VISION', seed: 33, loaded: 0.6, hullColor: '#5a1d1a', deckColor: '#6b4436' }); sh.wake = 0.4; S.sea.addShip(sh); sh.place(q.x, q.z, q.heading * 180 / Math.PI - 25, 0.4);
-    GEO.convoy(S.sea, G.laneOut, { n: 3, s0: G.laneOut.nearest(q.x, q.z) - 4500, gap: 3000, speed: 7.4, seed: 21, kinds: ['vlcc', 'container', 'lng'] });
+    GEO.convoy(S.sea, G.laneOut, { lite: true, n: 3, s0: G.laneOut.nearest(q.x, q.z) - 4500, gap: 3000, speed: 7.4, seed: 21, kinds: ['vlcc', 'container', 'lng'] });
     const boats = []; for (let i = 0; i < 5; i++) { const b = SEA.ship('fastboat', { seed: 90 + i }); S.sea.addShip(b); boats.push(b); }
     const cap = captions(S.layer, shot, {}, H);
     return S.out((t, p) => {
@@ -672,8 +677,8 @@ export function makeHormuz(H = {}) {
     const S = seaSet(ctx, shot, { look: look('bright-day', { sunEl: 55, sunAz: 150 }) });
     S.sea.environment();
     await withLand(S, { lod: 0 });
-    GEO.convoy(S.sea, G.laneIn, { n: 6, s0: 15000, gap: 2600, speed: 7.2, seed: 3 });
-    GEO.convoy(S.sea, G.laneOut, { n: 4, s0: 22000, gap: 3200, speed: 7.4, seed: 11 });
+    GEO.convoy(S.sea, G.laneIn, { lite: true, n: 6, s0: 15000, gap: 2600, speed: 7.2, seed: 3 });
+    GEO.convoy(S.sea, G.laneOut, { lite: true, n: 4, s0: 22000, gap: 3200, speed: 7.4, seed: 11 });
     const drone = rq4(); S.sea.scene.add(drone);
     const p0 = G.P.xz(26.42, 56.25), hdg = 70 * Math.PI / 180, v = 160, alt = 15000;
     const cap = captions(S.layer, shot, {}, H);
@@ -897,7 +902,7 @@ function bridgeRoom(A, P = {}) {
   const dim = (c, r = 0.7) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0.05, envMapIntensity: 0.6 });
   const add = (gg, m, x, y, z) => { const o = new THREE.Mesh(gg, m); o.position.set(x, y, z); o.castShadow = o.receiveShadow = true; group.add(o); return o; };
   const cx = (front + back) / 2;
-  add(new THREE.BoxGeometry(depth, 0.12, W), dim(0x2c2e2f), cx, floor, 0);
+  add(new THREE.BoxGeometry(depth, 0.12, W), dim(0x7a7672, 0.8), cx, floor, 0);
   add(new THREE.BoxGeometry(depth + 1, 0.2, W + 1), dim(0xd9d6cf), cx, floor + Hh, 0);
   add(new THREE.BoxGeometry(0.2, Hh, W), dim(0xcfcbc2), back, floor + Hh / 2, 0);
   add(new THREE.BoxGeometry(0.25, 1.05, W), dim(0x8b8f91), front, floor + 0.52, 0);
@@ -908,18 +913,18 @@ function bridgeRoom(A, P = {}) {
     x.strokeStyle = hue; x.lineWidth = 1.5; for (let r = 20; r < 90; r += 18) { x.beginPath(); x.arc(128, 80, r, 0, Math.PI * 2); x.stroke(); }
     for (let i = 0; i < 9; i++) { x.fillStyle = hue; x.fillRect(128 + Math.cos(i * 1.9) * (20 + i * 7), 80 + Math.sin(i * 2.3) * (16 + i * 6), 4, 3); }
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return new THREE.MeshBasicMaterial({ map: t, color: new THREE.Color(1.6, 1.6, 1.6) }); };
-  for (const z of [-6, -2.2, 1.6, 5.4]) { add(new THREE.BoxGeometry(1.2, 1.0, 3.2), dim(0x3a3d40, 0.5), front - 1.2, floor + 0.5, z);
+  for (const z of [-6, -2.2, 1.6, 5.4]) { add(new THREE.BoxGeometry(1.2, 1.0, 3.2), dim(0x5d6266, 0.5), front - 1.2, floor + 0.5, z);
     const s = add(new THREE.PlaneGeometry(1.0, 0.65), scr(z < 0 ? '#3fe0a0' : '#ffb347'), front - 1.75, floor + 1.25, z); s.rotation.y = -Math.PI / 2; s.rotateX(-0.3); }
   // VHF set on the console's top, starboard of centre: a grey box with an LCD (channel 16), a speaker grille, the handset on its hook
   const rx = front - 1.05, ry = floor + 1.02, rz = 3.2;
-  add(new THREE.BoxGeometry(0.3, 0.12, 0.42), dim(0x2b2e30, 0.4), rx, ry + 0.06, rz);
+  add(new THREE.BoxGeometry(0.3, 0.12, 0.42), dim(0x8a8f93, 0.4), rx, ry + 0.06, rz);
   const lcd = document.createElement('canvas'); lcd.width = 256; lcd.height = 96; const lx = lcd.getContext('2d'); const lt = new THREE.CanvasTexture(lcd); lt.colorSpace = THREE.SRGBColorSpace;
-  const lm = new THREE.MeshBasicMaterial({ map: lt, color: new THREE.Color(1.4, 1.4, 1.4) });
-  const face = add(new THREE.PlaneGeometry(0.4, 0.1), lm, rx - 0.151, ry + 0.06, rz); face.rotation.y = -Math.PI / 2;
-  const hand = add(new THREE.CapsuleGeometry(0.03, 0.16, 4, 8), dim(0x1c1d1e, 0.5), rx - 0.12, ry + 0.2, rz + 0.3);
+  const lm = new THREE.MeshBasicMaterial({ map: lt, color: new THREE.Color(1.4, 1.4, 1.4), side: THREE.DoubleSide, toneMapped: false });
+  const face = add(new THREE.PlaneGeometry(0.38, 0.1), lm, rx - 0.165, ry + 0.06, rz); face.rotation.y = -Math.PI / 2; face.castShadow = face.receiveShadow = false;
+  const hand = add(new THREE.CapsuleGeometry(0.03, 0.16, 4, 8), dim(0x1c1d1e, 0.5), rx - 0.02, ry + 0.22, rz - 0.3);
   add(new THREE.BoxGeometry(0.4, 0.5, 0.5), dim(0x3a3d40, 0.5), front - 2.2, floor + 0.25, -0.5);          // chair base
   add(new THREE.BoxGeometry(0.6, 0.7, 0.6), dim(0x24262a, 0.8), front - 2.2, floor + 0.85, -0.5);
-  for (const z of [-8, 0, 8]) { const fill = new THREE.PointLight(0xe6eef5, 40, 18, 2); fill.position.set(cx, floor + Hh - 0.5, z); group.add(fill); }
+  for (const z of [-8, 0, 8]) { const fill = new THREE.PointLight(0xe6eef5, 90, 22, 2); fill.position.set(cx - 1, floor + Hh - 0.5, z); group.add(fill); }
   return { group, floor, front, radio: { x: rx, y: ry, z: rz }, update(t) {
     lx.fillStyle = '#0a1a14'; lx.fillRect(0, 0, 256, 96); lx.fillStyle = '#9dffcf'; lx.font = '700 54px "Plex Mono", monospace'; lx.textBaseline = 'middle'; lx.fillText('16', 14, 50);
     lx.font = '500 16px "Plex Mono", monospace'; lx.fillText('DSC  25W  RX', 100, 22);

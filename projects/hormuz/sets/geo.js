@@ -27,10 +27,10 @@ export async function load() {
 }
 
 // a convoy in a lane: ships spaced along it (kinds cycle), speed in m/s; returns the ship list
-export function convoy(sea, lane, { kinds = ['vlcc', 'container', 'vlcc', 'lng', 'vlcc'], n = 6, s0 = 0, gap = 2600, speed = 7, seed = 1, names = [] } = {}) {
+export function convoy(sea, lane, { kinds = ['vlcc', 'container', 'vlcc', 'lng', 'vlcc'], n = 6, s0 = 0, gap = 2600, speed = 7, seed = 1, names = [], lite = false } = {}) {
   const out = [];
   for (let i = 0; i < n; i++) { const kind = kinds[i % kinds.length];
-    const s = SEA.ship(kind, { seed: seed * 17 + i, name: names[i] ?? undefined, loaded: kind === 'vlcc' ? (i % 3 === 1 ? 0.2 : 1) : undefined, hullColor: kind === 'vlcc' ? ['#1e1f22', '#5a1d1a', '#22303f', '#1e1f22'][i % 4] : undefined, deckColor: kind === 'vlcc' ? ['#405c42', '#7a3a2a', '#405c42', '#5d6a60'][i % 4] : undefined });
+    const s = SEA.ship(kind, { lite, seed: seed * 17 + i, name: names[i] ?? undefined, loaded: kind === 'vlcc' ? (i % 3 === 1 ? 0.2 : 1) : undefined, hullColor: kind === 'vlcc' ? ['#1e1f22', '#5a1d1a', '#22303f', '#1e1f22'][i % 4] : undefined, deckColor: kind === 'vlcc' ? ['#405c42', '#7a3a2a', '#405c42', '#5d6a60'][i % 4] : undefined });
     sea.addShip(s); s.follow(lane, { s0: s0 + i * gap + ((i * 7919) % 500), speed: speed * (0.92 + ((i * 37) % 10) / 60) }); out.push(s); }
   return out;
 }

@@ -71,11 +71,11 @@ export function smoke(sea, o = {}) {
           col += vec3(3.2, 1.25, .32) * f * fl * (.4 + .6 * dens); a = max(a, f * dens * .9); }
         // aerial perspective, pre-compensated for the post pass's haze of whatever lies behind
         vec3 dir = normalize(vW - uCam);
-        float to = hazeDepth(vW) * uHazeK;
+        float to = hazeDepth(vec3(vW.x, min(vW.y, 400.), vW.z)) * uHazeK;   // sea-level air along the line of sight, so a plume reads the same against sky and sea
         float tb = 0.; if (dir.y < -1e-4) { float dpl = uCam.y / -dir.y; if (dpl < sqrt(2. * R_EARTH * max(uCam.y, 1.)) * .98) { vec3 pb = uCam + dir * dpl; tb = hazeDepth(pb) * uHazeK; } }
         vec3 hz = hazeColor(dir);
         vec3 S = col * exp(-to) + hz * (1. - exp(-to));
-        vec3 C = tb > to ? hz + (S - hz) * exp(min(tb - to, 1.5)) : S;
+        vec3 C = S;   // (post-pass compensation dropped: against the sky it went black at the horizon)
         if (tb > 0. && tb < to) C = S;
         gl_FragColor = vec4(max(C, 0.), a);
       }`,

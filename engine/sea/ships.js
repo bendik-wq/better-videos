@@ -294,22 +294,23 @@ BUILD.vlcc = (o) => {
   for (let xx = x0; xx < x1; xx += 9) { frames.push(box(0.3, 0.5, 9, xx, yd + 0.4, 0)); frames.push(box(0.2, 2.4, 0.2, xx, yd + 1.2, 5.2), box(0.2, 2.4, 0.2, xx, yd + 1.2, 4.2)); }
   frames.push(box(x1 - x0, 0.12, 1.4, (x0 + x1) / 2, yd + 2.4, 4.7));                                               // catwalk
   rails.push(...DT.railing([[x0, yd + 2.45, 4.0], [x1, yd + 2.45, 4.0]], { step: 3, h: 1.0 }), ...DT.railing([[x0, yd + 2.45, 5.4], [x1, yd + 2.45, 5.4]], { step: 3, h: 1.0 }));
+  const lite = !!o.lite;
   // manifolds both sides midships, a hose crane each side, drip trays
-  for (const sd of [-1, 1]) { const m = DT.manifold(-4, yd, B / 2, sd); pipes.push(...m.pipes); darks.push(...m.valves); reds.push(...m.wheels); greens.push(...m.trays);
+  if (!lite) for (const sd of [-1, 1]) { const m = DT.manifold(-4, yd, B / 2, sd); pipes.push(...m.pipes); darks.push(...m.valves); reds.push(...m.wheels); greens.push(...m.trays);
     const c = DT.crane(10, yd, sd * (B / 2 - 9), { h: 6.5, boom: 22, elev: 0.5 + (o.seed ?? 3) % 3 * 0.08, slew: sd > 0 ? -0.35 : Math.PI + 0.35 }); whites.push(...c.ped); whites.push(...c.arm); darks.push(...c.hook); }
   // tank hatches, P/V vent risers, fire monitors on the catwalk, deck lights
-  for (let k = 0; k < 10; k++) { const xx = x0 + 10 + k * (x1 - x0 - 20) / 9; for (const sd of [-1, 1]) { greens.push(box(2.4, 0.7, 2.4, xx, yd + 0.35, sd * 15), cyl(0.5, 0.5, 0.25, xx + 3, yd + 0.12, sd * 21, 10)); pipes.push(cyl(0.22, 0.22, 5, xx + 1.5, yd + 2.5, sd * 10, 8)); darks.push(cyl(0.45, 0.3, 0.6, xx + 1.5, yd + 5.2, sd * 10, 8)); } }
-  for (let xx = x0 + 20; xx < x1; xx += 40) { reds.push(box(1.6, 1.0, 1.6, xx, yd + 3.0, 4.7), cyl(0.15, 0.2, 1.8, xx + 0.6, yd + 3.9, 4.7, 6, 'x')); darks.push(cyl(0.08, 0.08, 6, xx + 4, yd + 3, -B / 2 + 3, 5)); }
+  if (!lite) for (let k = 0; k < 10; k++) { const xx = x0 + 10 + k * (x1 - x0 - 20) / 9; for (const sd of [-1, 1]) { greens.push(box(2.4, 0.7, 2.4, xx, yd + 0.35, sd * 15), cyl(0.5, 0.5, 0.25, xx + 3, yd + 0.12, sd * 21, 10)); pipes.push(cyl(0.22, 0.22, 5, xx + 1.5, yd + 2.5, sd * 10, 8)); darks.push(cyl(0.45, 0.3, 0.6, xx + 1.5, yd + 5.2, sd * 10, 8)); } }
+  if (!lite) for (let xx = x0 + 20; xx < x1; xx += 40) { reds.push(box(1.6, 1.0, 1.6, xx, yd + 3.0, 4.7), cyl(0.15, 0.2, 1.8, xx + 0.6, yd + 3.9, 4.7, 6, 'x')); darks.push(cyl(0.08, 0.08, 6, xx + 4, yd + 3, -B / 2 + 3, 5)); }
   // forecastle: bulwark, windlasses, chain to the hawse pipes, mooring winches, the foremast
   const fx = L / 2 - 24; greens.push(box(22, 2.8, B * 0.5, fx, yd + 1.4, 0));
   const fdk = yd + 2.8;
-  for (const sd of [-1, 1]) { darks.push(cyl(1.0, 1.0, 2.2, L / 2 - 20, fdk + 1.0, sd * 4.5, 14, 'z'), box(3, 1.2, 2.6, L / 2 - 22, fdk + 0.6, sd * 4.5)); darks.push(...DT.bitts(L / 2 - 30, fdk, sd * 9));
+  if (!lite) for (const sd of [-1, 1]) { darks.push(cyl(1.0, 1.0, 2.2, L / 2 - 20, fdk + 1.0, sd * 4.5, 14, 'z'), box(3, 1.2, 2.6, L / 2 - 22, fdk + 0.6, sd * 4.5)); darks.push(...DT.bitts(L / 2 - 30, fdk, sd * 9));
     darks.push(bar([L / 2 - 20, fdk + 0.2, sd * 4.5], [L / 2 - 12, fdk, sd * 7.5], 0.25, 4)); greens.push(...DT.winch(L / 2 - 33, fdk, sd * 6, sd)); }
   rails.push(...DT.railing([[fx - 11, fdk, -B * 0.25], [fx + 8, fdk, -B * 0.22], [L / 2 - 4, fdk, 0], [fx + 8, fdk, B * 0.22], [fx - 11, fdk, B * 0.25]], { h: 1.1 }));
   pipes.push(cyl(0.35, 0.35, 16, L / 2 - 12, fdk + 8, 0, 8)); whites.push(box(1.2, 0.8, 1.2, L / 2 - 12, fdk + 12, 0));
   // bitts and fairleads along the deck edge, mooring winches midships and aft
-  for (let xx = -L / 2 + 60; xx < L / 2 - 40; xx += 26) for (const sd of [-1, 1]) darks.push(...DT.bitts(xx, yd, sd * (B / 2 - 2.2)));
-  for (const xx of [-L / 2 + 48, -30, 30]) for (const sd of [-1, 1]) greens.push(...DT.winch(xx, yd, sd * (B / 2 - 7), sd));
+  if (!lite) for (let xx = -L / 2 + 60; xx < L / 2 - 40; xx += 26) for (const sd of [-1, 1]) darks.push(...DT.bitts(xx, yd, sd * (B / 2 - 2.2)));
+  if (!lite) for (const xx of [-L / 2 + 48, -30, 30]) for (const sd of [-1, 1]) greens.push(...DT.winch(xx, yd, sd * (B / 2 - 7), sd));
   // aft: poop deck, the accommodation, funnel, stern mooring deck
   const hl = old ? 20 : 22, hw = B * (old ? 0.55 : 0.62), decks = old ? 8 : 7, dh = 2.9, ax = -L / 2 + 30;
   greens.push(box(hl + 14, 2.4, B * 0.86, ax - 4, yd + 1.2, 0));
@@ -318,13 +319,13 @@ BUILD.vlcc = (o) => {
   DT.funnel(S.body, { x: ax - hl / 2 - 6.5, y: yd + 2.4 + dh * (decks - 3), h: old ? 12 : 13, len: old ? 7 : 9, wid: old ? 6.5 : 5.5, band: o.bandColor ?? 0x1d4f8a, color: o.funnelColor ?? 0xb7b3ab });
   if (old) whites.push(box(4, 3, 4, ax - hl / 2 - 2, yd + 2.4 + 1.5, 0));
   rails.push(...DT.railing([[-L / 2 + 6, yd + 2.4, -B * 0.36], [-L / 2 + 2, yd + 2.4, 0], [-L / 2 + 6, yd + 2.4, B * 0.36]], { h: 1.1 }));
-  for (const sd of [-1, 1]) { darks.push(...DT.bitts(-L / 2 + 10, yd + 2.4, sd * B * 0.3)); greens.push(...DT.winch(-L / 2 + 16, yd + 2.4, sd * 9, sd)); }
+  if (!lite) for (const sd of [-1, 1]) { darks.push(...DT.bitts(-L / 2 + 10, yd + 2.4, sd * B * 0.3)); greens.push(...DT.winch(-L / 2 + 16, yd + 2.4, sd * 9, sd)); }
   // provision crane by the house
-  { const c = DT.crane(ax + hl / 2 + 4, yd, -hw / 2 - 1, { h: 4, boom: 12, elev: 0.75, slew: 0.6, r: 0.5 }); whites.push(...c.ped, ...c.arm); darks.push(...c.hook); }
+  if (!lite) { const c = DT.crane(ax + hl / 2 + 4, yd, -hw / 2 - 1, { h: 4, boom: 12, elev: 0.75, slew: 0.6, r: 0.5 }); whites.push(...c.ped, ...c.arm); darks.push(...c.hook); }
   meshOf(pipes, pipeMat, S.body); meshOf(frames, steel, S.body); meshOf(greens, greenMat, S.body); meshOf(reds, red, S.body); meshOf(darks, dark, S.body); meshOf(whites, DT.paint('white'), S.body);
   // railings along the deck edge with stanchions
-  for (const sd of [-1, 1]) { const pts = []; for (let i = 8; i < hg.deckEdge.length - 3; i += 2) { const [xx, yy, w] = hg.deckEdge[i]; pts.push([xx, yy, sd * w * 0.993]); } rails.push(...DT.railing(pts, { h: 1.05, step: 1.8 })); }
-  if (!o.lite) meshOf(rails, steel, S.body, { cast: false });
+  if (!lite) for (const sd of [-1, 1]) { const pts = []; for (let i = 8; i < hg.deckEdge.length - 3; i += 2) { const [xx, yy, w] = hg.deckEdge[i]; pts.push([xx, yy, sd * w * 0.993]); } rails.push(...DT.railing(pts, { h: 1.05, step: 1.8 })); }
+  if (!lite) meshOf(rails, steel, S.body, { cast: false });
   if (o.flag) { const f = DT.flag(o.flag, { w: 3.2, h: 2.0 }); f.mesh.position.set(-L / 2 + 1.5, yd + 2.4 + 5, 0); f.mesh.rotation.y = Math.PI; S.body.add(f.mesh); meshOf([cyl(0.08, 0.1, 6, -L / 2 + 1.5, yd + 2.4 + 3, 0, 6)], steel, S.body); S.flags.push(f); }
   if (o.anchored) { meshOf(DT.anchorChain(L / 2 - 14, yd - 3.2, -B * 0.18, { out: 34, s: -1 }), DT.paint('black'), S.body, { cast: false }); }
   S.parts = { hull, deck, house: A.main, wings: A.wh, bridge: A.bridge, A };
