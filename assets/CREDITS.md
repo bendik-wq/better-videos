@@ -183,3 +183,4 @@ code (no third-party models). Flags are drawn in code. Crew silhouettes are `eng
 | `assets/footage/clips/irgc-speedboat-sirocco.mp4` | Alias copy (same bytes) of `commons-iranian-irgc-speedboat-approaching-uss-sirocco-a.mp4` under the id the shot list uses | Public domain (US Navy work) | as above |
 | `assets/footage/clips/ships-lcs-formation.mp4` | Starter-pack clip (USS Independence LCS 2 and USS Coronado LCS 4, Pacific, 23 April 2014; MCSC Keith DeVinney, U.S. Navy) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv |
 | `assets/pbr/stone.*` (used by the Khasab fjord walls) | Poly Haven `large_sandstone_blocks` (already in the PBR library) | CC0 | https://polyhaven.com/a/large_sandstone_blocks |
+- projects/hormuz/assets/geo/world.json: simplified from Natural Earth 1:10m admin-0 countries. Public domain. https://www.naturalearthdata.com

@@ -1,7 +1,8 @@
 // THE 21 MILES THAT CONTROL THE WORLD. Episode 3: the Strait of Hormuz. BRIGHT mode.
 // Every fact in the VO is in projects/hormuz/RESEARCH.md. ⏱ = live fact, captioned "AS OF 12 OCT 2026".
-// Sets: projects/hormuz/sets/index.js (sea, ships, maps, footage) + projects/hormuz/sets/story.js
-// (bright graphics, history, people). Transitions: engine/transitions.js names via params.trans.
+// Sets: projects/hormuz/sets/index.js (sea, ships, maps, footage), scenic.js (history, people, maps),
+// graphics.js (bright graphics). Transition policy: cuts.mjs (shared by picture and score). Transitions: engine/transitions.js names via params.trans.
+import { scoreTransitions } from './cuts.mjs';
 let n = 0;
 const S = (set, vo, params = {}, extra = {}) => ({ id: `s${String(++n).padStart(3, '0')}`, set, vo, params, ...extra });
 const CH = (num, title, sub) => ({ id: `ch${num}`, set: 'chapter', params: { num, title, sub }, min: 4.2, chapter: num });
@@ -12,7 +13,7 @@ const shots = [
   S('strait-aerial', 'Before this year, around a hundred ships a day sailed through one gap of water between Iran and Oman.', { alt: 2600, drift: 1, caption: 'STRAIT OF HORMUZ' }, { padIn: 1.0 }),
   S('tanker-hero', 'Together they carried oil equal to a fifth of everything the world burns.', { side: 'port', mm: 50, caption: '≈ 20 MILLION BARRELS A DAY · 2024', source: 'SOURCE: EIA' }),
   S('chokepoint-map', 'At its narrowest, the gap is about twenty-one nautical miles. The lanes the tankers actually use are narrower still. Two nautical miles in. Two nautical miles out.', { widthAt: 'twenty', lanesAt: 'lanes' }),
-  S('strait-aerial', 'On the twenty-eighth of February, twenty twenty-six, the ships stopped.', { alt: 1800, empty: true, mm: 85, caption: '28 FEB 2026', trans: 'dip-to-black' }, { padOut: 1.0 }),
+  S('strait-aerial', 'On the twenty-eighth of February, twenty twenty-six, the ships stopped.', { alt: 1800, empty: true, mm: 85, caption: '28 FEB 2026', trans: 'dip-black' }, { padOut: 1.0 }),
   S('open-water', 'Nobody built a wall across the water. Nobody sank a fleet in the channel. The strait stayed open.', { mode: 'empty-lanes' }),
   S('numbers', 'And yet, within weeks, the oil flowing through it fell by more than three quarters.', { items: [{ word: 'three', value: 77, prefix: '−', suffix: '%', sub: 'oil through the strait · Q2 2026 vs Q4 2025' }], source: 'SOURCE: EIA STEO, AUG 2026' }),
   S('tanker-hero', 'So what actually closed it?', { mode: 'anchored', h: 3, mm: 35, golden: true }, { padOut: 0.8 }),
@@ -53,7 +54,7 @@ const shots = [
   S('tanker-war', 'Four days later, the U.S. Navy struck back. Operation Praying Mantis. The Navy calls it the largest of its major surface battles since the Second World War.', { mode: 'mantis', caption: 'OPERATION PRAYING MANTIS · 18 APR 1988' }),
   S('tanker-war', 'And then, in July nineteen eighty-eight, came the moment nobody involved has ever forgotten.', { mode: 'dawn-cruiser' }, { padOut: 0.6 }),
   S('tanker-war', 'The cruiser U.S.S. Vincennes, fighting Iranian boats in the strait, fired two missiles at an aircraft it believed was an attacking fighter jet.', { mode: 'radar', caption: 'USS VINCENNES · 3 JUL 1988' }),
-  S('tanker-war', 'It was Iran Air Flight six fifty-five. A passenger plane. All two hundred and ninety people on board were killed, sixty-six of them children.', { mode: 'airliner', caption: 'IRAN AIR 655 · 290 KILLED', trans: 'dip-to-black' }, { padOut: 1.2 }),
+  S('tanker-war', 'It was Iran Air Flight six fifty-five. A passenger plane. All two hundred and ninety people on board were killed, sixty-six of them children.', { mode: 'airliner', caption: 'IRAN AIR 655 · 290 KILLED', trans: 'dip-black' }, { padOut: 1.2 }),
   S('quote', 'The United States called it a tragic mistake. Iran has never accepted that. Eight years later, America paid compensation to the families, without admitting legal liability.', { text: 'Compensation paid ex gratia, without admission of legal liability.', by: 'US–IRAN SETTLEMENT · 1996' }),
   S('open-water', 'Weeks after the shootdown, the war ended. But the lesson stayed.', { mode: 'calm-golden' }, { padOut: 0.8 }),
   S('quote', 'You don’t close a strait by blocking it. You close it by making it frightening.', { text: 'You don’t close a strait by blocking it. You close it by making it frightening.', big: true }, { padOut: 0.9 }),
@@ -70,7 +71,7 @@ const shots = [
   S('fast-boats', 'A month later, Iran’s Revolutionary Guard seized a British tanker, the Stena Impero, with twenty-three crew on board.', { n: 6, caption: 'STENA IMPERO · 19 JUL 2019' }),
   S('footage', 'In twenty twenty-three, a dozen fast attack boats swarmed a tanker inside the strait and took it. The next year, commandos rappelled from a helicopter onto a container ship.', { file: 'irgc-speedboat-sirocco', grade: 'none', caption: 'IRGC FAST BOATS · STRAIT OF HORMUZ', source: 'U.S. NAVY · PUBLIC DOMAIN' }),
   S('photo', 'And in June twenty twenty-five, after American strikes on its nuclear sites, Iran’s parliament voted to back closing the strait.', { mode: 'parliament-card', caption: '22 JUN 2025' }),
-  S('strait-aerial', 'The final decision lay with Iran’s security council. The ships kept moving. Oil barely flinched.', { alt: 3200, drift: -1 }),
+  S('strait-aerial', 'The final decision lay with Iran’s security council. The ships kept moving. Oil barely flinched.', { alt: 3200, drift: -1, golden: true }),
   S('open-water', 'So, until this year, the lever was always pulled halfway.', { mode: 'lever' }),
   S('insurance', 'One more number to remember. Before this year, insuring a tanker against war for a single trip through the strait cost about a tenth to a quarter of one percent of the ship’s value.', { mode: 'before', source: 'SOURCE: SINGAPORE MINISTRY OF TRANSPORT' }, { padOut: 0.8 }),
 
@@ -80,7 +81,7 @@ const shots = [
   S('bridge', 'Iran’s Revolutionary Guard warned ships away from the strait. Then it began attacking them.', { mode: 'radio', crew: 2 }),
   S('tanker-hero', 'On the first of March, the first seafarers died, on tankers hit off the coast of Oman.', { mode: 'smoke', caption: '1 MAR 2026', source: 'SOURCE: IMO' }),
   S('gulf-terminal', 'Days later, Qatar stopped producing liquefied natural gas. An attack later knocked out seventeen percent of its export capacity, for what Qatar says could be up to five years.', { mode: 'lng-dark', caption: 'RAS LAFFAN · QATAR', source: 'SOURCE: EIA STEO, APR 2026' }),
-  S('open-water', 'And here is the answer to our first question.', { mode: 'empty-lanes-high' }, { padOut: 0.6 }),
+  S('tanker-hero', 'And here is the answer to our first question.', { mode: 'anchored', golden: true, mm: 85, h: 12 }, { padOut: 0.6 }),
   S('quote', 'The U.S. Energy Information Administration put it plainly. The strait is not physically blocked. The threat of attack, and the cancellation of insurance, made most tankers stay away.', { text: '“…not physically blocked, the threat of attack by Iran and the cancellation of insurance coverage have led most tankers to avoid transiting.”', by: 'EIA · SHORT-TERM ENERGY OUTLOOK · MARCH 2026', red: true }),
   S('insurance', 'Remember that insurance number? A tenth to a quarter of one percent. By the summer, war cover for one transit was quoted at between three and a half and seven and a half percent of the ship’s value.', { mode: 'jump', source: 'SOURCE: SINGAPORE MINISTRY OF TRANSPORT, AUG 2026' }),
   S('insurance', 'For a tanker worth a hundred million dollars, that’s up to seven and a half million dollars. For one trip.', { mode: 'cheque', caption: 'ILLUSTRATIVE · $100M HULL VALUE' }),
@@ -103,7 +104,7 @@ const shots = [
   S('pump', 'In September, Americans paid an average of four dollars and thirty-five cents for a gallon of gasoline, and over six dollars for diesel.', { gas: '4.35', diesel: '6.29', source: 'SOURCE: EIA STEO, OCT 2026' }),
   S('helium', 'It reaches further than fuel. Qatar produces around a third of the world’s helium, alongside its gas. Helium cools M.R.I. scanners. It’s used to make computer chips.', { source: 'SOURCE: USGS (2024)' }),
   S('navy-escort', 'And the answer to our second question? America guards a strait it barely uses because oil has one price. Close this water, and every pump on earth feels it.', { mode: 'golden-pass', golden: true }),
-  S('strait-aerial', 'As of today, the strait is largely shut, with traffic on Iran’s terms. Both sides claim control. The ship counts say neither fully has it.', { alt: 7000, sparse: true, caption: LIVE }),
+  S('strait-aerial', 'As of today, the strait is largely shut, with traffic on Iran’s terms. Both sides claim control. The ship counts say neither fully has it.', { alt: 7000, sparse: true, golden: true, caption: LIVE }),
   S('globe-dive', 'For fifty years, the world built its economy on one assumption. That this gap would always be open.', { reverse: true }),
   S('open-water', 'It was never the water that kept it open. It was everyone’s belief that it would stay that way.', { mode: 'final', golden: true }, { padOut: 2.5 }),
   { id: 'end', set: 'title', params: { title: 'The 21 Miles That Control the World', sub: '', end: true }, min: 7 },
@@ -113,13 +114,13 @@ for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
 export default {
   title: 'The 21 Miles That Control the World',
   fps: 60, width: 1920, height: 1080,
-  settings: { fps: 60, aa: 'fxaa', look: 'bright-day', cutGuard: 1.5 },
+  settings: { fps: 60, aa: 'fxaa', look: 'bright-day', cutGuard: 1.5, crf: 20 },
   voice: { engine: 'kokoro', name: 'af_heart', speed: 0.96,
     say: { 'U.S.S.': 'U.S.S.', 'E.I.A.': 'E.I.A.', 'M.R.I.': 'M.R.I.', Khasab: 'Kha-sab', Larak: 'La-rak', Musandam: 'Moo-san-dam', Hormuz: 'Hor-mooz', Qatar: 'Kuh-tar' } },
   timing: { padIn: 0.15, padOut: 0.4 },
   shots,
   // music and cues: filled in once engine/music lands (score.music = [{shot, mood, key, intensity}])
-  score: { key: 'D', drone: 0.0,
+  score: { key: 'D', drone: 0.0, transitions: scoreTransitions(shots),
     music: [
       { shot: 's001', mood: 'wonder', key: 'D', intensity: [0.3, 0.5] },
       { shot: 's004', mood: 'silence' },
