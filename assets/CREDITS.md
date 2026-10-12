@@ -166,3 +166,6 @@ Sketchfab needs a login). The bridge crew are `engine/people` bodies (see People
 | `projects/hormuz/assets/geo/facts.json` | 20 million b/d (2024, ~20 % of world liquids consumption), ~1/5 of LNG trade, 2.6 million b/d bypass capacity; the 21 nmi narrowest crossing measured on the baked DEM | EIA public domain; measurement ours | EIA (as above) |
 | `projects/hormuz/assets/archive/iss064e046338.jpg`, `iss067e270600.jpg`, `iss069e056918.jpg`, `iss063e002679.jpg`, `s04-37-716.jpg` | ISS and STS-4 crew photographs of the Strait of Hormuz, Musandam and the Gulf | Public domain (NASA; credit "NASA") | https://images.nasa.gov/details/<id> |
 | `assets/footage/clips/commons-iranian-irgc-speedboat-approaching-uss-sirocco-a.mp4` (+ provenance copy in `projects/hormuz/assets/footage/`) | IRGC Navy fast boat approaching USS Sirocco and USNS Choctaw County, Strait of Hormuz, 20 June 2022 (U.S. Naval Forces Central Command, 220620-N-NO146-1001) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:Iranian_IRGC_speedboat_approaching_USS_Sirocco_and_USNS_Choctaw.webm |
+
+## Music (engine/music, audio-lab)
+- Chopin, Waltz Op. 69 No. 1, performed by Luke Faulkner (Musopen). Public Domain Mark 1.0. https://archive.org/details/MusopenChopinWaltzOp69no1

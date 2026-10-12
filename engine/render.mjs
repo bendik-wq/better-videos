@@ -511,11 +511,8 @@ execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), tlPath, bed, '@'
 const voTrack = path.join(out, 'vo.wav');
 execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), '--vo', tlPath, voTrack, String(audioFrom), String(audioLen)], { stdio: 'inherit' });
 const mix = path.join(out, 'mix.wav');
-const graph = `[0:a]atrim=start=${audioFrom}:duration=${audioLen},asetpts=PTS-STARTPTS[bed];` +
-  // documentary voice chain: rumble cut, presence lift, gentle compression, a touch of room
-  `[1:a]aformat=channel_layouts=stereo,highpass=f=70,equalizer=f=180:t=q:w=1:g=2,equalizer=f=3200:t=q:w=1:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,aecho=0.8:0.4:35:0.06,apad,asplit[vo][vosc];` +
-  `[bed][vosc]sidechaincompress=threshold=0.04:ratio=5:release=450[duck];[duck][vo]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-15:TP=-1.5:LRA=9,aresample=48000,apad[a]`; // loudnorm drops its last ~50 ms; pad back to the exact length
-sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', bed, '-i', voTrack, '-filter_complex', graph, '-map', '[a]', '-ar', '48000', '-t', String(audioLen), mix]);
+// bus mix (engine/score.py --mix): vocal-band ducking, VO chain, -14 LUFS / -1 dBTP, writes mix.qa.json
+execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), '--mix', bed, voTrack, mix, String(audioFrom), String(audioLen)], { stdio: 'inherit' });
 
 // ---------- 5. film finish + mux ----------
 const master = path.join(out, DRAFT ? 'draft.mp4' : `${path.basename(projDir)}.mp4`);
