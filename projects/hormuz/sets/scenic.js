@@ -32,7 +32,7 @@ export function makeScenic(H = {}) {
       const P = shot.params ?? {}; const G = await GEO.load(); const mode = P.mode ?? 'empty-lanes';
       const golden = mode === 'calm-golden' || mode === 'final' || P.golden;
       const lk = mode === 'final' ? look('golden', { sunEl: 3.2, sunAz: 286, exposure: 1.06 }) : mode === 'calm-golden' ? look('golden', { sunEl: 5.5, sunAz: 268 })
-        : mode === 'empty-lanes-high' ? look('bright-day', { sunEl: 58, sunAz: 330 }) : mode === 'lever' ? look('bright-day', { sunEl: 66, sunAz: 200 }) : look('bright-day', { sunEl: 40, sunAz: 292 });
+        : mode === 'empty-lanes-high' ? look('bright-day', { sunEl: 58, sunAz: 330 }) : mode === 'lever' ? look('bright-day', { sunEl: 66, sunAz: 200 }) : look('bright-day', { sunEl: 24, sunAz: 286 });
       const calm = mode === 'calm-golden' || mode === 'final';
       const S = seaSet(ctx, shot, { look: lk, spectrum: calm ? { hs: 0.28, wind: 3 } : mode === 'empty-lanes' ? { hs: 0.7, wind: 6 } : {} });
       S.sea.environment();
@@ -42,36 +42,36 @@ export function makeScenic(H = {}) {
       let cam;
       if (mode === 'empty-lanes') {
         // gliding at 4 m along the empty inbound lane, a lane buoy passing close: the road with no traffic
-        const buoy = SEA.ship('buoy', { seed: 3 }); S.sea.addShip(buoy); const [fx, fz] = fwdOf(q0.heading); buoy.place(q0.x + fx * 260 - fz * 70, q0.z + fz * 260 + fx * 70, 0, 0);
-        cam = (t, k) => { const q = G.laneIn.at(s0 + 6 * t), [fx2, fz2] = fwdOf(q.heading), b = CAM.breath(t, 0.3, 2);
-          return { pos: [q.x - fz2 * 20 + b.x, 4.2 + b.y, q.z + fx2 * 20], look: [q.x + fx2 * 2000 - fz2 * 150, 0, q.z + fz2 * 2000 + fx2 * 150], mm: 32, roll: b.r }; };
+        const buoy = SEA.ship('buoy', { seed: 3 }); S.sea.addShip(buoy); const [fx, fz] = fwdOf(q0.heading); buoy.place(q0.x + fx * 70 + fz * 14, q0.z + fz * 70 - fx * 14, 0, 0);
+        cam = (t, k) => { const q = G.laneIn.at(s0 - 20 + 90 * k), [fx2, fz2] = fwdOf(q.heading), b = CAM.breath(t, 0.3, 2);
+          return { pos: [q.x - fz2 * 20 + b.x, 3.6 + b.y, q.z + fx2 * 20], look: [q.x + fx2 * 2000 - fz2 * 150, 0, q.z + fz2 * 2000 + fx2 * 150], mm: 30, roll: b.r }; };
       } else if (mode === 'calm-golden') {
         const d = SEA.ship('dhow', { seed: 9 }); S.sea.addShip(d); d.place(q0.x - 1800, q0.z - 2600, 200, 2.5);
         cam = (t, k) => { const b = CAM.breath(t, 0.15, 3), yaw = (268 + lerp(-3, 3, k)) * D2R; return { pos: [q0.x + lerp(-30, 30, k), 2.2 + b.y, q0.z], look: [q0.x + Math.sin(yaw) * 3000, 40, q0.z - Math.cos(yaw) * 3000], mm: 45, roll: b.r }; };
       } else if (mode === 'lever') {
         // straight down from 900 m: a tanker crosses the frame in its lane, one in the other lane the other way: business as usual
-        const a = SEA.ship('vlcc', { seed: 61, name: 'MARAN ORION', hullColor: '#22303f', deckColor: '#6b4436' }); S.sea.addShip(a); a.follow(G.laneIn, { s0: s0 - 260, speed: 7.4 });
-        const sOut = G.laneOut.nearest(q0.x, q0.z); const b2 = SEA.ship('lng', { seed: 62 }); S.sea.addShip(b2); b2.follow(G.laneOut, { s0: sOut - 1500, speed: 8 });
-        cam = (t, k) => { const st = a.pose(t, S.sea); const [fx, fz] = fwdOf(q0.heading); return { pos: [q0.x - fz * 900 + fx * 40 * k, 1300, q0.z + fx * 900 + fz * 40 * k], look: [q0.x - fz * 900 + fx * (40 * k + 1), 0, q0.z + fx * 900 + fz * (40 * k + 1)], up: [fx, 0, fz], mm: 28 }; };
+        const a = SEA.ship('vlcc', { seed: 61, name: 'MARAN ORION', hullColor: '#22303f', deckColor: '#5a4136' }); S.sea.addShip(a); a.follow(G.laneIn, { s0: s0 - 160, speed: 7.4 });
+        const d2 = SEA.ship('dhow', { seed: 63 }); S.sea.addShip(d2); { const [fx, fz] = fwdOf(q0.heading); d2.place(q0.x - fz * 260 + fx * 120, q0.z + fx * 260 + fz * 120, q0.heading * 180 / Math.PI + 160, 4); }
+        cam = (t, k) => { const [fx, fz] = fwdOf(q0.heading); const c = [q0.x + fx * lerp(-40, 40, k) - fz * 60, q0.z + fz * lerp(-40, 40, k) + fx * 60]; return { pos: [c[0], 1320, c[1]], look: [c[0] + fx * 0.01, 0, c[1] + fz * 0.01], up: [fx, 0, fz], mm: 30 }; };
         S._shadow = () => { const st = a.state; S.sea.shadows(V(st.x, 0, st.z), 250); };
       } else if (mode === 'empty-lanes-high') {
         // high over the strait: the lanes empty (ghost lines), ships waiting at anchor off both coasts
         for (const [lane, off] of [[G.laneIn, -1852], [G.laneIn, 1852], [G.laneOut, -1852], [G.laneOut, 1852]]) {
           const pts = []; for (let s = 0; s < lane.length; s += 600) { const q = lane.at(s), [fx, fz] = fwdOf(q.heading); pts.push([q.x - fz * off, q.z + fx * off]); }
-          const m = GEO.ribbon(pts, { width: 140, y: 5, color: 0xe8f6ff, opacity: 0.3, glow: 1 }); S.sea.overlay.add(m); (S.ghosts ??= []).push(m); }
-        anchorage(S.sea, [...(() => { const [x, z] = G.P.xz(26.32, 56.62); return [x, 0, z]; })()], { n: 16, r: 7000, seed: 21, heading: 330, minGap: 1100 });
-        anchorage(S.sea, [...(() => { const [x, z] = G.P.xz(26.75, 56.05); return [x, 0, z]; })()], { n: 12, r: 6000, seed: 22, heading: 320, minGap: 1100 });
-        const tg = G.P.xz(26.55, 56.38);
-        cam = (t, k) => { const v = aerial([tg[0], 0, tg[1]], lerp(318, 326, k), 38, 16000); return { ...v, mm: 30 }; };
+          const m = GEO.ribbon(pts, { width: 80, y: 5, color: 0xe8f6ff, opacity: 0.3, glow: 1 }); S.sea.overlay.add(m); (S.ghosts ??= []).push(m); }
+        const tg = G.P.xz(26.56, 56.46), qa = G.laneIn.at(G.laneIn.nearest(...tg) - 6000), qb = G.laneOut.at(G.laneOut.nearest(...tg) + 3000);
+        { const [fx, fz] = fwdOf(qa.heading); anchorage(S.sea, [qa.x + fz * 5200, 0, qa.z - fx * 5200], { n: 14, r: 2000, seed: 21, heading: 330, minGap: 520 }); }
+        { const [fx, fz] = fwdOf(qb.heading); anchorage(S.sea, [qb.x - fz * 4600, 0, qb.z + fx * 4600], { n: 10, r: 1800, seed: 22, heading: 320, minGap: 520 }); }
+        cam = (t, k) => { const v = aerial([tg[0], 0, tg[1]], lerp(300, 306, k), 46, 9000); return { ...v, mm: 26 }; };
       } else {
         // final: on the glassy sea at golden hour, the sun on the horizon, one tanker far off in the glitter, Musandam in silhouette
-        const far = SEA.ship('vlcc', { seed: 71, lite: true, hullColor: '#1e1f22' }); S.sea.addShip(far); const sf = G.laneOut.nearest(q0.x, q0.z); far.follow(G.laneOut, { s0: sf + 5200, speed: 6.5, dir: -1 });
+        const far = SEA.ship('vlcc', { seed: 71, lite: true, hullColor: '#1e1f22' }); S.sea.addShip(far); { const yaw = 286 * D2R, px = q0.x + 2600, pz = q0.z + 2600; far.place(px + Math.sin(yaw) * 2300, pz - Math.cos(yaw) * 2300, 196, 5.5); }
         cam = (t, k) => { const b = CAM.breath(t, 0.08, 4), yaw = 286 * D2R; const px = q0.x + 2600, pz = q0.z + 2600;
           return { pos: [px + Math.sin(yaw) * lerp(0, 60, k), 1.6 + b.y, pz - Math.cos(yaw) * lerp(0, 60, k)], look: [px + Math.sin(yaw) * 4000, 26, pz - Math.cos(yaw) * 4000], mm: 40, roll: b.r * 0.5 }; };
       }
       return S.out((t, p) => {
         const k = smoother(p); apply(S.camera, cam(t, k));
-        for (const m of S.ghosts ?? []) m.material.uniforms.uOp.value = 0.3 * ease(t, 0.5, 2.5);
+        for (const m of S.ghosts ?? []) m.material.uniforms.uOp.value = 0.2 * ease(t, 0.5, 2.5);
         S._shadow?.();
         S.pres.draw(S.camera, t);
         cap(t);
@@ -279,7 +279,7 @@ async function gulfMap(ctx, shot, H) {
   const P = shot.params ?? {}; const G = await GEO.load(); const exit = P.mode === 'exit';
   const S = seaSet(ctx, shot, { look: look('map', { sunEl: 42, sunAz: 130, hazeDensity: 1 / 500000 }), spectrum: { hs: 0.2 } });
   S.sea.environment();
-  const ar = await SEA.land(S.sea, 'arabia', { root: GEO.ROOT + 'imagery/', exaggeration: 3, segments: 160, deepCut: 1e9, darkCut: false, cut: -4 });
+  const ar = await SEA.land(S.sea, 'arabia', { root: GEO.ROOT + 'imagery/', exaggeration: 3, segments: 160, deepCut: 1e9, cut: -1e9, floor: 4 });
   S.sea.scene.add(ar.group); ar.setCurvature(0); S.sea.ocean.U.uCurv.value = 0; S.sea.water = P.water ?? true;
   const xz = (la, lo) => ar.projection.xz(la, lo);
   const lb = GEO.labels(S.layer);
@@ -298,12 +298,14 @@ async function gulfMap(ctx, shot, H) {
     const [la, lo] = LBL[name]; lb.add(name.toUpperCase(), V(...(() => { const [x, z] = xz(la, lo); return [x, 9000, z]; })()), { dot: false, dy: 0, size: w === 'Iran' || w === 'Saudi' ? 1.2 : 0.9, show: (t) => ease(t, t0, t0 + 0.4) });
     items.push({ meshes, rings, t0 });
   }
-  const gulfC = (() => { const [x, z] = xz(27.0, 51.3); return V(x, 0, z); })(), hz = (() => { const [x, z] = xz(26.56, 56.45); return V(x, 0, z); })();
+  const gulfC = (() => { const [x, z] = xz(27.1, 50.9); return V(x, 0, z); })(), hz = (() => { const [x, z] = xz(26.56, 56.45); return V(x, 0, z); })();
   let arrow = null;
   if (exit) {
     const path = [[28.9, 49.4], [27.6, 50.9], [26.6, 53.0], [26.25, 55.2], [26.55, 56.45], [25.9, 57.3], [24.6, 58.6]].map(([la, lo]) => xz(la, lo));
     const pts = []; for (let i = 0; i < path.length - 1; i++) for (let k = 0; k < 20; k++) { const f = k / 20; pts.push([lerp(path[i][0], path[i + 1][0], f), lerp(path[i][1], path[i + 1][1], f)]); } pts.push(path.at(-1));
-    arrow = GEO.ribbon(pts, { width: 26000, y: 9000, color: 0x17d0d4, opacity: 0.9, glow: 1.5, depthTest: false }); S.sea.overlay.add(arrow);
+    arrow = GEO.ribbon(pts, { width: 14000, y: 9000, color: 0x17d0d4, opacity: 0.95, glow: 1.6, depthTest: false }); S.sea.overlay.add(arrow);
+    { const e = path.at(-1), q = path.at(-2), dx = e[0] - q[0], dz = e[1] - q[1], l = Math.hypot(dx, dz), ux = dx / l, uz = dz / l; const sh = new THREE.Shape([new THREE.Vector2(e[0] + ux * 42000, -(e[1] + uz * 42000)), new THREE.Vector2(e[0] - uz * 26000, -(e[1] + ux * 26000)), new THREE.Vector2(e[0] + uz * 26000, -(e[1] - ux * 26000))]);
+      const g = new THREE.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); const hm = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: new THREE.Color(0x17d0d4).multiplyScalar(1.6), transparent: true, opacity: 0, depthTest: false, depthWrite: false, toneMapped: false })); hm.position.y = 9000; hm.renderOrder = 52; S.sea.overlay.add(hm); arrow.userData.head = hm; }
     lb.add('PERSIAN GULF', V(gulfC.x, 9000, gulfC.z), { dot: false, dy: 0, size: 1.2, t0: 0.3 });
     lb.add('ONE WAY OUT', V(hz.x, 9000, hz.z), { accent: RED, dx: 70, dy: -80, align: 'left', size: 1.3, sub: 'THE STRAIT OF HORMUZ', t0: wt(shot, 'one', 1.4) });
     lb.add('GULF OF OMAN', V(...(() => { const [x, z] = xz(24.9, 58.2); return [x, 9000, z]; })()), { dot: false, dy: 0, size: 0.9, t0: 2.4 });
@@ -313,10 +315,10 @@ async function gulfMap(ctx, shot, H) {
   return S.out((t, p) => {
     const k = smoother(p);
     if (exit) { const c = gulfC.clone().lerp(hz, lerp(0.15, 0.85, k)), alt = lerp(1.9e6, 1.1e6, k); apply(S.camera, { pos: [c.x - alt * 0.1, alt, c.z + alt * 0.55], look: [c.x, 0, c.z], mm: 35 });
-      arrow.material.uniforms.uDraw.value = arrow.userData.length * ease(t, 0.6, 3.2); }
-    else { const alt = lerp(2.3e6, 1.95e6, k); apply(S.camera, { pos: [gulfC.x + lerp(-50e3, 40e3, k), alt, gulfC.z + alt * 0.5], look: [gulfC.x + lerp(-30e3, 40e3, k), 0, gulfC.z], mm: 35 }); }
+      arrow.material.uniforms.uDraw.value = arrow.userData.length * ease(t, 0.6, 3.2); arrow.userData.head.material.opacity = 0.95 * ease(t, 3.0, 3.4); }
+    else { const alt = lerp(1.85e6, 1.6e6, k); apply(S.camera, { pos: [gulfC.x + lerp(-40e3, 30e3, k), alt, gulfC.z + alt * 0.45], look: [gulfC.x + lerp(-20e3, 30e3, k), 0, gulfC.z], mm: 35 }); }
     for (const it of items) { const a = ease(t, it.t0, it.t0 + 0.35), last = items.at(-1).t0 + 1.6; const hold = 1 - 0.55 * ease(t, it.t0 + 1.2, it.t0 + 2) * (1 - ease(t, last, last + 0.8));
-      it.meshes.forEach(m => m.material.opacity = 0.42 * a * hold); it.rings.forEach(r => r.material.uniforms.uOp.value = 0.95 * a * hold); }
+      it.meshes.forEach(m => m.material.opacity = 0.26 * a * hold); it.rings.forEach(r => r.material.uniforms.uOp.value = 0.95 * a * hold); }
     S.pres.draw(S.camera, t, { haze: 0.2 });
     lb.update(S.camera, t, S.W, S.H);
     cap(t);

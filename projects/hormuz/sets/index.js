@@ -304,10 +304,12 @@ export function makeHormuz(H = {}) {
       }
       const cap = captions(S.layer, shot, {}, H);
       return S.out((t, p) => {
-        const k = smoother(p), a = ((P.az ?? (lng ? 160 : 215)) + (P.orbit ?? (lng ? 18 : 24)) * (k - 0.5)) * Math.PI / 180, r = P.r ?? (lng ? 1500 : 760), h = P.alt ?? (lng ? 420 : 330);
-        const b = CAM.breath(t, 2, 4);
-        apply(S.camera, { pos: [focus.x + Math.sin(a) * r + b.x, h + b.y, focus.z + Math.cos(a) * r], look: [focus.x, lng ? 20 : 0, focus.z], mm: P.mm ?? 30, roll: b.r });
-        S.sea.shadows(V(focus.x, 0, focus.z), lng ? 1300 : 900, 2048);
+        const k = smoother(p), b = CAM.breath(t, 2, 4);
+        if (lng) { // from the sea, low: the idle carriers at the jetty in front, the dark trains and the cold flares behind
+          apply(S.camera, { pos: [T.berth.x + lerp(700, 420, k) + b.x, 64 + b.y, T.berth.z - lerp(820, 760, k)], look: [T.berth.x - 120, 60, T.berth.z + 1700], mm: P.mm ?? 42, roll: b.r });
+        } else { const a = ((P.az ?? 215) + (P.orbit ?? 24) * (k - 0.5)) * Math.PI / 180, r = P.r ?? 760, h = P.alt ?? 330;
+          apply(S.camera, { pos: [focus.x + Math.sin(a) * r + b.x, h + b.y, focus.z + Math.cos(a) * r], look: [focus.x, 0, focus.z], mm: P.mm ?? 30, roll: b.r }); }
+        S.sea.shadows(lng ? V(T.berth.x, 0, T.berth.z + 300) : V(focus.x, 0, focus.z), lng ? 700 : 900, 2048);
         S.pres.draw(S.camera, t);
         cap(t);
       });
@@ -469,8 +471,8 @@ export function makeHormuz(H = {}) {
       const P = shot.params ?? {}; const G = await GEO.load(); const hit = P.mode === 'hit';
       const S = seaSet(ctx, shot, { look: look('map', { sunEl: 40, sunAz: 120, hazeDensity: 1 / 400000 }), spectrum: { hs: 0.2 } });
       S.sea.environment();
-      const ar = await SEA.land(S.sea, 'arabia', { root: GEO.ROOT + 'imagery/', exaggeration: 3, segments: 160, deepCut: 1e9, darkCut: false, cut: -1e9 });
-      S.sea.scene.add(ar.group); ar.setCurvature(0); S.sea.ocean.U.uCurv.value = 0; S.sea.water = P.water ?? false;
+      const ar = await SEA.land(S.sea, 'arabia', { root: GEO.ROOT + 'imagery/', exaggeration: 3, segments: 160, deepCut: 1e9, cut: -1e9, floor: 4 });
+      S.sea.scene.add(ar.group); ar.setCurvature(0); S.sea.ocean.U.uCurv.value = 0; S.sea.water = P.water ?? true;
       const xz = (la, lo) => ar.projection.xz(la, lo);
       const pipes = [], lb = GEO.labels(S.layer);
       const pl = G.vec.pipelines, cols = { 'East-West (Petroline)': 0xffc24a, 'Habshan-Fujairah (ADCOP)': 0xffc24a, 'Goreh-Jask': 0x9fb6c8 };
@@ -697,7 +699,7 @@ function rq4() {
   const nose = new THREE.SphereGeometry(0.95, 20, 12); nose.scale(1.9, 0.85, 1); nose.translate(5.0, 0.2, 0);
   const wing = new THREE.BoxGeometry(1.6, 0.18, 39.9); const p = wing.attributes.position; for (let i = 0; i < p.count; i++) { const zz = Math.abs(p.getZ(i)) / 20; p.setX(i, p.getX(i) * (1 - zz * 0.55) - zz * 0.6); p.setY(i, p.getY(i) + zz * zz * 0.6); } wing.computeVertexNormals(); wing.translate(0.6, 0.2, 0);
   const eng = new THREE.CylinderGeometry(0.62, 0.5, 4.2, 16); eng.rotateZ(Math.PI / 2); eng.translate(-4.6, 1.15, 0);
-  const vt = (s) => { const b = new THREE.BoxGeometry(1.4, 0.08, 3.4); b.translate(0, 0, s * 1.7); b.rotateX(s * 0.8); b.translate(-6.4, 0.6, 0); return b; };
+  const vt = (s) => { const b = new THREE.BoxGeometry(1.4, 0.08, 3.0); b.translate(0, 0, s * 1.5); b.rotateX(-s * 0.85); b.translate(-6.4, 0.7, 0); return b; };
   for (const [geo, mat] of [[fus, m], [nose, m], [wing, m], [eng, m], [vt(1), m], [vt(-1), m]]) { const me = new THREE.Mesh(geo, mat); me.castShadow = true; g.add(me); }
   const inlet = new THREE.Mesh(new THREE.CircleGeometry(0.45, 14), dk); inlet.rotation.y = Math.PI / 2; inlet.position.set(-2.45, 1.15, 0); g.add(inlet);
   return g;

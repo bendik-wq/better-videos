@@ -157,7 +157,7 @@ export function oceanMaterial(U, spectrum, o = {}) {
             float lat = 1. - smoothstep(W * .35, W * .62, abs(vv));
             float n = noiseA(vec2(us, vv) / (Bm * 2.2) + A.xy * .001) * .65 + noiseA(vec2(us, vv) / (Bm * .55)) * .35;
             float near = smoothstep(-L * .55, 0., us) * exp(-max(us, 0.) / (Lw * (.45 + .6 * fk)));
-            wakeFoam = max(wakeFoam, lat * near * smoothstep(.45, .75, n + .25 * near) * fk * .9);
+            wakeFoam = max(wakeFoam, lat * near * smoothstep(.45, .75, n + .25 * near) * fk * .9 * clamp(Vs / 2.5, 0., 1.));
             aerated = max(aerated, lat * smoothstep(-L * .5, 0., us) * exp(-max(us, 0.) / (Lw * 4.5)) * (.35 + .65 * n) * min(1., Vs / 5.) * .6);
             calm = max(calm, (1. - smoothstep(W * .45, W * 1.2, abs(vv))) * smoothstep(0., L, us) * exp(-max(us, 0.) / (L * 10.)));
             // Kelvin arms: whitecaps along the arms close to the ship, height field for the normals
@@ -213,6 +213,8 @@ export function oceanMaterial(U, spectrum, o = {}) {
         if (elevHere > -9e3) depthHere = max(0., -elevHere) * uDepthScale;
         // from altitude, land in the DEM owns the pixel (depth precision cannot separate a 2 m beach from the sea 100 km away)
         if (uCamH > 1200. && elevHere > .5 && !below && texture(uOpaque, gl_FragCoord.xy / uRes).a > .25) discard;
+        // from map altitudes depth cannot separate the coast from the sea at all: wherever land was drawn, land wins
+        if (uCamH > 50000. && !below && texture(uOpaque, gl_FragCoord.xy / uRes).a > .25) discard;
         // ---- lighting
         vec3 L = uSunDir; float mu = max(dot(V, vec3(0., 1., 0.)), .02);
         float NV = max(dot(N, V), 0.);

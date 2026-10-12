@@ -61,7 +61,7 @@ export async function land(sea, name, o = {}) {
       const pos = [], uv = [], idx = [], el = [];
       for (let j = 0; j <= sy; j++) for (let i = 0; i <= sx; i++) {
         const lat = lat0 + (lat1 - lat0) * j / sy, lon = lon0 + (lon1 - lon0) * i / sx; const [x, z] = P.xz(lat, lon);
-        let hh = sample(D, lat, lon) ?? elevAt(lat, lon); const raw = hh; hh = hh > 0 ? hh * ex : hh; hh -= sink * (1 - Math.min(1, Math.max(0, hh / 30)));
+        let hh = sample(D, lat, lon) ?? elevAt(lat, lon); if (o.floor != null) hh = Math.max(hh, o.floor); const raw = hh; hh = hh > 0 ? hh * ex : hh; hh -= sink * (1 - Math.min(1, Math.max(0, hh / 30)));
         pos.push(x, hh, z); uv.push(i / sx, 1 - j / sy); el.push(raw);
       }
       for (let j = 0; j < sy; j++) for (let i = 0; i < sx; i++) {

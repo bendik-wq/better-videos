@@ -78,12 +78,12 @@ defineKind('cruiser', (o) => {
   const greys = [], darks = [], whites = [], rails = [];
   const X = (f) => -L / 2 + f * L;
   // forward deckhouse (tall, carrying two SPY-1 faces forward), aft deckhouse (two faces aft)
-  greys.push(box(X(0.72) - X(0.52), 9.5, B * 0.74, (X(0.72) + X(0.52)) / 2, yd + 4.75, 0), box(X(0.72) - X(0.62), 3.2, B * 0.62, (X(0.72) + X(0.62)) / 2, yd + 11.1, 0));
+  greys.push(taper(X(0.72) - X(0.52), 9.5, B * 0.74, 0.86, 0.8, (X(0.72) + X(0.52)) / 2, yd, 0, 0.5), taper(X(0.715) - X(0.62), 3.2, B * 0.56, 0.9, 0.9, (X(0.715) + X(0.62)) / 2, yd + 9.5, 0));
   darks.push(box(0.3, 1.1, B * 0.58, X(0.72) + 0.12, yd + 11.4, 0));
-  greys.push(box(X(0.42) - X(0.26), 8.0, B * 0.72, (X(0.42) + X(0.26)) / 2, yd + 4.0, 0));
+  greys.push(taper(X(0.42) - X(0.26), 8.0, B * 0.72, 0.88, 0.8, (X(0.42) + X(0.26)) / 2, yd, 0, -0.4));
   const faces = [];
-  for (const sd of [-1, 1]) { faces.push([X(0.70), yd + 6.5, sd * B * 0.3, sd > 0 ? 0.6 : Math.PI - 0.6 + Math.PI], [X(0.30), yd + 5.6, sd * B * 0.3, sd > 0 ? Math.PI - 0.6 : 0.6 + Math.PI]); }
-  for (const [x, y, z, ry] of faces) { const p = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 0.3, 8), spyM); p.rotation.set(Math.PI / 2, 0, 0); p.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), ry); p.position.set(x, y, z); S.body.add(p); }
+  for (const sd of [-1, 1]) { faces.push([X(0.705), yd + 5.6, sd * 5.6, sd * -0.78], [X(0.275), yd + 4.6, sd * 5.6, Math.PI + sd * 0.78]); }
+  for (const [x, y, z, ry] of faces) { const g = new THREE.CylinderGeometry(2.0, 2.0, 0.3, 8); g.rotateZ(Math.PI / 2); g.rotateY(ry); const p = new THREE.Mesh(g, spyM); p.position.set(x, y, z); S.body.add(p); }
   // masts: forward (lattice-ish tripod) and aft; stacks: two pairs of uptakes
   for (const [f, h] of [[0.6, 22], [0.45, 17]]) { const mx = X(f);
     greys.push(bar([mx - 1.4, yd + 9, -1.6], [mx, yd + h, 0], 0.25, 4), bar([mx - 1.4, yd + 9, 1.6], [mx, yd + h, 0], 0.25, 4), bar([mx + 1.6, yd + 9, 0], [mx, yd + h, 0], 0.25, 4));
@@ -171,5 +171,58 @@ defineKind('buoy', (o) => {
   const x = []; for (const a of [0.785, -0.785]) { const g = new THREE.BoxGeometry(0.12, 1.0, 0.12); g.rotateZ(a); g.translate(0, 4.9, 0); x.push(g); }
   meshOf(x, y, S.body); meshOf([cyl(0.12, 0.12, 0.4, 0, 4.35, 0, 8), cyl(0.18, 0.18, 0.3, 0, 5.6, 0, 8)], dark, S.body);
   meshOf([...DT.railing([[0.6, 4.15, 0.6], [-0.6, 4.15, 0.6], [-0.6, 4.15, -0.6], [0.6, 4.15, -0.6], [0.6, 4.15, 0.6]], { h: 0.6, step: 0.6, r: 0.025 })], dark, S.body);
+  return S;
+});
+
+// ---------------------------------------------------------------- Arleigh Burke-class destroyer (Flight IIA), replaces the
+// ships.js block model: raked, inward-sloping superstructure faces carrying the four octagonal SPY-1D arrays,
+// a raked tripod mast with its yards and domes, two angular stacks, the Mk 45 Mod 4 gun, flush VLS fields,
+// twin hangars and a flight deck; 155 x 20 m, hull draught 6.3 m.
+function taper(w, h, d, kx = 0.8, kz = 0.8, x = 0, y = 0, z = 0, lean = 0) {
+  const g = new THREE.BoxGeometry(w, h, d), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) if (p.getY(i) > 0) { p.setX(i, p.getX(i) * kx - lean); p.setZ(i, p.getZ(i) * kz); }
+  g.translate(x, y + h / 2, z); return g;
+}
+defineKind('destroyer', (o) => {
+  const L = o.L ?? 155, B = 20, D = 12.5, T = 6.3;
+  const S = new Ship('destroyer', { L, B, D, T, deckH: 9 }, { response: 0.75, ...o });
+  const grey = o.grey ?? '#7b8287';
+  const { hg, hull } = hullOf(S, o, { L, B, D, T }, { mid: [0.3, 0.5], entry: 1.25, run: 1.6, rake: 10, flare: 0.5, bulb: false, transom: 0.8, bilge: 3, sheer: 3.5, overhang: 1, stations: 140 },
+    { top: grey, bottom: '#59221d', boot: '#2a2c2e', hullNumber: o.number ?? '112', numberAt: 28, numberH: 3.6, numberY: 3.4, seed: o.seed ?? 11, rust: o.rust ?? 0.3, marks: false, bootH: 0.6, anchor: true, rough: 0.6 });
+  const dk = new THREE.Mesh(hg.deck, deckMat(0x4b5052, o.seed ?? 11)); dk.receiveShadow = true; S.body.add(dk);
+  const yd = D - T, X = (f) => -L / 2 + f * L, hz = paint('navyGrey'), dark = paint('navyDark'), spy = std({ color: 0x5f666a, roughness: 0.45, metalness: 0.3 });
+  const greys = [], darks = [], whites = [], rails = [];
+  // main deckhouse (one level, raked sides), the forward superstructure (tall, faces slope in), the aft superstructure
+  greys.push(taper(X(0.66) - X(0.24), 3.2, B * 0.7, 0.98, 0.92, (X(0.66) + X(0.24)) / 2, yd, 0));
+  greys.push(taper(X(0.68) - X(0.52), 9.5, B * 0.68, 0.82, 0.78, (X(0.68) + X(0.52)) / 2, yd + 3.2, 0, 0.6));
+  greys.push(taper(X(0.66) - X(0.585), 2.8, B * 0.5, 0.9, 0.9, (X(0.66) + X(0.585)) / 2 + 0.6, yd + 12.7, 0));            // pilot house
+  darks.push(taper(0.25, 1.3, B * 0.48, 1, 0.92, X(0.66) + 0.55, yd + 13.5, 0));                                          // bridge windows
+  greys.push(taper(X(0.43) - X(0.33), 7.5, B * 0.62, 0.84, 0.8, (X(0.43) + X(0.33)) / 2, yd + 3.2, 0));
+  greys.push(taper(X(0.24) - X(0.13), 6.2, B * 0.8, 1, 0.94, (X(0.24) + X(0.13)) / 2, yd, 0));                              // twin hangars
+  darks.push(box(0.2, 4.6, B * 0.3, X(0.13) - 0.05, yd + 2.4, -B * 0.19), box(0.2, 4.6, B * 0.3, X(0.13) - 0.05, yd + 2.4, B * 0.19));
+  // SPY-1D arrays: two forward (port/starboard bows of the forward superstructure), two aft on the aft superstructure
+  const face = (x, y, z, ry, tilt) => { const g = new THREE.CylinderGeometry(1.9, 1.9, 0.25, 8); g.rotateZ(Math.PI / 2); g.rotateY(ry); const m = new THREE.Mesh(g, spy); m.position.set(x, y, z); m.rotation.z = 0; m.rotateOnAxis(new THREE.Vector3(Math.cos(ry), 0, -Math.sin(ry)).normalize(), 0); S.body.add(m); return m; };
+  for (const sd of [-1, 1]) { face(X(0.665) - 1.0, yd + 8.4, sd * 5.0, sd * -0.78, 0); face(X(0.34) + 0.2, yd + 7.0, sd * 5.0, Math.PI + sd * 0.78, 0); }
+  // tripod mast raked aft, yards, radomes, the SPS-67 and the whips
+  const mx = X(0.565), mh = yd + 30;
+  greys.push(bar([mx + 2.2, yd + 12.7, -2.6], [mx - 1.2, mh, 0], 0.28, 4), bar([mx + 2.2, yd + 12.7, 2.6], [mx - 1.2, mh, 0], 0.28, 4), bar([mx - 2.6, yd + 12.7, 0], [mx - 1.2, mh, 0], 0.28, 4));
+  for (const [y, w] of [[yd + 21, 7], [yd + 25, 4.5], [yd + 28.5, 3]]) greys.push(box(0.35, 0.35, w, mx - 0.6 + (y - yd - 21) * -0.08, y, 0));
+  greys.push(box(2.4, 0.3, 2.8, mx - 0.4, yd + 19, 0)); whites.push(sph(0.9, mx - 1.0, yd + 23.2, 2.2, 10, 8), sph(0.9, mx - 1.0, yd + 23.2, -2.2, 10, 8));
+  darks.push(cyl(0.06, 0.06, 6, mx - 1.2, mh + 3, 0, 4));
+  { const sc = new THREE.Mesh(box(0.4, 0.45, 3.4), dark); sc.position.set(mx - 0.6, yd + 26.8, 0); S.body.add(sc); S.spin.push({ mesh: sc, rate: 2 * Math.PI / 2.6, phase: 2 }); }
+  // the two stacks: angular uptakes with exhaust caps
+  for (const f of [0.50, 0.40]) { greys.push(taper(6.2, 7.5, 7.4, 0.8, 0.86, X(f), yd + 3.2, 0, -0.4)); darks.push(box(4.6, 0.6, 5.8, X(f) + 0.3, yd + 10.9, 0)); for (const sd of [-1, 1]) darks.push(cyl(0.5, 0.5, 1.2, X(f) + 0.3, yd + 11.6, sd * 1.4, 8)); }
+  // Mk 45 Mod 4 (angular gunhouse) forward, VLS fields (forward and aft), CIWS, boats
+  { const gh = taper(5.2, 2.3, 3.6, 0.62, 0.72, X(0.86), yd + 0.2, 0, -0.6); greys.push(gh); darks.push(cyl(0.13, 0.17, 7.4, X(0.86) + 4.2, yd + 1.5, 0, 6, 'x'), box(4, 0.4, 4.2, X(0.86), yd + 0.2, 0)); }
+  for (const [f, n] of [[0.77, 8], [0.29, 8]]) { darks.push(box(n * 1.1, 0.25, 6.6, X(f), yd + 0.12, 0)); for (let i = 0; i <= n; i++) greys.push(box(0.08, 0.27, 6.6, X(f) - n * 0.55 + i * 1.1, yd + 0.13, 0)); }
+  whites.push(cyl(0.75, 0.75, 1.9, X(0.705), yd + 4.4, 0, 10), sph(0.8, X(0.705), yd + 5.6, 0, 10, 8), cyl(0.75, 0.75, 1.9, X(0.215), yd + 7.1, 0, 10), sph(0.8, X(0.215), yd + 8.3, 0, 10, 8));
+  for (const sd of [-1, 1]) { whites.push(DT.lifeboatGeo(7.5, 2.4, X(0.47), yd + 4.6, sd * (B * 0.36 + 1.0))); darks.push(bar([X(0.47) - 2.2, yd + 3.2, sd * B * 0.35], [X(0.47) - 2.2, yd + 5.8, sd * (B * 0.36 + 1.3)], 0.12, 'box'), bar([X(0.47) + 2.2, yd + 3.2, sd * B * 0.35], [X(0.47) + 2.2, yd + 5.8, sd * (B * 0.36 + 1.3)], 0.12, 'box')); }
+  // flight deck: dark non-skid with a white centreline and edge nets
+  darks.push(box(X(0.13) - X(0.0) - 1, 0.08, B * 0.82, (X(0.13) + X(0.0)) / 2, yd - 1.9, 0)); whites.push(box(X(0.13) - X(0.0) - 2, 0.1, 0.3, (X(0.13) + X(0.0)) / 2, yd - 1.85, 0));
+  for (const sd of [-1, 1]) { const pts = []; for (let i = 4; i < hg.deckEdge.length - 2; i += 3) { const [xx, yy, w] = hg.deckEdge[i]; pts.push([xx, yy, sd * w * 0.99]); } rails.push(...DT.railing(pts, { h: 1.0, step: 2 })); }
+  rails.push(...DT.railing([[X(0.66), yd + 3.2, -B * 0.33], [X(0.24), yd + 3.2, -B * 0.33]], { step: 2 }), ...DT.railing([[X(0.66), yd + 3.2, B * 0.33], [X(0.24), yd + 3.2, B * 0.33]], { step: 2 }));
+  meshOf(greys, hz, S.body); meshOf(darks, dark, S.body); meshOf(whites, std({ color: 0xaeb1b1, roughness: 0.5 }), S.body); meshOf(rails, paint('steel'), S.body, { cast: false });
+  if (o.flag) { const f = DT.flag(o.flag, { w: 2.6, h: 1.5 }); f.mesh.position.set(X(0.0) + 1, yd + 1.5, 0); f.mesh.rotation.y = Math.PI; S.body.add(f.mesh); S.flags.push(f); }
+  S.parts = { hull, bridge: [X(0.66), yd + 13.8, 0], mast: [mx, mh, 0] };
   return S;
 });

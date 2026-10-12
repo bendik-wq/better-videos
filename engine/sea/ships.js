@@ -374,7 +374,7 @@ BUILD.lng = (o) => {
   const L = o.L ?? 290, B = o.B ?? 49, D = 27, T = o.T ?? 11.5;
   const S = new Ship('lng', { L, B, D, T }, { response: 0.5, ...o });
   const hg = hullGeometry({ L, B, D, T, mid: [0.22, 0.66], entry: 1.7, run: 2.2, rake: 7, flare: 0.18, bulb: true, transom: 0.75, bilge: 3, sheer: 2 });
-  const atlas = hullAtlas(o, { L, D, T }, { top: o.hullColor ?? '#2a3c55', bottom: '#8a2c22', name: o.name ?? 'AL KHOR STAR', seed: o.seed ?? 7, rust: o.rust ?? 0.35 });
+  const atlas = hullAtlas(o, { L, D, T }, { top: o.hullColor ?? '#2c3542', bottom: '#8a2c22', name: o.name ?? 'AL KHOR STAR', seed: o.seed ?? 7, rust: o.rust ?? 0.35 });
   const hull = new THREE.Mesh(hg.hull, std({ map: atlas.map, normalMap: atlas.normalMap, roughnessMap: atlas.roughnessMap, roughness: 1, metalness: 0.25 })); hull.castShadow = hull.receiveShadow = true; S.body.add(hull);
   S.body.add(new THREE.Mesh(hg.transom, std({ color: 0x2a3c55 })));
   S.body.add(new THREE.Mesh(hg.deck, std({ map: DT.deckTexture({ color: '#5d6a60', L, B, seed: 13 }), roughness: 0.75 })));
@@ -493,7 +493,8 @@ export const KINDS = Object.keys(BUILD);
 export function defineKind(name, fn) { BUILD[name] = fn; if (!KINDS.includes(name)) KINDS.push(name); }
 export { Ship, hullAtlas, std, meshOf };
 export function ship(kind, o = {}) { const b = BUILD[kind]; if (!b) throw new Error('sea: unknown ship kind ' + kind + ' (' + KINDS.join(', ') + ')'); const S = b(o);
-  S.group.traverse(m => { if (m.isMesh && m.material && !Array.isArray(m.material)) m.material.side = THREE.DoubleSide; }); return S; }
+  S.group.traverse(m => { if (!m.isMesh || !m.material) return; const list = Array.isArray(m.material) ? m.material : [m.material];
+    for (const mt of list) { if (!Array.isArray(m.material)) mt.side = THREE.DoubleSide; if (o.weather !== false) DT.weather(mt, mt.userData.grime ?? (mt.map ? 0.55 : 1)); } }); return S; }
 
 // ============================================================ lanes
 // A sea lane through [x, z] points (metres, local frame): natural spline resampled by arc length, so

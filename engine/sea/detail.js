@@ -243,3 +243,31 @@ export function anchorChain(x, y, z, { len = 34, out = 26, s = 1 } = {}) {
   const out2 = []; for (let i = 0; i < pts.length - 1; i++) out2.push(bar(pts[i], pts[i + 1], 0.22, 6));
   return out2;
 }
+
+// ---------------------------------------------------------------- weathering (all ship materials)
+// Object-space value noise modulates albedo (soot, sun-fade, salt), adds vertical rust/run-off streaks and
+// varies roughness, so no painted surface is a flat CG colour. Pure function of the vertex position in
+// the ship's own frame (merged geometry is in that frame), so it never swims as the ship moves.
+const GRIME_GLSL = /* glsl */`
+  varying vec3 vObjP;
+  float gHash(vec3 p) { p = fract(p * .3183099 + .1); p *= 17.; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+  float gNoise(vec3 x) { vec3 i = floor(x), f = fract(x); f = f * f * (3. - 2. * f);
+    return mix(mix(mix(gHash(i), gHash(i + vec3(1, 0, 0)), f.x), mix(gHash(i + vec3(0, 1, 0)), gHash(i + vec3(1, 1, 0)), f.x), f.y),
+               mix(mix(gHash(i + vec3(0, 0, 1)), gHash(i + vec3(1, 0, 1)), f.x), mix(gHash(i + vec3(0, 1, 1)), gHash(i + vec3(1, 1, 1)), f.x), f.y), f.z); }`;
+export function weather(mat, k = 1) {
+  if (!mat?.isMeshStandardMaterial || mat.userData.weathered) return mat;
+  mat.userData.weathered = true;
+  mat.onBeforeCompile = (sh) => {
+    sh.vertexShader = 'varying vec3 vObjP;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vObjP = position;');
+    sh.fragmentShader = GRIME_GLSL + '\n' + sh.fragmentShader
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        { float gn = gNoise(vObjP * .21) * .5 + gNoise(vObjP * .93) * .32 + gNoise(vObjP * 3.7) * .18;
+          float st = gNoise(vec3(vObjP.x * 1.7, vObjP.y * .11, vObjP.z * 1.7)) * .7 + gNoise(vec3(vObjP.x * 5.3, vObjP.y * .4, vObjP.z * 5.3)) * .3;
+          diffuseColor.rgb *= mix(1., .8 + .32 * gn, ${(+k).toFixed(3)});
+          diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(.74, .6, .5), smoothstep(.6, .82, st) * .45 * ${(+k).toFixed(3)}); }`)
+      .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+        roughnessFactor = clamp(roughnessFactor * (.82 + .36 * gNoise(vObjP * .6)), .04, 1.);`);
+  };
+  mat.customProgramCacheKey = () => 'weather' + k;
+  return mat;
+}
