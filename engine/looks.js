@@ -13,7 +13,7 @@
 //   palette  colours for graphics (type, maps, charts, plates) that belong to the look.
 //
 //   import * as LK from '/engine/looks.js';
-//   LK.names()                         -> ['bright-day', 'golden-hour', 'blue-hour', 'noir-sodium', 'archive-warm']
+//   LK.names()                         -> ['bright-day', 'golden-hour', 'blue-hour', 'noir-sodium', 'archive-warm', 'live-wire']
 //   LK.get(name)                       -> the preset object (all of the above)
 //   LK.gradePixel(r, g, b, name)       -> display sRGB 0..1 in and out (the exact maths in the .cube)
 //   LK.cube(name, N = 33)              -> .cube text
@@ -270,6 +270,39 @@ export const LOOKS = {
     imagery: { haze: 'day', grade: { contrast: 1.0, saturation: 0.8, warmth: 0.08, gamma: 1.03, exposure: 1.0, lift: 0.02 } },
     palette: { bg: '#e9dfcb', paper: '#f1e8d6', ink: '#2a2119', inkSoft: '#6b5b48', accent: '#c4281e', sea: '#5f8f8c', seaDeep: '#36585a', sand: '#d6bd8e',
       sky: '#b9c8c4', land: '#e3d6bb', water: '#a9c1bb', grid: 'rgba(42,33,25,0.12)', plate: 'rgba(30,22,14,0.5)', plateInk: '#f1e8d6', shadow: '0 1px 14px rgba(30,20,10,0.35)', sun: '#fff0d0', navy: '#2a2119' },
+  },
+  // LIVE WIRE (episode 4, the grid hackers): light is power. Deep, truly black blacks (the darkness is the
+  // subject), phosphor green #5dff9e for CRTs, HMIs and fluorescent tubes (Wong Kar-wai / Doyle green),
+  // sodium #ffa24a kept rich for streetlights and the grid from orbit, direct-flash whites #fff8ee neutral
+  // to faintly warm. Cyan is pulled into the green, yellow-greens gathered onto the phosphor line, blues
+  // held as a desaturated snow-night navy, magenta removed. Shadows carry a trace of green-teal (the
+  // fluorescent cast), highlights stay clean so a flash still reads white. Alarm red stays alive (annotation).
+  'live-wire': {
+    label: 'Live wire', intent: 'Phosphor green, sodium and flash white on deep black; fluorescent control rooms, snow nights, direct flash.',
+    grade: {
+      wb: [-0.02, -0.05], ev: -0.02,
+      curve: { contrast: 1.26, pivot: 0.47, perChannel: 0.26 },
+      sat: 0.96, vibrance: 0.04,
+      bands: [
+        { h: 29, w: 10, sat: 1.12 },                                  // alarm red: the breaker OPEN state
+        { h: 52, w: 16, sat: 0.9, pull: 0.3 },                        // skin: protected, a little quieter
+        { h: 61, w: 12, sat: 1.12, shift: -1 },                       // sodium: rich amber, never lemon
+        { h: 96, w: 18, sat: 0.72, shift: -12 },                      // yellows lean to sodium, not to lime
+        { h: 132, w: 20, sat: 1.0, shift: 14 },                       // greens gather onto the phosphor line
+        { h: 153, w: 14, sat: 1.08, pull: 0.25 },                     // phosphor green: the hero colour
+        { h: 190, w: 20, sat: 0.7, shift: -16 },                      // cyan folds into the green
+        { h: 250, w: 30, sat: 0.72, shift: -6, light: -0.01 },        // blues: snow-night navy, low chroma
+        { h: 320, w: 40, sat: 0.45 },                                 // magenta: out
+      ],
+      shadowTint: [-0.009, -0.004], highTint: [0.002, 0.006],
+      satShadow: 0.74, satHigh: 0.58, ceiling: 0.9, floor: 0.0, white: 0.985,
+    },
+    finish: { grain: 10, halation: 18, halationAmount: 0.42, bloom: 0.2, vignette: 0.5, halationTint: [0.86, 1, 0.74] },
+    tod: { base: 'night', zenith: ['#02060a', 1], horizon: ['#0b1a2a', 1], haze: ['#0b1a2a', 0.9], ambSky: ['#1c2a3a', 0.16], cityGlow: ['#ffa24a', 0.3], cloud: ['#38414e', 0.35], stars: 0.6, sat: 1.02, contrast: 1.06 },
+    imagery: { haze: 'dusk', grade: { contrast: 1.12, saturation: 0.8, warmth: 0.0, gamma: 1.04, exposure: 0.85, lift: 0 } },
+    palette: { bg: '#000000', paper: '#d8ffe6', ink: '#d8ffe6', inkSoft: '#7fae92', accent: '#ff2b1f', phosphor: '#5dff9e', fluoro: '#d8ffe6', sodium: '#ffa24a', flash: '#fff8ee',
+      snow0: '#0b1a2a', snow1: '#9fb7cf', sea: '#0b1a2a', seaDeep: '#050b12', sand: '#ffa24a', sky: '#0b1a2a', land: '#0a120e', water: '#03070a',
+      grid: 'rgba(93,255,158,0.12)', plate: 'rgba(0,0,0,0.6)', plateInk: '#d8ffe6', shadow: '0 0 18px rgba(0,0,0,0.6)', sun: '#fff8ee', navy: '#0b1a2a' },
   },
 };
 

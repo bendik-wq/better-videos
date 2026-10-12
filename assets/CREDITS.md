@@ -184,3 +184,14 @@ code (no third-party models). Flags are drawn in code. Crew silhouettes are `eng
 | `assets/footage/clips/ships-lcs-formation.mp4` | Starter-pack clip (USS Independence LCS 2 and USS Coronado LCS 4, Pacific, 23 April 2014; MCSC Keith DeVinney, U.S. Navy) | Public domain (US Navy work) | https://commons.wikimedia.org/wiki/File:LCS_Formation_Displays_One_of_Navy%27s_Newest_Platforms.ogv |
 | `assets/pbr/stone.*` (used by the Khasab fjord walls) | Poly Haven `large_sandstone_blocks` (already in the PBR library) | CC0 | https://polyhaven.com/a/large_sandstone_blocks |
 - projects/hormuz/assets/geo/world.json: simplified from Natural Earth 1:10m admin-0 countries. Public domain. https://www.naturalearthdata.com
+
+## Episode 4, "LIVE WIRE" (projects/blackout): fonts, night-lights, geo
+
+| File | What | Licence | Source |
+|---|---|---|---|
+| `projects/blackout/assets/fonts/BigShouldersDisplay.ttf` (+ `OFL-BigShouldersDisplay.txt`) | Big Shoulders Display (variable, wght 100–900): the episode's condensed industrial display face (titles, chapter cards, big numbers) | SIL Open Font License 1.1 | github.com/google/fonts `ofl/bigshouldersdisplay/BigShouldersDisplay[wght].ttf` (The Big Shoulders Project Authors), fetched 2026-10-12 |
+| `projects/blackout/assets/fonts/VT323-Regular.ttf` (+ `OFL-VT323.txt`) | VT323 (a DEC VT320 terminal face): the SCADA/CRT data and caption type, with a bloom/scanline treatment in the CRT pass | SIL Open Font License 1.1 | github.com/google/fonts `ofl/vt323/VT323-Regular.ttf` (The VT323 Project Authors, Peter Hull), fetched 2026-10-12 |
+| `projects/blackout/assets/night/east-europe.jpg` (+ `.json`) | Night-lights texture over eastern Europe (14–42°E, 43–56°N), for the orbit-lights set's regional patch whose districts switch off on cue | Public domain (NASA) | NASA Black Marble 2016 (500 m, tile C1), https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_C1.jpg, cropped 2026-10-12. Credit: "NASA Earth Observatory / Black Marble 2016" |
+| `projects/blackout/assets/geo/vectors.json` | Coast, borders, states and country outlines for Ukraine, the US, Poland, Russia, Belarus (map-ops set) | Public domain | Natural Earth 1:10m (naturalearthdata.com), extracted and simplified from `projects/palantir/assets/geo/vectors.json` (Natural Earth via github.com/nvkelso/natural-earth-vector) |
+
+The LIVE WIRE globe/orbit shots reuse the NASA Blue Marble / Black Marble / cloud globe textures in `assets/world/earth/` (credited above). All episode-4 3D sets (the oscilloscope, one-line diagram, SCADA HMI, control room, substation, winter town, direct-flash still life, documents, attacker terminal) are original procedural code. Public-domain footage used via engine/footage.js (control rooms: NASA Apollo MCC / Artemis / SAGE; server room: NASA Ames; cities at night: NASA ISS) is credited in `assets/footage/clips/*.json`.

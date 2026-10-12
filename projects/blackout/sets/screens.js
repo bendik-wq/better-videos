@@ -39,7 +39,7 @@ export default function makeScreens(H) {
   async function scope(ctx, shot) {
     const P = shot.params ?? {}, mode = P.mode ?? 'steady', D = shot.duration;
     const at = H.cue(shot, P.at, mode === 'corner' ? 1.6 : Math.min(2.2, D * 0.45));
-    const smode = mode === 'corner' ? (P.scopeMode ?? 'steady') : mode;
+    const smode = mode === 'corner' ? (P.scopeMode ?? 'steady') : mode === 'end' ? 'flat' : mode;
     const label = P.label ?? (mode === 'drop' ? 'GRID FREQUENCY · UKRAINE' : 'GRID FREQUENCY');
     return crtSet(ctx, shot, (g, t, p, S, W, Ht) => {
       // the locked camera on the tube creeps in by 3 % over the shot (Fincher: precise, slow)
@@ -65,6 +65,11 @@ export default function makeScreens(H) {
         for (const ln of lines) { const s = ln.slice(0, Math.max(0, k)); k -= ln.length + 1; glowText(g, s, W * 0.08, y, { font: `${(P.size ?? 96) * S}px ${FONT.term}` });
           if (!cur && k < 0) { g.font = `${(P.size ?? 96) * S}px ${FONT.term}`; LW.cursorBlock(g, W * 0.08 + g.measureText(s).width + 6 * S, y, (P.size ?? 96) * S, t, { on: true }); cur = true; }
           y += (P.size ?? 96) * S * 1.05; }
+      }
+      if (mode === 'end') {
+        // flatline, then the tube collapses to a dot that holds 1 s and goes out
+        const tc = at + (P.hold ?? 1.0), ky = range(t, tc, tc + 0.45), kx = range(t, tc + 0.4, tc + 0.75), dotOut = range(t, tc + 1.75, tc + 2.0);
+        return { t, sqY: Math.max(0.004, 1 - Math.pow(ky, 2) * 0.996), sqX: Math.max(0.006, 1 - Math.pow(kx, 1.5) * 0.994), power: 1 - dotOut };
       }
       return { t, power: 1 };
     }, { curve: 0.14, bloom: 1.0 });
@@ -100,8 +105,8 @@ export default function makeScreens(H) {
   async function title(ctx, shot) {
     const P = shot.params ?? {}, D = shot.duration, END = !!P.end;
     const kicker = String(P.kicker ?? 'THE HACKERS WHO CAN').toUpperCase();
-    const big = (P.lines ?? ['TURN OFF', 'THE POWER']).map(s => s.toUpperCase());
-    const fail = END ? Infinity : (P.failAt ?? D - 1.5);
+    const big = (P.lines ?? ['TURN OFF', 'THE LIGHTS']).map(s => s.toUpperCase());
+    const fail = P.fail ? (P.failAt ?? D - 1.5) : Infinity; // a title holds; it only dies when params.fail is set (the grid-dies beat)
     // per-letter strike times (deterministic), kicker first, then the big lines
     const letters = [];
     const pushLine = (txt, line) => [...txt].forEach((ch, i) => letters.push({ ch, line, i, t0: 0.55 + (line === 0 ? i * 0.035 : 0.75 + (line - 1) * 0.42 + i * 0.07 + hash(i, line) * 0.12) * (END ? 1.4 : 1), die: fail + hash(i, line, 'd') * 0.9 }));
@@ -123,7 +128,7 @@ export default function makeScreens(H) {
       }
       g.letterSpacing = '0px';
       // the 50 Hz trace along the bottom: steady, stutters as the power fails, flatlines
-      const mode = END ? 'steady' : 'flat';
+      const mode = P.fail ? 'flat' : 'steady';
       LW.drawScope(g, [W * 0.18, Ht * 0.81, W * 0.64, Ht * 0.12], t, { mode: t > fail - 0.8 && t < fail ? 'stutter' : mode, at: fail + 0.2, grid: 0, readout: false, cycles: 6, amp: 0.4, width: 2.2, scale: S, alpha: sstep(0.5, 1.2, t) * 0.8 });
       if (P.sub) glowText(g, String(P.sub).toUpperCase(), W / 2, Ht * 0.96, { font: `${34 * S}px ${FONT.term}`, align: 'center', alpha: 0.6 * sstep(2.4, 3, t) });
       return { t, sqX, sqY };
@@ -189,8 +194,18 @@ export default function makeScreens(H) {
     ukraine: { box: [21.6, 43.9, 40.6, 52.8], pins: [
       { name: 'IVANO-FRANKIVSK', lon: 24.71, lat: 48.92, sub: 'PRYKARPATTYAOBLENERGO' }, { name: 'CHERNIVTSI', lon: 25.94, lat: 48.29, sub: 'CHERNIVTSIOBLENERGO' },
       { name: 'KYIV', lon: 30.52, lat: 50.45, sub: 'KYIVOBLENERGO' }] },
-    us: { box: [-125.5, 23.5, -66.5, 50], pins: [] },
+    us: { box: [-125.5, 23.5, -66.5, 50], pins: [], region: 'us', home: 'USA' },
+    kyiv: { box: [27.6, 48.6, 33.6, 52.0], region: 'ua', home: 'UKR', pins: [
+      { name: 'KYIV', lon: 30.52, lat: 50.45, dx: 26, dy: 40 }, { name: 'NORTH OF KYIV · 330 kV', lon: 30.45, lat: 50.66, sub: 'TRANSMISSION SUBSTATION · 17 DEC 2016', red: true }] },
+    northeast: { box: [-90, 37, -69, 47.5], region: 'us', home: 'USA', pins: [
+      { name: 'CLEVELAND–AKRON', lon: -81.6, lat: 41.2, sub: '14 AUG 2003', red: true }] },
+    littleton: { box: [-77, 39.5, -67, 46.5], region: 'us', home: 'USA', pins: [
+      { name: 'LITTLETON, MASSACHUSETTS', lon: -71.49, lat: 42.54, sub: 'LELWD · >300 DAYS INSIDE', red: true }] },
+    poland: { box: [13.5, 48.8, 24.5, 55.0], region: 'pl', home: 'POL', pins: [] },
   };
+  // the 2003 cascade: grid nodes go dark as a front spreads from Cleveland–Akron (≈7 min, compressed to the shot)
+  const NE_CITIES = [[-81.69, 41.5], [-81.52, 41.08], [-83.05, 42.33], [-79.38, 43.65], [-75.7, 45.42], [-74.0, 40.71], [-73.75, 42.65], [-78.88, 42.89], [-80.0, 40.44], [-77.61, 43.16],
+    [-76.15, 43.05], [-73.57, 45.5], [-83.55, 41.65], [-84.55, 42.73], [-82.99, 39.96], [-74.17, 40.73], [-72.68, 41.76], [-79.87, 43.25], [-81.25, 42.98], [-85.67, 42.96], [-75.16, 39.95]];
   async function mapOps(ctx, shot) {
     const P = shot.params ?? {}, view = P.view ?? 'ukraine', D = shot.duration;
     const data = await geo();
@@ -211,7 +226,7 @@ export default function makeScreens(H) {
         g.strokeStyle = 'rgba(93,255,158,0.07)'; g.lineWidth = 1 * S;
         for (let lo = Math.floor(lo0 - 10); lo <= lo1 + 10; lo += 2) { g.beginPath(); g.moveTo(X(lo), 0); g.lineTo(X(lo), Ht); g.stroke(); }
         for (let la = Math.floor(la0 - 10); la <= la1 + 10; la += 2) { g.beginPath(); g.moveTo(panel[0], Y(la)); g.lineTo(panel[0] + panel[2], Y(la)); g.stroke(); }
-        const R = data.regions[vw === 'ukraine' ? 'ua' : 'us'];
+        const R = data.regions[V.region ?? (vw === 'ukraine' ? 'ua' : 'us')];
         const draw = (L, style, w, close = false) => { for (const a of L ?? []) { g.beginPath(); for (let i = 0; i < a.length; i += 2) { const x = X(a[i]), y = Y(a[i + 1]); i ? g.lineTo(x, y) : g.moveTo(x, y); } if (close) { g.fillStyle = style; g.fill(); } else { g.strokeStyle = style; g.lineWidth = w; g.stroke(); } } };
         const reveal = sstep(0, 0.9, t);
         g.globalAlpha = reveal;
@@ -220,7 +235,7 @@ export default function makeScreens(H) {
         draw(R.borders, 'rgba(93,255,158,0.38)', 1.4 * S);
         draw(R.coast, 'rgba(93,255,158,0.5)', 1.4 * S);
         // the subject country, brighter
-        const home = data.countries[vw === 'ukraine' ? 'UKR' : 'USA'];
+        const home = data.countries[V.home ?? (vw === 'ukraine' ? 'UKR' : 'USA')] ?? [];
         g.globalCompositeOperation = 'lighter';
         draw(home, 'rgba(93,255,158,0.07)', 0, true);
         for (const a of home) glowPath(g, Array.from({ length: a.length / 2 }, (_, i) => [X(a[i * 2]), Y(a[i * 2 + 1])]), { width: 2 * S, alpha: 0.7 * reveal, glow: 0.6 });
@@ -229,6 +244,22 @@ export default function makeScreens(H) {
         const sw = ((t * 0.25) % 1) * panel[2] + panel[0];
         const gr = g.createLinearGradient(sw - 220 * S, 0, sw, 0); gr.addColorStop(0, 'rgba(93,255,158,0)'); gr.addColorStop(0.85, 'rgba(93,255,158,0.045)'); gr.addColorStop(1, 'rgba(93,255,158,0)');
         g.fillStyle = gr; g.fillRect(sw - 220 * S, 0, 220 * S, Ht);
+        // cascade (northeast view, or params.cascade): nodes trip as the front passes; a ring marks the front
+        if (vw === 'northeast' || P.cascade) {
+          const c0 = P.cascadeFrom ?? [-81.6, 41.2], t0 = H.cue(shot, P.cascadeAt, 1.2), sp = P.cascadeSpan ?? Math.max(2.5, D - t0 - 1.2);
+          const front = smoother(range(t, t0, t0 + sp)) * 14; // degrees
+          const nodes = [...NE_CITIES]; const rr = LW.rng(41); for (let i = 0; i < 140; i++) nodes.push([lo0 + rr() * (lo1 - lo0), la0 + rr() * (la1 - la0)]);
+          for (const [lon, lat] of nodes) { if (!(lat > 38 && lon > -88)) continue; const dd = Math.hypot((lon - c0[0]) * 0.75, lat - c0[1]) + hash(lon, lat) * 0.6;
+            const x = X(lon), y = Y(lat), on = dd > front; const big = NE_CITIES.some(c => c[0] === lon);
+            g.save(); g.globalCompositeOperation = 'lighter';
+            const r = (big ? 5 : 2.2) * S;
+            if (on) { g.fillStyle = PAL.sodium; g.globalAlpha = big ? 0.9 : 0.55; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.globalAlpha = 0.15; g.beginPath(); g.arc(x, y, r * 4, 0, 7); g.fill(); }
+            else { const k = range(front - dd, 0, 0.5); g.fillStyle = PAL.red; g.globalAlpha = (1 - k) * 0.9; g.beginPath(); g.arc(x, y, r * (1 + k * 2), 0, 7); g.fill(); }
+            g.restore(); }
+          if (front > 0 && front < 14) { g.save(); g.globalCompositeOperation = 'lighter'; g.strokeStyle = PAL.red; g.lineWidth = 2 * S; g.globalAlpha = 0.35; g.beginPath(); g.ellipse(X(c0[0]), Y(c0[1]), front / 0.75 * kx * sc, front * sc, 0, 0, 7); g.stroke(); g.restore(); }
+          const mins = Math.min(7, front / 14 * 7 * 1.35);
+          glowText(g, `T+${Math.floor(mins)}:${String(Math.floor((mins % 1) * 60)).padStart(2, '0')}`, panel[0] + panel[2] - 40 * S, Ht * 0.18, { font: `${64 * S}px ${FONT.term}`, align: 'right', color: front > 0 ? PAL.red : PAL.phosphor, alpha: 0.9 });
+        }
         // pins in this view
         for (const pn of pins.filter(q => (q.view ?? views[0]) === vw)) {
           if (t < pn.t0) continue; const k = range(t, pn.t0, pn.t0 + 0.4), x = X(pn.lon), y = Y(pn.lat), col = pn.red ? PAL.red : PAL.phosphor;
@@ -249,7 +280,7 @@ export default function makeScreens(H) {
           glowPath(g, pts, { width: 2.4 * S, color: a.red === false ? PAL.phosphor : PAL.red, core: '#ffd8d4', glow: 0.8 });
         }
         if (views.length === 2) { g.strokeStyle = 'rgba(93,255,158,0.4)'; g.lineWidth = 2 * S; g.beginPath(); g.moveTo(panel[0] + panel[2] - 1, Ht * 0.08); g.lineTo(panel[0] + panel[2] - 1, Ht * 0.92); g.stroke(); }
-        glowText(g, (P.labels?.[vi] ?? (vw === 'ukraine' ? 'UKRAINE' : 'UNITED STATES')), panel[0] + 40 * S, Ht * 0.1, { font: `600 ${54 * S}px ${FONT.display}`, alpha: 0.85 * reveal, spacing: 4 * S });
+        glowText(g, (P.labels?.[vi] ?? ({ ukraine: 'UKRAINE', kyiv: 'KYIV', us: 'UNITED STATES', northeast: 'NORTH-EAST · 14 AUG 2003', littleton: 'MASSACHUSETTS', poland: 'POLAND' }[vw])), panel[0] + 40 * S, Ht * 0.1, { font: `600 ${54 * S}px ${FONT.display}`, alpha: 0.85 * reveal, spacing: 4 * S });
         g.restore();
       });
       if (P.title) glowText(g, String(P.title).toUpperCase(), W * 0.96, Ht * 0.1, { font: `${40 * S}px ${FONT.term}`, align: 'right', alpha: 0.7 });

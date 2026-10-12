@@ -3,7 +3,8 @@
 // Every shot in project.mjs names a `set`. Set libraries, merged in this order (a later one wins):
 //   makeScreens(H)   ./sets/screens.js   CRT graphics: scope, chapter, title, numbers, quote, map-ops, terminal screen
 //   makeGrid(H)      ./sets/grid.js      oneline (draw, trip, extrude), cursor (subpixel macro)
-//   makeRooms(H)     ./sets/rooms.js     control-room, terminal (attacker's hands), flash, doc
+//   makeRooms(H)     ./sets/rooms.js     control-room (the dispatch centre, its operators, the town outside)
+//   makeStill(H)     ./sets/still.js     flash (direct-flash stills), doc, quote printout, terminal (attacker's hands)
 //   makeOutside(H)   ./sets/outside.js   substation, city-dark
 //   makeOrbit(H)     ./sets/orbit.js     orbit-lights, cold-open (the oner)
 //   makeFootage(H)   ./sets/footage.js   footage
@@ -29,7 +30,7 @@ import * as LW from '/projects/blackout/sets/lw.js';
 import * as PC from '/projects/blackout/sets/power-cuts.js';
 import { planCuts } from '/projects/blackout/cuts.mjs';
 
-const LIBS = ['screens', 'grid', 'rooms', 'outside', 'orbit', 'footage'];
+const LIBS = ['screens', 'grid', 'rooms', 'still', 'outside', 'orbit', 'footage'];
 const loaded = [], loadErrors = {};
 for (const n of LIBS) {
   try { const m = await import(`/projects/blackout/sets/${n}.js`); loaded.push(m.default ?? Object.values(m).find(f => typeof f === 'function' && /^make/.test(f.name))); }
@@ -57,12 +58,12 @@ function plate(layer, corner = 'tl', { w = 1100, h = 380, alpha = 0.85 } = {}) {
 function caption(layer, text, css = 'left:5.5%;top:7.5%', { at = 0.35, cps = 26 } = {}) {
   if (!text) return null;
   plate(layer, /right/.test(css) ? (/bottom/.test(css) ? 'br' : 'tr') : (/bottom/.test(css) ? 'bl' : 'tl'), { w: 1000, h: 300 });
-  const el = K.div(layer, `${css};${CAP}`, '');
+  const el = K.div(layer, `opacity:1;${css};${CAP}`, '');
   el.type = (t) => { const n = LW.typeCount(text, t, at, cps, 3); el.innerHTML = LW.typed(text, n).replace(/ /g, '&nbsp;') + (n < text.length || Math.floor(t * 2.2) % 2 === 0 ? '<span style="opacity:.85">▌</span>' : ''); };
   el.type(0); return el;
 }
 const sourceLine = (layer, text) => { if (!text) return null; plate(layer, 'br', { w: 900, h: 170, alpha: 0.75 });
-  return K.div(layer, `right:4.2%;bottom:4.6%;font:500 .62em 'Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(216,255,230,.78);text-shadow:0 0 10px rgba(0,0,0,.8)`, text); };
+  return K.div(layer, `opacity:1;right:4.2%;bottom:4.6%;font:500 .62em 'Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(216,255,230,.78);text-shadow:0 0 10px rgba(0,0,0,.8)`, text); };
 const H = { THREE, K, M, CAM, C, TR, LW, PAL, pal: PAL, base, layerOf, plate, CAP, RED: LW.RED, caption, sourceLine, sc, wt: M.wt, cue: LW.cue };
 
 // ---------------------------------------------------------------- slate for a missing or failing set (draft only)
