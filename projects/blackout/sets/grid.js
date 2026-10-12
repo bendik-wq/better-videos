@@ -70,7 +70,7 @@ export function hmiState(t, cfg) {
     cur = LW.ghostPath(t, rest, [bx[0] + 4 * s, bx[1] + 3 * s], { at: tm, dur: 1.5, seed: 5 });
     if (t > tDlg) cur = LW.ghostPath(t, [bx[0] + 4 * s, bx[1] + 3 * s], btn, { at: tDlg + 0.25, dur: Math.max(0.6, tOpen - tDlg - 0.5), seed: 9 });
     down = (t > tArrive && t < tArrive + 0.12) || (t > tOpen && t < tOpen + 0.12);
-    dialog = t > tDlg ? (t < tOpen + 0.1 ? 1 : 0) : 0;
+    dialog = LW.sstep(tDlg, tDlg + 0.14, t) * (1 - LW.sstep(tOpen + 0.06, tOpen + 0.2, t));
     open[target] = t > tOpen + 0.12 ? 1 : 0;
     if (t > tOpen + 0.3) alarms = [...alarms, [clock(0).slice(11), `SS-07 ${target} ${LW.HMI_BREAKERS.find(b => b[0] === target)?.[3] ?? ''}  CB OPEN  (REMOTE)`]];
     if (t > tOpen + 1.0) alarms = [...alarms, [clock(0).slice(11), `SS-07 ${target}  FEEDER DE-ENERGISED`]];

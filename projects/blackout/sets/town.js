@@ -240,9 +240,9 @@ export function buildCentre(scene, opts = {}) {
     const xs = [-C.w / 2, ...cols.flatMap(x => [x - C.winW / 2, x + C.winW / 2]), C.w / 2];
     for (let i = 0; i < xs.length; i += 2) if (xs[i + 1] - xs[i] > 0.01) add(xs[i + 1] - xs[i], C.winH, 0.3, (xs[i] + xs[i + 1]) / 2, (ws + we) / 2, -0.15);
     for (const x of cols) {
-      add(C.winW, 0.06, 0.12, x, ws + 0.03, -0.12, frameM); add(C.winW, 0.06, 0.12, x, we - 0.03, -0.12, frameM); add(0.06, C.winH, 0.12, x, (ws + we) / 2, -0.12, frameM);
+      add(C.winW, 0.06, 0.12, x, ws + 0.03, -0.12, frameM); add(C.winW, 0.06, 0.12, x, we - 0.03, -0.12, frameM); if (!(fi === 1 && x === heroCol)) add(0.06, C.winH, 0.12, x, (ws + we) / 2, -0.12, frameM);
       const room = fi === 1 && Math.abs(x) < (opts.roomHalf ?? 8);
-      const gl = new THREE.Mesh(new THREE.PlaneGeometry(C.winW, C.winH), glassM); gl.position.set(x, (ws + we) / 2, -0.1); gl.renderOrder = 5; g.add(gl); glass.push(gl);
+      if (!(fi === 1 && x === heroCol && opts.openHero)) { const gl = new THREE.Mesh(new THREE.PlaneGeometry(C.winW, C.winH), glassM); gl.position.set(x, (ws + we) / 2, -0.1); gl.renderOrder = 5; g.add(gl); glass.push(gl); }
       if (!room) { const k = hash(x, fi, 'w'), lit = k < 0.55; const b = new THREE.Mesh(new THREE.PlaneGeometry(C.winW, C.winH), backM(lit, k)); b.position.set(x, (ws + we) / 2, -0.9); g.add(b); glowWins.push({ mesh: b, lit, k }); }
     }
   });

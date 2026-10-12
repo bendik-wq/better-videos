@@ -59,7 +59,7 @@ function caption(layer, text, css = 'left:5.5%;top:7.5%', { at = 0.35, cps = 26 
   if (!text) return null;
   plate(layer, /right/.test(css) ? (/bottom/.test(css) ? 'br' : 'tr') : (/bottom/.test(css) ? 'bl' : 'tl'), { w: 1000, h: 300 });
   const el = K.div(layer, `opacity:1;${css};${CAP}`, '');
-  el.type = (t) => { const n = LW.typeCount(text, t, at, cps, 3); el.innerHTML = LW.typed(text, n).replace(/ /g, '&nbsp;') + (n < text.length || Math.floor(t * 2.2) % 2 === 0 ? '<span style="opacity:.85">▌</span>' : ''); };
+  el.type = (t) => { if (t < at - 0.05) { el.innerHTML = ''; return; } const n = LW.typeCount(text, t, at, cps, 3); el.innerHTML = LW.typed(text, n).replace(/ /g, '&nbsp;') + (n < text.length || Math.floor(t * 2.2) % 2 === 0 ? '<span style="opacity:.85">▌</span>' : ''); };
   el.type(0); return el;
 }
 const sourceLine = (layer, text) => { if (!text) return null; plate(layer, 'br', { w: 900, h: 170, alpha: 0.75 });

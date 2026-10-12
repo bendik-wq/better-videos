@@ -149,7 +149,7 @@ export default function makeOrbit(H) {
     // ---- the town, the dispatch centre and the control room (one three.js scene)
     const scene = new THREE.Scene(); scene.background = new THREE.Color(0x05080d);
     const town = buildTown(scene, { radius: 1900, poleRadius: 420, fog: 0.00055 });
-    const centre = buildCentre(scene);
+    const centre = buildCentre(scene, { openHero: true });
     const room = await buildRoom(scene, ctx);
     const moon = new THREE.HemisphereLight(0x22324a, 0x06080a, 0.25); scene.add(moon);
     for (const [x, z] of [[-11, 13], [9, 13]]) { const s = new THREE.SpotLight(0xffa24a, 70, 40, 0.75, 0.6, 1.6); s.position.set(x, 9, z); s.target.position.set(x * 0.4, 4, -1); scene.add(s, s.target);
@@ -201,22 +201,31 @@ export default function makeOrbit(H) {
     const camera = new THREE.PerspectiveCamera(34, ctx.width / ctx.height, 0.01, 1e8);
     const layer = H.layerOf(ctx);
     const cap = P.caption ? H.caption(layer, P.caption, 'left:5.5%;bottom:8%', { at: tMove }) : null;
-    const tod = { ...W.TOD.night, sunEl: -75, cityGlow: [1, 0.55, 0.25].map(x => x * 0.12), cloud: [0.11, 0.115, 0.13], stars: 0.7 };
+    const tod = { ...W.TOD.night, sunEl: -75, cityGlow: [1, 0.55, 0.25].map(x => x * 0.2), cloud: [0.2, 0.21, 0.24], stars: 0.7 };
+    const worldState = (t) => ({ t, tod, exposure: lerp(1.3, 1.7, sstep(tC - 1.5, tC - 0.1, t)), cloudFog: sstep(tC - 1.4, tC - 0.05, t) });
+    // measure the whiteout: render the world once at the handover instant and read the frame's mean colour;
+    // the town's veil starts from exactly that colour, so the switch inside the cloud has no step (deterministic)
+    { const r = ctx.renderer, gl = r.getContext(); oner.camera(tS - 1e-3, camera); w.setState(worldState(tS - 1e-3)); w.render(r, camera);
+      const W0 = gl.drawingBufferWidth, H0 = gl.drawingBufferHeight, n = 8, px = new Uint8Array(4); let acc = [0, 0, 0];
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { gl.readPixels(Math.floor(W0 * (i + 0.5) / n), Math.floor(H0 * (j + 0.5) / n), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); acc = acc.map((a, k) => a + px[k]); }
+      veil.material.color.setRGB(...acc.map(a => a / n / n / 255), THREE.SRGBColorSpace); }
     let phase = 'world', tNow = 0, blackK = 0;
     return { scene, camera, layer, toneMapping: THREE.ACESFilmicToneMapping,
-      update(t) {
+      update(t0) {
+        const t = t0 + (P.from ?? 0); // params.from: start the oner part-way (look-dev of a seam)
         tNow = t;
         oner.camera(t, camera);
         phase = t < tS ? 'world' : 'town';
         blackK = t >= tDark ? 1 : 0;
         if (phase === 'world') {
           // whiteout through the deck: we fly into the snow cloud
-          w.setState({ t, tod, exposure: lerp(1.3, 1.7, sstep(tC - 1.5, tC - 0.1, t)), cloudFog: sstep(tC - 1.4, tC - 0.05, t) });
+          w.setState(worldState(t));
+          veil.material.opacity = sstep(tS - 0.4, tS - 0.02, t); // the whiteout settles into the measured veil before the switch
           patch.set(t, {});
         } else {
           const alt = camera.position.y;
           camera.near = alt > 300 ? 2 : alt > 40 ? 0.3 : 0.004; camera.far = alt > 300 ? 9000 : 2500; camera.updateProjectionMatrix();
-          veil.material.opacity = 1 - sstep(tS + 0.2, tC + 2.6, t);
+          veil.material.opacity = 1 - sstep(tS + 0.15, tC + 2.8, t);
           const st = hmiAt(t);
           room.update(t, { banks: [1, 1, 1, 1], screens: 1, hmi: st, mimicDead: st.opened ? 0.04 : 0 });
           town.update(t, { pow: () => 1, camera, height: ctx.height });
@@ -229,7 +238,7 @@ export default function makeOrbit(H) {
       },
       render(r) {
         if (blackK >= 1) { r.setClearColor(0x000000, 1); r.clear(); return; }
-        if (phase === 'world') { w.render(r, camera); return; }
+        if (phase === 'world') { w.render(r, camera); if (veil.material.opacity > 0.001) { const ac = r.autoClear; r.autoClear = false; r.render(vScene, vCam); r.autoClear = ac; } return; }
         r.toneMapping = THREE.ACESFilmicToneMapping; r.render(scene, camera);
         if (veil.material.opacity > 0.001) { const ac = r.autoClear; r.autoClear = false; r.render(vScene, vCam); r.autoClear = ac; }
       } };

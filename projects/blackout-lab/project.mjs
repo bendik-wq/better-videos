@@ -33,6 +33,7 @@ const reel = [
 const LISTS = {
   reel,
   cold: [{ id: 'cold', set: 'cold-open', params: { caption: 'RECONSTRUCTION' }, min: 40 }],
+  seams: [9.45, 20.8, 31.95, 34.3].map((f, i) => ({ id: `seam${i}`, set: 'cold-open', params: { caption: 'RECONSTRUCTION', from: f, trans: 'cut' }, min: 0.75 })),
   screens: [
     S('scope-steady', 'scope', { mode: 'steady' }), S('scope-drop', 'scope', { mode: 'drop', at: 0.6, span: 2.5 }, { min: 5 }),
     S('scope-corner', 'scope', { mode: 'corner', at: 0.5, text: '230,000 PEOPLE. SIX HOURS IN THE DARK.' }),
