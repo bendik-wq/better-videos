@@ -23,7 +23,7 @@ Every episode is built from this library. Read the index entries before planning
 - **Worlds and oners.** `engine/world/` (`W.create({place, tod, clouds})` →
   `road / city / tower / traffic / route`, plus a map layer, labels, pins and a NASA globe) and
   `engine/oner.js` (one continuous camera across scales and world states, keyed to spoken
-  words). The world-lab hero oner goes sky → clouds → car chase → HQ tower → map → globe. New
+  words). The world-lab hero oner goes sky → clouds → car chase → HQ tower → map → globe. World options: `W.create({ renderScale: 0.8, shadows: false|{size}, mirror, bloom })`, plus per-frame `wet` and the `envDay`/`envNight` HDRIs. The world now uses PBR (`assets/pbr`), cascaded sun shadows, AgX and bloom. It costs about 1.2x the old world, so turn shadows off in night shots. Realism rule: aerials and real places look best as real NAIP imagery or PD footage. Use the 3D world for shots that footage can't give you, such as impossible oners, map transitions and the camera moving through clouds. New
   places come from `python3 engine/world/bake.py place <name> <lat> <lon>`. Demo:
   `projects/world-lab`, `renders/world-lab/`.
 - **Transitions.** `engine/transitions.js` (`TR.create`, `fx.composite`, `TR.meta[name]`) has 36
