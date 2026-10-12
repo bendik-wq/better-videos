@@ -62,6 +62,14 @@ body { font-family: var(--display); -webkit-user-select: none; user-select: none
 #xh i:nth-child(1), #xh i:nth-child(2) { width: 2px; height: 9px; left: -1px; }
 #xh i:nth-child(3), #xh i:nth-child(4) { height: 2px; width: 9px; top: -1px; }
 #dot { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #ff3b2a; box-shadow: 0 0 4px #ff3b2a; }
+#dot.reddot { width: 6px; height: 6px; margin: -3px 0 0 -3px; box-shadow: 0 0 6px 1px #ff3b2a; }
+#dot.holo { width: 4px; height: 4px; margin: -2px 0 0 -2px; }
+#dot.holo::after { content: ""; position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -16.5px 0 0 -16.5px; border: 1.5px solid rgba(255,59,42,0.95); border-radius: 50%; box-shadow: 0 0 5px #ff3b2a, inset 0 0 3px #ff3b2a; }
+#dot.acog { width: 0; height: 0; margin: 0; border-radius: 0; background: transparent; box-shadow: none; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid #ff3b2a; transform: translate(-6px, 0); filter: drop-shadow(0 0 3px #ff3b2a); }
+#acogRing { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 0, transparent calc(min(40vw, 40vh) - 1px), rgba(5,5,5,0.92) min(40vw, 40vh)); }
+#acogRing::before, #acogRing::after { content: ""; position: absolute; background: rgba(0,0,0,0.75); }
+#acogRing::before { left: 50%; top: calc(50% + 14px); width: 1.5px; height: min(30vw, 30vh); margin-left: -0.75px; }
+#acogRing::after { top: 50%; left: calc(50% - min(30vw, 30vh)); width: calc(min(60vw, 60vh)); height: 1.5px; margin-top: -0.75px; }
 #hitm { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; transform: translate(-50%,-50%) rotate(45deg); opacity: 0; }
 #hitm::before, #hitm::after { content: ""; position: absolute; background: var(--hud); }
 #hitm::before { left: 14px; top: 0; width: 2px; height: 30px; clip-path: polygon(0 0,100% 0,100% 33%,0 33%,0 67%,100% 67%,100% 100%,0 100%); }
@@ -237,6 +245,11 @@ body.touch #center { top: 30%; }
 .chal .bar { grid-column: 1 / -1; }
 .chal .done { color: var(--olive); }
 .guns { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; }
+.smith { border: 1px solid var(--rule); padding: 10px 12px; margin-bottom: 10px; display: grid; gap: 8px; }
+.smith h3 { margin: 0; font: 700 18px var(--display); letter-spacing: 0.06em; text-transform: uppercase; } .smith h3 small { font: 500 13px var(--mono, monospace); color: var(--dim); margin-left: 8px; }
+.slotrow { display: grid; grid-template-columns: 110px 1fr; gap: 8px; align-items: center; } .slotname { font-size: 14px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.slotrow .seg { flex-wrap: wrap; } .slotrow .seg button { font-size: 14px; padding: 6px 10px; } .slotrow .seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+@media (max-width: 560px) { .slotrow { grid-template-columns: 1fr; } }
 .guns button { text-align: left; font: inherit; color: var(--hud); background: rgba(236,230,214,0.05); border: 1px solid var(--rule); padding: 8px 10px; cursor: pointer; display: grid; gap: 2px; }
 .guns button b { font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
 .guns button small { font-family: var(--mono); font-size: 11px; color: var(--dim); }
@@ -257,6 +270,7 @@ body.touch #matchbar { top: 26px; } body.touch #medal { top: 18%; } body.touch #
 <div id="vig"></div>
 <div id="hurt"></div>
 <div id="scope" hidden></div>
+<div id="acogRing" hidden></div>
 
 <div id="hud" hidden>
   <canvas id="mini" width="336" height="336"></canvas>
@@ -354,7 +368,7 @@ const hemi = new THREE.HemisphereLight("#c6d3e2", "#6e6253", 0.35); scene.add(he
 const sun = new THREE.DirectionalLight("#fff1dc", 1.7); sun.position.set(-300, 220, 160); scene.add(sun);
 // Sky: a photographed partly-cloudy HDRI (Poly Haven, CC0), which also lights every PBR surface.
 const skyTex = new THREE.TextureLoader().load("world/sky.jpg", (t) => {
-  try { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(t).texture; pm.dispose(); } catch (e) { /* no env lighting */ }
+  try { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(t).texture; vmScene.environment = scene.environment; pm.dispose(); } catch (e) { /* no env lighting */ }
 });
 skyTex.encoding = THREE.sRGBEncoding;
 const SUN_DIR = new THREE.Vector3(0.536, 0.74, -0.407).normalize(); // where the sun is in that photo
@@ -938,11 +952,54 @@ function challengeEvent(id, amt = 1) {
 function postLeaderboard() {
   fetchLeaderboard({ key: profile.key, pub: profile.pub, nm: myName, xp: profile.xp, lvl: myLevel(), pr: profile.pr, k: profile.kills, d: profile.deaths, w: profile.wins });
 }
+// ================= gunsmith: attachments, unlocked by kills with each gun =================
+const MODS = {
+  optic: [{ id: "", name: "Iron sights" }, { id: "reddot", name: "Red Dot", kills: 5, desc: "Clean dot reticle" }, { id: "holo", name: "Holographic", kills: 25, desc: "Ring reticle, quicker aim" }, { id: "acog", name: "ACOG 4x", kills: 50, desc: "Magnified chevron sight" }],
+  muzzle: [{ id: "", name: "None" }, { id: "supp", name: "Suppressor", kills: 10, desc: "Quiet, off the minimap when firing, -15% range" }, { id: "comp", name: "Compensator", kills: 35, desc: "-35% recoil" }],
+  under: [{ id: "", name: "None" }, { id: "grip", name: "Foregrip", kills: 15, desc: "-25% recoil" }, { id: "laser", name: "Tactical Laser", kills: 40, desc: "-40% hip-fire spread" }],
+  mag: [{ id: "", name: "Standard" }, { id: "ext", name: "Extended Mags", kills: 20, desc: "+50% magazine, slower reload" }],
+};
+const SLOT_NAMES = { optic: "Optic", muzzle: "Muzzle", under: "Underbarrel", mag: "Magazine" };
+const MOD_CODE = { reddot: "r", holo: "h", acog: "a", supp: "s", comp: "c", grip: "g", laser: "l", ext: "e" };
+const isPistol = (w) => /pistol|revolver/i.test(w.type);
+function modSlots(w) { return w.proj ? [] : w.scope ? ["muzzle", "mag"] : isPistol(w) ? ["muzzle", "under", "mag"] : w.type === "Shotgun" ? ["under", "mag"] : ["optic", "muzzle", "under", "mag"]; }
+function modChoices(w, slot) { return MODS[slot].filter((m) => !(isPistol(w) && slot === "under" && m.id === "grip")); }
+const modUnlocked = (id, m) => !m.kills || profile.pr > 0 || (profile.wk[id] || 0) >= m.kills;
+function modsOf(id) {
+  const w = WEAPONS[widx(id)], saved = (profile.mods && profile.mods[id]) || {}, out = {};
+  for (const slot of modSlots(w)) { const m = modChoices(w, slot).find((x) => x.id === saved[slot]); out[slot] = m && modUnlocked(id, m) ? m.id : ""; }
+  return out;
+}
+const modCode = (m) => Object.values(m || {}).map((x) => MOD_CODE[x] || "").join("");
+const WBASE = WEAPONS.map((w) => ({ ...w }));
+// my attachments change my copy of each gun's numbers (other players' and bots' shots never read these)
+function applyMods() {
+  WEAPONS.forEach((w, i) => {
+    Object.assign(w, WBASE[i]);
+    const m = modsOf(w.id); w.mods = m;
+    if (m.mag === "ext") { w.mag = Math.round(w.mag * 1.5); w.reload *= 1.15; }
+    if (m.under === "grip") w.kick *= 0.75;
+    if (m.under === "laser") w.hip *= 0.6;
+    if (m.muzzle === "comp") w.kick *= 0.65;
+    if (m.muzzle === "supp") w.range *= 0.85;
+    if (m.optic === "acog") w.adsFov = Math.min(w.adsFov, 30);
+    if (m.optic === "holo") w.adsFov = Math.min(w.adsFov + 4, 62);
+  });
+}
+if (!profile.mods || typeof profile.mods !== "object") profile.mods = {};
+applyMods();
 const ammo = WEAPONS.map((w) => w.mag);
 let wIdx = 3, nextShot = 0, reloadEnd = 0, triggerHeld = false, triggerFresh = false, adsHeld = false, adsT = 0, bloom = 0, knifeT = -9, recoilP = 0, recoilY = 0, switchT = 0;
 
 // viewmodel
-const vm = new THREE.Group(); vm.scale.setScalar(0.62); camera.add(vm);
+// The gun and arms render in their own pass with a fixed field of view (like any shooter's viewmodel), so
+// aiming zooms the world without blowing the gun up to fill the screen. The sight line runs through the
+// centre of both cameras, so iron sights and optics still line up exactly with where bullets go.
+const vmScene = new THREE.Scene(), vmCam = new THREE.PerspectiveCamera(72, 1, 0.01, 40); vmScene.add(vmCam);
+vmScene.add(new THREE.HemisphereLight("#c6d3e2", "#6e6253", 0.5));
+{ const l = new THREE.DirectionalLight("#fff1dc", 1.5); l.position.copy(SUN_DIR); vmScene.add(l); }
+function syncVmCam() { camera.updateMatrixWorld(); vmCam.position.setFromMatrixPosition(camera.matrixWorld); vmCam.quaternion.setFromRotationMatrix(camera.matrixWorld); vmCam.updateMatrixWorld(true); }
+const vm = new THREE.Group(); vm.scale.setScalar(0.62); vmCam.add(vm);
 const vmMuzzle = new THREE.Object3D();
 const flash = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.22), new THREE.MeshBasicMaterial({ color: "#ffd27a", transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }));
 flash.visible = false;
@@ -1047,19 +1104,42 @@ function realGun(id, group, camo, shadow) {
     for (const a of [...remotes.values(), ...bots]) if (a.real) a.real.gunId = null;
   }).catch(() => { /* keep the block guns */ });
 })();
+const MOD_MAT = { metal: new THREE.MeshStandardMaterial({ color: new THREE.Color("#1b1c1d").convertSRGBToLinear(), metalness: 0.6, roughness: 0.45, side: THREE.DoubleSide }), poly: new THREE.MeshStandardMaterial({ color: new THREE.Color("#1e1f1f").convertSRGBToLinear(), metalness: 0.1, roughness: 0.7, side: THREE.DoubleSide }), glass: new THREE.MeshBasicMaterial({ color: "#8fd6ff", transparent: true, opacity: 0.16, depthWrite: false }), beam: new THREE.MeshBasicMaterial({ color: "#ff2a1a", transparent: true, opacity: 0.55, depthWrite: false }), dot: new THREE.MeshBasicMaterial({ color: "#ff3b2a" }) };
+function addMods(group, an, mods, w) {
+  if (!mods) return an;
+  const part = (geo, mat, x, y, z, rx = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.x = rx; m.castShadow = true; group.add(m); return m; };
+  const pistol = an.pistol, len = an.len, railY = (an.sight || 0.04) - 0.012, oz = pistol ? -0.06 : -Math.min(0.14, len * 0.22);
+  if (mods.muzzle === "supp") { part(new THREE.CylinderGeometry(0.021, 0.021, pistol ? 0.13 : 0.19, 14), MOD_MAT.metal, 0, 0, -len - (pistol ? 0.065 : 0.095), Math.PI / 2); an.muzzle = -len - (pistol ? 0.13 : 0.19); }
+  if (mods.muzzle === "comp") { part(new THREE.CylinderGeometry(0.017, 0.015, 0.06, 10), MOD_MAT.metal, 0, 0, -len - 0.03, Math.PI / 2); an.muzzle = -len - 0.06; }
+  if (mods.optic) {
+    const k = 1.45, cy = railY + 0.032 * k; // the line of sight now runs through the optic
+    part(new THREE.BoxGeometry(0.024 * k, 0.008 * k, 0.06 * k), MOD_MAT.poly, 0, railY + 0.004 * k, oz);
+    if (mods.optic === "reddot") { part(new THREE.CylinderGeometry(0.02 * k, 0.02 * k, 0.05 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, 0, cy, oz - 0.02 * k); }
+    if (mods.optic === "holo") { const f = 0.027 * k; for (const [x, y, wd, h] of [[0, cy + f, 0.06 * k, 0.006 * k], [0, cy - f, 0.06 * k, 0.006 * k], [-f, cy, 0.006 * k, 0.056 * k], [f, cy, 0.006 * k, 0.056 * k]]) part(new THREE.BoxGeometry(wd, h, 0.075 * k), MOD_MAT.poly, x, y, oz); part(new THREE.PlaneGeometry(0.052 * k, 0.048 * k), MOD_MAT.glass, 0, cy, oz - 0.03 * k); }
+    if (mods.optic === "acog") { part(new THREE.CylinderGeometry(0.02 * k, 0.016 * k, 0.13 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz - 0.01 * k, Math.PI / 2); part(new THREE.CylinderGeometry(0.022 * k, 0.022 * k, 0.03 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz + 0.055 * k, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, 0, cy, oz - 0.07 * k); }
+    an.sight = cy; an.optic = mods.optic; an.opticRear = oz + 0.04 * k;
+  }
+  if (mods.under === "grip") { part(new THREE.CylinderGeometry(0.014, 0.016, 0.085, 10), MOD_MAT.poly, 0, an.fore.y - 0.05, an.fore.z); an.fore = an.fore.clone().add(new V3(0, -0.035, 0.0)); }
+  if (mods.under === "laser") {
+    const lx = pistol ? 0 : 0.026, ly = pistol ? an.grip.y + 0.03 : an.fore.y + 0.012, lz = pistol ? -len * 0.55 : an.fore.z - 0.03;
+    part(new THREE.BoxGeometry(0.018, 0.018, 0.05), MOD_MAT.poly, lx, ly, lz);
+    const beam = part(new THREE.CylinderGeometry(0.0012, 0.0012, 30, 4), MOD_MAT.beam, lx, ly, lz - 15.03, Math.PI / 2); beam.castShadow = false;
+  }
+  return an;
+}
 function buildViewmodel() {
   vm.clear();
   const w = WEAPONS[wIdx], camo = camoOf(w.id), metal = lam(camo[2] || "#1c1d1e", camo[1] === "Gold" ? { emissive: "#3a2a00" } : {}), wood = lam(camo[2] ? camo[2] : "#6a4628"), skin = lam("#2e2c27"), sleeve = lam(match.mode !== 0 && P.team >= 0 ? TEAM[P.team].c : "#55583f");
   const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); vm.add(m); return m; };
   const rg = realGun(w.id, vm, camo, false);
   const len = rg ? rg.len : gunModel(w.id, add, metal, wood);
-  vm.userData.anchors = rg || { len, grip: new V3(0, -0.07, -0.03), fore: len < 0.3 ? new V3(-0.02, -0.08, 0) : new V3(0, -0.04, -len * 0.5), sight: 0.085 / 0.62, pistol: len < 0.3 };
+  vm.userData.anchors = addMods(vm, rg || { len, grip: new V3(0, -0.07, -0.03), fore: len < 0.3 ? new V3(-0.02, -0.08, 0) : new V3(0, -0.04, -len * 0.5), sight: 0.085 / 0.62, pistol: len < 0.3 }, w.mods, w);
   const hands = [add(new THREE.BoxGeometry(0.07, 0.07, 0.22), sleeve, 0.03, -0.08, 0.12), add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, 0, -0.06, -0.02)];
   hands[0].rotation.x = 0.4;
   if (len > 0.3) hands.push(add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, -0.01, -0.05, -len * 0.65));
   for (const h of hands) h.userData.boxHand = true;
   vm.userData.len = len;
-  vmMuzzle.position.set(0, 0.0, -len - 0.02); vm.add(vmMuzzle);
+  vmMuzzle.position.set(0, 0.0, (vm.userData.anchors.muzzle || -len) - 0.02); vm.add(vmMuzzle);
   flash.position.copy(vmMuzzle.position); vm.add(flash);
   renderSlots();
 }
@@ -1277,10 +1357,11 @@ function gripGun(H, fw, right, down, pistol) {
 }
 function setGun(a) {
   const R = a.real, w = WEAPONS[a.w] || WEAPONS[3];
-  if (R.gunId === w.id) return;
-  R.gunId = w.id; R.gun.clear();
+  const key = w.id + (a.wm || "");
+  if (R.gunId === key) return;
+  R.gunId = key; R.gun.clear();
   const rg = realGun(w.id, R.gun, null, true);
-  if (rg) { R.gun.scale.setScalar(1); R.anchors = rg; R.len = rg.len; R.pistol = rg.pistol; return; }
+  if (rg) { R.gun.scale.setScalar(1); R.anchors = addMods(R.gun, rg, a.wmods, w); R.len = rg.len; R.pistol = rg.pistol; return; }
   R.len = gunModel(w.id, (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; R.gun.add(m); return m; }, AV_METAL, AV_WOOD);
   R.gun.scale.setScalar(1.35);
   R.pistol = R.len < 0.3;
@@ -1305,7 +1386,7 @@ function updateFpArms() {
     root.rotation.y = SOLDIER_YAW; root.updateMatrixWorld(true);
     const shoulderY = B.RightArm.getWorldPosition(new V3()).y;
     const rest = {}; for (const n of ["LeftArm", "LeftForeArm", "LeftHand", "RightArm", "RightForeArm", "RightHand"]) rest[n] = B[n].quaternion.clone();
-    camera.add(root);
+    vmCam.add(root);
     fpArms = { root, B, rest, H: rigHands(root, B), shoulderY };
   }
   if (fpArms === false) return;
@@ -1316,7 +1397,7 @@ function updateFpArms() {
   // shoulders sit just under the eye, bladed like a rifle stance (left shoulder forward)
   F.root.position.set(0.04, -0.34 - F.shoulderY, 0.0); F.root.rotation.set(0, SOLDIER_YAW - 0.6, 0);
   for (const n in F.rest) B[n].quaternion.copy(F.rest[n]);
-  camera.updateMatrixWorld(true);
+  syncVmCam();
   const an = vm.userData.anchors; if (!an) return;
   const pistol = an.pistol;
   const k = vm.scale.x / 0.62 * 0.75; // hand offsets are tuned for a 0.75 m-scale hand on a 0.62-scale gun
@@ -1324,11 +1405,11 @@ function updateFpArms() {
   const rph = vm.userData.reloadPh || 0;
   if (rph > 0) { // pull the magazine, drop it out of sight, bring a fresh one up, back to the handguard
     const mag = vm.localToWorld(pistol ? new V3(-0.02, an.grip.y - 0.1, 0.02) : new V3(0, an.grip.y - 0.04, an.fore.z * 0.42));
-    const out = mag.clone().add(new V3(0, -0.28, 0.05).applyQuaternion(camera.quaternion));
+    const out = mag.clone().add(new V3(0, -0.28, 0.05).applyQuaternion(vmCam.quaternion));
     const seg = (a, b, t) => a.clone().lerp(b, clamp(t, 0, 1));
     fore.copy(rph < 0.2 ? seg(fore, mag, rph / 0.2) : rph < 0.42 ? seg(mag, out, (rph - 0.2) / 0.22) : rph < 0.68 ? seg(out, mag, (rph - 0.42) / 0.26) : seg(mag, fore, (rph - 0.68) / 0.32));
   }
-  const cq = camera.getWorldQuaternion(new THREE.Quaternion()), vq = vm.getWorldQuaternion(new THREE.Quaternion());
+  const cq = vmCam.getWorldQuaternion(new THREE.Quaternion()), vq = vm.getWorldQuaternion(new THREE.Quaternion());
   const right = new V3(1, 0, 0).applyQuaternion(cq), down = new V3(0, -1, 0).applyQuaternion(vq), fw = new V3(0, 0, -1).applyQuaternion(vq);
   const [rw, lw] = wristTargets(grip, fore, fw, right, down.clone().multiplyScalar(k), pistol);
   ik2(B.RightArm, B.RightForeArm, B.RightHand, rw, right.clone().multiplyScalar(0.9).add(down));
@@ -1442,8 +1523,9 @@ function tone(dur, freq, vol, type = "sine", delay = 0, pan = 0) {
 }
 // where a sound is, relative to where you face: -1 left … 1 right
 function panOf(pos) { const dx = pos.x - camera.position.x, dz = pos.z - camera.position.z, l = Math.hypot(dx, dz) || 1; return clamp((dx * Math.cos(P.yaw) - dz * Math.sin(P.yaw)) / l, -1, 1) * 0.85; }
-function gunSound(w, vol, pan = 0, dist = 0) {
+function gunSound(w, vol, pan = 0, dist = 0, supp = false) {
   const [f, v, boom, dur] = w.snd, far = dist > 70;
+  if (supp) { noise(dur * 0.55, f * 0.5, v * vol * 0.55, "lowpass", dist / 340, pan); noise(0.05, 3200, 0.12 * vol, "bandpass", dist / 340, pan); return; }
   noise(dur, far ? f * 0.35 : f, v * vol, "lowpass", dist / 340, pan); if (boom) tone(dur * 0.8, boom, 0.5 * vol, "sine", dist / 340, pan);
   if (vol > 0.3 || far) noise(0.7, 520, 0.09 * Math.max(vol, 0.25), "lowpass", 0.22 + dist / 340, pan * 0.4);
 }
@@ -1655,8 +1737,8 @@ function fire() {
   for (const [who, h] of dealt) dealDamage(who, Math.round(h.dmg), h.head, wIdx, h.dist);
   ejectCasing();
   fSeq++; lastFire = [fSeq, wIdx, r2(eye.x), r2(eye.y), r2(eye.z), r2(firstEnd.x), r2(firstEnd.y), r2(firstEnd.z)];
-  gunSound(w, 1);
-  flash.visible = true; flash.rotation.z = Math.random() * 3; flashT = 0.05;
+  gunSound(w, 1, 0, 0, w.mods && w.mods.muzzle === "supp");
+  flash.visible = !(w.mods && w.mods.muzzle === "supp"); flash.rotation.z = Math.random() * 3; flashT = 0.05;
   recoilP += w.kick * (1 - adsT * 0.4); recoilY += (Math.random() - 0.5) * w.kick * 0.5;
   bloom = Math.min(0.05, bloom + (w.auto ? 0.004 : 0.008) * (1 - adsT * 0.5));
   if (ammo[wIdx] === 0) setTimeout(() => { if (ammo[wIdx] === 0) startReload(); }, 250);
@@ -2365,7 +2447,7 @@ function myPresence() {
   const c = P.car;
   return {
     v: 1, g: 1, srv: mySrv, nm: myName, c: myColor, pas: P.passive ? 1 : 0,
-    p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], r: [r2(P.yaw), r2(P.pitch)], cr: P.crouch ? 1 : 0, dd: P.dead ? 1 : 0, w: wIdx, hp: Math.max(0, Math.round(P.hp)),
+    p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], r: [r2(P.yaw), r2(P.pitch)], cr: P.crouch ? 1 : 0, dd: P.dead ? 1 : 0, w: wIdx, wm: modCode(WEAPONS[wIdx].mods), hp: Math.max(0, Math.round(P.hp)),
     k: P.k, d: P.d, s: P.score,
     cv: c ? [c.id, r2(c.x), r2(c.z), r2(c.yaw), r2(c.speed)] : null,
     pk: [...parked.values()],
@@ -2420,6 +2502,7 @@ function applyPresence(a, pr) {
   if (Array.isArray(pr.p)) a.pos.set(num(pr.p[0], -300, 300), num(pr.p[1], -5, 80), num(pr.p[2], -300, 300));
   if (Array.isArray(pr.r)) { a.yaw = num(pr.r[0], -100, 100); a.pitch = num(pr.r[1], -2, 2); }
   a.crouch = pr.cr === 1; a.w = num(pr.w, 0, WEAPONS.length - 1, 3) | 0; a.hp = num(pr.hp, 0, 100, 100);
+  { const wm = typeof pr.wm === "string" ? pr.wm.replace(/[^rhascgle]/g, "").slice(0, 4) : ""; if (wm !== a.wm) { a.wm = wm; const inv = {}; for (const [k, v] of Object.entries(MOD_CODE)) inv[v] = k; a.wmods = {}; for (const ch of wm) { const id = inv[ch]; const slot = Object.keys(MODS).find((sl) => MODS[sl].some((m) => m.id === id)); if (slot) a.wmods[slot] = id; } } }
   a.k = num(pr.k, 0, 1e6) | 0; a.d = num(pr.d, 0, 1e6) | 0; a.score = num(pr.s, -1e7, 1e7) | 0;
   const wasDead = a.dead; a.dead = pr.dd === 1; if (wasDead && !a.dead) a.rpos.copy(a.pos);
   // the car they drive
@@ -2448,8 +2531,8 @@ function applyPresence(a, pr) {
       const vel = to.clone().sub(from); if (vel.length() > 60) vel.setLength(60);
       spawnProjectile({ pos: from, vel, grav: wi === FRAG ? 20 : w.proj.grav, impact: wi !== FRAG, fuse: wi === FRAG ? 2.2 : 8, owner: a.id, w: wi, live: false });
       if (w) gunSound(w, vol);
-    } else if (w) { tracer(from.clone().add(new V3(0, -0.15, 0)), to); gunSound(w, vol, panOf(from), from.distanceTo(P.pos)); const sd = to.clone().sub(from), sl = sd.length(); if (sl > 0.1) bloodOnRay(from, sd.divideScalar(sl), sl + 0.3, a); }
-    a.lastShotSeen = T;
+    } else if (w) { const supp = (a.wm || "").includes("s"); tracer(from.clone().add(new V3(0, -0.15, 0)), to); gunSound(w, vol, panOf(from), from.distanceTo(P.pos), supp); if (supp) a.suppT = T; const sd = to.clone().sub(from), sl = sd.length(); if (sl > 0.1) bloodOnRay(from, sd.divideScalar(sl), sl + 0.3, a); }
+    if (a.suppT !== T) a.lastShotSeen = T;
   }
   // damage addressed to me
   if (Array.isArray(pr.h)) for (const h of pr.h) {
@@ -2735,8 +2818,14 @@ function loadoutHtml() {
     const next = CAMOS.find((c) => c[0] > k);
     return `<button type="button" data-gun="${id}" data-slot="${slot}" aria-pressed="${sel}" ${ok ? "" : "disabled"}><b>${w.name}</b><small>${w.type}${ok ? ` · ${k} kills${camo[1] ? ` · ${camo[1]}` : ""}` : ` · unlocks at level ${UNLOCK[id]}`}</small>${ok && next ? `<small>${next[1]} camo at ${next[0]} kills</small>` : ""}</button>`;
   };
+  const smith = (id) => {
+    const w = WEAPONS[widx(id)], slots = modSlots(w), cur = modsOf(id), k = profile.wk[id] || 0;
+    if (!slots.length) return `<div class="smith"><h3>${w.name}</h3><p class="hint">No attachments for this weapon.</p></div>`;
+    return `<div class="smith"><h3>${w.name} <small>${k} kills</small></h3>${slots.map((slot) => `<div class="slotrow"><span class="slotname">${SLOT_NAMES[slot]}</span><div class="seg">${modChoices(w, slot).map((m) => { const ok = modUnlocked(id, m); return `<button type="button" data-mod="${id}|${slot}|${m.id}" aria-pressed="${cur[slot] === m.id}" ${ok ? "" : "disabled"} title="${esc(m.desc || "")}">${m.name}${ok ? "" : ` · ${m.kills} kills`}</button>`; }).join("")}</div></div>`).join("")}</div>`;
+  };
   return `<h2>Primary</h2><div class="guns">${PRIMARIES.map((id) => gun(id, "prim")).join("")}</div>
     <h2>Secondary</h2><div class="guns">${SECONDARIES.map((id) => gun(id, "sec")).join("")}</div>
+    <h2>Gunsmith</h2><p class="hint">Attachments unlock with kills on each gun and apply straight away.</p><div id="smithBox">${smith(profile.prim)}${smith(profile.sec)}</div>
     <p class="hint">Two frag grenades every life. Killstreaks: UAV at 3 kills, Airstrike at 5, Juggernaut at 7. A new loadout applies the next time you spawn.</p>
     <p class="hint">Art: soldier (Summer Engine, CC0); guns and street props (3DModelsCC0, CC0); textures (ambientCG, CC0); sky (Poly Haven, CC0); sedan by TopoSphere via Sloyd (CC BY 4.0).</p>`;
 }
@@ -2770,6 +2859,14 @@ function wireMenu(card, kind) {
     if (menuTab === "lb") fetchLeaderboard();
   }));
   card.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => { modeIdx = +b.dataset.mode; modeDirty = true; store.set("mode", modeIdx); card.querySelectorAll("[data-mode]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); $("modeHint").textContent = MODES[modeIdx].desc + " 10-minute rounds."; }));
+  const wireSmith = () => card.querySelectorAll("[data-mod]").forEach((b) => b.addEventListener("click", () => {
+    const [id, slot, mod] = b.dataset.mod.split("|");
+    profile.mods[id] = Object.assign({}, profile.mods[id], { [slot]: mod }); saveProfile(true); applyMods();
+    WEAPONS.forEach((w, i) => { ammo[i] = Math.min(ammo[i], w.mag); });
+    if (state !== "menu") { buildViewmodel(); pushPresence(true); }
+    showMenu(kind);
+  }));
+  wireSmith();
   card.querySelectorAll("[data-gun]").forEach((b) => b.addEventListener("click", () => { profile[b.dataset.slot] = b.dataset.gun; saveProfile(true); card.querySelectorAll(`[data-slot="${b.dataset.slot}"]`).forEach((x) => x.setAttribute("aria-pressed", String(x === b))); if (state === "menu") applyLoadout(); }));
   if ($("prestige")) $("prestige").onclick = () => { profile.pr++; profile.xp = 0; saveProfile(true); showBanner("Prestige", `Prestige ${profile.pr}`, "Rank reset · everything stays unlocked"); showMenu(kind); };
   wireBotSettings(card);
@@ -2929,7 +3026,8 @@ function update(dt) {
   // viewmodel
   const an = vm.userData.anchors, sightH = an ? an.sight * vm.scale.x : 0.085;
   // real rifles: butt tucked just under the eye when aiming (cheek weld); pistols: pushed out at arm's length
-  const adsZ = an && an.real ? (an.pistol ? -0.42 : 0.08 - an.stock * vm.scale.x) : -0.26;
+  // with an optic, the eye sits a hand's width behind it
+  const adsZ = an && an.optic ? -0.075 - an.opticRear * vm.scale.x : an && an.real ? (an.pistol ? -0.42 : 0.08 - an.stock * vm.scale.x) : -0.26;
   const hip = new V3(0.14, -0.15, an && an.pistol ? -0.4 : -0.36), ads = new V3(0, -sightH, adsZ);
   vm.position.lerpVectors(hip, ads, adsT);
   // sprinting rolls the gun in and drops it; quick turns make it lag; landings dip it; reloads tilt it
@@ -2945,7 +3043,7 @@ function update(dt) {
   vm.position.z += recoilP * 2.2 + 0.03 * sk;
   vm.rotation.set(-0.3 * rl - 0.3 * sk + recoilP * 2.5 + VMS.sy * swk, 0.5 * sk + VMS.sx * swk + (T - knifeT < 0.25 ? 0.6 : 0), 0.45 * rl + 0.55 * sk);
   camera.position.y -= 0.07 * land;
-  vm.visible = !P.car && !P.dead && !(w.scope && adsT > 0.85);
+  vm.visible = !P.car && !P.dead && !((w.scope || (w.mods && w.mods.optic === "acog")) && adsT > 0.85);
   updateFpArms();
   $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || P.dead;
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) flash.visible = false; }
@@ -2983,7 +3081,7 @@ function update(dt) {
     $("wFrag").textContent = `FRAG ×${frags}${touchMode ? "" : " · G"}`;
     $("wState").textContent = reloadEnd ? "RELOADING" : ammo[wIdx] === 0 ? "R · RELOAD" : P.passive ? "PASSIVE" : P.tired ? "WINDED" : "";
     $("weap").hidden = !!P.car; $("carhud").hidden = !P.car; if (P.car) $("kmh").textContent = Math.round(Math.abs(P.car.speed) * 3.6) + (P.car.hp < 110 ? " · DAMAGED" : "");
-    $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; $("dot").hidden = !(adsT > 0.5 && !w.scope && !P.car && !P.dead);
+    $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; const optic = w.mods && w.mods.optic; $("dot").hidden = !(adsT > (optic ? 0.8 : 0.5) && !w.scope && !P.car && !P.dead); $("dot").className = optic || ""; $("acogRing").hidden = !(optic === "acog" && adsT > 0.85 && !P.car && !P.dead);
     const sp = 8 + (w.hip * 300) + bloom * 400; const xs = $("xh").children; xs[0].style.top = -sp - 9 + "px"; xs[1].style.top = sp + "px"; xs[2].style.left = -sp - 9 + "px"; xs[3].style.left = sp + "px";
     renderSlots();
     // rank bar
@@ -3047,6 +3145,10 @@ function frame(now) {
   gx = (gx + 37) % 128; $("grain").style.backgroundPosition = `${gx}px ${(gx * 7) % 128}px`;
   sky.position.copy(camera.position);
   renderer.render(scene, camera);
+  if (vm.visible && (state === "play" || state === "paused")) {
+    syncVmCam(); vmCam.fov = 72 - 6 * adsT; vmCam.aspect = camera.aspect; vmCam.updateProjectionMatrix();
+    renderer.autoClear = false; renderer.clearDepth(); renderer.render(vmScene, vmCam); renderer.autoClear = true;
+  }
   requestAnimationFrame(frame);
 }
 resize(); buildViewmodel(); showMenu("start"); requestAnimationFrame(frame);
