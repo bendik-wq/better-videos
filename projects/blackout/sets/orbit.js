@@ -74,9 +74,9 @@ export async function nightPatch(w, { region = 'ivano-frankivsk' } = {}) {
         vec3 col = vec3(1., .55, .2) * pow(Ls, 1.6) * 1.25 * uGain * on + vec3(1., .78, .48) * core * .45 * uGain * on;
         col += vec3(1., .17, .12) * edge * .05;
         float fe = smoothstep(0., .04, vUv.x) * smoothstep(1., .96, vUv.x) * smoothstep(0., .06, vUv.y) * smoothstep(1., .94, vUv.y);
-        // cover only where there is light: the globe's own land, coast and sea show through
-        float a = fe * max(smoothstep(.26, .5, v), edge * .5);
-        gl_FragColor = vec4(col, a);
+        // the patch replaces the globe's coarse 3 km lights: land in a warm moonless dark matched to the globe, sea black
+        col += vec3(.0062, .0050, .0040) * (.35 + .65 * land) * (1. - Ls);
+        gl_FragColor = vec4(col, fe);
       }` });
   const mesh = new THREE.Mesh(geo, mat); mesh.frustumCulled = false; mesh.renderOrder = -45;
   w.add(mesh, { far: true });
