@@ -11,6 +11,9 @@ Hosts the multiplayer game at your own `*.workers.dev` URL (or a custom domain).
 - `soldier.json` + `soldier_0.jpg`/`soldier_1.jpg` (next to the page) is the rigged, motion-captured soldier from the three.js examples
   (`examples/models/gltf/Soldier.glb`, originally from Mixamo). If it fails to load, players fall back
   to simple box figures.
+- `guns/` holds the firearms: AK-47, M4A1, shotgun, sniper rifle, Makarov, Luger, M3 Grease Gun and Suomi
+  KP/-31 from the CC0 "Free CC0 Guns & Explosives Pack" by 3DModelsCC0 (https://3dmodelscc0.itch.io/free-cc0-guns-explosives-pack),
+  converted to one quantized mesh file (`guns.json`) plus colour, normal and roughness/metalness JPGs per gun.
 
 ## Deploy
 
