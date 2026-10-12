@@ -36,6 +36,11 @@ Every episode is built from this library. Read the index entries before planning
 - **Sound.** `engine/sfx.py` has 33 presets. In `cues()` use
   `{type:'sfx', name:'whoosh.m', shot, at}`, and add `score.transitions = [{shot, name, dur}]` so
   every planned transition gets its matching sound automatically.
+- **Real footage and real aerials (largest realism gain).** Use them wherever the story allows.
+  - **Footage:** `engine/footage.js`. The CLI covers `search`, `fetch`, `pack` and `prep`, and enforces the PD/CC0 licence policy with provenance per clip. The catalog is in `assets/footage/catalog.json` and the 27-clip starter pack in `pack.json`. In a set, call `await FT.footage(ctx, shot, {file, in, out, speed|ramp, grade, reframe, caption, source, stab})`. Every clip needs a SOURCE line.
+  - **Aerials:** `engine/imagery/` bakes USGS NAIP plus 3DEP for any US place, or Sentinel-2 elsewhere: `python3 engine/imagery/bake.py <name> <lat> <lon>`. Load it with `IM.terrain(scene, name, {...})`. Keep the camera at 400 m or higher over cities, because buildings are flat photos.
+  - Docs are in `docs/assets/` and the demo in `projects/footage-lab`.
+- **Context library.** Use `docs/library/` for the 70 video autopsies with measured replay heatmaps, 428 visual metaphors, a 256-idea topic bank, the narration style guide, sound and music, and the fact-check playbook. To pick a topic, run the `idea-engine` skill first.
 - **Cinematic post.** `engine/post.js` (DOF/AO/god rays/lens) and `engine/parallax.js`
   (archive-photo 2.5D); see the toolkit section below.
 - **Reference episode.** `projects/palantir` (stone/ops/geo set libraries, `photo.js`, deliberate
