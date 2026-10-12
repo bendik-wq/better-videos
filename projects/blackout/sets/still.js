@@ -213,14 +213,14 @@ export default function makeStill(H) {
     // a second page peeking under it
     const p2 = new THREE.Mesh(new THREE.PlaneGeometry(0.72, 0.99), new THREE.MeshStandardMaterial({ color: 0xe8e4d8, roughness: 0.9 })); p2.rotation.x = -Math.PI / 2; p2.position.set(0.04, 0.001, 0.05); p2.rotation.z = 0.06; scene.add(p2);
     // the desk lamp: a warm, tight pool from the upper left; plus a hard flash option
-    const lamp = new THREE.SpotLight(0xffe0a8, 24, 6, 0.6, 0.6, 1.6); lamp.position.set(-0.7, 0.9, 0.5); lamp.target.position.set(0.05, 0, -0.05); lamp.castShadow = true; lamp.shadow.mapSize.set(1024, 1024); scene.add(lamp, lamp.target);
+    const lamp = new THREE.SpotLight(0xffe0a8, 8, 6, 0.6, 0.6, 1.6); lamp.position.set(-0.7, 0.9, 0.5); lamp.target.position.set(0.05, 0, -0.05); lamp.castShadow = true; lamp.shadow.mapSize.set(1024, 1024); scene.add(lamp, lamp.target);
     const flashL = new THREE.PointLight(0xfff8ee, 0, 10, 2); flashL.position.set(0.1, 1.6, 1.2); scene.add(flashL);
     scene.add(new THREE.AmbientLight(0x181410, 0.1));
     // a red grease-pencil box around the highlight phrase appears on its cue
     const boxEl = P.highlight ? H.K.svgLayer(layer) : null;
     const cap = P.caption ? H.caption(layer, P.caption) : null, src = P.source ? H.sourceLine(layer, P.source) : null;
     const tHi = H.cue(shot, P.highlightAt, D * 0.55);
-    const rig = C.path([{ pos: [0.05, 1.05, 0.95], look: [0.03, 0, -0.08], mm: 42 }, { pos: [0.0, 0.98, 0.82], look: [0.03, 0, -0.12], mm: 45 }], { duration: D, accel: 0.3, decel: 0.5, float: 0.004, seed: 11 });
+    const rig = C.path([{ pos: [0.05, 0.78, 0.62], look: [0.03, 0, -0.1], mm: 40 }, { pos: [0.0, 0.72, 0.52], look: [0.03, 0, -0.13], mm: 42 }], { duration: D, accel: 0.3, decel: 0.5, float: 0.004, seed: 11 });
     return { scene, camera, layer,
       update(t, p) {
         rig(camera, p, t);
@@ -235,31 +235,31 @@ export default function makeStill(H) {
       dispose() {} };
   }
   function docCanvas(mode, P) {
-    const c = LW.canvas(880, 1210), g = c.g; g.fillStyle = '#ece7d8'; g.fillRect(0, 0, 880, 1210);
+    const c = LW.canvas(880, 1210), g = c.g; g.fillStyle = '#d9d3c2'; g.fillRect(0, 0, 880, 1210);
     // paper grain
     g.globalAlpha = 0.04; for (let i = 0; i < 2600; i++) { g.fillStyle = hash(i) > 0.5 ? '#000' : '#fff'; g.fillRect(hash(i, 1) * 880, hash(i, 2) * 1210, 1, 1); } g.globalAlpha = 1;
     g.fillStyle = '#1a1712';
     const head = (txt, y, sz = 26, al = 'center', font = FONT.mono) => { g.font = `${sz}px ${font}`; g.textAlign = al; g.fillText(txt, al === 'center' ? 440 : 80, y); g.textAlign = 'left'; };
-    const body = (lines, y, sz = 18, x = 80) => { g.font = `${sz}px ${FONT.mono}`; g.fillStyle = '#2a251c'; for (const ln of lines) { g.fillText(ln, x, y); y += sz * 1.55; } return y; };
+    const body = (lines, y, sz = 18, x = 80) => { g.font = `bold ${sz}px ${FONT.mono}`; g.fillStyle = '#14110c'; for (const ln of lines) { g.fillText(ln, x, y); y += sz * 1.55; } return y; };
     let hi = null;
     if (mode === 'indictment') {
       head('UNITED STATES DISTRICT COURT', 90); head('WESTERN DISTRICT OF PENNSYLVANIA', 122);
       g.strokeStyle = '#1a1712'; g.lineWidth = 1; g.beginPath(); g.moveTo(80, 150); g.lineTo(800, 150); g.stroke();
-      body(['UNITED STATES OF AMERICA', '', '              v.', '', 'YULIY SERGEYEVICH ANDRIENKO, et al.,', 'Defendants.'], 200, 20);
-      head('I N D I C T M E N T', 430, 30);
-      let y = body(['COUNT ONE', '(Conspiracy to Commit Computer Fraud)', '', 'The Grand Jury charges:', '', 'Beginning in or around November 2015, the', 'defendants, officers of Unit 74455 of the', 'Russian Main Intelligence Directorate (GRU),', 'did knowingly cause the transmission of code', 'and commands to protected computers operating', "Ukraine's electricity grid, resulting in", 'blackouts affecting hundreds of thousands of', 'customers.'], 500, 19);
-      hi = [80 / 880, 905 / 1210, 720 / 880, 86 / 1210]; // the "Ukraine's electricity grid" lines
-      g.font = `15px ${FONT.mono}`; g.fillStyle = '#6a5c44'; g.fillText('Case 2:20-cr-00316  ·  Document 1  ·  Filed 10/15/20', 80, 1170);
+      body(['UNITED STATES OF AMERICA', '              v.', 'YURIY SERGEYEVICH ANDRIENKO, et al.'], 200, 24);
+      head('I N D I C T M E N T', 360, 34);
+      body(['20. On or about December 23, 2015, the', 'Conspirators hacked into the computer', 'systems belonging to three Ukrainian', 'energy distribution companies, interacted', 'remotely with control systems in dozens of', 'power distribution substations ... and', 'successfully disrupted the supply of', 'electricity to more than 225,000', 'Ukrainian customers.'], 450, 25);
+      hi = [70 / 880, 520 / 1210, 740 / 880, 120 / 1210]; // "three Ukrainian energy distribution companies"
+      g.font = `16px ${FONT.mono}`; g.fillStyle = '#5a4c34'; g.fillText('EXCERPT, RECREATED  ·  W.D. Pa.  ·  unsealed 19 Oct 2020', 80, 1170);
     } else if (mode === 'advisory') {
       g.fillStyle = '#143a5a'; g.fillRect(0, 0, 880, 70); g.fillStyle = '#fff'; head('CISA  ·  CYBERSECURITY ADVISORY', 46, 26, 'left', FONT.ui);
       g.fillStyle = '#1a1712'; head('AA24-038A', 120, 22, 'left'); head('PRC State-Sponsored Actors Compromise and', 160, 22, 'left'); head('Maintain Persistent Access to U.S. Critical', 196, 22, 'left'); head('Infrastructure', 232, 22, 'left');
       g.strokeStyle = '#143a5a'; g.lineWidth = 2; g.beginPath(); g.moveTo(80, 260); g.lineTo(800, 260); g.stroke();
-      body(['SUMMARY', '', 'The authoring agencies assess that PRC state-', 'sponsored cyber actors are seeking to pre-', 'position themselves on IT networks for', 'disruptive or destructive cyberattacks against', 'U.S. critical infrastructure in the event of a', 'major crisis or conflict with the United States.', '', 'This is NOT consistent with traditional cyber', 'espionage operations.'], 320, 20);
-      hi = [80 / 880, 395 / 1210, 720 / 880, 175 / 1210];
-      g.font = `15px ${FONT.mono}`; g.fillStyle = '#6a5c44'; g.fillText('Joint advisory · NSA · FBI · CISA · 7 Feb 2024', 80, 1170);
+      body(['SUMMARY', '', '...PRC state-sponsored cyber actors are', 'seeking to pre-position themselves on IT', 'networks for disruptive or destructive', 'cyberattacks against U.S. critical', 'infrastructure in the event of a major', 'crisis or conflict with the United States.'], 320, 25);
+      hi = [70 / 880, 365 / 1210, 740 / 880, 120 / 1210];
+      g.font = `15px ${FONT.mono}`; g.fillStyle = '#6a5c44'; g.fillText('EXCERPT, RECREATED  ·  CISA · NSA · FBI  ·  7 Feb 2024', 80, 1170);
     } else {
       head(P.title ?? 'TLP:WHITE  ·  JOINT ANALYSIS', 90, 24, 'left'); g.strokeStyle = '#1a1712'; g.beginPath(); g.moveTo(80, 118); g.lineTo(800, 118); g.stroke();
-      body(P.lines ?? ['Analysis of the Cyber Attack on the', 'Ukrainian Power Grid', '', 'The malware itself did not directly cause', 'the outage. Based on the analysis, the', 'outage was caused by the use of the', "control systems' own HMI software by", 'remote attackers.'], 180, 20);
+      body(P.lines ?? [], 200, 30);
       hi = P.hi ?? [80 / 880, 335 / 1210, 720 / 880, 120 / 1210];
     }
     c.hi = P.highlight ? hi : null; return c;
