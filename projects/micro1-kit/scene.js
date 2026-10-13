@@ -1,4 +1,4 @@
-// LEDGER runtime: vertical (1080x1920) 2D motion-graphics kit. Every shot is a canvas set from ./sets (see README.md).
+// LEDGER runtime: 2D motion-graphics kit, vertical (1080x1920) or landscape (1920x1080) by the project's size. Every shot is a canvas set from ./sets (see README.md).
 //
 // An episode re-exports this runtime from its own scene.js:
 //   export { default } from '/projects/micro1-kit/scene.js';                       // all overlays on
@@ -18,6 +18,7 @@ export function makeScene(opts = {}) {
   return async function create(ctx) {
     const { renderer, width, height, shots } = ctx;
     await L.loadFonts();
+    L.setFrame(width, height); // portrait (1080x1920 units) or landscape (1920x1080 units) by canvas shape
     const k = width / L.W; // design units -> pixels
     const gl = renderer.domElement;
     const mk = () => { const c = document.createElement('canvas'); c.width = width; c.height = height; c.x = c.getContext('2d', { willReadFrequently: true, alpha: false }); return c; };

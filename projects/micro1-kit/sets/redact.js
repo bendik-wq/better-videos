@@ -1,10 +1,12 @@
 // redact: a document whose sensitive spans scramble to ███ and get black bars wiped over them, then a
 // DE-IDENTIFIED stamp. Visualises anonymisation.
 // params: title ('ONBOARDING SOP'), meta ('INTERNAL · v3'), lines: ['Call [[Dana Ruiz]] at [[dana@acme.co]] ...'],
+//         removed (landscape right-column result line, default 'N FIELDS REMOVED'),
 //         at (cue for the first redaction; default 40% into the narration), stagger (0.22 s), label ('DE-IDENTIFIED'), stampAt
 // Text in [[double brackets]] is sensitive. Use invented example text and say so on screen (it is an illustration).
 import * as L from '../kit/ledger.js';
 import * as Q from '../kit/cue.js';
+import { badge } from '../kit/icons.js';
 
 const GLYPHS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789@#%&*$';
 const DEF = ['Step 1. Call [[Dana Ruiz]] when a refund is over [[$500]].', 'Escalate to [[dana.ruiz@acme.co]] within 24 hours.', 'Log it in [[Acme CRM]] under client [[#44-1093]].', 'Close the ticket. Rate the call 1–5.'];
@@ -27,36 +29,44 @@ export default {
     const sfx = [Q.fx('paper.rustle', 0.05, 0.3), Q.fx('type.run', at - 0.05, 0.22, { chars: Math.max(6, k * 4), cps: 18 })];
     for (const r of rows) for (const tk of r) if (tk.hot) sfx.push(Q.fx('marker.swipe', tk.at + 0.32, 0.38, { dur: 0.22 }));
     sfx.push(Q.fx('impact.hit', stampAt + 0.16, 0.55));
-    return { rows, title: p.title ?? 'ONBOARDING SOP', meta: p.meta ?? 'INTERNAL · EXAMPLE', label: p.label ?? 'DE-IDENTIFIED', stampAt, sfx, hits: [{ at: stampAt + 0.16, amp: 1.3 }] };
+    return { rows, title: p.title ?? 'ONBOARDING SOP', meta: p.meta ?? 'INTERNAL · EXAMPLE', label: p.label ?? 'DE-IDENTIFIED', nHot: k, removed: p.removed, stampAt, sfx, hits: [{ at: stampAt + 0.16, amp: 1.3 }] };
   },
   draw(g, t, shot, P) {
-    const X = L.SAFE.x0, Y = 270, Wd = L.SAFE.w, FS = 50, LH = 82, padX = 54;
-    // layout once: wrap tokens into lines in mono
+    // portrait: the doc fills the column, stamp over its foot; landscape: doc on the left, shield + stamp on the right
+    const X = L.SAFE.x0, Y = L.pick(270, 90), Wd = L.pick(L.SAFE.w, 1080), padX = L.pick(54, 46);
+    const hd = L.pick({ t: 84, ty: 112, my: 172, ms: 44, ry: 200, by: 290, gap: 26 }, { t: 70, ty: 90, my: 140, ms: 38, ry: 164, by: 236, gap: 14 });
+    const maxH = L.pick(1180, L.SAFE.h);
+    // layout once: wrap tokens into lines in mono, shrinking the body type until the doc fits the frame
     if (!P.lay) {
-      g.font = L.font(500, FS, L.FONT.mono); const sp = g.measureText(' ').width, maxW = Wd - padX * 2;
-      P.lay = []; let y = 0;
-      P.rows.forEach((r, ri) => {
-        let x = 0; const line = [];
-        for (const tk of r) {
-          const w = g.measureText(tk.s).width;
-          if (tk.glue && line.length) x -= sp;
-          if (x > 0 && x + w > maxW && !tk.glue) { P.lay.push({ y, toks: line.splice(0), ri }); y += LH; x = 0; }
-          line.push({ ...tk, x, w, ri }); x += w + sp;
-        }
-        P.lay.push({ y, toks: line, ri }); y += LH + 26;
-      });
-      P.H = y + 230;
+      for (let fs = L.pick(50, 46); fs >= L.MIN_TEXT - 2; fs -= 2) {
+        const lh = Math.round(fs * L.pick(1.64, 1.48));
+        g.font = L.font(500, fs, L.FONT.mono); const sp = g.measureText(' ').width, maxW = Wd - padX * 2;
+        const lay = []; let y = 0;
+        P.rows.forEach((r, ri) => {
+          let x = 0; const line = [];
+          for (const tk of r) {
+            const w = g.measureText(tk.s).width;
+            if (tk.glue && line.length) x -= sp;
+            if (x > 0 && x + w > maxW && !tk.glue) { lay.push({ y, toks: line.splice(0), ri }); y += lh; x = 0; }
+            line.push({ ...tk, x, w, ri }); x += w + sp;
+          }
+          lay.push({ y, toks: line, ri }); y += lh + hd.gap;
+        });
+        Object.assign(P, { lay, FS: fs, LH: lh, H: y - lh - hd.gap + hd.by + fs * 0.9 });
+        if (P.H <= maxH) break;
+      }
     }
+    const FS = P.FS;
     const a0 = L.pop(t, 0.02, 0.45);
     g.save(); g.globalAlpha = a0.a; g.translate(0, (1 - L.outCubic(a0.u)) * 80);
-    const Hd = Math.min(1180, P.H);
+    const Hd = Math.min(maxH, P.H);
     L.card(g, X, Y, Wd, Hd, { r: 20, stroke: L.PAL.ink, lw: 3 });
     // header
-    g.font = L.font(900, 84); g.fillStyle = L.PAL.ink; g.textAlign = 'left'; g.fillText(P.title, X + padX, Y + 112);
-    L.label(g, P.meta, X + padX, Y + 172, { size: 44, color: L.PAL.inkSoft });
-    g.fillStyle = L.PAL.ink; g.fillRect(X + padX, Y + 200, Wd - padX * 2, 5);
+    g.font = L.font(900, hd.t); g.fillStyle = L.PAL.ink; g.textAlign = 'left'; g.fillText(P.title, X + padX, Y + hd.ty);
+    L.label(g, P.meta, X + padX, Y + hd.my, { size: hd.ms, color: L.PAL.inkSoft });
+    g.fillStyle = L.PAL.ink; g.fillRect(X + padX, Y + hd.ry, Wd - padX * 2, 5);
     // body
-    const by = Y + 290;
+    const by = Y + hd.by;
     g.font = L.font(500, FS, L.FONT.mono); g.textBaseline = 'alphabetic';
     P.lay.forEach((ln, li) => {
       const la = L.range(t, 0.12 + ln.ri * 0.12, 0.42 + ln.ri * 0.12); if (la <= 0) return;
@@ -75,10 +85,17 @@ export default {
       }
     });
     g.restore();
+    // landscape: the right column works while the doc is scrubbed (shield badge), then takes the stamp
+    const RX = (X + Wd + L.SAFE.x1) / 2;
+    if (L.LAND) {
+      badge(g, 'shield', RX, 300, 250, { t, u: L.range(t, 0.15, 0.6) });
+      const busy = t < P.stampAt;
+      L.label(g, busy ? 'ANONYMIZING' + '.'.repeat(1 + Math.floor(t * 3) % 3) : (P.removed ?? `${P.nHot} FIELDS REMOVED`), RX, 500, { align: 'center', size: 38, color: busy ? L.PAL.inkSoft : L.PAL.green, alpha: L.range(t, 0.3, 0.6), maxW: 620 });
+    }
     // stamp
     const st = L.range(t, P.stampAt, P.stampAt + 0.22);
     if (st > 0) {
-      const s = L.lerp(1.9, 1, L.outCubic(st)), cx = L.SAFE.cx, cy = Math.min(Y + Hd - 40, 1360);
+      const s = L.lerp(1.9, 1, L.outCubic(st)) * L.pick(1, 0.82), cx = L.pick(L.SAFE.cx, RX), cy = L.pick(Math.min(Y + Hd - 40, 1360), 660);
       g.save(); g.translate(cx, cy); g.rotate(-0.09); g.scale(s, s); g.globalAlpha = L.clamp(st * 3) * 0.95;
       g.font = L.font(900, 120); const tw = g.measureText(P.label).width + 90;
       g.fillStyle = 'rgba(243,239,230,0.9)'; L.rr(g, -tw / 2, -90, tw, 170, 22); g.fill();

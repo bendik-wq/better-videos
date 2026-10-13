@@ -18,9 +18,9 @@ export default {
       hl: Q.list(p.highlight), text: p.prefix ?? '', final: (p.prefix ?? '') + fmt(value, dec, commas) + (p.suffix ?? ''), sfx, hits: [{ at: at + dur, amp: 1.2 }] };
   },
   draw(g, t, shot, P) {
-    const cy = 760;
+    const cy = L.pick(760, P.kicker ? 430 : 400);
     if (!P.size) {
-      P.size = L.fit(g, P.final, L.SAFE.w, 330, 90, 900);
+      P.size = L.fit(g, P.final, L.pick(L.SAFE.w, 1500), L.pick(330, 400), 90, 900);
       g.font = L.font(900, P.size); P.dw = g.measureText('0').width;
       P.cells = [...P.final].map((ch) => ({ ch, w: /\d/.test(ch) ? P.dw : g.measureText(ch).width }));
       P.wTot = P.cells.reduce((a, c) => a + c.w, 0);
@@ -28,7 +28,7 @@ export default {
       const digits = P.cells.map((c, i) => (/\d/.test(c.ch) ? i : -1)).filter((i) => i >= 0);
       digits.forEach((ci, k) => { P.cells[ci].p = digits.length - 1 - k - P.dec; });
     }
-    if (P.kicker) L.kicker(g, P.kicker, L.SAFE.cx, 300, t, 0.05, { align: 'center' });
+    if (P.kicker) L.kicker(g, P.kicker, L.SAFE.cx, L.pick(300, 100), t, 0.05, { align: 'center' });
     const u = L.range(t, P.at, P.at + P.dur), cur = P.value * L.outQuart(u);
     const land = L.range(t, P.at + P.dur, P.at + P.dur + 0.35), punch = 1 + 0.07 * Math.sin(Math.PI * land) * (1 - land);
     const S = P.size, base = cy + S * 0.36, inA = L.clamp(L.range(t, P.at - 0.25, P.at) * 1.5);
@@ -56,8 +56,8 @@ export default {
     if (P.label) {
       const la = L.pop(t, P.labelAt, 0.4);
       if (la.a > 0) {
-        if (!P.lb) P.lb = L.fitBlock(g, String(P.label).toUpperCase(), L.SAFE.w, 260, 92, { weight: 700, maxLines: 2 });
-        const y0 = base + S * 0.1 + 120;
+        if (!P.lb) P.lb = L.fitBlock(g, String(P.label).toUpperCase(), L.SAFE.w, L.pick(260, 110), L.pick(92, 88), { weight: 700, maxLines: L.pick(2, 1) });
+        const y0 = base + S * 0.1 + L.pick(120, 105);
         g.save(); g.globalAlpha = la.a; g.translate(0, (1 - L.outCubic(la.u)) * 40);
         g.font = L.font(700, P.lb.size, L.FONT.body); g.textAlign = 'left';
         P.lb.lines.forEach((ln, i) => {
@@ -69,7 +69,7 @@ export default {
           }
         });
         g.restore();
-        if (P.sub) L.label(g, String(P.sub).toUpperCase(), L.SAFE.cx, y0 + P.lb.lines.length * P.lb.lh + 40, { align: 'center', alpha: L.range(t, P.labelAt + 0.35, P.labelAt + 0.7), size: 46 });
+        if (P.sub) L.label(g, String(P.sub).toUpperCase(), L.SAFE.cx, y0 + P.lb.lines.length * P.lb.lh + L.pick(40, 20), { align: 'center', alpha: L.range(t, P.labelAt + 0.35, P.labelAt + 0.7), size: 46 });
       }
     }
   },

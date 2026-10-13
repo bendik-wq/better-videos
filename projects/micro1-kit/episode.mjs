@@ -6,7 +6,7 @@
 //   // projects/<ep>/scene.js
 //   export { default } from '/projects/micro1-kit/scene.js';
 //
-// Defaults: 1080x1920 @ 30 fps, Kokoro af_heart at 1.04, light paper finish (no halation/bloom, faint grain),
+// Defaults: 1080x1920 (or aspect: '16:9' -> 1920x1080) @ 30 fps, Kokoro af_heart at 1.04, light paper finish (no halation/bloom, faint grain),
 // an upbeat 'wonder' score (override with `music`), every transition and every set event with its sound.
 import { scoreTransitions, transitionCues, setCues } from './cuts.mjs';
 
@@ -22,11 +22,14 @@ export function defaultMusic(shots, key = 'G') {
   return m;
 }
 
-export function episode({ title, shots, music, key = 'G', voice = {}, say = {}, settings = {}, timing = {}, finish = {}, score = {} }) {
+export function episode({ title, shots, music, aspect = '9:16', key = 'G', voice = {}, say = {}, settings = {}, timing = {}, finish = {}, score = {} }) {
+  if (!['9:16', '16:9'].includes(aspect)) throw new Error(`episode(): aspect must be '9:16' or '16:9', got ${aspect}`);
   for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
   return {
     title,
-    fps: 30, width: 1080, height: 1920,
+    // '9:16' (default, 1080x1920) or '16:9' (1920x1080): the kit lays every set out for the frame it gets
+    ...(aspect === '16:9' ? { width: 1920, height: 1080 } : { width: 1080, height: 1920 }),
+    fps: 30,
     // hashDirs: the kit lives outside the episode dir; its code must invalidate cached chunks too
     settings: { fps: 30, aa: 'none', workers: 3, chunkSeconds: 6, cutGuard: 0.8, crf: 20, hashDirs: ['projects/micro1-kit'],
       // every frame is 2D canvas: software compositing makes the per-frame page capture ~4x faster on llvmpipe

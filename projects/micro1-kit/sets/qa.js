@@ -20,8 +20,8 @@ export default {
   },
   draw(g, t, shot, P) {
     // question bubble
-    const X = L.SAFE.x0, Y = 260, Wb = L.SAFE.w - 60;
-    if (!P.qb) P.qb = L.fitBlock(g, P.q, Wb - 200, 420, 84, { weight: 700, maxLines: 5, lh: 1.12 });
+    const X = L.SAFE.x0, Y = L.pick(260, 90), Wb = L.pick(L.SAFE.w - 60, 1500);
+    if (!P.qb) P.qb = L.fitBlock(g, P.q, Wb - 200, L.pick(420, 200), L.pick(84, 76), { weight: 700, maxLines: L.pick(5, 2), lh: 1.12 });
     const bh = Math.max(180, P.qb.lines.length * P.qb.lh + 90), ap = L.pop(t, 0.04, 0.4, 1.8);
     g.save(); g.globalAlpha = ap.a; g.translate(X, Y + bh); g.scale(ap.s, ap.s); g.translate(-X, -Y - bh);
     g.fillStyle = L.PAL.ink; L.rr(g, X, Y, Wb, bh, 44); g.fill();
@@ -40,9 +40,9 @@ export default {
     });
     g.restore();
     // answer
-    const ay0 = Y + bh + 150;
+    const ay0 = Y + bh + L.pick(150, 125);
     if (!P.ab) {
-      P.ab = L.fitBlock(g, P.ws.map((x) => x.w).join(' '), L.SAFE.w, 1440 - ay0 - (P.sub ? 200 : 40), 190, { weight: 900, fam: L.FONT.display, lh: 0.95, maxLines: 4, min: 80 });
+      P.ab = L.fitBlock(g, P.ws.map((x) => x.w).join(' '), L.SAFE.w, L.pick(1440, 825) - ay0 - (P.sub ? L.pick(200, 100) : 20), L.pick(190, 220), { weight: 900, fam: L.FONT.display, lh: 0.95, maxLines: L.pick(4, 2), min: 70 });
       g.font = L.font(900, P.ab.size); const sp = g.measureText(' ').width; let k = 0;
       P.ab.lines.forEach((ln, li) => { const wl = g.measureText(ln).width; let x = L.SAFE.x0; for (const w of ln.split(' ')) { const ww = g.measureText(w).width; Object.assign(P.ws[k++], { x, y: ay0 + P.ab.size * 0.8 + li * P.ab.lh, ww }); x += ww + sp; } });
     }
@@ -56,10 +56,10 @@ export default {
     }
     if (P.sub) {
       const last = P.ws.at(-1);
-      if (!P.sb) P.sb = L.fitBlock(g, P.sub, L.SAFE.w, 170, 64, { weight: 700, maxLines: 2 });
+      if (!P.sb) P.sb = L.fitBlock(g, P.sub, L.SAFE.w, L.pick(170, 70), L.pick(64, 56), { weight: 700, maxLines: L.pick(2, 1) });
       const su = L.range(t, last.at + 0.35, last.at + 0.7);
       g.save(); g.globalAlpha = su; g.font = L.font(700, P.sb.size, L.FONT.body); g.fillStyle = L.PAL.inkSoft;
-      P.sb.lines.forEach((ln, i) => g.fillText(ln, L.SAFE.x0, last.y + 110 + i * P.sb.lh + (1 - L.outCubic(su)) * 20)); g.restore();
+      P.sb.lines.forEach((ln, i) => g.fillText(ln, L.SAFE.x0, last.y + L.pick(110, 85) + i * P.sb.lh + (1 - L.outCubic(su)) * 20)); g.restore();
     }
   },
 };

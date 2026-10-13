@@ -1,4 +1,4 @@
-// window: a 12-month calendar grid; months burn/fill from the first one like a progress bar.
+// window: a 12-month calendar grid (3x4 portrait, 6x2 landscape); months burn/fill from the first one like a progress bar.
 // params: fill (0..1 of the 12 months, or a month count > 1; default 1/12), label ('$1B · 12 MONTHS'), start ('OCT'),
 //         year (2026), at (fill cue), mark ('NOW': tag on the last filled month), sub (line under the grid)
 import * as L from '../kit/ledger.js';
@@ -17,11 +17,12 @@ export default {
     return { fill, at, dur, months, label: p.label ?? '$1B · 12 MONTHS', mark: p.mark ?? 'NOW', sub: p.sub, sfx, hits: [{ at: at + dur, amp: 0.6 }] };
   },
   draw(g, t, shot, P) {
-    if (!P.ls) P.ls = L.fit(g, P.label, L.SAFE.w, 150, 70, 900);
+    if (!P.ls) P.ls = L.fit(g, P.label, L.SAFE.w, L.pick(150, 130), 70, 900);
     const la = L.pop(t, 0.05, 0.45);
     g.save(); g.globalAlpha = la.a; g.font = L.font(900, P.ls); g.textAlign = 'center'; g.fillStyle = L.PAL.ink;
-    g.translate(L.SAFE.cx, 250 + P.ls * 0.8); g.scale(la.s, la.s); g.fillText(P.label, 0, 0); g.restore();
-    const cols = 3, gx = 34, gy = 30, cw = (L.SAFE.w - gx * (cols - 1)) / cols, chh = 190, top = 300 + P.ls;
+    g.translate(L.SAFE.cx, L.pick(250, 90) + P.ls * 0.8); g.scale(la.s, la.s); g.fillText(P.label, 0, 0); g.restore();
+    // portrait 3x4 grid, landscape 6x2 strip
+    const cols = L.pick(3, 6), gx = L.pick(34, 26), gy = L.pick(30, 26), cw = (L.SAFE.w - gx * (cols - 1)) / cols, chh = L.pick(190, 196), top = L.pick(300, 120) + P.ls;
     const f = 12 * P.fill * L.outCubic(L.range(t, P.at, P.at + P.dur)), last = Math.max(0, Math.ceil(12 * P.fill) - 1);
     P.months.forEach((mo, i) => {
       const r = Math.floor(i / cols), c = i % cols, x = L.SAFE.x0 + c * (cw + gx), y = top + r * (chh + gy);
@@ -51,10 +52,10 @@ export default {
       }
     });
     // progress bar under the grid
-    const by = top + 4 * (chh + gy) + 20;
+    const by = top + (12 / cols) * (chh + gy) + 4;
     g.fillStyle = L.PAL.rule; L.rr(g, L.SAFE.x0, by, L.SAFE.w, 22, 11); g.fill();
     g.fillStyle = L.PAL.green; L.rr(g, L.SAFE.x0, by, Math.max(22, L.SAFE.w * f / 12), 22, 11); g.fill();
     const txt = P.sub ?? `${Math.min(12, Math.max(0, Math.ceil(f - 0.01)))} OF 12 MONTHS`;
-    L.label(g, txt.toUpperCase(), L.SAFE.cx, by + 96, { align: 'center', size: 46, color: L.PAL.ink, alpha: L.range(t, 0.2, 0.5) });
+    L.label(g, txt.toUpperCase(), L.SAFE.cx, by + L.pick(96, 74), { align: 'center', size: 46, color: L.PAL.ink, alpha: L.range(t, 0.2, 0.5) });
   },
 };

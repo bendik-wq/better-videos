@@ -1,4 +1,4 @@
-// tiers: stacked payout tier cards that build bottom-up on their words, with an optional note.
+// tiers: payout tier cards that build up on their words (portrait: stacked rows; landscape: a podium), with an optional note.
 // params: tiers: [{ amount, label, word|at }] (bottom/smallest first; default $100K+ / $500K+ / $1M+),
 //         title ('PUBLISHED PAYOUT TIERS'), note ('Depends on quality, volume, uniqueness'), noteAt, highlight (note words to swipe)
 import * as L from '../kit/ledger.js';
@@ -19,10 +19,11 @@ export default {
   },
   draw(g, t, shot, P) {
     const n = P.tiers.length;
-    if (!P.ts) P.ts = L.fit(g, P.title, L.SAFE.w, 120, 60, 900);
+    if (!P.ts) P.ts = L.fit(g, P.title, L.SAFE.w, L.pick(120, 110), 60, 900);
     const a = L.pop(t, 0.05, 0.4);
-    g.save(); g.globalAlpha = a.a; g.font = L.font(900, P.ts); g.fillStyle = L.PAL.ink; g.textAlign = 'center'; g.fillText(P.title, L.SAFE.cx, 250 + P.ts * 0.8); g.restore();
-    const top = 260 + P.ts + 50, bottom = P.note ? 1230 : 1440, gap = 30, ch = Math.min(280, (bottom - top - gap * (n - 1)) / n);
+    g.save(); g.globalAlpha = a.a; g.font = L.font(900, P.ts); g.fillStyle = L.PAL.ink; g.textAlign = 'center'; g.fillText(P.title, L.SAFE.cx, L.pick(250, 90) + P.ts * 0.8); g.restore();
+    if (L.LAND) podium(g, t, P); else
+    { const top = 260 + P.ts + 50, bottom = P.note ? 1230 : 1440, gap = 30, ch = Math.min(280, (bottom - top - gap * (n - 1)) / n);
     P.tiers.forEach((x, i) => {
       const slot = n - 1 - i, y = top + slot * (ch + gap) + (bottom - top - n * ch - (n - 1) * gap);
       const u = L.range(t, x.at - 0.08, x.at + 0.4);
@@ -43,15 +44,15 @@ export default {
         x.lb.lines.forEach((ln, k) => g.fillText(ln, L.SAFE.x1 - 36, ly + k * x.lb.lh));
       }
       g.restore();
-    });
+    }); }
     if (P.note) {
       const na = L.range(t, P.noteAt, P.noteAt + 0.35);
       if (na > 0) {
-        if (!P.nb) P.nb = L.fitBlock(g, P.note, L.SAFE.w, 200, 62, { weight: 700, maxLines: 2 });
+        if (!P.nb) P.nb = L.fitBlock(g, P.note, L.SAFE.w, L.pick(200, 70), L.pick(62, 56), { weight: 700, maxLines: L.pick(2, 1) });
         g.save(); g.globalAlpha = na; g.translate(0, (1 - L.outCubic(na)) * 30);
         g.font = L.font(700, P.nb.size, L.FONT.body); const sp = g.measureText(' ').width;
         P.nb.lines.forEach((ln, k) => {
-          const y = 1300 + k * P.nb.lh, wl = g.measureText(ln).width; let x0 = L.SAFE.cx - wl / 2;
+          const y = L.pick(1300, 800) + k * P.nb.lh, wl = g.measureText(ln).width; let x0 = L.SAFE.cx - wl / 2;
           for (const w of ln.split(' ')) { const ww = g.measureText(w).width;
             if (P.hl.some((h) => Q.norm(w).startsWith(Q.norm(h)))) L.swipe(g, x0 - 6, y - P.nb.size * 0.82, ww + 12, P.nb.size * 0.98, L.range(t, P.noteAt + 0.3, P.noteAt + 0.65), { seed: L.hash(w) });
             g.fillStyle = L.PAL.ink; g.fillText(w, x0, y); x0 += ww + sp; }
@@ -61,3 +62,30 @@ export default {
     }
   },
 };
+
+// landscape: a podium, smallest tier on the left; columns rise from below on their words
+function podium(g, t, P) {
+  const n = P.tiers.length, gap = 60, cw = Math.min(470, (L.SAFE.w - gap * (n - 1)) / n), x0 = L.SAFE.cx - (cw * n + gap * (n - 1)) / 2;
+  const top = 90 + P.ts + 50, bottom = P.note ? 735 : 810, H0 = bottom - top;
+  P.tiers.forEach((x, i) => {
+    const h = H0 * (n > 1 ? 0.55 + 0.45 * i / (n - 1) : 1), X = x0 + i * (cw + gap), y = bottom - h;
+    const u = L.range(t, x.at - 0.08, x.at + 0.4);
+    if (u <= 0) { g.save(); g.globalAlpha = 0.45 * L.range(t, 0.05, 0.3); g.setLineDash([16, 14]); g.strokeStyle = L.PAL.inkFaint; g.lineWidth = 4; L.rr(g, X, y, cw, h, 28); g.stroke(); g.restore(); return; }
+    const top1 = i === n - 1, dy = (1 - L.outBack(u, 1.6)) * 320;
+    g.save(); g.beginPath(); g.rect(X - 40, 0, cw + 80, bottom + 30); g.clip();
+    g.translate(0, dy + L.bob(t, 2, 0.3, i * 0.3)); g.globalAlpha = L.clamp(u * 3);
+    L.card(g, X, y, cw, h, { r: 28, fill: top1 ? L.PAL.green : L.PAL.card, stroke: L.PAL.ink, lw: 4 });
+    if (!x.fsL) x.fsL = L.fit(g, x.amount, cw - 60, 150, 70, 900);
+    g.font = L.font(900, x.fsL); g.fillStyle = top1 ? L.PAL.card : L.PAL.ink; g.textAlign = 'center';
+    g.fillText(x.amount, X + cw / 2, y + 40 + x.fsL * 0.72);
+    if (x.label) {
+      if (!x.lbL) x.lbL = L.fitBlock(g, String(x.label), cw - 60, 120, 52, { weight: 700, maxLines: 2 });
+      g.font = L.font(700, x.lbL.size, L.FONT.body); g.fillStyle = top1 ? L.PAL.card : L.PAL.inkSoft;
+      x.lbL.lines.forEach((ln, k) => g.fillText(ln, X + cw / 2, y + 60 + x.fsL * 0.72 + x.lbL.size + k * x.lbL.lh));
+    }
+    // magnitude bar along the foot
+    const bu = L.range(t, x.at + 0.15, x.at + 0.7);
+    g.fillStyle = top1 ? 'rgba(255,255,255,0.25)' : L.PAL.greenTint; L.rr(g, X + 30, y + h - 44, (cw - 60) * L.outExpo(bu), 16, 8); g.fill();
+    g.restore();
+  });
+}

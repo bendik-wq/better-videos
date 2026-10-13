@@ -1,20 +1,29 @@
-// LEDGER look: tokens, easing and 2D-canvas drawing helpers for the vertical (1080x1920) kit.
+// LEDGER look: tokens, easing and 2D-canvas drawing helpers. Two frames, picked by the runtime from the canvas size:
+//   portrait  (9:16) design units 1080x1920: content x 80..1000, y 220..1500; source ~1478; captions 1500..1700;
+//             top 200 / bottom 220 px left to platform UI (the progress bar sits on the very top edge)
+//   landscape (16:9) design units 1920x1080: content x 120..1800, y 90..830; source ~860; captions 880..1000
+// Sets read the live bindings W, H, SAFE, LAND, MIN_TEXT (ES module exports update after setFrame()).
 // Pure at import time (node imports the sets for their sfx plans); DOM is touched only inside functions.
-//
-// Layout contract (1080x1920 design units; the runtime scales to the render size):
-//   content safe area   x 80..1000, y 220..1500
-//   source line         y ~1460 (above the captions)
-//   captions            y 1500..1700 (runtime overlay)
-//   bottom 220 px and top 200 px: platform UI, keep empty (the progress bar sits on the very top edge)
-export const W = 1080, H = 1920;
-export const SAFE = { x0: 80, x1: 1000, y0: 220, y1: 1500, w: 920, cx: 540, cy: 860 };
+const FRAMES = {
+  portrait: { W: 1080, H: 1920, SAFE: { x0: 80, x1: 1000, y0: 220, y1: 1500, w: 920, h: 1280, cx: 540, cy: 860 }, MIN: 44 },
+  landscape: { W: 1920, H: 1080, SAFE: { x0: 120, x1: 1800, y0: 90, y1: 830, w: 1680, h: 740, cx: 960, cy: 460 }, MIN: 36 },
+};
+export let W = 1080, H = 1920, LAND = false;
+export const SAFE = { ...FRAMES.portrait.SAFE };
+export let MIN_TEXT = 44; // nothing on screen is smaller than this (design px)
+export function setFrame(width, height) {
+  const f = FRAMES[width > height ? 'landscape' : 'portrait'];
+  W = f.W; H = f.H; LAND = width > height; MIN_TEXT = f.MIN; Object.assign(SAFE, f.SAFE);
+  return f;
+}
+// pick a value by orientation
+export const pick = (portrait, landscape) => (LAND ? landscape : portrait);
 export const PAL = {
   paper: '#f3efe6', paper2: '#ebe5d7', card: '#fbf9f4', rule: '#ddd5c4', ink: '#121212', inkSoft: '#57534b', inkFaint: '#a39d90',
   green: '#17a35b', greenDark: '#0f7a43', greenTint: '#d6eedf', yellow: '#ffe14d', red: '#e0241b',
 };
 export const FONT = { display: '"Big Shoulders Display"', body: '"Archivo Narrow"', mono: '"Plex Mono"' };
 export const font = (weight, size, fam = FONT.display) => `${weight} ${Math.round(size)}px ${fam}, sans-serif`;
-export const MIN_TEXT = 44; // nothing on screen is smaller than this (px at 1080 wide)
 
 // ---------------------------------------------------------------- maths + easing
 export const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -143,7 +152,7 @@ export function label(g, text, x, y, { size = 44, color = PAL.inkSoft, align = '
   if (!text || alpha <= 0) return 0;
   g.save(); g.globalAlpha *= alpha;
   let s = size; g.font = font(weight, s, FONT.mono); g.letterSpacing = `${(spacing * s).toFixed(1)}px`;
-  while (g.measureText(text).width > maxW && s > 40) { s -= 1; g.font = font(weight, s, FONT.mono); g.letterSpacing = `${(spacing * s).toFixed(1)}px`; }
+  while (g.measureText(text).width > maxW && s > Math.min(40, MIN_TEXT)) { s -= 1; g.font = font(weight, s, FONT.mono); g.letterSpacing = `${(spacing * s).toFixed(1)}px`; }
   g.fillStyle = color; g.textAlign = align; g.textBaseline = 'alphabetic'; g.fillText(text, x, y);
   const w = g.measureText(text).width; g.restore(); return w;
 }

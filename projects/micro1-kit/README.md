@@ -1,11 +1,44 @@
-# LEDGER: vertical motion-graphics kit (micro1 explainer shorts)
+# LEDGER: motion-graphics kit for micro1 explainers, vertical or 16:9
 
-A 1080x1920, 30 fps, 2D-canvas kit for 2–3 minute vertical explainers. It is used by an independent channel that is **not
+A 30 fps, 2D-canvas kit for 2–3 minute explainers. It renders vertical (1080x1920) by default, or 16:9 (1920x1080) with `episode({ aspect: '16:9' })`. It is used by an independent channel that is **not
 affiliated with micro1**. The look is warm paper (`#f3efe6`) with faint ledger rules and grain, ink `#121212`, money green
 `#17a35b`, and a marker yellow `#ffe14d` that swipes behind key words. Red `#e0241b` is used only for strike-throughs and redactions.
 Fonts are Big Shoulders Display (OFL, `assets/fonts/`, plus its licence), Archivo Narrow and IBM Plex Mono.
 
-Demo: `node engine/render.mjs projects/micro1-kit` produces `renders/micro1-kit/demo.mp4` and `contact.jpg`. Every set appears once, with real VO.
+Demos: every set appears once, with real VO. The shots are in `demo-shots.mjs`.
+
+| Command | Output |
+|---|---|
+| `node engine/render.mjs projects/micro1-kit` | `renders/micro1-kit/demo.mp4` and `contact.jpg` (vertical) |
+| `node engine/render.mjs projects/micro1-kit/demo-16x9` | `renders/micro1-kit/demo-16x9.mp4` and `contact-16x9.jpg` (16:9) |
+
+## Frames (portrait and landscape)
+
+The runtime picks the frame from the canvas shape. Sets draw in design units through live bindings (`L.W`, `L.H`, `L.SAFE`, `L.LAND`, `L.MIN_TEXT`, `L.pick(portrait, landscape)`).
+
+| | Portrait 9:16 | Landscape 16:9 |
+|---|---|---|
+| Design units | 1080x1920 | 1920x1080 |
+| Content safe area | x 80–1000, y 220–1500 | x 120–1800, y 90–830 |
+| Source line | y ≈ 1478 | y ≈ 860 |
+| Captions | y 1500–1700, 2–4 words per line | y 880–1000, 2–5 words per line, centred |
+| Minimum text | 44 px | 36 px |
+
+How each set changes in landscape:
+
+| Set | Landscape layout |
+|---|---|
+| hook | Reflows into the 1–3 lines with the biggest type. `reflow` defaults to true in landscape. |
+| tiers | A podium: columns left to right, rising on their words. |
+| checklist | Centred column, 1320 wide. |
+| flow | Runs left to right. |
+| docstack | Wider fan. |
+| redact | The doc sits on the left. A shield badge on the right reads "ANONYMIZING…", then "N FIELDS REMOVED", then the stamp. |
+| team | Counter and label on the left, a 10-column grid on the right. |
+| window | A 6x2 strip. |
+| industry | Badge on the left, name and items on the right. |
+| qa | Wide bubble, answer on one or two lines. |
+| cta | Centred. |
 
 ## Making a new episode
 
@@ -92,19 +125,19 @@ Layout: content stays inside x 80–1000 and y 220–1500. The source line sits 
 
 | Set | Params (defaults) | What it does / sounds |
 |---|---|---|
-| `hook` | `lines` (array or `'A / B'`), `highlight` (word(s) to swipe yellow), `accent` (word(s) in green), `strike` (word(s) struck red), `kicker` (pill above), `align` (`'center'` or `'left'`) | Giant stacked headline. Each line is sized to the full width. Each word slams in on its spoken word, with a camera kick, then the yellow swipe. Sounds: a soft impact per word, a hit plus a marker on highlighted words. |
+| `hook` | `lines` (array or `'A / B'`), `reflow` (default: landscape on, portrait off), `highlight` (word(s) to swipe yellow), `accent` (word(s) in green), `strike` (word(s) struck red), `kicker` (pill above), `align` (`'center'` or `'left'`) | Giant stacked headline. Each line is sized to the full width. Each word slams in on its spoken word, with a camera kick, then the yellow swipe. Sounds: a soft impact per word, a hit plus a marker on highlighted words. |
 | `bignum` | `value`, `prefix` (`''`), `suffix` (`''`), `decimals` (0), `commas` (true), `label`, `highlight` (label words), `sub`, `kicker`, `at` (count start, default the first word), `dur` (about 0.8–1.8 s), `labelAt` | An odometer count-up on rolling digit columns. Leading zeros stay faint until reached. A green rule draws in and the number punches on landing. Sounds: tick run, then a hit. |
 | `checklist` | `title`, `kicker`, `items: ['text' \| {text, word\|at, x}]` (`'!text'` = x item) | Card rows slide in on their words, each with a green check. X rows get a red cross and a red strike-through. Ghost slots show until each row lands. Sounds: tick, or a marker for x items. |
 | `docstack` | `docs` (default SOP / PLAYBOOK / KNOWLEDGE BASE / CRM WORKFLOW / QA CHECKLIST; or `{label, word, icon}`), `title`, `kicker` | Paper cards fly in from below with a tilt-back, squash and skew, then land in a fan. The top card is green. A "drop zone" shows until the first card lands. Sounds: a page per card plus a soft landing. |
-| `redact` | `title` (`'ONBOARDING SOP'`), `meta` (`'INTERNAL · EXAMPLE'`), `lines` (text with `[[sensitive]]` spans), `at` (first redaction, default 35% into the VO), `stagger` (0.22), `label` (`'DE-IDENTIFIED'`), `stampAt` | A document types in, with sensitive spans underlined red. On the cue, each span scrambles, then a black bar wipes over it. A green stamp slams in at the end. Sounds: typing, a marker per bar, a stamp hit. |
+| `redact` | `title` (`'ONBOARDING SOP'`), `meta` (`'INTERNAL · EXAMPLE'`), `removed` (landscape result line), `lines` (text with `[[sensitive]]` spans), `at` (first redaction, default 35% into the VO), `stagger` (0.22), `label` (`'DE-IDENTIFIED'`), `stampAt` | A document types in, with sensitive spans underlined red. On the cue, each span scrambles, then a black bar wipes over it. A green stamp slams in at the end. Sounds: typing, a marker per bar, a stamp hit. |
 | `flow` | `steps` (default Your docs → Scrub & anonymize → AI training environment → You get paid; or `{text, icon, word}`), `icons`, `title` | A vertical pipeline. Step cards pop in on their words with icon badges. Dashed arrows draw in and keep flowing, and green packets travel down the pipe. The last card is green. Sounds: whoosh, soft impact, rising ticks. |
 | `tiers` | `tiers: [{amount, label, word}]` (bottom/smallest first; default $100K+ / $500K+ / $1M+), `title` (`'PUBLISHED PAYOUT TIERS'`), `note`, `noteAt`, `highlight` (note words; default quality/volume/uniqueness) | Cards build bottom-up with an overshoot. Each has a magnitude bar, and the top tier is green. The note appears with swipes. Sounds: whoosh plus an impact, and a hit on the top tier. |
 | `window` | `fill` (0–1, or a month count above 1; default 1/12), `label` (`'$1B · 12 MONTHS'`), `start` (`'OCT'`), `year` (2026), `at`, `mark` (`'NOW'`), `sub` | A 12-month grid that pops in. Months burn green from the first one, with a yellow burning edge. A NOW tag and pulsing outline mark the current month, and a progress bar shows "N OF 12 MONTHS". Sounds: ticks, then a soft impact. |
 | `industry` | `name`, `icon`, `items` (2–4; strings or `{text, word}`), `kicker` (`'INDUSTRY 01'`), `itemsLabel` (`'DATA THEY ALREADY HAVE'`), `at` | A pictogram badge with a rotating dashed ring. The name slams in, then gets the yellow swipe. Example data rows slide in. Sounds: soft impact, marker, a tick per item. |
 | `quote` | `text` (verbatim, no quote marks), `by`, `highlight`, `byAt`, `kicker` | A pull-quote card with a green quote mark. Words rise in as they are read; if the VO doesn't read the quote, they spread over the first 60% of the line. Key words get swipes, then the attribution appears. Sounds: paper, markers, a tick. |
 | `qa` | `q`, `a` (short headline), `sub`, `at` (answer cue, default 55% into the VO), `highlight`, `cps` | A dark question bubble shows typing dots, then types the question with a cursor. The answer slams in word by word, with swipes and an optional sub line. Sounds: typing, a hit, markers. |
-| `team` | `min` (30), `max` (200), `per` (people per icon; 5 if max > 100), `cols`, `slots`, `label` (`'30–200 EMPLOYEES'`), `at` (fill to min), `atMax` (fill to max), `note` (default `'1 ICON = 5 PEOPLE'`) | A live counter and a grid of person icons. Icons below the minimum fill in ink, icons from min to max fill in green, and spare slots are struck out in red. The label gets a swipe. Sounds: ticks, an impact, a marker. |
-| `cta` | `text` (`'micro1 Company Data Partnerships'`), `pre` (`'SEARCH'`), `sub` (`'Apply takes ~2 minutes'`), `disclaimer` (`'Independent channel · not affiliated with micro1 · payouts not guaranteed'`), `at` (typing start), `subAt`, `cps` | "SEARCH:" appears with a swipe, then a search bar types the query. The sub line appears with a green check. The disclaimer is always on, at 44–54 px. Sounds: marker, typing, impacts. |
+| `team` | `min` (30), `max` (200), `per` (people per icon; 5 if max > 100), `cols` (default: portrait 8 or 12, landscape 10 or 20), `slots`, `label` (`'30–200 EMPLOYEES'`), `at` (fill to min), `atMax` (fill to max), `note` (default `'1 ICON = 5 PEOPLE'`) | A live counter and a grid of person icons. Icons below the minimum fill in ink, icons from min to max fill in green, and spare slots are struck out in red. The label gets a swipe. Sounds: ticks, an impact, a marker. |
+| `cta` | `mode` (`'link'`, the default, or `'search'`), `text`, `pre`, `sub`, `highlight`, `disclaimer` (`'Independent channel · not affiliated with micro1 · payouts not guaranteed'`), `at`, `arrowAt`, `subAt`, `cps`. Link defaults: text `'Link in the description'`, no pre, sub `'Interest form takes ~2 minutes'`, highlight `'DESCRIPTION'`. Search defaults: text `'micro1 Company Data Partnerships'`, pre `'SEARCH'`, sub `'Apply takes ~2 minutes'`. | **link:** the headline slams in word by word, with a swipe on DESCRIPTION. A check sub line follows, and a big green arrow grows down toward the description and keeps bouncing. **search:** "SEARCH:" appears with a swipe, then a search bar types the query, then the check sub line. In both modes the disclaimer is always on. Sounds: impacts, marker, whoosh, typing, tick. |
 
 **Icons** (`kit/icons.js`): people, person, briefcase, scales, truck, chart, code, building, headset, doc, shield, chip,
 cash, search, calendar, clock, cart, cross, gear. Each one has a small idle motion.

@@ -17,34 +17,36 @@ export default {
     docs.forEach((d, i) => {
       d.label = String(d.label).toUpperCase(); d.at = times[i]; d.icon ??= ICON[d.label] ?? 'doc'; d.sub ??= SUB[d.label] ?? 'INTERNAL DOCUMENT';
       const k = n > 1 ? i / (n - 1) - 0.5 : 0, r = L.rng(L.hash(d.label, i));
-      d.fx = 540 + k * 210 + (r() - 0.5) * 30; d.fy = 900 + Math.abs(k) * 70 - i * 18; d.rot = k * 0.34 + (r() - 0.5) * 0.06;
-      d.from = { x: d.fx + (i % 2 ? 1 : -1) * (500 + r() * 200), y: 2300, rot: (i % 2 ? 1 : -1) * (0.7 + r() * 0.4) };
+      // layout in frame-relative terms; draw() turns them into positions for the current orientation
+      d.k = k; d.jx = (r() - 0.5) * 30; d.rot = k * 0.34 + (r() - 0.5) * 0.06;
+      d.from = { dx: (i % 2 ? 1 : -1) * (500 + r() * 200), rot: (i % 2 ? 1 : -1) * (0.7 + r() * 0.4) };
     });
     const sfx = docs.flatMap((d, i) => [Q.fx('paper.page', d.at - 0.1, 0.5, { dur: 0.5 }), Q.fx('impact.soft', d.at + 0.32, 0.25)]);
     return { docs, title: p.title, kicker: p.kicker, sfx, hits: docs.map((d) => ({ at: d.at + 0.32, amp: 0.45 })) };
   },
   draw(g, t, shot, P) {
-    let yT = 250;
-    if (P.kicker) { L.kicker(g, P.kicker, L.SAFE.cx, yT, t, 0.05, { align: 'center' }); yT += 110; }
+    let yT = L.pick(250, 90);
+    if (P.kicker) { L.kicker(g, P.kicker, L.SAFE.cx, yT, t, 0.05, { align: 'center' }); yT += L.pick(110, 90); }
     if (P.title) {
-      if (!P.ts) P.ts = L.fit(g, String(P.title).toUpperCase(), L.SAFE.w, 150, 60, 900);
+      if (!P.ts) P.ts = L.fit(g, String(P.title).toUpperCase(), L.SAFE.w, L.pick(150, 120), 60, 900);
       const a = L.pop(t, 0.06, 0.45); g.save(); g.globalAlpha = a.a; g.font = L.font(900, P.ts); g.textAlign = 'center'; g.fillStyle = L.PAL.ink;
       g.fillText(String(P.title).toUpperCase(), L.SAFE.cx, yT + P.ts * 0.8 + (1 - L.outCubic(a.u)) * 30); g.restore();
     }
-    const CW = 520, CH = 660;
+    const CW = 520, CH = 660, cs = L.pick(1, P.title ? 0.74 : 0.82), cx0 = L.SAFE.cx, cy0 = L.pick(900, P.title ? 530 : 470);
+    const pos = (d, i) => ({ x: cx0 + d.k * L.pick(210, 440) + d.jx, y: cy0 + Math.abs(d.k) * L.pick(70, 36) - i * L.pick(18, 10) });
     // empty drop zone until the first document lands
     const g0 = 1 - L.range(t, P.docs[0].at, P.docs[0].at + 0.3);
     if (g0 > 0) { g.save(); g.globalAlpha = 0.55 * g0 * L.range(t, 0.05, 0.35); g.setLineDash([18, 16]); g.lineDashOffset = -t * 30; g.strokeStyle = L.PAL.inkFaint; g.lineWidth = 5;
-      g.translate(540, 900); g.rotate(-0.04 + 0.02 * Math.sin(t * 1.5)); L.rr(g, -CW / 2, -CH / 2, CW, CH, 18); g.stroke(); g.restore();
-      L.label(g, 'DROP ZONE', 540, 910, { align: 'center', size: 44, color: L.PAL.inkFaint, alpha: 0.8 * g0 }); }
+      g.translate(cx0, cy0); g.rotate(-0.04 + 0.02 * Math.sin(t * 1.5)); g.scale(cs, cs); L.rr(g, -CW / 2, -CH / 2, CW, CH, 18); g.stroke(); g.restore();
+      L.label(g, 'DROP ZONE', cx0, cy0 + 10, { align: 'center', size: 44, color: L.PAL.inkFaint, alpha: 0.8 * g0 }); }
     P.docs.forEach((d, i) => {
       const u = L.range(t, d.at - 0.12, d.at + 0.42); if (u <= 0) return;
       const e = L.outBack(u, 1.25), last = i === P.docs.length - 1 || t < P.docs[i + 1].at;
-      const x = L.lerp(d.from.x, d.fx, e) + L.bob(t, 3, 0.25, i * 0.17), y = L.lerp(d.from.y, d.fy, e) + L.bob(t, 4, 0.3, i * 0.29);
+      const f = pos(d, i), x = L.lerp(f.x + d.from.dx, f.x, e) + L.bob(t, 3, 0.25, i * 0.17), y = L.lerp(L.H + 420, f.y, e) + L.bob(t, 4, 0.3, i * 0.29);
       const rot = L.lerp(d.from.rot, d.rot, L.outCubic(u)) + 0.012 * Math.sin(t * 1.1 + i);
       // pseudo-3D: the card tips back while flying (y squash + skew) and settles flat
       const tilt = (1 - L.outCubic(u)) * 0.5, sway = (last ? 0.05 : 0.02) * Math.sin(t * 1.3 + i * 0.7);
-      g.save(); g.translate(x, y); g.rotate(rot); g.transform(Math.cos(sway), 0, -tilt * 0.4, 1 - tilt * 0.35, 0, 0);
+      g.save(); g.translate(x, y); g.rotate(rot); g.transform(Math.cos(sway), 0, -tilt * 0.4, 1 - tilt * 0.35, 0, 0); g.scale(cs, cs);
       const lift = 1 + 2.5 * (1 - L.outCubic(u));
       L.card(g, -CW / 2, -CH / 2, CW, CH, { r: 18, lift, stroke: L.PAL.ink, lw: 3 });
       // header band

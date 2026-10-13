@@ -20,24 +20,25 @@ export default {
     return { ws, by: p.by, byAt, kicker: p.kicker, sfx, hits: [] };
   },
   draw(g, t, shot, P) {
-    const X = L.SAFE.x0, Y = 330, Wd = L.SAFE.w, pad = 70;
+    const X = L.SAFE.x0; let Y = L.pick(330, 100); const Wd = L.SAFE.w, pad = L.pick(70, 90), top = L.pick(240, 200);
     if (!P.lay) {
       const txt = P.ws.map((x) => x.w).join(' ');
-      P.fb = L.fitBlock(g, txt, Wd - pad * 2, 760, 116, { weight: 700, maxLines: 9, lh: 1.12 });
+      P.fb = L.fitBlock(g, txt, Wd - pad * 2, L.pick(760, 400), L.pick(116, 110), { weight: 700, maxLines: L.pick(9, 4), lh: 1.12, oneLine: L.pick(0.75, 0.97) });
       g.font = L.font(700, P.fb.size, L.FONT.body); const sp = g.measureText(' ').width;
       let k = 0; P.lay = [];
       P.fb.lines.forEach((ln, li) => { let x = 0; for (const w of ln.split(' ')) { const ww = g.measureText(w).width; P.lay.push({ ...P.ws[k++], x, y: li * P.fb.lh, ww }); x += ww + sp; } });
-      P.Hc = 240 + P.fb.lines.length * P.fb.lh + 220;
+      P.Hc = top + P.fb.lines.length * P.fb.lh + L.pick(220, 170);
     }
-    if (P.kicker) L.kicker(g, P.kicker, X, 220, t, 0.03);
-    const a = L.pop(t, 0.02, 0.45, 1.6), Hc = Math.min(1140, P.Hc);
+    if (P.kicker) L.kicker(g, P.kicker, X, L.pick(220, 92), t, 0.03);
+    const Hc = Math.min(L.pick(1140, 720), P.Hc), a = L.pop(t, 0.02, 0.45, 1.6);
+    if (L.LAND) Y = Math.max(P.kicker ? 180 : L.SAFE.y0, L.SAFE.cy - Hc / 2);
     g.save(); g.globalAlpha = a.a; g.translate(L.SAFE.cx, Y + Hc / 2); g.scale(L.lerp(0.92, 1, a.s), L.lerp(0.92, 1, a.s)); g.translate(-L.SAFE.cx, -Y - Hc / 2);
     L.card(g, X, Y, Wd, Hc, { r: 30 });
     g.fillStyle = L.PAL.green; g.fillRect(X, Y + 40, 12, Hc - 80);
     // big quote mark
-    g.font = L.font(900, 300); g.fillStyle = L.PAL.green; g.globalAlpha = a.a * L.range(t, 0.1, 0.4); g.fillText('“', X + pad - 10, Y + 250 + L.bob(t, 4, 0.3));
+    g.font = L.font(900, L.pick(300, 260)); g.fillStyle = L.PAL.green; g.globalAlpha = a.a * L.range(t, 0.1, 0.4); g.fillText('“', X + pad - 10, Y + L.pick(250, 215) + L.bob(t, 4, 0.3));
     g.globalAlpha = a.a;
-    const ty = Y + 230 + P.fb.size * 0.8;
+    const ty = Y + top - 10 + P.fb.size * 0.8;
     g.font = L.font(700, P.fb.size, L.FONT.body); g.textAlign = 'left';
     for (const w of P.lay) if (w.hl) L.swipe(g, X + pad + w.x - 6, ty + w.y - P.fb.size * 0.82, w.ww + 12, P.fb.size * 0.98, L.range(t, w.at + 0.2, w.at + 0.5), { seed: L.hash(w.w) });
     for (const w of P.lay) {

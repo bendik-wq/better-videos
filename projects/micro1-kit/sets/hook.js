@@ -1,5 +1,5 @@
 // hook: giant kinetic headline. Each word slams in on its spoken word; key words get the yellow highlighter.
-// params: lines (array or 'LINE ONE / LINE TWO'), highlight (word or array, matched case-insensitively),
+// params: lines (array or 'LINE ONE / LINE TWO'), reflow (re-break into the 1-3 lines with the biggest type; default on in landscape), highlight (word or array, matched case-insensitively),
 //         accent (word(s) set in money green), strike (word(s) struck in red after they land), kicker, align ('center'|'left')
 import * as L from '../kit/ledger.js';
 import * as Q from '../kit/cue.js';
@@ -25,28 +25,43 @@ export default {
       if (x.st) sfx.push(Q.fx('marker.swipe', x.at + 0.5, 0.45));
       hits.push({ at: x.at, amp: x.hl ? 1 : 0.35 });
     });
-    return { lines: words, sfx, hits, kicker: p.kicker, align: p.align ?? 'center' };
+    return { lines: words, sfx, hits, kicker: p.kicker, align: p.align ?? 'center', reflow: p.reflow };
   },
   draw(g, t, shot, P) {
     if (!P.layout) {
+      g.font = L.font(900, 100); const capK0 = g.measureText('H').actualBoundingBoxAscent / 100;
+      const maxH = L.pick(P.kicker ? 900 : 1000, L.SAFE.h - (P.kicker ? 130 : 20));
+      // reflow (landscape default): ignore the given line breaks and pick the 1-3 line split with the biggest type
+      if (P.reflow ?? L.LAND) {
+        const flat = P.lines.flat(), n = flat.length; let best = null;
+        const tryLines = (groups) => {
+          let size = Math.min(...groups.map((gr) => L.fit(g, gr.map((x) => x.w).join(' '), L.SAFE.w, 420, 60, 900)));
+          const h = size * capK0 * (groups.length + 0.3 * (groups.length - 1)); if (h > maxH) size *= maxH / h;
+          if (!best || size > best.size * 1.04) best = { size, groups };
+        };
+        tryLines([flat]);
+        for (let i = 1; i < n; i++) tryLines([flat.slice(0, i), flat.slice(i)]);
+        for (let i = 1; i < n; i++) for (let j = i + 1; j < n; j++) tryLines([flat.slice(0, i), flat.slice(i, j), flat.slice(j)]);
+        P.lines = best.groups.map((gr, li) => gr.map((x) => Object.assign(x, { li })));
+      }
       // per-line sizes (stacked editorial headline), then scale the block into the safe area
       const rows = P.lines.map((ln) => { const txt = ln.map((x) => x.w).join(' '); return { size: L.fit(g, txt, L.SAFE.w, 420, 80, 900) }; });
       // space lines by the cap height (Big Shoulders' em box is much taller than its capitals)
       g.font = L.font(900, 100); const capK = g.measureText('H').actualBoundingBoxAscent / 100, lead = 0.3;
       const blockH = (rs) => rs.reduce((a, r, i) => a + r.size * capK + (i ? r.size * capK * lead : 0), 0);
-      const maxH = P.kicker ? 900 : 1000, k = Math.min(1, maxH / blockH(rows)); rows.forEach((r) => (r.size = Math.floor(r.size * k)));
+      const k = Math.min(1, maxH / blockH(rows)); rows.forEach((r) => (r.size = Math.floor(r.size * k)));
       const hTot = blockH(rows);
-      let y = L.SAFE.cy - hTot / 2 + (P.kicker ? 50 : 0);
+      const kOff = P.kicker ? L.pick(50, 55) : 0; let y = L.SAFE.cy - hTot / 2 + kOff;
       rows.forEach((r, li) => {
         g.font = L.font(900, r.size); const space = g.measureText(' ').width * 0.9;
         const ws = P.lines[li].map((x) => g.measureText(x.w).width), wTot = ws.reduce((a, b) => a + b, 0) + space * (ws.length - 1);
         let x = P.align === 'left' ? L.SAFE.x0 : L.SAFE.cx - wTot / 2; y += r.size * capK * (li ? 1 + lead : 1);
         P.lines[li].forEach((wd, i) => { wd.x = x; wd.w0 = ws[i]; wd.y = y; wd.size = r.size; x += ws[i] + space; });
       });
-      P.top = L.SAFE.cy - hTot / 2 + (P.kicker ? 50 : 0); P.capK = capK;
+      P.top = L.SAFE.cy - hTot / 2 + kOff; P.capK = capK;
       P.layout = true;
     }
-    if (P.kicker) L.kicker(g, P.kicker, P.align === 'left' ? L.SAFE.x0 : L.SAFE.cx, P.top - 160, t, 0.05, { align: P.align === 'left' ? 'left' : 'center' });
+    if (P.kicker) L.kicker(g, P.kicker, P.align === 'left' ? L.SAFE.x0 : L.SAFE.cx, P.top - L.pick(160, 120), t, 0.05, { align: P.align === 'left' ? 'left' : 'center' });
     const all = P.lines.flat();
     // highlighter swipes go under the type
     for (const wd of all) if (wd.hl) {
