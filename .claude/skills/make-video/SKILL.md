@@ -169,3 +169,8 @@ archive-photo parallax moves). Costs below are llvmpipe, 1080p, 4 vCPU, on a 263
   Everything a frame shows must be a function of its time (no `Math.random`, no wall clock).
 - YouTube can't be downloaded from the cloud box; ask the user for files or cookies.
 - Fact-check every number in the VO and show a source caption.
+- **Dead air on cue-triggered cards (ep4 lesson).** A number, quote or highlight that appears on a spoken word leaves the frame empty until that word. Cue the first item on a word in the **first two seconds** of the line, never on the number itself. Before the final render, run `blackdetect=d=0.3:pix_th=0.06` on the draft and fix every stretch longer than 1 s that isn't a deliberate cut to black.
+- **Oner cue overrides need `{ word, at }` objects.** A bare string in `params.cues` (e.g. `window: 'Twenty'`) is not resolved, and the camera parks at the start. Leave the set's default cues alone unless the VO words differ.
+- **Disk budget for long 60 fps renders.** The chunks for a 14-minute video come to about 8–9 GB, and the renderer's own concat and mux then needs about 2× that again. If free disk is under 2× the chunk size, encode the upload file straight from the chunk list plus `mix.wav`, as `projects/blackout/deliver-from-chunks.sh` does.
+- **Never `pkill -f` / `pgrep -f` a pattern that also appears in your own command line.** It kills your own shell (exit 144). Kill by PID from `progress.json` or `ps`.
+- **Recreated documents carry verbatim text only.** Never invent document wording or names. Label the page "EXCERPT, RECREATED".
