@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, window12, cta, redact, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Financial Firms: Your Process Now Has a Price', shots: [
+export default episode({ aspect: '16:9', title: 'Financial Firms: Your Process Now Has a Price', shots: [
   S('industry', 'Financial firms run on process. And right now, process has a price.', { name: 'FINANCIAL SERVICES', icon: 'chart', items: ['Onboarding procedures', 'Approval workflows', 'Compliance checklists'], kicker: 'INDUSTRY' }),
   billion('micro1 is spending a billion dollars over twelve months licensing operational data from businesses. Financial services is one of its example sectors.', { sub: 'FINANCIAL SERVICES: ON THE LIST' }),
   S('docstack', 'Onboarding procedures. Review and approval workflows. Compliance checklists. Reconciliation steps. Internal knowledge bases.', { title: 'YOUR OPERATING MANUAL', docs: [{ label: 'ONBOARDING', word: 'Onboarding' }, { label: 'APPROVAL WORKFLOW', word: 'approval' }, { label: 'COMPLIANCE CHECKLIST', word: 'Compliance' }, { label: 'RECONCILIATION', word: 'Reconciliation' }, { label: 'KNOWLEDGE BASE', word: 'knowledge' }] }),

@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, cta, redact, securityQuote, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Consultancies: There’s Now a Buyer for Your Frameworks', shots: [
+export default episode({ aspect: '16:9', title: 'Consultancies: There’s Now a Buyer for Your Frameworks', shots: [
   S('industry', 'Consultancies sell expertise by the hour. Now there may be a buyer for the frameworks behind it.', { name: 'CONSULTING', icon: 'briefcase', items: ['Engagement playbooks', 'Deliverable templates', 'Review checklists'], kicker: 'INDUSTRY' }),
   billion('micro1 has committed a billion dollars over twelve months to license operational data from businesses, and consulting and professional services are on its list.', { sub: 'CONSULTING: ON THE LIST' }),
   S('docstack', 'Engagement playbooks. Discovery questionnaires. Deliverable templates. Review checklists. Project histories showing how work actually moved from kickoff to close.', { title: 'THE METHOD', docs: [{ label: 'ENGAGEMENT PLAYBOOK', word: 'Engagement' }, { label: 'DISCOVERY QUESTIONS', word: 'Discovery' }, { label: 'DELIVERABLE TEMPLATE', word: 'Deliverable' }, { label: 'REVIEW CHECKLIST', word: 'Review' }, { label: 'PROJECT HISTORY', word: 'histories' }] }),

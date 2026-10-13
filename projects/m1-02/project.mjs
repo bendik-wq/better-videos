@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, cta, redact, SRC_PAGE, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'What Data Would an AI Company Pay You For?', shots: [
+export default episode({ aspect: '16:9', title: 'What Data Would an AI Company Pay You For?', shots: [
   S('qa', 'What data would an AI company actually pay your business for? It’s probably not what you think.', { q: 'What data would an AI company pay my business for?', a: 'Not what you think.', at: 'probably' }),
   S('hook', 'It’s not your customer list. It’s your know-how.', { lines: ['NOT YOUR', 'CUSTOMER LIST.', 'YOUR', 'KNOW-HOW.'], strike: 'CUSTOMER LIST.', highlight: 'KNOW-HOW.' }),
   S('docstack', 'micro1’s Company Data Partnerships program lists the things it wants. Standard operating procedures and playbooks. Knowledge bases. Process documentation.', { title: 'WHAT THEY LIST', docs: [{ label: 'SOP', word: 'Standard' }, { label: 'PLAYBOOK', word: 'playbooks' }, { label: 'KNOWLEDGE BASE', word: 'Knowledge' }, { label: 'PROCESS DOCS', word: 'Process' }], source: SRC_PAGE }),

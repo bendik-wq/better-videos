@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, window12, cta, redact, SRC_PAGE, SRC_TIERS, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'How Much Could Your Company’s Data Be Worth?', shots: [
+export default episode({ aspect: '16:9', title: 'How Much Could Your Company’s Data Be Worth?', shots: [
   S('bignum', 'A hundred thousand dollars. That’s where the reported payouts start for licensing your company’s operational data.', { value: 100000, prefix: '$', suffix: '+', commas: true, label: 'WHERE REPORTED PAYOUTS START', source: SRC_TIERS }),
   billion('Here’s the setup. micro1 has committed one billion dollars over the next twelve months to license real business data for AI training.'),
   tiers('Reported tiers: a hundred thousand dollars and up for a qualified partnership. Five hundred thousand and up for large scale datasets or ongoing participation across several teams. And a million dollars and up for highly unique, proprietary operational data.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large-scale or multi-team', word: 'Five' }, { amount: '$1M+', label: 'Highly unique, proprietary', word: 'million' }] }),

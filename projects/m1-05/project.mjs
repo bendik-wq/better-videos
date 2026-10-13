@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, cta, redact, SRC_PR, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Why AI Companies Want Your Boring SOPs', shots: [
+export default episode({ aspect: '16:9', title: 'Why AI Companies Want Your Boring SOPs', shots: [
   S('hook', 'Why would an AI company pay six figures for your boring internal documents?', { lines: ['SIX FIGURES', 'FOR YOUR', 'BORING DOCS?'], highlight: 'BORING', accent: 'SIX FIGURES' }),
   S('flow', 'Because the next wave of AI isn’t chatbots. It’s agents that do the work: processing claims, onboarding clients, running a recruiting pipeline.', { title: 'THE NEXT WAVE', steps: [{ text: 'Processing claims', icon: 'doc', word: 'claims' }, { text: 'Onboarding clients', icon: 'people', word: 'onboarding' }, { text: 'Running recruiting', icon: 'search', word: 'recruiting' }] }),
   S('hook', 'And agents learn the way people do. By practising.', { lines: ['AGENTS LEARN', 'BY PRACTISING.'], highlight: 'PRACTISING.' }),

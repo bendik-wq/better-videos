@@ -11,7 +11,7 @@ export const billion = (vo, extra = {}) => S('bignum', vo, { value: 1000000000, 
 export const tiers = (vo, extra = {}) => S('tiers', vo, { title: 'REPORTED PAYOUT TIERS', tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'five' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }], note: 'Depends on volume, quality, uniqueness', highlight: ['volume', 'quality', 'uniqueness'], source: SRC_TIERS, ...extra });
 export const team = (vo, extra = {}) => S('team', vo, { min: 30, max: 200, label: '30–200 EMPLOYEES', ...extra });
 export const window12 = (vo, extra = {}) => S('window', vo, { fill: 0.08, label: '$1B · 12 MONTHS', start: 'OCT', year: 2026, mark: 'NOW', ...extra });
-export const cta = (vo, extra = {}) => S('cta', vo, { text: 'micro1 Company Data Partnerships', sub: 'Interest form takes ~2 minutes', ...extra }, { padOut: 1.2 });
+export const cta = (vo, extra = {}) => S('cta', vo, { mode: 'link', sub: 'Interest form takes ~2 minutes', ...extra }, { padOut: 1.2 });
 export const securityQuote = (vo, text, extra = {}) => S('quote', vo, { text, by: 'micro1, Company Data Partnerships page', source: SRC_PAGE, ...extra });
 
 // redaction documents (illustrative; labelled EXAMPLE on screen by the kit)

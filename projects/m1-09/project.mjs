@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, window12, cta, redact, securityQuote, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Legal & Compliance Teams: Your Habit of Writing Everything Down Pays', shots: [
+export default episode({ aspect: '16:9', title: 'Legal & Compliance Teams: Your Habit of Writing Everything Down Pays', shots: [
   S('industry', 'Legal and compliance teams write everything down. That habit may now be worth real money.', { name: 'LEGAL & COMPLIANCE', icon: 'scales', items: ['Intake procedures', 'Review checklists', 'Policy libraries'], kicker: 'INDUSTRY' }),
   billion('micro1 has committed a billion dollars over twelve months to license operational data, and legal and compliance is on its list of example sectors.', { sub: 'LEGAL & COMPLIANCE: ON THE LIST' }),
   S('docstack', 'Intake procedures. Matter workflows. Review checklists. Policy libraries. Templates and precedent processes. Escalation playbooks.', { title: 'THE KNOW-HOW', docs: [{ label: 'INTAKE', word: 'Intake' }, { label: 'MATTER WORKFLOW', word: 'Matter' }, { label: 'REVIEW CHECKLIST', word: 'Review' }, { label: 'POLICY LIBRARY', word: 'Policy' }, { label: 'TEMPLATES', word: 'Templates' }, { label: 'ESCALATIONS', word: 'Escalation' }] }),

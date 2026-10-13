@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, window12, cta, redact, securityQuote, SRC_PAGE, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Is It Safe to License Your Company Data to AI?', shots: [
+export default episode({ aspect: '16:9', title: 'Is It Safe to License Your Company Data to AI?', shots: [
   S('qa', 'Would you hand your company’s internal documents to an AI company? Here’s how this program says it protects you.', { q: 'Would you hand your internal docs to an AI company?', a: 'Here’s the protection.', at: 'protects' }),
   billion('micro1 is spending a billion dollars over twelve months to license operational data from businesses. The first question every owner asks is about safety.', { label: 'FIRST QUESTION: IS IT SAFE?', highlight: 'SAFE?' }),
   redact('Step one is anonymization. micro1 says it handles the anonymization itself, and that sensitive information is scrubbed before any downstream use.', 'finance', { title: 'STEP 1 · ANONYMIZATION', at: 'scrubbed' }),

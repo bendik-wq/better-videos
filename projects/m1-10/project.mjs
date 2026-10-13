@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, window12, cta, redact, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Logistics Companies: AI Wants to Learn How You Solve Problems', shots: [
+export default episode({ aspect: '16:9', title: 'Logistics Companies: AI Wants to Learn How You Solve Problems', shots: [
   S('industry', 'Every logistics company has a way of doing things that nobody else has. AI wants to learn it.', { name: 'LOGISTICS', icon: 'truck', items: ['Dispatch procedures', 'Exception handling', 'Claims workflows'], kicker: 'INDUSTRY' }),
   billion('micro1 has committed a billion dollars over twelve months to license operational data from businesses, and logistics is on its list of example sectors.', { sub: 'LOGISTICS: ON THE LIST' }),
   S('docstack', 'Dispatch procedures. Exception handling. Carrier onboarding. Warehouse SOPs. Claims workflows. The tickets and task histories that show how problems actually get solved.', { title: 'HOW YOU SOLVE IT', docs: [{ label: 'DISPATCH', word: 'Dispatch' }, { label: 'EXCEPTIONS', word: 'Exception' }, { label: 'CARRIER ONBOARDING', word: 'Carrier' }, { label: 'WAREHOUSE SOP', word: 'Warehouse' }, { label: 'CLAIMS', word: 'Claims' }, { label: 'TASK HISTORY', word: 'tickets' }] }),

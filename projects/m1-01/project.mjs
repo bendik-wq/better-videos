@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, window12, cta, redact, securityQuote, SRC_PAGE, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'A $1 Billion Budget to Buy How Your Company Works', shots: [
+export default episode({ aspect: '16:9', title: 'A $1 Billion Budget to Buy How Your Company Works', shots: [
   S('hook', 'An AI company just set aside one billion dollars. Not for chips. Not for servers. For the way your company works.', { lines: ['$1 BILLION', 'NOT FOR CHIPS.', 'FOR HOW YOUR', 'COMPANY WORKS.'], strike: 'CHIPS.', highlight: 'COMPANY' }),
   billion('On October ninth, a company called micro1 committed to spend one billion dollars over the next twelve months, licensing operational data from real businesses.'),
   S('docstack', 'Operational data means your playbooks. Your SOPs. Your knowledge base. The step by step of how your team actually gets work done.', { title: 'OPERATIONAL DATA =', docs: [{ label: 'PLAYBOOK', word: 'playbooks' }, { label: 'SOP', word: 'SOPs' }, { label: 'KNOWLEDGE BASE', word: 'knowledge' }, { label: 'HOW WORK GETS DONE', word: 'step' }] }),

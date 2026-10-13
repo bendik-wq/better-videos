@@ -2,7 +2,7 @@
 import { episode } from '../micro1-kit/episode.mjs';
 import { S, billion, tiers, team, window12, cta, redact, SRC_PAGE, PREP } from '../micro1/common.mjs';
 
-export default episode({ title: 'Recruiting & BPO: Your Playbooks Could Be Worth Six Figures', shots: [
+export default episode({ aspect: '16:9', title: 'Recruiting & BPO: Your Playbooks Could Be Worth Six Figures', shots: [
   S('industry', 'If you run a recruiting agency or an outsourcing team, your playbooks might be worth a lot more than you think.', { name: 'RECRUITING & BPO', icon: 'people', items: ['Sourcing playbooks', 'Screening scripts', 'QA rubrics'], kicker: 'INDUSTRY' }),
   billion('micro1 has committed a billion dollars over twelve months to license operational data from businesses. Recruiting and BPOs are on its list of example sectors.', { sub: 'RECRUITING & BPO: ON THE LIST' }),
   S('docstack', 'Think about what you already have. Sourcing playbooks. Screening scripts. Candidate pipeline stages. Client onboarding checklists. Quality assurance rubrics. Escalation procedures.', { title: 'WHAT YOU ALREADY HAVE', docs: [{ label: 'SOURCING PLAYBOOK', word: 'Sourcing' }, { label: 'SCREENING SCRIPT', word: 'Screening' }, { label: 'PIPELINE STAGES', word: 'pipeline' }, { label: 'ONBOARDING CHECKLIST', word: 'onboarding' }, { label: 'QA RUBRIC', word: 'assurance' }, { label: 'ESCALATIONS', word: 'Escalation' }] }),
