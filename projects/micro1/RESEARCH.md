@@ -30,6 +30,11 @@ We are an independent channel and **not affiliated with micro1**. Every on-scree
 | Ownership | companies retain ownership of their underlying data | S1 |
 | Not a copycat | micro1 "does not aim to replicate businesses, products, customers, or competitive advantages" | S1 |
 | Effort | the interest form takes about 2 minutes (it asks for company, name, role, email, phone, country and website) | S1 |
+| Partner stats (on the program page) | "100+ Partner companies · $200M+ Generated for partners · 100+ Countries represented". Attribute it: "micro1's page says…" | S1 |
+| Backing | "Backed by Microsoft and trusted by leading AI companies, we have grown to more than $400M ARR" | S1 |
+| Contracts | "All data is handled under strict contractual protections." | S1 |
+| Mission line | "We believe organizations that helped build modern business workflows should participate in the value created by the next generation of AI systems." | S1 |
+| Verbatim security list | "Original datasets are retained only for processing purposes · Sensitive information is scrubbed before any downstream use · All confidential information is removed · Original datasets are deleted after processing · No data is publicly shared · No customer information is exposed · Companies retain ownership of their underlying data" | S1 |
 | Who micro1 is | an AI training-data company (an expert marketplace for AI labs). About $500M annualized revenue (Sacra estimate, Aug 2026) | S6 |
 
 ## Do not claim

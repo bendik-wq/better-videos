@@ -1,0 +1,20 @@
+// micro1 shorts 02: FAQ "What data do they actually want?" Script: projects/micro1/SCRIPTS.md §02.
+import { episode } from '../micro1-kit/episode.mjs';
+import { S, billion, tiers, cta, redact, SRC_PAGE, PREP } from '../micro1/common.mjs';
+
+export default episode({ title: 'What Data Would an AI Company Pay You For?', shots: [
+  S('qa', 'What data would an AI company actually pay your business for? It’s probably not what you think.', { q: 'What data would an AI company pay my business for?', a: 'Not what you think.', at: 'probably' }),
+  S('hook', 'It’s not your customer list. It’s your know-how.', { lines: ['NOT YOUR', 'CUSTOMER LIST.', 'YOUR', 'KNOW-HOW.'], strike: 'CUSTOMER LIST.', highlight: 'KNOW-HOW.' }),
+  S('docstack', 'micro1’s Company Data Partnerships program lists the things it wants. Standard operating procedures and playbooks. Knowledge bases. Process documentation.', { title: 'WHAT THEY LIST', docs: [{ label: 'SOP', word: 'Standard' }, { label: 'PLAYBOOK', word: 'playbooks' }, { label: 'KNOWLEDGE BASE', word: 'Knowledge' }, { label: 'PROCESS DOCS', word: 'Process' }], source: SRC_PAGE }),
+  S('docstack', 'Project management workflows. Templates and operational frameworks. Task histories. The metadata of how work moves through your tools.', { title: 'AND ALSO', docs: [{ label: 'PROJECT WORKFLOWS', word: 'Project' }, { label: 'TEMPLATES', word: 'Templates' }, { label: 'TASK HISTORY', word: 'Task' }, { label: 'WORKFLOW METADATA', word: 'metadata' }], source: SRC_PAGE }),
+  S('hook', 'In plain English, it’s the instruction manual for your company. Most of it already exists, sitting in Notion, Confluence, Google Drive or your ticketing system.', { lines: ['THE INSTRUCTION', 'MANUAL FOR', 'YOUR COMPANY.'], highlight: 'MANUAL', accent: 'YOUR COMPANY.' }),
+  S('flow', 'Why that? AI agents are being trained to do real business work. To learn, they need realistic practice environments, built from how real teams actually operate.', { title: 'WHY THAT?', steps: [{ text: 'How real teams operate', icon: 'people', word: 'Why' }, { text: 'Realistic practice environment', icon: 'gear', word: 'environments' }, { text: 'AI agents do real work', icon: 'chip', word: 'built' }] }),
+  billion('And micro1 has committed a billion dollars over twelve months to license exactly that.', { label: 'TO LICENSE IT · 12 MONTHS' }),
+  S('checklist', 'What makes your data more valuable? More volume. More complex workflows. Knowledge that’s unique to your niche. Clean, well kept documentation.', { title: 'WHAT RAISES THE VALUE', items: [{ text: 'Volume', word: 'volume' }, { text: 'Complex workflows', word: 'complex' }, { text: 'Niche knowledge', word: 'unique' }, { text: 'Clean documentation', word: 'Clean' }] }),
+  S('hook', 'Here’s an example. A thirty person agency with five years of onboarding checklists, QA rubrics and ticket histories has something no public dataset contains: the real, messy, step by step reality of how a business runs.', { lines: ['30 PEOPLE.', '5 YEARS OF', 'CHECKLISTS.', 'NO PUBLIC', 'DATASET HAS IT.'], highlight: 'NO PUBLIC', accent: '5 YEARS OF' }),
+  tiers('Reported payout tiers start at a hundred thousand dollars and run past a million for highly unique datasets. Not guaranteed. It depends on what you have.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
+  redact('And sensitive information? micro1 says it’s scrubbed before anything is used, customer information isn’t exposed, and originals are deleted after processing.', 'onboarding', { title: 'SUPPORT ESCALATION SOP', at: 'scrubbed' }),
+  ...PREP.B(),
+  S('hook', 'So if your team has spent years writing down how you do things, that work may now have a price tag.', { lines: ['YEARS OF', 'WRITING IT DOWN', 'NOW HAS A', 'PRICE TAG.'], highlight: 'PRICE TAG.' }),
+  cta('Search micro1 Company Data Partnerships. About two minutes to apply.'),
+] });
