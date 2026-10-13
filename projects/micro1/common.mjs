@@ -3,13 +3,13 @@
 import { shot as S } from '../micro1-kit/episode.mjs';
 export { S };
 
-export const SRC_PR = 'SOURCE: MICRO1 PRESS RELEASE · BUSINESS WIRE · 9 OCT 2026';
-export const SRC_PAGE = 'SOURCE: MICRO1 COMPANY DATA PARTNERSHIPS PAGE';
-export const SRC_TIERS = 'REPORTED TIERS (BERI · FOURWEEKMBA) · NOT GUARANTEED';
+export const SRC_PR = 'SOURCE: MICRO1 RELEASE · 9 OCT 2026';
+export const SRC_PAGE = 'SOURCE: MICRO1 PARTNERSHIP PAGE';
+export const SRC_TIERS = 'REPORTED TIERS · NOT GUARANTEED';
 
 export const billion = (vo, extra = {}) => S('bignum', vo, { value: 1000000000, prefix: '$', commas: true, label: 'COMMITTED OVER 12 MONTHS', sub: 'ANNOUNCED 9 OCT 2026', source: SRC_PR, ...extra });
 export const tiers = (vo, extra = {}) => S('tiers', vo, { title: 'REPORTED PAYOUT TIERS', tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'five' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }], note: 'Depends on volume, quality, uniqueness', highlight: ['volume', 'quality', 'uniqueness'], source: SRC_TIERS, ...extra });
-export const team = (vo, extra = {}) => S('team', vo, { min: 30, max: 200, label: '30–200 EMPLOYEES', source: SRC_PAGE, ...extra });
+export const team = (vo, extra = {}) => S('team', vo, { min: 30, max: 200, label: '30–200 EMPLOYEES', ...extra });
 export const window12 = (vo, extra = {}) => S('window', vo, { fill: 0.08, label: '$1B · 12 MONTHS', start: 'OCT', year: 2026, mark: 'NOW', ...extra });
 export const cta = (vo, extra = {}) => S('cta', vo, { text: 'micro1 Company Data Partnerships', sub: 'Interest form takes ~2 minutes', ...extra }, { padOut: 1.2 });
 export const securityQuote = (vo, text, extra = {}) => S('quote', vo, { text, by: 'micro1, Company Data Partnerships page', source: SRC_PAGE, ...extra });

@@ -12,6 +12,8 @@ export default {
     const lines = Q.list(p.lines, ['HEADLINE']).map((l) => String(l).toUpperCase().split(/\s+/).filter(Boolean));
     const toks = lines.flat();
     const times = Q.tokens(shot, toks, { from: Math.max(0.1, Q.first(shot)) });
+    // never open on an empty frame: the first word lands at once, even if it is spoken later
+    if (times.length) times[0] = Math.min(times[0], Math.max(0.1, Q.first(shot)) + 0.05);
     const hl = Q.list(p.highlight), ac = Q.list(p.accent), st = Q.list(p.strike);
     let k = 0;
     const words = lines.map((ln, li) => ln.map((w) => ({ w, li, at: times[k++], hl: has(hl, w), ac: has(ac, w), st: has(st, w) })));
