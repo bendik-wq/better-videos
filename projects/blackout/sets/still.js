@@ -286,20 +286,16 @@ export default function makeStill(H) {
     const scrL = new THREE.SpotLight(0x9fe8c8, 14, 2.8, 1.1, 0.8, 1.6); scrL.position.set(0, DT + 0.5, -0.3); scrL.target.position.set(0, DT, 0.15); scrL.castShadow = true; scrL.shadow.mapSize.set(1024, 1024); scene.add(scrL, scrL.target);
     const rim = new THREE.PointLight(0xff8a50, 3.0, 3, 1.8); rim.position.set(0.9, DT + 0.5, 1.0); scene.add(rim);
     scene.add(new THREE.AmbientLight(0x0a1410, 0.06));
-    // the attacker, seated, hands on the keyboard (torso in shadow, no face in frame)
-    const man = PE.person('hoodie', { dress: { silhouette: { color: 0x0c0e10 } } }); man.root.position.set(0, 0, 0.98); man.root.rotation.y = Math.PI; scene.add(man.root);
-    man.play('sit_type', 0).update(); const hip = man.worldPos('pelvis'); man.root.position.set(man.root.position.x - hip.x, man.root.position.y - hip.y + 0.46, man.root.position.z - hip.z + 0.9);
-    const ch = PE.props.chair(); ch.position.set(0, 0, 1.0); scene.add(ch);
+    // no attacker on screen: CG hands typing read as fake, so the screen is the performer (an empty chair, a lit keyboard)
     await PE.props.ready();
     const text = P.text ?? 'ipconfig /all', at = 0.6, cps = P.cps ?? 10;
     const cap = P.caption ? H.caption(layer, P.caption) : null;
     const keysV = new THREE.Vector3(0, DT + 0.02, 0.1), mouseV = new THREE.Vector3(0.34, DT + 0.02, 0.12);
-    const rig = C.path([{ pos: [0.52, DT + 0.42, 0.82], look: [0.0, DT + 0.04, -0.02], mm: 40 }, { pos: [0.44, DT + 0.38, 0.72], look: [0.0, DT + 0.03, -0.08], mm: 42 }], { duration: D, accel: 0.3, decel: 0.5, float: 0.008, seed: 13 });
+    const rig = C.path([{ pos: [0.16, DT + 0.36, 0.22], look: [-0.02, DT + 0.40, -0.5], mm: 36 }, { pos: [0.10, DT + 0.37, 0.08], look: [-0.02, DT + 0.40, -0.5], mm: 38 }], { duration: D, accel: 0.3, decel: 0.5, float: 0.008, seed: 13 });
     return { scene, camera, layer,
       update(t, p) {
         rig(camera, p, t);
         drawTerminalScreen(scr.g, 1024, 640, t, { text, at, cps, mode: P.mode ?? 'type', lines: P.lines }); scrTex.needsUpdate = true;
-        PE.acts.typing(man, t, { keys: keysV, screen: new THREE.Vector3(0, DT + 0.36, -0.5), seed: 3, lean: 0.02, mouse: true });
         cap?.type(t);
       },
       dispose() {} };

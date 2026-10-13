@@ -160,9 +160,9 @@ export default function makeOutside(H) {
         // the breaker closes by hand on the cue: the handle swings, the flag goes red->green, the bus is live
         const k = smoother(range(t, tClose - 0.5, tClose));
         if (cabA) { cabA.handle.rotation.x = lerp(0.9, -0.5, k); cabA.flag.material.color.setHex(t > tClose ? 0xd01810 : 0x00aa44); }
-        if (worker) { worker.play('idle', t * 0.4 + 2).update(); const hp = cabA.handle.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0, 0.2));
+        if (worker) { worker.play('idle', 2).update(); const hp = cabA.handle.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0, 0.2));
           worker.reach('r', hp, 1); worker.reach('l', hp.clone().add(new THREE.Vector3(-0.12, 0.05, 0)), 0.6); worker.lookAt(hp, 0.8); }
-        if (mate) mate.play('idle_b', t * 0.5 + 5).update();
+        if (mate) mate.play('idle_b', 5).update();
         if (truck) { const bc = truck.getObjectByName('beacon'); if (bc) bc.material.color.setScalar(0).setRGB(1.6 * (0.5 + 0.5 * Math.sin(t * 9)), 0.6 * (0.5 + 0.5 * Math.sin(t * 9)), 0); }
         cap?.type(t);
       },

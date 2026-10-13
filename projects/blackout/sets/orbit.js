@@ -185,7 +185,8 @@ export default function makeOrbit(H) {
       { t: tWin - 1.2, pos: [hw.x, hw.y + 0.9, 26], look: [hw.x, hw.y, 0], mm: 32 },
       { t: tWin + 0.9, pos: [hw.x, hw.y - 0.05, 0.6], look: [hw.x, hw.y - 0.35, -6], mm: 30 },
       { t: tOp, pos: [head.x + 0.42, head.y + 0.28, head.z + 0.55], look: mon, mm: 32 },
-      { t: tHand, pos: [S.hand[0] + 0.32, S.hand[1] + 0.32, S.hand[2] + 0.42], look: [S.hand[0] + 0.06, S.hand[1], S.hand[2] - 0.05], mm: 38 },
+      // the untouched mouse from above; the hand stays out of frame (CG hands read as fake)
+      { t: tHand, pos: [S.mouse[0] + 0.06, S.mouse[1] + 0.38, S.mouse[2] + 0.06], look: [S.mouse[0] + 0.06, S.mouse[1], S.mouse[2] - 0.01], mm: 48 },
       { t: tMove - 0.6, pos: [mon[0] + 0.03, mon[1] + 0.01, mon[2] + 0.42], look: mon, mm: 40 },
       { t: tMove + 1.4, ...macro(tMove + 1.4, 0.07), mm: 45 },
     ], { vIn: 'auto' });

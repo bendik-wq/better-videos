@@ -141,11 +141,11 @@ export async function buildRoom(scene, ctx, opts = {}) {
       // operators: the hero sits still, hand beside the mouse, eyes on the screen; the others work
       for (const o of ops) {
         if (o.p === heroP) {
-          o.p.play('sit_idle', 2 + t * 0.35).offset({ spine_01: [0.06, 0, 0], spine_02: [0.05, 0, 0] }); o.p.update();
+          o.p.play('sit_idle', 2).offset({ spine_01: [0.06, 0, 0], spine_02: [0.05, 0, 0] }); o.p.update();
           const pole = (s) => o.p.worldPos(`lowerarm_${s}`).add(new THREE.Vector3(s === 'l' ? -0.3 : 0.3, -0.45, 0.1));
           o.p.reach('r', handR, 1, pole('r')); o.p.reach('l', handL, 1, pole('l'));
-          o.p.lookAt(screenP.clone().add(new THREE.Vector3(0.04 * Math.sin(t * 0.3), 0.02 * Math.sin(t * 0.21), 0)), 0.9);
-        } else PE.acts.typing(o.p, t, { keys: new THREE.Vector3(o.x - 0.02, DESK_TOP, o.z + 0.18), screen: new THREE.Vector3(o.x, DESK_TOP + 0.32, o.z - 0.24), seed: o.seed, lean: 0.05 });
+          o.p.lookAt(screenP, 0.9); // stock-still: the stoic operator (CG idle/typing loops read as fake)
+        } else { o.p.play('sit_idle', 1 + o.seed * 1.3).update(); o.p.lookAt(new THREE.Vector3(o.x, DESK_TOP + 0.32, o.z - 0.24), 0.8); }
       }
     } };
 }
@@ -173,7 +173,8 @@ export default function makeRooms(H) {
       wide: [{ pos: [0, R.y0 + 1.62, R.z1 - 0.4], look: [0, R.y0 + 1.5, R.z0], mm: 24 }, { pos: [0, R.y0 + 1.6, R.z1 - 1.3], look: [0, R.y0 + 1.5, R.z0], mm: 24 }],
       dark: [{ pos: [3.6, R.y0 + 1.75, R.z1 - 0.45], look: [-1.2, R.y0 + 1.2, R.z0 + 3], mm: 22 }, { pos: [3.45, R.y0 + 1.74, R.z1 - 0.7], look: [-1.2, R.y0 + 1.2, R.z0 + 3], mm: 22 }],
       shoulder: [{ pos: [S.desk[0] + 0.42, R.y0 + 1.42, S.desk[2] + 1.45], look: [S.monitor[0] - 0.02, S.monitor[1] - 0.02, S.monitor[2]], mm: 40 }, { pos: [S.desk[0] + 0.3, R.y0 + 1.36, S.desk[2] + 1.1], look: [S.monitor[0], S.monitor[1] - 0.02, S.monitor[2]], mm: 45 }],
-      hand: [{ pos: [S.hand[0] + 0.62, S.hand[1] + 0.09, S.hand[2] + 0.2], look: [S.hand[0] + 0.07, S.hand[1] + 0.01, S.hand[2] - 0.06], mm: 65 }, { pos: [S.hand[0] + 0.56, S.hand[1] + 0.08, S.hand[2] + 0.16], look: [S.hand[0] + 0.07, S.hand[1] + 0.01, S.hand[2] - 0.06], mm: 70 }],
+      // top-down macro on the untouched mouse; the hand stays out of frame (CG hands read as fake)
+      hand: [{ pos: [S.mouse[0] + 0.04, S.mouse[1] + 0.40, S.mouse[2] + 0.05], look: [S.mouse[0] + 0.04, S.mouse[1], S.mouse[2] - 0.01], mm: 50 }, { pos: [S.mouse[0] + 0.04, S.mouse[1] + 0.34, S.mouse[2] + 0.04], look: [S.mouse[0] + 0.04, S.mouse[1], S.mouse[2] - 0.01], mm: 50 }],
       profile: [{ pos: [S.desk[0] + 2.3, R.y0 + 1.25, S.desk[2] + 0.95], look: [S.desk[0], R.y0 + 1.22, S.desk[2] + 0.95], mm: 65 }, { pos: [S.desk[0] + 2.2, R.y0 + 1.25, S.desk[2] + 0.85], look: [S.desk[0], R.y0 + 1.22, S.desk[2] + 0.95], mm: 70 }],
       window: [{ pos: [-5.5, R.y0 + 1.6, R.rowB + 1.4], look: [-1, R.y0 + 1.5, R.z1 + 5], mm: 28 }, { pos: [-5.2, R.y0 + 1.6, R.rowB + 1.0], look: [-1, R.y0 + 1.5, R.z1 + 5], mm: 28 }],
     };
