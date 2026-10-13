@@ -193,6 +193,39 @@ body.touch #center { top: 30%; }
 .invite code { font-family: var(--mono); font-size: 12px; color: var(--dim); overflow-wrap: anywhere; -webkit-user-select: all; user-select: all; }
 @media (max-width: 640px) { #mini { width: 120px; height: 120px; } #weap .a { font-size: 34px; } #srv { top: 150px; left: 16px; transform: none; } }
 /* progression + match HUD */
+#cash { position: absolute; right: 20px; top: 16px; font-family: var(--mono); font-size: 16px; font-weight: 600; color: #8fe08a; letter-spacing: 0.06em; text-shadow: 0 1px 2px #000; }
+body.touch #cash { top: calc(10px + env(safe-area-inset-top, 0px)); right: calc(120px + env(safe-area-inset-right, 0px)); font-size: 13px; }
+#drunk { position: fixed; inset: 0; pointer-events: none; backdrop-filter: blur(1.2px) saturate(1.3); animation: drunk 3s ease-in-out infinite alternate; }
+@keyframes drunk { from { background: rgba(255,120,60,0.06); } to { background: rgba(120,60,255,0.07); } }
+#casino { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: rgba(10,4,6,0.55); padding: 16px; }
+#casino[hidden] { display: none; }
+#casino .czp { position: relative; width: min(460px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: linear-gradient(#2a0d14, #170709); border: 2px solid #c9a24a; box-shadow: 0 0 40px rgba(255,60,100,0.35); padding: 18px 20px; color: #f5ead2; font-family: Georgia, serif; }
+#czX { position: absolute; right: 8px; top: 8px; background: none; border: 0; color: #c9a24a; font-size: 22px; cursor: pointer; }
+#casino .czhead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(201,162,74,0.5); padding: 0 28px 8px 0; letter-spacing: 0.18em; }
+#casino .czhead b { color: #ff5a80; text-shadow: 0 0 10px #ff2050; }
+#casino .czhead span { font-family: var(--mono); color: #8fe08a; font-size: 18px; }
+#casino h3 { margin: 12px 0 10px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a24a; font-size: 15px; }
+#casino button { font: 600 14px Georgia, serif; color: #f5ead2; background: #3a1620; border: 1px solid #c9a24a; padding: 9px 10px; cursor: pointer; border-radius: 3px; }
+#casino button:disabled { opacity: 0.4; cursor: default; }
+#casino button.on, #casino .czgo { background: #c9a24a; color: #1a0a0c; }
+#casino .czgo { width: 100%; margin-top: 10px; font-size: 17px; letter-spacing: 0.1em; }
+#casino .czbets, #casino .czgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px; margin-top: 8px; }
+#casino input { font: 16px var(--mono); background: #120507; color: #f5ead2; border: 1px solid #c9a24a; padding: 8px; min-width: 0; }
+#casino .reels { display: flex; gap: 8px; justify-content: center; }
+#casino .reels span { width: 84px; height: 96px; display: grid; place-items: center; background: #f5efe0; color: #b0182a; font-size: 50px; font-weight: 900; border-radius: 4px; box-shadow: inset 0 6px 12px rgba(0,0,0,0.35); }
+#casino .rl { width: 110px; height: 110px; margin: 0 auto; border-radius: 50%; border: 6px solid #6a3a1a; display: grid; place-items: center; background: radial-gradient(#4a2a16 40%, #111 41%, #111 60%, #b0182a 61%); font-size: 40px; font-weight: 900; }
+#casino .rl.spin { animation: rlspin 0.35s linear infinite; }
+@keyframes rlspin { to { transform: rotate(360deg); } }
+#casino .rl i { font-style: normal; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #111; }
+#casino .rl i.r { background: #b0182a; } #casino .rl i.g { background: #0f8a3a; }
+#casino .bj small { display: block; color: #c9a24a; margin: 6px 0 4px; letter-spacing: 0.12em; }
+#casino .cd { display: inline-grid; place-items: center; width: 46px; height: 64px; margin-right: 6px; background: #f8f4ea; color: #111; border-radius: 4px; font: 700 18px Georgia, serif; }
+#casino .cd.r { color: #b0182a; } #casino .cd.back { background: repeating-linear-gradient(45deg, #7a1020 0 6px, #5a0c18 6px 12px); color: #f5ead2; }
+#casino .shop { display: grid; gap: 6px; }
+#casino .shop button { display: flex; justify-content: space-between; text-align: left; }
+#casino .shop b { font-family: var(--mono); color: #8fe08a; }
+#casino .czmsg { min-height: 22px; margin-top: 12px; text-align: center; font-size: 18px; color: #ffd34a; }
+#casino .czpay { font-size: 12px; color: rgba(245,234,210,0.6); margin: 8px 0 0; text-align: center; }
 #xpbar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(0,0,0,0.45); }
 #xpbar i { display: block; height: 100%; width: 0; background: var(--signal); transition: width 0.4s; }
 #xplvl { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--dim); white-space: nowrap; }
@@ -283,7 +316,7 @@ body.touch #matchbar { top: 26px; } body.touch #medal { top: 18%; } body.touch #
   <div id="matchbar"></div>
   <div id="xppop"></div>
   <div id="medal"></div>
-  <div id="xpbar"><i></i></div><div id="xplvl"></div>
+  <div id="xpbar"><i></i></div><div id="xplvl"></div><div id="cash"></div><div id="drunk" hidden></div>
   <div id="stats">
     <div id="streaks"></div>
     <span id="buffs"></span>
@@ -298,7 +331,7 @@ body.touch #matchbar { top: 26px; } body.touch #medal { top: 18%; } body.touch #
     <span class="s" id="wFrag"></span>
     <div id="slots"></div>
   </div>
-  <div id="carhud" hidden><b id="kmh">0</b> <span>km/h</span></div>
+  <div id="carhud" hidden><b id="kmh">0</b> <span id="kmhU">km/h</span></div>
   <div id="xh"><i></i><i></i><i></i><i></i></div>
   <div id="dot" hidden></div>
   <div id="hitm"></div>
@@ -326,6 +359,7 @@ body.touch #matchbar { top: 26px; } body.touch #medal { top: 18%; } body.touch #
 <div id="endScreen" hidden></div>
 <div id="board" hidden><h3 id="boardTitle">Server</h3><table><thead><tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Score</th></tr></thead><tbody id="boardBody"></tbody></table></div>
 
+<div id="casino" hidden><div class="czp"><button id="czX" type="button" aria-label="Leave">✕</button><div id="czBody"></div></div></div>
 <div id="menu"><div class="card" id="card"></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -513,7 +547,91 @@ const SPAWNS = [], CAR_SPOTS = [], PATROL = [];
 for (const x of ROADS) for (const z of ROADS) PATROL.push(new V3(x, 0, z));
 const blocks = [];
 for (let i = 0; i < ROADS.length - 1; i++) for (let j = 0; j < ROADS.length - 1; j++) blocks.push({ i, j, x0: ROADS[i] + RW / 2 + 4, x1: ROADS[i + 1] - RW / 2 - 4, z0: ROADS[j] + RW / 2 + 4, z1: ROADS[j + 1] - RW / 2 - 4 });
-const SPECIAL = { "1,1": "plaza", "0,2": "park", "2,0": "yard" };
+// ================= Summit Casino (block 2,2) =================
+// A walk-in casino: slot machines, roulette, blackjack and a cashier/bar. The games run in this browser
+// and are paid in cash you earn alongside XP (kept in your profile).
+const CASINO = { spots: [], wheel: null, x0: 0, x1: 0, z0: 0, z1: 0 };
+function neonTex(text, w, h, col, glow, bulbs) {
+  return canvasTex(w, h, (g) => {
+    g.fillStyle = "#14090c"; g.fillRect(0, 0, w, h);
+    g.font = `900 ${Math.round(h * 0.58)}px Georgia, "Times New Roman", serif`; g.textAlign = "center"; g.textBaseline = "middle";
+    g.shadowColor = glow; g.shadowBlur = h * 0.2; g.fillStyle = col; for (let k = 0; k < 3; k++) g.fillText(text, w / 2, h / 2 + 3);
+    g.shadowBlur = 0; g.fillStyle = "#fff6e0"; g.fillText(text, w / 2, h / 2 + 3); g.globalCompositeOperation = "multiply"; g.fillStyle = col; g.fillText(text, w / 2, h / 2 + 3); g.globalCompositeOperation = "source-over";
+    if (bulbs) for (let x = 10; x < w; x += 20) for (const y of [8, h - 8]) { g.beginPath(); g.arc(x, y, 4, 0, 7); g.fillStyle = "#ffe9a8"; g.shadowColor = "#ffcf6a"; g.shadowBlur = 8; g.fill(); }
+  });
+}
+function buildCasino(b) {
+  const x0 = b.x0 + 1, x1 = b.x1 - 1, z0 = b.z0 + 1, z1 = b.z1 - 1, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, H = 7.5, TH = 0.4, W = x1 - x0, D = z1 - z0;
+  Object.assign(CASINO, { x0, x1, z0, z1 });
+  MAPDRAW.push(["bld", x0, z0, W, D]);
+  const wallM = lam("#d8c7a3"), trimM = new THREE.MeshStandardMaterial({ color: new THREE.Color("#c9a24a").convertSRGBToLinear(), metalness: 1, roughness: 0.32 });
+  const darkM = lam("#2a1416"), woodM = lam("#5a3320"), feltM = lam("#1f6a3c");
+  // walls with a full-height doorway on the north (toward the plaza) and west side
+  const DOOR = 2.2;
+  solid((x0 + cx - DOOR) / 2, z0, cx - DOOR - x0, H, TH, wallM); solid((cx + DOOR + x1) / 2, z0, x1 - cx - DOOR, H, TH, wallM);
+  solid(x0, (z0 + cz - DOOR) / 2, TH, H, cz - DOOR - z0, wallM); solid(x0, (cz + DOOR + z1) / 2, TH, H, z1 - cz - DOOR, wallM);
+  solid(cx, z1, W, H, TH, wallM); solid(x1, cz, TH, H, D, wallM);
+  // gold base trim and door frames
+  for (const [x, z, w, d] of [[cx, z0 - 0.25, W, 0.12], [x0 - 0.25, cz, 0.12, D], [cx, z1 + 0.25, W, 0.12], [x1 + 0.25, cz, 0.12, D]]) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.5, d), trimM); m.position.set(x, 0.25, z); scene.add(m); const t = m.clone(); t.position.y = H - 0.3; t.scale.y = 0.6; scene.add(t); }
+  for (const s of [-1, 1]) { solid(cx + s * (DOOR + 0.2), z0 - 0.25, 0.5, H - 0.6, 0.5, trimM); solid(x0 - 0.25, cz + s * (DOOR + 0.2), 0.5, H - 0.6, 0.5, trimM); }
+  // roof (no shadow, so the hall stays lit) and a glowing coffered ceiling
+  const roofTop = new THREE.Mesh(tileUV(new THREE.PlaneGeometry(W + 1, D + 1), W + 1, D + 1, 4), lam("#77706a")); roofTop.rotation.x = -Math.PI / 2; roofTop.position.set(cx, H + 0.02, cz); roofTop.userData.noShadow = true; scene.add(roofTop);
+  const ceilTex = canvasTex(256, 256, (g) => { g.fillStyle = "#3a2018"; g.fillRect(0, 0, 256, 256); g.fillStyle = "#c9a24a"; g.fillRect(0, 0, 256, 6); g.fillRect(0, 0, 6, 256); const gr = g.createRadialGradient(128, 128, 10, 128, 128, 110); gr.addColorStop(0, "#fff3d0"); gr.addColorStop(0.5, "#f2c878"); gr.addColorStop(1, "#5a3020"); g.fillStyle = gr; g.fillRect(24, 24, 208, 208); });
+  ceilTex.repeat.set(W / 4, D / 4);
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshLambertMaterial({ map: ceilTex, emissive: "#ffffff", emissiveMap: ceilTex, emissiveIntensity: 0.55 })); ceil.rotation.x = Math.PI / 2; ceil.position.set(cx, H - 0.05, cz); ceil.userData.noShadow = true; scene.add(ceil);
+  const carpetTex = canvasTex(256, 256, (g) => { g.fillStyle = "#6e1220"; g.fillRect(0, 0, 256, 256); g.strokeStyle = "#c9a24a"; g.lineWidth = 3; for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const x = i * 64 + 32, y = j * 64 + 32; g.beginPath(); g.moveTo(x, y - 22); g.lineTo(x + 22, y); g.lineTo(x, y + 22); g.lineTo(x - 22, y); g.closePath(); g.stroke(); g.fillStyle = "#1c3a6a"; g.beginPath(); g.arc(x, y, 6, 0, 7); g.fill(); } for (let k = 0; k < 2500; k++) { g.fillStyle = `rgba(0,0,0,${Math.random() * 0.12})`; g.fillRect(Math.random() * 256, Math.random() * 256, 2, 2); } });
+  carpetTex.repeat.set(W / 4, D / 4);
+  const carpet = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshLambertMaterial({ map: carpetTex })); carpet.rotation.x = -Math.PI / 2; carpet.position.set(cx, 0.04, cz); scene.add(carpet);
+  // neon signs over both doors and a tall pylon sign you can see across town
+  const signM = new THREE.MeshBasicMaterial({ map: neonTex("SUMMIT CASINO", 1024, 160, "#ff3b6b", "#ff2050", true), toneMapped: false });
+  const s1 = new THREE.Mesh(new THREE.PlaneGeometry(12, 1.9), signM); s1.position.set(cx, H - 1.4, z0 - TH / 2 - 0.05); s1.rotation.y = Math.PI; scene.add(s1);
+  const s2 = new THREE.Mesh(new THREE.PlaneGeometry(12, 1.9), signM); s2.position.set(x0 - TH / 2 - 0.05, H - 1.4, cz); s2.rotation.y = -Math.PI / 2; scene.add(s2);
+  const pyl = new THREE.Mesh(new THREE.BoxGeometry(0.5, 16, 0.5), trimM); pyl.position.set(x0 - 1.5, 8, z0 - 1.5); scene.add(pyl); addBox(x0 - 1.8, x0 - 1.2, z0 - 1.8, z0 - 1.2, 16);
+  const vM = new THREE.MeshBasicMaterial({ map: neonTex("CASINO", 512, 120, "#ffd34a", "#ff9a20", true), toneMapped: false, side: THREE.DoubleSide });
+  for (const r of [Math.PI / 4, -Math.PI / 4]) { const v = new THREE.Mesh(new THREE.PlaneGeometry(7, 1.65), vM); v.position.set(x0 - 1.5, 14.2, z0 - 1.5); v.rotation.y = r + Math.PI; scene.add(v); }
+  // slot machines: a row along the east wall and a back-to-back island
+  const reelTex = canvasTex(128, 160, (g) => { g.fillStyle = "#1a0a2a"; g.fillRect(0, 0, 128, 160); g.fillStyle = "#f5efe0"; for (let i = 0; i < 3; i++) g.fillRect(8 + i * 39, 30, 34, 70); g.font = "bold 30px Georgia"; g.textAlign = "center"; g.fillStyle = "#c01830"; for (let i = 0; i < 3; i++) g.fillText("7", 25 + i * 39, 76); g.fillStyle = "#ffd34a"; g.font = "bold 16px Georgia"; g.fillText("JACKPOT", 64, 20); g.fillStyle = "#ff3b6b"; g.fillRect(8, 112, 112, 30); g.fillStyle = "#fff"; g.font = "bold 15px Georgia"; g.fillText("777", 64, 133); });
+  const screenM = new THREE.MeshBasicMaterial({ map: reelTex, toneMapped: false }), topM = new THREE.MeshBasicMaterial({ color: "#ffcf5a", toneMapped: false }), cabM = lam("#5a0f1a");
+  const slot = (x, z, face) => { // face: direction the player stands, as a unit vector
+    solid(x, z, 0.75, 1.75, 0.75, cabM);
+    const sc = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.75), screenM); sc.position.set(x + face[0] * 0.39, 1.25, z + face[1] * 0.39); sc.rotation.y = Math.atan2(face[0], face[1]); scene.add(sc);
+    const tp = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.2, 0.8), topM); tp.position.set(x, 1.86, z); scene.add(tp);
+    const st = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 0.6, 12), trimM); st.position.set(x + face[0] * 1.0, 0.3, z + face[1] * 1.0); scene.add(st);
+    CASINO.spots.push({ x: x + face[0] * 1.1, z: z + face[1] * 1.1, kind: "slots" });
+  };
+  for (let z = z0 + 2; z < z1 - 2; z += 1.45) slot(x1 - 0.6, z, [-1, 0]);
+  for (let z = cz - 5; z <= cz + 5.1; z += 1.45) { slot(cx + 3.5, z, [-1, 0]); slot(cx + 4.25, z, [1, 0]); }
+  // roulette: felt layout and a spinning wheel
+  const rx = cx - 5, rz = cz + 5;
+  solid(rx, rz, 3.6, 0.88, 1.9, woodM);
+  const layTex = canvasTex(512, 256, (g) => { g.fillStyle = "#1f6a3c"; g.fillRect(0, 0, 512, 256); g.strokeStyle = "#f5efe0"; g.lineWidth = 2; g.font = "bold 22px Georgia"; g.textAlign = "center"; g.textBaseline = "middle"; const RED = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]; g.fillStyle = "#0f8a3a"; g.fillRect(150, 20, 34, 150); g.strokeRect(150, 20, 34, 150); g.fillStyle = "#fff"; g.fillText("0", 167, 95); for (let n = 1; n <= 36; n++) { const c = Math.floor((n - 1) / 3), r = 2 - (n - 1) % 3, x = 184 + c * 27, y = 20 + r * 50; g.fillStyle = RED.includes(n) ? "#b0182a" : "#111"; g.fillRect(x, y, 27, 50); g.strokeRect(x, y, 27, 50); g.fillStyle = "#fff"; g.font = "bold 13px Georgia"; g.fillText(n, x + 13, y + 25); } g.fillStyle = "#b0182a"; g.fillRect(184, 185, 160, 45); g.fillStyle = "#111"; g.fillRect(344, 185, 160, 45); g.strokeRect(184, 185, 320, 45); });
+  const lay = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.7), new THREE.MeshLambertMaterial({ map: layTex })); lay.rotation.x = -Math.PI / 2; lay.position.set(rx, 0.885, rz); scene.add(lay);
+  const wheelTex = canvasTex(256, 256, (g) => { g.fillStyle = "#4a2a16"; g.fillRect(0, 0, 256, 256); for (let i = 0; i < 37; i++) { const a0 = i / 37 * Math.PI * 2, a1 = (i + 1) / 37 * Math.PI * 2; g.fillStyle = i === 0 ? "#0f8a3a" : i % 2 ? "#b0182a" : "#111"; g.beginPath(); g.moveTo(128, 128); g.arc(128, 128, 124, a0, a1); g.closePath(); g.fill(); } g.fillStyle = "#6a3a1a"; g.beginPath(); g.arc(128, 128, 80, 0, 7); g.fill(); g.fillStyle = "#c9a24a"; g.beginPath(); g.arc(128, 128, 22, 0, 7); g.fill(); for (let i = 0; i < 4; i++) { g.save(); g.translate(128, 128); g.rotate(i * Math.PI / 2); g.fillRect(-4, 0, 8, 70); g.restore(); } });
+  const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.55, 0.14, 37), [new THREE.MeshStandardMaterial({ color: "#4a2a16", roughness: 0.5 }), new THREE.MeshStandardMaterial({ map: wheelTex, roughness: 0.35, metalness: 0.2 }), new THREE.MeshStandardMaterial({ color: "#4a2a16" })]);
+  wheel.position.set(rx - 1.1, 0.96, rz); scene.add(wheel); CASINO.wheel = wheel;
+  CASINO.spots.push({ x: rx, z: rz - 1.6, kind: "roulette" }, { x: rx + 2.4, z: rz, kind: "roulette" });
+  // blackjack: half-moon tables
+  for (const [bx, bz] of [[cx - 5, cz - 4], [cx - 1, cz - 7.5]]) {
+    const t = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.86, 24, 1, false, -Math.PI / 2, Math.PI), feltM); t.position.set(bx, 0.43, bz); scene.add(t);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.07, 6, 24, Math.PI), woodM); rim.rotation.x = Math.PI / 2; rim.position.set(bx, 0.87, bz); scene.add(rim);
+    addBox(bx - 1.5, bx + 1.5, bz - 0.2, bz + 1.5, 0.9);
+    const shirt = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 0.62, 12), lam("#efe9df")); shirt.position.set(bx, 1.2, bz - 0.45); scene.add(shirt);
+    const vest = new THREE.Mesh(new THREE.CylinderGeometry(0.215, 0.18, 0.5, 12, 1, false, Math.PI * 0.6, Math.PI * 0.8), darkM); vest.position.set(bx, 1.22, bz - 0.45); scene.add(vest);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 10), lam("#c79a7a")); head.position.set(bx, 1.66, bz - 0.45); scene.add(head);
+    const bow = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.05, 0.04), lam("#7a1020")); bow.position.set(bx, 1.48, bz - 0.27); scene.add(bow);
+    CASINO.spots.push({ x: bx, z: bz + 2.2, kind: "blackjack" });
+  }
+  // cashier and bar along the back wall, bottles on a lit shelf
+  solid(cx - 3, z1 - 1.8, 9, 1.1, 0.9, woodM);
+  const top = new THREE.Mesh(new THREE.BoxGeometry(9.2, 0.06, 1.0), trimM); top.position.set(cx - 3, 1.13, z1 - 1.8); scene.add(top);
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(9, 0.08, 0.35), trimM); shelf.position.set(cx - 3, 1.7, z1 - 0.4); scene.add(shelf);
+  const bottleCols = ["#2a5a2a", "#6a3a10", "#c8d8e0", "#7a1020", "#d0a040"].map((c) => new THREE.MeshStandardMaterial({ color: new THREE.Color(c).convertSRGBToLinear(), roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.85 }));
+  const bg = new THREE.CylinderGeometry(0.05, 0.05, 0.32, 8);
+  for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(bg, bottleCols[i % 5]); m.position.set(cx - 7.3 + i * 0.34, 1.9, z1 - 0.4); scene.add(m); }
+  const barSign = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.9), new THREE.MeshBasicMaterial({ map: neonTex("CASHIER · BAR", 512, 92, "#5ad8ff", "#20a0ff", false), toneMapped: false })); barSign.position.set(cx - 3, 3.0, z1 - TH / 2 - 0.03); barSign.rotation.y = Math.PI; scene.add(barSign);
+  CASINO.spots.push({ x: cx - 6, z: z1 - 3.2, kind: "cashier" }, { x: cx - 3, z: z1 - 3.2, kind: "cashier" }, { x: cx, z: z1 - 3.2, kind: "cashier" });
+}
+const SPECIAL = { "1,1": "plaza", "0,2": "park", "2,0": "yard", "2,2": "casino" };
 const trees = [];
 for (const b of blocks) {
   const kind = SPECIAL[b.i + "," + b.j] || "buildings";
@@ -536,9 +654,8 @@ for (const b of blocks) {
     }
     if (rnd() < 0.8) placeProp("dumpster", cx + (rnd() - 0.5), b.z0 + 1.1, Math.PI / 2, 1, true);
     if (rnd() < 0.5) placeProp("dumpster", b.x1 - 1.1, cz + (rnd() - 0.5), 0, 1, true);
-  } else if (kind === "plaza") {
-    const f = solid(cx, cz, 10, 0.9, 10, concrete); MAPDRAW.push(["prop", cx - 5, cz - 5, 10, 10]);
-    const st = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.1, 5, 10), lam("#5a6655")); st.position.set(cx, 3.4, cz); scene.add(st); addBox(cx - 0.9, cx + 0.9, cz - 0.9, cz + 0.9, 5.9);
+  } else if (kind === "casino") buildCasino(b);
+  else if (kind === "plaza") { // the Black Hawk's helipad is drawn with the helicopter
     for (let k = 0; k < 8; k += 2) { const a = k / 8 * Math.PI * 2; placeProp("bench", cx + Math.cos(a) * 8, cz + Math.sin(a) * 8, k % 4 ? Math.PI / 2 : 0, 1, true); }
     for (let k = 1; k < 8; k += 2) { const a = k / 8 * Math.PI * 2; placeProp("bin", cx + Math.cos(a) * 9, cz + Math.sin(a) * 9, a, 0.75, true); }
     for (const [dx, dz] of [[-9.5, -9.5], [9.5, -9.5], [-9.5, 9.5], [9.5, 9.5]]) solid(cx + dx, cz + dz, 6, 1.1, 1, barrierM);
@@ -936,6 +1053,7 @@ function trafficAt(c, time) {
 }
 function updateTraffic(dt) {
   updateLifts();
+  if (typeof updateHeli === "function") updateHeli(dt);
   const time = serverNow() / 1000, k = 1 - Math.exp(-dt * 8);
   for (const c of traffic) {
     const t = trafficAt(c, time);
@@ -1014,8 +1132,13 @@ const WEAPONS = [
   { id: "barrett", name: "Barrett .50", type: "Sniper", dmg: 150, head: 2, rpm: 70, auto: false, mag: 10, reload: 3.4, hip: 0.1, ads: 0.0004, range: 500, adsFov: 12, scope: true, kick: 0.08, heavy: 0.88, snd: [1500, 1.0, 50, 0.6] },
   { id: "deagle", name: "Desert Eagle", type: "Pistol", dmg: 58, head: 2, rpm: 220, auto: false, mag: 10, reload: 1.8, hip: 0.026, ads: 0.005, range: 35, adsFov: 56, kick: 0.05, snd: [1800, 0.8, 80, 0.4] },
   { id: "g18", name: "G18", type: "Machine pistol", dmg: 20, head: 1.6, rpm: 1000, auto: true, mag: 33, reload: 1.6, hip: 0.034, ads: 0.014, range: 20, adsFov: 58, kick: 0.009, snd: [3100, 0.35, 130, 0.15] },
+  { id: "famas", name: "FAMAS", type: "Assault rifle", dmg: 34, head: 1.6, rpm: 1100, burst: 3, auto: false, mag: 45, reload: 2.3, hip: 0.032, ads: 0.004, range: 55, adsFov: 50, kick: 0.011, snd: [2600, 0.5, 105, 0.24] },
+  { id: "uzi", name: "Mini-Uzi", type: "SMG", dmg: 22, head: 1.4, rpm: 1050, auto: true, mag: 48, reload: 1.9, hip: 0.034, ads: 0.015, range: 20, adsFov: 56, kick: 0.009, snd: [3300, 0.35, 120, 0.15] },
+  { id: "aa12", name: "AA-12", type: "Shotgun", dmg: 14, head: 1.2, rpm: 300, auto: true, mag: 32, reload: 3.0, hip: 0.08, ads: 0.06, range: 11, pellets: 7, adsFov: 62, kick: 0.035, snd: [1600, 0.7, 70, 0.36] },
+  { id: "intervention", name: "Intervention", type: "Sniper", dmg: 120, head: 2.2, rpm: 50, auto: false, mag: 7, reload: 3.1, hip: 0.09, ads: 0.0003, range: 450, adsFov: 12, scope: true, kick: 0.065, snd: [1800, 0.95, 55, 0.55] },
+  { id: "rpg", name: "RPG-7", type: "Launcher", rpm: 40, auto: false, mag: 2, reload: 3.4, hip: 0.01, ads: 0.004, adsFov: 58, kick: 0.09, heavy: 0.9, proj: { speed: 62, grav: 1.6, radius: 8, dmg: 220, rocket: true }, snd: [700, 0.9, 50, 0.45] },
 ];
-const KNIFE = 20, CAR = 21, FRAG = 22, AIR = 23, FALL = 24, CARBOOM = 25; // damage sources that are not guns
+const KNIFE = 40, CAR = 41, FRAG = 42, AIR = 43, FALL = 44, CARBOOM = 45, HELI = 46, HELIBOOM = 47; // damage sources that are not guns
 
 // ================= career: XP, ranks, unlocks, camos, challenges (kept in this browser) =================
 const RANK_TIERS = [["Private", 3], ["Private First Class", 3], ["Specialist", 3], ["Corporal", 3], ["Sergeant", 3], ["Staff Sergeant", 3], ["Sergeant First Class", 3], ["Master Sergeant", 3], ["First Sergeant", 3], ["Sergeant Major", 3], ["Command Sergeant Major", 3], ["Second Lieutenant", 3], ["First Lieutenant", 3], ["Captain", 3], ["Major", 2], ["Lieutenant Colonel", 2], ["Colonel", 2], ["Brigadier General", 1], ["General", 1]];
@@ -1023,8 +1146,8 @@ const RANKS = []; for (const [n, c] of RANK_TIERS) for (let i = 0; i < c; i++) R
 const MAX_LVL = RANKS.length; // 50
 const LVL_XP = [0]; for (let l = 1; l < MAX_LVL; l++) LVL_XP.push(LVL_XP[l - 1] + 400 + 110 * (l - 1) + 5 * (l - 1) ** 2);
 const levelOf = (xp) => { let l = 1; while (l < MAX_LVL && xp >= LVL_XP[l]) l++; return l; };
-const UNLOCK = { m1911: 1, mp5k: 1, ak47: 1, stakeout: 2, m4a1: 3, python: 4, ump45: 5, commando: 6, deagle: 7, dragunov: 9, spas12: 10, m60: 12, acr: 14, l96: 15, vector: 16, chinalake: 18, g18: 20, barrett: 22 };
-const PRIMARIES = ["mp5k", "ump45", "vector", "ak47", "m4a1", "commando", "acr", "m60", "stakeout", "spas12", "dragunov", "l96", "barrett"], SECONDARIES = ["m1911", "deagle", "python", "g18", "chinalake"];
+const UNLOCK = { m1911: 1, mp5k: 1, ak47: 1, stakeout: 2, m4a1: 3, python: 4, ump45: 5, commando: 6, deagle: 7, dragunov: 9, spas12: 10, m60: 12, acr: 14, l96: 15, vector: 16, chinalake: 18, g18: 20, barrett: 22, uzi: 3, famas: 8, aa12: 11, intervention: 13, rpg: 17 };
+const PRIMARIES = ["mp5k", "ump45", "vector", "uzi", "ak47", "m4a1", "famas", "commando", "acr", "m60", "stakeout", "spas12", "aa12", "dragunov", "l96", "intervention", "barrett"], SECONDARIES = ["m1911", "deagle", "python", "g18", "chinalake", "rpg"];
 const widx = (id) => WEAPONS.findIndex((w) => w.id === id);
 const CAMOS = [[0, null, null], [15, "Woodland", "#4f5a3a"], [40, "Tiger", "#8a6a2c"], [80, "Red Tiger", "#7a2a22"], [150, "Gold", "#c9a227"]];
 const CHALLENGES = [
@@ -1037,14 +1160,14 @@ const CHALLENGES = [
   { id: "uav", text: "Call in 2 UAVs", n: 2, xp: 1000 }, { id: "air", text: "Get 3 airstrike kills", n: 3, xp: 1500 },
 ];
 const hex = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => b.toString(16).padStart(2, "0")).join("");
-const profile = Object.assign({ xp: 0, pr: 0, kills: 0, deaths: 0, heads: 0, games: 0, wins: 0, best: 0, wk: {}, key: "", pub: "", chal: null, prim: "ak47", sec: "m1911" }, store.get("profile", {}));
+const profile = Object.assign({ xp: 0, pr: 0, kills: 0, deaths: 0, heads: 0, games: 0, wins: 0, best: 0, wk: {}, key: "", pub: "", chal: null, prim: "ak47", sec: "m1911", cash: 1000, bought: [] }, store.get("profile", {}));
 if (!profile.key) { profile.key = hex(16); profile.pub = hex(5); }
 if (typeof profile.wk !== "object" || !profile.wk) profile.wk = {};
 let saveT = 0;
 function saveProfile(now) { if (now || performance.now() - saveT > 4000) { saveT = performance.now(); store.set("profile", profile); } }
 const myLevel = () => levelOf(profile.xp);
 const camoOf = (id) => { const k = profile.wk[id] || 0; let c = CAMOS[0]; for (const t of CAMOS) if (k >= t[0]) c = t; return c; };
-const unlocked = (id) => myLevel() >= (UNLOCK[id] || 1) || profile.pr > 0;
+const unlocked = (id) => myLevel() >= (UNLOCK[id] || 1) || profile.pr > 0 || (Array.isArray(profile.bought) && profile.bought.includes(id));
 function ensureChallenges() {
   const day = new Date().toISOString().slice(0, 10);
   if (profile.chal && profile.chal.day === day) return;
@@ -1058,7 +1181,7 @@ let matchXP = 0, mStats = { k: 0, d: 0, heads: 0, best: 0, medals: 0 };
 function addXP(n, label, quiet) {
   if (n <= 0) return;
   const before = myLevel();
-  profile.xp += n; matchXP += n;
+  profile.xp += n; matchXP += n; profile.cash = (profile.cash || 0) + Math.round(n / 2);
   if (!quiet) xpPop(`+${n}`, label);
   const after = myLevel();
   if (after > before) promote(after);
@@ -1119,7 +1242,7 @@ function applyMods() {
 if (!profile.mods || typeof profile.mods !== "object") profile.mods = {};
 applyMods();
 const ammo = WEAPONS.map((w) => w.mag);
-let wIdx = 3, nextShot = 0, reloadEnd = 0, triggerHeld = false, triggerFresh = false, adsHeld = false, adsT = 0, bloom = 0, knifeT = -9, recoilP = 0, recoilY = 0, switchT = 0;
+let burstLeft = 0, wIdx = 3, nextShot = 0, reloadEnd = 0, triggerHeld = false, triggerFresh = false, adsHeld = false, adsT = 0, bloom = 0, knifeT = -9, recoilP = 0, recoilY = 0, switchT = 0;
 
 // viewmodel
 // The gun and arms render in their own pass with a fixed field of view (like any shooter's viewmodel), so
@@ -1139,7 +1262,7 @@ const flash = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), new THREE.Mesh
 const muzzleLight = new THREE.PointLight("#ffb466", 0, 10, 2); scene.add(muzzleLight);
 flash.visible = false;
 // Gun geometry shared by the first-person viewmodel and the guns other players carry. Returns the barrel length.
-const GUN_LEN = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56, m4a1: 0.56, acr: 0.58, ump45: 0.4, vector: 0.36, spas12: 0.68, barrett: 1.0, deagle: 0.25, g18: 0.2 };
+const GUN_LEN = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56, m4a1: 0.56, acr: 0.58, ump45: 0.4, vector: 0.36, spas12: 0.68, barrett: 1.0, deagle: 0.25, g18: 0.2, famas: 0.5, uzi: 0.3, aa12: 0.7, intervention: 0.9, rpg: 0.95 };
 const GUN_POLY = lam("#2a2b2a"), GUN_TAN = lam("#8a7a5a"), GUN_OLIVE = lam("#4d5a36"), GUN_TUBE = lam("#3d4430");
 function gunModel(id, add, metal, wood) {
   const len = GUN_LEN[id] || 0.5, poly = GUN_POLY, tan = GUN_TAN;
@@ -1168,6 +1291,15 @@ function gunModel(id, add, metal, wood) {
   if (id === "barrett") { scope(0.032, 0.36, -0.22); add(new THREE.BoxGeometry(0.06, 0.16, 0.08), poly, 0, -0.12, -0.18); add(new THREE.BoxGeometry(0.05, 0.1, 0.28), poly, 0, -0.02, 0.15); add(new THREE.BoxGeometry(0.09, 0.05, 0.08), metal, 0, 0, -len - 0.02); }
   if (id === "deagle") { add(new THREE.BoxGeometry(0.045, 0.11, 0.05), poly, 0, -0.075, -0.03); }
   if (id === "g18") { add(new THREE.BoxGeometry(0.04, 0.18, 0.045), poly, 0, -0.1, -0.03); }
+  if (id === "rpg") { // launch tube, flared venturi, wooden heat guards, grips, optic and a loaded warhead
+    const tube = add(new THREE.CylinderGeometry(0.03, 0.03, 0.95, 14), GUN_OLIVE, 0, 0, -0.32); tube.rotation.x = Math.PI / 2;
+    const ven = add(new THREE.CylinderGeometry(0.05, 0.03, 0.16, 14), metal, 0, 0, 0.21); ven.rotation.x = Math.PI / 2;
+    const gd = add(new THREE.CylinderGeometry(0.042, 0.042, 0.3, 12), wood, 0, 0, -0.18); gd.rotation.x = Math.PI / 2;
+    add(new THREE.BoxGeometry(0.03, 0.09, 0.035), poly, 0, -0.07, -0.05); add(new THREE.BoxGeometry(0.03, 0.09, 0.035), poly, 0, -0.07, -0.3);
+    const wh = add(new THREE.ConeGeometry(0.055, 0.2, 12), GUN_OLIVE, 0, 0, -0.92); wh.rotation.x = -Math.PI / 2;
+    const wb = add(new THREE.CylinderGeometry(0.055, 0.03, 0.12, 12), GUN_OLIVE, 0, 0, -0.78); wb.rotation.x = Math.PI / 2;
+    scope(0.016, 0.12, -0.2);
+  }
   return len;
 }
 // ================= real guns =================
@@ -1194,6 +1326,7 @@ const WMODEL = {
   mp5k: ["gg", 0.5], ump45: ["gg", 0.62, "#a4a4a4"], vector: ["su", 0.66, "#9a9a9a"], stakeout: ["sg", 1.0], spas12: ["sg", 1.04, "#8a8a8a"],
   dragunov: ["sn", 1.18, "#c9b89a"], l96: ["sn", 1.2], barrett: ["sn", 1.42, "#8c8c8c"],
   m1911: ["mk", 0.21], g18: ["mk", 0.2, "#a0a0a0"], python: ["lg", 0.25], deagle: ["lg", 0.27, "#cfcfcf"],
+  famas: ["m4", 0.76, "#6b6f73"], uzi: ["gg", 0.47, "#7a7a7a"], aa12: ["sg", 0.98, "#5a5d5f"], intervention: ["sn", 1.24, "#a7a7a1"],
 };
 const REALGUN = { data: null, geo: {}, tex: {}, mats: {}, env: null };
 function gunGeo(k) {
@@ -1323,11 +1456,13 @@ function refreshLook(a) {
   if (a.real) tintSoldier(a, shirtC);
 }
 function avatarBase(a) {
+  if (a.heli && heli.g) return new V3(heli.x, heli.y + 0.6, heli.z);
   if (a.car >= 0 && cars[a.car]) { const c = cars[a.car], co = Math.cos(c.yaw), si = Math.sin(c.yaw); return new V3(c.x + (-0.45) * co + 0.2 * si, 0.35, c.z - (-0.45) * si + 0.2 * co); }
   return a.rpos;
 }
 function rayAvatar(o, d, maxT, a) {
   if (a.dead) return null;
+  if (a.heli && heli.g) { const th = raySphere(o, d, new V3(heli.x, heli.y + 1.5, heli.z), 2.4); return th != null && th < maxT ? { t: th, head: false } : null; }
   const base = avatarBase(a), seated = a.car >= 0, hy = seated ? 1.15 : a.crouch ? 1.12 : 1.66;
   let best = null;
   const th = raySphere(o, d, new V3(base.x, base.y + hy, base.z), 0.18);
@@ -1349,6 +1484,7 @@ function animateAvatar(a, dt) {
   if (SOLDIER.ready && !a.real) upgradeAvatar(a);
   const real = a.real;
   if (real) { a.legs.forEach((l) => (l.visible = false)); a.upper.visible = false; }
+  g.visible = !a.heli; if (a.heli) return;
   if (a.car >= 0 && cars[a.car]) {
     const c = cars[a.car]; const b = avatarBase(a); g.position.copy(b); g.rotation.set(0, c.yaw, 0); a.legs.forEach((l) => (l.visible = false)); a.upper.position.y = 0.45; g.visible = true;
     if (real) poseSoldier(a, dt, 0, 0, "seat");
@@ -1665,7 +1801,7 @@ function tone(dur, freq, vol, type = "sine", delay = 0, pan = 0) {
 function panOf(pos) { const dx = pos.x - camera.position.x, dz = pos.z - camera.position.z, l = Math.hypot(dx, dz) || 1; return clamp((dx * Math.cos(P.yaw) - dz * Math.sin(P.yaw)) / l, -1, 1) * 0.85; }
 // Recorded gunshots (The Free Firearm Sound Library, CC0): a close and a distant take per gun family.
 const SFX = { buf: {}, loading: false };
-const GUN_SFX = { ak47: "ak", m60: ["ak", 0.86], dragunov: "mosin", l96: "bolt", barrett: ["bolt", 0.78], m4a1: "ar", commando: ["ar", 1.06], acr: ["ar", 0.95], mp5k: "smg", ump45: ["smg", 0.9], vector: ["pp", 1.08], stakeout: "pump", spas12: ["pump", 0.93], m1911: "p45", deagle: ["p45", 0.8], g18: ["p9", 1.06], python: "rev" };
+const GUN_SFX = { ak47: "ak", m60: ["ak", 0.86], dragunov: "mosin", l96: "bolt", barrett: ["bolt", 0.78], m4a1: "ar", commando: ["ar", 1.06], acr: ["ar", 0.95], mp5k: "smg", ump45: ["smg", 0.9], vector: ["pp", 1.08], stakeout: "pump", spas12: ["pump", 0.93], m1911: "p45", deagle: ["p45", 0.8], g18: ["p9", 1.06], python: "rev", famas: ["ar", 1.1], uzi: ["smg", 1.12], aa12: ["pump", 1.08], intervention: ["bolt", 0.9] };
 function loadSfx() {
   if (SFX.loading || !AC) return; SFX.loading = true;
   const get = (n) => fetch(`sfx/${n}.mp3`).then((r) => (r.ok ? r.arrayBuffer() : null)).then((ab) => ab && new Promise((res, rej) => AC.decodeAudioData(ab, res, rej))).then((b) => { if (b) SFX.buf[n] = b; }).catch(() => {});
@@ -1855,7 +1991,7 @@ function renderSlots() { $("slots").innerHTML = loadout.map((wi, i) => `<span cl
 let fSeq = 0, hSeq = 0, kbSeq = 0, chatSeq = 0, lastFire = null, lastKB = null, lastChat = null;
 const hitLog = []; // [toPeer, n, dmg, head, w]
 const fwd = new V3(), upv = new V3(), rightv = new V3();
-function canCombat() { return state === "play" && !P.dead && !P.car && !P.passive && match.phase === 0; }
+function canCombat() { return state === "play" && !P.dead && !P.car && !P.heli && !casinoOpen && !P.passive && match.phase === 0; }
 const hostile = (ta, tb) => match.mode === 0 || ta !== tb;
 function teamOfId(id) { if (id === myId()) return P.team; const e = whoIs(id); return e ? e.team : -2; }
 function targets() { const t = []; for (const a of remotes.values()) if (!a.pas && !a.dead && hostile(P.team, a.team)) t.push(a); for (const b of bots) if (!b.dead && hostile(P.team, b.team)) t.push(b); return t; }
@@ -1865,7 +2001,7 @@ function fire() {
   if (reloadEnd) return;
   if (ammo[wIdx] <= 0) { sfx.click(); startReload(); return; }
   if (T < nextShot) return;
-  nextShot = T + 60 / w.rpm; ammo[wIdx]--;
+  nextShot = T + 60 / w.rpm + (w.burst && burstLeft === 1 ? 0.16 : 0); ammo[wIdx]--;
   camera.updateMatrixWorld();
   const eye = camera.getWorldPosition(new V3());
   camera.getWorldDirection(fwd); upv.set(0, 1, 0).applyQuaternion(camera.quaternion); rightv.set(1, 0, 0).applyQuaternion(camera.quaternion);
@@ -1919,7 +2055,8 @@ const _eul = new THREE.Euler(), _qe = new THREE.Quaternion();
 const projectiles = [], booms = []; // booms: [n, x, y, z] announced in presence
 let frags = 2, fragT = -9, bmSeq = 0, shakeT = 0;
 const projGeo = new THREE.SphereGeometry(0.1, 8, 6), projMat = lam("#2d3020");
-function spawnProjectile(o) { const m = new THREE.Mesh(projGeo, projMat); m.position.copy(o.pos); scene.add(m); projectiles.push({ ...o, pos: o.pos.clone(), vel: o.vel.clone(), mesh: m, t: 0 }); }
+const rocketGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.6, 8).rotateX(Math.PI / 2);
+function spawnProjectile(o) { const rk = WEAPONS[o.w] && WEAPONS[o.w].proj && WEAPONS[o.w].proj.rocket; o.rocket = rk; const m = new THREE.Mesh(rk ? rocketGeo : projGeo, projMat); m.position.copy(o.pos); scene.add(m); projectiles.push({ ...o, pos: o.pos.clone(), vel: o.vel.clone(), mesh: m, t: 0 }); }
 function insideWorld(p) {
   if (p.y <= 0.05) return "ground";
   for (const b of boxesNear(p.x, p.z)) if (p.x > b.x0 && p.x < b.x1 && p.z > b.z0 && p.z < b.z1 && p.y < b.y1) return "box";
@@ -2055,7 +2192,7 @@ function updateProjectiles(dt) {
       const hit = insideWorld(pr.pos);
       if (pr.impact) {
         let direct = false;
-        if (pr.t > 0.12) for (const a of [...targets(), ...(pr.owner !== myId() ? ["me"] : [])]) { const p = a === "me" ? new V3(P.pos.x, P.pos.y + 1, P.pos.z) : (() => { const b = avatarBase(a); return new V3(b.x, b.y + 1, b.z); })(); if (p.distanceTo(pr.pos) < 0.9) direct = true; }
+        if (pr.t > 0.12) for (const a of [...targets(), ...(pr.owner !== myId() ? ["me"] : [])]) { const p = a === "me" ? new V3(P.pos.x, P.pos.y + 1, P.pos.z) : (() => { const b = avatarBase(a); return new V3(b.x, b.y + 1, b.z); })(); if (p.distanceTo(pr.pos) < ((a === "me" ? P.heli : a.heli) ? 2.6 : 0.9)) direct = true; }
         if (hit || direct || pr.t > pr.fuse) { pr.pos.copy(prev); done = true; }
       } else {
         if (hit === "ground") { pr.pos.y = 0.06; pr.vel.y = Math.abs(pr.vel.y) * 0.35; pr.vel.x *= 0.6; pr.vel.z *= 0.6; }
@@ -2064,6 +2201,7 @@ function updateProjectiles(dt) {
       }
     }
     pr.mesh.position.copy(pr.pos);
+    if (pr.rocket) { pr.mesh.lookAt(pr.pos.clone().add(pr.vel)); pr.trailT = (pr.trailT || 0) - dt; if (pr.trailT <= 0) { pr.trailT = isTouch ? 0.05 : 0.025; puff(pr.pos.clone(), "#d8d4cc", 0.22); } }
     if (!pr.impact && pr.pos.distanceTo(P.pos) < 9 && !P.dead) warn = true;
     if (done) { projectiles.splice(i, 1); explode(pr); }
   }
@@ -2078,7 +2216,7 @@ function knife() {
   if (best) dealDamage(best.a, 150, false, KNIFE);
 }
 function startReload() { const w = WEAPONS[wIdx]; if (reloadEnd || ammo[wIdx] >= w.mag || P.car) return; reloadEnd = T + w.reload; sfx.reload(w); }
-function switchWeapon(i) { if (i === wIdx || i < 0 || i >= WEAPONS.length) return; wIdx = i; reloadEnd = 0; switchT = T + 0.35; buildViewmodel(); }
+function switchWeapon(i) { if (i === wIdx || i < 0 || i >= WEAPONS.length) return; wIdx = i; burstLeft = 0; reloadEnd = 0; switchT = T + 0.35; buildViewmodel(); }
 // loadout: one primary and one secondary, picked in the menu, applied when you spawn
 let loadout = [3, 0];
 function applyLoadout() {
@@ -2089,7 +2227,7 @@ function applyLoadout() {
   buildViewmodel();
 }
 const swapWeapon = () => switchWeapon(wIdx === loadout[0] ? loadout[1] : loadout[0]);
-const WNAME = (i) => ({ [KNIFE]: "Knife", [CAR]: "Car", [FRAG]: "Frag", [AIR]: "Airstrike", [FALL]: "Fall", [CARBOOM]: "Car bomb" })[i] || (WEAPONS[i] || WEAPONS[3]).name;
+const WNAME = (i) => ({ [KNIFE]: "Knife", [CAR]: "Car", [FRAG]: "Frag", [AIR]: "Airstrike", [FALL]: "Fall", [CARBOOM]: "Car bomb", [HELI]: "Black Hawk", [HELIBOOM]: "Helicopter crash" })[i] || (WEAPONS[i] || WEAPONS[3]).name;
 const myDamage = new Map(), lastHitDist = new Map();
 let lastKills = [], comebackDeaths = 0, lastKillerId = null, roundKillsSeen = 0;
 function dealDamage(who, dmg, head, w, dist) {
@@ -2139,7 +2277,9 @@ function noteDeath(victimId, killerId) {
 }
 function takeDamage(dmg, from, head, w) {
   if (P.dead || P.passive || state !== "play" || match.phase !== 0) return;
+  if (casinoOpen) closeCasino();
   if (juggUntil > T) dmg *= 0.35;
+  if (P.heli && !(WEAPONS[w] && WEAPONS[w].proj) && w !== FRAG && w !== AIR && w !== HELIBOOM && w !== CARBOOM) dmg *= 0.3; // armoured cockpit: bullets do little, explosives full
   P.hp -= dmg; P.lastHurt = T; sfx.hurt(); hurtPulse = Math.min(1, hurtPulse + dmg / 45);
   if (from && from.rpos) damageDir(from.isBot ? from.pos : avatarBase(from));
   if (P.hp <= 0) die(from, w, head);
@@ -2148,6 +2288,7 @@ function die(from, w, head) {
   P.hp = 0; P.dead = true; P.deadT = T; P.d++; P.streak = 0; profile.deaths++; mStats.d++; comebackDeaths++; roundKillsSeen++;
   lastKillerId = from ? from.id : null; juggUntil = 0; saveProfile();
   if (P.car) exitCar(true);
+  if (P.heli) heliDown(from, true);
   kbSeq++; lastKB = [kbSeq, from ? from.id : "", w, head ? 1 : 0];
   P.killer = from;
   $("deathMsg").hidden = false; $("deathBy").textContent = from ? `by ${from.nm} · ${WNAME(w)}${head ? " · headshot" : ""}` : "";
@@ -2157,6 +2298,7 @@ function die(from, w, head) {
   pushPresence(true);
 }
 function respawn() {
+  if (P.heli) { P.heli = null; heliDown(null, false); }
   const others = [...remotes.values(), ...bots].filter((a) => !a.dead).map((a) => a.pos);
   let best = SPAWNS[0], bestD = -1;
   for (let i = 0; i < 12; i++) { const s = pick(SPAWNS); const d = others.length ? Math.min(...others.map((o) => o.distanceTo(s))) : Math.random(); if (d > bestD) { bestD = d; best = s; } }
@@ -2213,6 +2355,306 @@ function driveCar(c, dt) {
   P.pos.set(c.x, 0, c.z);
   setEngine(true, c.speed);
 }
+
+// ================= Black Hawk =================
+// One UH-60 sits on the plaza helipad. Whoever climbs in flies it for everyone: the pilot's game moves it
+// and shares where it is; everyone else shows it there. Nose minigun on the trigger, rockets on aim.
+const HELI_S = 0.72, HELI_PAD = new V3(0, 0, 0);
+const heli = { x: 0, y: 0, z: 0, yaw: Math.PI / 4, pitch: 0, roll: 0, vel: new V3(), rotor: 0, drv: null, t: 0, tx: 0, ty: 0, tz: 0, tyaw: 0, tp: 0, tr: 0, gunT: 0, rkT: 0, rkSide: 1, sndT: 0, g: null, main: null, tail: null, disc: null };
+let heliPark = null, heliSnd = null;
+const heliGround = (x, z) => Math.max(0, MTN.height(x, z));
+function buildHeli() {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); body.scale.setScalar(HELI_S);
+  const std = (c, r, m, extra) => new THREE.MeshStandardMaterial(Object.assign({ color: new THREE.Color(c).convertSRGBToLinear(), roughness: r, metalness: m, envMapIntensity: 0.7 }, extra || {}));
+  const paint = std("#2e332c", 0.62, 0.35), dark = std("#1c1e1b", 0.5, 0.5), glass = std("#1a2630", 0.08, 0.9, { transparent: true, opacity: 0.88 }), metal = std("#5a5d5a", 0.35, 0.9);
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0, parent = body) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); parent.add(m); return m; };
+  // fuselage: cabin, cockpit, rounded nose, belly
+  add(new THREE.BoxGeometry(2.3, 1.85, 4.8), paint, 0, 1.55, 0.2);
+  const roof = add(new THREE.CylinderGeometry(1.15, 1.15, 4.8, 16, 1, false, -Math.PI / 2, Math.PI), paint, 0, 2.45, 0.2, Math.PI / 2, 0, 0); roof.scale.set(1, 1, 0.35);
+  add(new THREE.BoxGeometry(2.15, 1.55, 1.5), paint, 0, 1.5, -2.85);
+  const nose = add(new THREE.SphereGeometry(1, 18, 12), paint, 0, 1.3, -3.6); nose.scale.set(1.05, 0.78, 1.15);
+  add(new THREE.BoxGeometry(1.95, 0.75, 0.06), glass, 0, 2.05, -3.62, -0.75);
+  for (const s of [-1, 1]) { add(new THREE.BoxGeometry(0.06, 0.8, 1.2), glass, s * 1.08, 1.85, -2.85); add(new THREE.BoxGeometry(0.06, 0.7, 1.0), glass, s * 1.16, 1.9, -0.6); add(new THREE.BoxGeometry(0.05, 1.5, 1.6), dark, s * 1.17, 1.45, 0.7); }
+  // engines and mast
+  add(new THREE.BoxGeometry(1.7, 0.75, 3.4), paint, 0, 2.95, 0.4);
+  for (const s of [-1, 1]) add(new THREE.CylinderGeometry(0.22, 0.26, 0.6, 10), dark, s * 0.95, 3.05, 1.7, Math.PI / 2 - 0.4, 0, s * 0.3);
+  add(new THREE.CylinderGeometry(0.17, 0.2, 0.7, 10), metal, 0, 3.55, -0.1);
+  // tail boom, fin, stabilator
+  add(new THREE.CylinderGeometry(0.28, 0.62, 7.4, 12), paint, 0, 2.05, 6.0, Math.PI / 2 - 0.08);
+  add(new THREE.BoxGeometry(0.16, 2.3, 1.15), paint, 0, 3.2, 9.6, -0.32);
+  add(new THREE.BoxGeometry(4.0, 0.08, 0.95), paint, 0, 1.75, 9.1);
+  // landing gear
+  for (const s of [-1, 1]) { const w = add(new THREE.CylinderGeometry(0.38, 0.38, 0.26, 14), dark, s * 1.35, 0.38, -2.3, 0, 0, Math.PI / 2); add(new THREE.BoxGeometry(0.12, 0.9, 0.12), metal, s * 1.2, 0.85, -2.3, 0, 0, s * 0.4); void w; }
+  add(new THREE.CylinderGeometry(0.22, 0.22, 0.16, 12), dark, 0, 0.22, 8.3, 0, 0, Math.PI / 2);
+  // stub wings with rocket pods, door guns, nose gun
+  add(new THREE.BoxGeometry(5.0, 0.12, 0.75), paint, 0, 2.35, -0.2);
+  for (const s of [-1, 1]) { add(new THREE.CylinderGeometry(0.24, 0.24, 1.6, 12), dark, s * 2.2, 2.0, -0.4, Math.PI / 2); add(new THREE.CylinderGeometry(0.05, 0.05, 1.1, 8), metal, s * 1.3, 1.55, -1.6, Math.PI / 2); }
+  add(new THREE.CylinderGeometry(0.07, 0.07, 1.2, 8), metal, 0, 0.75, -4.4, Math.PI / 2); add(new THREE.BoxGeometry(0.4, 0.35, 0.5), dark, 0, 0.82, -3.9);
+  // main rotor: 4 blades and a blur disc for speed
+  const main = new THREE.Group(); main.position.set(0, 3.95, -0.1); body.add(main);
+  add(new THREE.CylinderGeometry(0.35, 0.35, 0.25, 12), metal, 0, 0, 0, 0, 0, 0, main);
+  for (let k = 0; k < 4; k++) { const b = new THREE.Mesh(new THREE.BoxGeometry(8.0, 0.05, 0.5).translate(4.1, 0, 0), dark); b.rotation.y = k * Math.PI / 2; b.rotation.x = 0.04; main.add(b); }
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(8.1, 40).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: "#1a1c1a", transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide })); disc.position.copy(main.position); body.add(disc);
+  // tail rotor, on the right of the fin
+  const tail = new THREE.Group(); tail.position.set(0.3, 3.6, 9.85); body.add(tail);
+  for (let k = 0; k < 4; k++) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.6, 0.2).translate(0, 0.8, 0), dark); b.rotation.x = k * Math.PI / 2; tail.add(b); }
+  g.traverse((m) => { if (m.isMesh) { m.castShadow = SHADOWS && m !== disc; m.receiveShadow = SHADOWS; } });
+  scene.add(g);
+  Object.assign(heli, { g, main, tail, disc });
+  heli.x = HELI_PAD.x; heli.z = HELI_PAD.z; heli.y = 0.12;
+  placeHeli();
+}
+function placeHeli() { const h = heli; h.g.position.set(h.x, h.y, h.z); h.g.rotation.set(h.pitch, h.yaw, h.roll, "YXZ"); }
+// helipad on the plaza: painted circle with an H
+{
+  const padTex = canvasTex(256, 256, (g) => { g.fillStyle = "#3b3d3c"; g.fillRect(0, 0, 256, 256); g.strokeStyle = "#e8e2d0"; g.lineWidth = 10; g.beginPath(); g.arc(128, 128, 112, 0, 7); g.stroke(); g.fillStyle = "#e8e2d0"; g.fillRect(84, 64, 22, 128); g.fillRect(150, 64, 22, 128); g.fillRect(84, 117, 88, 22); g.strokeStyle = "#f0b020"; g.lineWidth = 4; g.beginPath(); g.arc(128, 128, 124, 0, 7); g.stroke(); });
+  const pad = new THREE.Mesh(new THREE.CircleGeometry(7.5, 48), new THREE.MeshLambertMaterial({ map: padTex })); pad.rotation.x = -Math.PI / 2; pad.position.set(HELI_PAD.x, 0.07, HELI_PAD.z); scene.add(pad);
+  const lightM = new THREE.MeshBasicMaterial({ color: "#7dff7a", toneMapped: false });
+  for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2, l = new THREE.Mesh(new THREE.SphereGeometry(0.09, 6, 4), lightM); l.position.set(HELI_PAD.x + Math.cos(a) * 7.7, 0.1, HELI_PAD.z + Math.sin(a) * 7.7); scene.add(l); }
+}
+buildHeli();
+function nearHeli() { if (heli.drv || P.dead || P.car) return false; return Math.hypot(heli.x - P.pos.x, heli.z - P.pos.z) < 5.5 && Math.abs(P.pos.y - heli.y) < 3; }
+function enterHeli() {
+  if (!nearHeli()) return;
+  P.heli = heli; heli.drv = "me"; heli.vel.set(0, 0, 0); vm.visible = false; adsHeld = false; P.crouch = false; reloadEnd = 0; sfx.door();
+  P.yaw = heli.yaw; P.pitch = -0.2;
+  chatLine(touchMode ? "Black Hawk: stick flies · Jump climbs · Crouch descends · Fire shoots" : "Black Hawk: Space up · Shift/C down · W/S fly · A/D turn · Mouse aims · LMB minigun · RMB rockets", true);
+}
+function heliLanded() { return heli.y - heliLandY(heli.x, heli.z) < 1.2 && heli.vel.length() < 4; }
+function heliLandY(x, z) { let g = heliGround(x, z); for (const b of boxesNear(x, z)) if (x > b.x0 - 0.5 && x < b.x1 + 0.5 && z > b.z0 - 0.5 && z < b.z1 + 0.5 && b.y1 <= heli.y + 1.5) g = Math.max(g, b.y1); return g; }
+function exitHeli(force) {
+  const h = heli; if (!P.heli) return;
+  if (!force) {
+    if (!heliLanded()) { chatLine("Land first to get out", true); return; }
+    if (Math.abs(h.x) > BOUND - 2 || Math.abs(h.z) > BOUND - 2) { chatLine("Land inside the city to get out", true); return; }
+  }
+  P.heli = null; h.drv = null; h.vel.set(0, 0, 0); h.t = Date.now(); heliPark = [r2(h.x), r2(h.y), r2(h.z), r2(h.yaw), h.t];
+  const co = Math.cos(h.yaw), si = Math.sin(h.yaw);
+  P.pos.set(h.x - 2.4 * co, h.y, h.z + 2.4 * si); P.vel.set(0, 0, 0); P.airTop = P.pos.y;
+  for (let k = 0; k < 3; k++) for (const b of boxesNear(P.pos.x, P.pos.z)) if (b.y1 > P.pos.y + 0.5) collideBox(P.pos, b, PR, 0, 1.8);
+  vm.visible = true; sfx.door(); pushPresence(true);
+}
+// shot down or crashed: a fireball where it was, the pilot dies, and a fresh one waits on the pad
+function heliDown(from, wasMe) {
+  const h = heli, pos = new V3(h.x, h.y + 1.5, h.z);
+  if (wasMe) { P.heli = null; explodeAt(pos, 11, 260, from && from.id ? from.id : myId(), HELIBOOM); }
+  h.drv = null; h.vel.set(0, 0, 0); h.rotor = 0; h.x = HELI_PAD.x; h.z = HELI_PAD.z; h.y = 0.12; h.pitch = h.roll = 0; h.yaw = Math.PI / 4; h.t = Date.now();
+  heliPark = [r2(h.x), r2(h.y), r2(h.z), r2(h.yaw), h.t]; placeHeli();
+}
+function heliCrash() { P.hp = 0; die(null, HELIBOOM, false); }
+function flyHeli(dt) {
+  const h = heli, prev = new V3(h.x, h.y, h.z);
+  const up = (keys.Space ? 1 : 0) - (keys.ShiftLeft || keys.KeyC ? 1 : 0);
+  const thr = clamp((keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0) - joy.y, -1, 1), turn = clamp((keys.KeyA ? 1 : 0) - (keys.KeyD ? 1 : 0) - joy.x, -1, 1);
+  h.rotor = Math.min(1, h.rotor + dt / 2.2);
+  const power = h.rotor > 0.8;
+  h.yaw += turn * 1.3 * dt;
+  const fx = -Math.sin(h.yaw), fz = -Math.cos(h.yaw), top = thr > 0 ? 46 : 14;
+  const kx = 1 - Math.exp(-dt * 0.9), ky = 1 - Math.exp(-dt * 2.4);
+  h.vel.x += (fx * thr * top - h.vel.x) * kx; h.vel.z += (fz * thr * top - h.vel.z) * kx;
+  h.vel.y += ((power ? up * 12 : -3) - h.vel.y) * ky;
+  h.x += h.vel.x * dt; h.y += h.vel.y * dt; h.z += h.vel.z * dt;
+  const r = Math.hypot(h.x, h.z); if (r > 1300) { h.x *= 1300 / r; h.z *= 1300 / r; }
+  h.y = Math.min(h.y, 1600);
+  // nose dips with speed, banks into turns
+  const fs = h.vel.x * fx + h.vel.z * fz;
+  h.pitch += (-0.3 * fs / 46 - 0.08 * thr - h.pitch) * Math.min(1, dt * 3);
+  h.roll += (turn * 0.32 * clamp(fs / 18, 0, 1) - h.roll) * Math.min(1, dt * 3);
+  // terrain, roofs and walls
+  const sp = h.vel.length();
+  const gy = heliGround(h.x, h.z);
+  if (h.y < gy) { if (h.vel.y < -9 || sp > 22) return heliCrash(); h.y = gy; h.vel.y = Math.max(0, h.vel.y); h.vel.x *= 0.9; h.vel.z *= 0.9; }
+  for (const b of boxesNear(h.x, h.z)) {
+    const pad = 2.2;
+    if (h.x > b.x0 - pad && h.x < b.x1 + pad && h.z > b.z0 - pad && h.z < b.z1 + pad && h.y < b.y1) {
+      if (prev.y >= b.y1 - 0.3 && h.x > b.x0 && h.x < b.x1 && h.z > b.z0 && h.z < b.z1) { if (h.vel.y < -9) return heliCrash(); h.y = b.y1; h.vel.y = Math.max(0, h.vel.y); }
+      else { if (sp > 16) return heliCrash(); h.x = prev.x; h.z = prev.z; h.vel.x *= -0.3; h.vel.z *= -0.3; sfx.crash(sp); }
+    }
+  }
+  placeHeli();
+  P.pos.set(h.x, h.y, h.z); P.vel.copy(h.vel); P.airTop = P.pos.y; P.onGround = true;
+}
+// aim point: where the crosshair (camera centre) meets the world
+function heliAim() {
+  camera.updateMatrixWorld(); const eye = camera.getWorldPosition(new V3()); camera.getWorldDirection(fwd);
+  const wh = rayWorldHit(eye, fwd, 900); let t = wh.t;
+  for (const a of targets()) { const hh = rayAvatar(eye, fwd, t, a); if (hh && hh.t < t) t = hh.t; }
+  return eye.addScaledVector(fwd, Math.min(t, 900));
+}
+function heliLocal(x, y, z) { return new V3(x * HELI_S, y * HELI_S, z * HELI_S).applyEuler(heli.g.rotation).add(heli.g.position); }
+function heliGuns(dt) {
+  const h = heli; if (state !== "play" || P.dead || P.passive || match.phase !== 0 || h.rotor < 0.8) return;
+  if (triggerHeld || triggerFresh) {
+    triggerFresh = false;
+    h.gunT -= dt;
+    while (h.gunT <= 0) {
+      h.gunT += 1 / 28;
+      const from = heliLocal(0, 0.75, -5.0), aim = heliAim(), d = aim.clone().sub(from).normalize();
+      d.x += (Math.random() - 0.5) * 0.03; d.y += (Math.random() - 0.5) * 0.03; d.z += (Math.random() - 0.5) * 0.03; d.normalize();
+      const wh = rayWorldHit(from, d, 700), tw = wh.t; let hit = null, who = null;
+      for (const a of targets()) { const hh = rayAvatar(from, d, tw, a); if (hh && (!hit || hh.t < hit.t)) { hit = hh; who = a; } }
+      const end = from.clone().addScaledVector(d, hit ? hit.t : Math.min(tw, 700));
+      if (Math.random() < 0.6) tracer(from, end);
+      if (hit) { bloodHit(end, d, hit.head, who); dealDamage(who, hit.head ? 30 : 20, hit.head, HELI, hit.t); }
+      else if (tw < 700) { if (wh.car) carHit(wh.car, 14, myId(), true); puff(end, "#bfb6a6", 0.18); if (wh.n && Math.random() < 0.3) bulletHole(end, wh.n); }
+      h.sndT = (h.sndT + 1) % 2; if (!h.sndT) gunSound(WEAPONS[widx("m60")], 0.6);
+      fSeq++; lastFire = [fSeq, HELI, r2(from.x), r2(from.y), r2(from.z), r2(end.x), r2(end.y), r2(end.z)];
+      shakeT = Math.max(shakeT, 0.06);
+    }
+  } else h.gunT = 0;
+  if (adsHeld && T > h.rkT) {
+    h.rkT = T + 0.45; h.rkSide = -h.rkSide;
+    const from = heliLocal(h.rkSide * 2.2, 2.0, -1.4), aim = heliAim(), ri = widx("rpg");
+    const vel = aim.sub(from).normalize().multiplyScalar(85);
+    spawnProjectile({ pos: from, vel, grav: 1, impact: true, fuse: 6, radius: 8, dmg: 190, owner: myId(), w: ri, live: true });
+    fSeq++; lastFire = [fSeq, ri, r2(from.x), r2(from.y), r2(from.z), r2(from.x + vel.x), r2(from.y + vel.y), r2(from.z + vel.z)];
+    gunSound(WEAPONS[ri], 0.8); pushPresence(true);
+  }
+}
+// every frame, flying or not: rotors, the remote pilot's copy, the rotor sound
+function updateHeli(dt) {
+  const h = heli; if (!h.g) return;
+  if (h.drv && h.drv !== "me") {
+    const k = 1 - Math.exp(-dt * 10);
+    if (Math.hypot(h.tx - h.x, h.tz - h.z) > 40) { h.x = h.tx; h.y = h.ty; h.z = h.tz; }
+    h.x += (h.tx - h.x) * k; h.y += (h.ty - h.y) * k; h.z += (h.tz - h.z) * k;
+    let dy = h.tyaw - h.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); h.yaw += dy * k; h.pitch += (h.tp - h.pitch) * k; h.roll += (h.tr - h.roll) * k;
+    h.rotor = Math.min(1, h.rotor + dt / 2.2); placeHeli();
+  } else if (!h.drv) h.rotor = Math.max(0, h.rotor - dt / 6);
+  h.main.rotation.y += h.rotor * dt * 26; h.tail.rotation.x += h.rotor * dt * 70;
+  h.disc.material.opacity = h.rotor * 0.22; for (const c of h.main.children) if (c.geometry.type === "BoxGeometry") c.visible = h.rotor < 0.6;
+  if (AC && noiseBuf) {
+    if (!heliSnd && h.rotor > 0.01) {
+      const len = AC.sampleRate, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) { const ph = (i / len * 17) % 1; d[i] = (Math.random() * 2 - 1) * (0.25 + 0.75 * Math.exp(-ph * 9)); }
+      const s = AC.createBufferSource(); s.buffer = buf; s.loop = true; const f = AC.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 520; const g = AC.createGain(); g.gain.value = 0;
+      const o = AC.createOscillator(); o.type = "sawtooth"; o.frequency.value = 160; const og = AC.createGain(); og.gain.value = 0;
+      s.connect(f).connect(g).connect(AC.destination); o.connect(og).connect(AC.destination); s.start(); o.start(); heliSnd = { s, g, o, og };
+    }
+    if (heliSnd) {
+      const d = camera.position.distanceTo(h.g.position), v = h.rotor * clamp(1 / (1 + d / 30), 0, 1) * (state === "menu" ? 0.25 : 1);
+      heliSnd.g.gain.setTargetAtTime(0.55 * v, AC.currentTime, 0.1); heliSnd.og.gain.setTargetAtTime(0.012 * v, AC.currentTime, 0.1);
+      heliSnd.s.playbackRate.setTargetAtTime(0.55 + 0.45 * h.rotor, AC.currentTime, 0.1); heliSnd.o.frequency.setTargetAtTime(80 + 120 * h.rotor, AC.currentTime, 0.1);
+    }
+  }
+}
+
+// ================= casino games, cashier and bar =================
+let casinoOpen = false, czKind = "", czBet = 100, czMsg = "", czBusy = false, drunkUntil = 0;
+const SPOT_NAME = { slots: "Play slots", roulette: "Play roulette", blackjack: "Play blackjack", cashier: "Cashier & bar" };
+function nearCasino() { if (P.car || P.heli || P.dead) return null; let best = null, bd = 1.8; for (const s of CASINO.spots) { const d = Math.hypot(s.x - P.pos.x, s.z - P.pos.z); if (d < bd && P.pos.y < 1) { bd = d; best = s; } } return best; }
+const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+function setCash(v) { profile.cash = Math.max(0, Math.round(v)); saveProfile(true); }
+function openCasino(kind) {
+  casinoOpen = true; czKind = kind; czMsg = ""; for (const k in keys) keys[k] = false; triggerHeld = adsHeld = false; joy.x = joy.y = 0;
+  if (locked()) document.exitPointerLock(); $("casino").hidden = false; $("tc").hidden = true; renderCasino();
+}
+function closeCasino() { if (!casinoOpen) return; casinoOpen = false; czBusy = false; $("casino").hidden = true; $("tc").hidden = !(touchMode && state === "play"); if (state === "play") requestLock(); }
+function interact() {
+  if (P.heli) return exitHeli();
+  if (P.car) return exitCar();
+  if (P.dead) return;
+  if (nearHeli()) return enterHeli();
+  const s = nearCasino(); if (s) return openCasino(s.kind);
+  const c = nearestCar(3.4); if (c) enterCar(c);
+}
+function betRow() { return `<div class="czbets">${[25, 100, 500, 2500].map((b) => `<button data-bet="${b}" class="${czBet === b ? "on" : ""}">${money(b)}</button>`).join("")}</div>`; }
+function pay(bet) { if (czBusy) { czMsg = "Wait for the spin"; renderCasino(); return false; } if (profile.cash < bet) { czMsg = "Not enough cash"; renderCasino(); return false; } setCash(profile.cash - bet); return true; }
+// slots
+const REEL = ["🍒", "🍋", "🔔", "⭐", "💎", "7"], REEL_W = [30, 26, 18, 13, 8, 5], REEL_PAY = [5, 8, 12, 20, 40, 100];
+let reels = [5, 5, 5];
+const spinReel = () => { let r = Math.random() * 100; for (let i = 0; i < REEL.length; i++) { r -= REEL_W[i]; if (r < 0) return i; } return 0; };
+function playSlots() {
+  if (!pay(czBet)) return; czBusy = true; czMsg = "";
+  const final = [spinReel(), spinReel(), spinReel()]; let n = 0;
+  const iv = setInterval(() => {
+    n++; for (let i = 0; i < 3; i++) if (n < 8 + i * 5) reels[i] = Math.floor(Math.random() * REEL.length); else reels[i] = final[i];
+    if (AC) tone(0.03, 900 + Math.random() * 400, 0.05, "square");
+    if (n >= 18) {
+      clearInterval(iv); czBusy = false;
+      const [a, b, c] = final; let win = 0;
+      if (a === b && b === c) win = czBet * REEL_PAY[a]; else if (a === b || b === c || a === c) win = czBet * ((a === b ? a : c) === 0 ? 2 : 1.5);
+      if (win) { setCash(profile.cash + win); czMsg = `${a === b && b === c ? "JACKPOT! " : ""}Won ${money(win)}`; if (AC) { tone(0.15, 880, 0.15, "square"); tone(0.25, 1320, 0.15, "square", 0.12); } } else czMsg = "No luck";
+    }
+    renderCasino();
+  }, 80);
+}
+// roulette
+const RED = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
+let rlLast = null, rlSpin = 0;
+function playRoulette(kind, num) {
+  if (!pay(czBet)) return; czBusy = true; czMsg = "Spinning…"; rlSpin = 1; renderCasino();
+  const n = Math.floor(Math.random() * 37);
+  setTimeout(() => {
+    rlSpin = 0; czBusy = false; rlLast = n;
+    const win = kind === "num" ? n === num : n !== 0 && (kind === "red" ? RED.has(n) : kind === "black" ? !RED.has(n) : kind === "odd" ? n % 2 === 1 : kind === "even" ? n % 2 === 0 : kind === "low" ? n <= 18 : n > 18);
+    const back = win ? czBet * (kind === "num" ? 36 : 2) : 0;
+    if (back) setCash(profile.cash + back);
+    czMsg = `${n} ${n === 0 ? "green" : RED.has(n) ? "red" : "black"} · ${back ? "won " + money(back) : "lost"}`;
+    if (AC) tone(0.2, back ? 990 : 220, 0.12, "square");
+    renderCasino();
+  }, 2600);
+}
+// blackjack (endless shoe)
+let bj = null;
+const card = () => { const r = Math.floor(Math.random() * 13); return { r, s: "♠♥♦♣"[Math.floor(Math.random() * 4)] }; };
+const cardName = (c) => ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"][c.r];
+function handVal(h) { let v = 0, aces = 0; for (const c of h) { v += c.r === 0 ? 11 : Math.min(10, c.r + 1); if (c.r === 0) aces++; } while (v > 21 && aces) { v -= 10; aces--; } return v; }
+function bjDeal() { if (bj && !bj.done) return; if (!pay(czBet)) return; bj = { bet: czBet, p: [card(), card()], d: [card(), card()], done: false }; czMsg = ""; if (handVal(bj.p) === 21) bjEnd(); renderCasino(); }
+function bjHit() { if (!bj || bj.done) return; bj.p.push(card()); if (handVal(bj.p) > 21) bjEnd(); else if (handVal(bj.p) === 21) bjStand(); renderCasino(); }
+function bjDouble() { if (!bj || bj.done || bj.p.length !== 2 || profile.cash < bj.bet) return; setCash(profile.cash - bj.bet); bj.bet *= 2; bj.p.push(card()); bjStand(); }
+function bjStand() { if (!bj || bj.done) return; while (handVal(bj.d) < 17) bj.d.push(card()); bjEnd(); renderCasino(); }
+function bjEnd() {
+  bj.done = true; const p = handVal(bj.p), d = handVal(bj.d), nat = p === 21 && bj.p.length === 2;
+  let back = 0;
+  if (p > 21) czMsg = "Bust"; else if (nat && !(d === 21 && bj.d.length === 2)) { back = bj.bet * 2.5; czMsg = "Blackjack!"; }
+  else if (d > 21 || p > d) { back = bj.bet * 2; czMsg = "You win"; } else if (p === d) { back = bj.bet; czMsg = "Push"; } else czMsg = "Dealer wins";
+  if (back) { setCash(profile.cash + back); czMsg += ` · ${money(back)}`; }
+}
+// cashier: gear and killstreaks for cash; weapons unlock early; the bar
+function shopItems() {
+  const items = [
+    ["frag", "Frag grenades ×2", 300], ["med", "Med kit · full health", 150], ["uav", "UAV", 1200], ["jugg", "Juggernaut armour", 2500], ["air", "Airstrike", 3500],
+    ["vodka", "Vodka shot", 40], ["champ", "Bottle of champagne", 400],
+  ];
+  for (const id of [...PRIMARIES, ...SECONDARIES]) if (!unlocked(id)) items.push(["w:" + id, `Unlock ${WEAPONS[widx(id)].name}`, 1500 + 250 * (UNLOCK[id] || 1)]);
+  return items;
+}
+function buy(id) {
+  const it = shopItems().find((x) => x[0] === id); if (!it || !pay(it[2])) return;
+  if (id === "frag") frags = Math.min(8, frags + 2);
+  else if (id === "med") P.hp = 100;
+  else if (id === "uav" || id === "jugg" || id === "air") earned.push(id);
+  else if (id === "vodka") drunkUntil = Math.max(drunkUntil, T) + 20;
+  else if (id === "champ") { drunkUntil = Math.max(drunkUntil, T) + 45; addXP(50, "Celebration"); }
+  else if (id.startsWith("w:")) { profile.bought = [...new Set([...(profile.bought || []), id.slice(2)])]; saveProfile(true); }
+  czMsg = `Bought: ${it[1]}`; if (AC) tone(0.12, 1200, 0.1, "triangle"); renderCasino();
+}
+function renderCasino() {
+  if (!casinoOpen) return;
+  const head = `<div class="czhead"><b>SUMMIT CASINO</b><span>${money(profile.cash)}</span></div>`;
+  let body = "";
+  if (czKind === "slots") body = `<h3>Slots</h3><div class="reels">${reels.map((r) => `<span>${REEL[r]}</span>`).join("")}</div>${betRow()}<button class="czgo" data-act="slots"${czBusy ? " disabled" : ""}>Spin ${money(czBet)}</button><p class="czpay">3× 7 pays 100× · 💎 40× · ⭐ 20× · 🔔 12× · 🍋 8× · 🍒 5× · any pair 1.5×</p>`;
+  else if (czKind === "roulette") body = `<h3>Roulette</h3><div class="rl ${rlSpin ? "spin" : ""}">${rlSpin ? "●" : rlLast == null ? "—" : `<i class="${rlLast === 0 ? "g" : RED.has(rlLast) ? "r" : "k"}">${rlLast}</i>`}</div>${betRow()}<div class="czgrid">${[["red", "Red"], ["black", "Black"], ["odd", "Odd"], ["even", "Even"], ["low", "1–18"], ["high", "19–36"]].map(([k, l]) => `<button data-act="rl" data-k="${k}"${czBusy ? " disabled" : ""}>${l} · 2×</button>`).join("")}</div><div class="czgrid"><input id="rlNum" type="number" min="0" max="36" value="${czLastNum}"><button data-act="rlnum"${czBusy ? " disabled" : ""}>Straight up · 36×</button></div>`;
+  else if (czKind === "blackjack") {
+    const show = (h, hide) => h.map((c, i) => hide && i === 1 ? `<span class="cd back">?</span>` : `<span class="cd ${"♥♦".includes(c.s) ? "r" : ""}">${cardName(c)}${c.s}</span>`).join("");
+    body = `<h3>Blackjack</h3>${bj ? `<div class="bj"><small>Dealer ${bj.done ? handVal(bj.d) : ""}</small><div>${show(bj.d, !bj.done)}</div><small>You ${handVal(bj.p)}</small><div>${show(bj.p)}</div></div>` : `<p class="czpay">Dealer stands on 17 · blackjack pays 3:2</p>`}
+      ${!bj || bj.done ? `${betRow()}<button class="czgo" data-act="deal">Deal ${money(czBet)}</button>` : `<div class="czgrid"><button data-act="hit">Hit</button><button data-act="stand">Stand</button><button data-act="double"${bj.p.length !== 2 ? " disabled" : ""}>Double</button></div>`}`;
+  } else body = `<h3>Cashier &amp; bar</h3><div class="shop">${shopItems().map(([id, name, price]) => `<button data-buy="${id}" ${profile.cash < price ? "disabled" : ""}><span>${esc(name)}</span><b>${money(price)}</b></button>`).join("")}</div><p class="czpay">Cash comes with XP: every kill, medal and win pays out.</p>`;
+  $("czBody").innerHTML = head + body + `<div class="czmsg">${esc(czMsg)}</div><p class="czpay">${touchMode ? "Tap ✕ to leave" : "E or Esc to leave"}</p>`;
+}
+let czLastNum = 17;
+$("casino").addEventListener("click", (e) => {
+  const t = e.target.closest("button"); if (!t) return; audio();
+  if (t.id === "czX") return closeCasino();
+  if (t.dataset.bet) { czBet = +t.dataset.bet; renderCasino(); return; }
+  if (t.dataset.buy) return buy(t.dataset.buy);
+  const a = t.dataset.act;
+  if (a === "slots") playSlots();
+  else if (a === "rl") playRoulette(t.dataset.k);
+  else if (a === "rlnum") { const n = clamp(Math.round(+$("rlNum").value || 0), 0, 36); czLastNum = n; playRoulette("num", n); }
+  else if (a === "deal") bjDeal(); else if (a === "hit") bjHit(); else if (a === "stand") bjStand(); else if (a === "double") bjDouble();
+});
 
 // ================= player movement =================
 function movePlayer(dt) {
@@ -2432,7 +2874,7 @@ function applyBotState(bt, hostId) {
   for (const e of kills) {
     const n = num(e[0], 0, 1e9); if (n <= hostBkSeen) continue; hostBkSeen = n;
     const b = bots.find((x) => x.idx === (num(e[1], 0, MAX_BOTS - 1, -1) | 0));
-    if (b) onBotKilled(b, String(e[2] || ""), num(e[3], 0, 30, 3) | 0, e[4] === 1);
+    if (b) onBotKilled(b, String(e[2] || ""), num(e[3], 0, 60, 3) | 0, e[4] === 1);
   }
 }
 function computeHost() {
@@ -2619,6 +3061,7 @@ function myPresence() {
     p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], r: [r2(P.yaw), r2(P.pitch)], cr: P.crouch ? 1 : 0, dd: P.dead ? 1 : 0, w: wIdx, wm: modCode(WEAPONS[wIdx].mods), hp: Math.max(0, Math.round(P.hp)),
     k: P.k, d: P.d, s: P.score,
     cv: c ? [c.id, r2(c.x), r2(c.z), r2(c.yaw), r2(c.speed)] : null,
+    hv: P.heli ? [r2(heli.x), r2(heli.y), r2(heli.z), r2(heli.yaw), r2(heli.pitch), r2(heli.roll)] : null, hk: heliPark,
     pk: [...parked.values()],
     f: lastFire, h: hitLog, kb: lastKB, bm: booms, ch: lastChat, t: Date.now(), js: myJoinT, bt: botPresence(),
     tm: P.team, uv: uavUntil > T ? 1 : 0, jg: juggUntil > T ? 1 : 0, cd: carDmgLog, lv: myLevel(), pr: profile.pr, mt: computeHost() === "me" && match.round > 0 ? matchPresence() : null,
@@ -2668,7 +3111,7 @@ function applyPresence(a, pr) {
   if (!botAuth && a.id === botHostId) { applyBotState(pr.bt, a.id); applyMatch(pr.mt); }
   if (Array.isArray(pr.cd)) for (const e of pr.cd) { if (!Array.isArray(e)) continue; const n = num(e[0], 0, 1e9); if (n <= a.cdn) continue; a.cdn = n; carHit(cars[num(e[1], 0, cars.length - 1, -1) | 0], num(e[2], 0, 500), a.id, false); }
   a.nm = nm; a.pas = pas; a.c = c;
-  if (Array.isArray(pr.p)) a.pos.set(num(pr.p[0], -300, 300), num(pr.p[1], -5, 80), num(pr.p[2], -300, 300));
+  if (Array.isArray(pr.p)) a.pos.set(num(pr.p[0], -2000, 2000), num(pr.p[1], -5, 2000), num(pr.p[2], -2000, 2000));
   if (Array.isArray(pr.r)) { a.yaw = num(pr.r[0], -100, 100); a.pitch = num(pr.r[1], -2, 2); }
   a.crouch = pr.cr === 1; a.w = num(pr.w, 0, WEAPONS.length - 1, 3) | 0; a.hp = num(pr.hp, 0, 100, 100);
   { const wm = typeof pr.wm === "string" ? pr.wm.replace(/[^rhascgle]/g, "").slice(0, 4) : ""; if (wm !== a.wm) { a.wm = wm; const inv = {}; for (const [k, v] of Object.entries(MOD_CODE)) inv[v] = k; a.wmods = {}; for (const ch of wm) { const id = inv[ch]; const slot = Object.keys(MODS).find((sl) => MODS[sl].some((m) => m.id === id)); if (slot) a.wmods[slot] = id; } } }
@@ -2690,17 +3133,26 @@ function applyPresence(a, pr) {
     const car = cars[num(rec[0], 0, cars.length - 1, -1) | 0], t = num(rec[4], 0, 1e14);
     if (car && !car.drv && t > car.t) { car.t = t; car.x = car.tx = num(rec[1], -300, 300); car.z = car.tz = num(rec[2], -300, 300); car.yaw = car.tyaw = num(rec[3], -100, 100); placeCar(car); }
   }
+  // the Black Hawk, if they fly it or parked it last
+  const hadHeli = a.heli; a.heli = false;
+  if (Array.isArray(pr.hv)) {
+    if (heli.drv === "me" && NET.me && a.id < NET.me) { exitHeli(true); chatLine(`${a.nm} took the Black Hawk`, true); }
+    if (heli.drv !== "me") { heli.drv = a.id; heli.tx = num(pr.hv[0], -2000, 2000); heli.ty = num(pr.hv[1], -5, 2000); heli.tz = num(pr.hv[2], -2000, 2000); heli.tyaw = num(pr.hv[3], -100, 100); heli.tp = num(pr.hv[4], -2, 2); heli.tr = num(pr.hv[5], -2, 2); a.heli = true; }
+  }
+  if (hadHeli && !a.heli && heli.drv === a.id) heli.drv = null;
+  if (Array.isArray(pr.hk) && !heli.drv) { const t = num(pr.hk[4], 0, 1e14); if (t > heli.t) { heli.t = t; heli.x = num(pr.hk[0], -2000, 2000); heli.y = num(pr.hk[1], -5, 2000); heli.z = num(pr.hk[2], -2000, 2000); heli.yaw = num(pr.hk[3], -100, 100); heli.pitch = heli.roll = 0; placeHeli(); } }
   // shots
   if (Array.isArray(pr.f) && num(pr.f[0], 0, 1e9) > a.fn) {
     a.fn = num(pr.f[0], 0, 1e9);
-    const wi = num(pr.f[1], 0, 30, 3) | 0, w = WEAPONS[wi];
-    const from = new V3(num(pr.f[2], -300, 300), num(pr.f[3], -5, 90), num(pr.f[4], -300, 300)), to = new V3(num(pr.f[5], -340, 340), num(pr.f[6], -50, 130), num(pr.f[7], -340, 340));
+    const wi = num(pr.f[1], 0, 60, 3) | 0, w = WEAPONS[wi];
+    const from = new V3(num(pr.f[2], -2000, 2000), num(pr.f[3], -5, 2000), num(pr.f[4], -2000, 2000)), to = new V3(num(pr.f[5], -2000, 2000), num(pr.f[6], -50, 2000), num(pr.f[7], -2000, 2000));
     const vol = clamp(1 / (1 + from.distanceTo(P.pos) / 20), 0.04, 0.9);
     if (wi === FRAG || (w && w.proj)) {
       const vel = to.clone().sub(from); if (vel.length() > 60) vel.setLength(60);
       spawnProjectile({ pos: from, vel, grav: wi === FRAG ? 20 : w.proj.grav, impact: wi !== FRAG, fuse: wi === FRAG ? 2.2 : 8, owner: a.id, w: wi, live: false });
       if (w) gunSound(w, vol);
-    } else if (w) { const supp = (a.wm || "").includes("s"); tracer(from.clone().add(new V3(0, -0.15, 0)), to); gunSound(w, vol, panOf(from), from.distanceTo(P.pos), supp); if (supp) a.suppT = T; const sd = to.clone().sub(from), sl = sd.length(); if (sl > 0.1) bloodOnRay(from, sd.divideScalar(sl), sl + 0.3, a); }
+    } else if (wi === HELI) { tracer(from, to); a.hsT = (a.hsT || 0) + 1; if (a.hsT % 2) gunSound(WEAPONS[widx("m60")], vol, panOf(from), from.distanceTo(P.pos)); }
+    else if (w) { const supp = (a.wm || "").includes("s"); tracer(from.clone().add(new V3(0, -0.15, 0)), to); gunSound(w, vol, panOf(from), from.distanceTo(P.pos), supp); if (supp) a.suppT = T; const sd = to.clone().sub(from), sl = sd.length(); if (sl > 0.1) bloodOnRay(from, sd.divideScalar(sl), sl + 0.3, a); }
     if (a.suppT !== T) a.lastShotSeen = T;
   }
   // damage addressed to me
@@ -2709,20 +3161,20 @@ function applyPresence(a, pr) {
     const n = num(h[1], 0, 1e9);
     if (n <= a.hn) continue;
     a.hn = Math.max(a.hn, n);
-    if (h[0] === NET.me) { const att = typeof h[5] === "string" ? bots.find((b) => b.id === h[5]) : null; if (att || !a.pas) takeDamage(num(h[2], 0, 200), att || a, h[3] === 1, num(h[4], 0, 30, 3) | 0); }
-    else if (botAuth && typeof h[0] === "string" && h[0].startsWith("bot:")) { const b = bots.find((x) => x.id === h[0]); if (b) botTakeDamage(b, num(h[2], 0, 200), a.id, num(h[4], 0, 30, 3) | 0, h[3] === 1); }
+    if (h[0] === NET.me) { const att = typeof h[5] === "string" ? bots.find((b) => b.id === h[5]) : null; if (att || !a.pas) takeDamage(num(h[2], 0, 200), att || a, h[3] === 1, num(h[4], 0, 60, 3) | 0); }
+    else if (botAuth && typeof h[0] === "string" && h[0].startsWith("bot:")) { const b = bots.find((x) => x.id === h[0]); if (b) botTakeDamage(b, num(h[2], 0, 200), a.id, num(h[4], 0, 60, 3) | 0, h[3] === 1); }
   }
   // deaths
   if (Array.isArray(pr.kb) && num(pr.kb[0], 0, 1e9) > a.kbn) {
     a.kbn = num(pr.kb[0], 0, 1e9);
-    const by = String(pr.kb[1] || ""), w = num(pr.kb[2], 0, 30, 3) | 0, head = pr.kb[3] === 1;
+    const by = String(pr.kb[1] || ""), w = num(pr.kb[2], 0, 60, 3) | 0, head = pr.kb[3] === 1;
     if (by === NET.me) { creditKill(a.nm, a.c, w, head, a.id); killFeed(myName, myColor, a.nm, a.c, WNAME(w), head); }
     else { noteDeath(a.id, by); const k = nameColorOf(by); if (k) killFeed(k.nm, k.c, a.nm, a.c, WNAME(w), head); else feed(`${nameSpan(a.nm, a.c)}<span class="w">died</span>`); }
     if (botAuth && by.startsWith("bot:")) { const kb = bots.find((x) => x.id === by); if (kb) { kb.k++; kb.score += 100; } }
   }
   if (Array.isArray(pr.bm)) for (const e of pr.bm) {
     if (!Array.isArray(e)) continue; const n = num(e[0], 0, 1e9); if (n <= a.bmn) continue; a.bmn = n;
-    boomFx(new V3(num(e[1], -300, 300), num(e[2], -5, 120), num(e[3], -300, 300)));
+    boomFx(new V3(num(e[1], -2000, 2000), num(e[2], -5, 2000), num(e[3], -2000, 2000)));
   }
   if (Array.isArray(pr.ch) && num(pr.ch[0], 0, 1e9) > a.chn) { a.chn = num(pr.ch[0], 0, 1e9); chatLine(`${a.nm}: ${String(pr.ch[1] || "").slice(0, 120)}`); }
 }
@@ -2736,10 +3188,10 @@ function syncRemotes() {
     if (!pr || pr.v !== 1 || pr.g !== 1 || cleanSrv(pr.srv) !== mySrv) continue;
     seen.add(pe.peer);
     let a = remotes.get(pe.peer);
-    if (!a) { a = makeAvatar(pe.peer, cleanName(pr.nm) || "Player", COLORS.includes(pr.c) ? pr.c : COLORS[7], false); baseline(a, pr); remotes.set(pe.peer, a); a.lastPres = null; chatLine(`${cleanName(pr.nm) || "A player"} joined ${mySrv}`, true); if (Array.isArray(pr.p)) { a.pos.set(num(pr.p[0], -300, 300), num(pr.p[1], -5, 80), num(pr.p[2], -300, 300)); a.rpos.copy(a.pos); } }
+    if (!a) { a = makeAvatar(pe.peer, cleanName(pr.nm) || "Player", COLORS.includes(pr.c) ? pr.c : COLORS[7], false); baseline(a, pr); remotes.set(pe.peer, a); a.lastPres = null; chatLine(`${cleanName(pr.nm) || "A player"} joined ${mySrv}`, true); if (Array.isArray(pr.p)) { a.pos.set(num(pr.p[0], -2000, 2000), num(pr.p[1], -5, 2000), num(pr.p[2], -2000, 2000)); a.rpos.copy(a.pos); } }
     if (pr !== a.lastPres) { applyPresence(a, pr); a.lastPres = pr; }
   }
-  for (const [id, a] of remotes) if (!seen.has(id)) { for (const c of cars) if (c.drv === id) c.drv = null; chatLine(`${a.nm} left`, true); dropAvatar(a); remotes.delete(id); }
+  for (const [id, a] of remotes) if (!seen.has(id)) { for (const c of cars) if (c.drv === id) c.drv = null; if (heli.drv === id) heliDown(null, false); chatLine(`${a.nm} left`, true); dropAvatar(a); remotes.delete(id); }
 }
 function updateRemoteCars(dt) {
   const k = 1 - Math.exp(-dt * 12);
@@ -2757,7 +3209,7 @@ let lockFailed = isTouch, drag = null;
 const joy = { x: 0, y: 0 };
 function requestLock() { if (lockFailed) return; try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => { lockFailed = true; }); } catch (e) { lockFailed = true; } }
 document.addEventListener("pointerlockerror", () => { lockFailed = true; });
-document.addEventListener("pointerlockchange", () => { if (!locked() && state === "play" && !lockFailed && !chatOpen) pause(); });
+document.addEventListener("pointerlockchange", () => { if (!locked() && state === "play" && !lockFailed && !chatOpen && !casinoOpen) pause(); });
 function look(dx, dy) { const s = 0.0022 * (camera.fov / 75); P.yaw -= dx * s; P.pitch = clamp(P.pitch - dy * s, -1.5, 1.5); }
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 canvas.addEventListener("mousedown", (e) => {
@@ -2768,21 +3220,22 @@ canvas.addEventListener("mousedown", (e) => {
 });
 document.addEventListener("mouseup", (e) => { if (e.button === 2) adsHeld = false; if (e.button === 0) { triggerHeld = false; if (drag) { if (drag.moved < 6) { triggerFresh = true; } drag = null; } } });
 document.addEventListener("mousemove", (e) => { if (state !== "play") return; if (locked()) look(e.movementX, e.movementY); else if (drag) { look(e.movementX, e.movementY); drag.moved += Math.abs(e.movementX) + Math.abs(e.movementY); } });
-canvas.addEventListener("wheel", (e) => { if (state !== "play" || P.car || Math.abs(e.deltaY) < 4) return; swapWeapon(); }, { passive: true });
+canvas.addEventListener("wheel", (e) => { if (state !== "play" || P.car || P.heli || Math.abs(e.deltaY) < 4) return; swapWeapon(); }, { passive: true });
 let chatOpen = false, boardOpen = false;
 document.addEventListener("keydown", (e) => {
   if (chatOpen) return;
   if (state !== "play") return;
+  if (casinoOpen) { if (e.code === "Escape" || e.code === "KeyE") { e.preventDefault(); closeCasino(); } return; }
   keys[e.code] = true;
   if (["Space", "Tab", "ArrowUp", "ArrowDown"].includes(e.code)) e.preventDefault();
   if (e.repeat) return;
-  if ((e.code === "Digit1" || e.code === "Digit2") && !P.car) switchWeapon(loadout[+e.code.slice(5) - 1]);
+  if ((e.code === "Digit1" || e.code === "Digit2") && !P.car && !P.heli) switchWeapon(loadout[+e.code.slice(5) - 1]);
   else if (e.code === "Digit4" || e.code === "KeyX") useStreak();
   else if (e.code === "KeyG") throwFrag();
   else if (e.code === "KeyR") startReload();
-  else if (e.code === "KeyC" || e.code === "ControlLeft") { if (!P.car) P.crouch = !P.crouch; }
+  else if (e.code === "KeyC" || e.code === "ControlLeft") { if (!P.car && !P.heli) P.crouch = !P.crouch; }
   else if (e.code === "KeyV") knife();
-  else if (e.code === "KeyE" || e.code === "KeyF") { if (P.car) exitCar(); else if (!P.dead) { const c = nearestCar(3.4); if (c) enterCar(c); } }
+  else if (e.code === "KeyE" || e.code === "KeyF") interact();
   else if (e.code === "KeyT" || e.code === "Enter") openChat();
   else if (e.code === "Tab") { boardOpen = true; renderBoard(); $("board").hidden = false; }
   else if (e.code === "KeyP") togglePassive();
@@ -2806,12 +3259,14 @@ function togglePassive() {
 
 // ================= touch controls =================
 const touchRecs = new Map();
-function useCar() { if (P.car) exitCar(); else if (!P.dead) { const c = nearestCar(3.4); if (c) enterCar(c); } }
+function useCar() { interact(); }
 function toggleBoard() { boardOpen = !boardOpen; if (boardOpen) renderBoard(); $("board").hidden = !boardOpen; }
 function touchButton(id, down) {
   if (state !== "play" && id !== "tPause") return;
   if (id === "tFire") { triggerHeld = down; if (down) triggerFresh = true; return; }
   if (id === "tJump") { keys.Space = down; return; }
+  if (id === "tCrouch" && P.heli) { keys.KeyC = down; return; }
+  if (id === "tAim" && P.heli) { adsHeld = down; return; }
   if (!down) return;
   if (id === "tAim") adsHeld = !adsHeld;
   else if (id === "tReload") startReload();
@@ -2952,12 +3407,12 @@ function wireInvite(srvOf) {
   };
 }
 function keysHtml() {
-  if (touchMode) return `<div class="keys"><div><kbd>Left thumb</kbd><span>Move (push far up to sprint)</span></div><div><kbd>Right thumb</kbd><span>Look; drag from Fire to aim while shooting</span></div><div><kbd>Aim</kbd><span>Toggle aiming down sights</span></div><div><kbd>Swap</kbd><span>Primary / secondary</span></div><div><kbd>Streak</kbd><span>Use a killstreak when it lights up</span></div><div><kbd>Drive</kbd><span>Appears next to a car</span></div><div><kbd>Menu</kbd><span>Pause, loadout, invite, leave</span></div></div>`;
+  if (touchMode) return `<div class="keys"><div><kbd>Left thumb</kbd><span>Move (push far up to sprint)</span></div><div><kbd>Right thumb</kbd><span>Look; drag from Fire to aim while shooting</span></div><div><kbd>Aim</kbd><span>Toggle aiming down sights</span></div><div><kbd>Swap</kbd><span>Primary / secondary</span></div><div><kbd>Streak</kbd><span>Use a killstreak when it lights up</span></div><div><kbd>Drive</kbd><span>Appears next to a car, the Black Hawk or a casino table</span></div><div><kbd>Menu</kbd><span>Pause, loadout, invite, leave</span></div></div>`;
   return `<div class="keys">
     <div><kbd>W A S D</kbd><span>Move · Shift sprint</span></div><div><kbd>Mouse</kbd><span>Look · left fire · right aim</span></div>
     <div><kbd>Space</kbd><span>Jump (handbrake in a car)</span></div><div><kbd>C / Ctrl</kbd><span>Crouch</span></div>
     <div><kbd>1 / 2 · Wheel</kbd><span>Primary / secondary</span></div><div><kbd>G</kbd><span>Frag grenade (2 per life)</span></div><div><kbd>4</kbd><span>Use killstreak</span></div><div><kbd>Shift (scoped)</kbd><span>Hold breath</span></div><div><kbd>R</kbd><span>Reload</span></div>
-    <div><kbd>V</kbd><span>Knife</span></div><div><kbd>E</kbd><span>Get in or out of a car</span></div>
+    <div><kbd>V</kbd><span>Knife</span></div><div><kbd>E</kbd><span>Car, Black Hawk (plaza helipad), casino tables</span></div><div><kbd>Heli</kbd><span>Space up · Shift down · W/S A/D fly · LMB gun · RMB rockets</span></div>
     <div><kbd>T</kbd><span>Chat</span></div><div><kbd>Tab</kbd><span>Scoreboard</span></div>
     <div><kbd>P</kbd><span>Passive mode</span></div><div><kbd>Esc</kbd><span>Pause</span></div></div>`;
 }
@@ -3042,6 +3497,7 @@ function wireMenu(card, kind) {
   if (menuTab === "lb") renderLeaderboard();
 }
 function showMenu(kind, notice) {
+  if (casinoOpen) closeCasino();
   const card = $("card");
   if (notice) menuNotice = notice;
   const tabs = [["play", kind === "pause" ? "Match" : "Play"], ["loadout", "Loadout"], ["career", "Career"]].concat(NET.cf ? [["lb", "Leaderboard"]] : []);
@@ -3144,7 +3600,8 @@ function update(dt) {
   updateTraffic(dt);
   updateCarDamage(dt);
   if (!P.dead) {
-    if (P.car) driveCar(P.car, dt);
+    if (P.heli) flyHeli(dt);
+    else if (P.car) driveCar(P.car, dt);
     else {
       const wasG = P.onGround, sp = movePlayer(dt); bob += dt * sp * 1.4;
       // footsteps and fall damage
@@ -3155,10 +3612,13 @@ function update(dt) {
     if (P.hp < 100 && T - P.lastHurt > 4.5) P.hp = Math.min(100, P.hp + 25 * dt);
   } else if (T - P.deadT > 4) respawn();
   // aim
-  adsT = clamp(adsT + (adsHeld && !P.car && !P.dead && !reloadEnd ? dt : -dt) / 0.16, 0, 1);
+  adsT = clamp(adsT + (adsHeld && !P.car && !P.heli && !P.dead && !reloadEnd ? dt : -dt) / 0.16, 0, 1);
   const w = WEAPONS[wIdx];
   if (reloadEnd && T >= reloadEnd) { ammo[wIdx] = w.mag; reloadEnd = 0; }
-  if (triggerHeld || triggerFresh) { if (w.auto || triggerFresh) fire(); triggerFresh = false; }
+  if (w.burst && triggerFresh && !burstLeft) burstLeft = w.burst;
+  if (burstLeft > 0) { const before = ammo[wIdx]; fire(); if (ammo[wIdx] < before) burstLeft--; if (reloadEnd || !canCombat() || ammo[wIdx] <= 0) burstLeft = 0; triggerFresh = false; }
+  else if (triggerHeld || triggerFresh) { if (w.auto || triggerFresh) fire(); triggerFresh = false; }
+  if (P.heli) heliGuns(dt);
   bloom = Math.max(0, bloom - dt * 0.08);
   recoilP *= Math.exp(-dt * 9); recoilY *= Math.exp(-dt * 9);
   // scope sway: hold Shift to steady your breath for a few seconds
@@ -3171,7 +3631,13 @@ function update(dt) {
   } else P.breath = Math.min(1, P.breath + dt / 3);
   // camera
   P.eye += ((P.crouch ? 1.12 : 1.62) - P.eye) * Math.min(1, dt * 12);
-  if (P.car) {
+  if (P.heli) { // chase camera that orbits with the mouse
+    const h = heli, cp = Math.cos(P.pitch), f = new V3(-Math.sin(P.yaw) * cp, Math.sin(P.pitch), -Math.cos(P.yaw) * cp);
+    const tgt = new V3(h.x, h.y + 2.2, h.z), want = tgt.clone().addScaledVector(f, -13).add(new V3(0, 2.2, 0));
+    want.y = Math.max(want.y, heliGround(want.x, want.z) + 1);
+    camera.position.lerp(want, 1 - Math.exp(-dt * 10)); camera.rotation.order = "YXZ"; camera.rotation.set(P.pitch - 0.08, P.yaw, 0);
+    camera.fov += (78 + h.vel.length() * 0.25 - camera.fov) * Math.min(1, dt * 4);
+  } else if (P.car) {
     const c = P.car, back = new V3(Math.sin(c.yaw) * 7.5, 3.2, Math.cos(c.yaw) * 7.5);
     const want = new V3(c.x, 0, c.z).add(back);
     camera.position.lerp(want, 1 - Math.exp(-dt * 8));
@@ -3184,6 +3650,7 @@ function update(dt) {
     const b = Math.sin(bob) * 0.04 * (1 - adsT);
     camera.position.set(P.pos.x, P.pos.y + P.eye + b, P.pos.z);
     camera.rotation.set(P.pitch + recoilP + swY, P.yaw + recoilY + swX, 0);
+    if (drunkUntil > T) { const k = Math.min(1, (drunkUntil - T) / 6); camera.rotation.z = Math.sin(T * 0.9) * 0.09 * k; camera.rotation.y += Math.sin(T * 0.55) * 0.035 * k; camera.rotation.x += Math.sin(T * 0.7 + 1) * 0.02 * k; }
     camera.fov += (75 + (w.adsFov - 75) * adsT + (keys.ShiftLeft && keys.KeyW && !P.crouch && !P.tired ? 4 : 0) - camera.fov) * Math.min(1, dt * 14);
   }
   camera.updateProjectionMatrix();
@@ -3220,9 +3687,9 @@ function update(dt) {
   _eul.set(-0.3 * rl - 0.3 * sk + recoilP * 2.5 * (1 - adsT * 0.85) + VMS.sy * swk, 0.5 * sk + VMS.sx * swk + (T - knifeT < 0.25 ? 0.6 : 0), 0.45 * rl + 0.55 * sk);
   vm.quaternion.set(0, 0, 0, 1).slerp(adsQ, adsT).multiply(_qe.setFromEuler(_eul));
   camera.position.y -= 0.07 * land;
-  vm.visible = !P.car && !P.dead && !((w.scope || (w.mods && w.mods.optic === "acog")) && adsT > 0.85);
+  vm.visible = !P.car && !P.heli && !P.dead && !((w.scope || (w.mods && w.mods.optic === "acog")) && adsT > 0.85);
   updateFpArms();
-  $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || P.dead;
+  $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || !!P.heli || P.dead;
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) flash.visible = false; }
   muzzleLight.intensity = flash.visible ? 3.5 : 0; if (flash.visible) muzzleLight.position.copy(camera.position).add(new V3(0, -0.1, -0.9).applyQuaternion(camera.quaternion));
   for (const a of remotes.values()) animateAvatar(a, dt);
@@ -3258,7 +3725,10 @@ function update(dt) {
     $("wName").textContent = w.name + (camoOf(w.id)[1] ? ` · ${camoOf(w.id)[1]}` : ""); $("wAmmo").innerHTML = `${ammo[wIdx]} <small>/ ∞</small>`;
     $("wFrag").textContent = `FRAG ×${frags}${touchMode ? "" : " · G"}`;
     $("wState").textContent = reloadEnd ? "RELOADING" : ammo[wIdx] === 0 ? "R · RELOAD" : P.passive ? "PASSIVE" : P.tired ? "WINDED" : "";
-    $("weap").hidden = !!P.car; $("carhud").hidden = !P.car; if (P.car) $("kmh").textContent = Math.round(Math.abs(P.car.speed) * 3.6) + (P.car.hp < 110 ? " · DAMAGED" : "");
+    $("weap").hidden = !!P.car || !!P.heli; $("carhud").hidden = !P.car && !P.heli; if (P.car) { $("kmh").textContent = Math.round(Math.abs(P.car.speed) * 3.6) + (P.car.hp < 110 ? " · DAMAGED" : ""); $("kmhU").textContent = "km/h"; }
+    if (P.heli) { $("kmh").textContent = Math.round(heli.vel.length() * 3.6); $("kmhU").textContent = `km/h · ALT ${Math.round(heli.y - heliGround(heli.x, heli.z))} m${heli.rotor < 0.8 ? " · SPOOLING" : ""}`; }
+    if (casinoOpen && (P.dead || state !== "play" || !nearCasino())) closeCasino();
+    $("cash").textContent = money(profile.cash || 0); $("drunk").hidden = !(drunkUntil > T);
     $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; const optic = w.mods && w.mods.optic; $("dot").hidden = !(optic && adsT > 0.8 && !w.scope && !P.car && !P.dead); $("dot").className = optic || ""; $("acogRing").hidden = !(optic === "acog" && adsT > 0.85 && !P.car && !P.dead);
     { const an = vm.userData.anchors; $("peep").hidden = !(an && an.peep && !an.optic && adsT > 0.7 && !P.car && !P.dead); $("peep").style.opacity = clamp((adsT - 0.7) / 0.3, 0, 1); }
     const sp = 8 + (w.hip * 300) + bloom * 400; const xs = $("xh").children; xs[0].style.top = -sp - 9 + "px"; xs[1].style.top = sp + "px"; xs[2].style.left = -sp - 9 + "px"; xs[3].style.left = sp + "px";
@@ -3278,17 +3748,18 @@ function update(dt) {
     $("streaks").innerHTML = STREAKS.map((st) => earned.includes(st.id) ? `<span class="ready">${st.name} · ${touchMode ? "tap" : "4"}</span>` : `<span class="${P.streak >= st.n ? "got" : ""}">${st.name} ${Math.min(P.streak, st.n)}/${st.n}</span>`).join("");
     const buffs = []; if (uavUntil > T) buffs.push(`UAV ${Math.ceil(uavUntil - T)}s`); if (juggUntil > T) buffs.push(`JUGGERNAUT ${Math.ceil(juggUntil - T)}s`); if (P.tired) buffs.push("WINDED");
     $("buffs").textContent = buffs.join(" · ");
-    const near = !P.car && !P.dead ? nearestCar(3.4) : null;
-    const pr = $("prompt"); pr.hidden = !(near || P.car); pr.innerHTML = P.car ? "<kbd>E</kbd> Get out" : "<kbd>E</kbd> Drive";
+    const nh = nearHeli(), nc = !nh ? nearCasino() : null, near = !P.car && !P.heli && !P.dead && !nh && !nc ? nearestCar(3.4) : null;
+    const pr = $("prompt"); pr.hidden = !(near || nh || nc || P.car || (P.heli && heliLanded())); pr.innerHTML = P.car || P.heli ? "<kbd>E</kbd> Get out" : nh ? "<kbd>E</kbd> Fly Black Hawk" : nc ? `<kbd>E</kbd> ${SPOT_NAME[nc.kind]}` : "<kbd>E</kbd> Drive";
     if (touchMode) {
-      const tcar = $("tCar"); tcar.hidden = !(near || P.car); tcar.textContent = P.car ? "Exit" : "Drive";
-      $("tJump").textContent = P.car ? "Brake" : "Jump";
-      for (const id of ["tAim", "tReload", "tKnife", "tNade", "tCrouch", "tSwap"]) $(id).hidden = !!P.car;
+      const tcar = $("tCar"); tcar.hidden = !(near || nh || nc || P.car || P.heli); tcar.textContent = P.car || P.heli ? "Exit" : nh ? "Fly" : nc ? "Play" : "Drive";
+      $("tJump").textContent = P.car ? "Brake" : P.heli ? "Up" : "Jump"; $("tCrouch").textContent = P.heli ? "Down" : "Crouch"; $("tAim").textContent = P.heli ? "Rockets" : "Aim";
+      for (const id of ["tReload", "tKnife", "tNade", "tSwap"]) $(id).hidden = !!P.car || !!P.heli;
+      for (const id of ["tAim", "tCrouch"]) $(id).hidden = !!P.car;
       $("tStreak").hidden = !earned.length || !!P.car;
       $("tAim").classList.toggle("on", adsHeld); $("tCrouch").classList.toggle("on", P.crouch);
       $("rotate").hidden = innerWidth > innerHeight || state !== "play";
     }
-    if (P.car) pr.hidden = true;
+    if (P.car || P.heli) pr.hidden = true;
     const online = NET.room && (NET.cf ? NET.room.connected() : NET.status === "online");
     $("srv").innerHTML = `SERVER <b>${esc(mySrv)}</b> · ${remotes.size + 1} PLAYER${remotes.size ? "S" : ""}${bots.length ? ` + ${bots.length} BOTS · ${DIFFS[botAuth ? difIdx : hostDif].name.toUpperCase()}` : ""} · <b class="${online ? "" : "off"}">${online ? "ONLINE" : NET.status === "offline" ? "OFFLINE" : "RECONNECTING"}</b>`;
     if (boardOpen) renderBoard();
@@ -3331,6 +3802,6 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 resize(); buildViewmodel(); showMenu("start"); requestAnimationFrame(frame);
-if (location.hash === "#test") window.__cb = { get fp() { return fpArms; }, get adsT() { return adsT; }, camera, vm, switchTo: (id) => switchWeapon(widx(id)), P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId };
+if (location.hash === "#test") window.__cb = { get fp() { return fpArms; }, get adsT() { return adsT; }, camera, vm, switchTo: (id) => switchWeapon(widx(id)), P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId, heli, interact, openCasino, get casinoOpen() { return casinoOpen; } };
 })();
 </script>
