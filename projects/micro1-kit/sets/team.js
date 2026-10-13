@@ -36,9 +36,9 @@ export default {
       const inMin = i < fMin - 0.01, inMax = !inMin && i < fAll - 0.01;
       const fillAt = i * per < P.min ? P.at + 0.6 * (i * per / P.min) : P.atMax + 1.2 * ((i * per - P.min) / Math.max(1, P.max - P.min));
       const pp = (inMin || inMax) ? 1 + 0.3 * Math.max(0, 1 - (t - fillAt) / 0.25) : 1;
-      const s = Math.min(cw, ch) * 0.46 * appear * pp + L.bob(t, 0.6, 0.5, i * 0.07);
+      const s = Math.max(0, Math.min(cw, ch) * 0.46 * appear * pp + L.bob(t, 0.6, 0.5, i * 0.07));
       g.fillStyle = i < maxI ? (inMin ? L.PAL.ink : inMax ? L.PAL.green : '#d3ccbc') : '#e4dfd2';
-      g.beginPath(); g.arc(x, y - s * 0.5, s * 0.3, 0, 7); g.fill();
+      g.beginPath(); g.arc(x, y - s * 0.5, Math.max(0, s * 0.3), 0, 7); g.fill();
       g.beginPath(); g.ellipse(x, y + s * 0.42, s * 0.48, s * 0.4, 0, Math.PI, 0); g.fill();
     }
     // icons beyond the max: struck out

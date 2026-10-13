@@ -4,3 +4,4 @@ projects/*/out/
 refs/
 __pycache__/
 projects/*/*.log
+projects/micro1/batch.log
