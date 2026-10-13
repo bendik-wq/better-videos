@@ -45,7 +45,7 @@ All three v2 concepts pass the three Palantir gates: ≤3 words, a high-contrast
 - A + "The Hackers Who Can Turn Off the Lights": the title names the who in general, and the thumbnail asks who clicked.
 - B + "The Mouse Moved By Itself…" is redundant, so pair B with title A only.
 
-**Every image is in the video in the first 45 s:**
+**Every image appears in the video (A and C in the first 45 s):**
 - A: the OPEN click at 0:43.
 - B: the flash still at 3:23. The cursor in the cold open moves by itself while the hand rests beside the mouse.
 - C: the orbit at 0:00–0:05.
