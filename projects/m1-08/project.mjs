@@ -13,7 +13,7 @@ export default episode({ aspect: '16:9', title: 'Financial Firms: Your Process N
   S('hook', 'Financial teams already document more than almost anyone, because regulators make them. That discipline is exactly what makes the data valuable here.', { lines: ['REGULATORS', 'MADE YOU', 'DOCUMENT IT.', 'NOW IT PAYS.'], highlight: 'NOW IT PAYS.' }),
   tiers('Reported tiers: a hundred thousand dollars and up, five hundred thousand and up for large or ongoing datasets, a million and up for highly unique data. Not guaranteed.'),
   S('hook', 'In a regulated business, bring your compliance team in early. Done right, this is a new revenue line from work you’ve already done.', { lines: ['COMPLIANCE', 'IN EARLY.', 'NEW REVENUE', 'FROM OLD WORK.'], highlight: 'NEW REVENUE' }),
+  cta('If that sounds like your firm, the link is in my bio.'),
   ...PREP.B(),
   window12('The budget is set for the next twelve months.'),
-  cta('The link is in my bio. Two minutes to apply.'),
 ] });

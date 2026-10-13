@@ -14,6 +14,7 @@ export default episode({ aspect: '16:9', title: 'Consultancies: There’s Now a 
   S('hook', 'Your methodology took years and hundreds of engagements to refine. Licensing the process behind it, de-identified, means it earns again without you giving away a single client.', { lines: ['YOUR METHOD', 'EARNS AGAIN.', 'NO CLIENT', 'GIVEN AWAY.'], highlight: 'EARNS AGAIN.' }),
   tiers('Reported payouts start at a hundred thousand dollars and run past a million for highly unique, proprietary know-how. Not guaranteed.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Proprietary know-how', word: 'million' }] }),
   team('Firms of roughly thirty to two hundred people with mature processes are the target.', { label: '30–200 · MATURE FIRMS' }),
+  cta('If you run a firm like this, the link to apply is in my bio.'),
   ...PREP.A(),
-  cta('The link is in my bio. Your frameworks might be worth more than your hourly rate.'),
+  S('hook', 'Your method took years and hundreds of engagements to build. It may be worth more than your hourly rate ever was.', { lines: ['YEARS TO', 'BUILD.', 'WORTH MORE', 'THAN AN HOUR.'], highlight: 'WORTH MORE' }, { padOut: 1.0 }),
 ] });

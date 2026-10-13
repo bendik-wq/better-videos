@@ -18,13 +18,16 @@ export function defaultMusic(shots, key = 'G') {
   const first = shots[0].id, last = shots.at(-1).id;
   const m = [{ shot: first, mood: 'wonder', key, intensity: [0.4, 0.6], bpm: 112 }];
   if (shots.length > 3) m.push({ shot: shots[Math.floor(shots.length * 0.55)].id, mood: 'triumph', key, intensity: [0.45, 0.6], bpm: 112 });
-  if (shots.at(-1).set === 'cta' && shots.length > 1) m.push({ shot: last, mood: 'triumph', key, intensity: [0.5, 0.35], ending: true });
+  // the score always resolves on the last shot (the CTA may sit mid-video)
+  if (shots.length > 1) m.push({ shot: last, mood: 'triumph', key, intensity: [0.5, 0.35], ending: true });
   return m;
 }
 
 export function episode({ title, shots, music, aspect = '9:16', key = 'G', voice = {}, say = {}, settings = {}, timing = {}, finish = {}, score = {} }) {
   if (!['9:16', '16:9'].includes(aspect)) throw new Error(`episode(): aspect must be '9:16' or '16:9', got ${aspect}`);
   for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
+  // let the last shot breathe so the video never ends mid-sentence
+  if (shots.length && shots.at(-1).padOut == null) shots.at(-1).padOut = 1.0;
   return {
     title,
     // '9:16' (default, 1080x1920) or '16:9' (1920x1080): the kit lays every set out for the frame it gets

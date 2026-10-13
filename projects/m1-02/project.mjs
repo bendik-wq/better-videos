@@ -14,7 +14,7 @@ export default episode({ aspect: '16:9', title: 'What Data Would an AI Company P
   S('hook', 'Here’s an example. A thirty person agency with five years of onboarding checklists, QA rubrics and ticket histories has something no public dataset contains: the real, messy, step by step reality of how a business runs.', { lines: ['30 PEOPLE.', '5 YEARS OF', 'CHECKLISTS.', 'NO PUBLIC', 'DATASET HAS IT.'], highlight: 'NO PUBLIC', accent: '5 YEARS OF' }),
   tiers('Reported payout tiers start at a hundred thousand dollars and run past a million for highly unique datasets. Not guaranteed. It depends on what you have.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   redact('And sensitive information? micro1 says it’s scrubbed before anything is used, customer information isn’t exposed, and originals are deleted after processing.', 'onboarding', { title: 'SUPPORT ESCALATION SOP', at: 'scrubbed' }),
+  cta('If that sounds like your company, the link to apply is in my bio.'),
   ...PREP.B(),
   S('hook', 'So if your team has spent years writing down how you do things, that work may now have a price tag.', { lines: ['YEARS OF', 'WRITING IT DOWN', 'NOW HAS A', 'PRICE TAG.'], highlight: 'PRICE TAG.' }),
-  cta('The link is in my bio. About two minutes to apply.'),
 ] });

@@ -14,8 +14,8 @@ export default episode({ aspect: '16:9', title: 'Is It Safe to License Your Comp
   S('hook', 'Think of it like licensing a recipe without giving away the restaurant. They learn the steps. They never get your customers, your name or your secret sauce.', { lines: ['LICENSE', 'THE RECIPE.', 'KEEP THE', 'RESTAURANT.'], highlight: 'KEEP THE', accent: 'RECIPE.' }),
   S('hook', 'Our advice is to do what any smart operator would. Read the agreement. Check your client contracts. Loop in your counsel.', { lines: ['READ IT.', 'CHECK CLIENT', 'CONTRACTS.', 'ASK COUNSEL.'], highlight: 'CONTRACTS.' }),
   securityQuote('micro1’s page puts it simply: all data is handled under strict contractual protections.', 'All data is handled under strict contractual protections.', { highlight: ['strict contractual'] }),
+  cta('If you want to read micro1’s terms yourself, the link is in my bio.'),
   ...PREP.C(),
   tiers('Because the upside is real. Reported tiers start at a hundred thousand dollars and run past a million, depending on volume and uniqueness. Not guaranteed.', { title: 'THE UPSIDE · REPORTED TIERS', tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   window12('And the budget runs for twelve months.'),
-  cta('The link is in my bio. Read the terms, then decide.'),
 ] });

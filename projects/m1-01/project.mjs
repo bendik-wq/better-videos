@@ -14,8 +14,8 @@ export default episode({ aspect: '16:9', title: 'A $1 Billion Budget to Buy How 
   tiers('And the money? Reported payout tiers start at a hundred thousand dollars, go to five hundred thousand and up for large or ongoing datasets, and past a million for truly unique data.'),
   S('bignum', 'micro1’s own page says it already has more than a hundred partner companies, and has generated over two hundred million dollars for partners.', { value: 200, prefix: '$', suffix: 'M+', label: 'GENERATED FOR PARTNERS', sub: '100+ PARTNER COMPANIES · PER MICRO1', source: SRC_PAGE }),
   redact('And no, they don’t want your customers. micro1 says sensitive and customer information is scrubbed, nothing is shared publicly, and you keep ownership of your data.', 'onboarding', { at: 'scrubbed' }),
+  cta('If you want to check whether your team qualifies, I’ve put the link in my bio. The form takes about two minutes.'),
   ...PREP.A(),
   window12('Here’s the part that matters. The budget is for the next twelve months. Once it’s spent, it’s spent.', { fill: 0.05 }),
   S('hook', 'The companies that move first get looked at first.', { lines: ['MOVE FIRST.', 'GET LOOKED', 'AT FIRST.'], highlight: 'FIRST.' }),
-  cta('The link to apply is in my bio. The interest form takes about two minutes, and the budget won’t wait.'),
 ] });

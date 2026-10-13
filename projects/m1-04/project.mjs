@@ -13,7 +13,7 @@ export default episode({ aspect: '16:9', title: 'How Much Could Your Company’s
   S('hook', 'And remember why they pay. The more your data looks like real, complex, day to day work, the more useful it is for training AI agents. Depth beats size.', { lines: ['DEPTH', 'BEATS', 'SIZE.'], highlight: 'DEPTH' }),
   redact('And it’s not about your customers. Sensitive and customer information is scrubbed, and you keep ownership.', 'onboarding', { title: 'CUSTOMER SUCCESS PLAYBOOK', at: 'scrubbed' }),
   S('quote', 'These are reported ranges, not guarantees. Every deal is evaluated on what you actually have.', { text: 'Selected partners receive significant compensation based on: Dataset size/Volume · Workflow complexity · Uniqueness of operational knowledge · Data quality · Domain expertise represented', by: 'micro1, Company Data Partnerships page', highlight: ['significant compensation'], source: SRC_PAGE }),
+  cta('If you want to find out what yours could be worth, the link is in my bio. The form takes about two minutes.'),
   ...PREP.A(),
   window12('But the budget is set for twelve months, and it isn’t unlimited.', { sub: 'NOT UNLIMITED' }),
-  cta('Find out what yours is worth. The link is in my bio, and the form takes about two minutes.'),
 ] });

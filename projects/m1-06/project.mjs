@@ -13,7 +13,7 @@ export default episode({ aspect: '16:9', title: 'Recruiting & BPO: Your Playbook
   S('hook', 'Picture it. Every req you’ve filled taught your team something about sourcing, screening and closing. That knowledge lives in your playbooks and your pipeline history. That’s the asset.', { lines: ['EVERY REQ', 'YOU FILLED', 'IS IN YOUR', 'PLAYBOOK.'], highlight: 'PLAYBOOK.' }),
   tiers('Reported payouts start at a hundred thousand dollars, five hundred thousand and up for ongoing, multi team participation, and past a million for highly unique data. Not guaranteed.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Ongoing, multi-team', word: 'five' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   S('checklist', 'Volume helps. Repeatable workflows help. Clean documentation helps a lot.', { title: 'WHAT HELPS', items: [{ text: 'Volume', word: 'Volume' }, { text: 'Repeatable workflows', word: 'Repeatable' }, { text: 'Clean documentation', word: 'Clean' }] }),
+  cta('Recruiting and BPO owners, the link to apply is in my bio.'),
   ...PREP.C(),
   window12('The budget runs for twelve months. The earlier you apply, the earlier you’re reviewed.', { sub: 'APPLY EARLY · REVIEWED EARLY' }),
-  cta('Recruiting and BPO teams: the link is in my bio. About two minutes to apply.'),
 ] });

@@ -13,7 +13,7 @@ export default episode({ aspect: '16:9', title: 'Legal & Compliance Teams: Your 
   S('hook', 'Every matter your team has run through a clear intake, review and sign-off process is a worked example of judgment. That’s what AI agents are missing.', { lines: ['EVERY MATTER', 'IS A WORKED', 'EXAMPLE OF', 'JUDGMENT.'], highlight: 'JUDGMENT.' }),
   tiers('Reported payouts start at a hundred thousand dollars, and run past a million for highly unique, proprietary operational data. Not guaranteed.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   team('The target is teams of roughly thirty to two hundred people with mature processes.'),
+  cta('If you want to read the terms yourself, the link is in my bio.'),
   ...PREP.C(),
   window12('The budget runs for twelve months.'),
-  cta('The link is in my bio. Read the terms, then make the call.'),
 ] });

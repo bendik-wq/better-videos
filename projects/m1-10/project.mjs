@@ -13,7 +13,7 @@ export default episode({ aspect: '16:9', title: 'Logistics Companies: AI Wants t
   S('hook', 'Late trucks, damaged freight, missed handoffs. Every exception your team solved and logged is a lesson an AI agent needs. You’ve been building this dataset for years without knowing it.', { lines: ['EVERY EXCEPTION', 'YOU LOGGED', 'IS A LESSON', 'AI NEEDS.'], highlight: 'A LESSON', accent: 'EVERY EXCEPTION' }),
   tiers('Reported payouts start at a hundred thousand dollars, with five hundred thousand and up for ongoing, multi team participation and a million and up for highly unique data. Not guaranteed.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Ongoing, multi-team', word: 'five' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   S('hook', 'It’s new revenue from knowledge you’ve already built.', { lines: ['NEW REVENUE.', 'OLD KNOWLEDGE.'], highlight: 'NEW REVENUE.' }),
+  cta('Logistics operators, the link to apply is in my bio. Takes about two minutes.'),
   ...PREP.A(),
   window12('The budget is set for the next twelve months. First in line, first reviewed.', { sub: 'FIRST IN LINE · FIRST REVIEWED' }),
-  cta('The link is in my bio. About two minutes to apply. First in line, first reviewed.'),
 ] });
