@@ -482,7 +482,7 @@ const concrete = pbr("barrier", { tone: 0.75 }), barrierM = pbr("barrier", { ton
 const MAPDRAW = []; // minimap shapes
 {
   const ground = new THREE.Mesh(tileUV(new THREE.PlaneGeometry(GROUND, GROUND), GROUND, GROUND, 2.5), pbr("walk", { tone: 0.72 })); ground.rotation.x = -Math.PI / 2; scene.add(ground);
-  const outer = new THREE.Mesh(tileUV(new THREE.PlaneGeometry(3000, 3000), 3000, 3000, 6), pbr("gravel", { extra: { color: new THREE.Color("#b8ab98").convertSRGBToLinear() } })); outer.rotation.x = -Math.PI / 2; outer.position.y = -0.05; scene.add(outer);
+  const outer = new THREE.Mesh(tileUV(new THREE.PlaneGeometry(700, 700), 700, 700, 6), pbr("gravel", { extra: { color: new THREE.Color("#b8ab98").convertSRGBToLinear() } })); outer.rotation.x = -Math.PI / 2; outer.position.y = -0.05; scene.add(outer);
   const rm = pbr("asphalt", { tone: 0.42 });
   for (const r of ROADS) {
     const a = new THREE.Mesh(tileUV(new THREE.PlaneGeometry(RW, ROADLEN), RW, ROADLEN, 5), rm); a.rotation.x = -Math.PI / 2; a.position.set(r, 0.02, 0); scene.add(a);
@@ -658,6 +658,133 @@ const stars = (() => {
   scene.add(p); return p;
 })();
 const headlight = new THREE.SpotLight("#fff1cc", 0, 70, 0.55, 0.5, 1); scene.add(headlight, headlight.target);
+// ================= the Himalaya: snow peaks around the valley, with ski lifts =================
+// A ring of ridged, glaciated mountains rises beyond the city walls: forest and ski runs low down, bare
+// rock on the steep faces, snow above the snowline. Far slopes fade into blue haze. Purely scenery.
+const MTN = (() => {
+  const r = mulberry32(8848), P = new Uint8Array(512), perm = [...Array(256).keys()];
+  for (let i = 255; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+  for (let i = 0; i < 512; i++) P[i] = perm[i & 255];
+  const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10), lerp = (a, b, t) => a + (b - a) * t;
+  const grad = (h, x, y) => ((h & 1) ? -x : x) + ((h & 2) ? -y : y);
+  const noise = (x, y) => { const X = Math.floor(x) & 255, Y = Math.floor(y) & 255; x -= Math.floor(x); y -= Math.floor(y); const u = fade(x), v = fade(y), A = P[X] + Y, B = P[X + 1] + Y; return lerp(lerp(grad(P[A], x, y), grad(P[B], x - 1, y), u), lerp(grad(P[A + 1], x, y - 1), grad(P[B + 1], x - 1, y - 1), u), v); };
+  const ridged = (x, y) => { let s = 0, a = 0.55, f = 1, w = 1; for (let o = 0; o < 6; o++) { let n = 1 - Math.abs(noise(x * f, y * f)); n *= n; n *= w; w = clamp(n * 1.6, 0, 1); s += n * a; f *= 2.05; a *= 0.5; } return s; };
+  const fbm = (x, y) => { let s = 0, a = 0.5, f = 1; for (let o = 0; o < 4; o++) { s += noise(x * f, y * f) * a; f *= 2; a *= 0.5; } return s; };
+  const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  // height of the land at (x, z): flat under the city, foothills from ~300 m, great peaks beyond ~800 m
+  function height(x, z) {
+    const d = Math.hypot(x, z), ang = Math.atan2(z, x);
+    const big = 0.65 + 0.35 * Math.sin(ang * 2 + 0.8) + 0.2 * Math.sin(ang * 5 + 2); // some sides are higher
+    const foot = sstep(300, 560, d) * (90 + 170 * ridged(x * 0.004 + 3, z * 0.004 + 7));
+    const peaks = sstep(620, 1150, d) * big * (260 + 1050 * ridged(x * 0.0016, z * 0.0016));
+    return foot + peaks + sstep(300, 500, d) * fbm(x * 0.02, z * 0.02) * 12 - 0.6;
+  }
+  return { height, noise, fbm, sstep, runs: [] };
+})();
+const LIFTS = [];
+(function buildMountains() {
+  // polar grid: rings get wider with distance, so detail sits where it can be seen
+  const RINGS = isTouch ? 90 : 140, SEG = isTouch ? 220 : 320, R0 = 260, R1 = 1450;
+  const ringR = (i) => R0 + (R1 - R0) * Math.pow(i / (RINGS - 1), 1.6);
+  const pos = new Float32Array(RINGS * SEG * 3), col = new Float32Array(RINGS * SEG * 3);
+  for (let i = 0; i < RINGS; i++) for (let j = 0; j < SEG; j++) {
+    const a = j / SEG * Math.PI * 2, rr = ringR(i), x = Math.cos(a) * rr, z = Math.sin(a) * rr, k = (i * SEG + j) * 3;
+    pos[k] = x; pos[k + 1] = MTN.height(x, z); pos[k + 2] = z;
+  }
+  const idx = [];
+  for (let i = 0; i < RINGS - 1; i++) for (let j = 0; j < SEG; j++) { const a = i * SEG + j, b = i * SEG + (j + 1) % SEG, c = a + SEG, d = b + SEG; idx.push(a, b, c, b, d, c); }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setIndex(idx); geo.computeVertexNormals();
+  // colour by height and steepness
+  const C = (h) => new THREE.Color(h).convertSRGBToLinear();
+  const SNOW = C("#eef2f8"), SNOW2 = C("#cfd8e6"), ROCK = C("#5c5650"), ROCK2 = C("#3f3b37"), FOREST = C("#263322"), MEADOW = C("#5d6440"), SCREE = C("#857c70");
+  const nrm = geo.attributes.normal, tmp = new THREE.Color();
+  for (let v = 0; v < RINGS * SEG; v++) {
+    const x = pos[v * 3], y = pos[v * 3 + 1], z = pos[v * 3 + 2], ny = nrm.getY(v), n = MTN.fbm(x * 0.01, z * 0.01);
+    const snowLine = 300 + n * 140, treeLine = 210 + n * 60;
+    tmp.copy(y > treeLine ? (ny > 0.55 ? SCREE : ROCK) : ny > 0.6 ? FOREST : MEADOW);
+    if (y > treeLine - 40 && y < treeLine + 40) tmp.lerp(ROCK, MTN.sstep(treeLine - 40, treeLine + 40, y) * 0.6);
+    if (ny < 0.62) tmp.lerp(ROCK2, MTN.sstep(0.62, 0.35, ny)); // cliffs stay bare
+    const snow = MTN.sstep(snowLine - 60, snowLine + 40, y) * MTN.sstep(0.4, 0.62, ny);
+    if (snow > 0) tmp.lerp(ny > 0.8 ? SNOW : SNOW2, snow);
+    col.set([tmp.r, tmp.g, tmp.b], v * 3);
+  }
+  // ski runs: snowy lanes cut through the forest beside each lift (painted below)
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  const LIFT_DEFS = [{ ang: 2.25, r0: 330, r1: 760, kind: "chair" }, { ang: 2.9, r0: 340, r1: 820, kind: "chair" }, { ang: -2.6, r0: 360, r1: 1080, kind: "gondola" }, { ang: 0.35, r0: 330, r1: 700, kind: "chair" }];
+  const runPts = [];
+  for (const L of LIFT_DEFS) for (const off of [-24, 26]) for (let t = 0; t <= 1; t += 0.01) {
+    const rr = L.r0 + (L.r1 - L.r0) * t, a = L.ang + off / rr + Math.sin(t * 9 + L.ang) * 0.02;
+    runPts.push([Math.cos(a) * rr, Math.sin(a) * rr, 9 + 4 * Math.sin(t * 13)]);
+  }
+  const SNOWRUN = C("#e8edf4");
+  for (let v = 0; v < RINGS * SEG; v++) {
+    const x = pos[v * 3], z = pos[v * 3 + 2];
+    for (const [px, pz, w] of runPts) { const dd = Math.hypot(x - px, z - pz); if (dd < w) { tmp.setRGB(col[v * 3], col[v * 3 + 1], col[v * 3 + 2]).lerp(SNOWRUN, 0.85 * (1 - dd / w)); col.set([tmp.r, tmp.g, tmp.b], v * 3); break; } }
+  }
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, metalness: 0, fog: false, envMapIntensity: 0.6 });
+  // aerial perspective: the further the slope, the more it melts into the sky's haze
+  mat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vHazeD;").replace("#include <project_vertex>", "#include <project_vertex>\nvHazeD = length((modelMatrix * vec4(transformed, 1.0)).xyz - cameraPosition);");
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHazeD;").replace("#include <dithering_fragment>", "gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.63, 0.67, 0.74), clamp(1.0 - exp(-max(vHazeD - 250.0, 0.0) * 0.00085), 0.0, 0.82));\n#include <dithering_fragment>");
+  };
+  const mesh = new THREE.Mesh(geo, mat); mesh.renderOrder = -0.5; scene.add(mesh);
+  // pines on the lower slopes: dark cones, instanced
+  const pines = [], pr = mulberry32(2024);
+  for (let k = 0; k < (isTouch ? 900 : 2200); k++) {
+    const a = pr() * Math.PI * 2, rr = 280 + Math.pow(pr(), 0.7) * 520, x = Math.cos(a) * rr, z = Math.sin(a) * rr, y = MTN.height(x, z);
+    if (y > 200 + MTN.fbm(x * 0.01, z * 0.01) * 60 || y < 3) continue;
+    if (runPts.some(([px, pz, w]) => Math.hypot(x - px, z - pz) < w + 2)) continue;
+    pines.push([x, y, z, 0.8 + pr() * 0.8]);
+  }
+  const pg = new THREE.ConeGeometry(2.6, 11, 6); pg.translate(0, 5.5, 0);
+  const pineMesh = new THREE.InstancedMesh(pg, new THREE.MeshLambertMaterial({ color: C("#1c2a1c"), fog: false }), pines.length), m4 = new THREE.Matrix4();
+  pines.forEach(([x, y, z, sc], i) => { m4.makeScale(sc, sc * (0.9 + (i % 5) * 0.08), sc).setPosition(x, y - 0.5, z); pineMesh.setMatrixAt(i, m4); });
+  scene.add(pineMesh);
+  // ---- lifts: stations, towers every ~70 m, a haul rope loop and moving chairs or gondola cabins ----
+  const steel = new THREE.MeshLambertMaterial({ color: C("#7c8287"), fog: false }), hut = new THREE.MeshLambertMaterial({ color: C("#8a3b2c"), fog: false }), roofM = new THREE.MeshLambertMaterial({ color: C("#3a3f45"), fog: false });
+  const ropeMat = new THREE.LineBasicMaterial({ color: "#2a2a2a", fog: false });
+  const chairGeo = (() => { const parts = [new THREE.BoxGeometry(0.12, 2.4, 0.12).translate(0, -1.2, 0), new THREE.BoxGeometry(2.4, 0.15, 0.7).translate(0, -2.45, 0.1), new THREE.BoxGeometry(2.4, 0.8, 0.12).translate(0, -2.0, 0.45), new THREE.BoxGeometry(2.5, 0.08, 0.08).translate(0, -1.55, -0.35)]; return mergeGeos(parts); })();
+  const cabinGeo = (() => { const parts = [new THREE.BoxGeometry(0.15, 1.6, 0.15).translate(0, -0.8, 0), new THREE.BoxGeometry(2.0, 2.2, 2.0).translate(0, -2.8, 0)]; return mergeGeos(parts); })();
+  const chairMat = new THREE.MeshLambertMaterial({ color: C("#2c3036"), fog: false }), cabinMat = new THREE.MeshLambertMaterial({ color: C("#b8402e"), fog: false });
+  for (const L of LIFT_DEFS) {
+    const dir = new V3(Math.cos(L.ang), 0, Math.sin(L.ang)), side = new V3(-dir.z, 0, dir.x), len = L.r1 - L.r0;
+    const span = L.kind === "gondola" ? 110 : 70, nT = Math.max(2, Math.round(len / span)), H = L.kind === "gondola" ? 22 : 13;
+    const towers = [];
+    for (let t = 0; t <= nT; t++) { const rr = L.r0 + len * t / nT, x = dir.x * rr, z = dir.z * rr, y = MTN.height(x, z); towers.push(new V3(x, Math.max(y, 0) + (t === 0 || t === nT ? 6 : H), z)); }
+    const tg = []; // towers
+    for (let t = 1; t < nT; t++) { const p = towers[t]; const g = new THREE.Mesh(new THREE.BoxGeometry(0.9, H + 4, 0.9), steel); g.position.set(p.x, p.y - (H + 4) / 2 + 1, p.z); scene.add(g); const arm = new THREE.Mesh(new THREE.BoxGeometry(L.kind === "gondola" ? 9 : 7, 0.5, 0.6), steel); arm.position.copy(p).add(new V3(0, 0.6, 0)); arm.lookAt(p.clone().add(side).add(new V3(0, 0.6, 0))); arm.rotateY(Math.PI / 2); scene.add(arm); }
+    for (const end of [0, nT]) { // stations
+      const p = towers[end], y = MTN.height(p.x, p.z), w = L.kind === "gondola" ? 16 : 11;
+      const b = new THREE.Mesh(new THREE.BoxGeometry(w, 7, w * 1.3), hut); b.position.set(p.x, y + 3.5, p.z); b.lookAt(p.x + dir.x, y + 3.5, p.z + dir.z); scene.add(b);
+      const rf = new THREE.Mesh(new THREE.BoxGeometry(w + 2, 0.8, w * 1.3 + 2), roofM); rf.position.set(p.x, y + 7.4, p.z); rf.rotation.copy(b.rotation); scene.add(rf);
+    }
+    // rope: two parallel strands (up and down) sagging between towers
+    const gauge = L.kind === "gondola" ? 3.6 : 2.6, rope = (k) => { const pts = []; for (let t = 0; t < nT; t++) { const a = towers[t], b = towers[t + 1]; for (let q = 0; q <= 12; q++) { const f = q / 12; pts.push(a.clone().lerp(b, f).addScaledVector(side, k * gauge).add(new V3(0, -Math.sin(f * Math.PI) * (L.kind === "gondola" ? 5 : 3), 0))); } } return pts; };
+    const up = rope(1), down = rope(-1).reverse();
+    for (const pts of [up, down]) scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ropeMat));
+    const loop = up.concat(down), segL = []; let total = 0;
+    for (let i = 0; i < loop.length; i++) { const l = loop[i].distanceTo(loop[(i + 1) % loop.length]); segL.push(l); total += l; }
+    const spacing = L.kind === "gondola" ? 60 : 26, n = Math.floor(total / spacing);
+    const inst = new THREE.InstancedMesh(L.kind === "gondola" ? cabinGeo : chairGeo, L.kind === "gondola" ? cabinMat : chairMat, n); inst.frustumCulled = false; scene.add(inst);
+    LIFTS.push({ loop, segL, total, n, spacing, inst, speed: L.kind === "gondola" ? 6 : 4.5 });
+  }
+  scene.updateMatrixWorld(true);
+})();
+const _lm = new THREE.Matrix4(), _lq = new THREE.Quaternion(), _lp = new V3(), _ls = new V3(1, 1, 1);
+function updateLifts() {
+  const t = serverNow() / 1000;
+  for (const L of LIFTS) {
+    for (let c = 0; c < L.n; c++) {
+      let s = ((t * L.speed + c * L.spacing) % L.total + L.total) % L.total, i = 0;
+      while (s > L.segL[i]) { s -= L.segL[i]; i = (i + 1) % L.loop.length; }
+      const a = L.loop[i], b = L.loop[(i + 1) % L.loop.length];
+      _lp.copy(a).lerp(b, s / Math.max(L.segL[i], 1e-3));
+      _lq.setFromAxisAngle(UP, Math.atan2(b.x - a.x, b.z - a.z));
+      L.inst.setMatrixAt(c, _lm.compose(_lp, _lq, _ls));
+    }
+    L.inst.instanceMatrix.needsUpdate = true;
+  }
+}
 fetch("world/props.json").then((r) => (r.ok ? r.json() : null)).then((data) => {
   if (!data) return;
   const byKind = {}; for (const pl of PROP_PLACES) (byKind[pl.k] = byKind[pl.k] || []).push(pl);
@@ -808,6 +935,7 @@ function trafficAt(c, time) {
   return { x: L.pts[0][0], z: L.pts[0][1], yaw: 0 };
 }
 function updateTraffic(dt) {
+  updateLifts();
   const time = serverNow() / 1000, k = 1 - Math.exp(-dt * 8);
   for (const c of traffic) {
     const t = trafficAt(c, time);
