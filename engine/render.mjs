@@ -31,6 +31,7 @@
 //   settings.renderScale   GL resolution scale, default 1 (DOM overlays always render at full res)
 //   settings.look          'fast' (default) | 'reference' (the original full-res finish, ~6x slower, same look)
 //   settings.preset/crf    x264 preset (default veryfast) and crf (default 18); settings.gop GOP length in s (0.5)
+//   settings.browserArgs   extra Chromium flags (default none); settings.hashDirs extra code dirs in the chunk cache key
 // Env: BV_GL=swiftshader forces SwiftShader; BV_CHROME overrides the browser binary.
 import { chromium } from 'playwright-core';
 import { spawn, fork, execFileSync } from 'node:child_process';
@@ -62,7 +63,8 @@ const mjs = path.join(projDir, 'project.mjs');
 const project = fs.existsSync(mjs) ? (await import(pathToFileURL(mjs))).default : JSON.parse(fs.readFileSync(path.join(projDir, 'project.json'), 'utf8'));
 const settings = project.settings ?? {};
 const fps = Number(flag('fps') ?? (DRAFT ? 12 : settings.fps ?? project.fps ?? 30));
-const [W, H] = DRAFT ? [960, 540] : [project.width, project.height];
+// drafts keep the project's orientation: 960x540, or 540x960 for a vertical (9:16) project
+const [W, H] = DRAFT ? (project.height > project.width ? [540, 960] : [960, 540]) : [project.width, project.height];
 fs.mkdirSync(out, { recursive: true });
 const sh = (cmd, a, opts = {}) => execFileSync(cmd, a, { stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 1 << 28, ...opts }).toString();
 const log = (...a) => console.log(...a);
@@ -242,7 +244,9 @@ const GL_ARGS = {
 async function launch(gl) {
   const env = { ...process.env, EGL_PLATFORM: 'surfaceless' };
   // llvmpipe uses every core by default. Capping LP_NUM_THREADS per worker was slower in testing.
-  const browser = await chromium.launch({ executablePath: findBrowser(), args: GL_ARGS[gl], env });
+  // settings.browserArgs: extra Chromium flags for one project (e.g. a 2D-canvas-only kit renders ~4x faster with
+  // --disable-gpu-compositing on llvmpipe); empty by default, so other projects launch exactly as before
+  const browser = await chromium.launch({ executablePath: findBrowser(), args: [...GL_ARGS[gl], ...(settings.browserArgs ?? [])], env });
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   const rendererName = await page.evaluate(() => {
     const g = document.createElement('canvas').getContext('webgl2'); if (!g) return 'none';
@@ -351,7 +355,9 @@ const walk = (d) => !fs.existsSync(d) ? [] : fs.readdirSync(d, { withFileTypes: 
 // everything a frame can depend on: engine page code, vendored libraries, the project's own assets
 const engineFiles = [...fs.readdirSync(path.join(ROOT, 'engine')).filter(f => /\.(js|html)$/.test(f)).sort().map(f => path.join(ROOT, 'engine', f)),
   ...walk(path.join(ROOT, 'engine', 'vendor')), ...walk(path.join(ROOT, 'engine', 'grade')), ...walk(path.join(ROOT, 'engine', 'world')), ...walk(path.join(ROOT, 'assets', 'world')),
-  ...walk(path.join(projDir, 'assets'))];
+  ...walk(path.join(projDir, 'assets')),
+  // settings.hashDirs: shared code outside the project dir (e.g. a set kit an episode imports); empty by default
+  ...(settings.hashDirs ?? []).flatMap(d => walk(path.join(ROOT, d)).filter(f => /\.(m?js|json)$/.test(f) && !f.split(path.sep).includes('out')))];
 const fileHash = (f) => crypto.createHash('sha1').update(fs.readFileSync(f)).digest('hex') + path.relative(ROOT, f);
 const chunkKey = crypto.createHash('sha1').update([fs.readFileSync(tlPath), ...engineFiles.map(fileHash), ...fs.readdirSync(projDir).filter(f => /\.(m?js)$/.test(f)).sort().map(f => fs.readFileSync(path.join(projDir, f))), `${W}x${H}@${fps}`,
   JSON.stringify({ gl: GL, aa: AA, scale: RSCALE, finish: FINISH, look: LOOK, grade: GRADE, shutter: SHUTTER, ns: NS, enc: encArgs, vf: chunkGraph(0), capture: 'cdp-jpeg95' })].join('|')).digest('hex').slice(0, 10);
