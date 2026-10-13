@@ -66,6 +66,7 @@ body { font-family: var(--display); -webkit-user-select: none; user-select: none
 #dot.holo { width: 4px; height: 4px; margin: -2px 0 0 -2px; }
 #dot.holo::after { content: ""; position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -16.5px 0 0 -16.5px; border: 1.5px solid rgba(255,59,42,0.95); border-radius: 50%; box-shadow: 0 0 5px #ff3b2a, inset 0 0 3px #ff3b2a; }
 #dot.acog { width: 0; height: 0; margin: 0; border-radius: 0; background: transparent; box-shadow: none; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid #ff3b2a; transform: translate(-6px, 0); filter: drop-shadow(0 0 3px #ff3b2a); }
+#peep { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 0, transparent min(9vw, 9vh), rgba(12,12,12,0.55) min(12vw, 12vh), rgba(12,12,12,0.92) min(17vw, 17vh), rgba(12,12,12,0.35) min(24vw, 24vh), transparent min(30vw, 30vh)); }
 #acogRing { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 0, transparent calc(min(40vw, 40vh) - 1px), rgba(5,5,5,0.92) min(40vw, 40vh)); }
 #acogRing::before, #acogRing::after { content: ""; position: absolute; background: rgba(0,0,0,0.75); }
 #acogRing::before { left: 50%; top: calc(50% + 14px); width: 1.5px; height: min(30vw, 30vh); margin-left: -0.75px; }
@@ -271,6 +272,7 @@ body.touch #matchbar { top: 26px; } body.touch #medal { top: 18%; } body.touch #
 <div id="hurt"></div>
 <div id="scope" hidden></div>
 <div id="acogRing" hidden></div>
+<div id="peep" hidden></div>
 
 <div id="hud" hidden>
   <canvas id="mini" width="336" height="336"></canvas>
@@ -1001,7 +1003,12 @@ vmScene.add(new THREE.HemisphereLight("#c6d3e2", "#6e6253", 0.5));
 function syncVmCam() { camera.updateMatrixWorld(); vmCam.position.setFromMatrixPosition(camera.matrixWorld); vmCam.quaternion.setFromRotationMatrix(camera.matrixWorld); vmCam.updateMatrixWorld(true); }
 const vm = new THREE.Group(); vm.scale.setScalar(0.62); vmCam.add(vm);
 const vmMuzzle = new THREE.Object3D();
-const flash = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.22), new THREE.MeshBasicMaterial({ color: "#ffd27a", transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }));
+const flashTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const g = c.getContext("2d"), r = mulberry32(9);
+  const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, "rgba(255,250,220,1)"); gr.addColorStop(0.18, "rgba(255,210,120,0.95)"); gr.addColorStop(0.5, "rgba(255,140,40,0.35)"); gr.addColorStop(1, "rgba(255,90,10,0)"); g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  g.globalCompositeOperation = "lighter"; for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2 + r() * 0.3, l = 40 + r() * 22; g.save(); g.translate(64, 64); g.rotate(a); const lg = g.createLinearGradient(0, 0, l, 0); lg.addColorStop(0, "rgba(255,220,150,0.9)"); lg.addColorStop(1, "rgba(255,120,30,0)"); g.fillStyle = lg; g.beginPath(); g.moveTo(0, -5); g.lineTo(l, 0); g.lineTo(0, 5); g.fill(); g.restore(); }
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
+const flash = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), new THREE.MeshBasicMaterial({ map: flashTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+const muzzleLight = new THREE.PointLight("#ffb466", 0, 10, 2); scene.add(muzzleLight);
 flash.visible = false;
 // Gun geometry shared by the first-person viewmodel and the guns other players carry. Returns the barrel length.
 const GUN_LEN = { m1911: 0.2, python: 0.27, mp5k: 0.32, ak47: 0.62, commando: 0.5, m60: 0.8, stakeout: 0.66, dragunov: 0.84, l96: 0.85, chinalake: 0.56, m4a1: 0.56, acr: 0.58, ump45: 0.4, vector: 0.36, spas12: 0.68, barrett: 1.0, deagle: 0.25, g18: 0.2 };
@@ -1043,12 +1050,13 @@ function gunModel(id, add, metal, wood) {
 // v from the bottom (0) to the top (1). g = where the shooting hand holds, f = support hand, bore and sight
 // are the heights of the barrel axis and the line of sight.
 const GUN_ART = {
-  ak: { g: [0.70, 0.47], f: [0.335, 0.755], bore: 0.81, sight: 0.96 },
-  m4: { g: [0.71, 0.33], f: [0.38, 0.75], bore: 0.76, sight: 0.97 },
+  // los: the real sight line, measured off each mesh: rear sight and front post tip as [u, v, sideways cm]
+  ak: { g: [0.70, 0.47], f: [0.335, 0.755], bore: 0.81, sight: 0.96, los: { r: [0.44, 0.984, -0.5], f: [0.041, 0.995, -0.55] } },
+  m4: { g: [0.71, 0.33], f: [0.38, 0.75], bore: 0.76, sight: 0.97, los: { r: [0.70, 0.96, -0.1], f: [0.213, 0.98, -0.15], peep: true } },
   sg: { g: [0.725, 0.5], f: [0.29, 0.74], bore: 0.92, sight: 0.99 },
   sn: { g: [0.686, 0.39], f: [0.41, 0.46], bore: 0.5, sight: 0.88 },
-  mk: { g: [0.77, 0.5], f: [0.77, 0.4], bore: 0.84, sight: 0.98 },
-  lg: { g: [0.74, 0.55], f: [0.74, 0.45], bore: 0.88, sight: 0.98 },
+  mk: { g: [0.77, 0.5], f: [0.77, 0.4], bore: 0.84, sight: 0.985 },
+  lg: { g: [0.74, 0.55], f: [0.74, 0.45], bore: 0.88, sight: 0.975 },
   gg: { g: [0.8, 0.61], f: [0.41, 0.73], bore: 0.85, sight: 0.97 },
   su: { g: [0.65, 0.57], f: [0.29, 0.84], bore: 0.86, sight: 0.97 },
 };
@@ -1094,7 +1102,9 @@ function realGun(id, group, camo, shadow) {
   mesh.scale.setScalar(sc); mesh.position.set(-cx * sc, -boreY * sc, -gz * sc); mesh.castShadow = !!shadow;
   group.add(mesh);
   const pistol = k === "mk" || k === "lg";
-  return { len: A.g[0] * L, stock: (1 - A.g[0]) * L, grip: new V3(0, (gy - boreY) * sc, 0), fore: new V3(pistol ? -0.02 : 0, (fy - boreY) * sc, (fz - gz) * sc), sight: (A.sight - A.bore) * d.size[1] * sc, pistol, real: true };
+  const pt = (u, v, xcm) => new V3((xcm || 0) * sc, (d.min[1] + v * d.size[1] - boreY) * sc, (d.min[2] + u * d.size[2] - gz) * sc);
+  const losR = A.los ? pt(...A.los.r) : new V3(0, (A.sight - A.bore) * d.size[1] * sc, -0.05), losF = A.los ? pt(...A.los.f) : new V3(0, losR.y, -A.g[0] * L);
+  return { losR, losF, sightX: losF.x, peep: !!(A.los && A.los.peep), len: A.g[0] * L, stock: (1 - A.g[0]) * L, grip: new V3(0, (gy - boreY) * sc, 0), fore: new V3(pistol ? -0.02 : 0, (fy - boreY) * sc, (fz - gz) * sc), sight: (A.sight - A.bore) * d.size[1] * sc, pistol, real: true };
 }
 (function loadGuns() {
   fetch("guns/guns.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
@@ -1108,16 +1118,17 @@ const MOD_MAT = { metal: new THREE.MeshStandardMaterial({ color: new THREE.Color
 function addMods(group, an, mods, w) {
   if (!mods) return an;
   const part = (geo, mat, x, y, z, rx = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.x = rx; m.castShadow = true; group.add(m); return m; };
-  const pistol = an.pistol, len = an.len, railY = (an.sight || 0.04) - 0.012, oz = pistol ? -0.06 : -Math.min(0.14, len * 0.22);
+  const pistol = an.pistol, len = an.len, railY = (an.sight || 0.04) - 0.012, oz = pistol ? -0.06 : -Math.min(0.14, len * 0.22), sx = an.sightX || 0;
   if (mods.muzzle === "supp") { part(new THREE.CylinderGeometry(0.021, 0.021, pistol ? 0.13 : 0.19, 14), MOD_MAT.metal, 0, 0, -len - (pistol ? 0.065 : 0.095), Math.PI / 2); an.muzzle = -len - (pistol ? 0.13 : 0.19); }
   if (mods.muzzle === "comp") { part(new THREE.CylinderGeometry(0.017, 0.015, 0.06, 10), MOD_MAT.metal, 0, 0, -len - 0.03, Math.PI / 2); an.muzzle = -len - 0.06; }
   if (mods.optic) {
     const k = 1.45, cy = railY + 0.032 * k; // the line of sight now runs through the optic
-    part(new THREE.BoxGeometry(0.024 * k, 0.008 * k, 0.06 * k), MOD_MAT.poly, 0, railY + 0.004 * k, oz);
-    if (mods.optic === "reddot") { part(new THREE.CylinderGeometry(0.02 * k, 0.02 * k, 0.05 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, 0, cy, oz - 0.02 * k); }
-    if (mods.optic === "holo") { const f = 0.027 * k; for (const [x, y, wd, h] of [[0, cy + f, 0.06 * k, 0.006 * k], [0, cy - f, 0.06 * k, 0.006 * k], [-f, cy, 0.006 * k, 0.056 * k], [f, cy, 0.006 * k, 0.056 * k]]) part(new THREE.BoxGeometry(wd, h, 0.075 * k), MOD_MAT.poly, x, y, oz); part(new THREE.PlaneGeometry(0.052 * k, 0.048 * k), MOD_MAT.glass, 0, cy, oz - 0.03 * k); }
-    if (mods.optic === "acog") { part(new THREE.CylinderGeometry(0.02 * k, 0.016 * k, 0.13 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz - 0.01 * k, Math.PI / 2); part(new THREE.CylinderGeometry(0.022 * k, 0.022 * k, 0.03 * k, 20, 1, true), MOD_MAT.metal, 0, cy, oz + 0.055 * k, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, 0, cy, oz - 0.07 * k); }
+    part(new THREE.BoxGeometry(0.024 * k, 0.008 * k, 0.06 * k), MOD_MAT.poly, sx, railY + 0.004 * k, oz);
+    if (mods.optic === "reddot") { part(new THREE.CylinderGeometry(0.02 * k, 0.02 * k, 0.05 * k, 20, 1, true), MOD_MAT.metal, sx, cy, oz, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, sx, cy, oz - 0.02 * k); }
+    if (mods.optic === "holo") { const f = 0.027 * k; for (const [x, y, wd, h] of [[0, cy + f, 0.06 * k, 0.006 * k], [0, cy - f, 0.06 * k, 0.006 * k], [-f, cy, 0.006 * k, 0.056 * k], [f, cy, 0.006 * k, 0.056 * k]]) part(new THREE.BoxGeometry(wd, h, 0.075 * k), MOD_MAT.poly, sx + x, y, oz); part(new THREE.PlaneGeometry(0.052 * k, 0.048 * k), MOD_MAT.glass, sx, cy, oz - 0.03 * k); }
+    if (mods.optic === "acog") { part(new THREE.CylinderGeometry(0.02 * k, 0.016 * k, 0.13 * k, 20, 1, true), MOD_MAT.metal, sx, cy, oz - 0.01 * k, Math.PI / 2); part(new THREE.CylinderGeometry(0.022 * k, 0.022 * k, 0.03 * k, 20, 1, true), MOD_MAT.metal, sx, cy, oz + 0.055 * k, Math.PI / 2); part(new THREE.CircleGeometry(0.019 * k, 20), MOD_MAT.glass, sx, cy, oz - 0.07 * k); }
     an.sight = cy; an.optic = mods.optic; an.opticRear = oz + 0.04 * k;
+    an.losR = new V3(sx, cy, an.opticRear); an.losF = new V3(sx, cy, an.opticRear - 0.3);
   }
   if (mods.under === "grip") { part(new THREE.CylinderGeometry(0.014, 0.016, 0.085, 10), MOD_MAT.poly, 0, an.fore.y - 0.05, an.fore.z); an.fore = an.fore.clone().add(new V3(0, -0.035, 0.0)); }
   if (mods.under === "laser") {
@@ -1133,7 +1144,7 @@ function buildViewmodel() {
   const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); vm.add(m); return m; };
   const rg = realGun(w.id, vm, camo, false);
   const len = rg ? rg.len : gunModel(w.id, add, metal, wood);
-  vm.userData.anchors = addMods(vm, rg || { len, grip: new V3(0, -0.07, -0.03), fore: len < 0.3 ? new V3(-0.02, -0.08, 0) : new V3(0, -0.04, -len * 0.5), sight: 0.085 / 0.62, pistol: len < 0.3 }, w.mods, w);
+  vm.userData.anchors = addMods(vm, rg || { len, grip: new V3(0, -0.07, -0.03), fore: len < 0.3 ? new V3(-0.02, -0.08, 0) : new V3(0, -0.04, -len * 0.5), sight: 0.085 / 0.62, losR: new V3(0, 0.085 / 0.62, -0.05), losF: new V3(0, 0.085 / 0.62, -len), pistol: len < 0.3 }, w.mods, w);
   const hands = [add(new THREE.BoxGeometry(0.07, 0.07, 0.22), sleeve, 0.03, -0.08, 0.12), add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, 0, -0.06, -0.02)];
   hands[0].rotation.x = 0.4;
   if (len > 0.3) hands.push(add(new THREE.BoxGeometry(0.05, 0.05, 0.08), skin, -0.01, -0.05, -len * 0.65));
@@ -1506,6 +1517,7 @@ let AC = null, noiseBuf = null, engine = null;
 function audio() {
   if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } }
   if (AC && AC.state === "suspended") AC.resume();
+  if (AC) loadSfx();
   if (AC && !noiseBuf) { noiseBuf = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
 }
 function outNode(pan) { if (!pan || !AC.createStereoPanner) return AC.destination; const p = AC.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); p.connect(AC.destination); return p; }
@@ -1523,7 +1535,31 @@ function tone(dur, freq, vol, type = "sine", delay = 0, pan = 0) {
 }
 // where a sound is, relative to where you face: -1 left … 1 right
 function panOf(pos) { const dx = pos.x - camera.position.x, dz = pos.z - camera.position.z, l = Math.hypot(dx, dz) || 1; return clamp((dx * Math.cos(P.yaw) - dz * Math.sin(P.yaw)) / l, -1, 1) * 0.85; }
+// Recorded gunshots (The Free Firearm Sound Library, CC0): a close and a distant take per gun family.
+const SFX = { buf: {}, loading: false };
+const GUN_SFX = { ak47: "ak", m60: ["ak", 0.86], dragunov: "mosin", l96: "bolt", barrett: ["bolt", 0.78], m4a1: "ar", commando: ["ar", 1.06], acr: ["ar", 0.95], mp5k: "smg", ump45: ["smg", 0.9], vector: ["pp", 1.08], stakeout: "pump", spas12: ["pump", 0.93], m1911: "p45", deagle: ["p45", 0.8], g18: ["p9", 1.06], python: "rev" };
+function loadSfx() {
+  if (SFX.loading || !AC) return; SFX.loading = true;
+  const get = (n) => fetch(`sfx/${n}.mp3`).then((r) => (r.ok ? r.arrayBuffer() : null)).then((ab) => ab && new Promise((res, rej) => AC.decodeAudioData(ab, res, rej))).then((b) => { if (b) SFX.buf[n] = b; }).catch(() => {});
+  for (const n of new Set(Object.values(GUN_SFX).map((v) => [].concat(v)[0]))) { get(`g_${n}`); get(`g_${n}_far`); }
+  for (const n of ["r_rifle", "r_pistol", "r_pump"]) get(n);
+}
+function playBuf(buf, vol, pan, delay, rate, lowpass) {
+  const s = AC.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate;
+  let node = s; if (lowpass) { const f = AC.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = lowpass; node.connect(f); node = f; }
+  const g = AC.createGain(); g.gain.value = vol; node.connect(g).connect(outNode(pan)); s.start(AC.currentTime + delay);
+}
 function gunSound(w, vol, pan = 0, dist = 0, supp = false) {
+  const map = GUN_SFX[w.id];
+  if (AC && map) {
+    const [n, rate = 1] = [].concat(map), farTake = dist > 45, b = SFX.buf[`g_${n}${farTake ? "_far" : ""}`] || SFX.buf[`g_${n}`];
+    if (b) {
+      const r = rate * (0.97 + Math.random() * 0.06);
+      if (supp) playBuf(b, 0.28 * vol, pan, dist / 340, r * 1.12, 1100);
+      else playBuf(b, 0.85 * vol, pan, dist / 340, r, farTake ? Math.max(1400, 7000 - dist * 35) : 0);
+      return;
+    }
+  }
   const [f, v, boom, dur] = w.snd, far = dist > 70;
   if (supp) { noise(dur * 0.55, f * 0.5, v * vol * 0.55, "lowpass", dist / 340, pan); noise(0.05, 3200, 0.12 * vol, "bandpass", dist / 340, pan); return; }
   noise(dur, far ? f * 0.35 : f, v * vol, "lowpass", dist / 340, pan); if (boom) tone(dur * 0.8, boom, 0.5 * vol, "sine", dist / 340, pan);
@@ -1532,7 +1568,11 @@ function gunSound(w, vol, pan = 0, dist = 0, supp = false) {
 const sfx = {
   hit(kill) { if (!AC) return; tone(0.06, kill ? 1400 : 2200, 0.25, "square"); if (kill) tone(0.12, 900, 0.2, "square", 0.05); },
   hurt() { noise(0.2, 400, 0.4); },
-  reload() { noise(0.05, 3000, 0.25, "bandpass"); noise(0.06, 2400, 0.3, "bandpass", 0.5); },
+  reload(w) {
+    const n = !w ? null : w.type === "Shotgun" ? "r_pump" : /pistol|revolver/i.test(w.type) ? "r_pistol" : "r_rifle";
+    if (AC && n && SFX.buf[n]) { playBuf(SFX.buf[n], 0.6, 0, 0, Math.max(0.8, Math.min(1.25, (n === "r_rifle" ? 1.4 : 1.1) / Math.max(0.8, w.reload * 0.6))), 0); return; }
+    noise(0.05, 3000, 0.25, "bandpass"); noise(0.06, 2400, 0.3, "bandpass", 0.5);
+  },
   click() { noise(0.03, 4500, 0.2, "bandpass"); },
   knife() { noise(0.12, 5000, 0.25, "highpass"); },
   door() { noise(0.12, 900, 0.3); tone(0.1, 160, 0.2); },
@@ -1745,6 +1785,7 @@ function fire() {
 }
 let flashT = 0;
 const VMS = { sprint: 0, yaw: 0, pitch: 0, sx: 0, sy: 0 }; // viewmodel motion state
+const _eul = new THREE.Euler(), _qe = new THREE.Quaternion();
 // Grenades and launcher rounds. Whoever fired (or the host, for bots) owns the round: their game
 // flies it, works out blast damage and announces the explosion. Everyone else flies a copy for show.
 const projectiles = [], booms = []; // booms: [n, x, y, z] announced in presence
@@ -1908,7 +1949,7 @@ function knife() {
   for (const a of targets()) { const b = avatarBase(a), to = new V3(b.x - eye.x, b.y + 1.2 - eye.y, b.z - eye.z), dist = to.length(); if (dist < 2.6 && to.normalize().dot(fwd) > 0.6 && (!best || dist < best.d)) best = { a, d: dist }; }
   if (best) dealDamage(best.a, 150, false, KNIFE);
 }
-function startReload() { const w = WEAPONS[wIdx]; if (reloadEnd || ammo[wIdx] >= w.mag || P.car) return; reloadEnd = T + w.reload; sfx.reload(); }
+function startReload() { const w = WEAPONS[wIdx]; if (reloadEnd || ammo[wIdx] >= w.mag || P.car) return; reloadEnd = T + w.reload; sfx.reload(w); }
 function switchWeapon(i) { if (i === wIdx || i < 0 || i >= WEAPONS.length) return; wIdx = i; reloadEnd = 0; switchT = T + 0.35; buildViewmodel(); }
 // loadout: one primary and one secondary, picked in the menu, applied when you spawn
 let loadout = [3, 0];
@@ -2827,7 +2868,7 @@ function loadoutHtml() {
     <h2>Secondary</h2><div class="guns">${SECONDARIES.map((id) => gun(id, "sec")).join("")}</div>
     <h2>Gunsmith</h2><p class="hint">Attachments unlock with kills on each gun and apply straight away.</p><div id="smithBox">${smith(profile.prim)}${smith(profile.sec)}</div>
     <p class="hint">Two frag grenades every life. Killstreaks: UAV at 3 kills, Airstrike at 5, Juggernaut at 7. A new loadout applies the next time you spawn.</p>
-    <p class="hint">Art: soldier (Summer Engine, CC0); guns and street props (3DModelsCC0, CC0); textures (ambientCG, CC0); sky (Poly Haven, CC0); sedan by TopoSphere via Sloyd (CC BY 4.0).</p>`;
+    <p class="hint">Art: soldier (Summer Engine, CC0); guns and street props (3DModelsCC0, CC0); textures (ambientCG, CC0); sky (Poly Haven, CC0); sedan by TopoSphere via Sloyd (CC BY 4.0); gunshots from The Free Firearm Sound Library and reloads by SpringySpringo (CC0).</p>`;
 }
 function careerHtml() {
   ensureChallenges();
@@ -3028,7 +3069,14 @@ function update(dt) {
   // real rifles: butt tucked just under the eye when aiming (cheek weld); pistols: pushed out at arm's length
   // with an optic, the eye sits a hand's width behind it
   const adsZ = an && an.optic ? -0.075 - an.opticRear * vm.scale.x : an && an.real ? (an.pistol ? -0.42 : 0.08 - an.stock * vm.scale.x) : -0.26;
-  const hip = new V3(0.14, -0.15, an && an.pistol ? -0.4 : -0.36), ads = new V3(0, -sightH, adsZ);
+  const hip = new V3(0.14, -0.15, an && an.pistol ? -0.4 : -0.36), S = vm.scale.x;
+  // Aiming lines the eye up with the gun's actual sight line (rear sight -> front post, or through the
+  // optic): that line is turned onto the view axis and the rear sight kept where it was, so the post tip
+  // sits exactly on the point of aim.
+  const R = an ? an.losR.clone().multiplyScalar(S) : new V3(0, sightH, 0), F = an ? an.losF.clone().multiplyScalar(S) : new V3(0, sightH, -0.3);
+  const adsQ = new THREE.Quaternion().setFromUnitVectors(F.clone().sub(R).normalize(), new V3(0, 0, -1));
+  // a peep (aperture) rear sight sits right at the eye and is clipped away; the HUD draws its blurred ring
+  const peep = an && an.peep && !an.optic, rearDist = peep ? 0.02 : Math.max(0.05, -(adsZ + R.z)), ads = new V3(0, 0, -rearDist).sub(R.clone().applyQuaternion(adsQ));
   vm.position.lerpVectors(hip, ads, adsT);
   // sprinting rolls the gun in and drops it; quick turns make it lag; landings dip it; reloads tilt it
   const sprintNow = P.sprinting && !P.car && adsT < 0.2 && Math.hypot(P.vel.x, P.vel.z) > 5;
@@ -3036,17 +3084,19 @@ function update(dt) {
   let dyaw = P.yaw - VMS.yaw; dyaw = Math.atan2(Math.sin(dyaw), Math.cos(dyaw)); const dpit = P.pitch - VMS.pitch; VMS.yaw = P.yaw; VMS.pitch = P.pitch;
   VMS.sx += (clamp(dyaw * 5, -0.12, 0.12) - VMS.sx) * Math.min(1, dt * 9); VMS.sy += (clamp(dpit * 5, -0.1, 0.1) - VMS.sy) * Math.min(1, dt * 9);
   const land = P.landT ? Math.exp(-(T - P.landT) * 6) * Math.sin(Math.min(1, (T - P.landT) * 8) * Math.PI) * (P.landAmp || 0) : 0;
-  const rph = reloadEnd ? clamp(1 - (reloadEnd - T) / w.reload, 0, 1) : 0, rl = Math.sin(rph * Math.PI), swk = 1 - adsT * 0.85, sk = VMS.sprint;
+  const rph = reloadEnd ? clamp(1 - (reloadEnd - T) / w.reload, 0, 1) : 0, rl = Math.sin(rph * Math.PI), swk = 1 - adsT * 0.95, sk = VMS.sprint;
   vm.userData.reloadPh = rph;
   vm.position.x += -0.05 * sk + VMS.sx * 0.25 * swk;
   vm.position.y += Math.sin(bob * 2) * 0.008 * (1 - adsT) - 0.05 * rl - 0.07 * sk - 0.06 * land + VMS.sy * 0.15 * swk - Math.max(0, switchT - T) * 0.5;
-  vm.position.z += recoilP * 2.2 + 0.03 * sk;
-  vm.rotation.set(-0.3 * rl - 0.3 * sk + recoilP * 2.5 + VMS.sy * swk, 0.5 * sk + VMS.sx * swk + (T - knifeT < 0.25 ? 0.6 : 0), 0.45 * rl + 0.55 * sk);
+  vm.position.z += recoilP * 2.2 * (1 - adsT * 0.4) + 0.03 * sk;
+  _eul.set(-0.3 * rl - 0.3 * sk + recoilP * 2.5 * (1 - adsT * 0.85) + VMS.sy * swk, 0.5 * sk + VMS.sx * swk + (T - knifeT < 0.25 ? 0.6 : 0), 0.45 * rl + 0.55 * sk);
+  vm.quaternion.set(0, 0, 0, 1).slerp(adsQ, adsT).multiply(_qe.setFromEuler(_eul));
   camera.position.y -= 0.07 * land;
   vm.visible = !P.car && !P.dead && !((w.scope || (w.mods && w.mods.optic === "acog")) && adsT > 0.85);
   updateFpArms();
   $("scope").hidden = !(w.scope && adsT > 0.85) || !!P.car || P.dead;
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) flash.visible = false; }
+  muzzleLight.intensity = flash.visible ? 3.5 : 0; if (flash.visible) muzzleLight.position.copy(camera.position).add(new V3(0, -0.1, -0.9).applyQuaternion(camera.quaternion));
   for (const a of remotes.values()) animateAvatar(a, dt);
   updateRemoteCars(dt);
   // other people's footsteps, panned
@@ -3081,7 +3131,8 @@ function update(dt) {
     $("wFrag").textContent = `FRAG ×${frags}${touchMode ? "" : " · G"}`;
     $("wState").textContent = reloadEnd ? "RELOADING" : ammo[wIdx] === 0 ? "R · RELOAD" : P.passive ? "PASSIVE" : P.tired ? "WINDED" : "";
     $("weap").hidden = !!P.car; $("carhud").hidden = !P.car; if (P.car) $("kmh").textContent = Math.round(Math.abs(P.car.speed) * 3.6) + (P.car.hp < 110 ? " · DAMAGED" : "");
-    $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; const optic = w.mods && w.mods.optic; $("dot").hidden = !(adsT > (optic ? 0.8 : 0.5) && !w.scope && !P.car && !P.dead); $("dot").className = optic || ""; $("acogRing").hidden = !(optic === "acog" && adsT > 0.85 && !P.car && !P.dead);
+    $("xh").hidden = adsT > 0.5 || !!P.car || P.dead; const optic = w.mods && w.mods.optic; $("dot").hidden = !(optic && adsT > 0.8 && !w.scope && !P.car && !P.dead); $("dot").className = optic || ""; $("acogRing").hidden = !(optic === "acog" && adsT > 0.85 && !P.car && !P.dead);
+    { const an = vm.userData.anchors; $("peep").hidden = !(an && an.peep && !an.optic && adsT > 0.7 && !P.car && !P.dead); $("peep").style.opacity = clamp((adsT - 0.7) / 0.3, 0, 1); }
     const sp = 8 + (w.hip * 300) + bloom * 400; const xs = $("xh").children; xs[0].style.top = -sp - 9 + "px"; xs[1].style.top = sp + "px"; xs[2].style.left = -sp - 9 + "px"; xs[3].style.left = sp + "px";
     renderSlots();
     // rank bar
@@ -3146,12 +3197,12 @@ function frame(now) {
   sky.position.copy(camera.position);
   renderer.render(scene, camera);
   if (vm.visible && (state === "play" || state === "paused")) {
-    syncVmCam(); vmCam.fov = 72 - 6 * adsT; vmCam.aspect = camera.aspect; vmCam.updateProjectionMatrix();
+    syncVmCam(); vmCam.fov = 72 - 6 * adsT; vmCam.near = vm.userData.anchors && vm.userData.anchors.peep && !vm.userData.anchors.optic && adsT > 0.6 ? 0.045 : 0.01; vmCam.aspect = camera.aspect; vmCam.updateProjectionMatrix();
     renderer.autoClear = false; renderer.clearDepth(); renderer.render(vmScene, vmCam); renderer.autoClear = true;
   }
   requestAnimationFrame(frame);
 }
 resize(); buildViewmodel(); showMenu("start"); requestAnimationFrame(frame);
-if (location.hash === "#test") window.__cb = { get fp() { return fpArms; }, camera, vm, switchTo: (id) => switchWeapon(widx(id)), P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId };
+if (location.hash === "#test") window.__cb = { get fp() { return fpArms; }, get adsT() { return adsT; }, camera, vm, switchTo: (id) => switchWeapon(widx(id)), P, remotes, cars, traffic, NET, match, profile, fire: () => { triggerFresh = true; }, get bots() { return bots; }, get botAuth() { return botAuth; }, get state() { return state; }, get T() { return T; }, get earned() { return earned; }, useStreak, setMode: (i) => { modeIdx = i; modeDirty = true; }, endNow: () => { match.endsAt = T; }, skipEnd: () => { match.phaseEnds = T; }, standings, teamScores, carHit, myId };
 })();
 </script>

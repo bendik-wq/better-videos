@@ -15,6 +15,9 @@ Hosts the multiplayer game at your own `*.workers.dev` URL (or a custom domain).
 - `guns/` holds the firearms: AK-47, M4A1, shotgun, sniper rifle, Makarov, Luger, M3 Grease Gun and Suomi
   KP/-31 from the CC0 "Free CC0 Guns & Explosives Pack" by 3DModelsCC0 (https://3dmodelscc0.itch.io/free-cc0-guns-explosives-pack),
   converted to one quantized mesh file (`guns.json`) plus colour, normal and roughness/metalness JPGs per gun.
+- `sfx/` holds recorded gunshots (close and distant takes) from The Free Firearm Sound Library (CC0,
+  https://opengameart.org/content/the-free-firearm-sound-library) and reloads by SpringySpringo (CC0,
+  https://opengameart.org/content/gun-reload-sounds).
 - `world/` holds the city's look:
   - facades, asphalt, paving, grass, gravel, concrete, bark and leaf textures from ambientCG (CC0, https://ambientcg.com);
   - the sky, `kloofendal_48d_partly_cloudy_puresky` from Poly Haven (CC0, https://polyhaven.com), which also lights the scene;
