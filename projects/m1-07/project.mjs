@@ -15,5 +15,5 @@ export default episode({ aspect: '16:9', title: 'Consultancies: There’s Now a 
   tiers('Reported payouts start at a hundred thousand dollars and run past a million for highly unique, proprietary know-how. Not guaranteed.', { tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Proprietary know-how', word: 'million' }] }),
   team('Firms of roughly thirty to two hundred people with mature processes are the target.', { label: '30–200 · MATURE FIRMS' }),
   ...PREP.A(),
-  cta('The link is in the description. Your frameworks might be worth more than your hourly rate.'),
+  cta('The link is in my bio. Your frameworks might be worth more than your hourly rate.'),
 ] });

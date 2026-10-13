@@ -15,5 +15,5 @@ export default episode({ aspect: '16:9', title: 'Recruiting & BPO: Your Playbook
   S('checklist', 'Volume helps. Repeatable workflows help. Clean documentation helps a lot.', { title: 'WHAT HELPS', items: [{ text: 'Volume', word: 'Volume' }, { text: 'Repeatable workflows', word: 'Repeatable' }, { text: 'Clean documentation', word: 'Clean' }] }),
   ...PREP.C(),
   window12('The budget runs for twelve months. The earlier you apply, the earlier you’re reviewed.', { sub: 'APPLY EARLY · REVIEWED EARLY' }),
-  cta('Recruiting and BPO teams: the link is in the description. About two minutes to apply.'),
+  cta('Recruiting and BPO teams: the link is in my bio. About two minutes to apply.'),
 ] });

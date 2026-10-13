@@ -15,5 +15,5 @@ export default episode({ aspect: '16:9', title: 'Legal & Compliance Teams: Your 
   team('The target is teams of roughly thirty to two hundred people with mature processes.'),
   ...PREP.C(),
   window12('The budget runs for twelve months.'),
-  cta('The link is in the description. Read the terms, then make the call.'),
+  cta('The link is in my bio. Read the terms, then make the call.'),
 ] });

@@ -16,5 +16,5 @@ export default episode({ aspect: '16:9', title: 'What Data Would an AI Company P
   redact('And sensitive information? micro1 says it’s scrubbed before anything is used, customer information isn’t exposed, and originals are deleted after processing.', 'onboarding', { title: 'SUPPORT ESCALATION SOP', at: 'scrubbed' }),
   ...PREP.B(),
   S('hook', 'So if your team has spent years writing down how you do things, that work may now have a price tag.', { lines: ['YEARS OF', 'WRITING IT DOWN', 'NOW HAS A', 'PRICE TAG.'], highlight: 'PRICE TAG.' }),
-  cta('The link is in the description. About two minutes to apply.'),
+  cta('The link is in my bio. About two minutes to apply.'),
 ] });

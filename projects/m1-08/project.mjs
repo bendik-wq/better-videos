@@ -15,5 +15,5 @@ export default episode({ aspect: '16:9', title: 'Financial Firms: Your Process N
   S('hook', 'In a regulated business, bring your compliance team in early. Done right, this is a new revenue line from work you’ve already done.', { lines: ['COMPLIANCE', 'IN EARLY.', 'NEW REVENUE', 'FROM OLD WORK.'], highlight: 'NEW REVENUE' }),
   ...PREP.B(),
   window12('The budget is set for the next twelve months.'),
-  cta('The link is in the description. Two minutes to apply.'),
+  cta('The link is in my bio. Two minutes to apply.'),
 ] });

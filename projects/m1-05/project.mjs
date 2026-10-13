@@ -15,5 +15,5 @@ export default episode({ aspect: '16:9', title: 'Why AI Companies Want Your Bori
   tiers('Reported tiers: a hundred thousand dollars and up, five hundred thousand and up, and a million and up for highly unique data. Not guaranteed.'),
   redact('Sensitive and customer information is scrubbed, and you keep ownership.', 'onboarding', { title: 'QA REVIEW PROCESS', at: 'scrubbed' }),
   ...PREP.B(),
-  cta('Your boring docs could be your next revenue line. The link is in the description.'),
+  cta('Your boring docs could be your next revenue line. The link is in my bio.'),
 ] });

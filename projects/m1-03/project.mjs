@@ -17,5 +17,5 @@ export default episode({ aspect: '16:9', title: 'Is It Safe to License Your Comp
   ...PREP.C(),
   tiers('Because the upside is real. Reported tiers start at a hundred thousand dollars and run past a million, depending on volume and uniqueness. Not guaranteed.', { title: 'THE UPSIDE · REPORTED TIERS', tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   window12('And the budget runs for twelve months.'),
-  cta('The link and all our sources are in the description. Read it, then decide.'),
+  cta('The link is in my bio. Read the terms, then decide.'),
 ] });
