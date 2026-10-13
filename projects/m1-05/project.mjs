@@ -15,5 +15,5 @@ export default episode({ title: 'Why AI Companies Want Your Boring SOPs', shots:
   tiers('Reported tiers: a hundred thousand dollars and up, five hundred thousand and up, and a million and up for highly unique data. Not guaranteed.'),
   redact('Sensitive and customer information is scrubbed, and you keep ownership.', 'onboarding', { title: 'QA REVIEW PROCESS', at: 'scrubbed' }),
   ...PREP.B(),
-  cta('Search micro1 Company Data Partnerships.'),
+  cta('Your boring docs could be your next revenue line. The link is in the description.'),
 ] });

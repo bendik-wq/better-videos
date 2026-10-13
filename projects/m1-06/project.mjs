@@ -15,5 +15,5 @@ export default episode({ title: 'Recruiting & BPO: Your Playbooks Could Be Worth
   S('checklist', 'Volume helps. Repeatable workflows help. Clean documentation helps a lot.', { title: 'WHAT HELPS', items: [{ text: 'Volume', word: 'Volume' }, { text: 'Repeatable workflows', word: 'Repeatable' }, { text: 'Clean documentation', word: 'Clean' }] }),
   ...PREP.C(),
   window12('The budget runs for twelve months. The earlier you apply, the earlier you’re reviewed.', { sub: 'APPLY EARLY · REVIEWED EARLY' }),
-  cta('Search micro1 Company Data Partnerships. About two minutes to apply.'),
+  cta('Recruiting and BPO teams: the link is in the description. About two minutes to apply.'),
 ] });

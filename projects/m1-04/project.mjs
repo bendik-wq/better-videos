@@ -15,5 +15,5 @@ export default episode({ title: 'How Much Could Your Company’s Data Be Worth?'
   S('quote', 'These are reported ranges, not guarantees. Every deal is evaluated on what you actually have.', { text: 'Selected partners receive significant compensation based on: Dataset size/Volume · Workflow complexity · Uniqueness of operational knowledge · Data quality · Domain expertise represented', by: 'micro1, Company Data Partnerships page', highlight: ['significant compensation'], source: SRC_PAGE }),
   ...PREP.A(),
   window12('But the budget is set for twelve months, and it isn’t unlimited.', { sub: 'NOT UNLIMITED' }),
-  cta('Search micro1 Company Data Partnerships. The form takes about two minutes.'),
+  cta('Find out what yours is worth. The link is in the description, and the form takes about two minutes.'),
 ] });

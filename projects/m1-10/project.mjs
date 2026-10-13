@@ -15,5 +15,5 @@ export default episode({ title: 'Logistics Companies: AI Wants to Learn How You 
   S('hook', 'It’s new revenue from knowledge you’ve already built.', { lines: ['NEW REVENUE.', 'OLD KNOWLEDGE.'], highlight: 'NEW REVENUE.' }),
   ...PREP.A(),
   window12('The budget is set for the next twelve months. First in line, first reviewed.', { sub: 'FIRST IN LINE · FIRST REVIEWED' }),
-  cta('Search micro1 Company Data Partnerships. About two minutes to apply.'),
+  cta('The link is in the description. About two minutes to apply. First in line, first reviewed.'),
 ] });

@@ -17,5 +17,5 @@ export default episode({ title: 'A $1 Billion Budget to Buy How Your Company Wor
   ...PREP.A(),
   window12('Here’s the part that matters. The budget is for the next twelve months. Once it’s spent, it’s spent.', { fill: 0.05 }),
   S('hook', 'The companies that move first get looked at first.', { lines: ['MOVE FIRST.', 'GET LOOKED', 'AT FIRST.'], highlight: 'FIRST.' }),
-  cta('Search micro1 Company Data Partnerships. The interest form takes about two minutes. Links and sources are in the description.'),
+  cta('The link to apply is in the description. The interest form takes about two minutes, and the budget won’t wait.'),
 ] });

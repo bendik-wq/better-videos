@@ -16,5 +16,5 @@ export default episode({ title: 'What Data Would an AI Company Pay You For?', sh
   redact('And sensitive information? micro1 says it’s scrubbed before anything is used, customer information isn’t exposed, and originals are deleted after processing.', 'onboarding', { title: 'SUPPORT ESCALATION SOP', at: 'scrubbed' }),
   ...PREP.B(),
   S('hook', 'So if your team has spent years writing down how you do things, that work may now have a price tag.', { lines: ['YEARS OF', 'WRITING IT DOWN', 'NOW HAS A', 'PRICE TAG.'], highlight: 'PRICE TAG.' }),
-  cta('Search micro1 Company Data Partnerships. About two minutes to apply.'),
+  cta('The link is in the description. About two minutes to apply.'),
 ] });

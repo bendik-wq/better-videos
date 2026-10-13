@@ -1,4 +1,9 @@
-# Post copy for the 10 micro1 shorts (vertical)
+# Post copy for the 10 micro1 videos (16:9; vertical cuts also exist for 01–09)
+
+**The description opens with the link.** That's where every video's call to action points:
+> Apply for micro1's Company Data Partnerships (interest form, about 2 minutes): https://req.micro1.ai/post/a8b8ac95-8691-4c53-b808-8129fd2c324b
+>
+> Swap in your own tracked or referral link here if you have one; the videos only say "link in the description".
 
 **Every post ends with the disclosure line:**
 > Independent channel. Not affiliated with micro1. Payout figures are reported ranges, not guarantees. Check your client contracts and talk to counsel before licensing any data.

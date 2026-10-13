@@ -15,5 +15,5 @@ export default episode({ title: 'Legal & Compliance Teams: Your Habit of Writing
   team('The target is teams of roughly thirty to two hundred people with mature processes.'),
   ...PREP.C(),
   window12('The budget runs for twelve months.'),
-  cta('Search micro1 Company Data Partnerships.'),
+  cta('The link is in the description. Read the terms, then make the call.'),
 ] });

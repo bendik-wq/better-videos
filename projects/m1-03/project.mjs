@@ -17,5 +17,5 @@ export default episode({ title: 'Is It Safe to License Your Company Data to AI?'
   ...PREP.C(),
   tiers('Because the upside is real. Reported tiers start at a hundred thousand dollars and run past a million, depending on volume and uniqueness. Not guaranteed.', { title: 'THE UPSIDE · REPORTED TIERS', tiers: [{ amount: '$100K+', label: 'Qualified partnership', word: 'hundred' }, { amount: '$500K+', label: 'Large or ongoing', word: 'past' }, { amount: '$1M+', label: 'Highly unique data', word: 'million' }] }),
   window12('And the budget runs for twelve months.'),
-  cta('Search micro1 Company Data Partnerships. Sources are in the description.'),
+  cta('The link and all our sources are in the description. Read it, then decide.'),
 ] });
