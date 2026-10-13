@@ -4,10 +4,10 @@
 - **Title:** The Hackers Who Can Turn Off the Lights
 - **Title test (Test & Compare) alternatives:** The Mouse Moved By Itself. Then the Lights Went Out. · Someone Else Is Already Inside the Power Grid
 - **Thumbnails (Test & Compare, title fixed):**
-  - `thumbs/A.jpg` "IT MOVED BY ITSELF" (lead)
-  - `thumbs/B.jpg` "LIGHTS OUT"
-  - `thumbs/C.jpg` "ALREADY INSIDE"
-  - Rebuild them with `node projects/blackout/thumbs/make.mjs`.
+  - `thumbs/A.jpg` "WHO CLICKED?" (lead)
+  - `thumbs/B.jpg` "NOBODY TOUCHED IT"
+  - `thumbs/C.jpg` "ONE CLICK"
+  - Rebuild them with `node projects/blackout/thumbs/make.mjs`. See packaging.md for the rationale.
 
 ## Description
 

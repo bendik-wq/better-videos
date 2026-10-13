@@ -13,22 +13,48 @@ Rules:
 - No "SHOCKING".
 - Each one promises a mechanism plus a threat, and the video pays it off by 1:20 (L1) and 12:50 (L3).
 
-## Thumbnails (build in `thumbs/make.mjs`, LIVE WIRE palette, 1280×720)
-- **T1 (lead) "IT MOVED BY ITSELF":**
-  - Direct-flash macro of an office mouse on a desk, with the hard shadow behind it.
-  - To the right, a green CRT one-line diagram with ONE breaker glowing alarm red and a white arrow cursor on it.
-  - Text, 3 words: phosphor-green condensed caps.
-  - The palette contrasts with every red/blue news thumb in the niche.
-- **T2 "LIGHTS OUT":**
-  - Night orbit of a city grid (sodium orange), with half of it black along a hard diagonal.
-  - One cursor arrow sits at the boundary.
-  - No other text.
-- **T3 "ALREADY INSIDE":**
-  - A control-room operator in silhouette, lit only by a green monitor.
-  - The cursor on screen is circled.
-  - Text: "ALREADY INSIDE".
+## Thumbnails v2 (trained on the niche's top videos; replaces v1, archived in `thumbs/src/v1/`)
 
-Thumbnail ⇄ title pairs never repeat words.
+**What the top 12 videos in the niche do** (yt-dlp search, 13 Oct 2026). The leaders are:
+- Fern, "The Kids Who Hacked The CIA" (20.1M)
+- Fern, "Russia's Most Wanted Hackers" (5.4M)
+- Cybernews, "NotPetya" (4.7M)
+- Fern, "How America Destroyed Iran's Nuclear Program" (4.2M)
+
+They share:
+1. One huge hero that reads as **evidence**: a case-board photo, CCTV, or a document with a **mouse cursor**.
+2. 1–3 words in heavy sans, often a **declarative or accusing phrase** ("IT'S THEM.", "WANTED").
+3. One red annotation: an arrow or loop.
+4. The niche palette is **red and black**, and almost every thumbnail uses it. Our phosphor-green and sodium palette is the pattern break in that feed.
+
+**Why v1 was cut:**
+- "IT MOVED BY ITSELF" is 4 words (it fails gate 1).
+- The text glowed.
+- B had no red element.
+- C relied on a CG human.
+
+All three v2 concepts pass the three Palantir gates: ≤3 words, a high-contrast hero, exactly one red element. Check `thumbs/mobile.png`.
+
+| | Grammar | Hero | Text | Red | Score |
+|---|---|---|---|---|---|
+| **A (lead)** | Evidence macro (Cybernews cursor + Fern question) | Giant pixel cursor on the OPEN button | WHO CLICKED? | Loop on the cursor | 9 |
+| B | Deadpan flash | The untouched mouse, direct flash, date stamp | NOBODY TOUCHED IT | Loop on the mouse | 8 |
+| C | Absence drawn | Europe at night with one region gone dark | ONE CLICK | Dashed outline of the dark region | 7 |
+
+**Title pairing (the thumbnail sharpens the title, never repeats it):**
+- A + "The Hackers Who Can Turn Off the Lights": the title names the who in general, and the thumbnail asks who clicked.
+- B + "The Mouse Moved By Itself…" is redundant, so pair B with title A only.
+
+**Every image is in the video in the first 45 s:**
+- A: the OPEN click at 0:43.
+- B: the flash still at 3:23. The cursor in the cold open moves by itself while the hand rests beside the mouse.
+- C: the orbit at 0:00–0:05.
+
+**CTR reality:**
+- YouTube says half of all channels and videos sit at 2–10% impressions CTR.
+- Broad browse traffic pulls CTR down as reach grows.
+- A 35% floor is not achievable as a guarantee. Use Test & Compare (decided on watch-time share) to pick the winner.
+- Prediction: 6–11% in week 1, higher from notifications and returning viewers.
 
 ## Hook contract
 | Time | Beat |
