@@ -5,3 +5,5 @@ refs/
 __pycache__/
 projects/*/*.log
 projects/micro1/batch.log
+projects/micro1/out/
+projects/micro1/deliver.log
