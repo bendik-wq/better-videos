@@ -31,16 +31,16 @@
 
 | # | File | Title | Caption hook | Extra hashtags |
 |---|---|---|---|---|
-| 11 | `micro1-11.mp4` | SaaS Companies: AI Wants to License Your Runbooks and Postmortems | Every outage you fixed and wrote down is a lesson an AI agent can't find anywhere else. | #SaaS #DevOps |
-| 12 | `micro1-12.mp4` | Marketing Agencies: Your Campaign Playbooks Have a New Buyer | Brief in, campaign out. That system is the asset. | #MarketingAgency #AgencyLife |
-| 13 | `micro1-13.mp4` | Accounting Firms: AI Wants Your Month-End Close Process | Step by step, with review built in. Accountants already documented the thing AI needs. | #Accounting #Bookkeeping #CPA |
-| 14 | `micro1-14.mp4` | Insurance Agencies: Your Claims & Renewal Workflows Have a Buyer | Thousands of documented decisions, from first notice to close. | #Insurance #InsurTech |
-| 15 | `micro1-15.mp4` | Medical Billing Companies: AI Wants Your Denial-Appeal Playbook (Not Patient Data) | This is about the admin process, not patient records. Bring your compliance officer in first. | #MedicalBilling #RCM #HealthcareAdmin |
-| 16 | `micro1-16.mp4` | Call Centers & Support Teams: Your QA Scorecards Are Training Data Now | Call scripts, escalation matrices, QA scorecards: how great support teams already work. | #CustomerSupport #CallCenter #BPO |
-| 17 | `micro1-17.mp4` | IT Managed Service Providers: AI Wants to Learn From Your Ticket History | Tens of thousands of solved tickets. That's how AI agents learn IT work. | #MSP #ITSupport |
-| 18 | `micro1-18.mp4` | Property Management Companies: Your Maintenance SOPs Have a Price Now | Not on micro1's named list, but many property managers fit the profile: 30–200 staff and documented workflows. | #PropertyManagement #RealEstate |
-| 19 | `micro1-19.mp4` | Engineering & Architecture Firms: AI Wants Your QA/QC Process | Discipline, written down, is valuable. Check your client contracts first. | #Engineering #Architecture #AEC |
-| 20 | `micro1-20.mp4` | HR & Payroll Providers: Your Payroll Run Checklist Is Worth Licensing | Precise, repeated every cycle, written down: exactly what AI agents need. | #Payroll #HR #PEO |
+| 11 | `micro1-11.mp4` | SaaS Companies Could Earn $100K+ Licensing Runbook Data to AI | Every outage you fixed and wrote down is a lesson an AI agent can't find anywhere else. | #SaaS #DevOps |
+| 12 | `micro1-12.mp4` | Marketing Agencies Could Earn $100K+ Licensing Campaign Data to AI | Brief in, campaign out. That system is the asset. | #MarketingAgency #AgencyLife |
+| 13 | `micro1-13.mp4` | Accounting Firms Could Earn $100K+ Licensing Close-Process Data to AI | Step by step, with review built in. Accountants already documented the thing AI needs. | #Accounting #Bookkeeping #CPA |
+| 14 | `micro1-14.mp4` | Insurance Agencies Could Earn $100K+ Licensing Claims-Workflow Data to AI | Thousands of documented decisions, from first notice to close. | #Insurance #InsurTech |
+| 15 | `micro1-15.mp4` | Medical Billing Firms Could Earn $100K+ Licensing Admin Data to AI (No Patient Data) | This is about the admin process, not patient records. Bring your compliance officer in first. | #MedicalBilling #RCM #HealthcareAdmin |
+| 16 | `micro1-16.mp4` | Call Centers Could Earn $100K+ Licensing QA & Script Data to AI | Call scripts, escalation matrices, QA scorecards: how great support teams already work. | #CustomerSupport #CallCenter #BPO |
+| 17 | `micro1-17.mp4` | IT MSPs Could Earn $100K+ Licensing Ticket-Workflow Data to AI | Tens of thousands of solved tickets. That's how AI agents learn IT work. | #MSP #ITSupport |
+| 18 | `micro1-18.mp4` | Property Managers Could Earn $100K+ Licensing Maintenance Data to AI | Not on micro1's named list, but many property managers fit the profile: 30–200 staff and documented workflows. | #PropertyManagement #RealEstate |
+| 19 | `micro1-19.mp4` | Engineering & Architecture Firms Could Earn $100K+ Licensing QA/QC Data to AI | Discipline, written down, is valuable. Check your client contracts first. | #Engineering #Architecture #AEC |
+| 20 | `micro1-20.mp4` | HR & Payroll Providers Could Earn $100K+ Licensing Process Data to AI | Precise, repeated every cycle, written down: exactly what AI agents need. | #Payroll #HR #PEO |
 
 **Targeting:** run each video only to its industry's audience. On LinkedIn, target by industry, plus company size 11–50 and 51–200. On YouTube, use the industry's keywords.
 
