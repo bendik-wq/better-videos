@@ -1,12 +1,11 @@
 # micro1 videos 01–20: titles and descriptions (ready to paste)
 
-**Paste into every description.**
+**Your link goes in your bio/profile.** Every video says "link in bio" about three-quarters of the way through, so put your incentive link there.
 
-Top of description:
+Optional first line of each description, for YouTube where the bio is less visible:
 ```
-👉 Apply (interest form, ~2 min): https://req.micro1.ai/post/a8b8ac95-8691-4c53-b808-8129fd2c324b
+👉 Apply via the link in my bio (interest form, ~2 min)
 ```
-Swap in your own tracked link if you have one.
 
 Bottom of description:
 ```
