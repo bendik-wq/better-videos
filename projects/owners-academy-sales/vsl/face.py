@@ -111,7 +111,9 @@ def main():
         out = os.path.join(a.out, f"{cid}{'-test' if a.test else ''}.mp4")
         if os.path.exists(out) and not a.test:
             continue
-        n, secs = run(a.src, s["in"], s["out"] - s["in"], sr, restorer, a.weight, out, a.test or None)
+        tmp = out[:-4] + ".part.mp4"  # renamed only when complete, so a killed run never leaves a short clip
+        n, secs = run(a.src, s["in"], s["out"] - s["in"], sr, restorer, a.weight, tmp, a.test or None)
+        os.replace(tmp, out)
         print(f"{cid}: {n} frames in {secs:.0f}s ({n / max(secs, 1e-6):.2f} fps)", flush=True)
         if a.test:
             break
