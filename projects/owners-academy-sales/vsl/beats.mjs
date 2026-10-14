@@ -97,7 +97,7 @@ export const beats = {
         <div class="arrows"><div data-d="4.6">Their business<svg viewBox="0 0 200 26"><path data-draw data-d="4.6" stroke="#c7d3fb" d="M4 13 H190 M178 3 L192 13 L178 23"/></svg></div>
           <div data-d="7.1"><svg viewBox="0 0 200 26"><path data-draw data-d="7.1" stroke="#fdd050" d="M196 13 H10 M22 3 L8 13 L22 23"/></svg>Payments over time</div></div>
         <div class="node" data-d="0.6"><div class="who">You</div><div class="sub">New owner from day one</div></div></div>` },
-    { at: 30.4, html: eb('Faster than raising from investors') + big('Close in <mark data-hd="10.5">2–4 weeks</mark>.', 9.8) },
+    { at: 30.4, html: eb('Faster than raising from investors') + big('Close in <mark data-hd="10.3">2–4 weeks</mark>.', 0.3) },
   ],
   'seller-pitch': [
     { at: 0, html: eb('The pitch to the seller') + big('Don\'t say "vendor finance." Say <mark data-hd="13.0">"getting paid over time."</mark>', 0.2) },

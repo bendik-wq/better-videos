@@ -37,7 +37,7 @@ def main(src, tl_path, face_dir, out_dir):
             fade = 0.06
             ff("-ss", f"{s['in']:.3f}", "-t", f"{dur:.3f}", "-i", src, "-vn",
                "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fade:.3f}:d={fade},loudnorm=I=-16:TP=-1.5:LRA=11,"
-                      f"aresample=48000,apad,atrim=0:{nf / FPS:.4f}",
+                      f"aresample=48000,apad=whole_dur={nf / FPS:.4f},atrim=end={nf / FPS:.4f}",
                "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", a)
         else:
             ff("-f", "lavfi", "-i", f"color=c=0x121b2e:s={W}x{H}:r={FPS}", "-frames:v", str(nf),
