@@ -1,0 +1,525 @@
+<title>Owners Academy Sales Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a deal-room binder. Sticky section index on the left, one long readable column on the right,
+   black/yellow taken from the Owners Academy slide. Timestamps in mono point back to the recording. */
+:root {
+  --paper: #fbfaf6;
+  --ink: #141414;
+  --muted: #5d5a52;
+  --line: #e4e0d4;
+  --card: #ffffff;
+  --accent: #f2c12e;
+  --accent-ink: #141414;
+  --flag: #b4471f;
+  --flag-bg: #fbeee6;
+  --ok: #2f6b3a;
+  --display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121211; --ink: #f1efe8; --muted: #a8a397; --line: #2c2b27; --card: #1b1a18;
+  --accent: #f2c12e; --accent-ink: #141414; --flag: #f08a5d; --flag-bg: #2b1c14; --ok: #8fcf98; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121211; --ink: #f1efe8; --muted: #a8a397; --line: #2c2b27; --card: #1b1a18;
+  --accent: #f2c12e; --accent-ink: #141414; --flag: #f08a5d; --flag-bg: #2b1c14; --ok: #8fcf98; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 0 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; }
+header.top { grid-column: 1 / -1; padding-block: 48px 8px; border-bottom: 1px solid var(--line); }
+.brand { display: inline-flex; gap: 10px; align-items: center; background: var(--ink); color: var(--paper);
+  padding: 8px 14px; font: 800 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; }
+.brand b { color: var(--accent) }
+h1 { font: 800 clamp(34px, 5vw, 56px)/1.05 var(--display); letter-spacing: -.02em; margin: 22px 0 12px; text-wrap: balance; }
+.lede { max-width: 66ch; color: var(--muted); margin: 0 0 28px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font: 400 13px/1.4 var(--mono); color: var(--muted); padding-bottom: 24px; }
+
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; padding-top: 32px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: s; }
+nav.toc a { display: grid; grid-template-columns: 28px 1fr; padding: 6px 8px; color: var(--ink); text-decoration: none;
+  font: 600 14px/1.3 var(--body); border-left: 2px solid transparent; }
+nav.toc a span { font: 500 12px/1.6 var(--mono); color: var(--muted) }
+nav.toc a:hover, nav.toc a:focus-visible { border-left-color: var(--accent); background: var(--card); outline: none; }
+
+main { min-width: 0; padding-top: 32px; display: grid; gap: 72px; }
+section { display: grid; gap: 20px; scroll-margin-top: 24px; }
+.eyebrow { font: 600 12px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+h2 { font: 800 30px/1.15 var(--display); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h3 { font: 800 18px/1.3 var(--display); margin: 0; text-wrap: balance; }
+p { margin: 0; max-width: 68ch }
+.sub { color: var(--muted); max-width: 68ch }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 68ch }
+.ts { font: 500 13px/1 var(--mono); background: var(--line); color: var(--ink); padding: 3px 6px; white-space: nowrap; }
+mark { background: var(--accent); color: var(--accent-ink); padding: 0 3px }
+
+.onepager { background: var(--ink); color: var(--paper); padding: clamp(24px, 4vw, 44px); display: grid; gap: 22px; }
+.onepager h3 { color: var(--accent); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
+.onepager .big { font: 800 clamp(24px, 3.4vw, 36px)/1.15 var(--display); max-width: 24ch; text-wrap: balance; }
+.onepager p, .onepager li { color: var(--paper) }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.cs { display: grid; gap: 8px; align-content: start }
+.cs .n { font: 800 34px/1 var(--display); color: var(--accent) }
+.onepager ul { margin: 0; padding-left: 18px; display: grid; gap: 4px }
+
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--card) }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+th { font: 600 12px/1.2 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0 }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--mono); font-size: 13px }
+
+.block { background: var(--card); border: 1px solid var(--line); display: grid; }
+.block header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.block header .when { font: 500 12px/1.3 var(--mono); color: var(--muted); }
+.block pre { margin: 0; padding: 18px 16px; white-space: pre-wrap; word-wrap: break-word; font: 400 15.5px/1.65 var(--body); max-width: 72ch; }
+.copy { font: 600 13px/1 var(--body); border: 1px solid var(--ink); background: transparent; color: var(--ink);
+  padding: 8px 12px; cursor: pointer; }
+.copy:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+
+.flag { border-left: 3px solid var(--flag); background: var(--flag-bg); padding: 14px 16px; display: grid; gap: 6px; }
+.flag strong { color: var(--flag) }
+
+.qa { display: grid; gap: 0; border-top: 1px solid var(--line) }
+.qa details { border-bottom: 1px solid var(--line); }
+.qa summary { cursor: pointer; padding: 16px 4px; font: 600 17px/1.35 var(--body); list-style: none; display: flex; gap: 12px; justify-content: space-between; }
+.qa summary::after { content: "+"; font: 600 20px/1 var(--display); color: var(--muted) }
+.qa details[open] summary::after { content: "–" }
+.qa summary:focus-visible { outline: 2px solid var(--accent) }
+.qa .ans { padding: 0 4px 18px; display: grid; gap: 10px; }
+.quote { font-style: italic; border-left: 3px solid var(--accent); padding-left: 14px; max-width: 66ch }
+
+.vids { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.vid { background: var(--card); border: 1px solid var(--line); padding: 18px; display: grid; gap: 10px; align-content: start }
+.vid .file { font: 500 12px/1.4 var(--mono); color: var(--muted); word-break: break-all }
+.vid .dur { font: 800 26px/1 var(--display) }
+.vid.hero { border-color: var(--ink); box-shadow: 6px 6px 0 var(--accent); }
+
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0 }
+  nav.toc { position: static; padding-top: 20px }
+  nav.toc ol { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important } }
+html { scroll-behavior: smooth }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="brand">The Owners <b>Academy</b></span>
+    <h1>Sales kit from the 5 March M&amp;A Masterclass</h1>
+    <p class="lede">Everything here comes from Josh's 3-hour masterclass recording: the VSL cut, four pre-call videos, the sequence that delivers them, and the words to use on the call. Timestamps like <span class="ts">0:21:36</span> point to the original recording, so any line can be checked or re-cut.</p>
+    <div class="meta"><span>Source: GMT20260305-205623_Recording_1920x1080 (1).mp4</span><span>Talk: 0:07:56 – 2:52:53</span><span>Offer: Owners Academy + 1:1 advisory, application only</span></div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <ol>
+      <li><a href="#offer"><span>01</span>Offer one-pager</a></li>
+      <li><a href="#videos"><span>02</span>Videos</a></li>
+      <li><a href="#sequence"><span>03</span>Pre-call sequence</a></li>
+      <li><a href="#proof"><span>04</span>Proof bank</a></li>
+      <li><a href="#objections"><span>05</span>Objections</a></li>
+      <li><a href="#discovery"><span>06</span>Discovery call</a></li>
+      <li><a href="#scripts"><span>07</span>Scripts to record</a></li>
+      <li><a href="#hooks"><span>08</span>Ad hooks &amp; clips</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 01 OFFER -->
+    <section id="offer">
+      <div class="eyebrow">01 · Offer one-pager</div>
+      <h2>What we sell and who it's for</h2>
+      <div class="onepager">
+        <div class="big">Buy profitable businesses with little to no money down, using the 3C model.</div>
+        <div class="cols">
+          <div class="cs"><span class="n">C1</span><h3>Credibility</h3><p>Build a board of credible operators and a top-tier external team (lawyers, accountants) by offering founders' equity instead of cash. Banks fund you and sellers take your offers seriously.</p></div>
+          <div class="cs"><span class="n">C2</span><h3>Capital</h3><p>Vendor finance, vendor rollover and commercial lending. Two rules: free cash flow covers debt service, at a minimum 1.5 DSCR. Debt over dilution, so you keep control and the exit.</p></div>
+          <div class="cs"><span class="n">C3</span><h3>Closing</h3><p>Sourcing by cold outreach, offers by LOI/NBIO at 3–5× EBITDA, due diligence with a quality-of-earnings focus, financing, legals, post-closing.</p></div>
+        </div>
+        <div class="cols">
+          <div class="cs"><h3>Two ways in</h3>
+            <ul>
+              <li><strong>The Owners Academy</strong>: private community, full course, every template and script, daily deal discussion.</li>
+              <li><strong>1:1 advisory</strong>: Josh works your strategy, structures and lender presentations with you. Equity or advisory roles considered case by case.</li>
+            </ul></div>
+          <div class="cs"><h3>Bonuses on joining</h3>
+            <ul>
+              <li>Non-binding indicative offer (NBIO) template. A client was quoted about $7,000 for the same document.</li>
+              <li>A 1:1 coaching session with Jy Kingston (KingVets), who built his board in under 30 days.</li>
+            </ul></div>
+          <div class="cs"><h3>Who it's for</h3>
+            <ul>
+              <li>Willing to put in 40–100 hours a week</li>
+              <li>Wants a big outcome: a roll-up exit, a legacy business, or flips</li>
+              <li>Ideal: has cash, an existing business or property to leverage</li>
+              <li>Not for: four-hour-work-week lifestyle seekers</li>
+            </ul></div>
+        </div>
+        <p><strong style="color:var(--accent)">Call to action:</strong> book a call directly with Josh (no setters). Short application form first.</p>
+      </div>
+    </section>
+
+    <!-- 02 VIDEOS -->
+    <section id="videos">
+      <div class="eyebrow">02 · Videos</div>
+      <h2>The VSL and four pre-call videos</h2>
+      <p class="sub">All cut straight from the masterclass footage (slides with Josh's camera in the corner), with clean cuts on word boundaries, levelled audio and chapter cards. The profanity in the live session was cut around rather than bleeped.</p>
+      <div class="vids">
+        <div class="vid hero"><span class="eyebrow">Booking page</span><h3>VSL: Buy a business with no money down</h3><span class="dur" data-dur="vsl">16 min</span>
+          <p>First-deal hook, credentials, proof, then C1/C2/C3 in Josh's words, who it's for, and the book-a-call ask.</p><span class="file">vsl.mp4</span></div>
+        <div class="vid"><span class="eyebrow">Sent on booking</span><h3>1 · Meet Josh</h3><span class="dur" data-dur="precall-1-meet-josh">2½ min</span>
+          <p>Credentials, then the full first-deal story: four failed deals, 7-year vendor note at 4%, 9 months without payments, $150K pulled out.</p><span class="file">precall-1-meet-josh.mp4</span></div>
+        <div class="vid"><span class="eyebrow">48 hours before</span><h3>2 · How the money works</h3><span class="dur" data-dur="precall-2-how-the-money-works">4½ min</span>
+          <p>Vendor finance explained, Elliot's "pension plan" structures, why retiring owners say yes, and the exact seller pitch.</p><span class="file">precall-2-how-the-money-works.mp4</span></div>
+        <div class="vid"><span class="eyebrow">24 hours before</span><h3>3 · People like you</h3><span class="dur" data-dur="precall-3-people-like-you">5 min</span>
+          <p>Proof wall, Jy (IT background, board in 30 days), Saul (first NDA, $3.8M HVAC business), Cam (2 deals, 23 days), Christian Dawes.</p><span class="file">precall-3-people-like-you.mp4</span></div>
+        <div class="vid"><span class="eyebrow">Morning of the call</span><h3>4 · Is this for you?</h3><span class="dur" data-dur="precall-4-is-this-for-you">3 min</span>
+          <p>Time, commitment, where your energy goes, decide at 60%, and the people Josh wants to work with. Filters out tyre-kickers before the call.</p><span class="file">precall-4-is-this-for-you.mp4</span></div>
+      </div>
+    </section>
+
+    <!-- 03 SEQUENCE -->
+    <section id="sequence">
+      <div class="eyebrow">03 · Pre-call sequence</div>
+      <h2>Emails and texts from booking to call</h2>
+      <p class="sub">Timed relative to the booked call. Replace the [VIDEO 1–4] links with wherever the files are hosted. {first_name}, {call_time} and {reschedule_link} are calendar merge fields.</p>
+
+      <div class="block"><header><h3>Email 1: Booking confirmation</h3><span class="when">Immediately on booking</span><button class="copy" type="button">Copy</button></header>
+<pre>Subject: You're booked in with Josh ({call_time})
+
+Hey {first_name},
+
+Josh here. You're locked in for {call_time}.
+
+This call is with me directly. No setters, no sales team. I take a limited number of these because I run my healthcare group full time, so I'd ask one thing: watch the short video below before we speak.
+
+[VIDEO 1: Meet Josh]
+
+It's the story of my first deal. I was unemployed, had no savings and zero experience. I went through four failed deals and about a thousand cold calls. Then I bought a physio clinic on a 7-year vendor note at 4%, made no payments for the first nine months, and pulled $150K out in year one.
+
+I'm not telling you that to impress you. I'm telling you because if I could do it from there, the question on our call won't be whether this works. It'll be how fast you can do it.
+
+Before we speak, have three things ready:
+1. Your end goal: big exit, legacy, lifestyle or flipping
+2. What you have to work with: cash, a business, property, or none of these
+3. How many hours a week you can actually give this
+
+Talk soon,
+Josh
+
+P.S. If you can't make {call_time}, reschedule here: {reschedule_link}. Please don't no-show; someone else is waiting for that spot.</pre></div>
+
+      <div class="block"><header><h3>SMS 1: Confirmation</h3><span class="when">Immediately on booking</span><button class="copy" type="button">Copy</button></header>
+<pre>Hey {first_name}, Josh Li here. You're booked for {call_time}. Watch this 2 min video before we speak, it'll save us both time: [VIDEO 1]</pre></div>
+
+      <div class="block"><header><h3>Email 2: How the money works</h3><span class="when">48 hours before (skip if booked &lt;48h out)</span><button class="copy" type="button">Copy</button></header>
+<pre>Subject: Why would a seller let you pay them with their own money?
+
+{first_name},
+
+The most common question I get is: "Why would anyone sell me their business with no money down?"
+
+Short answer: the burden of ownership.
+
+There's a whole generation of owners in traditional industries who are ready to retire. They don't want to wait 16 weeks for a bank. They want out, they want to be looked after, and many will take a better total price paid over time instead of a lower price today.
+
+A friend of mine in the States has signed offers that pay the owner $350K a year for life out of a business making $500K. The seller gets paid. He gets the asset. The business pays for itself.
+
+I break down exactly how this works, and the pitch I use with sellers, in this short video:
+
+[VIDEO 2: How the money works]
+
+Watch it before our call on {call_time}. We'll work out which structure fits your situation.
+
+Josh</pre></div>
+
+      <div class="block"><header><h3>Email 3: Proof</h3><span class="when">24 hours before</span><button class="copy" type="button">Copy</button></header>
+<pre>Subject: "My situation is different"
+
+{first_name},
+
+Before our call tomorrow I want to deal with the thought most people have at this point:
+
+"This works for Josh. My situation is different."
+
+So here are people whose situations were different:
+
+• Jy came from an analytical IT background with no business or finance experience. He built his board in under 30 days using only LinkedIn, and he's now closing his first deal with 12 more in his pipeline.
+• Saul built his board, started cold calling, and got an NDA signed with a $3.8M electrical and HVAC business whose owner wants to retire.
+• Cam closed two deals in 23 days, 100% vendor finance.
+• Christian Dawes was unemployed, with no higher education and a criminal record. His bank funded his first $2.4M deal in full.
+
+The common factor wasn't money or background. It was action.
+
+Their stories, in their own numbers: [VIDEO 3: People like you]
+
+See you tomorrow at {call_time}.
+Josh</pre></div>
+
+      <div class="block"><header><h3>SMS 2: Day-before reminder</h3><span class="when">24 hours before</span><button class="copy" type="button">Copy</button></header>
+<pre>{first_name}, quick reminder: you're on with me tomorrow at {call_time}. Reply YES to confirm, or reschedule here: {reschedule_link}. – Josh</pre></div>
+
+      <div class="block"><header><h3>Email 4: Morning of</h3><span class="when">Morning of the call</span><button class="copy" type="button">Copy</button></header>
+<pre>Subject: Today at {call_time}: one question first
+
+{first_name},
+
+We speak today at {call_time}.
+
+One question I'll ask you, so you can think about it now:
+
+Time, money and energy. Which one have you actually committed?
+
+I've had people pay me $20–30K for advisory and still not take action. Spending time and money is easy. Where your energy goes decides whether this works.
+
+If you've been watching content for months and haven't sent a single outreach message, that's fine. Tell me on the call and we'll fix it. Just watch this first:
+
+[VIDEO 4: Is this for you?]
+
+Josh</pre></div>
+
+      <div class="block"><header><h3>SMS 3: Join link</h3><span class="when">10 minutes before</span><button class="copy" type="button">Copy</button></header>
+<pre>Jumping on in 10, {first_name}. Here's the link: {meeting_link}. Grab a pen. – Josh</pre></div>
+
+      <div class="block"><header><h3>Email 5: No-show</h3><span class="when">15 minutes after a missed call</span><button class="copy" type="button">Copy</button></header>
+<pre>Subject: Missed you
+
+{first_name},
+
+Looks like we missed each other today. No stress, life happens.
+
+If you still want to buy your first business with little to no money down, grab another time here: {reschedule_link}
+
+If you've decided it's not for you right now, reply and tell me why. I read every reply.
+
+Josh
+
+P.S. Decide at 60% and figure it out as you go. There's never a perfect moment.</pre></div>
+    </section>
+
+    <!-- 04 PROOF -->
+    <section id="proof">
+      <div class="eyebrow">04 · Proof bank</div>
+      <h2>Every result Josh cited, and how he described it</h2>
+      <p class="sub">Use each story with the relationship Josh gave it on the recording. Several are friends or network contacts, not Academy students; presenting them as student results would be a false claim.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Who</th><th>Result as stated</th><th>Relationship</th><th>Recording</th></tr></thead>
+        <tbody>
+          <tr><td>Josh Li</td><td>First deal with $0, unemployed, no experience. Physio clinic, 100% vendor finance, 7 years at 4% principal &amp; interest, 9-month payment holiday, rent in arrears, no deposit. Pulled $150K in year one, mid six figures in equity. Four failed deals and ~1,000 cold calls first.</td><td>Self</td><td class="num">0:21:36<br>1:37:40<br>2:12:09</td></tr>
+          <tr><td>Josh Li</td><td>$30M+ in deals by 21 in banking; involved in $100M+ of transactions; youngest in Australian history to close a no-money-down healthcare deal (age 25, JC Health Group).</td><td>Self</td><td class="num">0:22:59</td></tr>
+          <tr><td>Jy Kingston</td><td>IT background, no finance experience. Board in &lt;30 days via LinkedIn, accountants and lawyers within ~2 weeks, 12 deals active, closing first.</td><td>Student / mentee</td><td class="num">0:47:05<br>0:48:32</td></tr>
+          <tr><td>Saul</td><td>NDA signed, early due diligence on an electrical/aircon business: 25 staff, ~$3.8M revenue, owner retiring in 2 years. Found by cold call, direct to vendor.</td><td>Owners Academy member</td><td class="num">1:09:32</td></tr>
+          <tr><td>Cam (Cameron)</td><td>2 deals in 23 days, 100% vendor finance, interest-only 10 years with balloons in year 3 and 10; $500K working capital from the bank.</td><td>"My good friend"</td><td class="num">0:29:30<br>1:56:07</td></tr>
+          <tr><td>Arthur</td><td>Signed a $23M deal.</td><td>"Friends / students" (unspecified)</td><td class="num">0:29:26</td></tr>
+          <tr><td>Jason Nagy</td><td>First deal $5.5M radiology, zero down (60/40 structure); $200M exit to private equity after 7 years.</td><td>"My friend"</td><td class="num">0:29:41<br>1:49:28</td></tr>
+          <tr><td>Elliot (US)</td><td>~40 offers; three LOIs signed at 100% seller finance, 99-year "pension plan" terms, e.g. $350K/yr for life on $500K NOI.</td><td>"A friend of mine"</td><td class="num">0:52:43</td></tr>
+          <tr><td>Christian Dawes</td><td>$2.4M first deal (slide; said "$2.5M" live), funded 100% and over-financed by the bank. Unemployed, no higher education, criminal record.</td><td>Example, not stated as student</td><td class="num">2:17:11</td></tr>
+          <tr><td>Unnamed student</td><td>Secured the former CEO of IBM to join their company.</td><td>Student</td><td class="num">0:29:54</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flag"><strong>Check before running paid traffic</strong>
+        <p>Income and deal-size claims ($150K, $23M, $200M exit) need records on file and a "results not typical" disclaimer near them, under ACCC rules in Australia and FTC rules in the US. Leave out these lines from the live session: "50 of them will get back to you within 48 hours, guaranteed" (1:09:30) and "closing off public access / webinar-only offer" (2:28:30), unless they are true wherever the asset is used.</p></div>
+    </section>
+
+    <!-- 05 OBJECTIONS -->
+    <section id="objections">
+      <div class="eyebrow">05 · Objections</div>
+      <h2>Objection handling in Josh's own words</h2>
+      <div class="qa">
+        <details open><summary>"I don't have any money."</summary><div class="ans">
+          <p class="quote">"How much money do you need to buy a company? Zero."</p>
+          <p>Answer with the mechanism, not reassurance. The seller is paid out of the business's own cash flow (vendor finance), or keeps a stake that fills the bank's equity gap (rollover / 60-40). Josh was unemployed with no savings on his first deal. <span class="ts">2:20:30</span> <span class="ts">0:51:20</span></p></div></details>
+        <details><summary>"Why would a seller ever agree to that?"</summary><div class="ans">
+          <p class="quote">"There is something called the burden of ownership."</p>
+          <p>Retiring owners in traditional industries want out. Vendor finance can pay above market value (6–7× vs the usual 3–5×), closes in 2–4 weeks instead of 6–16 with a bank, and the seller can walk away and still get paid. Never say "vendor finance" to the seller; say "getting paid over time". <span class="ts">0:54:35</span> <span class="ts">1:35:59</span></p></div></details>
+        <details><summary>"Nobody will take me seriously. I have no track record."</summary><div class="ans">
+          <p class="quote">"If you have no track record, we can't do much about that. So what can we do? We can steal credibility."</p>
+          <p>Build a board with founders' equity, at zero cost, found through LinkedIn and cold contact. Josh did it at 25 with no network; Jy did it in under 30 days. <span class="ts">0:35:21</span> <span class="ts">0:36:56</span></p></div></details>
+        <details><summary>"I'm too analytical / I need to learn more first."</summary><div class="ans">
+          <p class="quote">"Learning to just shut up and take action is probably one of the best skills you can learn… You probably know too much."</p>
+          <p>Jy came from IT. Then use decide-at-60%: "There is never a perfect moment." <span class="ts">0:47:40</span> <span class="ts">2:10:37</span></p></div></details>
+        <details><summary>"I'm worried about taking on debt."</summary><div class="ans">
+          <p>Debt means no dilution, so you keep control and keep the exit. It's more readily available than investors (months for one investor vs a bank set up to lend), and it's only safe inside the rule: free cash flow covers debt service at 1.5× or better. <span class="ts">1:02:18</span> <span class="ts">0:59:28</span></p></div></details>
+        <details><summary>"I can't afford the program right now."</summary><div class="ans">
+          <p class="quote">"If you can't afford an upfront component, then we can explore some kind of financing arrangement. We can explore a pure equity arrangement… It is important though that there is a monetary exchange… because then there's commitment on both ends."</p>
+          <p>Josh offered this live. Decide as a team whether closers may offer payment plans or equity deals, and under what criteria. <span class="ts">2:34:43</span></p></div></details>
+        <details><summary>"I'm in the US / UK. Does this work outside Australia?"</summary><div class="ans">
+          <p>Elliot and Cam's examples are outside Australia. Josh: "We have a network of banks and private lenders in the US. A lot of our work revolves around helping you structure and present the deals." Josh can be a director only in Australia; elsewhere, an advisor or equity holder. <span class="ts">2:36:34</span> <span class="ts">2:35:47</span></p></div></details>
+        <details><summary>"Should I find a deal first, or build the board first?"</summary><div class="ans">
+          <p>Either works. Board-first is the macro approach (an executive summary PDF plus handshake equity). Deal-first is project-based, the way Christian did it. Josh recommends board-first. <span class="ts">2:37:24</span></p></div></details>
+        <details><summary>"I can do this myself from your free content."</summary><div class="ans">
+          <p>Agree; Josh says so himself. The case for the Academy is speed and the community: "The model is easy… but to go through it on a day to day basis, to keep yourself motivated… there's so much value to just being able to ask someone." Then ask: "You've been watching for months. How many offers have you sent?" <span class="ts">2:26:43</span> <span class="ts">2:19:06</span></p></div></details>
+      </div>
+    </section>
+
+    <!-- 06 DISCOVERY -->
+    <section id="discovery">
+      <div class="eyebrow">06 · Discovery call</div>
+      <h2>Questions for the call, built on Josh's own filters</h2>
+      <p class="sub">Josh qualifies on time, commitment, goal size, and existing assets. Ask in this order, then use the pop quiz to see how deal-ready they are.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Area</th><th>Ask</th><th>Listen for</th></tr></thead>
+        <tbody>
+          <tr><td>Goal</td><td>Ten years from now, what does this look like: a big exit, a legacy business, a lifestyle business, or flipping?</td><td>Jackpot or legacy is the best fit. Lifestyle-only is a soft no ("maybe this isn't for you").</td></tr>
+          <tr><td>Size</td><td>How big do you want to go? What number would change your life?</td><td>Under ~$10M: "maybe there's an easier model". Tens of millions or more: acquisitions.</td></tr>
+          <tr><td>Time</td><td>Realistically, how many hours a week can you give this from next Monday?</td><td>40–60 minimum; 100 ideal.</td></tr>
+          <tr><td>Assets</td><td>Do you have cash, an existing business, or property you could leverage?</td><td>Any of the three: "you could buy your first company in the next 30 days".</td></tr>
+          <tr><td>Action so far</td><td>What have you actually done so far: outreach, board conversations, offers?</td><td>Months of watching with no outreach means an energy problem, not a knowledge problem.</td></tr>
+          <tr><td>Industry</td><td>Which industry, and why? Is it asset-rich enough for a bank to lend against?</td><td>Don't let them stall here ("don't spend too long on that").</td></tr>
+          <tr><td>Decision</td><td>If this is a fit, what would stop you starting this week?</td><td>Surfaces the real objection. Answer from section 05.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Pop quiz: "How deal-ready are you?"</h3>
+      <ul class="plain">
+        <li>Minimum DSCR Josh recommends? <mark>1.5</mark></li>
+        <li>How much money do you need to buy a company? <mark>Zero</mark></li>
+        <li>Best way to find deals? <mark>Cold outreach, with cold calling best of all</mark></li>
+        <li>Best negotiation tactic? <mark>Walk away</mark>; second best is a time limit ("24 hours to accept")</li>
+        <li>Three items before making an offer? <mark>3 years of financials, matching tax returns, revenue breakdown by FY</mark></li>
+      </ul>
+    </section>
+
+    <!-- 07 SCRIPTS -->
+    <section id="scripts">
+      <div class="eyebrow">07 · Scripts to record</div>
+      <h2>Studio VSL and "Before our call" scripts for Josh</h2>
+      <p class="sub">The footage cut works today. These scripts are the upgrade: Josh to camera: about 11 minutes for the VSL and 90 seconds for the booking video, built on the same stories so every claim matches the recording. [B-ROLL] marks the slides or screenshots to cut in.</p>
+
+      <div class="block"><header><h3>Studio VSL (~11 min)</h3><span class="when">Booking page / ads</span><button class="copy" type="button">Copy</button></header>
+<pre>[HOOK]
+When I was 25, I was unemployed, with no savings and zero experience in business.
+
+Then I bought a healthcare clinic. Within the first year I'd pulled a hundred and fifty thousand dollars out of it, and I'd built mid six figures in equity.
+
+I didn't put a single dollar down.
+
+My name's Josh Li. In the next few minutes I'm going to show you exactly how I did it, how people I work with are doing it right now, and how to tell whether you can do it too.
+
+[B-ROLL: photo with the seller of Josh's first deal]
+
+[THE TWO WRONG WAYS]
+These days there are only two ways most people try to buy a business.
+
+One: you save for a deposit. Years of grinding to scrape together ten, twenty percent. Then the bank still says no, or you lose the deal to private equity.
+
+Two: you raise money from investors. Six months to land one cheque, and when you finally do, you've given away the equity, the control, and most of your exit.
+
+There's a third way. It's how I bought my first business, and it's how my friend Jason bought a five-and-a-half-million-dollar radiology business with nothing down. Seven years later, his group sold for two hundred million.
+
+I call it the 3C model: credibility, capital and closing.
+
+[C1: CREDIBILITY]
+Credibility is simply how seriously people take you. When I started, nobody had any reason to. I was a kid.
+
+If you have no money and no track record, you borrow credibility. You build a board of directors: people with the experience and success you don't have yet. You don't pay them. You offer them founders' equity, a slice of what you're going to build.
+
+I found every person on my board through LinkedIn and cold outreach. None of them were friends, family or old colleagues. Today the founder of the Australian Institute of Fitness is a shareholder in my company.
+
+One of my students, Jy, came from IT. No business background, no finance experience. He built his board in under thirty days using only LinkedIn. He now has twelve deals in his pipeline.
+
+[B-ROLL: leadership team slide, Jy's KingVets profile]
+
+[C2: CAPITAL]
+Now the money. Vendor finance means the seller lends you the money to buy their business. You pay them over time, out of the business's own profit.
+
+Why would a seller do that? The burden of ownership. There's a generation of owners in traditional industries ready to retire. They don't want to wait sixteen weeks for a bank. They want out, and they want to be looked after.
+
+Here's what that looks like. Take a business making two hundred and fifty thousand a year in profit. Divide by one point five, my safety buffer. That's a hundred and sixty-six thousand a year you can comfortably pay the seller. Over ten years, that's one point six six million: well above what most buyers would offer. The seller retires and gets paid every month. You take over a business that pays for itself from day one.
+
+That's almost exactly how I closed my first deal. Seven years, four percent interest. I negotiated nine months with no payments while we took over, and no deposit on the lease.
+
+[B-ROLL: 1.66M speed-run notepad]
+
+[C3: CLOSING]
+Closing is a process. Find deals with cold outreach: calls, emails, LinkedIn. Get three years of financials, the tax returns, and a revenue breakdown before you offer. Offer three to five times profit in a letter of intent. Do proper due diligence. Get the contract right with top-tier lawyers.
+
+Saul, in our community, built his board and started cold calling. Soon after, he had an NDA signed with an electrical and air-con business doing just under four million a year, whose owner wants to retire.
+
+My friend Cam closed two deals in twenty-three days. Both a hundred percent vendor finance.
+
+[B-ROLL: Saul's Telegram message, Cam's "just closed two deals" message]
+
+[THE ROLL-UP]
+And here's why this beats real estate. Buy ten businesses like that one at four times profit. Grow them, combine them, and sell the group. Groups trade at eight, ten, fifteen times. That's the multiple arbitrage, and it's how most of the wealthiest people on the planet made their money.
+
+[WHO THIS IS FOR]
+This is not a four-hour-work-week model. If you want a lifestyle business, this isn't for you.
+
+It's for people who can give this real hours every week, who want to build something big, and who are ready to act before they feel ready. Decide at sixty percent and figure it out as you go. I had four deals fall over before my first one closed.
+
+If you already have cash, a business or property, this gets a lot easier and a lot faster.
+
+[CALL TO ACTION]
+If that's you, book a call with me below. Not with a setter or a sales team. With me.
+
+There's a short form so I can understand your situation. On the call we'll work out your strategy, your first structure, and whether the Owners Academy or one-on-one advisory makes sense for you.
+
+I run a healthcare group full time, so I only take on people who'll actually do the work.
+
+If that's you, I'll see you on the call.</pre></div>
+
+      <div class="block"><header><h3>"Before our call" (~90 sec)</h3><span class="when">Thank-you page after booking</span><button class="copy" type="button">Copy</button></header>
+<pre>Hey, it's Josh. You've just booked a call with me, so first: good decision.
+
+Three quick things so we get the most out of it.
+
+One. This call is with me, not a sales team. I'm going to ask you real questions: what your end goal is, how many hours you can give this, and what you've got to work with, whether that's cash, a business, property, or nothing yet. Nothing yet is fine. That's where I started.
+
+Two. Watch the short videos we send you before the call. They cover my first deal, how vendor finance works, and what people like you are doing right now. If you've watched them, we can skip the basics and spend the whole call on your plan.
+
+Three. Turn up. Be somewhere quiet, camera on, with a pen and paper. If something comes up, reschedule using the link in your email. Don't just disappear; someone else wanted that spot.
+
+On the call we'll work out whether this model fits you, what your first deal could look like, and the fastest way to get there.
+
+See you soon.</pre></div>
+    </section>
+
+    <!-- 08 HOOKS -->
+    <section id="hooks">
+      <div class="eyebrow">08 · Ad hooks &amp; clips</div>
+      <h2>Short-form clips already in the footage</h2>
+      <p class="sub">Each is a ready 20–60 second clip. Cut vertical with captions and the hook as on-screen text.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>On-screen hook</th><th>Clip</th><th>Recording</th></tr></thead>
+        <tbody>
+          <tr><td>I bought my first company unemployed, with $0.</td><td>"This is how I closed my first deal…" → "off the first deal"</td><td class="num">0:21:36–0:22:06</td></tr>
+          <tr><td>The seller paid for his own business.</td><td>Elliot's 99-year "pension plan" structure</td><td class="num">0:52:43–0:54:26</td></tr>
+          <tr><td>Why retiring owners say yes</td><td>The burden of ownership</td><td class="num">0:54:26–0:55:50</td></tr>
+          <tr><td>How to "steal" credibility</td><td>Steal credibility, then founders' equity</td><td class="num">0:35:21–0:38:25</td></tr>
+          <tr><td>$250K profit → $1.66M offer in 2 minutes</td><td>Vanilla pop speed run</td><td class="num">1:33:06–1:36:53</td></tr>
+          <tr><td>Business vs real estate</td><td>Cash flow, time, multiple arbitrage</td><td class="num">0:15:09–0:18:55</td></tr>
+          <tr><td>Unemployed, criminal record, $2.4M deal</td><td>Christian Dawes</td><td class="num">2:17:11–2:18:15</td></tr>
+          <tr><td>The best negotiation tactic is to walk away</td><td>Josh Li-ism</td><td class="num">1:05:03–1:06:17</td></tr>
+          <tr><td>Billionaires decide at 60%</td><td>Passive vs active risk</td><td class="num">2:10:14–2:11:21</td></tr>
+          <tr><td>Never let minority holders block your exit</td><td>Drag-along and veto rights</td><td class="num">2:01:07–2:02:52</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
+
+<script>
+document.querySelectorAll(".copy").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var pre = btn.closest(".block").querySelector("pre");
+    var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+    var select = function () {
+      var r = document.createRange(); r.selectNodeContents(pre);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = "Selected, press Ctrl/Cmd+C";
+    };
+    try {
+      navigator.clipboard.writeText(pre.innerText).then(done, select);
+    } catch (e) { select(); }
+  });
+});
+</script>
