@@ -73,8 +73,10 @@ def main(wav_path, spec_path, out_path, *only):
         t_in = lo + words[i].start - 0.12
         t_out = lo + words[j].end + 0.30
         text = "".join(wd.word for wd in words[i:j + 1]).strip()
+        rel = [[wd.word.strip(), round(lo + wd.start - t_in, 2), round(lo + wd.end - t_in, 2)]
+               for wd in words[i:j + 1]]
         out[cid] = {"in": round(t_in, 2), "out": round(t_out, 2), "snapped": True,
-                    "match": [round(a[3], 2), round(b[3], 2)], "text": text}
+                    "match": [round(a[3], 2), round(b[3], 2)], "text": text, "words": rel}
         print(f"ok {cid}: {t_in:.1f}-{t_out:.1f} ({t_out - t_in:.0f}s) match={a[3]:.2f}/{b[3]:.2f}", flush=True)
     json.dump(out, open(out_path, "w"), indent=1)
 

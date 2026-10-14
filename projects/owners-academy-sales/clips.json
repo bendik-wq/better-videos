@@ -199,6 +199,78 @@
       "to": "2:32:41",
       "start": "for us to get to know each other",
       "end": "and our community"
+    },
+    "owner-a": {
+      "from": "0:28:14",
+      "to": "0:28:39",
+      "start": "and then the last three things",
+      "end": "so much easier for you"
+    },
+    "owner-b": {
+      "from": "0:28:45",
+      "to": "0:28:57",
+      "start": "if you have these three things",
+      "end": "deals done so easily"
+    },
+    "mechanisms": {
+      "from": "0:50:44",
+      "to": "0:51:14",
+      "start": "the two core financing mechanisms",
+      "end": "equity to investors"
+    },
+    "rollover": {
+      "from": "0:56:03",
+      "to": "0:57:56",
+      "start": "what is a vendor rollover",
+      "end": "very powerful tool"
+    },
+    "commercial": {
+      "from": "0:57:54",
+      "to": "0:59:08",
+      "start": "commercial lending this is getting money",
+      "end": "just get the deal done"
+    },
+    "dscr": {
+      "from": "0:59:24",
+      "to": "0:59:40",
+      "start": "free cashflow must cover debt service",
+      "end": "or more"
+    },
+    "sixty-forty": {
+      "from": "1:48:24",
+      "to": "1:49:10",
+      "start": "our offer we're going to buy",
+      "end": "putting that up himself"
+    },
+    "jason-first": {
+      "from": "1:49:24",
+      "to": "1:50:05",
+      "start": "this is how jason nagy closed his first deal",
+      "end": "assets were worth money"
+    },
+    "seller-vision": {
+      "from": "1:52:19",
+      "to": "1:53:08",
+      "start": "you're telling the seller hey",
+      "end": "is now 4 million"
+    },
+    "rollup-run": {
+      "from": "2:07:22",
+      "to": "2:08:16",
+      "start": "now this is essentially a speed run",
+      "end": "how fast you could build wealth"
+    },
+    "jason-exit": {
+      "from": "2:09:13",
+      "to": "2:09:45",
+      "start": "this is jason nagy's company",
+      "end": "200 mil in radiology"
+    },
+    "serious": {
+      "from": "2:31:31",
+      "to": "2:32:00",
+      "start": "if you actually want to do anything serious",
+      "end": "people in my network"
     }
   },
   "cuts": {
@@ -289,6 +361,61 @@
         "energy",
         "decide-at-60",
         "right-people",
+        "get-to-know"
+      ]
+    },
+    "vsl-b2b": {
+      "title": "B2B VSL \u2014 Grow by acquisition with vendor finance, rollover and commercial debt",
+      "layout": "split",
+      "sequence": [
+        "arbitrage",
+        "owner-a",
+        "owner-b",
+        "creds-a",
+        "creds-b",
+        {
+          "card": "Why owners are selling"
+        },
+        "why-sellers",
+        "retiring-owners",
+        {
+          "card": "Three ways to fund a deal"
+        },
+        "mechanisms",
+        {
+          "card": "1 \u00b7 Vendor finance"
+        },
+        "vendor-finance-a",
+        "vendor-finance-b",
+        "seller-pitch",
+        "first-deal-terms",
+        {
+          "card": "2 \u00b7 Vendor rollover"
+        },
+        "rollover",
+        {
+          "card": "3 \u00b7 Commercial debt"
+        },
+        "commercial",
+        "dscr",
+        {
+          "card": "Stacking all three"
+        },
+        "sixty-forty",
+        "jason-first",
+        "seller-vision",
+        "christian-a",
+        "cam",
+        {
+          "card": "The roll-up"
+        },
+        "rollup-run",
+        "jason-exit",
+        {
+          "card": "Work with us"
+        },
+        "serious",
+        "book-call",
         "get-to-know"
       ]
     }

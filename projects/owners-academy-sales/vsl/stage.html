@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>G&amp;L VSL stage</title>
+<style>
+/* Layout: 1920x1080. Josh in a tall panel on the left (composited later by ffmpeg into #face),
+   motion graphics on the right, word-synced captions under them. Palette and type are the
+   landing page's dark "ink" tokens (apply.grosfjeld-li.com, site.css). */
+@font-face { font-family: "Newsreader"; src: url(fonts/Newsreader-opsz-wght.ttf); font-weight: 200 800; font-style: normal; }
+@font-face { font-family: "Newsreader"; src: url(fonts/Newsreader-Italic-opsz-wght.ttf); font-weight: 200 800; font-style: italic; }
+@font-face { font-family: "Inter"; src: url(fonts/Inter-Regular.otf); font-weight: 400; }
+@font-face { font-family: "Inter"; src: url(fonts/Inter-Medium.otf); font-weight: 500; }
+@font-face { font-family: "Inter"; src: url(fonts/Inter-SemiBold.otf); font-weight: 600; }
+:root {
+  --bg: #0b1220; --bg-alt: #0f1728; --surface: #121b2e; --surface-2: #17223a;
+  --ink: #f3f5f9; --ink-2: #b7bfcd; --muted: #8a93a6; --hair: #222c40; --hair-strong: #2e3a52;
+  --ice: #c7d3fb; --gold: #fdd050; --hl: rgba(253, 208, 80, .55);
+  --blue-1: #24508f; --blue-2: #12336a; --blue-3: #0b2553;
+  --serif: "Newsreader", Georgia, serif; --sans: "Inter", Arial, sans-serif;
+  --L: 96px; --R: 96px; --top: 112px;
+  --face-w: 576px; --face-h: 824px; --gap: 80px;
+  --rx: calc(var(--L) + var(--face-w) + var(--gap)); /* right column x = 752 */
+}
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+#silk { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+#scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,18,32,.55) 0%, rgba(11,18,32,.15) 45%, rgba(11,18,32,.35) 100%); }
+
+header { position: absolute; left: var(--L); right: var(--R); top: 40px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+.wordmark { font: 600 30px/1 var(--serif); letter-spacing: -.01em; }
+.chap { display: flex; align-items: center; gap: 22px; font: 500 18px/1 var(--sans); color: var(--muted); }
+.ticks { display: flex; gap: 6px }
+.ticks i { display: block; width: 28px; height: 3px; border-radius: 2px; background: var(--hair-strong); }
+.ticks i.on { background: var(--ink-2) }
+.ticks i.now { background: var(--gold) }
+
+/* The face is composited over this box; it only shows as a shadowed frame during the gap frames. */
+#face { position: absolute; left: var(--L); top: var(--top); width: var(--face-w); height: var(--face-h); border-radius: 18px;
+  background: var(--surface); box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 30px 80px -30px rgba(0,0,0,.7), 0 60px 140px -60px rgba(28,47,107,.9); }
+
+#stage { position: absolute; left: var(--rx); right: var(--R); top: 150px; height: 690px; }
+.beat { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+
+.eyebrow { font: 500 22px/1.3 var(--sans); color: var(--muted); letter-spacing: .01em }
+.eyebrow b { color: var(--ice); font-weight: 600 }
+.big { font: 500 78px/1.07 var(--serif); letter-spacing: -.015em; text-wrap: balance; }
+.mid { font: 500 58px/1.1 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.small { font: 400 26px/1.45 var(--sans); color: var(--ink-2); max-width: 900px }
+em { font-style: italic; }
+.gold { color: var(--gold) }
+.ice { color: var(--ice) }
+mark { color: inherit; background: linear-gradient(transparent 60%, var(--hl) 60%) no-repeat 0 0 / 0% 100%; padding: 0 .06em; }
+
+.card { background: rgba(18,27,46,.82); border: 1px solid var(--hair); border-radius: 14px; padding: 30px 34px; }
+.row { display: flex; gap: 22px; }
+.row > * { flex: 1 1 0; min-width: 0 }
+.card .mid { font-size: 46px }
+.card { display: grid; gap: 10px; align-content: start }
+.kpi { display: grid; gap: 10px; align-content: start }
+.kpi .v { font: 500 72px/1 var(--serif); font-variant-numeric: tabular-nums; letter-spacing: -.02em }
+.kpi .l { font: 500 20px/1.35 var(--sans); color: var(--muted) }
+
+/* horizontal bars */
+.bars { display: grid; gap: 26px }
+.bar { display: grid; gap: 10px }
+.bar .lab { display: flex; justify-content: space-between; font: 500 22px/1 var(--sans); color: var(--ink-2) }
+.bar .lab b { font: 500 34px/1 var(--serif); color: var(--ink) }
+.bar .track { height: 54px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px solid var(--hair); overflow: hidden }
+.bar .fill { height: 100%; width: 0; border-radius: 9px; background: linear-gradient(180deg, var(--blue-1), var(--blue-2) 48%, var(--blue-3)); box-shadow: inset 0 1px 0 rgba(255,255,255,.25) }
+.bar .fill.hot { background: linear-gradient(180deg, #ffe08a, #f2bf3a 55%, #d99a12); }
+
+/* capital stack */
+.stack { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: stretch; height: 560px }
+.stack .col { position: relative; border-radius: 14px; border: 1px solid var(--hair-strong); overflow: hidden; display: flex; flex-direction: column-reverse; background: rgba(255,255,255,.03) }
+.stack .seg { height: 0; display: flex; align-items: center; justify-content: center; font: 600 26px/1 var(--sans); color: var(--ink); overflow: hidden; border-top: 1px solid rgba(255,255,255,.18) }
+.stack .seg.bank { background: linear-gradient(180deg, var(--blue-1), var(--blue-3)); }
+.stack .seg.roll { background: linear-gradient(180deg, #4a3d7a, #2a2457); }
+.stack .seg.vend { background: linear-gradient(180deg, #2f6a74, #163b4a); }
+.stack .seg.you { background: linear-gradient(180deg, #ffe08a, #d99a12); color: #0d1526 }
+.legend { display: grid; gap: 22px; align-content: center }
+.legend .it { display: grid; grid-template-columns: 18px 1fr auto; gap: 18px; align-items: baseline; font: 500 26px/1.3 var(--sans); color: var(--ink-2) }
+.legend .it i { width: 18px; height: 18px; border-radius: 4px; display: block; transform: translateY(2px) }
+.legend .it b { font: 500 44px/1 var(--serif); color: var(--ink); font-variant-numeric: tabular-nums }
+.legend .tot { border-top: 1px solid var(--hair-strong); padding-top: 22px; }
+
+/* flow diagram */
+.flow { display: grid; grid-template-columns: 1fr 220px 1fr; align-items: center; gap: 0 }
+.node { background: rgba(18,27,46,.9); border: 1px solid var(--hair-strong); border-radius: 16px; padding: 30px; text-align: center; display: grid; gap: 10px }
+.node .who { font: 500 46px/1 var(--serif) }
+.node .sub { font: 500 20px/1.3 var(--sans); color: var(--muted) }
+.arrows { display: grid; gap: 34px; justify-items: center; font: 500 19px/1.3 var(--sans); color: var(--ink-2); text-align: center }
+.arrows svg { width: 200px; height: 26px; overflow: visible }
+.arrows path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round }
+
+/* timeline weeks */
+.weeks { display: grid; gap: 34px }
+.wk { display: grid; grid-template-columns: 280px 1fr; align-items: center; gap: 24px }
+.wk .name { font: 500 26px/1.25 var(--sans); color: var(--ink-2) }
+.wk .name b { display: block; font: 500 40px/1.1 var(--serif); color: var(--ink) }
+.wk .lane { position: relative; height: 46px; border-left: 1px solid var(--hair-strong) }
+.wk .span { position: absolute; top: 6px; height: 34px; border-radius: 8px; width: 0 }
+.scale { display: grid; grid-template-columns: 280px 1fr; gap: 24px; font: 500 17px/1 var(--sans); color: var(--muted) }
+.scale .ticksx { display: flex; justify-content: space-between }
+
+/* term sheet */
+.terms { display: grid; gap: 0; border-top: 1px solid var(--hair-strong) }
+.terms .t { display: grid; grid-template-columns: 1fr auto; align-items: baseline; padding: 20px 4px; border-bottom: 1px solid var(--hair) }
+.terms .t span { font: 500 26px/1.2 var(--sans); color: var(--ink-2) }
+.terms .t b { font: 500 46px/1 var(--serif); font-variant-numeric: tabular-nums }
+
+/* proof chat bubble */
+.chat { display: grid; gap: 14px; max-width: 760px }
+.bubble { justify-self: start; background: #1f2a44; border-radius: 22px 22px 22px 6px; padding: 18px 24px; font: 400 30px/1.35 var(--sans); }
+.bubble.me { justify-self: end; background: linear-gradient(180deg, #2b5ba0, #163c7a); border-radius: 22px 22px 6px 22px }
+.who-tag { font: 500 18px/1 var(--sans); color: var(--muted); }
+
+/* roll-up grid */
+.grid10 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px }
+.tile { height: 96px; border-radius: 12px; border: 1px solid var(--hair-strong); background: rgba(255,255,255,.03); display: grid; place-items: center; font: 500 22px/1.15 var(--sans); color: var(--ink-2); text-align: center }
+.tile.lit { background: linear-gradient(180deg, rgba(36,80,143,.9), rgba(11,37,83,.9)); color: var(--ink); border-color: rgba(199,211,251,.35) }
+.eq { display: grid; gap: 16px }
+.eq .ln { display: grid; grid-template-columns: 1fr auto; align-items: baseline; font: 500 26px/1.2 var(--sans); color: var(--ink-2) }
+.eq .ln b { font: 500 44px/1 var(--serif); color: var(--ink); font-variant-numeric: tabular-nums }
+.eq .ln.res { border-top: 1px solid var(--hair-strong); padding-top: 16px }
+.eq .ln.res b { font-size: 64px; color: var(--gold) }
+
+/* checklist */
+.list { display: grid; gap: 20px }
+.list .li { display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: center; font: 500 40px/1.2 var(--serif) }
+.list .li i { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ice); display: grid; place-items: center; font: 600 20px/1 var(--sans); color: var(--ice); font-style: normal }
+
+/* formula */
+.formula { display: flex; align-items: center; gap: 28px; font: 500 56px/1 var(--serif) }
+.formula .fr { display: grid; gap: 12px; text-align: center }
+.formula .fr hr { border: 0; height: 2px; background: var(--ink-2) }
+.formula .op { color: var(--muted) }
+
+/* CTA button: landing page --btn-bg */
+.btn { display: inline-flex; align-items: center; gap: 14px; padding: 26px 40px; border-radius: 10px; font: 600 32px/1 var(--sans); color: #fff;
+  background: linear-gradient(180deg, #24508f 0%, #12336a 48%, #0b2553 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 0 0 1px rgba(255,255,255,.12), 0 20px 60px -10px rgba(36,80,143,.75); }
+.url { font: 500 24px/1 var(--sans); color: var(--ink-2); letter-spacing: .01em }
+
+/* captions */
+#cap { position: absolute; left: var(--rx); right: var(--R); top: 874px; height: 62px; display: flex; align-items: center; }
+#cap .line { font: 500 32px/1.25 var(--sans); color: rgba(183,191,205,.9); white-space: nowrap; }
+#cap .w { padding: 0 .02em; }
+#cap .w.on { color: #fff; background: linear-gradient(transparent 62%, var(--hl) 62%); }
+#cap .w.past { color: var(--ink) }
+
+/* full-frame cards */
+#card { position: absolute; inset: 0; display: none; }
+#card .bgc { position: absolute; inset: 0; background: radial-gradient(1200px 700px at 70% 40%, rgba(28,47,107,.55), transparent 70%), var(--bg); }
+#card .in { position: absolute; left: 180px; right: 180px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 34px }
+#card .num { font: 500 24px/1 var(--sans); color: var(--muted); letter-spacing: .02em }
+#card .ttl { font: 500 128px/1.02 var(--serif); letter-spacing: -.02em; max-width: 1400px; text-wrap: balance }
+#card .rule { height: 2px; width: 0; background: var(--gold) }
+#card .poster { display: flex; align-items: center; gap: 18px; font: 400 22px/1.3 var(--sans); color: var(--muted) }
+#card .poster .av { width: 56px; height: 56px; border-radius: 50%; background: #e9edf5; color: #0d1526; display: grid; place-items: center; font: 600 20px/1 var(--sans) }
+#card .poster b { display: block; color: var(--ink); font-weight: 500; font-size: 24px }
+#card .fine { position: absolute; left: 180px; right: 180px; bottom: 56px; font: 400 17px/1.5 var(--sans); color: var(--muted); max-width: 1300px }
+</style>
+</head>
+<body>
+<canvas id="silk" width="960" height="540"></canvas>
+<div id="scrim"></div>
+<header>
+  <div class="wordmark">G&amp;L M&amp;A Advisory</div>
+  <div class="chap"><span id="chapname"></span><div class="ticks" id="ticks"></div></div>
+</header>
+<div id="face"></div>
+<div id="stage"></div>
+<div id="cap"><div class="line" id="capline"></div></div>
+<div id="card"><div class="bgc"></div><div class="in" id="cardin"></div><div class="fine" id="cardfine"></div></div>
+<script src="stage.js"></script>
+</body>
+</html>
