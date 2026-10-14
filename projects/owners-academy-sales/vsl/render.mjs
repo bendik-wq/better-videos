@@ -2,6 +2,7 @@
 //   node vsl/render.mjs timeline.json out/graphics.mp4             # full cut, 25 fps
 //   node vsl/render.mjs timeline.json out/stills --stills 5,40,95  # PNG stills at those seconds
 //   node vsl/render.mjs timeline.json out/part.mp4 --from 60 --to 90
+//   node vsl/render.mjs timeline.json out/chunks --chunks 3000      # resumable, 2-min chunks
 //   node vsl/render.mjs --overlay out/                             # face-panel frame + mask PNGs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,10 +67,10 @@ if (opt('--stills')) {
 }
 
 const fps = TL.fps;
-const from = Number(opt('--from') ?? 0), to = Number(opt('--to') ?? TL.duration);
-const n = Math.round((to - from) * fps);
+
+async function encode(from, n, file) {
 const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
-  '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(fps), outPath], { stdio: ['pipe', 'inherit', 'inherit'] });
+  '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(fps), '-f', 'mp4', file], { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
 for (let i = 0; i < n; i++) {
   await page.evaluate((t) => window.render(t), from + i / fps);
@@ -79,5 +80,26 @@ for (let i = 0; i < n; i++) {
 }
 ff.stdin.end();
 await new Promise((r) => ff.on('close', r));
+process.stderr.write(`done: ${n} frames in ${((Date.now() - t0) / 60000).toFixed(1)} min -> ${file}\n`);
+}
+
+const total = Math.round(TL.duration * fps);
+if (opt('--chunks')) {
+  // Background jobs here are stopped after 2 h, so long renders go out in chunks that are renamed
+  // into place only when complete; re-running skips finished chunks. Several workers can share a
+  // directory (each claims a chunk); delete stale *.part files before re-running after a kill.
+  const size = Number(opt('--chunks'));
+  fs.mkdirSync(outPath, { recursive: true });
+  for (let k = 0; k * size < total; k++) {
+    const file = path.join(outPath, `chunk-${String(k).padStart(3, '0')}.mp4`);
+    if (fs.existsSync(file)) continue;
+    try { fs.writeFileSync(file + '.part', '', { flag: 'wx' }); } catch { continue; } // another worker has it
+    const a = k * size, n = Math.min(size, total - a);
+    await encode(a / fps, n, file + '.part');
+    fs.renameSync(file + '.part', file);
+  }
+} else {
+  const from = Number(opt('--from') ?? 0), to = Number(opt('--to') ?? TL.duration);
+  await encode(from, Math.round((to - from) * fps), outPath);
+}
 await browser.close();
-process.stderr.write(`done: ${n} frames in ${((Date.now() - t0) / 60000).toFixed(1)} min -> ${outPath}\n`);
