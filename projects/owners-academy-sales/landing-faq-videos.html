@@ -1,0 +1,49 @@
+<!--
+  Video answers for the landing page FAQ (apply.grosfjeld-li.com, section#faq "Before you apply").
+
+  Uses the site's own FAQ component (details.faq > summary + .faq-a from /assets/site.css), so fonts,
+  colours and the ink/dark palette carry over. Each video loads only when its question is opened.
+
+  1. Upload the files to /media/faq/ (same convention as /media/vsl-main.mp4):
+       faq-4-us-financing.mp4 / .jpg, faq-5-seller-buyout.mp4 / .jpg,
+       faq-6-control.mp4 / .jpg,      faq-7-negotiation.mp4 / .jpg
+  2. Paste the four <details> items into .faqs (after "Do I really put no money down?" works well),
+     or into the FAQ content wherever the data-html="faqs" block is managed.
+  3. Paste the <style> and <script> once, anywhere after site.css.
+  The pre-call FAQ page (precall-faq.html) carries all eight videos.
+-->
+<style>
+  .faq summary .faq-tag { display: inline-block; margin-left: 10px; padding: 3px 8px; border-radius: 999px; vertical-align: 2px;
+    font: 500 12px/1 var(--font); color: var(--accent); background: var(--accent-tint); }
+  .faq-video { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 12px; overflow: hidden;
+    background: var(--video); margin: 0 0 16px; box-shadow: 0 18px 40px -16px rgba(20, 35, 80, .32); }
+  .faq-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+</style>
+
+<details class="faq" data-faq="v4"><summary>How do you help with financing in the US? <span class="faq-tag">Video · 0:53</span></summary>
+  <div class="faq-a"><div class="faq-video"><video controls playsinline preload="none" poster="/media/faq/faq-4-us-financing.jpg" data-src="/media/faq/faq-4-us-financing.mp4"></video></div>
+    <p>We have a network of US banks and private lenders. Most of the work is helping you <strong>structure and present the deal</strong> so it gets funded. You build the banker relationships, and we can present on your behalf depending on how involved you want Josh to be.</p></div></details>
+
+<details class="faq" data-faq="v5"><summary>Can I buy out a seller who keeps a stake? <span class="faq-tag">Video · 2:30</span></summary>
+  <div class="faq-a"><div class="faq-video"><video controls playsinline preload="none" poster="/media/faq/faq-5-seller-buyout.jpg" data-src="/media/faq/faq-5-seller-buyout.mp4"></video></div>
+    <p>Yes. When a seller rolls over equity you can build in an early exit: a <strong>sale option</strong> (for example after three years, at a fixed price or a fixed multiple), or they <strong>ride it out</strong> and exit when you do. Options can trigger on time or on the size of the business.</p></div></details>
+
+<details class="faq" data-faq="v6"><summary>How do I stop minority shareholders taking control? <span class="faq-tag">Video · 1:20</span></summary>
+  <div class="faq-a"><div class="faq-video"><video controls playsinline preload="none" poster="/media/faq/faq-6-control.jpg" data-src="/media/faq/faq-6-control.mp4"></video></div>
+    <p>In the shareholders' agreement: <strong>drag-along rights</strong>, and <strong>no voting control or veto rights</strong> for minority holders. Set up the agreement, charter and constitution properly from the start. Get your own legal advice on the wording.</p></div></details>
+
+<details class="faq" data-faq="v7"><summary>What's the best negotiation tactic with a seller? <span class="faq-tag">Video · 0:58</span></summary>
+  <div class="faq-a"><div class="faq-video"><video controls playsinline preload="none" poster="/media/faq/faq-7-negotiation.jpg" data-src="/media/faq/faq-7-negotiation.mp4"></video></div>
+    <p><strong>Be willing to walk away.</strong> The second is a <strong>time limit</strong> on your offer: "You have 24 hours to accept, or it's gone." Seller finance is a deal mechanism, not a negotiation tactic.</p></div></details>
+
+<script>
+  // Load a video answer only when its question is opened; pause it when closed.
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (!d.matches || !d.matches('details.faq')) return;
+    var v = d.querySelector('video[data-src]');
+    if (!v) return;
+    if (d.open && !v.getAttribute('src')) v.setAttribute('src', v.dataset.src);
+    if (!d.open) v.pause();
+  }, true);
+</script>

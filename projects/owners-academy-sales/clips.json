@@ -361,6 +361,12 @@
       "to": "2:48:10",
       "start": "did i receive training from",
       "end": "qla trained and self-taught"
+    },
+    "faq-work-with": {
+      "from": "2:33:28",
+      "to": "2:33:44",
+      "start": "how do we work with you",
+      "end": "what we can do for you"
     }
   },
   "cuts": {
@@ -671,6 +677,69 @@
       "sequence": [
         "faq-mistakes-a",
         "faq-mistakes-b"
+      ]
+    },
+    "faq-9-work-with-josh": {
+      "title": "faq-9-work-with-josh",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Next step",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do I <em>work with Josh</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-work-with",
+        "book-call",
+        "get-to-know"
+      ]
+    },
+    "faq-10-equity-advisory": {
+      "title": "faq-10-equity-advisory",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Internal",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Would you take <em>equity</em> for advisory?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-equity-advisory-a",
+        "faq-equity-advisory-b"
+      ]
+    },
+    "faq-11-training": {
+      "title": "faq-11-training",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Background",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Where did Josh <em>learn this</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-training"
       ]
     }
   }

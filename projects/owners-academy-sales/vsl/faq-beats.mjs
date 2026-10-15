@@ -83,4 +83,21 @@ export const beats = {
     { at: 84, html: eb('What matters most') + list([['Your social and physical environment', 4.6], ['Your ability to make decisions quickly', 9.5]]) },
     { at: 104, html: big('Decide at <em>60%</em>. Figure it out as you go.', 0.3) },
   ],
+  'faq-work-with': [
+    { at: 0, html: Q('How do I <em>work with Josh</em>?') },
+    { at: 3.4, html: eb('The next step') + big('Book a call <em>with Josh</em>, and see what we can do for you.', 0.3) },
+  ],
+  'faq-equity-advisory-a': [
+    { at: 0, html: Q('Would you take <em>equity</em> for advisory?') },
+    { at: 2.2, html: big('Yes. Josh has taken <em>equity for advisory</em> with a couple of clients.', 0.2) },
+    { at: 12, html: eb('If an upfront fee is the problem') + list([['A financing arrangement', 6.8], ['A pure equity arrangement', 9.0], ['Flexible, if you\'re serious about executing', 12.0]]) },
+  ],
+  'faq-equity-advisory-b': [
+    { at: 0, html: big('Advisory isn\'t Josh\'s main income. He runs his <em>healthcare group</em>.', 0.2) },
+    { at: 15.5, html: big('But there must be a <mark data-hd="5.5">value exchange</mark>, so both sides are committed.', 0.2) },
+  ],
+  'faq-training': [
+    { at: 0, html: Q('Where did Josh <em>learn this</em>?') },
+    { at: 4.6, html: big('Primarily <em>QLA-trained</em> (Dan Peña), and self-taught.', 0.2) },
+  ],
 };
