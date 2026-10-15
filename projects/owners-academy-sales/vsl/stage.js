@@ -85,6 +85,10 @@
       const walk = (node) => {
         [...node.childNodes].forEach((c) => {
           if (c.nodeType === 3) {
+            // punctuation straight after <em>/<mark> joins that element's last word, so a line can't break before it
+            const lead = c.textContent.match(/^[,.;:?!)'"\u2019\u201d]+/);
+            const prevWord = lead && c.previousSibling && c.previousSibling.nodeType === 1 && [...c.previousSibling.querySelectorAll('span')].pop();
+            if (prevWord) { prevWord.textContent += lead[0]; c.textContent = c.textContent.slice(lead[0].length); }
             const frag = document.createDocumentFragment();
             c.textContent.split(/(\s+)/).forEach((part) => {
               if (!part) return;
