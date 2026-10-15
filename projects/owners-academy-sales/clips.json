@@ -271,6 +271,96 @@
       "to": "2:32:00",
       "start": "if you actually want to do anything serious",
       "end": "people in my network"
+    },
+    "faq-board-or-deal": {
+      "from": "2:37:22",
+      "to": "2:39:38",
+      "start": "if you're starting how can you start with a board",
+      "end": "this one deal in particular"
+    },
+    "faq-board-equity-a": {
+      "from": "0:40:33",
+      "to": "0:41:46",
+      "start": "so carl's asking what's the typical percentage",
+      "end": "as you're building your board"
+    },
+    "faq-board-equity-b": {
+      "from": "0:41:46",
+      "to": "0:43:14",
+      "start": "you're gonna find that some of these board members",
+      "end": "maintain majority shareholder that's the key thing"
+    },
+    "faq-board-seat": {
+      "from": "2:35:42",
+      "to": "2:36:33",
+      "start": "if someone wanted to",
+      "end": "to be a director of a company"
+    },
+    "faq-us-financing": {
+      "from": "2:36:32",
+      "to": "2:37:22",
+      "start": "how do you work with people in usa regarding financing",
+      "end": "open the doors to get the money"
+    },
+    "faq-seller-buyout-a": {
+      "from": "2:48:58",
+      "to": "2:50:10",
+      "start": "do you include language to buy out sellers",
+      "end": "when we exit you exit"
+    },
+    "faq-seller-buyout-b": {
+      "from": "2:50:12",
+      "to": "2:51:34",
+      "start": "these people are going to be business partners",
+      "end": "buyouts and minority shareholders"
+    },
+    "faq-hostile-a": {
+      "from": "2:43:11",
+      "to": "2:44:08",
+      "start": "what's that term to include to stop hostile takeovers",
+      "end": "try to legally decimate"
+    },
+    "faq-hostile-b": {
+      "from": "2:44:05",
+      "to": "2:44:36",
+      "start": "and then there's two legally",
+      "end": "try to take over companies"
+    },
+    "faq-negotiation": {
+      "from": "2:20:58",
+      "to": "2:22:06",
+      "start": "best deal negotiation tactic actually is to walk away",
+      "end": "no more offer see you later"
+    },
+    "faq-mistakes-a": {
+      "from": "2:40:19",
+      "to": "2:41:18",
+      "start": "what were biggest mistakes you made early on",
+      "end": "the quicker you'll get there"
+    },
+    "faq-mistakes-b": {
+      "from": "2:41:28",
+      "to": "2:43:15",
+      "start": "another thing even even even till now",
+      "end": "making decisions at 60"
+    },
+    "faq-equity-advisory-a": {
+      "from": "2:34:29",
+      "to": "2:35:13",
+      "start": "would you take equity for advisory",
+      "end": "seriously get it done"
+    },
+    "faq-equity-advisory-b": {
+      "from": "2:35:13",
+      "to": "2:35:38",
+      "start": "i don't rely on this for my income",
+      "end": "commitment on both ends"
+    },
+    "faq-training": {
+      "from": "2:47:54",
+      "to": "2:48:10",
+      "start": "did i receive training from",
+      "end": "qla trained and self-taught"
     }
   },
   "cuts": {
@@ -417,6 +507,170 @@
         "serious",
         "book-call",
         "get-to-know"
+      ]
+    },
+    "faq-1-board-or-deal": {
+      "title": "FAQ 1 \u2014 Board first, or deal first?",
+      "layout": "split",
+      "chapter": "FAQ 1 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Board first, or <em>deal first</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-or-deal"
+      ]
+    },
+    "faq-2-board-equity": {
+      "title": "FAQ 2 \u2014 How much equity do board members get?",
+      "layout": "split",
+      "chapter": "FAQ 2 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How much equity do board members <em>get</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-equity-a",
+        "faq-board-equity-b"
+      ]
+    },
+    "faq-3-board-seat": {
+      "title": "FAQ 3 \u2014 Can Josh sit on my board?",
+      "layout": "split",
+      "chapter": "FAQ 3 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Can Josh sit on <em>my board</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-seat"
+      ]
+    },
+    "faq-4-us-financing": {
+      "title": "FAQ 4 \u2014 How do you help with financing in the US?",
+      "layout": "split",
+      "chapter": "FAQ 4 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do you help with financing <em>in the US</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-us-financing"
+      ]
+    },
+    "faq-5-seller-buyout": {
+      "title": "FAQ 5 \u2014 Can I buy out a seller who keeps a stake?",
+      "layout": "split",
+      "chapter": "FAQ 5 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Can I buy out a seller who <em>keeps a stake</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-seller-buyout-a",
+        "faq-seller-buyout-b"
+      ]
+    },
+    "faq-6-control": {
+      "title": "FAQ 6 \u2014 How do I stop minority shareholders taking control?",
+      "layout": "split",
+      "chapter": "FAQ 6 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do I stop minority shareholders <em>taking control</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-hostile-a",
+        "faq-hostile-b"
+      ]
+    },
+    "faq-7-negotiation": {
+      "title": "FAQ 7 \u2014 What's the best negotiation tactic?",
+      "layout": "split",
+      "chapter": "FAQ 7 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "What's the best <em>negotiation tactic</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-negotiation"
+      ]
+    },
+    "faq-8-mistakes": {
+      "title": "FAQ 8 \u2014 What mistakes cost the most time?",
+      "layout": "split",
+      "chapter": "FAQ 8 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "What mistakes <em>cost the most time</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-mistakes-a",
+        "faq-mistakes-b"
       ]
     }
   }

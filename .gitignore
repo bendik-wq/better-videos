@@ -9,3 +9,5 @@ projects/micro1/out/
 projects/micro1/deliver.log
 projects/micro1/batch2.log
 projects/*/gfpgan/
+projects/*/face.log
+projects/*/render-faqs.log

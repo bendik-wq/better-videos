@@ -168,6 +168,7 @@
   const chapname = document.getElementById('chapname');
   function header(t) {
     if (!ticks.children.length) TL.chapters.forEach(() => ticks.appendChild(document.createElement('i')));
+    ticks.style.display = TL.chapters.length > 1 ? '' : 'none';
     let k = -1;
     TL.chapters.forEach((c, i) => { if (t >= c.t0) k = i; });
     [...ticks.children].forEach((e, i) => { e.className = i < k ? 'on' : i === k ? 'now' : ''; });

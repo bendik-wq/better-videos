@@ -1,0 +1,139 @@
+<title>Pre-Call FAQ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Inter:opsz,wght@14..32,400..700&display=swap">
+<style>
+/* Layout: the pre-call page's FAQ section, built in apply.grosfjeld-li.com's tokens (site.css):
+   white page, navy ink, Newsreader headlines with italic emphasis, Inter body, yellow highlighter.
+   One column of question cards; each card is Josh's video answer plus a short written summary. */
+:root {
+  --bg: #ffffff; --bg-alt: #f6f7f9; --surface: #ffffff; --ink: #0d1526; --ink-2: #454e63; --muted: #6b7385;
+  --hair: #e3e6ec; --hair-strong: #cfd4dd; --accent: #0f2c5c; --accent-tint: #eef2f8; --video: #0d1526;
+  --hl: rgba(253, 208, 80, .62);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0b1220; --bg-alt: #0f1728; --surface: #121b2e; --ink: #f3f5f9; --ink-2: #b7bfcd; --muted: #8a93a6;
+  --hair: #222c40; --hair-strong: #2e3a52; --accent: #f3f5f9; --accent-tint: #17223a; --video: #060a13; --hl: rgba(253, 208, 80, .4); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0b1220; --bg-alt: #0f1728; --surface: #121b2e; --ink: #f3f5f9; --ink-2: #b7bfcd; --muted: #8a93a6;
+  --hair: #222c40; --hair-strong: #2e3a52; --accent: #f3f5f9; --accent-tint: #17223a; --video: #060a13; --hl: rgba(253, 208, 80, .4); color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.65 var(--font); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { border-bottom: 1px solid var(--hair); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
+.wordmark { font: 600 22px/1 var(--serif); letter-spacing: -.01em; }
+.tag { font: 500 13px/1 var(--font); color: var(--muted); }
+
+.hero { padding-block: 64px 36px; }
+.eyebrow { font: 500 14px/1.3 var(--font); color: var(--muted); margin: 0 0 14px; }
+h1 { font: 500 clamp(34px, 5vw, 58px)/1.08 var(--serif); letter-spacing: -.015em; margin: 0 0 18px; max-width: 18ch; text-wrap: balance; }
+h1 em, h2 em, h3 em { font-style: italic }
+.lead { font: 400 clamp(17px, 1.6vw, 20px)/1.6 var(--font); color: var(--ink-2); max-width: 62ch; margin: 0; }
+mark { color: inherit; background: linear-gradient(transparent 58%, var(--hl) 58%); padding: 0 .06em; }
+
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.jump a { font: 500 14px/1 var(--font); color: var(--ink); text-decoration: none; border: 1px solid var(--hair-strong); border-radius: 999px; padding: 9px 14px; background: var(--surface); }
+.jump a:hover, .jump a:focus-visible { border-color: var(--accent); outline: none; background: var(--accent-tint); }
+
+.list { display: grid; gap: 28px; padding-block: 20px 80px; }
+.faq { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: start;
+  padding: 28px; border: 1px solid var(--hair); border-radius: 18px; background: var(--surface); scroll-margin-top: 20px; }
+.player { position: relative; border-radius: 12px; overflow: hidden; background: var(--video); aspect-ratio: 16 / 9; max-width: 100%;
+  box-shadow: 0 1px 2px rgba(13, 21, 38, .08), 0 18px 40px -16px rgba(20, 35, 80, .32); }
+.player video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--video); }
+.player .pending { position: absolute; inset: 0; display: grid; place-items: center; color: #b7bfcd; font: 500 14px/1.4 var(--font); text-align: center; padding: 20px; }
+.meta { display: flex; gap: 14px; align-items: center; font: 500 13px/1 var(--font); color: var(--muted); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+.meta .n { color: var(--ink); }
+h2 { font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--serif); letter-spacing: -.01em; margin: 0 0 14px; text-wrap: balance; }
+.answer p { margin: 0 0 10px; color: var(--ink-2); max-width: 60ch; }
+.answer ul { margin: 0 0 10px; padding-left: 18px; color: var(--ink-2); display: grid; gap: 4px; }
+.answer strong { color: var(--ink); font-weight: 600; }
+
+.close { border-top: 1px solid var(--hair); padding-block: 48px 64px; background: var(--bg-alt); }
+.close h2 { margin-bottom: 10px; }
+.fine { font: 400 13px/1.55 var(--font); color: var(--muted); max-width: 90ch; margin-top: 22px; }
+
+@media (max-width: 860px) {
+  .faq { grid-template-columns: minmax(0, 1fr); padding: 18px; gap: 18px; }
+  .hero { padding-block: 40px 24px; }
+}
+</style>
+
+<div class="bar"><div class="wrap"><span class="wordmark">G&amp;L M&amp;A Advisory</span><span class="tag">Before your call</span></div></div>
+
+<section class="hero"><div class="wrap">
+  <p class="eyebrow">For owners of $1M+ businesses · Pre-call FAQ</p>
+  <h1>Your questions, <em>answered by Josh</em>.</h1>
+  <p class="lead">These are real questions from business owners at Josh's live M&amp;A masterclass, with his answers. Watch the ones that matter to you before your call, so we can spend the call on <mark>your business and your first deal</mark>.</p>
+  <nav class="jump" aria-label="Questions" id="jump"></nav>
+</div></section>
+
+<main class="wrap list" id="list"></main>
+
+<section class="close"><div class="wrap">
+  <h2>Still have a question? <em>Bring it to the call.</em></h2>
+  <p class="lead">Josh takes these calls himself. Come with your numbers (revenue, EBITDA, and what you'd like to buy) and we'll work through your structure live.</p>
+  <p class="fine">Answers are taken from a live recorded masterclass and lightly edited for length. Results are not typical and depend on your business, market and the deals available to you. Nothing on this page is financial, legal or tax advice; deal terms, shareholder agreements and financing should be reviewed with your own independent advisers before you enter any transaction.</p>
+</div></section>
+
+<script>
+// Each FAQ: video asset (filled in after upload), poster, length, written summary.
+const FAQS = [
+  { id: 'board-or-deal', n: 1, len: '2:17', q: 'Board first, or <em>deal first</em>?', video: '{{faq-1}}', poster: '{{poster-1}}',
+    a: `<p>Josh recommends <strong>building your board first</strong>, before you have a company or a deal: put your vision in a short executive summary, approach credible business people, and offer them minority equity on a handshake.</p>
+        <p>The alternative is to find a deal first and build the team around it, which is how Christian Dawes did his. Board-first plans for the whole venture; deal-first plans for one deal.</p>` },
+  { id: 'board-equity', n: 2, len: '2:38', q: 'How much equity do board members <em>get</em>?', video: '{{faq-2}}', poster: '{{poster-2}}',
+    a: `<p>In Josh's healthcare group he holds <strong>73%</strong> of the holding company. The chairman holds the most of the rest, the founder of the Australian Institute of Fitness is second, and everyone else has fairly even splits.</p>
+        <p>Reward the members who contribute most. Give whatever you like, but <strong>keep the majority</strong>, for control and for the exit.</p>` },
+  { id: 'board-seat', n: 3, len: '0:55', q: 'Can Josh sit on <em>my board</em>?', video: '{{faq-3}}', poster: '{{poster-3}}',
+    a: `<ul><li><strong>In Australia:</strong> open to directorships, if you're a good fit personally and professionally.</li>
+        <li><strong>Outside Australia:</strong> open to advisor or equity positions, but not as a director.</li></ul>` },
+  { id: 'us-financing', n: 4, len: '0:53', q: 'How do you help with financing <em>in the US</em>?', video: '{{faq-4}}', poster: '{{poster-4}}',
+    a: `<p>G&amp;L has a network of US banks and private lenders. Most of the work is helping you <strong>structure and present the deal</strong> so it gets funded. You build the banker relationships, and we can present on your behalf depending on how involved you want Josh to be.</p>` },
+  { id: 'seller-buyout', n: 5, len: '2:30', q: 'Can I buy out a seller who <em>keeps a stake</em>?', video: '{{faq-5}}', poster: '{{poster-5}}',
+    a: `<p>Yes. When a seller rolls over equity, you can build in an early exit:</p>
+        <ul><li>A <strong>sale option</strong>, for example after three years, at a fixed price or a fixed multiple.</li>
+        <li>Or they <strong>ride it out</strong> and exit when you exit.</li></ul>
+        <p>Options can trigger on time or on the size of the business. Every seller wants something different, and they become your partners, so be fair.</p>` },
+  { id: 'control', n: 6, len: '1:20', q: 'How do I stop minority shareholders <em>taking control</em>?', video: '{{faq-6}}', poster: '{{poster-6}}',
+    a: `<p>In your shareholders' agreement: <strong>drag-along rights</strong>, and <strong>no voting control or veto rights</strong> for minority holders.</p>
+        <p>Beyond that, it's the relationship (how you treat your partners) and setting up the shareholders' agreement, company charter and constitution properly from the start.</p>` },
+  { id: 'negotiation', n: 7, len: '0:58', q: "What's the best <em>negotiation tactic</em>?", video: '{{faq-7}}', poster: '{{poster-7}}',
+    a: `<p><strong>Be willing to walk away.</strong> The second is a <strong>time limit</strong>: "You have 24 hours to accept, or it's gone."</p>
+        <p>Seller finance is a deal mechanism, not a negotiation tactic.</p>` },
+  { id: 'mistakes', n: 8, len: '2:42', q: 'What mistakes <em>cost the most time</em>?', video: '{{faq-8}}', poster: '{{poster-8}}',
+    a: `<ul><li><strong>Distractions,</strong> and people who don't serve your goals.</li>
+        <li><strong>Deciding too slowly.</strong> How fast you move is directly proportional to how fast you decide, and your team moves at your pace.</li></ul>
+        <p>Decide at 60%, and figure it out as you go.</p>` },
+];
+
+const esc = (s) => s.replace(/<[^>]+>/g, '');
+const jump = document.getElementById('jump');
+const list = document.getElementById('list');
+FAQS.forEach((f) => {
+  const a = document.createElement('a');
+  a.href = '#' + f.id;
+  a.textContent = esc(f.q);
+  jump.appendChild(a);
+
+  const ready = !f.video.startsWith('{{');
+  const el = document.createElement('article');
+  el.className = 'faq';
+  el.id = f.id;
+  el.innerHTML = `
+    <div class="player">${ready
+      ? `<video controls playsinline preload="metadata" ${f.poster.startsWith('{{') ? '' : `poster="${f.poster}"`} src="${f.video}"></video>`
+      : '<div class="pending">Video uploading…</div>'}</div>
+    <div>
+      <div class="meta"><span class="n">Question ${f.n} of ${FAQS.length}</span><span>${f.len}</span></div>
+      <h2>${f.q}</h2>
+      <div class="answer">${f.a}</div>
+    </div>`;
+  list.appendChild(el);
+});
+</script>

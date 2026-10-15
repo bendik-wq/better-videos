@@ -1,9 +1,9 @@
 """Composite the split-layout VSL: graphics layer + Josh's face panel + audio.
 
-    python3 composite.py <recording.mp4> <timeline.json> <face-dir> <out-dir>
+    python3 composite.py <recording.mp4> <timeline.json> <face-dir> <out-dir> [out-name.mp4]
 
 Needs <out-dir>/graphics.mp4 (render.mjs) and face-mask.png / face-frame.png (render.mjs --overlay),
-and <face-dir>/<clip>.mp4 from face.py. Writes <out-dir>/vsl-b2b.mp4.
+and <face-dir>/<clip>.mp4 from face.py. Writes <out-dir>/<out-name> (default vsl-b2b.mp4).
 """
 import json
 import os
@@ -21,7 +21,7 @@ def ff(*args):
     subprocess.run(["ffmpeg", "-v", "error", "-y", *args], check=True)
 
 
-def main(src, tl_path, face_dir, out_dir):
+def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
     tl = json.load(open(tl_path))
     parts = os.path.join(out_dir, "parts")
     os.makedirs(parts, exist_ok=True)
@@ -60,7 +60,7 @@ def main(src, tl_path, face_dir, out_dir):
     fc = (f"[2:v]format=gray[m];[1:v][m]alphamerge[f];"
           f"[0:v][f]overlay={X}:{Y}:enable='{on}'[a];"
           f"[a][3:v]overlay={X}:{Y}:enable='{on}',format=yuv420p[v]")
-    out = os.path.join(out_dir, "vsl-b2b.mp4")
+    out = os.path.join(out_dir, out_name)
     ff("-i", os.path.join(out_dir, "graphics.mp4"), "-i", face,
        "-loop", "1", "-i", os.path.join(out_dir, "face-mask.png"),
        "-loop", "1", "-i", os.path.join(out_dir, "face-frame.png"),
@@ -71,4 +71,4 @@ def main(src, tl_path, face_dir, out_dir):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])

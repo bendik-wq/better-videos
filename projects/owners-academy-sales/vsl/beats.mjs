@@ -182,3 +182,6 @@ export const beats = {
         `<div data-d="16.6" style="display:flex;align-items:center;gap:30px"><span class="btn">See if you qualify →</span><span class="url">apply.grosfjeld-li.com</span></div>` },
   ],
 };
+
+// shared with faq-beats.mjs
+export { eb, big, small, kpi, count, bar, terms, list };

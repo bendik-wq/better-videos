@@ -4,7 +4,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { beats, cards, chapters } from './beats.mjs';
+import { beats as vslBeats, cards, chapters } from './beats.mjs';
+import { beats as faqBeats } from './faq-beats.mjs';
+
+const beats = { ...vslBeats, ...faqBeats };
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(HERE, '..');
@@ -19,26 +22,32 @@ const cardHtml = (c) => `<div class="num" data-d="0.05">${c.eyebrow}</div><div c
 
 // caption text clean-up: whisper spellings, fillers, split numbers
 const FIX = { 'Lee.': 'Li.', 'Lee': 'Li', '6040': '60/40' };
-const CLIP_FIX = { 'owner-a': { state: 'estate' } }; // per-clip mishearings
+const CLIP_FIX = { // per-clip mishearings
+  'owner-a': { state: 'estate' },
+  'faq-board-seat': { point: 'appoint' },
+  'faq-board-equity-a': { "Kyle's": "Carl's" },
+  'faq-training': { 'Debelle?': 'Deibel?', 'Peniel.': 'Peña.' },
+};
 const FILLER = /^(um|uh|uh,|um,)$/i;
 
 const segments = [], allBeats = [], captions = [], chaps = [];
 let t = 0;
-const seq = [{ card: 'intro' }, ...spec.cuts[cutName].sequence, { card: 'end' }];
+const cut = spec.cuts[cutName];
+const seq = [{ card: 'intro' }, ...cut.sequence, { card: 'end' }];
 for (const item of seq) {
   if (typeof item === 'object') {
-    const c = cards[item.card];
+    const c = cut.cards?.[item.card] ?? cards[item.card];
     if (!c) throw new Error(`no card "${item.card}" in beats.mjs`);
     const dur = c.dur || CARD;
     segments.push({ kind: 'card', name: item.card, t0: t, t1: t + dur, html: cardHtml(c), fine: c.fine || '' });
-    if (chapters[item.card]) chaps.push({ name: chapters[item.card], t0: t });
+    if (!cut.chapter && chapters[item.card]) chaps.push({ name: chapters[item.card], t0: t });
     t += dur;
     continue;
   }
   const s = snapped[item];
   if (!s?.words) throw new Error(`clip ${item} has no word timings; re-run snap.py for it`);
   const dur = +(s.out - s.in).toFixed(3);
-  if (!chaps.length) chaps.push({ name: chapters.start, t0: t });
+  if (!chaps.length) chaps.push({ name: cut.chapter || chapters.start, t0: t });
   segments.push({ kind: 'clip', id: item, t0: t, t1: t + dur, in: s.in, out: s.out });
   for (const b of beats[item] || []) allBeats.push({ t0: t + b.at, html: b.html, clip: item });
 
