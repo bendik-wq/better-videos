@@ -84,35 +84,35 @@ h2 { font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--serif); letter-spacing: -.01e
 <script>
 // Each FAQ: video asset (filled in after upload), poster, length, written summary.
 const FAQS = [
-  { id: 'board-or-deal', n: 1, len: '2:16', q: 'Board first, or <em>deal first</em>?', video: '{{faq-1}}', poster: '{{poster-1}}',
+  { id: 'board-or-deal', n: 1, len: '2:16', q: 'Board first, or <em>deal first</em>?', video: '/_blob/5b8002cc043c8901a49148128e3317fb', poster: '/_blob/0506a314fb3df956a90197f8ad2ffd95',
     a: `<p>Josh recommends <strong>building your board first</strong>, before you have a company or a deal: put your vision in a short executive summary, approach credible business people, and offer them minority equity on a handshake.</p>
         <p>The alternative is to find a deal first and build the team around it, which is how Christian Dawes did his. Board-first plans for the whole venture; deal-first plans for one deal.</p>` },
-  { id: 'board-equity', n: 2, len: '2:37', q: 'How much equity do board members <em>get</em>?', video: '{{faq-2}}', poster: '{{poster-2}}',
+  { id: 'board-equity', n: 2, len: '2:37', q: 'How much equity do board members <em>get</em>?', video: '/_blob/89233d6ac6ac5fbb9588fb36bfd64347', poster: '/_blob/70dc01ee6571ab94807647d3b882580b',
     a: `<p>In Josh's healthcare group he holds <strong>73%</strong> of the holding company. The chairman holds the most of the rest, the founder of the Australian Institute of Fitness is second, and everyone else has fairly even splits.</p>
         <p>Reward the members who contribute most. Give whatever you like, but <strong>keep the majority</strong>, for control and for the exit.</p>` },
-  { id: 'board-seat', n: 3, len: '0:55', q: 'Can Josh sit on <em>my board</em>?', video: '{{faq-3}}', poster: '{{poster-3}}',
+  { id: 'board-seat', n: 3, len: '0:55', q: 'Can Josh sit on <em>my board</em>?', video: '/_blob/b8afefb8b490d241ae7a1d6b3b3f0225', poster: '/_blob/d641faaecfd46517ae41fba95eed7c94',
     a: `<ul><li><strong>In Australia:</strong> open to directorships, if you're a good fit personally and professionally.</li>
         <li><strong>Outside Australia:</strong> open to advisor or equity positions, but not as a director.</li></ul>` },
-  { id: 'us-financing', n: 4, len: '0:53', q: 'How do you help with financing <em>in the US</em>?', video: '{{faq-4}}', poster: '{{poster-4}}',
+  { id: 'us-financing', n: 4, len: '0:53', q: 'How do you help with financing <em>in the US</em>?', video: '/_blob/3462bdfebf7904a3c74523127a847462', poster: '/_blob/161fa7acb02f5ea3e49f62ecd3f1b324',
     a: `<p>G&amp;L has a network of US banks and private lenders. Most of the work is helping you <strong>structure and present the deal</strong> so it gets funded. You build the banker relationships, and we can present on your behalf depending on how involved you want Josh to be.</p>` },
-  { id: 'seller-buyout', n: 5, len: '2:30', q: 'Can I buy out a seller who <em>keeps a stake</em>?', video: '{{faq-5}}', poster: '{{poster-5}}',
+  { id: 'seller-buyout', n: 5, len: '2:30', q: 'Can I buy out a seller who <em>keeps a stake</em>?', video: '/_blob/25bf5546b56aa4e7ba781f7b7eb47ce5', poster: '/_blob/e513e6e161e911fed8619ee70e7cc2a2',
     a: `<p>Yes. When a seller rolls over equity, you can build in an early exit:</p>
         <ul><li>A <strong>sale option</strong>, for example after three years, at a fixed price or a fixed multiple.</li>
         <li>Or they <strong>ride it out</strong> and exit when you exit.</li></ul>
         <p>Options can trigger on time or on the size of the business. Every seller wants something different, and they become your partners, so be fair.</p>` },
-  { id: 'control', n: 6, len: '1:19', q: 'How do I stop minority shareholders <em>taking control</em>?', video: '{{faq-6}}', poster: '{{poster-6}}',
+  { id: 'control', n: 6, len: '1:19', q: 'How do I stop minority shareholders <em>taking control</em>?', video: '/_blob/ad1b0d5c078ab3183f0ebe6f6ac742ec', poster: '/_blob/9314e8fc2a5f55ab4b29539e92e9b5e7',
     a: `<p>In your shareholders' agreement: <strong>drag-along rights</strong>, and <strong>no voting control or veto rights</strong> for minority holders.</p>
         <p>Beyond that, it's the relationship (how you treat your partners) and setting up the shareholders' agreement, company charter and constitution properly from the start.</p>` },
-  { id: 'negotiation', n: 7, len: '0:58', q: "What's the best <em>negotiation tactic</em>?", video: '{{faq-7}}', poster: '{{poster-7}}',
+  { id: 'negotiation', n: 7, len: '0:58', q: "What's the best <em>negotiation tactic</em>?", video: '/_blob/3d189e484610d482736fa682e50b779b', poster: '/_blob/d8e4dfb5258db4d0ecf2564521e895c5',
     a: `<p><strong>Be willing to walk away.</strong> The second is a <strong>time limit</strong>: "You have 24 hours to accept, or it's gone."</p>
         <p>Seller finance is a deal mechanism, not a negotiation tactic.</p>` },
-  { id: 'mistakes', n: 8, len: '2:42', q: 'What mistakes <em>cost the most time</em>?', video: '{{faq-8}}', poster: '{{poster-8}}',
+  { id: 'mistakes', n: 8, len: '2:42', q: 'What mistakes <em>cost the most time</em>?', video: '/_blob/2306ae24bf5fd31d9b44911e962dea79', poster: '/_blob/8b5a29d0fd8fac7c4e691a6beb11f71d',
     a: `<ul><li><strong>Distractions,</strong> and people who don't serve your goals.</li>
         <li><strong>Deciding too slowly.</strong> How fast you move is directly proportional to how fast you decide, and your team moves at your pace.</li></ul>
         <p>Decide at 60%, and figure it out as you go.</p>` },
-  { id: 'work-with-josh', n: 9, len: '0:49', q: 'How do I <em>work with Josh</em>?', video: '{{faq-9}}', poster: '{{poster-9}}',
+  { id: 'work-with-josh', n: 9, len: '0:49', q: 'How do I <em>work with Josh</em>?', video: '/_blob/ea97369f4b3420350d113248cb1f279b', poster: '/_blob/25fd64dddb8bb0ee4bbfb2cfedbca1de',
     a: `<p>Book a call directly with Josh, not with staff or appointment setters. There's a short form first so he understands your business. The call is for getting to know each other and deciding whether you're a good fit for him, the firm and the community.</p>` },
-  { id: 'background', n: 10, len: '0:17', q: 'Where did Josh <em>learn this</em>?', video: '{{faq-11}}', poster: '{{poster-11}}',
+  { id: 'background', n: 10, len: '0:17', q: 'Where did Josh <em>learn this</em>?', video: '/_blob/aa3c36c665672448d64a446452abe855', poster: '/_blob/af7ba696d655b4b8385a88285894cafa',
     a: `<p>Josh is primarily QLA-trained (Dan Peña's model) and self-taught, and built the 3C model from his own deals.</p>` },
 ];
 
