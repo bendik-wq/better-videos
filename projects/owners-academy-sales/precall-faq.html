@@ -95,6 +95,11 @@ const FAQS = [
         <li><strong>Outside Australia:</strong> open to advisor or equity positions, but not as a director.</li></ul>` },
   { id: 'us-financing', n: 4, len: '0:53', q: 'How do you help with financing <em>in the US</em>?', video: '/_blob/3462bdfebf7904a3c74523127a847462', poster: '/_blob/161fa7acb02f5ea3e49f62ecd3f1b324',
     a: `<p>G&amp;L has a network of US banks and private lenders. Most of the work is helping you <strong>structure and present the deal</strong> so it gets funded. You build the banker relationships, and we can present on your behalf depending on how involved you want Josh to be.</p>` },
+  { id: 'personal-guarantee', n: 0, len: '0:58', q: 'Do I have to sign a <em>personal guarantee</em>?', video: '{{faq-12}}', poster: '{{poster-12}}',
+    a: `<p>Not always. On Jason Nagy's $5.5M radiology deal, neither Jason nor the seller who kept 40% signed a personal guarantee, for two reasons:</p>
+        <ul><li><strong>Deal size.</strong> Once you're out of small-business lending (that deal was over $5M), banks typically forego the personal guarantee.</li>
+        <li><strong>Assets.</strong> The equipment was worth enough to secure the loan, so the bank's protection was in the assets.</li></ul>
+        <p>Every lender and deal is different; we work through this with you before you sign anything.</p>` },
   { id: 'seller-buyout', n: 5, len: '2:30', q: 'Can I buy out a seller who <em>keeps a stake</em>?', video: '/_blob/25bf5546b56aa4e7ba781f7b7eb47ce5', poster: '/_blob/e513e6e161e911fed8619ee70e7cc2a2',
     a: `<p>Yes. When a seller rolls over equity, you can build in an early exit:</p>
         <ul><li>A <strong>sale option</strong>, for example after three years, at a fixed price or a fixed multiple.</li>
@@ -112,14 +117,12 @@ const FAQS = [
         <p>Decide at 60%, and figure it out as you go.</p>` },
   { id: 'work-with-josh', n: 9, len: '0:49', q: 'How do I <em>work with Josh</em>?', video: '/_blob/ea97369f4b3420350d113248cb1f279b', poster: '/_blob/25fd64dddb8bb0ee4bbfb2cfedbca1de',
     a: `<p>Book a call directly with Josh, not with staff or appointment setters. There's a short form first so he understands your business. The call is for getting to know each other and deciding whether you're a good fit for him, the firm and the community.</p>` },
-  { id: 'background', n: 10, len: '0:17', q: 'Where did Josh <em>learn this</em>?', video: '/_blob/aa3c36c665672448d64a446452abe855', poster: '/_blob/af7ba696d655b4b8385a88285894cafa',
-    a: `<p>Josh is primarily QLA-trained (Dan Peña's model) and self-taught, and built the 3C model from his own deals.</p>` },
 ];
 
 const esc = (s) => s.replace(/<[^>]+>/g, '');
 const jump = document.getElementById('jump');
 const list = document.getElementById('list');
-FAQS.forEach((f) => {
+FAQS.forEach((f, i) => {
   const a = document.createElement('a');
   a.href = '#' + f.id;
   a.textContent = esc(f.q);
@@ -134,7 +137,7 @@ FAQS.forEach((f) => {
       ? `<video controls playsinline preload="metadata" ${f.poster.startsWith('{{') ? '' : `poster="${f.poster}"`} src="${f.video}"></video>`
       : '<div class="pending">Video uploading…</div>'}</div>
     <div>
-      <div class="meta"><span class="n">Question ${f.n} of ${FAQS.length}</span><span>${f.len}</span></div>
+      <div class="meta"><span class="n">Question ${i + 1} of ${FAQS.length}</span><span>${f.len}</span></div>
       <h2>${f.q}</h2>
       <div class="answer">${f.a}</div>
     </div>`;

@@ -367,6 +367,12 @@
       "to": "2:33:44",
       "start": "how do we work with you",
       "end": "what we can do for you"
+    },
+    "faq-pg": {
+      "from": "1:50:42",
+      "to": "1:51:41",
+      "start": "jason and the 40% owner",
+      "end": "position was in the assets"
     }
   },
   "cuts": {
@@ -722,14 +728,14 @@
         "faq-equity-advisory-b"
       ]
     },
-    "faq-11-training": {
-      "title": "faq-11-training",
+    "faq-12-personal-guarantee": {
+      "title": "faq-12-personal-guarantee",
       "layout": "split",
-      "chapter": "FAQ \u00b7 Background",
+      "chapter": "FAQ \u00b7 Financing",
       "cards": {
         "intro": {
           "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
-          "title": "Where did Josh <em>learn this</em>?",
+          "title": "Do I have to sign a <em>personal guarantee</em>?",
           "dur": 2.8
         },
         "end": {
@@ -739,7 +745,7 @@
         }
       },
       "sequence": [
-        "faq-training"
+        "faq-pg"
       ]
     }
   }

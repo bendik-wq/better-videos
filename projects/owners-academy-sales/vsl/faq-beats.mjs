@@ -96,6 +96,15 @@ export const beats = {
     { at: 0, html: big('Advisory isn\'t Josh\'s main income. He runs his <em>healthcare group</em>.', 0.2) },
     { at: 15.5, html: big('But there must be a <mark data-hd="5.5">value exchange</mark>, so both sides are committed.', 0.2) },
   ],
+  'faq-pg': [
+    { at: 0, html: eb('Jason Nagy\'s $5.5M radiology deal') + big('Did anyone sign a <em>personal guarantee</em>?', 0.2) },
+    { at: 7.9, html: eb('In this deal') + big('<em>No</em> personal guarantees, for two reasons.', 0.2) },
+    { at: 16.6, html: eb('Reason 1') + big('The deal was over <em>$5M</em>.', 0.3) },
+    { at: 21.8, html: eb('Reason 1') + big('Bigger deals: banks <mark data-hd="5.0">typically forego</mark> the personal guarantee.', 0.3, 'mid') +
+        small('Once you\'re out of small-business lending. Every lender and deal is different.', 7.0) },
+    { at: 38.3, html: eb('Reason 2') + big('The bank\'s security was in the <em>assets</em>.', 0.3) +
+        small('Radiology equipment worth millions, pledged against the loan.', 6.5) },
+  ],
   'faq-training': [
     { at: 0, html: Q('Where did Josh <em>learn this</em>?') },
     { at: 4.6, html: big('Primarily <em>QLA-trained</em> (Dan Peña), and self-taught.', 0.2) },
