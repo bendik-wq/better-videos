@@ -141,7 +141,7 @@
 110. And when you have a hundred ships and twenty-two places, | the places go to auction.
 111. Normally, a slot in the canal's auction goes for something like fifty-five thousand dollars, on top of the toll. [↺]
 112. That autumn, a Japanese company paid almost four million. | For one crossing.
-113. The canal's own administrator put it simply. "We are rain takers."
+113. The canal put it in its own words. The lake had fallen to "unprecedented levels for this time of year."
 114. Then, finally, the rain came back. In twenty twenty-four, the lake recovered. By September, thirty-six ships a day were crossing again. [↺]
 115. And this year, twenty twenty-six, started perfectly. In February, the lake was so full the canal opened its spillways to let water *out*.
 116. In June, the canal published a forecast. | "Current data does not forecast the need for transit restrictions through December thirty-first, twenty twenty-six." [↺]
