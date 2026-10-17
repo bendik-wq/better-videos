@@ -47,7 +47,7 @@ export default function makeArchive(H) {
     const inst = await set(ctx, shot, (g, t, p, k) => {
       // render the parallax photo (GL) at its own aspect, then place it as a print
       move(camera, clamp(t / D), t); camera.aspect = a; camera.updateProjectionMatrix();
-      const tm = r.toneMapping; r.toneMapping = THREE.NoToneMapping; r.setRenderTarget(null); r.render(scene, camera); r.toneMapping = tm;
+      const tm = r.toneMapping; r.toneMapping = THREE.NoToneMapping; r.setRenderTarget(null); r.setClearColor(0xf3ead8, 1); r.clear(true, true, true); r.render(scene, camera); r.toneMapping = tm;
       k.view(0.3); G.paper(g, { tone: '#f3ead8' });
       k.view(1);
       const cx = 960, cy = caption ? 455 : 520, B = 28;

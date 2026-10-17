@@ -20,7 +20,9 @@ import * as THREE from 'three';
 import * as C from '/engine/cine.js';
 
 const loader = new THREE.TextureLoader();
-const load = (url, srgb) => loader.loadAsync(url).catch(() => { throw new Error(`[parallax] cannot load ${url}${/depth\//.test(url) ? ' (run: python3 engine/depth.py projects/<name>)' : ''}`); }).then(t => { t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 8; return t; });
+// a fresh image per load: reusing a cached image after its texture was disposed sampled stale GPU data
+let LOADS = 0;
+const load = (url, srgb) => loader.loadAsync(`${url}${url.includes('?') ? '&' : '?'}n=${++LOADS}`).catch(() => { throw new Error(`[parallax] cannot load ${url}${/depth\//.test(url) ? ' (run: python3 engine/depth.py projects/<name>)' : ''}`); }).then(t => { t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 8; return t; });
 const depthUrl = (url, ext) => url.replace(/\/([^/]+)\.(jpe?g|png)$/i, `/depth/$1.${ext}`);
 
 // Photojournalism looks (style bible: 1967 photojournalism, blacks stay black).
