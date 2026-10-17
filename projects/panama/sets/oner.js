@@ -57,11 +57,11 @@ export default function makeOner(H) {
     // rising with the water, then climbing the stern: positions relative to the water level
     const climb = (t) => smoother(range(t, T.staircase + 1.2, T.sky + 0.6));
     const segB = O.fn((t) => { const w = level0(t), k = climb(t);
-      return { pos: [lerp(sx - 2, LX + 1, k), w + lerp(2.9, 31, k), cz(lerp(33, 30, k))], look: [LX, w + lerp(11, 22, k), cz(lerp(150, 260, k))], mm: 22 }; });
+      return { pos: [lerp(sx - 2, LX + 1, k), w + lerp(2.9, 42, k), cz(lerp(33, 30, k))], look: [LX, w + lerp(11, 26, k), cz(lerp(150, 260, k))], mm: 22 }; });
     const wSky = F.step; // the chamber is full by then
     const segC = O.keys([
-      { t: T.sky, pos: [LX + 1, wSky + 31, cz(30)], look: [LX, wSky + 22, cz(260)], mm: 22 },
-      { t: T.up, pos: [LX - 4, 50, cz(300)], look: [LX - 6, 22, cz(600)], mm: 22 },
+      { t: T.sky, pos: [LX + 1, wSky + 42, cz(30)], look: [LX, wSky + 26, cz(260)], mm: 22 },
+      { t: T.up, pos: [LX - 4, 62, cz(300)], look: [LX - 6, 22, cz(600)], mm: 22 },
       { t: T.lake - 0.4, pos: [LX - 10, 46, cz(700)], look: [LX - 18, 30, cz(1500)], mm: 22 },
       { t: T.lake + 2.2, pos: [LX - 30, 105, cz(1150)], look: [LX - 260, 26, cz(9000)], mm: 24 },
       { t: T.afternoon, pos: [LX - 100, 190, cz(2200)], look: [-700, 20, cz(11000)], mm: 24 },

@@ -142,14 +142,16 @@ export function world(scene, o = {}) {
   grp.add(patch);
   // water: the ocean (y 0) and the lake (y 26, masked to the lake)
   const oceanM = CK.water({ color: o.sea ?? '#2c9fa9', scale: 34, strength: 0.34, glint: 2.6, opacity: 0.8 });
-  const ocean = CK.plane(900000, 900000, oceanM, { y: -0.03 }); grp.add(ocean);
+  // pushed back in depth: the post chain's depth is coarse, and the ocean must never fight the chamber water at y = 0
+  oceanM.polygonOffset = true; oceanM.polygonOffsetFactor = 2; oceanM.polygonOffsetUnits = 8;
+  const ocean = CK.plane(900000, 900000, oceanM, { y: -0.4 }); grp.add(ocean);
   const LB = { x0: -32000, x1: 22000, z0: -27000, z1: 19400 };
   const mc = CK.canvas(1024, 1024), mg = mc.g, img = mg.createImageData(1024, 1024);
   for (let j = 0; j < 1024; j++) for (let i = 0; i < 1024; i++) { const x = lerp(LB.x0, LB.x1, (i + 0.5) / 1024), z = lerp(LB.z0, LB.z1, (j + 0.5) / 1024), v = lakeMask(x, z) > 0.4 ? 255 : 0, k = (j * 1024 + i) * 4; img.data[k] = img.data[k + 1] = img.data[k + 2] = v; img.data[k + 3] = 255; }
   mg.putImageData(img, 0, 0);
   const maskTex = new THREE.CanvasTexture(mc); maskTex.colorSpace = THREE.NoColorSpace; maskTex.flipY = false;
   const lakeM = CK.water({ color: o.lakeColor ?? '#3aaeae', scale: 30, strength: 0.3, glint: 2.4 });
-  lakeM.alphaMap = maskTex; lakeM.alphaTest = 0.5;
+  lakeM.alphaMap = maskTex; lakeM.alphaTest = 0.5; lakeM.polygonOffset = true; lakeM.polygonOffsetFactor = 2; lakeM.polygonOffsetUnits = 8;
   const lakeGeo = new THREE.PlaneGeometry(LB.x1 - LB.x0, LB.z1 - LB.z0).rotateX(-Math.PI / 2);
   // plane uv after rotateX(-pi/2): u along +x, v along -z  -> flip v so the mask (row 0 = z0) lines up
   const uv = lakeGeo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - uv.getY(i));
@@ -217,13 +219,18 @@ export function world(scene, o = {}) {
         s.position.x = s.userData.x0 + Math.cos(a) * v * t; s.position.z = s.userData.z0 - Math.sin(a) * v * t; });
       const alt = Math.max(1, camera.position.y - Math.max(0, H(camera.position.x, camera.position.z)));
       const la = Math.log10(alt);
-      camera.near = clamp(alt * 0.12, 0.2, 400); camera.far = clamp(alt * 400, 30000, 700000); camera.updateProjectionMatrix();
+      camera.near = clamp(alt * 0.2, 0.3, 600); camera.far = clamp(alt * 400, 30000, 700000); camera.updateProjectionMatrix();
       if (scene.fog) { const k = sstep(2.2, 4.8, la); scene.fog.near = lerp(2500, 70000, k); scene.fog.far = lerp(30000, 340000, k); }
       if (sun) {
+        // shadow frustum follows the camera; its centre is snapped to whole shadow texels in light space (no shimmer)
+        // and its size changes in octave steps (no constant re-scaling), so shadows hold still while the camera moves
         const d = new THREE.Vector3(); camera.getWorldDirection(d);
-        const span = clamp(alt * 3.2, 450, 70000), fwd = clamp(alt * 2.2, 250, 60000);
+        const span = Math.pow(2, Math.ceil(Math.log2(clamp(alt * 3.2, 800, 70000)))), fwd = clamp(alt * 2.2, 250, 60000);
         const tgt = camera.position.clone().addScaledVector(new THREE.Vector3(d.x, 0, d.z).normalize(), fwd); tgt.y = 0;
-        sun.track(tgt, span); sun.shadow.camera.far = span * 8; sun.shadow.camera.updateProjectionMatrix();
+        const L = sun.dir, R = new THREE.Vector3(0, 1, 0).cross(L).normalize(), U = L.clone().cross(R).normalize(), texel = 2 * span / sun.shadow.mapSize.x;
+        const a = Math.round(tgt.dot(R) / texel) * texel, b = Math.round(tgt.dot(U) / texel) * texel, c = tgt.dot(L);
+        tgt.copy(R).multiplyScalar(a).addScaledVector(U, b).addScaledVector(L, c);
+        sun.track(tgt, span); if (sun.shadow.camera.far !== span * 8) { sun.shadow.camera.far = span * 8; sun.shadow.camera.updateProjectionMatrix(); }
       }
     },
   };
