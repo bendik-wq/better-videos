@@ -8,3 +8,6 @@ projects/micro1/batch.log
 projects/micro1/out/
 projects/micro1/deliver.log
 projects/micro1/batch2.log
+renders/panama/graphics/draft-*.mp4
+renders/panama/graphics/*-25.jpg
+renders/panama/graphics/*-95.jpg
