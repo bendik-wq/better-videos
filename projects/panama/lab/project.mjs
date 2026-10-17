@@ -31,6 +31,8 @@ const all = [
   { id: 'aerial-transit', set: 'aerial', min: 8, params: { mode: 'ships-transit' } },
   { id: 'aerial-jungle', set: 'aerial', min: 8, params: { mode: 'jungle-shore' } },
   { id: 'aerial-dry', set: 'aerial', min: 8, params: { mode: 'dry-shore' } },
+  { id: 'aerial-locks-2', set: 'aerial', min: 8, params: { mode: 'locks-wide', cam: 1 } },
+  { id: 'aerial-lake-3', set: 'aerial', min: 8, params: { mode: 'lake-islands', cam: 2 } },
 ];
 const only = process.env.BV_SHOTS?.split(',');
 export default {
