@@ -130,27 +130,35 @@ export default function makeMaps(H) {
     const rings = Object.values(set0).flat(), hlRings = hl.flatMap(c => set0[c] ?? []);
     const shifts = V.shift ? [0, V.shift] : [0];
     const lakes = view === 'isthmus' || view === 'watershed' ? [...(gj.lakes.gatun ?? []), ...(gj.lakes.alhajuela ?? [])] : [];
+    let baseCache = null;
     return set(ctx, shot, (g, t, p, k) => {
       const box = boxAt(t), pr = proj(box);
       // 2.5D: the sea sits deeper than the land, labels float above (parallax on the camera drift)
       k.view(0.7); sea(g, t);
       k.view(1);
-      const land = landPath(rings, pr, shifts, box);
       const ext = view === 'world' ? 3 : view === 'americas' || view === 'telegraph' ? 4 : 7;
-      paperLand(g, land, { ext, lift: view === 'world' ? 0.5 : 0.9, shelfW: view === 'world' ? 8 : 16 });
-      // country borders, faint
-      if (view !== 'isthmus' && view !== 'watershed') { g.save(); g.strokeStyle = 'rgba(27,36,48,0.13)'; g.lineWidth = 1.1; g.stroke(land); g.restore(); }
+      // the static paper (land, borders, lakes) is drawn once into a cache when the box does not move
+      const drawBase = (c, S) => {
+        const land = landPath(rings, pr, shifts, box);
+        paperLand(c, land, { ext, lift: view === 'world' ? 0.5 : 0.9, shelfW: view === 'world' ? 8 : 16 });
+        if (view !== 'isthmus' && view !== 'watershed') { c.save(); c.strokeStyle = 'rgba(27,36,48,0.13)'; c.lineWidth = 1.1; c.stroke(land); c.restore(); }
+        if (lakes.length) { // lakes cut into the paper
+          const lp = landPath(lakes, pr);
+          c.save(); c.fillStyle = P.water; c.fill(lp); c.clip(lp);
+          c.shadowColor = 'rgba(40,60,50,0.35)'; c.shadowBlur = 10 * S; c.shadowOffsetY = 5 * S; c.strokeStyle = P.landSide; c.lineWidth = 6; c.stroke(lp); c.restore();
+          c.save(); c.strokeStyle = 'rgba(47,127,132,0.6)'; c.lineWidth = 1.2; c.stroke(lp); c.restore();
+        }
+      };
+      if (from) drawBase(g, k.S);
+      else {
+        const M0 = 120, CS = k.S * 1.12;
+        if (!baseCache) { baseCache = G.mk((1920 + 2 * M0) * CS, (1080 + 2 * M0) * CS); const c = baseCache.getContext('2d'); c.setTransform(CS, 0, 0, CS, M0 * CS, M0 * CS); G.setS(CS); drawBase(c, CS); G.setS(k.S); }
+        g.drawImage(baseCache, -M0, -M0, 1920 + 2 * M0, 1080 + 2 * M0);
+      }
       // highlight: the country lifts off the sheet in sun yellow
       if (hlRings.length) {
         const kh = E.outBack(range(t, 0.4, 1.2)), hp = landPath(hlRings, pr, shifts, box);
         g.save(); g.translate(0, -10 * kh); paperLand(g, hp, { ext: ext + 10 * kh, lift: 0.4 + 1.2 * kh, top: kh > 0 ? '#ffe28a' : P.land, side: '#e2b84f', shelf: false, edge: '#c99a2e', grainA: 0.3 }); g.restore();
-      }
-      // lakes cut into the paper
-      if (lakes.length) {
-        const lp = landPath(lakes, pr);
-        g.save(); g.fillStyle = P.water; g.fill(lp); g.clip(lp);
-        g.shadowColor = 'rgba(40,60,50,0.35)'; g.shadowBlur = 10 * k.S; g.shadowOffsetY = 5 * k.S; g.strokeStyle = P.landSide; g.lineWidth = 6; g.stroke(lp); g.restore();
-        g.save(); g.strokeStyle = 'rgba(47,127,132,0.6)'; g.lineWidth = 1.2; g.stroke(lp); g.restore();
       }
       // watershed: shaded catchment, clouds and rain
       if (view === 'watershed') {
@@ -159,7 +167,7 @@ export default function makeMaps(H) {
         g.clip(wp); G.rain(g, -100, -100, 2200, 1300, t, { n: 420, color: `rgba(31,95,110,${0.55 * kw})`, len: 30, width: 2.6, speed: 700 }); g.restore();
         // paper clouds drifting over the catchment
         g.save(); const cr = rng(12);
-        for (let i = 0; i < 3; i++) { const cx = pr.X(-80.35 + i * 0.42 + cr() * 0.1) + t * (14 + cr() * 10), cy = pr.Y(9.47) - 10 + cr() * 30, s = 0.45 + cr() * 0.25;
+        for (let i = 0; i < 3; i++) { const cx = pr.X(-80.35 + i * 0.42 + cr() * 0.1) + t * (14 + cr() * 10), cy = pr.Y(9.47) + 40 + cr() * 30, s = 0.45 + cr() * 0.25;
           G.shadow(g, 1.4, 0.8); g.fillStyle = 'rgba(255,255,255,0.92)'; g.beginPath(); for (const [ox, oy, r] of [[-90, 14, 55], [-20, -14, 78], [60, 2, 62], [120, 22, 42], [10, 30, 60]]) { g.moveTo(cx + ox * s + r * s, cy + oy * s); g.arc(cx + ox * s, cy + oy * s, r * s, 0, TAU); } g.fill(); G.noShadow(g); }
         g.restore();
       }
@@ -275,7 +283,7 @@ export default function makeMaps(H) {
     const world = Object.values(gj.world).flat();
     const fw = 290, fh = 100, FLD = new Float32Array(fw * fh);
     for (let j = 0; j < fh; j++) for (let i = 0; i < fw; i++) FLD[j * fw + i] = field(box[0] + (i + 0.5) / fw * (box[2] - box[0]), box[3] - (j + 0.5) / fh * (box[3] - box[1]));
-    const masks = BANDS.map(() => G.mk(fw, fh));
+    const masks = BANDS.map(() => G.mk(fw, fh)); let landCache = null;
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g);
       const grow = E.inOutSine(range(t, 0.2, Math.min(D * 0.6, 4.5))) * 0.85 + 0.15;
@@ -293,8 +301,8 @@ export default function makeMaps(H) {
           g.drawImage(masks[bi], pr.X(box[0]), pr.Y(box[3]), pr.X(box[2]) - pr.X(box[0]), pr.Y(box[1]) - pr.Y(box[3])); g.restore();
         });
         // cool anomaly in the west, pale blue
-        const land = landPath(world, pr, [0, 360], box);
-        paperLand(g, land, { ext: 4, lift: 0.7, shelfW: 10 });
+        if (!landCache) { const CS = k.S * 1.12; landCache = G.mk(1920 * CS, 1080 * CS); const c = landCache.getContext('2d'); c.setTransform(CS, 0, 0, CS, 0, 0); G.setS(CS); paperLand(c, landPath(world, pr, [0, 360], box), { ext: 4, lift: 0.7, shelfW: 10 }); G.setS(k.S); }
+        g.drawImage(landCache, 0, 0, 1920, 1080);
         // Niño 3.4 box
         const kb = range(t, 0.9, 1.5);
         if (kb > 0) {
