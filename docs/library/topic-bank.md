@@ -1,4 +1,4 @@
-# Topic bank: 256 scored video ideas
+# Topic bank: 259 scored video ideas
 
 Ideas in AI, tech, money, power, geopolitics and business mysteries, each with a working title,
 a thumbnail concept in the house style, a one-line hook and a score. The `idea-engine` skill
@@ -321,7 +321,7 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 199 | ★12 | **The Strait That Controls a Fifth of the World's Oil** | A narrow strait with tankers in single file at dusk | One narrow channel. If it closes, the price of everything changes. | 21212 | 8 | E | 5 | 5 | 0 | **23** | EIA chokepoint data (Hormuz) |
 | 200 | ★30 | **How the Houthis Rerouted World Trade** | A container ship turning away from a red-lit strait | A rebel group with drones forced the world's biggest shipping companies to sail around Africa. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Suez Canal Authority revenue; shipping line statements; UKMTO |
 | 201 | ★21 | **Why the Suez Canal Got Blocked by One Ship** | A ship wedged across a canal, a digger tiny beside it | For six days, one ship held up about ten billion dollars of trade a day. | 22212 | 9 | E | 5 | 5 | -1 (many explainers 2021) | **23** | Lloyd's List estimate; SCA statements (Ever Given, 2021) |
-| 202 |  | **The Panama Canal Is Running Out of Water** | A lock gate with a dark waterline far above the water | The canal needs a lake to fill its locks. The lake is drying up. | 21212 | 8 | H | 5 | 5 | 0 | **22** | Panama Canal Authority draft restrictions (2023) |
+| 202 | IN PRODUCTION 2026-10-17 | **The Canal That Runs on Rain** (was: The Panama Canal Is Running Out of Water) | Sunlit aerial of a tanker in a lock chamber, the dry stain far above the waterline, red loop on the stain | Every ship that crosses Panama climbs a staircase of fresh water, then pours it into the sea. The lake that pays for it runs on rain, and forecasters now give 83% odds of a historic El Niño, the strongest since 1950 records. | 22212 | 9 | H | 5 | 5 | -1 (Wendover 4.7M on how it works; Megaprojects 493K on the water angle) | **22** | ACP advisories (2023–26); NOAA CPC ENSO discussion (8 Oct 2026); FreightWaves/Bloomberg on the $5.3M slot (Aug 2026); NPR on Río Indio (Feb 2025). Rescored 2026-10-17; brief in `next-episode-brief.md` |
 | 203 |  | **China's Plan to Win Without Fighting** | A chess piece casting a long shadow across a map of ports | China has built or financed ports on every continent. | 12212 | 8 | E | 4 | 5 | 0 | **22** | AidData; Belt and Road databases; CFR trackers |
 | 204 |  | **Why China Builds Islands in the Sea** | A sandbar becoming a runway in a satellite time-lapse | In three years, reefs became airfields. | 21212 | 8 | E | 5 | 5 | -1 (many) | **22** | CSIS AMTI satellite imagery; tribunal ruling (2016) |
 | 205 | ★1 | **How Sanctions on Russia Actually Work** | A tanker turning its transponder off and vanishing from the map | Russia's oil still sells. It just takes a longer route. | 12222 | 9 | H | 5 | 5 | 0 | **23** | KSE shadow fleet trackers; Treasury price-cap enforcement |
@@ -352,6 +352,17 @@ The top 30 lean toward investigations with primary documents (court records, lea
 | 230 |  | **The Island Base That Watches China** | A radar dome on a small island at night | A tiny island near China is one of the most militarised places on Earth. | 21102 | 6 | E | 4 | 5 | 0 | **20** | Kinmen histories; satellite imagery |
 | 231 |  | **How Qatar Got So Rich** | A gas tanker leaving a desert port at dawn | It has fewer citizens than many cities. It may be the richest country per person on Earth. | 11102 | 5 | E | 5 | 5 | 0 | **20** | IMF/World Bank GDP per capita; LNG export data |
 | 232 |  | **The Billion-Dollar Fight Over a Canal That Doesn't Exist** | A dotted line across Nicaragua on a map | A Chinese billionaire promised a canal through Nicaragua. It was never built. | 21102 | 6 | E | 4 | 5 | 0 | **20** | HKND reporting; Nicaraguan concession law (2013) |
+
+## Megaprojects, places and hidden infrastructure
+
+Added 2026-10-17 by `idea-engine` for the bright-daylight look (sunlit places, white 3D models,
+bright maps). Sat re-checked with `yt-dlp` on 2026-10-17.
+
+| # | ★ | Title | Thumbnail concept | Hook | F | Out | Life | Res | Vis | Sat | Total | Key sources |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 257 |  | **The River That Ran Out** | Hoover Dam in hard desert sun, a white "bathtub ring" towering above Lake Mead, red loop on the ring | A 1922 deal split up a river using its wettest years on record. In 2026 the states couldn't agree on a new one, so Washington imposed one. | 22211 | 8 | H | 5 | 5 | -1 (PBS Terra 3.9M; Eric Hanson 1.9M) | **21** | USBR post-2026 Record of Decision and factsheet (Aug 2026); USBR 24-Month Studies; Colorado River Compact (1922) |
+| 258 |  | **The Secret Spire That Won the Race to the Sky** | Pastel Manhattan, 1929, a steel spire rising out of the Chrysler Building's crown, red loop on it | In October 1929 a builder hid a 185-foot spire inside his own skyscraper and raised it in about 90 minutes. Days later Wall Street crashed. Now Saudi Arabia is building the first one-kilometre tower. | 21122 | 8 | H | 4 | 5 | 0 (top on the angle 26K) | **21** | NYC Landmarks Preservation Commission designation report (1978); Skyscraper Museum; NYT archive Oct 1929; Bascomb "Higher"; CTBUH and Thornton Tomasetti on Jeddah Tower (2026) |
+| 259 |  | **The $167 Billion Dam at the Edge of the World** | The Yarlung Tsangpo's Great Bend in sunlight, a tunnel line cut through the mountain, red loop on the 2,000 m drop | China has started a power project with three times the output of the Three Gorges Dam, about 30 km from India, on a fault line. | 21212 | 8 | H | 4 | 5 | -2 (RealLifeLore 2.3M; Bloomberg Originals 2.0M) | **19** | Xinhua on the 19 Jul 2025 groundbreaking; International Hydropower Association; NHPC on the Siang project |
 
 ## Business models and everyday economics
 
