@@ -121,7 +121,7 @@ export default function makeMaps(H) {
     const pins = (Pm.pins ?? []).map(resolveLabel).filter(Boolean).map(p => ({ kind: 'pin', ...p }));
     const PT = G.cues(shot, pins, { from: 1.0, span: Math.min(2.4, D * 0.4) });
     const hl = [].concat(Pm.highlight ?? (view === 'americas' || view === 'telegraph' ? 'PAN' : [])).filter(Boolean);
-    const routeKeys = Pm.routes === true || (view === 'world' && Pm.routes == null) ? ['panama', 'suez', 'cape'] : (Pm.routes ?? []);
+    const routeKeys = Pm.routes === true || (view === 'world' && Pm.routes == null) ? ['panama', 'suez', 'cape'] : (Array.isArray(Pm.routes) ? Pm.routes : []);
     const routes = routeKeys.map(k => (typeof k === 'string' ? { key: k, ...ROUTES[k] } : k)).filter(r => r.pts);
     const rT0 = G.cue(shot, Pm.routesAt, 0.6), rSpan = Pm.routeSpan ?? Math.max(3, D - rT0 - 2.4);
     const showCanal = Pm.canal ?? (view === 'isthmus' || view === 'watershed');
