@@ -13,7 +13,7 @@
 //   palette  colours for graphics (type, maps, charts, plates) that belong to the look.
 //
 //   import * as LK from '/engine/looks.js';
-//   LK.names()                         -> ['bright-day', 'golden-hour', 'blue-hour', 'noir-sodium', 'archive-warm', 'live-wire']
+//   LK.names()                         -> ['bright-day', 'golden-hour', 'blue-hour', 'noir-sodium', 'archive-warm', 'live-wire', 'bright-model']
 //   LK.get(name)                       -> the preset object (all of the above)
 //   LK.gradePixel(r, g, b, name)       -> display sRGB 0..1 in and out (the exact maths in the .cube)
 //   LK.cube(name, N = 33)              -> .cube text
@@ -303,6 +303,39 @@ export const LOOKS = {
     palette: { bg: '#000000', paper: '#d8ffe6', ink: '#d8ffe6', inkSoft: '#7fae92', accent: '#ff2b1f', phosphor: '#5dff9e', fluoro: '#d8ffe6', sodium: '#ffa24a', flash: '#fff8ee',
       snow0: '#0b1a2a', snow1: '#9fb7cf', sea: '#0b1a2a', seaDeep: '#050b12', sand: '#ffa24a', sky: '#0b1a2a', land: '#0a120e', water: '#03070a',
       grid: 'rgba(93,255,158,0.12)', plate: 'rgba(0,0,0,0.6)', plateInk: '#d8ffe6', shadow: '0 0 18px rgba(0,0,0,0.6)', sun: '#fff8ee', navy: '#0b1a2a' },
+  },
+  'bright-model': {
+    label: 'Bright model', intent: 'White-clay models and paper maps in sun; hoog / Primal Space / Neo geography (docs/library/bright-style/STYLE.md §13.2).',
+    grade: {
+      wb: [0.0, 0.0], ev: 0.0,
+      curve: { contrast: 1.12, pivot: 0.44, perChannel: 0.18 },      // a little more bite than the raw clay render
+      sat: 1.08, vibrance: 0.28,                                     // lift the pastels (target S 0.22–0.34)
+      bands: [
+        { h: 29, w: 10, sat: 1.06 },                                 // hero red
+        { h: 45, w: 14, sat: 1.04, shift: -2 },                      // terracotta / coral
+        { h: 58, w: 16, sat: 0.94, pull: 0.35 },                     // skin line
+        { h: 88, w: 16, sat: 0.9, shift: -4, light: 0.006 },         // sand / paper land: cream, not lemon
+        { h: 132, w: 22, sat: 0.78, shift: -8, light: 0.01 },        // foliage: sage pastel
+        { h: 190, w: 18, sat: 1.12, shift: 3 },                      // turquoise water: hero colour
+        { h: 245, w: 20, sat: 1.0, shift: -3, light: 0.008 },        // sky: clean, light
+        { h: 290, w: 18, sat: 1.0 },                                 // lavender accents stay
+        { h: 330, w: 24, sat: 0.8 },
+      ],
+      shadowTint: [-0.004, -0.013], highTint: [0.001, 0.004],        // cool shade, faintly warm light
+      satShadow: 0.9, satHigh: 0.66, ceiling: 0.88,
+      floor: 0.03, white: 0.985,                                     // lifted floor: ≤3 % px under L 0.06
+    },
+    finish: { grain: 3, halation: 6, halationAmount: 0.1, bloom: 0.06, vignette: 0.14, halationTint: [1, 0.8, 0.62] },
+    tod: { base: 'day', sunEl: 40, sunAz: 235, sun: ['#fff6ea', 4.0], zenith: ['#3b78c8', 1.0], horizon: ['#cfe0ee', 1.1],
+      glow: ['#fffaf0', 0.12], glowW: 0.3, haze: ['#dfe9f1', 1.0], hazeDen: 0.00004, hazeH: 1800,
+      ambSky: ['#a9c6e8', 1.0], ambGround: ['#d8cdb8', 0.7], exposure: 1.0, cloud: ['#ffffff', 1.8],
+      sky: { turbidity: 2.0, rayleigh: 1.1, mie: 0.002 }, hazeGain: 0.85, bloom: 0.02, bloomThresh: 2.8, flare: 0.15, sat: 1.02, contrast: 1.0 },
+    imagery: { haze: { color: [0.86, 0.9, 0.94], sunColor: [1.0, 0.95, 0.88], density: 1 / 20000, scale: 1600, sunDir: [-0.55, 0.64, 0.53], zenith: [0.23, 0.47, 0.78] },
+      grade: { contrast: 1.06, saturation: 1.08, warmth: 0.0, gamma: 0.97, exposure: 1.06, lift: 0.02 } },
+    palette: { bg: '#eef2f5', paper: '#fbfaf7', clay: '#f4f4f1', void: '#dde5ec', ink: '#0f1e33', inkSoft: '#46536a', accent: '#e0241b',
+      coral: '#ff7a5c', lavender: '#b9a9ef', yellow: '#ffd23f', sea: '#7cc4c0', seaDeep: '#4fa9ab', shallow: '#bfe5df', sand: '#e6cf9f',
+      land: '#ece3d1', landSide: '#cbbd9f', water: '#7cc4c0', sky: '#9cc7ea', park: '#cbd9b1', grid: 'rgba(15,30,51,0.10)',
+      plate: '#0b0b0b', plateInk: '#ffffff', pill: '#fbf8f2', pillInk: '#0f1e33', shadow: '0 2px 14px rgba(15,30,51,0.28)', sun: '#fff6ea', navy: '#0f1e33' },
   },
 };
 
