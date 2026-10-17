@@ -52,10 +52,10 @@ export function reset(g) { g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; 
 // ---------------------------------------------------------------- look
 export const HOUSE = {
   sunEl: 40, sunAz: 235, sun: '#fff6ea', sunI: 3.9,
-  hemiSky: '#bcd6f0', hemiGround: '#e9dcc6', hemiI: 0.85,
+  hemiSky: '#bcd6f0', hemiGround: '#e9dcc6', hemiI: 0.95,
   bgTop: '#8dbbe5', bgHorizon: '#e7eff4',
   fog: '#dfe9f1', fogNear: 900, fogFar: 6000,
-  clay: '#f4f4f1', clay2: '#ecebe7', ground: '#d6d8d8', plate: '#e8e9e7', concrete: '#e9e6df', concreteWet: '#cfd3d2',
+  clay: '#f4f4f1', clay2: '#ecebe7', ground: '#d6d8d8', plate: '#e8e9e7', concrete: '#efece6', concreteWet: '#d3d8d7',
   water: '#4cb5b6', waterDeep: '#2f9fae', shallow: '#bfe5df', park: '#cbd9b1', tree: '#9fc184', jungle: '#86b673', jungle2: '#a9c98e',
   red: '#e0241b', coral: '#ff7a5c', lavender: '#b9a9ef', yellow: '#ffd23f', navy: '#0f1e33', sky: '#9cc7ea',
   land: '#ece3d1', landSide: '#cbbd9f', sea: '#5fb8bb', void: '#dde5ec', mud: '#d9c7a6',
@@ -92,7 +92,7 @@ export function gradientBg(top, horizon, split = 0.62) {
 export function sunDir(el = HOUSE.sunEl, az = HOUSE.sunAz) { const e = el * Math.PI / 180, a = az * Math.PI / 180; return new THREE.Vector3(Math.cos(e) * Math.sin(a), Math.sin(e), -Math.cos(e) * Math.cos(a)); }
 // sun + cool sky fill + haze. Returns the sun; sun.track(target) re-centres the shadow frustum (for long moves).
 export function brightLight(scene, { target = [0, 0, 0], span = 900, fog = true, bg = [HOUSE.bgTop, HOUSE.bgHorizon], fogC = HOUSE.fog, near = HOUSE.fogNear, far = HOUSE.fogFar,
-  mapSize = 2048, el = HOUSE.sunEl, az = HOUSE.sunAz, sunI = HOUSE.sunI, hemiI = HOUSE.hemiI, env = false } = {}) {
+  mapSize = 2048, el = HOUSE.sunEl, az = HOUSE.sunAz, sunI = HOUSE.sunI, hemiI = HOUSE.hemiI, env = false, fill = 0.5 } = {}) {
   const dir = sunDir(el, az);
   const sun = new THREE.DirectionalLight(col(HOUSE.sun), sunI);
   sun.castShadow = true; sun.shadow.mapSize.set(mapSize, mapSize);
@@ -108,6 +108,8 @@ export function brightLight(scene, { target = [0, 0, 0], span = 900, fog = true,
   sun.track(target);
   scene.add(sun, sun.target);
   const hemi = new THREE.HemisphereLight(col(HOUSE.hemiSky), col(HOUSE.hemiGround), hemiI); scene.add(hemi); sun.hemi = hemi;
+  // a cool, high fill from the opposite side (no shadows): shade reads blue-grey, never black (STYLE.md §3)
+  if (fill > 0) { const f = new THREE.DirectionalLight(col('#cfe0f2'), fill); f.position.copy(sunDir(32, az + 180)).multiplyScalar(1000); f.target.position.set(0, 0, 0); scene.add(f, f.target); sun.fill = f; }
   scene.background = gradientBg(...bg);
   if (fog) scene.fog = new THREE.Fog(col(fogC), near, far);
   if (env) scene.environment = skyEnv();
@@ -181,8 +183,8 @@ export function water({ color = HOUSE.water, rough = 0.07, scale = 26, strength 
         normal = normalize(tbnW * mapN);
         // sun glitter: a sharp specular lobe on the high-frequency normal, added as emission (so it blooms in the finish)
         vec3 sv = normalize((viewMatrix * vec4(uSun, 0.)).xyz), vv = normalize(vViewPosition);
-        vec3 ng = normalize(tbnW * normalize(vec3(n3.xy * 1.6 + n2.xy * .5, 1.)));
-        float gl = pow(max(dot(reflect(vv, ng), sv), 0.), 900.) * uGlint * 24.;
+        vec3 ng = normalize(tbnW * normalize(vec3(n3.xy * 3.2 + n2.xy * 1.4, 1.)));
+        float gl = pow(max(dot(reflect(-vv, ng), sv), 0.), 260.) * uGlint * 9.;
         totalEmissiveRadiance += vec3(1., .97, .9) * gl;`);
   };
   m.customProgramCacheKey = () => 'panama-water';
@@ -209,7 +211,7 @@ export function terrain({ w, d, nx = 128, nz = 128, cx = 0, cz = 0, height, colo
   const H = []; for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) { const x = X(i), z = Z(j), y = height(x, z); H.push(y); pos.push(x, y, z); }
   for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) {
     const k = j * (nx + 1) + i, hx = (H[j * (nx + 1) + Math.min(nx, i + 1)] - H[j * (nx + 1) + Math.max(0, i - 1)]) / (2 * w / nx), hz = (H[Math.min(nz, j + 1) * (nx + 1) + i] - H[Math.max(0, j - 1) * (nx + 1) + i]) / (2 * d / nz);
-    toCol(color(pos[k * 3], pos[k * 3 + 2], H[k], Math.hypot(hx, hz))); cols.push(_c.r, _c.g, _c.b);
+    toCol(color(pos[k * 3], pos[k * 3 + 2], H[k], Math.hypot(hx, hz), hx, hz)); cols.push(_c.r, _c.g, _c.b);
   }
   for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
     if (hole && hole(X(i + 0.5), Z(j + 0.5))) continue;
@@ -411,7 +413,7 @@ export function lockFlight(o = {}) {
   const cx = (i) => [X0 + GG + i * (Lc + GG), X0 + GG + i * (Lc + GG) + Lc];
   const laneZ = (l) => (l - (lanes - 1) / 2) * (Wc + mid);
   const totalW = lanes * Wc + (lanes - 1) * mid + 2 * wall, Z0 = -totalW / 2;
-  const grp = new THREE.Group(), conc = mat(o.concrete ?? HOUSE.concrete, 0.82), wet = mat(HOUSE.concreteWet, 0.32), floorM = mat('#cfcac0', 0.9);
+  const grp = new THREE.Group(), conc = o.wallMat ?? mat(o.concrete ?? HOUSE.concrete, 0.82), wet = mat(HOUSE.concreteWet, 0.32), floorM = o.floorMat ?? mat('#cfcac0', 0.9);
   const walls = [];
   // chamber floors + walls per chamber, gate blocks between chambers (they step up)
   const floorY = (i) => pool(i) - depth;

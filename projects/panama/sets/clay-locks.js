@@ -33,19 +33,20 @@ export default function makeClayLocks(H) {
     const P0 = shot.params ?? {}, mode = P0.mode ?? 'fill';
     const { scene, camera, layer, sun } = H.base(ctx, { target: [340, 0, 0], span: 640, fog: false, bg: ['#c9dbe8', '#eef2f4'], mapSize: 4096, az: P0.sunAz ?? 112, el: P0.sunEl ?? 40 });
     scene.add(CK.catcher(-60));
-    const F = CK.lockFlight({ n: 2, lanes: 2, lo: 0, hi: 17.4, depth: 12.8, gate: 'miter', Lc: 304.8, Wc: 33.53, wall: 16, mid: 18 });
+    const xr = mode === 'culverts', ghostM = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8, transparent: true, opacity: 0.22, depthWrite: false });
+    const F = CK.lockFlight({ n: 2, lanes: 2, lo: 0, hi: 17.4, depth: 12.8, gate: 'miter', Lc: 304.8, Wc: 33.53, wall: 16, mid: 18, ...(xr ? { wallMat: ghostM('#eef3f5'), floorMat: ghostM('#e3e8ea') } : {}) });
     scene.add(F.group);
     const L = F.length, Z0 = -F.totalW / 2, BASE = -42;
     const wm = CK.water({ scale: 30 });
     // ground blocks either side of the flight (stepping up with the chambers) and the base under it
     const g = new THREE.Group(); scene.add(g);
-    const side = 70, front = mode === 'culverts' ? 6 : 26;
+    const side = 70, front = xr ? 0.01 : 26;
     const strata = [[1.2, '#b9cd95'], [5, HOUSE.strata[0]], [10, HOUSE.strata[1]], [14, HOUSE.strata[2]], [1e9, HOUSE.strata[3]]];
-    const piece = (x0, x1, z0, z1, top) => g.add(CK.slab({ w: x1 - x0, d: z1 - z0, x: (x0 + x1) / 2, z: (z0 + z1) / 2, y0: BASE, y1: top, top: HOUSE.park, strata }));
+    const piece = (x0, x1, z0, z1, top) => z1 - z0 < 0.1 ? null : g.add(CK.slab({ w: x1 - x0, d: z1 - z0, x: (x0 + x1) / 2, z: (z0 + z1) / 2, y0: BASE, y1: top, top: HOUSE.park, strata }));
     const xMid = F.chamberX(1)[0] - F.GG / 2;
     piece(0, xMid, Z0 - side, Z0, F.wallTop(0)); piece(xMid, L, Z0 - side, Z0, F.wallTop(1));
     piece(0, xMid, -Z0, -Z0 + front, F.wallTop(0)); piece(xMid, L, -Z0, -Z0 + front, F.wallTop(1));
-    for (let i = 0; i < 2; i++) { const [a, b] = F.chamberX(i); g.add(CK.slab({ w: b - a + F.GG * 2, d: F.totalW, x: (a + b) / 2, z: 0, y0: BASE, y1: F.floorY(i) - 2.01, top: '#cfcac0', strata })); }
+    for (let i = 0; i < 2; i++) { const [a, b] = F.chamberX(i); g.add(CK.slab({ w: b - a + F.GG * 2, d: F.totalW, x: (a + b) / 2, z: 0, y0: BASE, y1: F.floorY(i) - (xr ? 4.5 : 2.01), top: '#cfcac0', strata })); }
     // the sea (low end) and the lake (high end), with sea bed / lake bed blocks
     const SEA = 220, LAKE = 220;
     piece(-SEA, 0, Z0 - side, -Z0 + front, -14); piece(L, L + LAKE, Z0 - side, -Z0 + front, 17.4 - 14);
@@ -120,7 +121,7 @@ export default function makeClayLocks(H) {
       gates: [{ pos: [F.chamberX(1)[0] - 120, 70, 150], look: [F.chamberX(1)[0] - 10, 6, 0], mm: 32 }, { pos: [F.chamberX(1)[0] - 95, 64, 170], look: [F.chamberX(1)[0] - 6, 6, 0], mm: 32 }],
       culverts: [{ pos: [midX - 160, 70, 300], look: [midX + 40, -6, 0], mm: 30 }, { pos: [midX - 110, 66, 320], look: [midX + 60, -6, 0], mm: 30 }],
       mules: [{ pos: [midX - 60, 46, 120], look: [midX + 30, 8, 10], mm: 30 }, { pos: [midX + 40, 46, 128], look: [midX + 120, 8, 10], mm: 30 }],
-      swimmer: [{ pos: [midX + 20, 6, zN + 8], look: [midX + 34, -0.5, zN], mm: 50 }, { pos: [midX - 120, 120, zN + 160], look: [midX + 40, -2, zN], mm: 32 }],
+      swimmer: [{ pos: [midX + 22, 5, zN + 7], look: [midX + 35, -0.5, zN], mm: 50 }, { pos: [midX - 40, 52, zN + 70], look: [midX + 40, 2, zN], mm: 32 }],
     };
     const cam = rig(shot, P0.view ? views[P0.view] : views[mode] ?? views.fill, { accel: 0.4, decel: 0.4 });
     const fx = post(ctx, scene, camera, { aoR: 9, aoI: 2.6 });
@@ -129,6 +130,7 @@ export default function makeClayLocks(H) {
     const cap = H.caption(layer, P0.caption ?? ({ fill: 'NO PUMPS · GRAVITY ONLY', drain: 'OUT TO THE SEA', gates: 'GATE LEAF · 64 × 7 FT · UP TO 82 FT TALL', culverts: '18 FT CULVERTS · 100 HOLES PER CHAMBER', mules: 'ELECTRIC "MULES"', swimmer: 'RICHARD HALLIBURTON · 1928' })[mode], 'left:5.5%;top:7.5%');
     const dims = mode === 'fill' ? H.pill(layer, '1,000 × 110 ft', { size: 26 }) : null;
     const toll = mode === 'swimmer' ? H.slab(layer, 'TOLL: 36¢', 'left:5.5%;top:15.5%', { size: 40 }) : null;
+    const swP = mode === 'swimmer' ? H.pill(layer, 'CHARGED BY WEIGHT · 150 LB', { size: 24, dot: HOUSE.red }) : null;
     const src = H.sourceLine(layer, P0.source ?? (mode === 'swimmer' ? 'SOURCE: GUINNESS · ACP' : 'SOURCE: PANAMA CANAL AUTHORITY'));
     const v = new THREE.Vector3();
     return { scene, camera, layer, update(t, p) {
@@ -167,6 +169,7 @@ export default function makeClayLocks(H) {
       cap?.type(t);
       if (dims) { const [x, y] = toScreen(v.set(midX, F.wallTop(0) + 2, -Z0), camera); dims.at(x, y, sstep(0.6, 1.2, t)); }
       if (toll) toll.style.opacity = String(sstep(1.2, 1.6, t));
+      if (swP && swimmer) { const [x, y] = toScreen(v.set(swimmer.position.x, swimmer.position.y + 3, zN), camera); swP.at(x, y - 10, sstep(2.5, 3.2, t)); }
       sun.track([camera.position.x * 0.3 + midX * 0.7, 0, 0]);
     }, dispose() { fx.dispose(); } };
   }
