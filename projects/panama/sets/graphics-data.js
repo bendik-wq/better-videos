@@ -83,11 +83,14 @@ export default function makeData(H) {
     // ------------------------------------------------ history
     const box = [190, 280, 1770, 900], xr = [0, di(2027, 1, 1)], yr = [77, 95];
     const t0 = G.cue(shot, Pm.at, 0.4), drawDur = Pm.drawDur ?? Math.max(3, Math.min(D * 0.62, D - t0 - 2.2));
-    const marks = Pm.marks ?? [
+    const MARKS0 = [
       { y: 1998, m: 4, d: 22, rank: '#2', tag: 'YEAR AFTER EL NIÑO', bx: 800 },
       { y: 2016, m: 5, d: 18, rank: 'LOWEST', tag: 'YEAR AFTER EL NIÑO', bx: 1205 },
       { y: 2023, m: 7, d: 25, rank: '#3', tag: 'EL NIÑO YEAR', bx: 1770, align: 'right' },
     ];
+    // marks: false = none; ['1998', '2016'] = only those years; or a full list of mark objects
+    const marks = Pm.marks === false ? [] : Array.isArray(Pm.marks)
+      ? Pm.marks.flatMap(m => (typeof m === 'object' ? [m] : MARKS0.filter(d => String(d.y) === String(m)))) : MARKS0;
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g); k.view(1);
       G.card(g, 60, 40, 1800, 1000, { r: 34, lift: 1.2 });
