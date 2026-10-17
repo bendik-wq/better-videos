@@ -1,0 +1,36 @@
+{
+ "2023-06-03": {
+  "id": "S2B_17PPL_20230603_0_L2A",
+  "box_lonlat": [
+   -80.06,
+   8.99,
+   -79.6,
+   9.33
+  ],
+  "utm_zone": 17,
+  "E0": 603220.0,
+  "N1": 1031660.0,
+  "px": 20.0,
+  "w": 2533,
+  "h": 1889,
+  "credit": "Contains modified Copernicus Sentinel data 2023",
+  "gatun_ft": 80.09
+ },
+ "2026-01-05": {
+  "id": "S2A_17PPL_20260105_0_L2A",
+  "box_lonlat": [
+   -80.06,
+   8.99,
+   -79.6,
+   9.33
+  ],
+  "utm_zone": 17,
+  "E0": 603220.0,
+  "N1": 1031660.0,
+  "px": 20.0,
+  "w": 2533,
+  "h": 1889,
+  "credit": "Contains modified Copernicus Sentinel data 2026",
+  "gatun_ft": 88.82
+ }
+}
