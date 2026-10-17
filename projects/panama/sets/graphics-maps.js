@@ -15,11 +15,11 @@ const geo = () => GEO ??= fetch('/projects/panama/assets/geo/panama.json').then(
 
 // view boxes [lonW, latS, lonE, latN]
 const VIEWS = {
-  world: { box: [-232, -46, 152, 64], data: 'world', shift: -360 },
+  world: { box: [-240, -48, 162, 66], data: 'world', shift: -360 },
   americas: { box: [-128, -42, -30, 52], data: 'americas' },
   isthmus: { box: [-80.32, 8.8, -79.38, 9.44], data: 'isthmus' },
   watershed: { box: [-80.42, 8.78, -79.12, 9.5], data: 'isthmus' },
-  telegraph: { box: [-104, 4, -64, 44], data: 'americas' },
+  telegraph: { box: [-106, 4, -62, 48], data: 'americas' },
   caribbean: { box: [-100, 2, -58, 32], data: 'americas' },
 };
 const PLACES = {
@@ -99,7 +99,7 @@ export default function makeMaps(H) {
   function drawLabel(g, l, pr, t, kk) {
     if (!l || kk <= 0) return; const x = pr.X(l.lon), y = pr.Y(l.lat);
     if (l.kind === 'sea') G.text(g, l.name, x, y, { size: l.size ?? 44, weight: 400, fam: F.serif, style: 'italic', color: P.waterDark, align: 'center', alpha: E.outCubic(kk) * 0.9 });
-    else if (l.kind === 'lake') G.text(g, l.name, x, y, { size: l.size ?? 40, weight: 400, fam: F.serif, style: 'italic', color: P.white, align: 'center', alpha: E.outCubic(kk) });
+    else if (l.kind === 'lake') { g.save(); g.shadowColor = 'rgba(20,70,75,0.6)'; g.shadowBlur = 8; G.text(g, l.name, x, y, { size: l.size ?? 50, weight: 400, fam: F.serif, style: 'italic', color: P.white, align: 'center', alpha: E.outCubic(kk) }); g.restore(); }
     else if (l.kind === 'pin') { G.pin(g, x, y, t, kk, { color: l.color ?? P.red }); G.pill(g, l.name, x + 26, y, { size: l.size ?? 28, k: kk }); if (l.sub) G.text(g, l.sub, x + 30, y + 46, { size: 18, weight: 500, fam: F.mono, color: P.ink, track: 0.1, alpha: E.outCubic(kk) }); }
     else { g.fillStyle = P.ink; g.beginPath(); g.arc(x, y, 7 * clamp(kk * 2), 0, TAU); g.fill(); G.pill(g, l.name, x + (l.dx ?? 18), y + (l.dy ?? 0), { size: l.size ?? 28, k: kk, align: l.align ?? 'left' }); }
   }
@@ -175,7 +175,7 @@ export default function makeMaps(H) {
         const secPerDay = rSpan / Math.max(...routes.map(r => r.days));
         const jp = [[140.1, 35.4], [-219.9, 35.4]];
         jp.forEach(([lo, la]) => G.pin(g, pr.X(lo), pr.Y(la), t, range(t, 0.3, 0.8), { color: P.ink, pulse: false }));
-        G.pill(g, 'JAPAN', pr.X(140.1) + 22, pr.Y(35.4), { size: 26, k: range(t, 0.4, 0.9) }); G.pill(g, 'JAPAN', pr.X(-219.9) - 22, pr.Y(35.4), { size: 26, k: range(t, 0.4, 0.9), align: 'right' });
+        G.pill(g, 'JAPAN', pr.X(140.1) - 22, pr.Y(35.4) - 40, { size: 26, k: range(t, 0.4, 0.9), align: 'right' }); G.pill(g, 'JAPAN', pr.X(-219.9) + 22, pr.Y(35.4) - 40, { size: 26, k: range(t, 0.4, 0.9) });
         G.pin(g, pr.X(HOUSTON[0]), pr.Y(HOUSTON[1]), t, range(t, 0.2, 0.7), { color: P.red });
         G.pill(g, 'US GULF COAST', pr.X(HOUSTON[0]), pr.Y(HOUSTON[1]) - 42, { size: 26, k: range(t, 0.3, 0.8), align: 'center' });
         routes.forEach((r, ri) => {
@@ -189,8 +189,8 @@ export default function makeMaps(H) {
             G.shipTop(g, e.x, e.y, 34, e.ang, { color: P.white, edge: r.color });
             G.pill(g, `DAY ${Math.floor(el) + 1}`, e.x, e.y - 40, { size: 24, align: 'center', fill: r.color, color: P.white, k: 1 });
           } else {
-            const end = pts.at(-1), lx = r.key === 'panama' ? end[0] + 30 : end[0] + 30, ly = end[1] + (r.key === 'panama' ? 70 : r.key === 'suez' ? 70 : 140);
-            G.pill(g, `${r.days} DAYS · ${r.label}`, r.key === 'panama' ? end[0] - 10 : lx, ly, { size: 28, k: range(t, rT0 + r.days * secPerDay, rT0 + r.days * secPerDay + 0.5), fill: r.key === 'panama' ? P.red : P.white, color: r.key === 'panama' ? P.white : P.ink, dot: r.key === 'panama' ? P.sun : r.color, weight: 800, align: r.key === 'panama' ? 'left' : 'left' });
+            const end = pts.at(-1), ly = end[1] + (r.key === 'panama' ? 60 : r.key === 'suez' ? 60 : 130);
+            G.pill(g, `${r.days} DAYS · ${r.label}`, r.key === 'panama' ? end[0] + 6 : end[0] - 6, ly, { size: 28, k: range(t, rT0 + r.days * secPerDay, rT0 + r.days * secPerDay + 0.5), fill: r.key === 'panama' ? P.red : P.white, color: r.key === 'panama' ? P.white : P.ink, dot: r.key === 'panama' ? P.sun : r.color, weight: 800, align: r.key === 'panama' ? 'left' : 'right' });
           }
         });
       }
@@ -249,11 +249,11 @@ export default function makeMaps(H) {
     const kb = range(t, t0 + span, t0 + span + 0.9);
     if (kb > 0) { // the blast at Gamboa
       for (let i = 0; i < 3; i++) { const q = clamp(kb * 1.4 - i * 0.2); g.strokeStyle = `rgba(224,36,27,${0.8 * (1 - q)})`; g.lineWidth = 6; g.beginPath(); g.arc(px, py, 20 + q * 140, 0, TAU); g.stroke(); }
-      G.slab(g, 'GAMBOA DIKE BLOWN', px + 40, py + 80, { size: 30, fill: P.red, k: range(t, t0 + span + 0.2, t0 + span + 0.8) });
+      G.slab(g, 'GAMBOA DIKE BLOWN', px + 40, py - 70, { size: 30, fill: P.red, k: range(t, t0 + span + 0.2, t0 + span + 0.8) });
     }
-    G.card(g, 1240, 90, 590, 150, { r: 20, lift: 1, alpha: clamp(range(t, 0.1, 0.6) * 2) });
-    G.text(g, '10 OCT 1913', 1280, 160, { size: 54, weight: 900, color: P.red, alpha: range(t, 0.2, 0.7) });
-    G.text(g, 'JUST AFTER 2 P.M., WASHINGTON', 1282, 206, { size: 26, weight: 700, alpha: range(t, 0.3, 0.8) });
+    G.card(g, 90, 840, 590, 150, { r: 20, lift: 1, alpha: clamp(range(t, 0.1, 0.6) * 2) });
+    G.text(g, '10 OCT 1913', 130, 910, { size: 54, weight: 900, color: P.red, alpha: range(t, 0.2, 0.7) });
+    G.text(g, 'JUST AFTER 2 P.M., WASHINGTON', 132, 956, { size: 26, weight: 700, alpha: range(t, 0.3, 0.8) });
     G.text(g, 'ROUTE SCHEMATIC', 1830, 990, { size: 18, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12, align: 'right' });
   }
 
@@ -315,7 +315,7 @@ export default function makeMaps(H) {
       }
       // odds dial
       if (mode !== 'map') {
-        const big2 = mode === 'odds', cx = big2 ? 960 : 1555, cy = big2 ? 640 : 500, R = big2 ? 330 : 220;
+        const big2 = mode === 'odds', cx = big2 ? 960 : 1555, cy = big2 ? 560 : 500, R = big2 ? 300 : 220;
         if (!big2) G.card(g, 1290, 160, 560, 760, { r: 28, lift: 1.3 });
         else G.kicker(g, 'NOAA CLIMATE PREDICTION CENTER · 8 OCT 2026', 160, 150, range(t, 0.05, 0.6));
         const kn = E.outBack(range(t, tN, tN + 1.6)), v = odds * clamp(kn, 0, 1.04);

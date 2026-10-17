@@ -154,7 +154,7 @@ export default function makeGraphics(H) {
           const sc = pop * intro; if (sc <= 0) continue;
           g.save(); g.translate(x, y); g.scale(sc, sc);
           if (tChange > 0 && !removed && u < 1) { g.fillStyle = `rgba(255,210,63,${0.6 * (1 - u)})`; g.beginPath(); g.arc(0, -8, 64, 0, TAU); g.fill(); }
-          G.ship(g, 0, 10, 96, { seed: i * 7 + 3 }); g.restore();
+          G.ship(g, 0, 10, 110, { seed: i * 7 + 3 }); g.restore();
         } else if (removed && u < 1) { // drops out: lifts, tips, falls and fades, with a red flash
           const fall = E.inCubic(u);
           g.save(); g.translate(x + fall * 30, y + fall * 160 - Math.sin(u * Math.PI) * 20); g.rotate(fall * 0.7); g.globalAlpha = 1 - fall;
@@ -193,7 +193,7 @@ export default function makeGraphics(H) {
     const D = shot.duration ?? 8, n = ev.length, sp = 330, X = (i) => 260 + i * sp, total = X(n - 1) + 260;
     const fi = (f) => { if (f == null) return null; const i = ev.findIndex(e => e.year === f || e.label === f); return i < 0 ? null : i; };
     const focus = Array.isArray(Pm.focus) ? Pm.focus.map(fi) : [fi(Pm.focus), fi(Pm.focus)];
-    const T = G.cues(shot, ev, { from: 0.3, span: D * 0.7 });
+    const T = Pm.focus != null && !ev.some(e => e.word) ? ev.map((_, i) => 0.15 + i * 0.05) : G.cues(shot, ev, { from: 0.3, span: D * 0.7 });
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g);
       // pan: keep the focus centred (or travel the whole line)
@@ -297,6 +297,7 @@ export default function makeGraphics(H) {
       g.fillStyle = P.ink; g.fillRect(x0 + w + 26, y0 + 40, 4, h - 40); g.fillRect(x0 + w + 16, y0 + 40, 24, 4); g.fillRect(x0 + w + 16, y0 + h - 4, 24, 4);
       G.text(g, '1 FT', x0 + w + 46, y0 + h / 2 + 14, { size: 34, weight: 900 });
       G.text(g, Pm.note ?? '425 km² × 1 ft ≈ 129.5 million m³  ÷  ~197,000 m³ per Panamax crossing (52M gal)  ≈ 658', 150, 930, { size: 28, weight: 600, color: P.inkSoft, alpha: E.outCubic(range(t, t0 + dur * 0.6, t0 + dur)) });
+      G.pill(g, 'EACH MARK = ONE CROSSING', 1770, 300, { size: 24, k: range(t, t0, t0 + 0.5), align: 'right', dot: P.waterDark });
       G.pill(g, 'OUR MATH · IGNORES RAIN, DRINKING WATER, EVAPORATION', 150, 990, { size: 24, k: range(t, t0 + dur * 0.8, t0 + dur + 0.4), fill: P.sunSoft, dot: P.red });
       k.flat(); G.source(g, 'INPUTS: ACP; LINDA HALL LIBRARY; UNIV. OF FLORIDA', range(t, 0.6, 1.4), { y: 1052, size: 18 });
     }, { push: 0.03 });
@@ -372,7 +373,7 @@ export default function makeGraphics(H) {
       k.view(0.4); G.paper(g);
       k.view(0.6); G.water(g, -100, 2020, 930 - 30 * E.inOutSine(clamp(t / D)), 1200, t, { amp: 7, glints: 6 });
       k.view(1);
-      const size = Pm.size ?? (txt.length > 90 ? 70 : txt.length > 40 ? 88 : 124), maxW = 1320;
+      const size = Pm.size ?? (txt.length > 90 ? 70 : txt.length > 40 ? 88 : 150), maxW = 1320;
       const lines = []; let cur = [], cw = 0; const sp = G.measure(g, ' ', size, 400, F.serif);
       words.forEach((w, i) => { const ww = G.measure(g, w, size, 400, F.serif); if (cw + ww > maxW && cur.length) { lines.push(cur); cur = []; cw = 0; } cur.push({ w, i, ww }); cw += ww + sp; });
       if (cur.length) lines.push(cur);

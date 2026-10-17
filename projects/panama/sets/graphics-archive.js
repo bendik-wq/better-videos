@@ -41,7 +41,7 @@ export default function makeArchive(H) {
     const ph = await PX.photo(scene, url, { mm: Pm.mm ?? 50, aspect: a, depth: Pm.depth ?? 0.45, center: Pm.center ?? meta.center ?? [0.5, 0.5], treatment: Pm.treatment === 'bw' ? 'bw' : WARM, margin: 1.1 });
     const move = (PX.moves[Pm.move ?? 'push'] ?? PX.moves.push)(ph, { amount: Pm.amount, opts: { duration: D } });
     // print size: fit 1460 x 790, keep the photo's aspect
-    let pw = 1460, phh = pw / a; if (phh > 790) { phh = 790; pw = phh * a; }
+    let pw = 1440, phh = pw / a; if (phh > 730) { phh = 730; pw = phh * a; }
     const tilt = (Pm.tilt ?? -0.7) * Math.PI / 180, caption = Pm.caption ?? meta.caption ?? '', credit = Pm.credit ?? meta.credit ?? '';
     const r = ctx.renderer;
     const inst = await set(ctx, shot, (g, t, p, k) => {
@@ -50,7 +50,7 @@ export default function makeArchive(H) {
       const tm = r.toneMapping; r.toneMapping = THREE.NoToneMapping; r.setRenderTarget(null); r.render(scene, camera); r.toneMapping = tm;
       k.view(0.3); G.paper(g, { tone: '#f3ead8' });
       k.view(1);
-      const cx = 960, cy = caption ? 470 : 520, B = 28;
+      const cx = 960, cy = caption ? 455 : 520, B = 28;
       g.save(); g.translate(cx, cy); g.rotate(tilt);
       G.shadow(g, 1.6); g.fillStyle = '#fbf7ef'; g.fillRect(-pw / 2 - B, -phh / 2 - B, pw + 2 * B, phh + 2 * B + 34); G.noShadow(g);
       G.grain(g, pw + 2 * B, phh + 2 * B + 34, 0.5, -pw / 2 - B, -phh / 2 - B);
@@ -64,11 +64,11 @@ export default function makeArchive(H) {
       g.restore();
       // caption card (taped label) and credit
       if (caption) {
-        const lines = G.wrap(g, caption, 1300, 38, 400, F.serif, 'italic');
-        const kc = range(t, 0.5, 1.2), h = 34 + lines.length * 46 + 34, y0 = Math.min(1040 - h, cy + phh / 2 + 6);
+        const lines = G.wrap(g, caption, 1380, 44, 400, F.serif, 'italic');
+        const kc = range(t, 0.5, 1.2), h = 36 + lines.length * 50 + 34, y0 = Math.min(1040 - h, cy + phh / 2 + 6);
         G.card(g, 210, y0, 1500, h, { r: 10, fill: P.white, lift: 1, alpha: clamp(kc * 2), grainA: 0.25 });
         g.fillStyle = P.red; g.fillRect(210, y0, 10 * clamp(kc * 2), h);
-        lines.forEach((l, i) => G.text(g, l, 250, y0 + 62 + i * 46, { size: 38, weight: 400, fam: F.serif, style: 'italic', color: P.ink, alpha: E.outCubic(range(t, 0.6 + i * 0.1, 1.2 + i * 0.1)) }));
+        lines.forEach((l, i) => G.text(g, l, 250, y0 + 64 + i * 50, { size: 44, weight: 400, fam: F.serif, style: 'italic', color: P.ink, alpha: E.outCubic(range(t, 0.6 + i * 0.1, 1.2 + i * 0.1)) }));
       }
       k.flat(); G.source(g, credit, range(t, 0.8, 1.6), { size: 16, y: 1066 });
     }, { push: 0.035, dx: 18, dy: 6 });
