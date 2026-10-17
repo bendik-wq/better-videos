@@ -58,15 +58,16 @@ export function height(x, z) {
 }
 // colour by height / slope / place (sRGB hex)
 const cJ = [new THREE.Color('#7fae6a'), new THREE.Color('#93bd79'), new THREE.Color('#6d9e5e'), new THREE.Color('#a7c88c')];
-const SAND = new THREE.Color('#efe0bd'), MUD = new THREE.Color('#d8c7a4'), SHELF = new THREE.Color('#c6ebe2'), DEEP = new THREE.Color('#2f97a3'), LBED = new THREE.Color('#9fc7b0'), GRASS = new THREE.Color('#bcd39b'), CONC = new THREE.Color('#e3e0d8');
+const DRY = new THREE.Color('#ead9b8'), SAND = new THREE.Color('#efe0bd'), MUD = new THREE.Color('#d8c7a4'), SHELF = new THREE.Color('#c6ebe2'), DEEP = new THREE.Color('#2f97a3'), LBED = new THREE.Color('#9fc7b0'), GRASS = new THREE.Color('#bcd39b'), CONC = new THREE.Color('#e3e0d8');
 // colour by height / slope / place, with a baked hillshade from the sun (relief exaggerated E x so 300 m hills read from 60 km)
-export function colorAt({ sunAz = 125, sunEl = 50, E = 7 } = {}) {
+export function colorAt({ sunAz = 125, sunEl = 50, E = 7, lakeY = LAKE } = {}) {
   const L = CK.sunDir(sunEl, sunAz);
   return (x, z, y, slope, hx = 0, hz = 0) => {
     const c = new THREE.Color();
     if (y < 0) return c.copy(SHELF).lerp(DEEP, sstep(-3, -38, y));
     const m = lakeMask(x, z);
-    if (m > 0.45 && y < LAKE - 0.3) return c.copy(LBED);
+    if (m > 0.45 && y < lakeY - 0.3) return c.copy(LBED);
+    if (m > 0.4 && y < LAKE + 0.4) return c.copy(DRY).lerp(MUD, sstep(lakeY, LAKE + 0.4, y) * 0.5);
     const nearLock = (Math.abs(x) < 400 && ((z > LOCK_S.z0 - 760 && z < LOCK_S.z0 + 200) || (z > LOCK_N.z0 - 200 && z < LOCK_N.z0 + 1100)));
     if (nearLock && y > 3) return c.copy(GRASS).lerp(CONC, 0.25);
     if (y < 2.2) return c.copy(SAND);
@@ -83,7 +84,7 @@ export function colorAt({ sunAz = 125, sunEl = 50, E = 7 } = {}) {
 // ---------------------------------------------------------------- the section curtain (lake ABOVE both oceans)
 // A vertical panel along x = 0 from the Atlantic to the Pacific, its profile exaggerated E times; it sweeps in (prog)
 // and rises (rise). Water levels from RESEARCH §1a: Gatun 3 steps (85 ft), Pedro Miguel 1 (31 ft), Miraflores 2 (54 ft).
-export function sectionCurtain({ z0 = -36000, z1 = 27000, E = 210, y0 = -3600, top = 9800 } = {}) {
+export function sectionCurtain({ z0 = -36000, z1 = 27000, E = 210, y0 = -2200, top = 8400 } = {}) {
   const W = 2048, Hh = 512, c = CK.canvas(W, Hh), g = c.g;
   const Y = (y) => Hh - (y * E - y0) / (top - y0) * Hh, X = (f) => f * W;
   const ft = (f) => f * 0.3048;
@@ -106,7 +107,7 @@ export function sectionCurtain({ z0 = -36000, z1 = 27000, E = 210, y0 = -3600, t
   g.lineJoin = 'round'; for (const [w, col] of [[14, '#0f1e33'], [6, '#ffffff']]) { g.strokeStyle = col; g.lineWidth = w; g.beginPath(); prof.forEach(([f, y], i) => (i ? g.lineTo(X(f), Y(y)) : g.moveTo(X(f), Y(y)))); g.stroke(); }
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
   const U = { map: { value: tex }, uProg: { value: 0 }, uRise: { value: 0 }, uOp: { value: 1 } };
-  const m = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, depthTest: true, side: THREE.DoubleSide,
+  const m = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, depthTest: false, side: THREE.DoubleSide,
     vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`,
     fragmentShader: `uniform sampler2D map; uniform float uProg, uRise, uOp; varying vec2 vUv;
       void main() { if (vUv.x > uProg + .002) discard; vec2 uv = vec2(vUv.x, (vUv.y - (1. - uRise)) / max(uRise, 1e-3)); if (uv.y < 0.) discard;
@@ -115,7 +116,7 @@ export function sectionCurtain({ z0 = -36000, z1 = 27000, E = 210, y0 = -3600, t
         gl_FragColor = vec4(c.rgb, c.a * uOp); }` });
   m.toneMapped = false;
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(z1 - z0, top - y0).rotateY(-Math.PI / 2), m);
-  mesh.position.set(0, (top + y0) / 2, (z0 + z1) / 2); mesh.renderOrder = 5; mesh.frustumCulled = false;
+  mesh.position.set(0, (top + y0) / 2, (z0 + z1) / 2); mesh.renderOrder = 10; mesh.frustumCulled = false;
   mesh.set = (prog, rise, op = 1) => { U.uProg.value = prog; U.uRise.value = rise; U.uOp.value = op; mesh.visible = prog > 0.001 && rise > 0.001 && op > 0.001; };
   // anchor(f, y): a point on the panel at schematic fraction f (0 = Atlantic end), level y (m, unexaggerated)
   mesh.anchor = (f, y) => new THREE.Vector3(0, y * E, lerp(z0, z1, f)); mesh.E = E;
@@ -130,7 +131,7 @@ export function world(scene, o = {}) {
   // macro terrain with a hole under the detail patch
   const PATCH = o.patch ?? { x0: -5200, x1: 5200, z0: 9000, z1: 22600 };
   const MID = { x0: -40000, x1: 30000, z0: -36000, z1: 32000 }, CELL = 250;
-  const col = colorAt({ sunAz: o.sunAz ?? 125, sunEl: o.sunEl ?? 50 });
+  const col = colorAt({ sunAz: o.sunAz ?? 125, sunEl: o.sunEl ?? 50, lakeY: o.lakeLevel ?? LAKE });
   const inBox = (B, m) => (x, z) => x > B.x0 + m && x < B.x1 - m && z > B.z0 + m && z < B.z1 - m;
   const far = CK.terrain({ w: 480000, d: 360000, nx: 320, nz: 240, cx: -5000, cz: -2000, height: H, color: col, hole: inBox(MID, 1500), rough: 0.95, skirt: 0 });
   far.top.castShadow = false; grp.add(far);
@@ -141,7 +142,7 @@ export function world(scene, o = {}) {
   grp.add(patch);
   // water: the ocean (y 0) and the lake (y 26, masked to the lake)
   const oceanM = CK.water({ color: o.sea ?? '#2c9fa9', scale: 34, strength: 0.34, glint: 2.6, opacity: 0.8 });
-  const ocean = CK.plane(900000, 900000, oceanM, { y: 0 }); grp.add(ocean);
+  const ocean = CK.plane(900000, 900000, oceanM, { y: -0.03 }); grp.add(ocean);
   const LB = { x0: -32000, x1: 22000, z0: -27000, z1: 19400 };
   const mc = CK.canvas(1024, 1024), mg = mc.g, img = mg.createImageData(1024, 1024);
   for (let j = 0; j < 1024; j++) for (let i = 0; i < 1024; i++) { const x = lerp(LB.x0, LB.x1, (i + 0.5) / 1024), z = lerp(LB.z0, LB.z1, (j + 0.5) / 1024), v = lakeMask(x, z) > 0.4 ? 255 : 0, k = (j * 1024 + i) * 4; img.data[k] = img.data[k + 1] = img.data[k + 2] = v; img.data[k + 3] = 255; }
@@ -171,9 +172,10 @@ export function world(scene, o = {}) {
   const ships = [];
   const add = (kind, x, z, hd, o2 = {}) => { const s = CK.ship(kind, { seed: ships.length + 3, accent: null, ...o2 }); s.position.set(x, o2.y ?? 0, z); s.rotation.y = hd; grp.add(s); ships.push(s); return s; };
   const kinds = ['container', 'bulk', 'tanker', 'lpg', 'container', 'bulk'];
-  for (let k = 0; k < 14; k++) { const a = r() * 6.28; add(kinds[k % 6], -2600 + r() * 7000, LOCK_S.z0 + 2600 + r() * 5200, a); }
-  for (let k = 0; k < 10; k++) add(kinds[(k + 2) % 6], -3500 + r() * 7000, LOCK_N.z0 - 2400 - r() * 4800, r() * 6.28);
-  const lakeShips = [add('container', -900, 15200, Math.PI / 2 + 0.25, { y: LAKE }), add('bulk', 1300, 12400, -Math.PI / 2 - 0.4, { y: LAKE }), add('tanker', -1500, 9800, Math.PI / 2 + 0.6, { y: LAKE })];
+  if (o.anchored !== false) { for (let k = 0; k < 14; k++) { const a = r() * 6.28; add(kinds[k % 6], -2600 + r() * 7000, LOCK_S.z0 + 2600 + r() * 5200, a); }
+  for (let k = 0; k < 10; k++) add(kinds[(k + 2) % 6], -3500 + r() * 7000, LOCK_N.z0 - 2400 - r() * 4800, r() * 6.28); }
+  const LY = o.lakeLevel ?? LAKE;
+  const lakeShips = o.lakeShips === false ? [] : [add('container', -900, 15200, Math.PI / 2 + 0.25, { y: LY }), add('bulk', 1300, 12400, -Math.PI / 2 - 0.4, { y: LY }), add('tanker', -1500, 9800, Math.PI / 2 + 0.6, { y: LY })];
   // spill arrows: water leaving the flights for the sea at both ends (macro scale)
   const arrowsOut = [CK.arrows([[0, 30, LOCK_S.z0 + 300], [200, 30, LOCK_S.z0 + 5000], [1500, 30, LOCK_S.z0 + 12000]], { count: 5, size: 1500, speed: 5000, color: '#ffffff' }),
     CK.arrows([[0, 30, LOCK_N.z0 - 300], [-200, 30, LOCK_N.z0 - 5000], [-1500, 30, LOCK_N.z0 - 12000]], { count: 5, size: 1500, speed: 5000, color: '#ffffff' })];
@@ -202,12 +204,13 @@ export function world(scene, o = {}) {
     shaftM.uniforms.uOp.value = sstep(0.5, 1, k);
     shafts.forEach((m, j) => { m.position.x = cl[j].x + cl[j].s * 0.4 + t * 40; });
   }
-  setClouds(0, 0);
+  setClouds(0, 0); rainFx.tick(0, 0);
   const api = {
     group: grp, h: H, lake: LAKE, flightS, flightN, ocean, lakeMesh, oceanM, lakeM, section, clouds, rainFx, arrowsOut, ships, lakeShips, setClouds, macro, patch, trees: tr,
     // per frame: water, near/far, fog, shadow frustum (sun = the set's DirectionalLight from CK.brightLight)
     tick(t, camera, sun) {
       oceanM.tick(t); lakeM.tick(t); flightS.tick(t); flightN.tick(t);
+      { const a = Math.max(1, camera.position.y), g = 0.35 + (1 - sstep(400, 4000, a)) * 2.3; oceanM.U.uGlint.value = g; lakeM.U.uGlint.value = g; const rr = lerp(0.07, 0.42, sstep(600, 6000, a)); oceanM.roughness = lakeM.roughness = rr; }
       lakeShips.forEach((s, i) => { const v = 4.5, a = s.rotation.y; s.position.x += 0; s.userData.x0 ??= s.position.x; s.userData.z0 ??= s.position.z;
         s.position.x = s.userData.x0 + Math.cos(a) * v * t; s.position.z = s.userData.z0 - Math.sin(a) * v * t; });
       const alt = Math.max(1, camera.position.y - Math.max(0, H(camera.position.x, camera.position.z)));

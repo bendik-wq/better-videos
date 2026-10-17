@@ -19,6 +19,18 @@ const all = [
   { id: 'culebra', set: 'culebra', min: 10, params: {} },
   { id: 'culebra-blast', set: 'culebra', min: 10, params: { mode: 'blast', at: 3 } },
   { id: 'rio-indio', set: 'rio-indio', min: 10, params: {} },
+  { id: 'pools', set: 'pools', min: 10, params: {} },
+  { id: 'pools-field', set: 'pools', min: 10, params: { mode: 'field' } },
+  { id: 'expansion', set: 'expansion', min: 10, params: {} },
+  { id: 'expansion-basins', set: 'expansion', min: 10, params: { mode: 'basins' } },
+  { id: 'hourglass', set: 'hourglass', min: 10, params: {} },
+  { id: 'hourglass-deficit', set: 'hourglass', min: 10, params: { mode: 'deficit' } },
+  { id: 'queue', set: 'queue', min: 10, params: { count: 163 } },
+  { id: 'aerial-lake', set: 'aerial', min: 8, params: { mode: 'lake-islands' } },
+  { id: 'aerial-locks', set: 'aerial', min: 8, params: { mode: 'locks-wide' } },
+  { id: 'aerial-transit', set: 'aerial', min: 8, params: { mode: 'ships-transit' } },
+  { id: 'aerial-jungle', set: 'aerial', min: 8, params: { mode: 'jungle-shore' } },
+  { id: 'aerial-dry', set: 'aerial', min: 8, params: { mode: 'dry-shore' } },
 ];
 const only = process.env.BV_SHOTS?.split(',');
 export default {
@@ -26,5 +38,5 @@ export default {
   voice: { engine: 'kokoro', name: 'bm_george' },
   settings: { aa: 'fxaa', fps: 30, look: 'bright-model', workers: 3 },
   finish: { grain: 3, halation: 6, halationAmount: 0.1, bloom: 0.06, vignette: 0.14 },
-  shots: only ? all.filter(s => only.includes(s.id)) : all,
+  shots: (only ? all.filter(s => only.includes(s.id)) : all).map(s => (process.env.BV_MIN ? { ...s, min: Number(process.env.BV_MIN) } : s)),
 };

@@ -52,6 +52,7 @@ const sc = () => window.innerHeight / 1080;
 // house type: Primal/Neo slabs and Wendover pills; never naked white type on a bright sky (STYLE.md §7)
 const CAP = `font:700 1.9em ${CK.FONT.ui};letter-spacing:.02em;text-transform:uppercase;color:#fff;line-height:1.05;background:${PAL.plate};padding:.22em .5em .18em;display:inline-block`;
 const layerOf = (ctx) => { const l = document.createElement('div'); l.style.cssText = 'position:absolute;inset:0;display:none'; ctx.overlay.appendChild(l); return l; };
+// base(ctx, { fov, near, far (the camera), light (true: CK.brightLight with the rest: target, span, fog, fogNear, fogFar, bg, az, el, ...) })
 function base(ctx, { fov = 40, near = 0.5, far = 20000, light = true, ...lo } = {}) {
   const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(fov, ctx.width / ctx.height, near, far);
   const sun = light ? CK.brightLight(scene, lo) : null;

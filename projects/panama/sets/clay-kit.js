@@ -91,7 +91,7 @@ export function gradientBg(top, horizon, split = 0.62) {
 }
 export function sunDir(el = HOUSE.sunEl, az = HOUSE.sunAz) { const e = el * Math.PI / 180, a = az * Math.PI / 180; return new THREE.Vector3(Math.cos(e) * Math.sin(a), Math.sin(e), -Math.cos(e) * Math.cos(a)); }
 // sun + cool sky fill + haze. Returns the sun; sun.track(target) re-centres the shadow frustum (for long moves).
-export function brightLight(scene, { target = [0, 0, 0], span = 900, fog = true, bg = [HOUSE.bgTop, HOUSE.bgHorizon], fogC = HOUSE.fog, near = HOUSE.fogNear, far = HOUSE.fogFar,
+export function brightLight(scene, { target = [0, 0, 0], span = 900, fog = true, bg = [HOUSE.bgTop, HOUSE.bgHorizon], fogC = HOUSE.fog, fogNear = null, fogFar = null, near = fogNear ?? HOUSE.fogNear, far = fogFar ?? HOUSE.fogFar,
   mapSize = 2048, el = HOUSE.sunEl, az = HOUSE.sunAz, sunI = HOUSE.sunI, hemiI = HOUSE.hemiI, env = false, fill = 0.5 } = {}) {
   const dir = sunDir(el, az);
   const sun = new THREE.DirectionalLight(col(HOUSE.sun), sunI);
@@ -500,4 +500,19 @@ export function mule({ color = '#f2f2ee', accent = '#2d3f55' } = {}) {
   dark.push(new THREE.BoxGeometry(9.0, 0.6, 2.6).translate(0, 0.3, 0), new THREE.BoxGeometry(0.15, 0.8, 2.6).translate(-3.3, 3.9, 0), new THREE.BoxGeometry(0.15, 0.8, 2.6).translate(3.6, 3.9, 0));
   const a = new THREE.Mesh(merge(parts), mat(color, 0.5)), b = new THREE.Mesh(merge(dark), mat(accent, 0.5));
   a.castShadow = b.castShadow = true; g.add(a, b); return g;
+}
+
+// bake a ship (or any group) into one geometry with vertex colours, for instancing many of them (queues, harbours)
+export function bake(group) {
+  group.updateMatrixWorld(true); const inv = new THREE.Matrix4().copy(group.matrixWorld).invert(), list = [], M = new THREE.Matrix4(), c = new THREE.Color();
+  const push = (geo, m, color) => { let g = (geo.index ? geo.toNonIndexed() : geo.clone()).applyMatrix4(m); for (const k of Object.keys(g.attributes)) if (!['position', 'normal', 'color'].includes(k)) g.deleteAttribute(k);
+    if (!g.attributes.normal) g.computeVertexNormals();
+    if (!g.attributes.color) { const n = g.attributes.position.count, a = new Float32Array(n * 3); for (let i = 0; i < n; i++) a.set([color.r, color.g, color.b], i * 3); g.setAttribute('color', new THREE.BufferAttribute(a, 3)); }
+    list.push(g); };
+  group.traverse((o) => {
+    if (!o.isMesh) return; const base = new THREE.Matrix4().multiplyMatrices(inv, o.matrixWorld), mc = o.material?.color ?? c.set('#ffffff');
+    if (o.isInstancedMesh) { for (let i = 0; i < o.count; i++) { o.getMatrixAt(i, M); const cc = new THREE.Color(1, 1, 1); if (o.instanceColor) o.getColorAt(i, cc); push(o.geometry, new THREE.Matrix4().multiplyMatrices(base, M), cc.multiply(mc)); } }
+    else push(o.geometry, base, o.material?.vertexColors ? new THREE.Color(1, 1, 1) : mc);
+  });
+  return mergeGeometries(list);
 }

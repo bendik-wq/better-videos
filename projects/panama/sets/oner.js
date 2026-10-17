@@ -30,7 +30,7 @@ export default function makeOner(H) {
 
     // ---- the world
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(60, ctx.width / ctx.height, 0.3, 30000);
-    const sun = CK.brightLight(scene, { target: [0, 0, 19500], span: 500, fog: true, near: 2500, far: 30000, mapSize: 4096, el: P0.sunEl ?? 38, az: P0.sunAz ?? 40, fill: 0.85, hemiI: 1.1 });
+    const sun = CK.brightLight(scene, { target: [0, 0, 19500], span: 500, fog: true, near: 2500, far: 30000, mapSize: P0.mapSize ?? 2048, el: P0.sunEl ?? 38, az: P0.sunAz ?? 40, fill: 0.85, hemiI: 1.1 });
     const W = CW.world(scene, { sunAz: P0.sunAz ?? 40, sunEl: P0.sunEl ?? 38 });
     const F = W.flightS, Z0 = CW.LOCK_S.z0, cz = (u) => Z0 - u, LX = F.laneZ(1);
     // the hero: a white LPG carrier, red funnel band (the shot's one accent)
@@ -38,7 +38,7 @@ export default function makeOner(H) {
     const other = CK.ship('container', { seed: 6, accent: null }); other.rotation.y = -Math.PI / 2; scene.add(other);
     const mules = [-1, 1].flatMap(sd => [0, 1].map(k => { const m = CK.mule(); m.rotation.y = Math.PI / 2; scene.add(m); return { m, sd, k }; }));
     const layer = H.layerOf(ctx);
-    const fx = P.post(ctx, scene, camera, { ao: { radius: 4, intensity: 1.3, falloff: 1 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
+    const fx = P.post(ctx, scene, camera, { ao: { radius: 4, intensity: 1.3, falloff: 1 }, tone: 'neutral', quality: P0.quality ?? 'low' });
 
     // ---- levels: chamber 0 (east lane) fills sea -> step; the west lane steps down (a ship descending); chamber 1 waits at step
     const fill = (t) => smoother(range(t, T.staircase, T.staircase + fillSpan));
@@ -63,8 +63,8 @@ export default function makeOner(H) {
       { t: T.sky, pos: [LX + 1, wSky + 31, cz(30)], look: [LX, wSky + 22, cz(260)], mm: 22 },
       { t: T.up, pos: [LX - 4, 50, cz(300)], look: [LX - 6, 22, cz(600)], mm: 22 },
       { t: T.lake - 0.4, pos: [LX - 10, 46, cz(700)], look: [LX - 18, 30, cz(1500)], mm: 22 },
-      { t: T.lake + 2.2, pos: [LX - 24, 62, cz(1050)], look: [LX - 220, 26, cz(9000)], mm: 24 },
-      { t: T.afternoon, pos: [LX - 90, 120, cz(2100)], look: [-700, 20, cz(11000)], mm: 24 },
+      { t: T.lake + 2.2, pos: [LX - 30, 105, cz(1150)], look: [LX - 260, 26, cz(9000)], mm: 24 },
+      { t: T.afternoon, pos: [LX - 100, 190, cz(2200)], look: [-700, 20, cz(11000)], mm: 24 },
       { t: T.climbs, pos: [-260, 260, cz(3600)], look: [-1300, 20, cz(13000)], mm: 24 },
     ]);
     const segD = O.keys([
