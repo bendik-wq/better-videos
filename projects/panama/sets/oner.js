@@ -109,7 +109,7 @@ export default function makeOner(H) {
       const kp = sstep(T.pours - 0.5, T.pours + 1.5, t) * (1 - sstep(T.gone + 1, T.gone + 3, t));
       W.arrowsOut.forEach(a => a.tick(t, kp));
       const sweep = P0.sweep ?? 3.6, kr = sstep(T.gallons - 0.6, T.gallons + 0.8, t), ks = smoother(range(t, T.gallons, T.gallons + sweep));
-      W.section.set(ks, kr, 1 - 0.55 * sstep(T.rain - 1, T.rain + 2, t));
+      W.section.set(ks, kr, 1 - 0.85 * sstep(T.rain - 1.5, T.rain + 1.5, t));
       W.setClouds(t, sstep(T.rain - 1.5, T.rain + 3.5, t)); W.rainFx.tick(t, sstep(T.rain, T.rain + 2.5, t));
       // overlays
       if (ctr) {
@@ -119,7 +119,7 @@ export default function makeOner(H) {
         ctr.at(960, 150, a);
       }
       { const p = toS(v.set(LX - 220, CW.LAKE + 30, cz(4200))), a = sstep(T.lake + 0.4, T.lake + 1.2, t) * (1 - sstep(T.climbs - 1, T.climbs, t)); lakePill.at(p[0], p[1], a); }
-      for (const L of labels) { const p = toS(v.copy(W.section.anchor(L.z, L.y))); L.el.at(p[0], p[1] - 14, sstep(T.gone - 0.8, T.gone + 0.2, t)); }
+      for (const L of labels) { const p = toS(v.copy(W.section.anchor(L.z, L.y))); L.el.at(p[0], p[1] - 14, sstep(T.gone - 0.8, T.gone + 0.2, t) * (1 - sstep(T.rain - 1, T.rain + 1, t))); }
     }, dispose() { fx.dispose(); } };
   }
   return { 'cold-open': coldOpen };

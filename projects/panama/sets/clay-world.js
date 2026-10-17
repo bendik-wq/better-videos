@@ -112,7 +112,7 @@ export function sectionCurtain({ z0 = -36000, z1 = 27000, E = 210, y0 = -2200, t
     fragmentShader: `uniform sampler2D map; uniform float uProg, uRise, uOp; varying vec2 vUv;
       void main() { if (vUv.x > uProg + .002) discard; vec2 uv = vec2(vUv.x, (vUv.y - (1. - uRise)) / max(uRise, 1e-3)); if (uv.y < 0.) discard;
         vec4 c = texture2D(map, uv);
-        float edge = 1. - smoothstep(0., .004, uProg - vUv.x); c.rgb = mix(c.rgb, vec3(1., .84, .25), edge * step(uProg, .999)); c.a = max(c.a, edge * .95 * step(.0, uv.y));
+        float edge = 1. - smoothstep(0., .004, uProg - vUv.x); c.rgb = mix(c.rgb, vec3(1., .84, .25), edge * step(uProg, .999)); c.a = max(c.a, edge * .95 * step(uProg, .999));
         gl_FragColor = vec4(c.rgb, c.a * uOp); }` });
   m.toneMapped = false;
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(z1 - z0, top - y0).rotateY(-Math.PI / 2), m);
@@ -163,7 +163,9 @@ export function world(scene, o = {}) {
   // jungle near the camera's path: trees on the patch above the lake / sea shores
   const tz = (x, z, y) => y > 3 && !(Math.abs(x) < 330 && z > LOCK_S.z0 - 760 && z < LOCK_S.z0 + 220) && lakeMask(x, z) < 0.5 && (y > LAKE + 1.5 || lakeMask(x, z) < 0.2) && z < coastS(x) - 60;
   const jungle = CK.scatter(o.trees ?? 9000, { x0: PATCH.x0 + 100, x1: PATCH.x1 - 100, z0: PATCH.z0 + 100, z1: PATCH.z1 - 100, height: H, ok: tz, seed: 17, s: [9, 20], tries: 3 });
-  const tr = CK.trees(jungle, { low: true, seed: 5, colors: ['#78a965', '#8dba74', '#6a9a5b', '#9cc483', '#84b26c'] }); tr.castShadow = true; grp.add(tr);
+  // a dense jungle belt along the lake shores (the 'jungle-shore' look), on top of the scattered trees
+  const shore = CK.scatter(o.shoreTrees ?? 7000, { x0: PATCH.x0 + 100, x1: PATCH.x1 - 100, z0: PATCH.z0 + 100, z1: PATCH.z1 - 100, height: H, ok: (x, z, y) => tz(x, z, y) && lakeMask(x, z) > 0.22 && y > LAKE + 2, seed: 23, s: [10, 18], tries: 8 });
+  const tr = CK.trees([...jungle, ...shore], { low: true, seed: 5, colors: ['#78a965', '#8dba74', '#6a9a5b', '#9cc483', '#84b26c'] }); tr.castShadow = true; grp.add(tr);
   // Panama City: white towers east of the Pacific entrance (macro detail)
   const city = [], r = CK.rng(8);
   for (let k = 0; k < 420; k++) { const x = 7000 + r() * 6500, z = coastS(x) - 300 - r() * 2600; const y = H(x, z); if (y < 3 || y > 60) continue; const tall = Math.exp(-(((x - 10500) / 1500) ** 2)) * (r() < 0.5 ? 1 : 0.4); city.push({ x, y, z, sx: 40 + r() * 50, sy: 20 + tall * 220 * r() + r() * 30, sz: 40 + r() * 50, c: r() < 0.08 ? '#dfe8ee' : '#f5f4f0' }); }

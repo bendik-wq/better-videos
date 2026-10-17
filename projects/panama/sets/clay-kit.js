@@ -56,7 +56,7 @@ export const HOUSE = {
   bgTop: '#8dbbe5', bgHorizon: '#e7eff4',
   fog: '#dfe9f1', fogNear: 900, fogFar: 6000,
   clay: '#f4f4f1', clay2: '#ecebe7', ground: '#d6d8d8', plate: '#e8e9e7', concrete: '#efece6', concreteWet: '#d3d8d7',
-  water: '#4cb5b6', waterDeep: '#2f9fae', shallow: '#bfe5df', park: '#cbd9b1', tree: '#9fc184', jungle: '#86b673', jungle2: '#a9c98e',
+  water: '#46abad', waterDeep: '#2f9fae', shallow: '#bfe5df', park: '#cbd9b1', tree: '#9fc184', jungle: '#86b673', jungle2: '#a9c98e',
   red: '#e0241b', coral: '#ff7a5c', lavender: '#b9a9ef', yellow: '#ffd23f', navy: '#0f1e33', sky: '#9cc7ea',
   land: '#ece3d1', landSide: '#cbbd9f', sea: '#5fb8bb', void: '#dde5ec', mud: '#d9c7a6',
   strata: ['#d8c49a', '#c7a77b', '#b08a62', '#93704f'],
@@ -167,7 +167,7 @@ export function noiseNormal(N = 256, seed = 5) {
 export function water({ color = HOUSE.water, rough = 0.07, scale = 26, strength = 0.32, glint = 2.2, flow = [0.35, 0.22], opacity = 1, sun = null, side = THREE.FrontSide, depthWrite = true } = {}) {
   const U = { uT: { value: 0 }, uScale: { value: scale }, uStr: { value: strength }, uGlint: { value: glint }, uFlow: { value: new THREE.Vector2(...flow) },
     uSun: { value: (sun ?? sunDir()).clone().normalize() } };
-  const m = new THREE.MeshStandardMaterial({ color: col(color), roughness: rough, metalness: 0, normalMap: noiseNormal(), envMap: skyEnv(), transparent: opacity < 1, opacity, side, depthWrite, envMapIntensity: 0.9 });
+  const m = new THREE.MeshStandardMaterial({ color: col(color), roughness: rough, metalness: 0, normalMap: noiseNormal(), envMap: skyEnv(), transparent: opacity < 1, opacity, side, depthWrite, envMapIntensity: 0.55 });
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vWUv; uniform float uScale;')

@@ -14,7 +14,7 @@ export default function makeClayLand(H) {
   const post = (ctx, scene, camera, o = {}) => P.post(ctx, scene, camera, { ao: { radius: o.aoR ?? 6, intensity: o.aoI ?? 2.0, falloff: 1 }, tone: 'neutral', quality: o.q ?? 'medium' });
   const rig = (shot, keys, o = {}) => C.path(keys, { duration: shot.duration, float: 0, accel: 0.4, decel: 0.4, ...o });
   const scr = (v, cam) => K.toScreen(v, cam);
-  const waterSide = (c = '#5fbcb9', op = 0.9) => new THREE.MeshStandardMaterial({ color: new THREE.Color(c), roughness: 0.25, transparent: true, opacity: op, depthWrite: false });
+  const waterSide = (c = '#56b3b2', op = 1) => new THREE.MeshStandardMaterial({ color: new THREE.Color(c), roughness: 0.3, transparent: op < 1, opacity: op, depthWrite: op >= 1, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2 });
   function waterBox(wm, { x0, x1, z0, z1, y0, y1, side = null }) {
     const sd = side ?? waterSide(), m = new THREE.Mesh(BOX, [sd, sd, wm, sd, sd, sd]);
     m.position.set((x0 + x1) / 2, y0, (z0 + z1) / 2); m.scale.set(x1 - x0, Math.max(0.05, y1 - y0), z1 - z0); m.receiveShadow = true;
@@ -47,11 +47,11 @@ export default function makeClayLand(H) {
       if (x < coastA) h = lerp(-30, 4, sstep(coastA - 60, coastA, x));
       if (x > coastP) h = lerp(4, -30, sstep(coastP, coastP + 60, x));
       // the lake basin: below lake level between Gatun and Gamboa, with islands
-      const inLake = sstep(-480, -440, x) * (1 - sstep(60, 110, x)) * (1 - sstep(-150, -120, z));
+      const inLake = sstep(-480, -440, x) * (1 - sstep(60, 110, x)) * sstep(-158, -128, z);
       const isl = sstep(0.62, 0.8, fbm(x / 70, z / 70, 9, 3));
       h = lerp(h, LAKE - 16 + 26 * isl, inLake * (1 - 0.0));
       // Miraflores Lake (small, between the two Pacific flights)
-      const inML = sstep(250, 262, x) * (1 - sstep(306, 318, x)) * (1 - sstep(-90, -60, z));
+      const inML = sstep(250, 262, x) * (1 - sstep(306, 318, x)) * sstep(-95, -65, z);
       h = lerp(h, PM - 10, inML);
       // the channel (Culebra Cut through the divide, approaches, lock footprints)
       if (z > -38) h = Math.min(h, level(x) - (x > -590 && x < 400 ? 12 : 30));
@@ -62,9 +62,10 @@ export default function makeClayLand(H) {
       color: (x, z, y) => (y < 4 && (x < -560 || x > 380) ? '#ead9b5' : y < LAKE + 2 && x > -480 && x < 100 && z < -36 ? '#cfc39f' : y > 150 ? '#a9c98e' : fbm(x / 60, z / 60, 2, 2) > 0.5 ? '#86b673' : '#9cc483'),
       strata: [[3, '#a4b37e'], [16, HOUSE.strata[0]], [30, HOUSE.strata[1]], [50, HOUSE.strata[2]], [1e9, HOUSE.strata[3]]] });
     scene.add(blk);
+    scene.add(CK.trees(CK.scatter(900, { x0: -580, x1: 390, z0: -168, z1: -40, height: hgt, ok: (x, z, y) => y > LAKE + 4, seed: 7, s: [5, 9] })));
     // water: seas, lock chambers, the lake, the cut, Miraflores Lake: boxes with a turquoise cut face
     const wm = CK.water({ scale: 14, strength: 0.3 }), boxes = [];
-    const add = (x0, x1, z0, z1, y0, y1) => { const b = waterBox(wm, { x0, x1, z0, z1, y0, y1 }); scene.add(b); boxes.push(b); return b; };
+    const add = (x0, x1, z0, z1, y0, y1) => { const b = waterBox(wm, { x0, x1, z0, z1: z1 === 0 ? 0.4 : z1, y0, y1 }); scene.add(b); boxes.push(b); return b; };
     add(-800, -560, -170, 0, -30, 0); add(372, 800, -170, 0, -30, 0);
     for (let i = 0; i < 3; i++) add(-560 + i * 30, -560 + (i + 1) * 30 - 2, -36, 0, -10, Y([28, 57, 85][i] * FT));
     const lake = add(-470, 228, -170, 0, LAKE - 30, LAKE);
@@ -101,9 +102,9 @@ export default function makeClayLand(H) {
     const hl = P0.highlight ?? null, focus = { atlantic: -680, gatun: -515, lake: -200, culebra: 170, pedro: 240, miraflores: 345, pacific: 600 }[hl] ?? (madden ? 60 : 0);
     const wide = hl == null || P0.wide;
     const keys = wide
-      ? [{ pos: [-260, 520, 760], look: [focus * 0.4 - 30, 20, -70], mm: 30 }, { pos: [120, 500, 770], look: [focus * 0.4 + 10, 20, -70], mm: 30 }]
+      ? [{ pos: [-120, 1050, 820], look: [focus * 0.4 - 20, 0, -90], mm: 28 }, { pos: [140, 1020, 840], look: [focus * 0.4 + 20, 0, -90], mm: 28 }]
       : [{ pos: [focus - 110, 190, 270], look: [focus, Y(18), -45], mm: 30 }, { pos: [focus + 50, 180, 265], look: [focus + 20, Y(18), -45], mm: 30 }];
-    const cam = rig(shot, P0.camera ?? keys);
+    const cam = rig(shot, P0.camera ?? (madden ? [{ pos: [-160, 420, 420], look: [60, 50, -100], mm: 30 }, { pos: [-60, 400, 450], look: [90, 50, -100], mm: 30 }] : keys));
     const fx = post(ctx, scene, camera, { aoR: 6, aoI: 2.0 });
     // ---- labels
     const names = { atlantic: ['ATLANTIC', -690, 0], gatun: ['GATUN · 3 STEPS', -515, Y(85 * FT) + 8], lake: ['GATUN LAKE · 85 FT', -150, LAKE + 6], culebra: ['CULEBRA CUT', 165, LAKE + 30], pedro: ['PEDRO MIGUEL · 1 STEP', 240, LAKE + 10], miraflores: ['MIRAFLORES · 2 STEPS', 345, PM + 8], pacific: ['PACIFIC', 600, 0] };

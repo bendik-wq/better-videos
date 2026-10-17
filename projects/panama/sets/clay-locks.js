@@ -181,7 +181,7 @@ export default function makeClayLocks(H) {
   async function pools(ctx, shot) {
     const P0 = shot.params ?? {}, count = P0.count ?? 76, field = P0.field ?? 2700, mode = P0.mode ?? 'count';
     const { scene, camera, layer, sun } = H.base(ctx, { target: [0, 0, 0], span: 400, fog: true, fogNear: 1500, fogFar: 9000, far: 30000, bg: ['#c6d8e6', '#eef2f4'], fogC: '#e6edf2', mapSize: 4096, az: 140, el: 44, fill: 0.55 });
-    const ground = CK.plane(30000, 30000, mat('#dfe6dc', 0.95), { y: 0 }); scene.add(ground);
+    const ground = CK.plane(30000, 30000, mat('#cfdcc6', 0.95), { y: 0 }); scene.add(ground);
     // one pool: 50 x 25 m clay rim, turquoise water, lane ropes
     const PW = 50, PD = 25, gap = 8, pitchX = PW + gap, pitchZ = PD + gap;
     const rimM = mat('#f6f5f1', 0.75), wM = CK.water({ color: '#59c6cf', scale: 9, strength: 0.25, glint: 1.4 }), laneM = mat('#ffffff', 0.6);
@@ -202,7 +202,7 @@ export default function makeClayLocks(H) {
     const tCount = H.cue(shot, P0.at, 0.8), span = P0.span ?? Math.max(3, shot.duration - 2.5), kOf = (t) => clamp((t - tCount) / span);
     const cam = C.path(P0.camera ?? (mode === 'field'
       ? [{ pos: [300, 520, 900], look: [0, 0, 0], mm: 30 }, { pos: [600, 1500, 2100], look: [-100, 0, -100], mm: 30 }]
-      : [{ pos: [-300, 95, 230], look: [-20, 0, 10], mm: 30 }, { pos: [-60, 250, 470], look: [300, 0, 60], mm: 30 }]), { duration: shot.duration, float: 0, accel: 0.35, decel: 0.45 });
+      : [{ pos: [-430, 120, 230], look: [-150, 0, -10], mm: 30 }, { pos: [-120, 230, 430], look: [230, 0, 40], mm: 30 }]), { duration: shot.duration, float: 0, accel: 0.35, decel: 0.45 });
     const fx = post(ctx, scene, camera, { aoR: 6, aoI: 2.0 });
     const s = S_();
     const ctr = K.div(layer, `opacity:1;left:5.5%;top:7%;padding:${10 * s}px ${22 * s}px;background:#0b0b0b;color:#fff;font:700 ${84 * s}px/1 ${H.FONT.ui};letter-spacing:.01em`, '0');
@@ -284,9 +284,9 @@ export default function makeClayLocks(H) {
   async function hourglass(ctx, shot) {
     const P0 = shot.params ?? {}, deficit = P0.mode === 'deficit';
     const inflow = P0.inflow ?? (deficit ? 7 : 15), outflow = P0.outflow ?? 10;
-    const { scene, camera, layer, sun } = H.base(ctx, { target: [0, 0, 0], span: 90, fog: false, bg: ['#cad9e6', '#eff3f5'], mapSize: 2048, az: 140, el: 46, fill: 0.6 });
+    const { scene, camera, layer, sun } = H.base(ctx, { target: [0, 0, 0], span: 90, fog: false, bg: ['#a9c6dd', '#dfe8ee'], mapSize: 2048, az: 140, el: 46, fill: 0.5 });
     scene.add(CK.catcher(-0.01, { size: 600, opacity: 0.16 }));
-    const floor = CK.plane(600, 600, mat('#e9eef1', 1), { y: -0.02 }); scene.add(floor);
+    const floor = CK.plane(600, 600, mat('#d9e1e6', 1), { y: -0.02 }); scene.add(floor);
     // the bulb profile (radius by height), a lathe: glass (pale, translucent) and water volumes clipped at levels
     const Hh = 60, neck = 2.2, R = 17;
     const rad = (y) => { const u = y / Hh; const d = Math.abs(u - 0.5) * 2; return neck + (R - neck) * Math.pow(Math.sin(Math.min(1, d * 1.25) * Math.PI / 2), 0.9) * (1 - 0.35 * sstep(0.85, 1, d)); };
@@ -296,7 +296,7 @@ export default function makeClayLocks(H) {
     // clay frame: two discs and three posts
     for (const y of [0, Hh + 4]) { const d = new THREE.Mesh(new THREE.CylinderGeometry(R + 4, R + 4, 4, 64), mat('#f4f2ee', 0.8)); d.position.y = y + 2 - (y ? 2 : 0); d.castShadow = d.receiveShadow = true; scene.add(d); }
     for (let k = 0; k < 3; k++) { const a = k / 3 * Math.PI * 2 + 0.5, p = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, Hh + 2, 16), mat('#efe9df', 0.8)); p.position.set(Math.cos(a) * (R + 2), Hh / 2 + 3, Math.sin(a) * (R + 2)); p.castShadow = true; scene.add(p); }
-    const wm = CK.water({ color: '#4cbcbf', scale: 6, strength: 0.25, glint: 1.5 }), wSide = new THREE.MeshStandardMaterial({ color: '#62c3c2', roughness: 0.3, transparent: true, opacity: 0.86 });
+    const wm = CK.water({ color: '#3fa9ad', scale: 6, strength: 0.25, glint: 1.5 }), wSide = new THREE.MeshStandardMaterial({ color: '#4fb3b4', roughness: 0.3, transparent: true, opacity: 0.9 });
     const topW = new THREE.Mesh(new THREE.BufferGeometry(), wSide); topW.position.y = 4; scene.add(topW);
     const botW = new THREE.Mesh(new THREE.BufferGeometry(), wSide); botW.position.y = 4; scene.add(botW);
     const capTop = new THREE.Mesh(new THREE.CircleGeometry(1, 64).rotateX(-Math.PI / 2), wm), capBot = capTop.clone(); scene.add(capTop, capBot);

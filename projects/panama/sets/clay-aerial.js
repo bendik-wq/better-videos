@@ -35,12 +35,12 @@ export default function makeClayAerial(H) {
       [{ pos: [120, 1400, Z0 + 200], look: [0, 0, Z0 - 420], mm: 34 }, { pos: [200, 1380, Z0 + 120], look: [0, 0, Z0 - 420], mm: 34 }],
     ],
     'jungle-shore': [
-      [{ pos: [1700, 70, 15400], look: [2600, 30, 13600], mm: 26 }, { pos: [1900, 68, 14900], look: [2800, 30, 13200], mm: 26 }],
-      [{ pos: [-2400, 90, 12800], look: [-3400, 40, 11500], mm: 26 }, { pos: [-2200, 88, 12400], look: [-3300, 40, 11100], mm: 26 }],
-      [{ pos: [800, 160, 17400], look: [2200, 30, 16300], mm: 28 }, { pos: [950, 155, 17000], look: [2350, 30, 15900], mm: 28 }],
+      [{ pos: [-500, 150, 15800], look: [1200, 30, 13800], mm: 26 }, { pos: [-300, 145, 15300], look: [1400, 30, 13400], mm: 26 }],
+      [{ pos: [-400, 170, 12300], look: [-2600, 40, 11200], mm: 26 }, { pos: [-300, 165, 11900], look: [-2500, 40, 10800], mm: 26 }],
+      [{ pos: [300, 240, 17900], look: [1800, 30, 15600], mm: 28 }, { pos: [450, 235, 17500], look: [1950, 30, 15200], mm: 28 }],
     ],
   };
-  VIEWS['dry-shore'] = VIEWS['jungle-shore'].map(v => v.map(k => ({ ...k, pos: [k.pos[0], k.pos[1] * 0.6, k.pos[2]] })));
+  VIEWS['dry-shore'] = VIEWS['jungle-shore'].map(v => v.map(k => ({ ...k, pos: [k.pos[0], k.pos[1] * 0.45, k.pos[2]] })));
   async function aerial(ctx, shot) {
     const P0 = shot.params ?? {}, mode = P0.mode ?? 'lake-islands', v = clamp(P0.cam ?? 0, 0, 2) | 0;
     const dry = mode === 'dry-shore', lakeY = CW.LAKE - (dry ? (P0.drop ?? 6) * FT : 0);
@@ -51,6 +51,16 @@ export default function makeClayAerial(H) {
     if (mode === 'ships-transit') {
       const s0 = W.lakeShips[0], off = [[-320, 120, 160], [180, 60, -260], [-90, 260, 40]][v];
       cam = (camera, p, t) => { W.tick(t, camera, sun); const sp = s0.position; camera.position.set(sp.x + off[0] - t * 2, sp.y + off[1], sp.z + off[2]); camera.lookAt(sp.x + 60, sp.y + 8, sp.z - 20); camera.fov = CK.lerp(30, 30, 0); camera.updateProjectionMatrix(); };
+    } else if ((mode === 'jungle-shore' || dry) && !P0.camera) {
+      // find a real shoreline on the detail patch: march from open water until the land rises above the lake
+      const a = [-0.5, 2.4, 0.9][v], o0 = [[0, 15600], [-600, 11800], [600, 16800]][v];
+      let sx = o0[0], sz = o0[1];
+      for (let k = 0; k < 600; k++) { sx += Math.cos(a) * 15; sz += Math.sin(a) * 15; if (W.h(sx, sz) > CW.LAKE + 0.5) break; }
+      const back = dry ? 170 : 300, up = dry ? 32 : 75, side = [-1, 1, -1][v] * 90;
+      const px = sx - Math.cos(a) * back - Math.sin(a) * side, pz = sz - Math.sin(a) * back + Math.cos(a) * side;
+      const r = rig(shot, [{ pos: [px, up + lakeY, pz], look: [sx + Math.cos(a) * 120, CW.LAKE + 10, sz + Math.sin(a) * 120], mm: 26 },
+        { pos: [px + Math.sin(a) * 60, up + lakeY - 4, pz - Math.cos(a) * 60], look: [sx + Math.cos(a) * 120 + Math.sin(a) * 60, CW.LAKE + 10, sz + Math.sin(a) * 120 - Math.cos(a) * 60], mm: 26 }]);
+      cam = (camera, p, t) => r(camera, p, t);
     } else { const r = rig(shot, P0.camera ?? VIEWS[mode]?.[v] ?? VIEWS['lake-islands'][0]); cam = (camera, p, t) => r(camera, p, t); }
     // the dry shore: tree stumps on the exposed bank, and a pale band label
     if (dry) {
