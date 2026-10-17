@@ -14,7 +14,21 @@
   "w": 2533,
   "h": 1889,
   "credit": "Contains modified Copernicus Sentinel data 2023",
-  "gatun_ft": 80.09
+  "gatun_ft": 80.09,
+  "pins": {
+   "Gatun Locks": [
+    0.3019,
+    0.1735
+   ],
+   "Barro Colorado Island": [
+    0.4653,
+    0.5153
+   ],
+   "Gamboa": [
+    0.7932,
+    0.625
+   ]
+  }
  },
  "2026-01-05": {
   "id": "S2A_17PPL_20260105_0_L2A",
@@ -31,6 +45,20 @@
   "w": 2533,
   "h": 1889,
   "credit": "Contains modified Copernicus Sentinel data 2026",
-  "gatun_ft": 88.82
+  "gatun_ft": 88.82,
+  "pins": {
+   "Gatun Locks": [
+    0.3019,
+    0.1735
+   ],
+   "Barro Colorado Island": [
+    0.4653,
+    0.5153
+   ],
+   "Gamboa": [
+    0.7932,
+    0.625
+   ]
+  }
  }
 }

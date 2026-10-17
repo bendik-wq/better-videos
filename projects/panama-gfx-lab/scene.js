@@ -6,7 +6,7 @@ import * as K from 'kit';
 import * as M from '/engine/motion.js';
 import * as KIT from '/projects/panama/sets/graphics-kit.js';
 
-const LIBS = ['graphics', 'graphics-map', 'graphics-gauge', 'graphics-photo'];
+const LIBS = ['graphics', 'graphics-maps', 'graphics-data', 'graphics-archive'];
 const loaded = [];
 for (const n of LIBS) {
   try { const m = await import(`/projects/panama/sets/${n}.js`); loaded.push(m.default); }
