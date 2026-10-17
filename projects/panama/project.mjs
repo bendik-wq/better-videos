@@ -76,7 +76,7 @@ const shots = [
   S('french-cut', 'The mountains kept sliding back into the cut. The rivers flooded it. And yellow fever and malaria tore through the workers.', { slideAt: 'sliding', rainAt: 'rivers', floodAt: 'flooded', floodSpan: 3 },
     { beats: [['yellow', 'archive', { photo: 'cucaracha-slide-1913', move: 'lateral', treatment: 'bw' }]] }),
   S('timeline', 'By early eighteen eighty-nine, the company was bankrupt. More than two hundred and sixty million dollars was gone. | And by most estimates, around twenty thousand people had died.', { focus: 1889, title: 'BANKRUPT · $260M+ LOST' },
-    { beats: [['around', 'bignumber', { value: 20000, prefix: '≈ ', label: 'PEOPLE DIED', kicker: 'THE FRENCH ATTEMPT · 1881–1889', note: '$260M+ LOST · BANKRUPT 1889', at: 0.3, source: 'SOURCE: ACP · McCULLOUGH, “THE PATH BETWEEN THE SEAS”' }]] }),
+    { beats: [['around', 'bignumber', { value: 20000, prefix: '≈ ', label: 'PEOPLE DIED', kicker: 'THE FRENCH ATTEMPT · 1881–1889', note: '$260M+ LOST · BANKRUPT 1889', at: 0.3, source: 'SOURCES: US STATE DEPT, OFFICE OF THE HISTORIAN · UNIV. OF FLORIDA PANAMA CANAL MUSEUM COLLECTION' }]] }),
   S('timeline', 'When the Americans took over in nineteen-oh-four, they had to answer the same question all over again. Sea level, or locks?', { focus: 1904, title: 'SEA LEVEL, OR LOCKS?' }),
   S('quote', 'The international board of engineers voted for sea level. Eight to five.', { text: 'Sea level: 8. Locks: 5.', by: 'BOARD OF CONSULTING ENGINEERS', role: '1906 VOTE', source: 'SOURCE: ACP HISTORY', highlight: ['8'] }),
   S('section', 'But the five American engineers in the minority argued for something else. Don’t cut through the mountains. | Drown the valley instead.', { highlight: 'gatun', caption: 'THE MINORITY PLAN' }),
