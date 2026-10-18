@@ -1,0 +1,173 @@
+[
+ {
+  "id": "house-idle",
+  "set": "house-block",
+  "min": 8,
+  "params": {
+   "mode": "idle"
+  },
+  "start": 0,
+  "voAt": 0.25,
+  "voDur": 0,
+  "duration": 8,
+  "words": []
+ },
+ {
+  "id": "house-sold",
+  "set": "house-block",
+  "min": 8,
+  "params": {
+   "mode": "sold",
+   "at": 3
+  },
+  "start": 8,
+  "voAt": 8.25,
+  "voDur": 0,
+  "duration": 8,
+  "words": []
+ },
+ {
+  "id": "house-rate",
+  "set": "house-block",
+  "min": 8,
+  "params": {
+   "mode": "rate",
+   "from": "6.27%",
+   "to": "7.40%",
+   "view": "close"
+  },
+  "start": 16,
+  "voAt": 16.25,
+  "voDur": 0,
+  "duration": 8,
+  "words": []
+ },
+ {
+  "id": "bids-arrive",
+  "set": "bid-stack",
+  "min": 9,
+  "params": {
+   "mode": "arrive"
+  },
+  "start": 24,
+  "voAt": 24.25,
+  "voDur": 0,
+  "duration": 9,
+  "words": []
+ },
+ {
+  "id": "bids-fill",
+  "set": "bid-stack",
+  "min": 10,
+  "params": {
+   "mode": "fill"
+  },
+  "start": 33,
+  "voAt": 33.25,
+  "voDur": 0,
+  "duration": 10,
+  "words": []
+ },
+ {
+  "id": "bids-cutoff",
+  "set": "bid-stack",
+  "min": 9,
+  "params": {
+   "mode": "cutoff"
+  },
+  "start": 43,
+  "voAt": 43.25,
+  "voDur": 0,
+  "duration": 9,
+  "words": []
+ },
+ {
+  "id": "seesaw",
+  "set": "seesaw",
+  "min": 9,
+  "params": {
+   "at": 2.5
+  },
+  "start": 52,
+  "voAt": 52.25,
+  "voDur": 0,
+  "duration": 9,
+  "words": []
+ },
+ {
+  "id": "pipe-flow",
+  "set": "pipe",
+  "min": 10,
+  "params": {
+   "mode": "flow"
+  },
+  "start": 61,
+  "voAt": 61.25,
+  "voDur": 0,
+  "duration": 10,
+  "words": []
+ },
+ {
+  "id": "pipe-prepay",
+  "set": "pipe",
+  "min": 10,
+  "params": {
+   "mode": "prepay"
+  },
+  "start": 71,
+  "voAt": 71.25,
+  "voDur": 0,
+  "duration": 10,
+  "words": []
+ },
+ {
+  "id": "suburb-forsale",
+  "set": "suburb",
+  "min": 8,
+  "params": {
+   "mode": "forsale"
+  },
+  "start": 81,
+  "voAt": 81.25,
+  "voDur": 0,
+  "duration": 8,
+  "words": []
+ },
+ {
+  "id": "suburb-locked",
+  "set": "suburb",
+  "min": 8,
+  "params": {
+   "mode": "locked"
+  },
+  "start": 89,
+  "voAt": 89.25,
+  "voDur": 0,
+  "duration": 8,
+  "words": []
+ },
+ {
+  "id": "tower-interest",
+  "set": "debt-tower",
+  "min": 10,
+  "params": {
+   "mode": "interest"
+  },
+  "start": 97,
+  "voAt": 97.25,
+  "voDur": 0,
+  "duration": 10,
+  "words": []
+ },
+ {
+  "id": "vault",
+  "set": "vault",
+  "min": 9,
+  "params": {},
+  "start": 107,
+  "voAt": 107.25,
+  "voDur": 0,
+  "duration": 9,
+  "words": []
+ }
+]
