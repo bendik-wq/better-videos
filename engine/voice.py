@@ -7,7 +7,10 @@ Writes <cache>/<id>-<hash>.wav and .words.json; prints a JSON map id -> {wav, wo
 
 Engines:
   kokoro      (default, offline)  voice: {"engine":"kokoro","name":"af_heart","speed":1.0}
-  elevenlabs  (needs ELEVENLABS_API_KEY) voice: {"engine":"elevenlabs","voiceId":"...","model":"eleven_multilingual_v2"}
+  elevenlabs  (needs ELEVENLABS_API_KEY) voice: {"engine":"elevenlabs","voiceId":"...","model":"eleven_v3" | "eleven_v4",
+                                    "settings":{"stability":0.5,...},"speed":1.0,"takes":3,"parallel":3,"context":true}
+              Whole shot per request; | beats become ellipses; [audio tags] (e.g. [curious]) pass to the model and
+              are hidden from captions; each take is Whisper-checked and retried with a new seed if words are wrong.
   piper       (fallback)          voice: {"engine":"piper","model":"en_US-ryan-high"}
   chatterbox  (offline, expressive) voice: {"engine":"chatterbox","ref":"assets/voices/stuart_bell.wav","tempo":1.05,
                                     "beat":0.3,"python":"/root/cbenv/bin/python"}
@@ -107,16 +110,71 @@ def finish(audio, sr, path):
     write_wav(path, audio, sr)
 
 
-def say_elevenlabs(text, path):
-    import urllib.request
+def el_text(text):
+    """Script markup -> ElevenLabs v3/v4 text: | beats become ellipses (pauses with weight), *emphasis* and > are
+    dropped (v3/v4 read emphasis from context; caps can shout), [audio tags] pass through."""
+    out = []
+    for line in [l.strip().lstrip(">").strip() for l in text.split("\n") if l.strip()]:
+        parts = [p.strip() for p in line.split("|") if p.strip()]
+        t = ""
+        for k, p in enumerate(parts):
+            p = re.sub(r"\*([^*]+)\*", r"\1", p)
+            if k and not re.search(r"[.!?:;,…—]$", t): t += "…"
+            t += (" " if t else "") + p
+        out.append(t)
+    return " ".join(out)
+
+
+def _el_request(text, voice_id, seed, prev=None, nxt=None):
+    import urllib.request, urllib.error
     key = os.environ["ELEVENLABS_API_KEY"]
-    req = urllib.request.Request(
-        f"https://api.elevenlabs.io/v1/text-to-speech/{V['voiceId']}?output_format=pcm_24000",
-        data=json.dumps({"text": text, "model_id": V.get("model", "eleven_multilingual_v2"),
-                         "voice_settings": V.get("settings", {"stability": 0.45, "similarity_boost": 0.8, "style": 0.2})}).encode(),
-        headers={"xi-api-key": key, "content-type": "application/json"})
-    pcm = np.frombuffer(urllib.request.urlopen(req).read(), dtype="<i2").astype(np.float32) / 32767
-    write_wav(path, pcm, 24000)
+    body = {"text": text, "model_id": V.get("model", "eleven_v3"), "seed": seed,
+            "voice_settings": V.get("settings", {"stability": 0.5, "similarity_boost": 0.8, "style": 0.0, "use_speaker_boost": True})}
+    if V.get("speed"): body["voice_settings"]["speed"] = V["speed"]
+    if V.get("context", True) and prev: body["previous_text"] = prev
+    if V.get("context", True) and nxt: body["next_text"] = nxt
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=pcm_24000"
+    for attempt in range(5):
+        req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"xi-api-key": key, "content-type": "application/json"})
+        try:
+            return np.frombuffer(urllib.request.urlopen(req, timeout=180).read(), dtype="<i2").astype(np.float32) / 32767
+        except urllib.error.HTTPError as e:
+            msg = e.read().decode(errors="replace")[:300]
+            if e.code == 400 and ("previous_text" in body or "next_text" in body):  # model without request context
+                body.pop("previous_text", None); body.pop("next_text", None); continue
+            if e.code in (429, 500, 502, 503) and attempt < 4:
+                import time; time.sleep(4 * (attempt + 1)); continue
+            raise RuntimeError(f"ElevenLabs {e.code}: {msg}")
+
+
+def elevenlabs_batch(todo):
+    """todo = [(text, wav path, prev text, next text)]. Generated in parallel, each take checked with Whisper and
+    regenerated with a new seed if its words come out wrong; the best take wins."""
+    from concurrent.futures import ThreadPoolExecutor
+    voice_id = V["voiceId"]
+
+    def one(job):
+        text, wav, prev, nxt = job
+        t = el_text(text); best, best_w = None, 9
+        for k in range(int(V.get("takes", 3))):
+            a = _el_request(t, voice_id, 4242 + 7919 * k, el_text(prev) if prev else None, el_text(nxt) if nxt else None)
+            tmp = wav[:-4] + f".take{k}.wav"; write_wav(tmp, a, 24000)
+            w = _wer(re.sub(r"\[[^\]]*\]", " ", t), " ".join(x["w"] for x in align(tmp)))
+            if w < best_w: best, best_w = a, w
+            os.unlink(tmp)
+            if w <= float(V.get("maxWer", 0.25)): break
+            print(f"[vo] retry {os.path.basename(wav)} (WER {w:.2f})", file=sys.stderr)
+        # trim the edges so the shot's padIn/padOut own the silence
+        nz = np.where(np.abs(best) > 0.01)[0]
+        if len(nz): best = best[max(0, nz[0] - 480): nz[-1] + 1440]
+        finish(best, 24000, wav)
+        print(f"[vo] {os.path.basename(wav)} ok (WER {best_w:.2f})", file=sys.stderr)
+
+    with ThreadPoolExecutor(int(V.get("parallel", 3))) as ex: list(ex.map(one, todo))
+
+
+def say_elevenlabs(text, path):
+    elevenlabs_batch([(text, path, None, None)])
 
 
 def say_piper(text, path):
@@ -162,7 +220,8 @@ def script_align(text, heard):
 
 
 def strip_markup(t):
-    if not use_prosody() and V.get("engine") != "chatterbox": return t
+    if V.get("engine") == "elevenlabs": t = re.sub(r"\[[^\]]*\]\s*", "", t)
+    if not use_prosody() and V.get("engine") not in ("chatterbox", "elevenlabs"): return t
     from music import vo
     return vo.strip_markup(t)
 
@@ -263,6 +322,15 @@ def main(jobs_path):
     V = jobs["voice"]; cache = jobs["cache"]; root = jobs.get("root", ".")
     os.makedirs(cache, exist_ok=True)
     out = {}
+    if V.get("engine") == "elevenlabs":  # parallel requests, with neighbouring lines as context
+        todo, sh = [], jobs["shots"]
+        for i, s in enumerate(sh):
+            key = hashlib.sha1(json.dumps([{k: v for k, v in V.items() if k != "say"}, s["text"], "el1"]).encode()).hexdigest()[:12]
+            wav = os.path.join(cache, f"{s['id']}-{key}.wav")
+            if not os.path.exists(wav): todo.append((s["text"], wav, sh[i - 1]["text"] if i else None, sh[i + 1]["text"] if i + 1 < len(sh) else None))
+        if todo:
+            print(f"[vo] elevenlabs: {len(todo)} shots", file=sys.stderr)
+            elevenlabs_batch(todo)
     if V.get("engine") == "chatterbox":  # one model load for every missing shot
         todo = []
         for s in jobs["shots"]:
@@ -276,6 +344,7 @@ def main(jobs_path):
         # v2 salt only when the new pipeline is on, so old caches stay valid for prosody/fx = false
         salt = [V, s["text"]] + ([["r3.1", use_prosody(), use_fx()]] if (use_prosody() or use_fx()) and V.get("engine", "kokoro") == "kokoro" else [])
         if V.get("engine") == "chatterbox": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "cb1"]
+        if V.get("engine") == "elevenlabs": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "el1"]
         key = hashlib.sha1(json.dumps(salt).encode()).hexdigest()[:12]
         wav = os.path.join(cache, f"{s['id']}-{key}.wav"); wj = wav[:-4] + ".words.json"
         if not os.path.exists(wav):
