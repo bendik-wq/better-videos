@@ -8,7 +8,7 @@
 //   staircase 11.5 (the chamber starts to fill)   sky 17 (over the stern)   up 21.5 ('Up there': up the staircase)
 //   lake 25 (crest + reveal)   afternoon 29 (lake cruise)   climbs 33 (pull-up starts)   pours 37.5 (water out to sea)
 //   gallons 42 (section sweeps)   gone 46.5 (section complete)   rain 51 (clouds and rain on the watershed)
-// params: cues, labels (true), counter (true: the "+ft" pill during the climb), sweep (s, default 3.6), fillSpan (s, 8.5)
+// params: cues, first (9.5: skim length floor), gap (2.4 s between beats), labels (true), counter (true: the "+ft" pill during the climb), sweep (s, default 3.6), fillSpan (s, 8.5)
 import * as THREE from 'three';
 import * as O from '/engine/oner.js';
 import * as CK from './clay-kit.js';
@@ -24,8 +24,9 @@ export default function makeOner(H) {
     const P0 = shot.params ?? {};
     // ---- cue times (monotonic, at least `gap` apart)
     const cues = Object.fromEntries(Object.keys(DEF).map(k => [k, { word: P0.cues?.[k]?.word ?? WORD[k], at: P0.cues?.[k]?.at ?? DEF[k] }]));
-    const T = {}; let last = 9.5;
-    for (const k of Object.keys(DEF)) { let t; try { t = O.cueTime(k, { shot, cues }); } catch { t = DEF[k]; } T[k] = Math.max(t, last + 2.4); last = T[k]; }
+    // first: earliest the chamber can start filling minus gap (the skim before it); gap: least time between beats
+    const gap = P0.gap ?? 2.4, T = {}; let last = P0.first ?? 9.5;
+    for (const k of Object.keys(DEF)) { let t; try { t = O.cueTime(k, { shot, cues }); } catch { t = DEF[k]; } T[k] = Math.max(t, last + gap); last = T[k]; }
     const enter = Math.min(9.5, T.staircase - 2), fillSpan = P0.fillSpan ?? Math.max(6, Math.min(8.5, T.up - T.staircase + 1));
 
     // ---- the world

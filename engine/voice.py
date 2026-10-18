@@ -9,6 +9,11 @@ Engines:
   kokoro      (default, offline)  voice: {"engine":"kokoro","name":"af_heart","speed":1.0}
   elevenlabs  (needs ELEVENLABS_API_KEY) voice: {"engine":"elevenlabs","voiceId":"...","model":"eleven_multilingual_v2"}
   piper       (fallback)          voice: {"engine":"piper","model":"en_US-ryan-high"}
+  chatterbox  (offline, expressive) voice: {"engine":"chatterbox","ref":"assets/voices/stuart_bell.wav","tempo":1.05,
+                                    "beat":0.3,"python":"/root/cbenv/bin/python"}
+              Chatterbox Turbo cloned from a CC0 reference voice. Runs engine/tts_chatterbox.py in its own venv.
+              Text is split at "|" beats and line breaks; each chunk is generated, checked with Whisper
+              (regenerated with a new seed if the words come out wrong) and joined with short pauses.
 
 Kokoro extras (all optional; see engine/music/vo.py and docs/audio/voice.md):
   "prosody": true      sentence/line-level synthesis with punctuation-driven pauses, per-line speed
@@ -157,12 +162,99 @@ def script_align(text, heard):
 
 
 def strip_markup(t):
-    if not use_prosody(): return t
+    if not use_prosody() and V.get("engine") != "chatterbox": return t
     from music import vo
     return vo.strip_markup(t)
 
 
-ENGINES = {"kokoro": say_kokoro, "elevenlabs": say_elevenlabs, "piper": say_piper}
+def cb_chunks(text):
+    """Script text -> [(chunk text, pause after s)]: split at | beats and line breaks, keep sentences together."""
+    beat = float(V.get("beat", 0.3)); out = []
+    for li, line in enumerate([l for l in text.split("\n") if l.strip()]):
+        line = line.strip().lstrip(">").strip()
+        parts = [p.strip() for p in line.split("|")]
+        for k, p in enumerate(parts):
+            p = re.sub(r"\*([^*]+)\*", r"\1", p).strip()
+            if not p: continue
+            out.append([p, beat])
+        if out: out[-1][1] = max(out[-1][1], 0.45)
+    if out: out[-1][1] = 0.0
+    return out
+
+
+NUMW = set("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand million billion point percent and a dollar dollars cents".split())
+
+
+def _norm_words(t):
+    """Words for the intelligibility check; numbers are dropped (Whisper writes digits, the script spells them)."""
+    w = re.sub(r"[^a-z0-9 ]", " ", t.lower().replace("’", "'").replace("'", "").replace("-", " ")).split()
+    return [x for x in w if x not in NUMW and not re.fullmatch(r"\d+(st|nd|rd|th|s)?", x)]
+
+
+def _wer(ref, hyp):
+    r, h = _norm_words(ref), _norm_words(hyp)
+    d = list(range(len(h) + 1))
+    for i in range(1, len(r) + 1):
+        prev, d[0] = d[0], i
+        for j in range(1, len(h) + 1):
+            cur = min(d[j] + 1, d[j - 1] + 1, prev + (r[i - 1] != h[j - 1])); prev, d[j] = d[j], cur
+    return d[len(h)] / max(1, len(r))
+
+
+def chatterbox_batch(todo, cache):
+    """todo = [(text, wav path)] -> writes every wav (finished through the fx chain)."""
+    import tempfile
+    from scipy.io import wavfile
+    py = V.get("python", "/root/cbenv/bin/python"); ref = os.path.join(root, V["ref"])
+    chunks = []  # [shot index, chunk index, text, pause, raw path]
+    for i, (text, wav) in enumerate(todo):
+        for k, (t, pause) in enumerate(cb_chunks(text)):
+            chunks.append(dict(i=i, k=k, text=t, pause=pause, raw=f"{wav[:-4]}.c{k}.raw.wav", seed=1000 + k, wer=9))
+    pending = chunks
+    for attempt in range(4):
+        if not pending: break
+        job = dict(ref=ref, temperature=V.get("temperature", 0.8), items=[dict(text=c["text"], out=c["raw"], seed=c["seed"]) for c in pending])
+        jf = tempfile.NamedTemporaryFile("w", suffix=".json", dir=cache, delete=False); json.dump(job, jf); jf.close()
+        env = dict(os.environ, TQDM_DISABLE="1", HF_HUB_DISABLE_PROGRESS_BARS="1")
+        subprocess.run([py, os.path.join(HERE, "tts_chatterbox.py"), jf.name], check=True, env=env, stdout=sys.stderr)
+        os.unlink(jf.name)
+        again = []
+        for c in pending:  # intelligibility check: regenerate a chunk whose words come out wrong
+            heard = " ".join(w["w"] for w in align(c["raw"]))
+            w = _wer(c["text"], heard)
+            if w < c["wer"]: c["best"], c["wer"] = c["raw"] + ".best.wav", w; os.replace(c["raw"], c["best"])
+            if c["wer"] > float(V.get("maxWer", 0.25)) and attempt < 3:
+                c["seed"] += 7919; again.append(c)
+                print(f"[vo] retry {os.path.basename(c['raw'])} (WER {w:.2f}): {c['text'][:60]}", file=sys.stderr)
+        pending = again
+    for c in chunks:
+        if os.path.exists(c["raw"]): os.unlink(c["raw"])
+    tempo = float(V.get("tempo", 1.0))
+    for i, (text, wav) in enumerate(todo):
+        parts, sr = [], 24000
+        for c in [c for c in chunks if c["i"] == i]:
+            sr, a = wavfile.read(c["best"]); a = a.astype(np.float32) / (32768.0 if a.dtype == np.int16 else 1.0)
+            if a.ndim > 1: a = a.mean(axis=1)
+            # trim leading/trailing silence so the beat pauses are ours
+            nz = np.where(np.abs(a) > 0.01)[0]
+            if len(nz): a = a[max(0, nz[0] - int(0.02 * sr)): nz[-1] + int(0.06 * sr)]
+            f = min(len(a) // 4, int(0.006 * sr))
+            if f > 1: a = a.copy(); a[:f] *= np.linspace(0, 1, f); a[-f:] *= np.linspace(1, 0, f)
+            parts += [a, np.zeros(int(c["pause"] / tempo * sr), np.float32)]
+            os.unlink(c["best"])
+        audio = np.concatenate(parts) if parts else np.zeros(sr // 10, np.float32)
+        if abs(tempo - 1.0) > 1e-3:  # pitch-preserving speed-up with ffmpeg atempo
+            tmp = wav[:-4] + ".tempo.wav"; write_wav(tmp + ".in.wav", audio, sr)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp + ".in.wav", "-filter:a", f"atempo={tempo}", tmp], check=True)
+            sr, audio = wavfile.read(tmp); audio = audio.astype(np.float32) / 32768.0; os.unlink(tmp); os.unlink(tmp + ".in.wav")
+        finish(audio, sr, wav)
+
+
+def say_chatterbox(text, path):
+    chatterbox_batch([(text, path)], os.path.dirname(path) or ".")
+
+
+ENGINES = {"chatterbox": say_chatterbox, "kokoro": say_kokoro, "elevenlabs": say_elevenlabs, "piper": say_piper}
 
 
 def main(jobs_path):
@@ -171,9 +263,19 @@ def main(jobs_path):
     V = jobs["voice"]; cache = jobs["cache"]; root = jobs.get("root", ".")
     os.makedirs(cache, exist_ok=True)
     out = {}
+    if V.get("engine") == "chatterbox":  # one model load for every missing shot
+        todo = []
+        for s in jobs["shots"]:
+            key = hashlib.sha1(json.dumps([V, s["text"], "cb1"]).encode()).hexdigest()[:12]
+            wav = os.path.join(cache, f"{s['id']}-{key}.wav")
+            if not os.path.exists(wav): todo.append((s["text"], wav))
+        if todo:
+            print(f"[vo] chatterbox: {len(todo)} shots", file=sys.stderr)
+            chatterbox_batch(todo, cache)
     for s in jobs["shots"]:
         # v2 salt only when the new pipeline is on, so old caches stay valid for prosody/fx = false
         salt = [V, s["text"]] + ([["r3.1", use_prosody(), use_fx()]] if (use_prosody() or use_fx()) and V.get("engine", "kokoro") == "kokoro" else [])
+        if V.get("engine") == "chatterbox": salt = [V, s["text"], "cb1"]
         key = hashlib.sha1(json.dumps(salt).encode()).hexdigest()[:12]
         wav = os.path.join(cache, f"{s['id']}-{key}.wav"); wj = wav[:-4] + ".words.json"
         if not os.path.exists(wav):

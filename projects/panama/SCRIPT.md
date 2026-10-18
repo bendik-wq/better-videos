@@ -18,20 +18,18 @@
 
 ---
 
-## COLD OPEN (0:00–1:45): the oner over the water, up the lock, over the lake
-1. Every ship that crosses Panama climbs a staircase of water | eighty-five feet into the sky. [↺]
-2. Up there, on top of the country, | is a lake.
-3. The ship sails across it for a whole afternoon, | then climbs back down the other side, | and the canal *pours* the water it used into the sea.
-4. About fifty million gallons of fresh water. | Every crossing. | Gone. [↺]
-5. And the only thing that ever fills it back up | is rain.
-6. Most of the time, that works. Panama is one of the wettest places on Earth.
-7. But in twenty twenty-three, the rain stopped. | More than a hundred and sixty ships ended up waiting in line at the two ends of the canal. [↺]
-8. And this summer, it happened again. One ship paid a record five point three million dollars | just to skip the queue.
-9. That's almost a hundred times the usual price. **(opens L2)**
-10. Now, right as you watch this, forecasters say there's an eighty-three percent chance the ocean is building one of the strongest El Niños ever measured. ⏱ [↺]
-11. And the people who run this canal have a rule of thumb about El Niño. | The worst doesn't come during it. | It comes *the year after*.
-12. So how did a hundred-and-twelve-year-old machine end up running on rain? **(opens L1)**
-13. > And what happens if the rain doesn't come? **(opens L3)**
+## COLD OPEN (0:00–0:45): v2, quick. The oner starts moving on frame 1 and the first line lands at once
+1. This ship is about to climb a mountain. | Made of water. [↺]
+2. Eighty-five feet up, | on top of Panama, | sits a lake.
+3. Every ship that crosses pours about fifty million gallons of it | into the sea. | Gone. [↺]
+4. And the only thing that fills it back up? | Rain.
+5. In twenty twenty-three, the rain stopped. | More than a hundred and sixty ships got stuck in line. [↺]
+6. This summer, it happened again. | One ship paid a record five point three million dollars | just to skip the queue. **(opens L2)**
+7. And right now, forecasters put the odds of one of the strongest El Niños ever measured | at eighty-three percent. ⏱ [↺]
+8. The canal's own rule of thumb? | The worst comes *the year after*.
+9. > So what happens when the rain doesn't come? **(opens L3)**
+
+(v1 lines 6, 9 and 12 were cut. L1, "why a canal that runs on rain?", now opens at line 43.)
 
 **TITLE: THE CANAL THAT RUNS ON RAIN**
 
