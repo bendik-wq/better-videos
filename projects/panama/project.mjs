@@ -220,8 +220,10 @@ export default {
   title: 'The Canal That Runs on Rain',
   fps: 60, width: 1920, height: 1080,
   settings: { fps: 60, aa: 'fxaa', look: 'bright-model', cutGuard: 1.5, crf: 20 },
-  voice: { engine: 'chatterbox', ref: 'assets/voices/stuart_bell.wav', tempo: 1.06, beat: 0.26,
-    say: { NOAA: 'Noah' }},
+  voice: process.env.ELEVENLABS_API_KEY
+    ? { engine: 'elevenlabs', voiceId: 'JBFqnCBsd6RMkjVDRZzb', model: 'eleven_v4', settings: { stability: 0.5, similarity_boost: 0.8, style: 0.0, use_speaker_boost: true },
+        takes: 2, maxWer: 0.35, parallel: 3, say: { NOAA: 'Noah' } }
+    : { engine: 'chatterbox', ref: 'assets/voices/stuart_bell.wav', tempo: 1.06, beat: 0.26, say: { NOAA: 'Noah' } },
   timing: { padIn: 0.15, padOut: 0.4 },
   shots,
   score: { key: 'D', transitions: scoreTransitions(shots), music },
