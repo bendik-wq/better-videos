@@ -66,3 +66,46 @@ Sources consulted:
 - https://www.enr.com/articles/63168-worlds-longest-immersed-tunnel-passes-milestone-but-faces-delays
 - https://www.analyticsinsight.net/amp/story/news/spacex-delays-2026-mars-mission-shifts-starship-focus-to-nasa-moon-landing
 - https://abcnews.go.com/US/wireStory/north-carolina-maker-high-purity-quartz-back-operating-114699814
+
+## 2026-10-18 idea-engine run (high-CPM constraint)
+Winner: The Auction That Sets Your Mortgage Rate (21/25) · Money, markets and economics · H
+Why: F1 (the 7 Oct 10-year auction sold $39B at 5.300%, the highest since Nov 2000; mortgages at 7.40%), F2 (the Fed cut 1.75 points from 2024 to 2025 yet mortgages rose 6.09% → 7.40%), F3 (the 10-year closed at 5.31% on 5 Oct, its highest since 2002) and F5 (an auction that prices your house) are all strong. Wow factors: at 3:00, the computed payment gap (+$301/month and $108,520 over a $400K loan versus a year ago); at 6:00, a 3D reconstruction of the 1:00 pm auction with who-bought flows from TIC data. The niche is investing and mortgages, among the highest-CPM categories; publish mid-to-late November for the Q4 ad peak.
+Runners-up: The Island That Insures Your House (Bermuda reinsurance, 21), The Drawer That Holds Social Security (19)
+Fresh ideas added to the bank: 5 (#260–264, in "Money, markets and economics"; #260 is marked IN PRODUCTION). #101 (The $34 Trillion Question) should be rescored to about 20 (it is $40T now, so Sat is −1 for Concerning Reality 2.0M); its content folds into the winner. The bank row is left as it was.
+Full research (CPM ranges and sources, sentiment evidence, the 12-candidate table, stress tests): docs/library/cpm-research-2026-10.md
+
+Constraints for this run: a high-CPM niche (money, housing, insurance, retirement, debt), live audience sentiment in Oct 2026, a bright white-clay hero object, 20–25 min. No repeats of data rush, Palantir, Hormuz, the Ukraine grid or Panama.
+
+Filtered out:
+- Private credit: no hero object, and naming firms is a fact risk.
+- The 50-year mortgage: timely only.
+- Car insurance and wage garnishment: low outlier factors.
+- Who Lends America $40T, Japan selling, and the $7T rollover wall overlap the winner; they become its acts 3 and 4.
+
+Sources consulted:
+- https://www.vidiq.com/blog/post/most-profitable-youtube-niches
+- https://outlierkit.com/resources/youtube-rpm-benchmarks/
+- https://air.io/en/air-data-findings/how-much-does-youtube-really-pay-in-2026-real-rpm-data-from-300-channels
+- https://localiq.com/blog/search-advertising-benchmarks/
+- https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026
+- https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/
+- https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/
+- https://fiscaldata.treasury.gov/datasets/interest-expense-debt-outstanding/
+- https://fiscaldata.treasury.gov/datasets/average-interest-rates-treasury-securities/
+- https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/
+- https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.txt
+- https://www.freddiemac.com/pmms
+- https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm
+- https://www.federalreserve.gov/newsevents/pressreleases/monetary20251210a.htm
+- https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm
+- https://www.nbcnews.com/business/markets/treasury-yields-hit-24-year-highs-global-sell-accelerates-rcna602045
+- https://www.cnbc.com/2026/09/02/global-bond-yields-inflation-rates.html
+- https://www.americanactionforum.org/insight/cbo-fy-2026-budget-deficit-totaled-2-trillion/
+- https://www.newyorkfed.org/newsevents/news/research/2026/20260811
+- https://www.everycrsreport.com/reports/IF13256.html
+- https://rateschaser.com/home-insurance/news/california-fair-plan-cdi-rate-approval-29-percent-2026-06-28/
+- https://woods.stanford.edu/news/californias-home-insurance-crisis-spreading-beyond-wildfire-country
+- https://www.guycarp.com/content/dam/guycarp-rebrand/pdf/pressreleases/News-Release-GC-June-Renewals.pdf
+- https://www.insurancebusinessmag.com/reinsurance/news/breaking-news/florida-reinsurance-rates-fall-30-for-citizens-as-capital-floods-the-market-579777.aspx
+- https://business.abir.bm/resources/Details/abir-fact-sheet-2026-339211
+- https://georgewbush-whitehouse.archives.gov/news/releases/2005/04/20050405-3.html
