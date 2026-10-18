@@ -220,8 +220,8 @@ def script_align(text, heard):
 
 
 def strip_markup(t):
-    if V.get("engine") == "elevenlabs": t = re.sub(r"\[[^\]]*\]\s*", "", t)
-    if not use_prosody() and V.get("engine") not in ("chatterbox", "elevenlabs"): return t
+    if V.get("engine") in ("elevenlabs", "pocket"): t = re.sub(r"\[[^\]]*\]\s*", "", t)
+    if not use_prosody() and V.get("engine") not in ("chatterbox", "elevenlabs", "pocket"): return t
     from music import vo
     return vo.strip_markup(t)
 
@@ -313,7 +313,50 @@ def say_chatterbox(text, path):
     chatterbox_batch([(text, path)], os.path.dirname(path) or ".")
 
 
-ENGINES = {"chatterbox": say_chatterbox, "kokoro": say_kokoro, "elevenlabs": say_elevenlabs, "piper": say_piper}
+_pocket = None
+
+
+def pocket_batch(todo):
+    """Kyutai Pocket TTS (in-process, CPU, ~2x real time). voice: a built-in name ('stuart_bell') or a .wav path.
+    Same chunking, Whisper check, tempo and fx chain as the chatterbox engine."""
+    global _pocket
+    from scipy.io import wavfile
+    if _pocket is None:
+        from pocket_tts import TTSModel
+        m = TTSModel.load_model(); _pocket = (m, m.get_state_for_audio_prompt(V.get("voice", "stuart_bell")))
+    m, st = _pocket
+    tempo = float(V.get("tempo", 1.0))
+    for text, wav in todo:
+        parts = []
+        for k, (t, pause) in enumerate(cb_chunks(text)):
+            best, best_w = None, 9
+            for attempt in range(3):
+                import torch; torch.manual_seed(1000 + k + 7919 * attempt)
+                a = m.generate_audio(st, t).numpy().astype(np.float32)
+                tmp = wav[:-4] + f".c{k}.wav"; write_wav(tmp, a, m.sample_rate)
+                w = _wer(t, " ".join(x["w"] for x in align(tmp))); os.unlink(tmp)
+                if w < best_w: best, best_w = a, w
+                if w <= float(V.get("maxWer", 0.25)): break
+                print(f"[vo] retry {os.path.basename(wav)} c{k} (WER {w:.2f}): {t[:50]}", file=sys.stderr)
+            a = best; nz = np.where(np.abs(a) > 0.01)[0]
+            if len(nz): a = a[max(0, nz[0] - int(0.02 * m.sample_rate)): nz[-1] + int(0.06 * m.sample_rate)]
+            f = min(len(a) // 4, int(0.006 * m.sample_rate))
+            if f > 1: a = a.copy(); a[:f] *= np.linspace(0, 1, f); a[-f:] *= np.linspace(1, 0, f)
+            parts += [a, np.zeros(int(pause / tempo * m.sample_rate), np.float32)]
+        audio, sr = (np.concatenate(parts) if parts else np.zeros(2400, np.float32)), m.sample_rate
+        if abs(tempo - 1.0) > 1e-3:
+            tmp = wav[:-4] + ".tempo.wav"; write_wav(tmp + ".in.wav", audio, sr)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp + ".in.wav", "-filter:a", f"atempo={tempo}", tmp], check=True)
+            sr, audio = wavfile.read(tmp); audio = audio.astype(np.float32) / 32768.0; os.unlink(tmp); os.unlink(tmp + ".in.wav")
+        finish(audio, sr, wav)
+        print(f"[vo] {os.path.basename(wav)} ok", file=sys.stderr)
+
+
+def say_pocket(text, path):
+    pocket_batch([(text, path)])
+
+
+ENGINES = {"pocket": say_pocket, "chatterbox": say_chatterbox, "kokoro": say_kokoro, "elevenlabs": say_elevenlabs, "piper": say_piper}
 
 
 def main(jobs_path):
@@ -345,6 +388,7 @@ def main(jobs_path):
         salt = [V, s["text"]] + ([["r3.1", use_prosody(), use_fx()]] if (use_prosody() or use_fx()) and V.get("engine", "kokoro") == "kokoro" else [])
         if V.get("engine") == "chatterbox": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "cb1"]
         if V.get("engine") == "elevenlabs": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "el1"]
+        if V.get("engine") == "pocket": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "pk1"]
         key = hashlib.sha1(json.dumps(salt).encode()).hexdigest()[:12]
         wav = os.path.join(cache, f"{s['id']}-{key}.wav"); wj = wav[:-4] + ".words.json"
         if not os.path.exists(wav):
