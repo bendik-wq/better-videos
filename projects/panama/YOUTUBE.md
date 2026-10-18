@@ -1,6 +1,6 @@
 # YouTube upload: The Canal That Runs on Rain
 
-- **File:** `out/deliver/panama-1080p60.mp4` (1080p, 60 fps, 20:32). v2: new narrator and a faster cold open. Download link below once uploaded.
+- **File:** `out/deliver/panama-1080p60.mp4` (1080p, 60 fps, 20:32). v2: new narrator and a faster cold open. Download: https://gofile.io/d/5Uc6Eshn
 - **Title:** The Canal That Runs on Rain
 - **Title test (Test & Compare):** The Panama Canal Doesn't Connect Two Oceans · Why the Panama Canal Is Running Out of Water
 - **Thumbnails (Test & Compare, title fixed):** see `packaging.md`.
