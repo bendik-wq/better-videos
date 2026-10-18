@@ -16,3 +16,4 @@ renders/mortgage/graphics/*-60.jpg
 renders/mortgage/graphics/*-95.jpg
 renders/mortgage/graphics/draft-*.mp4
 projects/*/lab/out/
+renders/mortgage/*-[0-9]*.jpg

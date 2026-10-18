@@ -30,7 +30,8 @@ if (done.length > 1) {
     const page = done.slice(p * 12, p * 12 + 12), inputs = page.flatMap(f => ['-i', f]);
     const layout = page.map((_, i) => `${(i % cols) * w}_${Math.floor(i / cols) * h}`).join('|');
     const name = path.join(OUT, `contact${p ? '-' + (p + 1) : ''}.jpg`);
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-filter_complex', `${page.map((_, i) => `[${i}:v]scale=${w}:${h}[v${i}]`).join(';')};${page.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${page.length}:layout=${layout}:fill=white[o]`, '-map', '[o]', '-q:v', '3', name]);
+    const fc = page.length === 1 ? `[0:v]scale=${w}:${h}[o]` : `${page.map((_, i) => `[${i}:v]scale=${w}:${h}[v${i}]`).join(';')};${page.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${page.length}:layout=${layout}:fill=white[o]`;
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-filter_complex', fc, '-map', '[o]', '-q:v', '3', name]);
     sheets.push(name);
   }
   console.log(`[mortgage] ${done.length} graded stills + ${sheets.map(s => path.relative(ROOT, s)).join(', ')}`);

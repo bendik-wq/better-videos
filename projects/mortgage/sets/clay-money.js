@@ -132,7 +132,7 @@ export default function makeClayMoney(H) {
     const rw = nb * dx + 1.0;
     const ruler = new THREE.Mesh(new THREE.PlaneGeometry(rw, 1.15).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ roughness: 0.9, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
       map: PR.canvasTex(2400, Math.round(2400 * 1.15 / rw), (g, W, Hh) => { const u = W / rw; g.strokeStyle = C.inkSoft; g.lineWidth = 3; g.beginPath(); g.moveTo(u * 0.3, Hh * 0.18); g.lineTo(W - u * 0.3, Hh * 0.18); g.stroke();
-        YIELDS.forEach((y, b) => { const x = (xb(b) + rw / 2) * u; g.beginPath(); g.moveTo(x, Hh * 0.08); g.lineTo(x, Hh * 0.3); g.stroke(); PR.fitText(g, `${y.toFixed(2)}%`, { x: x - u * 0.66, y: Hh * 0.32, w: u * 1.32, h: Hh * 0.62, size: 0.86, weight: 700, color: C.ink }); }); }) }));
+        YIELDS.forEach((y, b) => { const x = (xb(b) + rw / 2) * u; g.beginPath(); g.moveTo(x, Hh * 0.08); g.lineTo(x, Hh * 0.3); g.stroke(); PR.fitText(g, `${y.toFixed(2)}%`, { x: x - u * 0.55, y: Hh * 0.32, w: u * 1.1, h: Hh * 0.62, size: 0.86, weight: 700, color: C.ink }); }); }) }));
     ruler.position.set(0, 0.006, 1.2); ruler.receiveShadow = true; scene.add(ruler);
     // envelopes: one InstancedMesh; data per envelope
     const env = [], heapC = V(0, 0, 3.4);
@@ -389,7 +389,7 @@ export default function makeClayMoney(H) {
       coins = new THREE.InstancedMesh(coinG, PR.vmat(0.4), nI + 24); coins.castShadow = true; scene.add(coins);
     }
     // ---- labels
-    const ctr = counter(layer, P0.sub ?? { grow: 'U.S. DEBT', rollover: 'DUE WITHIN 12 MONTHS', interest: 'NET INTEREST · FY2026' }[mode]);
+    const ctr = counter(layer, P0.sub ?? { grow: 'U.S. DEBT', rollover: 'ROLLED OVER · NEXT 12 MONTHS', interest: 'NET INTEREST · FY2026' }[mode]);
     const pl = { due: H.pill(layer, '≈1/3 DUE IN 12 MONTHS', { size: 26, dot: C.yellow }), old: H.pill(layer, 'OLD DEBT · <b>≈3.5%</b>', { size: 26 }), nw: H.pill(layer, 'NEW 10-YEAR · <b>5.3%</b>', { size: 26, dot: C.red }), hop: H.pill(layer, 'AUCTION', { size: 26 }),
       int: H.pill(layer, 'NET INTEREST · <b>$1.05T</b>', { size: 28, dot: C.gold }), def: H.pill(layer, 'DEFENSE · <b>$0.97T</b>', { size: 28, dot: '#c9ccd0' }) };
     const cap = H.caption(layer, P0.caption ?? null);
@@ -438,7 +438,7 @@ export default function makeClayMoney(H) {
           M4.compose(Pp.set(x, y, z), Q.identity(), Sc.setScalar(Math.max(1e-4, s))); fresh.setMatrixAt(i, M4);
         }
         fresh.instanceMatrix.needsUpdate = true;
-        ctr.set(`$${(10.64 * clamp(1 - done / nCyc)).toFixed(2)}T`, 1);
+        ctr.set(`$${(num(P0.rolled ?? 10.64) * clamp(D / nCyc)).toFixed(2)}T`, 1);
         const bt = toS(v.set(-4.2, PED + ROLL * LH * 0.5, 2.2), camera); pl.due.at(bt[0] - 110, bt[1], sstep(at - 1.4, at - 0.8, t) * (1 - sstep(at + span * 0.3, at + span * 0.3 + 0.4, t)));
         const ob = toS(v.set(10, PED + 1.3, 1.2), camera); pl.old.at(ob[0], ob[1], sstep(at + 0.4, at + 0.8, t));
         const nb = toS(v.set(0, topY + 1.6, 0), camera); pl.nw.at(nb[0], nb[1], sstep(at + cyc, at + cyc + 0.4, t));
