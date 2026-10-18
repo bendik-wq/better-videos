@@ -266,7 +266,7 @@ def main(jobs_path):
     if V.get("engine") == "chatterbox":  # one model load for every missing shot
         todo = []
         for s in jobs["shots"]:
-            key = hashlib.sha1(json.dumps([V, s["text"], "cb1"]).encode()).hexdigest()[:12]
+            key = hashlib.sha1(json.dumps([{k: v for k, v in V.items() if k != "say"}, s["text"], "cb1"]).encode()).hexdigest()[:12]
             wav = os.path.join(cache, f"{s['id']}-{key}.wav")
             if not os.path.exists(wav): todo.append((s["text"], wav))
         if todo:
@@ -275,7 +275,7 @@ def main(jobs_path):
     for s in jobs["shots"]:
         # v2 salt only when the new pipeline is on, so old caches stay valid for prosody/fx = false
         salt = [V, s["text"]] + ([["r3.1", use_prosody(), use_fx()]] if (use_prosody() or use_fx()) and V.get("engine", "kokoro") == "kokoro" else [])
-        if V.get("engine") == "chatterbox": salt = [V, s["text"], "cb1"]
+        if V.get("engine") == "chatterbox": salt = [{k: v for k, v in V.items() if k != "say"}, s["text"], "cb1"]
         key = hashlib.sha1(json.dumps(salt).encode()).hexdigest()[:12]
         wav = os.path.join(cache, f"{s['id']}-{key}.wav"); wj = wav[:-4] + ".words.json"
         if not os.path.exists(wav):
