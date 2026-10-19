@@ -1,6 +1,6 @@
 # YouTube upload: The Auction That Sets Your Mortgage Rate
 
-- **File:** `out/deliver/mortgage-1080p60.mp4` (1080p, 60 fps, 19:56). The download link is added when uploaded.
+- **File:** `out/deliver/mortgage-1080p60.mp4` (1080p, 60 fps, 19:56). Download: https://gofile.io/d/SThxHd81
 - **Title:** The Auction That Sets Your Mortgage Rate
 - **Title test (Test & Compare, thumbnail fixed):** #1 vs "Who Really Sets Your Mortgage Rate". "The Fed Cut Rates. So Why Is Your Mortgage 7%?" was dropped: the fact pack shows the 7.40% came after a Sep 2026 hike, so it would mislead.
 - **Thumbnails (Test & Compare, title fixed):** `thumbs/A.jpg` SOLD + red 5.3% tag (lead) · `thumbs/B.jpg` NOT THE FED · `thumbs/C.jpg` SEALED BIDS. Rebuild with `node projects/mortgage/thumbs/make.mjs`.
