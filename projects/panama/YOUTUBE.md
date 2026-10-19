@@ -1,6 +1,6 @@
 # YouTube upload: The Canal That Runs on Rain
 
-- **File:** `out/deliver/panama-1080p60.mp4` (1080p, 60 fps, 20:32). v2: new narrator and a faster cold open. Download: https://gofile.io/d/5Uc6Eshn
+- **File:** `out/deliver/panama-1080p60.mp4` (1080p, 60 fps, 21:44). v3: ElevenLabs narration (George, Eleven v4) and the faster cold open. Download: https://gofile.io/d/Oh12Yxky
 - **Title:** The Canal That Runs on Rain
 - **Title test (Test & Compare):** The Panama Canal Doesn't Connect Two Oceans · Why the Panama Canal Is Running Out of Water
 - **Thumbnails (Test & Compare, title fixed):** see `packaging.md`.
@@ -20,11 +20,11 @@
 > Every ship that crosses Panama climbs 85 feet up a staircase of water to a lake in the sky. On the way down, the canal pours about 50 million gallons of fresh water into the sea, every crossing. The only thing that refills it is rain. In 2023 the rain failed, and more than 160 ships waited in line. In 2026 it failed again, and one ship paid a reported $5.3 million to skip the queue. Now a historic El Niño is building, and the canal's own rule of thumb says the worst comes the year after.
 >
 > 00:00 A mountain made of water
-> 00:49 The Machine
-> 05:18 Why a Lake?
-> 09:15 Bigger Ships
-> 12:19 The Year the Rain Stopped
-> 16:36 The Countdown
+> 00:53 The Machine
+> 05:35 Why a Lake?
+> 09:45 Bigger Ships
+> 13:00 The Year the Rain Stopped
+> 17:39 The Countdown
 >
 > **Sources:**
 > - Panama Canal Authority (ACP):
@@ -52,7 +52,7 @@
 > - Maps: Natural Earth (public domain) and © OpenStreetMap contributors (ODbL).
 > - Fonts: Inter, Instrument Serif, IBM Plex Mono and Archivo Narrow (SIL Open Font License).
 > - Depth for photo parallax: Depth Anything V2 Small (Apache-2.0).
-> - Narration: synthetic voice (Chatterbox Turbo by Resemble AI, MIT licence), conditioned on a CC0 reference voice from Voice-Zero (LibriVox).
+> - Narration: synthetic voice (ElevenLabs).
 
 **Tags:** Panama Canal, Gatun Lake, El Niño 2026, drought, shipping, global trade, canal locks, engineering, megaprojects, Río Indio, documentary
 
