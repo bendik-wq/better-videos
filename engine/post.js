@@ -19,7 +19,7 @@
 // Measured costs on llvmpipe at 1080p are in docs/research/animation-libraries.md ("post.js").
 import * as THREE from 'three';
 import {
-  EffectComposer, RenderPass, EffectPass, DepthOfFieldEffect, GodRaysEffect, ToneMappingEffect, ToneMappingMode,
+  EffectComposer, RenderPass, EffectPass, DepthOfFieldEffect, GodRaysEffect, ToneMappingEffect, ToneMappingMode, BloomEffect,
   LensDistortionEffect, ChromaticAberrationEffect, BlendFunction, KernelSize,
 } from 'postprocessing';
 import { N8AOPostPass } from 'n8ao';
@@ -68,6 +68,7 @@ function hook(renderer) {
  * @param opts.rays     { light: Mesh, density=0.94, decay=0.92, weight=0.35, exposure=0.5, samples=48 }
  * @param opts.lens     true | 'subtle' | 'vintage' | { distortion, ca }
  * @param opts.tone     'aces' (matches the renderer default) | 'agx' | 'neutral' | 'linear'
+ * @param opts.bloom    true | { intensity=0.9, threshold=1.0 (linear HDR), smoothing=0.3, radius=0.7 }  glow from HDR highlights (molten metal, lamps)
  */
 export function post(ctx, scene, camera, opts = {}) {
   const renderer = ctx.isWebGLRenderer ? ctx : ctx.renderer;
@@ -120,6 +121,11 @@ export function post(ctx, scene, camera, opts = {}) {
     const rays = new GodRaysEffect(camera, l, { density: r.density ?? 0.94, decay: r.decay ?? 0.92, weight: r.weight ?? 0.35, exposure: r.exposure ?? 0.5,
       samples: r.samples ?? 48, clampMax: r.clampMax ?? 1, resolutionScale: r.resolution ?? Q.rays, kernelSize: KernelSize.SMALL, blur: true, blendFunction: BlendFunction.SCREEN });
     effects.push(rays); fx.rays = rays;
+  }
+  const bloomOpt = opts.bloom === true ? {} : opts.bloom;
+  if (bloomOpt) {
+    const bloom = new BloomEffect({ intensity: bloomOpt.intensity ?? 0.9, luminanceThreshold: bloomOpt.threshold ?? 1.0, luminanceSmoothing: bloomOpt.smoothing ?? 0.3, mipmapBlur: true, radius: bloomOpt.radius ?? 0.7 });
+    effects.push(bloom); fx.bloom = bloom;
   }
   const tone = new ToneMappingEffect({ mode: toneMode[opts.tone ?? 'aces'] ?? ToneMappingMode.ACES_FILMIC });
   effects.push(tone);

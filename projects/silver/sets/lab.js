@@ -1,9 +1,39 @@
 // Look-dev sets for the studio look (not used in the episode).
 import * as THREE from 'three';
 import * as S from './studio-kit.js';
+import * as PR from './silver-props.js';
 
 export default function lab(H) {
   return {
+    async 'lab-props'(ctx, shot) {
+      const P0 = shot.params ?? {};
+      await PR.loadFont();
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(30, ctx.width / ctx.height, 0.5, 2000);
+      const st = S.studio(scene, ctx.renderer, { target: [0, 0, 0], span: 16, contact: { w: 40, d: 30 } });
+      const add = (o, x, z, ry = 0, s = 1) => { o.position.set(x, 0, z); o.rotation.y = ry; o.scale.multiplyScalar(s); scene.add(o); return o; };
+      const fork = new THREE.Mesh(PR.forkGeometry(), S.polishedSilver()); fork.castShadow = true; add(fork, -9, 4, 0.4, 1.4);
+      const spoon = new THREE.Mesh(PR.spoonGeometry(), S.polishedSilver()); spoon.castShadow = true; add(spoon, -9, 5.4, 0.2, 1.4);
+      const cr = add(PR.crucible(), -6, 2); cr.userData.setLevel(0.8);
+      const mo = add(PR.mould(), -2.5, 3.5, 0.2); mo.userData.setFill(0.6);
+      const ph = add(PR.phone(), 1.5, 4, -0.3);
+      add(PR.person({ hat: 'cowboy', coat: '#14233d', tie: '#e0241b' }), 4.5, 3);
+      add(PR.person({ hat: 'stetson', coat: '#6b7a8f' }), 5.5, 3.4, -0.3);
+      add(PR.person({ coat: '#2a8c86' }), 6.5, 2.8, 0.3);
+      add(PR.jet(), -6, -5, 0.5, 1.2);
+      add(PR.derrick(), 2, -6);
+      const pj = add(PR.pumpjack(), 6, -4, -0.4); pj.userData.tick(1);
+      add(PR.building({ label: 'COMMODITY EXCHANGE' }), -1, -12, 0, 0.8);
+      add(PR.cashStack(), 8.5, 3.5, 0.3); const c2 = add(PR.cashStack(), 8.5, 3.5, 0.5); c2.position.y = 0.3;
+      const bal = add(PR.balance(), 10, -3, 0, 0.9); bal.userData.set(0.15);
+      add(PR.rubberStamp(), -3.5, 6.5, 0.3, 0.7);
+      const pb = add(PR.priceBoard(), 3, -1, 0); pb.position.y = 0.5; pb.userData.setText('$50.35');
+      const t = PR.text3d('$50', { size: 1.6, depth: 0.5 }); add(t, -2, -1.5);
+      const bar = new THREE.Mesh(S.barGeometry(), S.barMaterial()); bar.castShadow = true; add(bar, -6.5, 6.2, 0.3);
+      st.applyEnv();
+      const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.9, intensity: 2.0, falloff: 0.8 }, tone: 'neutral', quality: 'high' });
+      return { scene, camera, layer: H.layerOf(ctx), update(t) { S.rig(camera, P0.keys ?? [{ pos: [0, 16, 30], look: [0, 0.8, 0], mm: 32 }], t, { t0: 0, t1: 6, float: 0 }); st.contact.update([st.cyc]); } };
+    },
     async 'lab-stack'(ctx, shot) {
       const P0 = shot.params ?? {};
       const scene = new THREE.Scene();
