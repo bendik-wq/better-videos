@@ -1,6 +1,6 @@
 # YouTube upload: The Brothers Who Tried to Buy All the Silver
 
-- **File:** `out/deliver/silver-1080p60.mp4` (1080p, 60 fps, 16:51). Download: (link after delivery)
+- **File:** `out/deliver/silver-1080p60.mp4` (1080p, 60 fps, 16:51). Download: https://gofile.io/d/UUzx3SS7 (md5 304f718ddacce0f67e797a579b19d261)
 - **Title:** The Brothers Who Tried to Buy All the Silver
 - **Title test (Test & Compare, thumbnail fixed):** the lead vs "They Bought All the Silver. Then the Rules Changed".
 - **Thumbnails (Test & Compare, title fixed):**
