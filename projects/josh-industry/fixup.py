@@ -33,7 +33,18 @@ s["acq"] = from_words(367.4, 376.2, pad_out=0.12)    # "And that's why ... playi
 s["pena"] = from_words(475.7, 498.84)             # Dan Pena's phone-book joke (swear dropped below)
 s["rejected"] = from_words(500.2, 523.58, pad_out=0.12)  # "I went in ... rejected ... glad I made that pivot"
 s["allied"] = from_words(533.7, 561.98, pad_out=0.15)    # "In physiotherapy ... we empower the person"
-s["glad"] = from_words(626.8, 629.88)             # "I'm glad I came into physiotherapy ..."            # one "Conversation got started.", not two
+s["glad"] = from_words(626.8, 629.88)             # "I'm glad I came into physiotherapy ..."
+# the whole talk, uncut, in chapter-sized pieces (industry-full); only long silences get trimmed
+FULL = [(0.0, 53.1), (54.1, 153.8), (154.5, 232.5), (233.0, 331.0), (331.7, 409.3), (409.8, 475.0), (475.7, 523.7), (523.8, 649.0)]
+for n, (t0, t1) in enumerate(FULL, 1):
+    s[f"all-{n}"] = from_words(t0, t1)
+for n in range(1, len(FULL)):  # neighbouring pieces meet halfway between their words: nothing doubled, nothing lost
+    a, b = s[f"all-{n}"], s[f"all-{n + 1}"]
+    mid = round((a["in"] + a["words"][-1][2] + b["in"] + b["words"][0][1]) / 2, 2)
+    a["out"] = mid
+    shift = mid - b["in"]
+    b["in"] = mid
+    b["words"] = [[w, round(x - shift, 2), round(y - shift, 2)] for w, x, y in b["words"]]            # one "Conversation got started.", not two
 json.dump(s, open(sys.argv[2], "w"), indent=1)
 for k in ("physio-a", "physio-p", "pivot-made", "archetype", "close", "deal-c"):
     print(k, s[k]["in"], s[k]["out"], "|", s[k]["text"][:90])
@@ -50,6 +61,7 @@ c = json.load(open("clips.json"))
 used = set()
 for cut in c["cuts"].values():
   base = cut.setdefault("base_sequence", cut["sequence"])
+  gap = cut.get("gap", GAP)
   seq = []
   for item in base:
       if not isinstance(item, str):
@@ -57,21 +69,21 @@ for cut in c["cuts"].values():
           continue
       clip = s[item]
       drop = {i for a, b in DROP.get(item, []) for i in range(a, b + 1)}
-      ws = [[RENAME.get((item, i), w), clip["in"] + a, clip["in"] + b, i] for i, (w, a, b) in enumerate(clip["words"])]
+      ws = [[RENAME.get((item, i), "" if w == "II" else w), clip["in"] + a, clip["in"] + b, i] for i, (w, a, b) in enumerate(clip["words"])]
       parts, cur = [], []
       for w in ws:
           if w[3] in drop:
               if cur: parts.append(cur); cur = []
               continue
-          if cur and (w[1] - cur[-1][2] > GAP or w[3] != cur[-1][3] + 1):
+          if cur and (w[1] - cur[-1][2] > gap or w[3] != cur[-1][3] + 1):
               parts.append(cur); cur = []
           cur.append(w)
       if cur: parts.append(cur)
       for n, p in enumerate(parts):
           i0, i1 = p[0][3], p[-1][3]
           # pad 0.2 s into a cut, but never into the neighbouring (possibly dropped) word
-          a = clip["in"] if i0 == 0 else max(p[0][1] - 0.2, ws[i0 - 1][2] + 0.03)
-          b = clip["out"] if i1 == len(ws) - 1 else min(p[-1][2] + 0.2, ws[i1 + 1][1] - 0.03)
+          a = max(clip["in"], p[0][1] - 0.6) if i0 == 0 else max(p[0][1] - 0.2, ws[i0 - 1][2] + 0.03)
+          b = min(clip["out"], p[-1][2] + 0.6) if i1 == len(ws) - 1 else min(p[-1][2] + 0.2, ws[i1 + 1][1] - 0.03)
           pid = f"{item}#{n + 1}"  # parts never overwrite the snapped originals
           s[pid] = {"in": round(a, 2), "out": round(b, 2), "snapped": True, "text": " ".join(w[0] for w in p),
                     "words": [[w[0], round(w[1] - a, 2), round(w[2] - a, 2)] for w in p]}

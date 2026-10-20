@@ -37,6 +37,10 @@ const cut = spec.cuts[cutName];
 const chapterNames = cut.chapters ?? chapters;
 const seq = [{ card: 'intro' }, ...cut.sequence, { card: 'end' }];
 for (const item of seq) {
+  if (typeof item === 'object' && item.chapter) { // chapter marker with no card (keeps the talk flowing)
+    chaps.push({ name: item.chapter, t0: t });
+    continue;
+  }
   if (typeof item === 'object') {
     const c = cut.cards?.[item.card] ?? cards[item.card];
     if (!c) throw new Error(`no card "${item.card}" in beats.mjs`);
