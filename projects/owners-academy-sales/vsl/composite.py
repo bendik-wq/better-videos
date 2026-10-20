@@ -13,8 +13,10 @@ import sys
 X, Y, W, H = 96, 112, 576, 824  # face panel, matches --L/--top/--face-w/--face-h in stage.html
 FPS = 25
 # sit the webcam in the navy palette, and add grain so the upscale doesn't look waxy
+# (FACE_GRAIN=2 or so for clean camera footage that wasn't upscaled)
+GRAIN = int(os.environ.get("FACE_GRAIN", 7))
 FACE_VF = (f"scale={W}:{H}:flags=lanczos,eq=contrast=1.05:brightness=-0.015:saturation=0.9,"
-           "colorbalance=rs=-0.02:bs=0.035:rm=-0.01:bm=0.02,noise=alls=7:allf=t+u,format=yuv420p")
+           f"colorbalance=rs=-0.02:bs=0.035:rm=-0.01:bm=0.02,noise=alls={GRAIN}:allf=t+u,format=yuv420p")
 
 
 def ff(*args):
