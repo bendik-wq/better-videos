@@ -10,7 +10,7 @@ import { beats as faqBeats } from './faq-beats.mjs';
 const beats = { ...vslBeats, ...faqBeats };
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.join(HERE, '..');
+const ROOT = process.env.CUT_ROOT || path.join(HERE, '..'); // CUT_ROOT: another project's clips.json + snapped.json
 const cutName = process.argv[2] || 'vsl-b2b';
 const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'clips.json'), 'utf8'));
 const snapped = JSON.parse(fs.readFileSync(path.join(ROOT, 'snapped.json'), 'utf8'));
