@@ -50,7 +50,7 @@ const LINES = {
 const PANELS = {
   lucent: {
     kicker: 'THE LAST TIME · TWO EQUIPMENT GIANTS · $ PER SHARE', title: 'The suppliers fell hardest',
-    src: 'SOURCES: LUCENT ~$84 AND 58¢: INSTITUTIONAL INVESTOR; WIKIPEDIA (APPROX.) · CISCO: YAHOO FINANCE (SPLIT-ADJ.) · STRAIGHT LINES JOIN THE DOTS',
+    src: 'SOURCES: LUCENT ~$84 AND 58¢: INSTITUTIONAL INVESTOR; WIKIPEDIA (APPROX.) · CISCO: YAHOO FINANCE (SPLIT-ADJ.)',
     axis: [['1999-07-01', '2003-02-01', 1]], yr: [0, 90], yStep: 15, yFmt: (v) => `$${v}`,
     ticks: [['2000-01-01', '2000'], ['2001-01-01', '2001'], ['2002-01-01', '2002'], ['2003-01-01', '2003']],
     panels: [

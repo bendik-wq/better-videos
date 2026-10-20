@@ -26,14 +26,14 @@ const MP = {
 
 // every pin a map can name (a pin given by name only inherits these fields); the modes list which ones show by default
 const KNOWN = [
-  { name: 'Pike County, Ohio', lon: -83.0, lat: 39.0, sub: 'OPENAI’S LEASES · NVIDIA GUARANTEE · 4.25 GW', side: 'r', dy: -20 },
+  { name: 'Pike County, Ohio', lon: -83.0, lat: 39.0, sub: 'NVIDIA-GUARANTEED LEASES · 4.25 GW', side: 'r', dy: -20 },
   { name: 'Abilene, Texas', lon: -99.73, lat: 32.45, sub: 'ORACLE · OPENAI DATA CENTRE', side: 'l' },
   { name: 'Louisiana', lon: -91.5, lat: 32.5, sub: 'META “HYPERION” · ~$27B · OFF BALANCE SHEET', side: 'r', dy: 30 },
   { name: 'El Paso', lon: -106.49, lat: 31.76, sub: 'META’S SECOND JV · JUL 2026', side: 'l' },
   { name: 'New York', lon: -74.0, lat: 40.71, sub: 'NASDAQ −4.5% IN A WEEK · 16 OCT', side: 'r' },
-  { name: 'Seoul', lon: 126.98, lat: 37.57, sub: 'KOSPI −7.6% · CIRCUIT BREAKER', side: 'l', dy: -46 },
+  { name: 'Seoul', lon: 126.98, lat: 37.57, sub: 'KOSPI −7.6% · CIRCUIT BREAKER', side: 'l', dy: -40 },
   { name: 'Tokyo', lon: 139.69, lat: 35.69, sub: 'NIKKEI −4.9%', side: 'l', dy: 34 },
-  { name: 'Taiwan', lon: 120.97, lat: 24.8, sub: 'TSMC: A CAUTIOUS 2027 OUTLOOK', side: 'l', dy: 30 },
+  { name: 'Taiwan', lon: 120.97, lat: 24.8, sub: 'TSMC: A CAUTIOUS 2027 OUTLOOK', side: 'l', dy: 40 },
 ];
 const pinOf = (n) => KNOWN.find(p => p.name === n);
 const MAPS = {
@@ -45,8 +45,8 @@ const MAPS = {
     src: 'SOURCES: NVIDIA 8-K (17 AUG 2026); META 10-Q (2026); BLOOMBERG VIA REPORTS (MAR 2026) · MAP: NATURAL EARTH',
   },
   world: {
-    data: 'world', box: [-128, -4, 148, 64], rect: [40, 240, 1840, 790], hl: ['KOR'],
-    pins: ['New York', 'Seoul', 'Tokyo', 'Taiwan'].map(pinOf),
+    data: 'world', box: [-126, -4, 158, 66], rect: [40, 240, 1840, 790], hl: ['KOR'],
+    pins: ['New York', 'Seoul', 'Taiwan'].map(pinOf),
     routes: [['New York', 'Seoul']],
     kicker: '14 – 16 OCT 2026 · THE SELLOFF GOES GLOBAL', title: 'From New York to Seoul',
     src: 'SOURCES: AP (16 OCT 2026); CNN (15 OCT 2026); REUTERS (14–15 OCT 2026) · MAP: NATURAL EARTH',
@@ -180,6 +180,8 @@ export default function makeMaps(H) {
           }
         });
         hlPath = hlKeys.length ? pathOf(hlKeys.flatMap(k => layer[k] ?? []), pr, V.box) : null;
+        // a pin standing on the raised (red) region turns navy so it stays visible: one red per frame
+        if (hlPath) { const hc = G.mk(8, 8).getContext('2d'); pins.forEach(pn => { pn.onHl = hc.isPointInPath(hlPath, pr.X(pn.lon), pr.Y(pn.lat)); }); }
       }
       base(g);
       // the highlighted region rises in red
@@ -201,7 +203,7 @@ export default function makeMaps(H) {
       // pins and labels
       pins.forEach((pn, i) => {
         const [x, y] = at(i), kk = range(t, PT[i], PT[i] + 0.7);
-        teardrop(g, x, y, t, kk, { R: 20 });
+        teardrop(g, x, y, t, kk, { R: 20, color: pn.color ?? (pn.onHl ? P.ink : MP.red) });
         label(g, x, y - 36, range(t, PT[i] + 0.25, PT[i] + 0.75), pn.name, pn.sub, pn.side ?? (x > 1500 ? 'l' : 'r'), pn.dy ?? 0);
       });
       k.flat();
@@ -241,7 +243,8 @@ export default function makeMaps(H) {
   };
   // SCRIPT chapter 2 (lines 21–31), in order; META and ANTHROPIC get their own rows so every node is in the circle
   const DEAL_STEPS = ['C2', 'C3', 'C4', 'C5', 'C6', 'C6w', 'C12', 'C13', 'C10', 'C11', 'C9', 'C8', 'C24', 'C17a', 'C20'];
-  const RING = ['NVIDIA', 'COREWEAVE', 'META', 'ALPHABET', 'ANTHROPIC', 'OPENAI', 'AMAZON', 'MICROSOFT', 'AMD', 'ORACLE'];
+  // OPENAI sits in the middle by default (the script calls it "the center of the circle"); params.center: null puts it on the ring
+  const RING = ['NVIDIA', 'COREWEAVE', 'META', 'ALPHABET', 'ANTHROPIC', 'MICROSOFT', 'AMAZON', 'AMD', 'ORACLE'];
   const KIND = {
     INVESTS: { col: P.teal, dash: null }, BUYS: { col: P.ink, dash: null }, GUARANTEES: { col: P.ink, dash: [16, 10] },
     WARRANT: { col: P.tealDeep, dash: [4, 9] }, BOOKS: { col: P.sageDeep, dash: null },
@@ -253,18 +256,18 @@ export default function makeMaps(H) {
     const norm = (st) => { const e = typeof st === 'string' ? { id: st, ...(EDGES[st] ?? { from: st, kind: 'BOOKS', label: st }) } : { ...(st.id ? EDGES[st.id] : {}), ...st };
       e.from = String(e.from ?? '').toUpperCase(); e.to = e.to ? String(e.to).toUpperCase() : null; if (e.to === e.from) e.to = null; e.kind = String(e.kind ?? (e.to ? 'BUYS' : 'BOOKS')).toUpperCase(); return e; };
     const pre = [].concat(Pm.pre ?? []).map(norm), steps = [].concat(Pm.steps ?? DEAL_STEPS).map(norm), all = [...pre, ...steps];
-    const names = (Pm.nodes ?? RING).map(n => String(n).toUpperCase());
-    for (const e of all) for (const n of [e.from, e.to]) if (n && !names.includes(n)) names.push(n);
-    const loopOn = Pm.loop !== false;
+    const hubName = Pm.center === undefined ? 'OPENAI' : Pm.center ? String(Pm.center).toUpperCase() : null;
+    const names = (Pm.nodes ?? (hubName ? RING : [...RING.slice(0, 5), 'OPENAI', ...RING.slice(5)])).map(n => String(n).toUpperCase()).filter(n => n !== hubName);
+    for (const e of all) for (const n of [e.from, e.to]) if (n && n !== hubName && !names.includes(n)) names.push(n);
+    const loopOn = Pm.loop ?? !Pm.steps;
     const T = G.cues(shot, steps, { from: 0.9, span: Math.max(0.9 * (steps.length - 1), D - (loopOn ? 4.0 : 2.4) - 0.9) });
     const tLoop = G.cue(shot, Pm.loopAt, (T.at(-1) ?? 0.9) + 1.4);
     const CX = 960, CY = 606, RX = 700, RY = 330;
     const mg = G.mk(4, 4).getContext('2d');
-    const nodes = names.map((n, i) => {
-      const a = -Math.PI / 2 + i / names.length * TAU, hub = n === 'OPENAI', size = hub ? 34 : 29;
-      const w = G.measure(mg, n, size, 800, F.sans, 0.02) + (hub ? 60 : 48), h = hub ? 72 : 62;
-      return { n, i, a, x: CX + Math.cos(a) * RX, y: CY + Math.sin(a) * RY, w, h, size, hub };
-    });
+    const mkNode = (n, i, a, x, y) => { const hub = n === 'OPENAI' || n === hubName, size = hub ? 36 : 29;
+      return { n, i, a, x, y, w: G.measure(mg, n, size, 800, F.sans, 0.02) + (hub ? 64 : 48), h: hub ? 76 : 62, size, hub }; };
+    const nodes = names.map((n, i) => { const a = -Math.PI / 2 + i / names.length * TAU; return mkNode(n, i, a, CX + Math.cos(a) * RX, CY + Math.sin(a) * RY); });
+    if (hubName) nodes.push(mkNode(hubName, names.length, Math.PI / 2, CX, CY + 10));
     const node = (n) => nodes.find(q => q.n === n);
     // edge geometry: pairs with several edges fan out; a lone edge bows slightly
     const pairs = {}; all.forEach((e, i) => { if (!e.to) return; const k = [e.from, e.to].sort().join('|'); (pairs[k] ??= []).push(i); });
@@ -273,13 +276,13 @@ export default function makeMaps(H) {
       if (!e.to) return null;
       const A = node(e.from), B = node(e.to), k = [e.from, e.to].sort(), list = pairs[k.join('|')], j = list.indexOf(i), n = list.length;
       const P0 = node(k[0]), P1 = node(k[1]), dx = P1.x - P0.x, dy = P1.y - P0.y, dist = Math.hypot(dx, dy), nx = -dy / dist, ny = dx / dist;
-      const o = n === 1 ? 0.1 : (j - (n - 1) / 2) * 0.3;
+      const o = n === 1 ? 0.08 : (j - (n - 1) / 2) * Math.max(0.26, 150 / dist);
       const c = [(A.x + B.x) / 2 + nx * o * dist, (A.y + B.y) / 2 + ny * o * dist];
       const N = 160, pts = []; for (let q = 0; q <= N; q++) { const u = q / N; pts.push([(1 - u) ** 2 * A.x + 2 * (1 - u) * u * c[0] + u * u * B.x, (1 - u) ** 2 * A.y + 2 * (1 - u) * u * c[1] + u * u * B.y]); }
       let s0 = 0; while (s0 < N && inside(pts[s0], A, 10)) s0++;
       let s1 = N; while (s1 > 0 && inside(pts[s1], B, 16)) s1--;
       const seg = pts.slice(s0, s1 + 1), cum = G.polyLen(seg);
-      return { seg, cum, mid: G.polyAt(seg, cum, 0.5) };
+      return { seg, cum, mid: G.polyAt(seg, cum, n === 1 ? 0.5 : 0.5 + (j - (n - 1) / 2) * 0.22) };
     });
     const stepAt = (i) => (i < pre.length ? -10 : T[i - pre.length]);
     // a white card label; big = the current step, small = a compact amount pill once it is old news
@@ -327,6 +330,8 @@ export default function makeMaps(H) {
         // money pulses running along a finished edge
         if (kd >= 1) for (let q = 0; q < 3; q++) { const u = ((t - ts) * 0.32 + q / 3) % 1, pp = G.polyAt(gm.seg, gm.cum, u); g.save(); g.globalAlpha = (old ? 0.45 : 0.85) * Math.sin(u * Math.PI); g.fillStyle = K.col; g.beginPath(); g.arc(pp.x, pp.y, isCur ? 6 : 4.5, 0, TAU); g.fill(); g.restore(); }
       });
+      // labels: compact pills for old edges (under the nodes), then the nodes, then the current card on top
+      all.forEach((e, i) => { const gm = geom[i]; if (!gm || i === cur) return; const kl = range(t, stepAt(i) + 0.4, stepAt(i) + 0.9); edgeLabel(g, e, gm.mid.x, gm.mid.y, kl, false); });
       // nodes
       nodes.forEach((nd) => {
         const kn = E.outBack(range(t, 0.15 + nd.i * 0.06, 0.65 + nd.i * 0.06)); if (kn <= 0) return;
@@ -337,14 +342,14 @@ export default function makeMaps(H) {
         G.text(g, nd.n, 0, nd.size * 0.36, { size: nd.size, weight: 800, align: 'center', color: nd.hub ? P.white : P.ink, track: 0.02 });
         g.restore();
       });
-      // badges (BOOKS steps): a card beside the node, outward from the ring
+
+      // badges (BOOKS steps): a card under the node
       all.forEach((e, i) => {
         if (e.to) return; const nd = node(e.from), kb = range(t, stepAt(i) + 0.1, stepAt(i) + 0.7); if (kb <= 0 || !nd) return;
-        const ox = Math.cos(nd.a), oy = Math.sin(nd.a), bx = nd.x + ox * (nd.w / 2 + 20) * (Math.abs(ox) > 0.3 ? 1 : 0), by = nd.y + (Math.abs(ox) > 0.3 ? 70 : oy * (nd.h / 2 + 64));
-        if (i === cur && loopK <= 0) edgeLabel(g, e, bx, by + 20, kb, true); else G.pill(g, `${e.label} ${e.sub ? '· ' + e.sub.split(' · ')[0] : ''}`.trim(), bx, by, { size: 16, align: 'center', k: kb, fam: F.mono, weight: 500, fill: P.mint, color: P.tealDeep, lift: 0.4 });
+        const txt = `${e.label}${e.sub ? ' · ' + e.sub.split(' · ')[0] : ''}`, bw = G.measure(g, txt, 16, 500, F.mono) + 40;
+        const bx = clamp(nd.x, 100 + bw / 2, 1820 - bw / 2), by = nd.y + nd.h / 2 + 34;
+        if (i === cur && loopK <= 0) edgeLabel(g, e, clamp(nd.x, 300, 1620), by + 50, kb, true); else G.pill(g, txt, bx, by, { size: 16, align: 'center', k: kb, fam: F.mono, weight: 500, fill: P.mint, color: P.tealDeep, lift: 0.4 });
       });
-      // labels: compact pills for old edges, then the current card on top
-      all.forEach((e, i) => { const gm = geom[i]; if (!gm || i === cur) return; const kl = range(t, stepAt(i) + 0.4, stepAt(i) + 0.9); edgeLabel(g, e, gm.mid.x, gm.mid.y, kl, false); });
       if (cur >= 0 && geom[cur] && loopK <= 0) { const gm = geom[cur], ts = stepAt(cur); edgeLabel(g, all[cur], gm.mid.x, gm.mid.y, range(t, ts + 0.45, ts + 0.95), true); }
       if (cur >= 0 && geom[cur] && loopK > 0) edgeLabel(g, all[cur], geom[cur].mid.x, geom[cur].mid.y, 1, false);
       // header, legend, the loop slab
@@ -352,7 +357,8 @@ export default function makeMaps(H) {
       G.kicker(g, Pm.kicker ?? 'WHO PAYS WHOM · ARROWS = MONEY OR PROMISES', 90, 104, range(t, 0.05, 0.6));
       G.riseText(g, Pm.title ?? 'Follow the money', 90, 176, range(t, 0.12, 0.9), { size: 58, weight: 800 });
       const lg = [['INVESTS', 'INVESTS'], ['BUYS', 'BUYS'], ['GUARANTEES', 'GUARANTEES'], ['WARRANT', 'GIVES A WARRANT']];
-      lg.forEach(([kd, txt], q) => { const K = KIND[kd], x = 92 + q * 210, y = 1036, kk = E.outCubic(range(t, 0.6 + q * 0.1, 1.1 + q * 0.1));
+      let lx = 92;
+      lg.forEach(([kd, txt], q) => { const K = KIND[kd], x = lx, y = 1000, kk = E.outCubic(range(t, 0.6 + q * 0.1, 1.1 + q * 0.1)); lx += 52 + G.measure(g, txt, 15, 500, F.mono, 0.08) + 44;
         g.save(); g.globalAlpha = kk; g.strokeStyle = K.col; g.lineWidth = 4; if (K.dash) g.setLineDash(K.dash.map(d => d * 0.6)); g.beginPath(); g.moveTo(x, y - 6); g.lineTo(x + 40, y - 6); g.stroke(); g.restore();
         G.text(g, txt, x + 52, y, { size: 15, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.08, alpha: kk }); });
       if (loopK > 0) G.slab(g, Pm.loopLabel ?? 'IT’S A CIRCLE', 1830, 130, { size: 40, fill: P.red, align: 'right', k: range(t, tLoop + 0.8, tLoop + 1.4) });

@@ -38,7 +38,7 @@ const sec = (form, kind, company, date) => [
 ];
 const DOCS = {
   nvidia8k: {
-    w: 612, h: 730, paper: '#fbfaf6', ink: INK, def: ['shortfall', 'cap'], tilt: -0.7,
+    w: 612, h: 730, paper: '#fbfaf6', ink: INK, def: ['cap', 'shortfall', 'rating'], tilt: -0.7,
     blocks: [
       ...sec('FORM 8-K', 'CURRENT REPORT', 'NVIDIA CORPORATION', 'Date of report: August 17, 2026'),
       ['t', 300, 'ITEMS 1.01 AND 2.03 · AN OFF-BALANCE-SHEET OBLIGATION', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY, key: 'items' }],
@@ -110,15 +110,15 @@ const DOCS = {
     label: 'RECREATED SUMMARY · ORACLE FORM 10-Q, SEP 2026', src: 'SOURCE: ORACLE CORP., FORM 10-Q, QUARTER ENDED 31 AUG 2026 (FILED 11 SEP 2026) · SEC EDGAR',
   },
   lucent10k: {
-    w: 612, h: 660, paper: '#f6f3ea', ink: '#1d1a14', def: ['clec', 'creditworthiness'], tilt: 0.9,
+    w: 612, h: 620, paper: '#f6f3ea', ink: '#1d1a14', def: ['clec', 'creditworthiness', 'commit'], tilt: 0.9,
     blocks: [
       ...sec('FORM 10-K405', 'ANNUAL REPORT', 'LUCENT TECHNOLOGIES INC.', 'Fiscal year ended September 30, 2001 · filed December 28, 2001'),
       ['p', 320, '“Adverse industry conditions, such as the continued softening in the CLEC market, have negatively affected the creditworthiness of several customers that participate in our customer financing program.”', { size: 21, lh: 30, fam: F.serif, marks: { clec: 'continued softening in the CLEC market,', creditworthiness: 'negatively affected the creditworthiness', program: 'our customer financing program.”' } }],
-      ['rule', 486, {}],
-      ['row', 520, 'Customer-financing commitments, 30 Sep 2000', '$8.1 billion', { key: 'commit', fam: F.mono, size: 13 }],
-      ['row', 552, 'Provisions: uncollectibles & customer financing, FY01', '$2.2 billion', { key: 'provisions', fam: F.mono, size: 13 }],
-      ['rule', 576, {}],
-      ['p', 602, 'Recreated text. The quotation is verbatim from Lucent’s Form 10-K405 for fiscal 2001; the figures are summarised from it and the FY2000 10-K/A. CLEC: competitive local exchange carrier.', NOTE],
+      ['rule', 448, {}],
+      ['row', 484, 'Customer financing committed, 30 Sep 2000', '$8.1 billion', { key: 'commit', size: 14, bold: true }],
+      ['row', 518, 'Provisions incl. customer financing, FY2001', '$2.2 billion', { key: 'provisions', size: 14, bold: true }],
+      ['rule', 544, {}],
+      ['p', 570, 'Recreated text. The quotation is verbatim from Lucent’s Form 10-K405 for fiscal 2001; the figures are summarised from it and the FY2000 10-K/A. CLEC: competitive local exchange carrier.', NOTE],
     ],
     label: 'RECREATED TEXT · LUCENT FORM 10-K405, DEC 2001', src: 'SOURCE: LUCENT TECHNOLOGIES, FORM 10-K405 FOR FISCAL 2001 (FILED 28 DEC 2001); FORM 10-K/A FY2000 · SEC EDGAR',
   },

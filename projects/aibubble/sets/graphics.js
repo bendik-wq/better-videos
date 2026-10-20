@@ -179,12 +179,12 @@ export default function makeGraphics(H) {
   // ================================================================ counter: the split-flap board (prices and clocks)
   // 14 Oct 2026 was a Wednesday (RESEARCH 1.8 "Wed 14 Oct"); 15 Oct a Thursday.
   const PRESETS = {
-    oct14: { kicker: 'WED 14 OCT 2026 · THE TRIGGER DAY', title: 'One hot number, then the selloff', source: 'SOURCES: BLS CPI RELEASE (14 OCT 2026); REUTERS (14 OCT 2026)',
+    oct14: { align: 'center', kicker: 'WED 14 OCT 2026 · THE TRIGGER DAY', title: 'One hot number, then the selloff', source: 'SOURCES: BLS CPI RELEASE (14 OCT 2026); REUTERS (14 OCT 2026)',
       steps: [{ text: 'WED 14 OCT 2026', label: 'THE DAY IT CRACKED', sub: 'NASDAQ −1.88% · ITS BIGGEST DROP SINCE 23 JUL' },
         { text: 'CPI 3.7%', label: 'US INFLATION, SEPTEMBER, YEAR ON YEAR', sub: 'UP FROM 3.4% IN AUGUST · RELEASED THAT MORNING' },
         { text: 'ORACLE −8.8%', label: 'ORACLE, IN ONE DAY', sub: 'CLOSE $130.55 · VOLUME 61% ABOVE AVERAGE', red: '−8.8%' },
         { text: 'COREWEAVE −15%', label: 'COREWEAVE, IN ONE DAY', sub: 'TO $65.78, AFTER A SELL-OFF IN ITS BONDS', red: '−15%' }] },
-    oct15: { kicker: 'THU 15 OCT 2026 · SEOUL', title: 'South Korea trips the switch', source: 'SOURCE: CNN (15 OCT 2026)',
+    oct15: { align: 'center', kicker: 'THU 15 OCT 2026 · SEOUL', title: 'South Korea trips the switch', source: 'SOURCE: CNN (15 OCT 2026)',
       steps: [{ text: 'KOSPI −7.6%', label: 'SOUTH KOREA’S MARKET, IN ONE DAY', sub: 'SK HYNIX −11% · SAMSUNG −9.5% · NIKKEI −4.9%', red: '−7.6%' },
         { text: 'CIRCUIT BREAKER', label: 'TRIGGERED', sub: 'HOME OF THE WORLD’S MEMORY-CHIP GIANTS', red: true }] },
   };
@@ -195,7 +195,8 @@ export default function makeGraphics(H) {
     const D = shot.duration ?? 8, clk = Pm.clock ?? pre.clock;
     const T = G.cues(shot, steps, { from: 0.35, span: Math.max(1.6 * (steps.length - 1), D * 0.5) });
     const L = Math.max(...steps.map(s => s.text.length));
-    const pad = (s) => s.padStart(L, ' ').split('');
+    const align = Pm.align ?? pre.align ?? 'right';
+    const pad = (s) => (align === 'center' ? s.padStart(Math.floor((L + s.length) / 2), ' ').padEnd(L, ' ') : s.padStart(L, ' ')).split('');
     const narrow = (c) => /[:.,·]/.test(c);
     // fixed slot widths: punctuation slots are narrow, spaces common to every step are gaps
     const slots = Array.from({ length: L }, (_, i) => {
@@ -221,8 +222,9 @@ export default function makeGraphics(H) {
       const redNow = cur.red && t > tc + tFlap(L) + 0.3;
       // on a red step only the figure turns red: the part after the last '·' (or everything when there is none)
       // (or, when red is a string, from where that string starts: red: '−15%')
-      const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? L - cur.text.length + cur.text.lastIndexOf(cur.red)
-        : cur.text.includes('·') ? L - cur.text.length + cur.text.lastIndexOf('·') + 1 : 0;
+      const off = align === 'center' ? Math.floor((L + cur.text.length) / 2) - cur.text.length : L - cur.text.length;
+      const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? off + cur.text.lastIndexOf(cur.red)
+        : cur.text.includes('·') ? off + cur.text.lastIndexOf('·') + 1 : 0;
       let x = x0;
       for (let i = 0; i < L; i++) {
         const sl = slots[i], w = sl === 'n' ? NW : sl === 'g' ? GW : TW, a = from[i], b = to[i], stopAt = tc + tFlap(i);
@@ -293,11 +295,11 @@ export default function makeGraphics(H) {
   async function timeline(ctx, shot) {
     const Pm = shot.params ?? {};
     const ev = (Pm.events ?? EVENTS).map(e => (typeof e === 'object' ? e : EVENTS.find(x => String(x.year) === String(e) || `${x.date} ${x.year}` === String(e)) ?? { year: String(e), label: '' }));
-    const D = shot.duration ?? 8, n = ev.length, sp = Pm.spacing ?? (n > 1 ? Math.min(330, 1450 / (n - 1)) : 0), X = (i) => 960 - sp * (n - 1) / 2 + i * sp;
+    const D = shot.duration ?? 8, n = ev.length, sp = Pm.spacing ?? (n > 1 ? Math.min(330, 1400 / (n - 1)) : 0), X = (i) => 960 - sp * (n - 1) / 2 + i * sp;
     const fi = (f) => { if (f == null) return null; const s = String(f); const i = ev.findIndex(e => `${e.date ?? ''} ${e.year}`.trim() === s || e.label === s); return i >= 0 ? i : (j => (j < 0 ? null : j))(ev.findIndex(e => String(e.year) === s)); };
     const hasF = Pm.focus != null, focus = hasF ? (Array.isArray(Pm.focus) ? Pm.focus.map(fi) : [fi(Pm.focus), fi(Pm.focus)]) : [null, null];
     const T = hasF && !ev.some(e => e.word) ? ev.map((_, i) => 0.15 + i * 0.08) : G.cues(shot, ev, { from: 0.3, span: Math.min(D * 0.62, Math.max(0.6 * (n - 1), D - 2.4)) });
-    const lw = Math.min(320, sp * 1.8);
+    const lw = Math.min(300, sp * 1.75);
     const lo = Math.min(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1), hi = Math.max(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g);
