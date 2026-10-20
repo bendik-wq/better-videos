@@ -1,17 +1,16 @@
-// Silver document and archive sets (episode 7).
-//   doc    typographic RECREATIONS of documents (never facsimiles): every sheet says on screen that it is recreated
-//          and from what. params.doc:
-//     'rule7'        Comex emergency Silver Rule 7, effective Mon 7 Jan 1980 (summary)   keys: title date limit ounces retro spot
-//     'liquidation'  Comex "liquidation only", Mon 21 Jan 1980 (summary)                 keys: date stamp new close cbt
-//     'tiffany'      the Tiffany & Co. newspaper ad, text as quoted by Time (7 Apr 1980) keys: unconscionable billion spoons
-//     'cftc'         CFTC memo of the 8 Jan 1980 meeting with Bunker Hunt (excerpts)     keys: objective shut date
-//     'fed'          Special Credit Restraint Program, 14 Mar 1980 (Dallas Fed 80-49)     keys: speculative title date
-//     'verdict'      Minpeco v. Hunt, 20 Aug 1988: $66.2M ×3 = $198.6M − $64.6M = $133.95M  keys: damages treble settle net liable case date civil
-//     'bankruptcy'   Sep 1988 Chapter 11: the inventory as reported by Time               keys: chapter hawaii vail cadillacs mercedes coins bond
-//     'testimony'    sworn testimony card, W. Herbert Hunt, 2 May 1980                     keys: corner rest
+// AI-bubble document and archive sets (episode 8).
+//   doc    typographic RECREATIONS of SEC filings (never facsimiles): every sheet says on screen that it is recreated
+//          and from what; quoted phrases are verbatim from RESEARCH.md, everything else is a labelled summary. params.doc:
+//     'nvidia8k'     NVIDIA 8-K, 17 Aug 2026: up to $105B guarantee of OpenAI's Ohio leases     keys: shortfall cap term gw tenant rating items form date
+//     'nvidia10k'    NVIDIA 10-K, filed 25 Feb 2026: "There is no assurance …"                    keys: assurance agreement form date
+//     'nvidia10q'    NVIDIA 10-Q, quarter to 26 Jul 2026: AI clouds "currently lack …"            keys: lack financing power form date
+//     'coreweave8k'  CoreWeave 8-K, Sep 2025: NVIDIA "is obligated to purchase the residual …"    keys: residual value date form
+//     'oracle10q'    Oracle 10-Q, quarter to 31 Aug 2026: $125.0B debt, fair value $105.7B (≈85¢), FCF −$5.4B, $20B ATM   keys: debt fair cents capex fcf atm form date
+//     'lucent10k'    Lucent 10-K405, FY2001 (Dec 2001): "Adverse industry conditions …"           keys: clec creditworthiness program commit provisions form date
+//     'amdwarrant'   AMD 8-K, 6 Oct 2025: warrant, 160M shares at $0.01, targets "escalate to $600"  keys: shares price gw expiry 600 form date
 //          other params: highlight (key or [keys]), at (cue or [cues] per highlight), zoom, tilt, label (false hides), source
-//   photo  an archival photo in a white border card on paper with an eased Ken Burns push, caption slab and credit line.
-//          params: file (in projects/silver/assets/photos/), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
+//   photo  a photo in a white border card on paper with an eased Ken Burns push, caption slab and credit line.
+//          params: file (in projects/aibubble/assets/photos/, or an absolute /projects/... path), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
 // Every word on a recreated sheet is either a verbatim quote from RESEARCH.md or a plain summary of a RESEARCH fact;
 // brackets and ellipses mark our edits.
 import * as G from './graphics-kit.js';
@@ -24,139 +23,119 @@ const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
 //         ['row', y, label, value, o]  label at x, value right-aligned at r (or left at vx), dotted leader: o = { key, size, fam, bold }
 //         ['rule', y, o]      o = { x0, x1, w, double, color }
 //         ['box', x, y, w, h, o]  o = { lw, color, r, text, size, fam, track, key }
-const INK = '#17181c', OLD = '#1d1a14';
+const INK = '#17181c', GREY = '#55524b', NOTE = { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 };
+// the SEC cover block: UNITED STATES / SEC / Washington / FORM / kind / registrant / date line (y 64 … 272)
+const sec = (form, kind, company, date) => [
+  ['t', 62, 'UNITED STATES', { align: 'c', size: 11, fam: F.narrow, weight: 700, track: 0.3 }],
+  ['t', 82, 'SECURITIES AND EXCHANGE COMMISSION', { align: 'c', size: 15, fam: F.serif, track: 0.08 }],
+  ['t', 99, 'Washington, D.C. 20549', { align: 'c', size: 10, fam: F.serif, style: 'italic', color: GREY }],
+  ['rule', 114, { double: true }],
+  ['t', 164, form, { align: 'c', size: 40, weight: 900, track: 0.02, key: 'form' }],
+  ['t', 188, kind, { align: 'c', size: 11.5, fam: F.narrow, weight: 700, track: 0.3, color: GREY }],
+  ['t', 228, company, { align: 'c', size: 21, fam: F.serif, track: 0.06 }],
+  ['t', 250, date, { align: 'c', size: 11, fam: F.serif, style: 'italic', key: 'date' }],
+  ['rule', 270, {}],
+];
 const DOCS = {
-  rule7: {
-    w: 612, h: 640, paper: '#fbfaf5', ink: INK, def: ['limit', 'retro'], tilt: -0.8,
+  nvidia8k: {
+    w: 612, h: 730, paper: '#fbfaf6', ink: INK, def: ['shortfall', 'cap'], tilt: -0.7,
     blocks: [
-      ['t', 72, 'COMMODITY EXCHANGE, INC. · NEW YORK', { align: 'c', size: 13, fam: F.narrow, weight: 700, track: 0.14 }],
-      ['rule', 86, { double: true }],
-      ['t', 128, 'EMERGENCY ACTION OF THE BOARD', { align: 'c', size: 12, fam: F.narrow, weight: 700, track: 0.3, color: '#55524b' }],
-      ['t', 180, 'SILVER RULE 7', { align: 'c', size: 44, weight: 900, track: 0.01, key: 'title' }],
-      ['t', 208, 'POSITION LIMITS IN SILVER FUTURES', { align: 'c', size: 13, fam: F.narrow, weight: 700, track: 0.16 }],
-      ['rule', 234, {}],
-      ['row', 276, 'Effective', 'Monday, January 7, 1980', { key: 'date' }],
-      ['row', 318, 'Position limit, per trader', '2,000 contracts', { key: 'limit', bold: true }],
-      ['row', 360, 'Equivalent to', '10,000,000 troy oz', { key: 'ounces' }],
-      ['row', 402, 'One contract', '5,000 troy oz', {}],
-      ['row', 444, 'Applies to', 'positions already held', { key: 'retro', bold: true }],
-      ['row', 486, 'Spot silver that day', '$35.80 an ounce', { key: 'spot' }],
-      ['rule', 516, {}],
-      ['p', 548, 'Recreated summary of the rule as described in the SEC staff report, The Silver Crisis of 1980 (1982), p. 65, and the CFTC (Federal Register, 2013). Not the original text.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 8-K', 'CURRENT REPORT', 'NVIDIA CORPORATION', 'Date of report: August 17, 2026'),
+      ['t', 300, 'ITEMS 1.01 AND 2.03 · AN OFF-BALANCE-SHEET OBLIGATION', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY, key: 'items' }],
+      ['row', 338, 'Guarantee, capped at', 'up to $105 billion', { key: 'cap', bold: true, size: 15 }],
+      ['row', 372, 'Leases', '20-year terms', { key: 'term' }],
+      ['row', 406, 'Data-centre capacity', '~4.25 GW · Pike County, Ohio', { key: 'gw' }],
+      ['row', 440, 'Tenant', 'OpenAI', { key: 'tenant' }],
+      ['p', 492, '[If OpenAI becomes insolvent or fails to pay,] “NVIDIA will pay an amount generally equal to any shortfall …”', { size: 18, lh: 26, fam: F.serif, marks: { shortfall: '“NVIDIA will pay an amount generally equal to any shortfall …”' } }],
+      ['p', 586, '[The guarantee ends early upon] “… OpenAI achieving a satisfactory credit rating.”', { size: 18, lh: 26, fam: F.serif, marks: { rating: 'OpenAI achieving a satisfactory credit rating.”' } }],
+      ['rule', 646, {}],
+      ['p', 672, 'Recreated text. Quoted phrases are verbatim from NVIDIA’s Form 8-K of 17 Aug 2026; the table and bracketed words are our summary. OpenAI must reimburse NVIDIA for any payment.', NOTE],
     ],
-    label: 'RECREATION · SEC STAFF REPORT (1982) P. 65', src: 'SOURCES: SEC STAFF REPORT, THE SILVER CRISIS OF 1980 (1982) P. 65; CFTC, FEDERAL REGISTER (12 DEC 2013)',
+    label: 'RECREATED TEXT · NVIDIA FORM 8-K, 17 AUG 2026', src: 'SOURCE: NVIDIA CORP., FORM 8-K (17 AUG 2026), ITEMS 1.01 AND 2.03 · SEC EDGAR',
   },
-  liquidation: {
-    w: 612, h: 600, paper: '#fbfaf5', ink: INK, def: ['stamp', 'new'], tilt: 0.9,
+  nvidia10k: {
+    w: 612, h: 560, paper: '#fbfaf6', ink: INK, def: ['assurance'], tilt: 0.7,
     blocks: [
-      ['t', 72, 'COMMODITY EXCHANGE, INC. · NEW YORK', { align: 'c', size: 13, fam: F.narrow, weight: 700, track: 0.14 }],
-      ['rule', 86, { double: true }],
-      ['t', 128, 'NOTICE · SILVER FUTURES', { align: 'c', size: 12, fam: F.narrow, weight: 700, track: 0.3, color: '#55524b' }],
-      ['t', 160, 'Monday, January 21, 1980', { align: 'c', size: 15, fam: F.serif, style: 'italic', key: 'date' }],
-      ['box', 106, 192, 400, 92, { lw: 4, r: 6, text: 'LIQUIDATION ONLY', size: 40, key: 'stamp' }],
-      ['row', 340, 'New positions', 'not accepted', { key: 'new', bold: true }],
-      ['row', 382, 'Existing positions', 'may only be closed out', { key: 'close' }],
-      ['row', 424, 'Tuesday, January 22', 'Chicago Board of Trade follows', { key: 'cbt' }],
-      ['rule', 456, {}],
-      ['p', 488, 'Recreated summary of the exchange actions as described in the SEC staff report, The Silver Crisis of 1980 (1982), p. 35. Not the original text.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 10-K', 'ANNUAL REPORT', 'NVIDIA CORPORATION', 'Fiscal year ended January 25, 2026 · filed February 25, 2026'),
+      ['t', 304, '[On the September 2025 letter of intent to invest “up to $100 billion” in OpenAI:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
+      ['p', 352, '“There is no assurance that we will enter into an investment and partnership agreement with OpenAI or that a transaction will be completed.”', { size: 23, lh: 32, fam: F.serif, marks: { assurance: 'There is no assurance', agreement: 'or that a transaction will be completed.”' } }],
+      ['rule', 478, {}],
+      ['p', 504, 'Recreated text. The quotation is verbatim from NVIDIA’s Form 10-K filed 25 Feb 2026; the bracketed line is our summary.', NOTE],
     ],
-    label: 'RECREATION · SEC STAFF REPORT (1982) P. 35', src: 'SOURCE: SEC STAFF REPORT, THE SILVER CRISIS OF 1980 (1982) P. 35',
+    label: 'RECREATED TEXT · NVIDIA FORM 10-K, 25 FEB 2026', src: 'SOURCE: NVIDIA CORP., FORM 10-K FOR FISCAL 2026 (FILED 25 FEB 2026) · SEC EDGAR',
   },
-  tiffany: {
-    w: 612, h: 860, paper: '#f2eee3', ink: '#141414', def: ['unconscionable', 'billion'], tilt: 0.6, news: true,
+  nvidia10q: {
+    w: 612, h: 640, paper: '#fbfaf6', ink: INK, def: ['lack', 'financing'], tilt: -0.8,
     blocks: [
-      ['rule', 54, { w: 2.4 }],
-      ['t', 150, '“', { x: 70, size: 84, fam: F.serif, color: '#141414' }],
-      ['p', 196, 'We think it is unconscionable for anyone to hoard several billion, yes billion, dollars worth of silver and thus drive the price up so high that others must pay artificially high prices for articles made of silver from baby spoons to tea sets, as well as photographic film and other products.”', { x: 76, w: 460, size: 31, lh: 39, fam: F.serif, marks: { unconscionable: 'unconscionable', billion: 'several billion, yes billion,', spoons: 'from baby spoons to tea sets,' } }],
-      ['rule', 724, { x0: 236, x1: 376, w: 1.2 }],
-      ['t', 782, 'TIFFANY & CO.', { align: 'c', size: 34, fam: F.serif, track: 0.22, key: 'name' }],
-      ['rule', 810, { w: 2.4 }],
+      ...sec('FORM 10-Q', 'QUARTERLY REPORT', 'NVIDIA CORPORATION', 'Quarter ended July 26, 2026 · filed August 26, 2026'),
+      ['t', 304, '[On the AI cloud providers NVIDIA now backs, which:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
+      ['p', 352, '“… currently lack the ability to secure long-term infrastructure contracts and investment-grade financing capacity …”', { size: 23, lh: 32, fam: F.serif, marks: { lack: 'currently lack the ability', financing: 'investment-grade financing capacity' } }],
+      ['t', 488, '[On demand, customers may delay purchases:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
+      ['p', 520, '“… due to the lack of availability of data center infrastructure …”', { size: 16, lh: 23, fam: F.serif, marks: { power: 'lack of availability of data center infrastructure' } }],
+      ['rule', 560, {}],
+      ['p', 586, 'Recreated text. Quotations are verbatim from NVIDIA’s Form 10-Q for the quarter ended 26 Jul 2026; bracketed lines are our summary.', NOTE],
     ],
-    label: 'TEXT AS QUOTED BY TIME, 7 APR 1980 · RECREATION, NOT THE ORIGINAL AD', src: 'SOURCE: TIME, “HE HAS A PASSION FOR SILVER”, 7 APR 1980 (TIFFANY & CO. AD, NYT, MARCH 1980)',
+    label: 'RECREATED TEXT · NVIDIA FORM 10-Q, AUG 2026', src: 'SOURCE: NVIDIA CORP., FORM 10-Q, QUARTER ENDED 26 JUL 2026 (FILED 26 AUG 2026) · SEC EDGAR',
   },
-  cftc: {
-    w: 612, h: 600, paper: '#f6f3ea', ink: OLD, def: ['objective', 'shut'], tilt: -1.1, typed: true,
+  coreweave8k: {
+    w: 612, h: 620, paper: '#fbfaf6', ink: INK, def: ['residual', 'value'], tilt: 0.8,
     blocks: [
-      ['t', 66, 'COMMODITY FUTURES TRADING COMMISSION', { align: 'c', size: 11.5, fam: F.mono, track: 0.12 }],
-      ['t', 104, 'M E M O R A N D U M', { align: 'c', size: 17, fam: F.mono, weight: 500, track: 0.1 }],
-      ['row', 150, 'DATE:', 'January 8, 1980', { vx: 170, fam: F.mono, key: 'date', lead: false }],
-      ['row', 172, 'SUBJECT:', 'Meeting with Nelson Bunker Hunt', { vx: 170, fam: F.mono, lead: false }],
-      ['row', 194, 'TIME:', '3:00 p.m.', { vx: 170, fam: F.mono, lead: false }],
-      ['row', 216, 'PLACE:', 'Office of Commissioner Dunn', { vx: 170, fam: F.mono, lead: false }],
-      ['rule', 238, { color: 'rgba(29,26,20,0.5)' }],
-      ['p', 280, '… [Mr. Hunt] asked whether CFTC’s objective was to raise, lower, or stabilize silver prices …', { x: 72, w: 468, size: 13, lh: 24, fam: F.mono, marks: { objective: 'raise, lower, or stabilize silver prices' } }],
-      ['p', 376, '… [and] whether CFTC was considering action to shut down the silver market. …', { x: 72, w: 468, size: 13, lh: 24, fam: F.mono, marks: { shut: 'shut down the silver market.' } }],
-      ['p', 520, 'Recreated text: excerpts as quoted from the CFTC memorandum in the House hearing record (1980). Brackets and ellipses are ours.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 8-K', 'CURRENT REPORT', 'COREWEAVE, INC.', 'Date of report: September 9, 2025 · filed September 15, 2025'),
+      ['row', 316, 'Order from', 'NVIDIA', {}],
+      ['row', 350, 'Initial order value', '$6.3 billion', { key: 'value', bold: true, size: 15 }],
+      ['row', 384, 'Runs through', 'April 13, 2032', { key: 'date' }],
+      ['p', 440, '[NVIDIA] “is obligated to purchase the residual unsold capacity through April 13, 2032.”', { size: 22, lh: 31, fam: F.serif, marks: { residual: 'is obligated to purchase the residual unsold capacity' } }],
+      ['rule', 540, {}],
+      ['p', 566, 'Recreated text. The quotation is verbatim from CoreWeave’s Form 8-K (filed 15 Sep 2025); the table and bracketed word are our summary.', NOTE],
     ],
-    label: 'RECREATED TEXT · CFTC MEMO, 8 JAN 1980', src: 'SOURCE: CFTC MEMORANDUM, 8 JAN 1980, IN HOUSE HEARINGS “SILVER PRICES AND THE ADEQUACY OF FEDERAL ACTIONS…” (1980)',
+    label: 'RECREATED TEXT · COREWEAVE FORM 8-K, SEP 2025', src: 'SOURCE: COREWEAVE, INC., FORM 8-K (DATED 9 SEP 2025, FILED 15 SEP 2025) · SEC EDGAR',
   },
-  fed: {
-    w: 612, h: 560, paper: '#fbfaf6', ink: INK, def: ['speculative'], tilt: 0.8,
+  oracle10q: {
+    w: 612, h: 720, paper: '#fbfaf6', ink: INK, def: ['fair', 'fcf'], tilt: -0.6,
     blocks: [
-      ['t', 70, 'FEDERAL RESERVE BANK OF DALLAS', { align: 'c', size: 15, fam: F.serif, track: 0.12 }],
-      ['t', 90, 'Circular No. 80-49 · March 15, 1980', { align: 'c', size: 11, fam: F.serif, style: 'italic' }],
-      ['rule', 106, { double: true }],
-      ['t', 156, 'SPECIAL CREDIT RESTRAINT PROGRAM', { align: 'c', size: 18, weight: 800, track: 0.05, key: 'title' }],
-      ['t', 180, 'Announced Friday, March 14, 1980', { align: 'c', size: 12, fam: F.serif, style: 'italic', key: 'date' }],
-      ['p', 240, '[Lenders should avoid] “… financing for purely speculative holdings of commodities or precious metals or extraordinary inventory accumulation …”', { x: 82, w: 448, size: 19, lh: 30, fam: F.serif, marks: { speculative: 'purely speculative holdings of commodities or precious metals' } }],
-      ['rule', 420, {}],
-      ['p', 450, 'Recreated text. The quoted phrase is from Federal Reserve Bank of Dallas Circular No. 80-49; brackets and ellipses are ours.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 10-Q', 'QUARTERLY REPORT', 'ORACLE CORPORATION', 'Quarter ended August 31, 2026 · filed September 11, 2026'),
+      ['t', 304, 'SENIOR NOTES AND OTHER BORROWINGS, 31 AUG 2026', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
+      ['row', 338, 'Carrying value', '$125.0 billion', { key: 'debt', fam: F.mono, size: 14 }],
+      ['row', 370, 'Estimated fair value', '$105.7 billion', { key: 'fair', fam: F.mono, size: 14, bold: true }],
+      ['row', 402, 'Fair value per $1 of debt (our math)', '≈ 85¢', { key: 'cents', fam: F.mono, size: 14, bold: true }],
+      ['t', 452, 'FIRST QUARTER OF FISCAL 2027 · JUN – AUG 2026', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
+      ['row', 486, 'Operating cash flow', '$23.1 billion', { fam: F.mono, size: 14 }],
+      ['row', 518, 'Capital expenditures', '−$28.5 billion', { key: 'capex', fam: F.mono, size: 14 }],
+      ['rule', 536, { x0: 380, x1: 540 }],
+      ['row', 568, 'Free cash flow (our math)', '−$5.4 billion', { key: 'fcf', fam: F.mono, size: 17, bold: true }],
+      ['row', 608, 'At-the-market stock sales', '$20B programme, all used', { key: 'atm', fam: F.mono, size: 14 }],
+      ['rule', 634, {}],
+      ['p', 660, 'Recreated summary of figures in Oracle’s Form 10-Q for the quarter ended 31 Aug 2026, not the filing’s layout. Rows marked “our math” are our calculation from those figures.', NOTE],
     ],
-    label: 'RECREATED TEXT · FED. RESERVE BANK OF DALLAS CIRCULAR 80-49', src: 'SOURCE: FEDERAL RESERVE BANK OF DALLAS, CIRCULAR NO. 80-49 (15 MAR 1980), SPECIAL CREDIT RESTRAINT PROGRAM',
+    label: 'RECREATED SUMMARY · ORACLE FORM 10-Q, SEP 2026', src: 'SOURCE: ORACLE CORP., FORM 10-Q, QUARTER ENDED 31 AUG 2026 (FILED 11 SEP 2026) · SEC EDGAR',
   },
-  verdict: {
-    w: 612, h: 640, paper: '#fbfaf6', ink: INK, def: ['damages', 'treble', 'settle', 'net'], tilt: -0.7,
+  lucent10k: {
+    w: 612, h: 660, paper: '#f6f3ea', ink: '#1d1a14', def: ['clec', 'creditworthiness'], tilt: 0.9,
     blocks: [
-      ['t', 66, 'UNITED STATES DISTRICT COURT', { align: 'c', size: 15, fam: F.serif, track: 0.12 }],
-      ['t', 86, 'SOUTHERN DISTRICT OF NEW YORK', { align: 'c', size: 10.5, fam: F.serif, track: 0.14 }],
-      ['rule', 102, { double: true }],
-      ['t', 150, 'Minpeco, S.A. v. Hunt et al.', { align: 'c', size: 26, fam: F.serif, style: 'italic', key: 'case' }],
-      ['t', 176, 'JURY VERDICT · SATURDAY, AUGUST 20, 1988', { align: 'c', size: 10.5, fam: F.narrow, weight: 700, track: 0.16, key: 'date' }],
-      ['box', 238, 196, 136, 26, { lw: 1.6, r: 13, text: 'CIVIL CASE', size: 11, fam: F.mono, track: 0.18, key: 'civil' }],
-      ['row', 270, 'Damages found by the jury', '$66.2M', { key: 'damages', fam: F.mono, size: 15 }],
-      ['row', 310, '× 3, trebled (antitrust, RICO, fraud)', '$198.6M', { key: 'treble', fam: F.mono, size: 15 }],
-      ['row', 350, '− earlier settlements', '−$64.6M', { key: 'settle', fam: F.mono, size: 15 }],
-      ['rule', 370, { x0: 380, x1: 540 }],
-      ['row', 404, 'Net judgment', '$133.95M', { key: 'net', fam: F.mono, size: 20, bold: true }],
-      ['p', 456, 'Found liable: N. Bunker Hunt, W. Herbert Hunt, Lamar Hunt, Mahmoud Fustok and International Metals Investment Co.', { x: 72, w: 468, size: 13, lh: 19, fam: F.serif, marks: { liable: 'Found liable:' } }],
-      ['rule', 516, {}],
-      ['p', 546, 'Recreated summary. Figures as reported by the Los Angeles Times / Washington Post, 24 Aug 1988. A civil case: nobody was convicted of a crime.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 10-K405', 'ANNUAL REPORT', 'LUCENT TECHNOLOGIES INC.', 'Fiscal year ended September 30, 2001 · filed December 28, 2001'),
+      ['p', 320, '“Adverse industry conditions, such as the continued softening in the CLEC market, have negatively affected the creditworthiness of several customers that participate in our customer financing program.”', { size: 21, lh: 30, fam: F.serif, marks: { clec: 'continued softening in the CLEC market,', creditworthiness: 'negatively affected the creditworthiness', program: 'our customer financing program.”' } }],
+      ['rule', 486, {}],
+      ['row', 520, 'Customer-financing commitments, 30 Sep 2000', '$8.1 billion', { key: 'commit', fam: F.mono, size: 13 }],
+      ['row', 552, 'Provisions: uncollectibles & customer financing, FY01', '$2.2 billion', { key: 'provisions', fam: F.mono, size: 13 }],
+      ['rule', 576, {}],
+      ['p', 602, 'Recreated text. The quotation is verbatim from Lucent’s Form 10-K405 for fiscal 2001; the figures are summarised from it and the FY2000 10-K/A. CLEC: competitive local exchange carrier.', NOTE],
     ],
-    label: 'RECREATED SUMMARY · LA TIMES / WASHINGTON POST, 24 AUG 1988', src: 'SOURCE: LOS ANGELES TIMES (FROM THE WASHINGTON POST), 24 AUG 1988 · MINPECO, S.A. V. HUNT (S.D.N.Y. 1988)',
+    label: 'RECREATED TEXT · LUCENT FORM 10-K405, DEC 2001', src: 'SOURCE: LUCENT TECHNOLOGIES, FORM 10-K405 FOR FISCAL 2001 (FILED 28 DEC 2001); FORM 10-K/A FY2000 · SEC EDGAR',
   },
-  bankruptcy: {
-    w: 612, h: 640, paper: '#fbfaf6', ink: INK, def: ['cadillacs', 'mercedes', 'coins'], tilt: 0.7,
+  amdwarrant: {
+    w: 612, h: 660, paper: '#fbfaf6', ink: INK, def: ['shares', 'price', '600'], tilt: -0.8,
     blocks: [
-      ['t', 66, 'UNITED STATES BANKRUPTCY COURT', { align: 'c', size: 15, fam: F.serif, track: 0.12 }],
-      ['t', 86, 'DALLAS, TEXAS · SEPTEMBER 1988', { align: 'c', size: 10.5, fam: F.serif, track: 0.14 }],
-      ['rule', 102, { double: true }],
-      ['t', 150, 'CHAPTER 11', { align: 'c', size: 34, weight: 900, track: 0.04, key: 'chapter' }],
-      ['t', 176, 'N. Bunker Hunt · W. Herbert Hunt', { align: 'c', size: 16, fam: F.serif, style: 'italic' }],
-      ['t', 230, 'Among the assets listed:', { x: 72, size: 13, fam: F.serif, style: 'italic', color: '#55524b' }],
-      ['row', 270, '1.', 'Hawaiian real estate', { vx: 100, key: 'hawaii', lead: false, size: 15 }],
-      ['row', 306, '2.', 'Half interest in a Vail, Colo., ski lodge', { vx: 100, key: 'vail', lead: false, size: 15 }],
-      ['row', 342, '3.', 'Two Cadillacs', { vx: 100, key: 'cadillacs', lead: false, size: 15 }],
-      ['row', 378, '4.', 'A Mercedes-Benz', { vx: 100, key: 'mercedes', lead: false, size: 15 }],
-      ['row', 414, '5.', 'A 13,649-piece Byzantine coin collection', { vx: 100, key: 'coins', lead: false, size: 15, bold: true }],
-      ['p', 470, 'Filed partly to avoid posting a $225 million appeal bond.', { x: 72, w: 468, size: 13, lh: 19, fam: F.serif, marks: { bond: '$225 million appeal bond.' } }],
-      ['rule', 506, {}],
-      ['p', 536, 'Recreated summary. The list as reported by Time, “Billionaire Bankrupts”, 3 Oct 1988. Not the court filing.', { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
+      ...sec('FORM 8-K', 'CURRENT REPORT', 'ADVANCED MICRO DEVICES, INC.', 'Date of report: October 6, 2025'),
+      ['t', 304, 'WARRANT ISSUED TO OPENAI', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
+      ['row', 340, 'Shares of AMD common stock', 'up to 160,000,000', { key: 'shares', fam: F.mono, size: 15, bold: true }],
+      ['row', 374, 'Exercise price', '$0.01 per share', { key: 'price', fam: F.mono, size: 15, bold: true }],
+      ['row', 408, 'Vests as OpenAI buys', 'up to 6 GW of AMD GPUs', { key: 'gw', fam: F.mono, size: 14 }],
+      ['row', 442, 'Expires', 'October 5, 2030', { key: 'expiry', fam: F.mono, size: 14 }],
+      ['p', 494, '[Vesting is also tied to AMD’s share price reaching targets] “that escalate to $600 per share.”', { size: 19, lh: 27, fam: F.serif, marks: { 600: '“that escalate to $600 per share.”' } }],
+      ['rule', 572, {}],
+      ['p', 598, 'Recreated summary of AMD’s Form 8-K of 6 Oct 2025; the quoted phrase is verbatim, the table and bracketed words are our summary. AMD gave Meta an identical warrant on 23 Feb 2026.', NOTE],
     ],
-    label: 'RECREATED SUMMARY · TIME, 3 OCT 1988', src: 'SOURCES: TIME, “BILLIONAIRE BANKRUPTS”, 3 OCT 1988; LOS ANGELES TIMES, 23 SEP 1988',
-  },
-  testimony: {
-    w: 780, h: 470, paper: '#fdfcf7', ink: INK, def: ['corner'], tilt: -0.9, card: true,
-    blocks: [
-      ['t', 52, 'SWORN TESTIMONY', { x: 48, size: 13, fam: F.mono, weight: 500, track: 0.3 }],
-      ['t', 52, 'FRIDAY, MAY 2, 1980', { align: 'r', x: 732, size: 11, fam: F.mono, track: 0.14, key: 'date' }],
-      ['rule', 70, { x0: 48, x1: 732, w: 2, color: '#2a8c86' }],
-      ['t', 112, 'W. HERBERT HUNT', { x: 48, size: 22, weight: 800, track: 0.02 }],
-      ['t', 134, 'before the House Commerce, Consumer and Monetary Affairs Subcommittee', { x: 48, size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
-      ['p', 196, '“At no time did I attempt to corner, squeeze, or manipulate the silver market.”', { x: 48, w: 680, size: 33, lh: 42, fam: F.serif, marks: { corner: 'corner, squeeze, or manipulate' } }],
-      ['p', 308, '“At no time did I participate in an agreement to corner, squeeze, or manipulate the silver market. At no time did I attempt or agree with others to manipulate the silver market.”', { x: 48, w: 680, size: 15, lh: 22, fam: F.serif, color: '#4a4a52', marks: { rest: 'At no time did I attempt or agree with others' } }],
-      ['p', 410, 'Recreated text from the hearing record, Silver Prices and the Adequacy of Federal Actions in the Marketplace, 1979–80, p. 281.', { x: 48, w: 680, size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 }],
-    ],
-    label: 'RECREATED TEXT · HOUSE HEARING RECORD, 2 MAY 1980', src: 'SOURCE: HOUSE SUBCOMMITTEE HEARINGS, SILVER PRICES AND THE ADEQUACY OF FEDERAL ACTIONS IN THE MARKETPLACE, 1979–80, P. 281',
+    label: 'RECREATED SUMMARY · AMD FORM 8-K, 6 OCT 2025', src: 'SOURCE: ADVANCED MICRO DEVICES, FORM 8-K (6 OCT 2025) · SEC EDGAR',
   },
 };
 
@@ -228,7 +207,7 @@ export default function makeDocs(H) {
 
   // ================================================================ doc
   async function doc(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 7, Dc = DOCS[Pm.doc ?? 'rule7'] ?? DOCS.rule7;
+    const Pm = shot.params ?? {}, D = shot.duration ?? 7, Dc = DOCS[Pm.doc ?? 'nvidia8k'] ?? DOCS.nvidia8k;
     await G.loadFonts();
     const L = layout(Dc);
     const keys = [].concat(Pm.highlight ?? Dc.def).filter(k => L.keys[k]);
@@ -279,8 +258,9 @@ export default function makeDocs(H) {
 
   // ================================================================ photo: an archival photo, Ken Burns, caption, credit
   async function photo(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 7, file = Pm.file ?? 'loc_comex_floor_1978_a.jpg';
-    const im = await G.image(`/projects/silver/assets/photos/${file}`);
+    const Pm = shot.params ?? {}, D = shot.duration ?? 7, file = String(Pm.file ?? '');
+    if (!file) throw new Error('photo: params.file is required (projects/aibubble/assets/photos/<file> or an absolute /projects/... path)');
+    const im = await G.image(file.startsWith('/') ? file : `/projects/aibubble/assets/photos/${file}`);
     const iw = im.naturalWidth, ih = im.naturalHeight, ar = iw / ih;
     const cutout = Pm.cutout ?? /\.png$/i.test(file), portrait = ar < 1.05;
     const zoom = Pm.zoom ?? 1.14, focus = Pm.focus ?? [0.5, 0.45], maxScale = Pm.maxScale ?? 1.7;

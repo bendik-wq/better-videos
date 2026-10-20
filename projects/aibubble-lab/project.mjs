@@ -10,6 +10,14 @@ const shots = [
   { id: 'gpu', set: 'gpu', min: 5, params: {} },
   { id: 'dom', set: 'dominoes', min: 10, params: {} },
   { id: 'fund', set: 'fund', min: 6, params: {} },
+  // thumbnails (rendered at --stills=0.95; composited by projects/aibubble/thumbs/make.mjs)
+  { id: 'thA', set: 'bubble', min: 3, params: { mode: 'needle', needleAt: 0, seed: 7, camera: [{ pos: [-6, 10, 46], look: [6, 7.5, 0], mm: 35 }] } },
+  { id: 'thB', set: 'circle', min: 4, params: { noPills: true, caption: null, seed: 4, flows: [
+    { from: 'NVIDIA', to: 'OPENAI', kind: 'invest', at: 0 }, { from: 'OPENAI', to: 'ORACLE', kind: 'buy', at: 0.1 }, { from: 'ORACLE', to: 'NVIDIA', kind: 'buy', at: 0.2 },
+    { from: 'AMAZON', to: 'OPENAI', kind: 'invest', at: 0.3 }, { from: 'OPENAI', to: 'MICROSOFT', kind: 'buy', at: 0.4 }, { from: 'NVIDIA', to: 'OPENAI', kind: 'guarantee', at: 0.5 }],
+    camera: [{ pos: [4, 30, 34], look: [0, 3, 0], mm: 30 }] } },
+  { id: 'thC', set: 'circle', min: 3, params: { towers: ['LUCENT', 'NVIDIA'], radius: 5, seed: 9, caption: null, tilt: { LUCENT: -0.55, NVIDIA: 0.07 }, heights: { LUCENT: 11, NVIDIA: 12 },
+    camera: [{ pos: [-34, 9, 0], look: [0, 6.5, 0], mm: 34 }] } },
 ];
 export default {
   title: 'aibubble lab', fps: 60, width: 1920, height: 1080,

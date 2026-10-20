@@ -1,7 +1,7 @@
-// Silver bright graphics kit (episode 7, "The Brothers Who Tried to Buy All the Silver"): palette, fonts, the 2D canvas
-// set, camera drift, ledger drawing helpers, the silver key closes and an image loader. Shared by graphics.js,
-// graphics-data.js, graphics-maps.js and graphics-docs.js. Not a set library: the default export returns no sets, so a
-// runtime that loads every sets/*.js can load this file harmlessly. (Adapted from projects/mortgage/sets/graphics-kit.js.)
+// AI-bubble bright graphics kit (episode 8, "How the AI Bubble Pops"): palette, fonts, the 2D canvas set, camera drift,
+// ledger drawing helpers, the Nasdaq Composite key closes and an image loader. Shared by graphics.js, graphics-data.js,
+// graphics-maps.js and graphics-docs.js. Not a set library: the default export returns no sets, so a runtime that loads
+// every sets/*.js can load this file harmlessly. (Adapted from projects/silver/sets/graphics-kit.js.)
 //
 // Money identity (same bright house as Panama/Mortgage, docs/library/bright-style/STYLE.md): bright cool paper #f7f6f1 with
 // faint ledger rules, ink navy #14233d, sage #a9c5ae and teal #2a8c86 accents, and ONE red #e0241b reserved for the
@@ -31,7 +31,7 @@ export function loadFonts() {
     try {
       const f = new FontFace('Inter', 'url(/projects/mortgage/assets/fonts/Inter-latin.woff2)', { weight: '100 900' });
       await f.load(); document.fonts.add(f);
-    } catch (e) { console.warn('[silver] Inter not loaded:', e.message); }
+    } catch (e) { console.warn('[aibubble] Inter not loaded:', e.message); }
     await Promise.all(['500', '600', '700', '800', '900'].map(w => document.fonts.load(`${w} 40px Inter`)).concat(
       [document.fonts.load('40px "Instrument Serif"'), document.fonts.load('italic 40px "Instrument Serif"'), document.fonts.load('500 40px "Plex Mono"'), document.fonts.load('400 40px "Plex Mono"'), document.fonts.load('700 40px "Archivo Narrow"'), document.fonts.load('400 40px "Archivo Narrow"')]));
   })();
@@ -258,24 +258,21 @@ export const ms = (d) => Date.parse(d + 'T00:00:00Z');
 export const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 export const dstr = (d) => { const x = new Date(typeof d === 'number' ? d : ms(d)); return `${x.getUTCDate()} ${MON[x.getUTCMonth()]} ${x.getUTCFullYear()}`; };
 
-// ---------------------------------------------------------------- silver key prices (RESEARCH.md; sparse, NOT a daily series)
-// [date, $/oz, short label]. Spot closes from the SEC staff report (S01) unless noted. Charts join them with straight
-// segments and say so in their source line.
-export const KEY7980 = [
-  ['1979-07-31', 9.0, '~$9'],      // S01 p.32 ("below $10 per ounce prior to August 1, 1979"; position ~123M oz)
-  ['1979-12-31', 34.45, '$34.45'], // S01 p.4
-  ['1980-01-17', 48.70, '$48.70'], // S01 p.37 fn16: record Comex spot settle (intraday high $50.36, p.65; see D1)
-  ['1980-01-22', 34.00, '$34.00'], // S01 p.35
-  ['1980-03-10', 29.75, '$29.75'], // S01 pp.7, 35
-  ['1980-03-25', 20.20, '$20.20'], // S01 pp.78–79
-  ['1980-03-26', 15.80, '$15.80'], // S01 p.93
-  ['1980-03-27', 10.80, '$10.80'], // S01 p.3: Silver Thursday
+// ---------------------------------------------------------------- Nasdaq Composite key closes (RESEARCH.md; sparse, NOT a daily series)
+// [date, close, short label]. S52 / S05 (Yahoo price history). Charts join them with straight segments and say so on
+// screen. 23 Apr 2015 is the first close above the 2000 peak: RESEARCH gives the date, not the level, so it is plotted AT
+// the 5,048.62 peak level and labelled "back above".
+export const NASDAQ = [
+  ['2000-03-10', 5048.62, '5,048.62'],   // 7.1 record close
+  ['2002-10-09', 1114.11, '1,114.11'],   // 7.2 trough, −77.9%
+  ['2015-04-23', 5048.62, 'BACK ABOVE'], // 7.3 first close above the 2000 peak (level not given: plotted at the peak)
+  ['2026-10-06', 27599.79, '27,599.79'], // 1.1 record close ⏱
 ];
-export const KEY_SRC = 'SILVER, KEY SPOT CLOSES 1979–80 · SEC STAFF REPORT (1982) · LINE JOINS POINTS';
+export const NASDAQ_SRC = 'NASDAQ COMPOSITE · KEY CLOSES ONLY · YAHOO FINANCE PRICE HISTORY · LINE JOINS POINTS';
 // the key line as [ms, v] points
-export const keyPts = (rows = KEY7980) => rows.map(([d, v]) => [ms(d), v]);
+export const keyPts = (rows = NASDAQ) => rows.map(([d, v]) => [ms(d), v]);
 
-// ---------------------------------------------------------------- images (archival photos in projects/silver/assets/photos)
+// ---------------------------------------------------------------- images (photos: projects/aibubble/assets/photos, or any absolute path)
 const IMG = {};
 export function image(url) {
   return IMG[url] ??= new Promise((res, rej) => { const im = new Image(); im.decoding = 'async'; im.onload = () => res(im); im.onerror = () => rej(new Error(`image not found: ${url}`)); im.src = url; })

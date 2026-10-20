@@ -1,11 +1,11 @@
-// Silver bright graphics (episode 7, "The Brothers Who Tried to Buy All the Silver"): cards painted on a 2D canvas.
-//   title      the episode title card (the 1979–80 silver key-close line draws behind the type, key-close tape)
-//   chapter    chapter card on ledger paper, the silver key-close line drawing on to the right, a red pulse at $10.80
+// AI-bubble bright graphics (episode 8, "How the AI Bubble Pops"): cards painted on a 2D canvas.
+//   title      the episode title card (the Nasdaq key-close line 2000 -> 2026 draws behind the type, key-close tape)
+//   chapter    chapter card on ledger paper, the Nasdaq key-close line drawing on to the right, a red pulse at the 2026 record
 //   quote      verbatim quote card, words appear as they are spoken
 //   bignumber  a generic count-up card
-//   counter    split-flap board for prices and clocks (thursday · clock1215 · clock213, or any steps)
-//   timeline   horizontal ledger timeline (1961 Sarir … 29 Jan 2026)
-// Params for every set: projects/silver/SETS-graphics.md. Every number on screen comes from RESEARCH.md.
+//   counter    split-flap board (presets oct14 · oct15, or any steps)
+//   timeline   horizontal ledger timeline (10 Mar 2000 Nasdaq peak … 14–16 Oct 2026 selloff)
+// Params for every set: projects/aibubble/SETS-graphics.md. Every number on screen comes from RESEARCH.md.
 // Format: makeGraphics(H) -> { name: async (ctx, shot) => ({ scene, camera, layer, canvas, update(t, p) }) }.
 import * as G from './graphics-kit.js';
 import * as M from '/engine/motion.js';
@@ -15,7 +15,7 @@ const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
 export default function makeGraphics(H) {
   const set = async (ctx, shot, paint, cam) => { await G.loadFonts(); return G.canvasSet(H, ctx, shot, paint, cam); };
 
-  // the silver key closes drawn on to fraction u (by length) in rect [x0, y0, x1, y1], value range yr.
+  // the key closes drawn on to fraction u (by length) in rect [x0, y0, x1, y1], value range yr.
   // Straight segments between the sparse points (never smoothed: they are not a daily series). Returns the head.
   function keyLine(g, pts, rect, yr, u, { color = P.teal, width = 6, fill = P.tealPale, fillA = 0.9, dots = true, t = 0, redEnd = true } = {}) {
     const [x0, y0, x1, y1] = rect, tA = pts[0][0], tB = pts.at(-1)[0];
@@ -33,15 +33,15 @@ export default function makeGraphics(H) {
 
   // ================================================================ title
   async function title(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 6, lines = Pm.lines ?? ['THE BROTHERS WHO', 'TRIED TO BUY', 'ALL THE SILVER'];
+    const Pm = shot.params ?? {}, D = shot.duration ?? 6, lines = Pm.lines ?? ['HOW THE', 'AI BUBBLE', 'POPS'];
     const drawEnd = Math.min(D * 0.75, 4.6);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.2); G.paper(g, { step: 60 });
-      // the silver key closes, Jul 1979 -> 27 Mar 1980, drawing on behind the type
+      // the Nasdaq key closes, 10 Mar 2000 -> 6 Oct 2026, drawing on behind the type (navy end: the title's red is its last line)
       k.view(0.45);
       const u = E.inOutSine(range(t, 0.1, drawEnd));
-      const hd = keyLine(g, KP, [60, 630, 1790, 880], [0, 52], u, { color: 'rgba(42,140,134,0.55)', width: 7, fill: 'rgba(210,233,228,0.7)' });
-      if (hd) G.pin(g, hd.x, hd.y, t, range(t, 0.2, 0.6), { color: hd.done ? P.red : P.teal, r: 10, pulse: hd.done });
+      const hd = keyLine(g, KP, [80, 560, 1780, 880], [0, 30000], u, { color: 'rgba(42,140,134,0.55)', width: 7, fill: 'rgba(210,233,228,0.7)' });
+      if (hd) G.pin(g, hd.x, hd.y, t, range(t, 0.2, 0.6), { color: hd.done ? P.ink : P.teal, r: 10, pulse: hd.done });
       // a soft paper halo so the type never sits on the line
       const halo = g.createRadialGradient(960, 430, 120, 960, 430, 900); halo.addColorStop(0, 'rgba(247,246,241,0.94)'); halo.addColorStop(0.55, 'rgba(247,246,241,0.62)'); halo.addColorStop(1, 'rgba(247,246,241,0)');
       g.save(); g.scale(1, 0.55); g.fillStyle = halo; g.fillRect(-200, 0, 2320, 1700); g.restore();
@@ -52,50 +52,60 @@ export default function makeGraphics(H) {
         const red = i === lines.length - 1;
         G.riseText(g, l, 960, y0 + i * size * 1.0, range(t, 0.25 + i * 0.2, 1.25 + i * 0.2), { size, weight: 900, align: 'center', color: red ? P.red : P.ink, track: -0.02, maxW: 1700 });
       });
-      // the tape: key spot closes (S01), revealed one by one, $10.80 in red
+      // the tape: Nasdaq key closes (S52, S05), revealed one by one; the 2026 record on a teal chip
       k.view(0.8);
-      const ty = 940, kt = range(t, 0.6, 1.1);
+      const ty = 950, kt = range(t, 0.6, 1.1);
       if (kt > 0) {
         g.save(); g.globalAlpha = clamp(kt * 2); G.shadow(g, 0.8); g.fillStyle = P.ink; g.fillRect(-200, ty - 44, 2320, 88); G.noShadow(g);
-        const lab = 'SPOT SILVER $/OZ', items = [['31 JUL 1979', '~$9'], ['31 DEC 1979', '$34.45'], ['17 JAN 1980', '$48.70'], ['27 MAR 1980', '$10.80', true]];
+        const lab = 'NASDAQ COMPOSITE', items = [['10 MAR 2000', '5,048.62'], ['9 OCT 2002', '1,114.11'], ['23 APR 2015', 'BACK ABOVE'], ['6 OCT 2026', '27,599.79', true]];
         const wl = G.measure(g, lab, 21, 500, F.mono, 0.12), wi = items.map(([d, v]) => G.measure(g, d, 21, 500, F.mono, 0.1) + 14 + G.measure(g, v, 32, 500, F.mono) + 60);
-        let x = 960 - (wl + 50 + wi.reduce((a, b) => a + b, 0) - 60) / 2;
+        const TW = wl + 50 + wi.reduce((a, b) => a + b, 0) - 60, ts = Math.min(1, 1700 / TW);
+        g.translate(960, ty); g.scale(ts, ts); g.translate(-960, -ty);
+        let x = 960 - TW / 2;
         G.text(g, lab, x, ty + 8, { size: 21, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.7)', track: 0.12 }); x += wl + 50;
-        items.forEach(([d, v, red], i) => {
+        items.forEach(([d, v, hi], i) => {
           const ki = range(t, 0.9 + i * 0.32, 1.3 + i * 0.32); if (ki <= 0) { x += wi[i]; return; }
           g.save(); g.globalAlpha *= ki; g.translate(0, (1 - E.outCubic(ki)) * 10);
           G.text(g, d, x, ty + 8, { size: 21, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.7)', track: 0.1 });
           const vx = x + G.measure(g, d, 21, 500, F.mono, 0.1) + 14, vw = G.measure(g, v, 32, 500, F.mono);
-          if (red) { G.rr(g, vx - 10, ty - 25, vw + 20, 48, 8); g.fillStyle = P.red; g.fill(); }
+          if (hi) { G.rr(g, vx - 10, ty - 25, vw + 20, 48, 8); g.fillStyle = P.teal; g.fill(); }
           G.text(g, v, vx, ty + 11, { size: 32, weight: 500, fam: F.mono, color: P.white });
           g.restore(); x += wi[i];
         });
         g.restore();
       }
       k.flat();
-      if (Pm.sub) G.text(g, Pm.sub, 960, 1040, { size: 22, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.16, upper: true, alpha: E.outCubic(range(t, 1.6, 2.2)) });
-      else G.text(g, Pm.source ?? 'SOURCE: SEC STAFF REPORT, THE SILVER CRISIS OF 1980 (1982)', 960, 1040, { size: 17, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.12, alpha: E.outCubic(range(t, 1.8, 2.4)) });
+      if (Pm.sub) G.text(g, Pm.sub, 960, 1046, { size: 22, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.16, upper: true, alpha: E.outCubic(range(t, 1.6, 2.2)) });
+      else G.text(g, Pm.source ?? 'NASDAQ COMPOSITE · KEY CLOSES ONLY · YAHOO FINANCE PRICE HISTORY · LINE JOINS POINTS', 960, 1046, { size: 17, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.12, alpha: E.outCubic(range(t, 1.8, 2.4)) });
     }, { push: 0.05, dx: 0 });
   }
 
-  // ================================================================ chapter: ledger paper, the silver key line on the right
+  // ================================================================ chapter: ledger paper, the Nasdaq key line on the right
   async function chapter(ctx, shot) {
     const Pm = shot.params ?? {}, D = Math.max(3.5, shot.duration ?? 4), num = String(Pm.num ?? 1).padStart(2, '0');
     const ttl = String(Pm.title ?? 'Chapter'), sub = Pm.sub ?? '';
+    const dEnd = Math.min(D * 0.8, 3.1);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g, { step: 54, margin: 96, cols: [1040, 1240, 1440, 1640] });
       // right: the line, on its own ledger columns
       k.view(0.7);
-      const u = E.inOutSine(range(t, 0.15, Math.min(D * 0.8, 3.1)));
-      const hd = keyLine(g, KP, [1060, 330, 1800, 900], [0, 55], u, { color: P.teal, width: 7, fill: 'rgba(210,233,228,0.85)' });
+      const u = E.inOutSine(range(t, 0.15, dEnd));
+      const hd = keyLine(g, KP, [1060, 330, 1800, 900], [0, 30000], u, { color: P.teal, width: 7, fill: 'rgba(210,233,228,0.85)' });
       if (hd) {
         G.pin(g, hd.x, hd.y, t, range(t, 0.3, 0.8), { color: hd.done ? P.red : P.teal, r: 11, pulse: hd.done });
-        const pk = hd.xy[2], kp = range(t, 0.15 + (Math.min(D * 0.8, 3.1) - 0.15) * 0.45, 0.15 + (Math.min(D * 0.8, 3.1) - 0.15) * 0.45 + 0.5);
-        G.fig(g, '$48.70', pk[0], pk[1] - 30, { size: 26, align: 'center', color: P.ink, alpha: E.outCubic(kp) });
-        if (hd.done) G.fig(g, '$10.80', hd.x - 22, hd.y + 62, { size: 30, align: 'right', color: P.red, alpha: E.outCubic(range(t, Math.min(D * 0.8, 3.1), Math.min(D * 0.8, 3.1) + 0.4)) });
+        const pk = hd.xy[0], kp = range(t, 0.3, 0.9);
+        G.fig(g, '5,048.62', pk[0] + 6, pk[1] - 26, { size: 22, align: 'left', color: P.ink, alpha: E.outCubic(kp) });
+        G.fig(g, '2000', pk[0], 938, { size: 18, align: 'left', color: P.inkSoft, alpha: E.outCubic(kp) });
+        const ke = range(t, dEnd, dEnd + 0.45);
+        if (hd.done) {
+          G.fig(g, '27,599.79', hd.x - 56, hd.y + 8, { size: 34, align: 'right', color: P.red, alpha: E.outCubic(ke) });
+          G.fig(g, 'RECORD · 6 OCT 2026', hd.x - 56, hd.y + 38, { size: 16, align: 'right', color: P.inkSoft, track: 0.08, alpha: E.outCubic(ke) });
+          G.asOf(g, 'AS OF 20 OCT 2026', hd.x - 56, hd.y - 50, range(t, dEnd + 0.2, dEnd + 0.7), { align: 'right', size: 16 });
+          G.fig(g, '2026', hd.x, 938, { size: 18, align: 'right', color: P.inkSoft, alpha: E.outCubic(ke) });
+        }
       }
-      G.text(g, 'SILVER $/OZ · KEY CLOSES · JUL 1979 – 27 MAR 1980', 1800, 960, { size: 17, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.1, align: 'right', alpha: range(t, 0.8, 1.4) });
-      G.text(g, 'SEC STAFF REPORT (1982) · LINE JOINS POINTS', 1800, 990, { size: 15, weight: 500, fam: F.mono, color: P.inkFaint, track: 0.1, align: 'right', alpha: range(t, 1.0, 1.6) });
+      G.text(g, 'NASDAQ COMPOSITE · KEY CLOSES · 2000 – 2026', 1800, 960, { size: 17, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.1, align: 'right', alpha: range(t, 0.8, 1.4) });
+      G.text(g, 'YAHOO FINANCE PRICE HISTORY · LINE JOINS POINTS', 1800, 990, { size: 15, weight: 500, fam: F.mono, color: P.inkFaint, track: 0.1, align: 'right', alpha: range(t, 1.0, 1.6) });
       // left: the type
       k.view(1);
       G.text(g, 'CHAPTER', 160, 300, { size: 30, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.3, alpha: E.outCubic(range(t, 0.1, 0.6)) });
@@ -167,20 +177,20 @@ export default function makeGraphics(H) {
   }
 
   // ================================================================ counter: the split-flap board (prices and clocks)
-  const SEC = 'SOURCE: SEC STAFF REPORT, THE SILVER CRISIS OF 1980 (1982)';
+  // 14 Oct 2026 was a Wednesday (RESEARCH 1.8 "Wed 14 Oct"); 15 Oct a Thursday.
   const PRESETS = {
-    thursday: { kicker: 'SPOT SILVER · DAILY CLOSE · MARCH 1980', title: 'Three days in March', source: `${SEC}, PP. 79, 93 · −31.6%: OUR MATH`,
-      steps: [{ text: 'TUE 25 MAR · $20.20', label: 'TUESDAY CLOSE', sub: 'THAT EVENING: NO MORE CASH, NO MORE COLLATERAL' },
-        { text: 'WED 26 MAR · $15.80', label: '−$4.40 IN A DAY', sub: 'BACHE’S CHAIRMAN CALLS THE FED CHAIRMAN' },
-        { text: 'THU 27 MAR · $10.80', label: 'SILVER THURSDAY', sub: '−31.6% IN ONE DAY', red: true }] },
-    clock1215: { kicker: 'WED 26 MAR 1980 · BACHE CALLS THE FED CHAIRMAN', title: 'Harry Jacobs phones Paul Volcker', source: `${SEC}, PP. 91–92`, clock: [12, 15],
-      steps: [{ text: '12:15 PM', label: 'ABOUT 12:15 P.M.', sub: '“A GREAT ILLIQUIDITY IN THE SILVER MARKET”', red: true }] },
-    clock213: { kicker: 'THU 27 MAR 1980 · NYSE HALTS BACHE STOCK', title: 'Two minutes before silver closes', source: `${SEC}, P. 233`, clock: [14, 13],
-      steps: [{ text: '2:13 PM', label: 'BACHE GROUP: TRADING HALTED', sub: 'SILVER FUTURES CLOSE AT 2:15 P.M.', red: true }] },
+    oct14: { kicker: 'WED 14 OCT 2026 · THE TRIGGER DAY', title: 'One hot number, then the selloff', source: 'SOURCES: BLS CPI RELEASE (14 OCT 2026); REUTERS (14 OCT 2026)',
+      steps: [{ text: 'WED 14 OCT 2026', label: 'THE DAY IT CRACKED', sub: 'NASDAQ −1.88% · ITS BIGGEST DROP SINCE 23 JUL' },
+        { text: 'CPI 3.7%', label: 'US INFLATION, SEPTEMBER, YEAR ON YEAR', sub: 'UP FROM 3.4% IN AUGUST · RELEASED THAT MORNING' },
+        { text: 'ORACLE −8.8%', label: 'ORACLE, IN ONE DAY', sub: 'CLOSE $130.55 · VOLUME 61% ABOVE AVERAGE', red: '−8.8%' },
+        { text: 'COREWEAVE −15%', label: 'COREWEAVE, IN ONE DAY', sub: 'TO $65.78, AFTER A SELL-OFF IN ITS BONDS', red: '−15%' }] },
+    oct15: { kicker: 'THU 15 OCT 2026 · SEOUL', title: 'South Korea trips the switch', source: 'SOURCE: CNN (15 OCT 2026)',
+      steps: [{ text: 'KOSPI −7.6%', label: 'SOUTH KOREA’S MARKET, IN ONE DAY', sub: 'SK HYNIX −11% · SAMSUNG −9.5% · NIKKEI −4.9%', red: '−7.6%' },
+        { text: 'CIRCUIT BREAKER', label: 'TRIGGERED', sub: 'HOME OF THE WORLD’S MEMORY-CHIP GIANTS', red: true }] },
   };
   const FLAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   async function counter(ctx, shot) {
-    const Pm = shot.params ?? {}, pre = PRESETS[Pm.preset ?? (Pm.steps ? '' : 'thursday')] ?? {};
+    const Pm = shot.params ?? {}, pre = PRESETS[Pm.preset ?? (Pm.steps ? '' : 'oct14')] ?? {};
     const steps = (Pm.steps ?? pre.steps ?? [{ text: '—' }]).map(s => (typeof s === 'string' ? { text: s } : s));
     const D = shot.duration ?? 8, clk = Pm.clock ?? pre.clock;
     const T = G.cues(shot, steps, { from: 0.35, span: Math.max(1.6 * (steps.length - 1), D * 0.5) });
@@ -210,7 +220,9 @@ export default function makeGraphics(H) {
       G.card(g, x0 - TW * 0.22, y0 - TW * 0.22, boardW + TW * 0.44, TH + TW * 0.44, { r: 26, fill: P.ink, lift: 1.4, grainA: 0 });
       const redNow = cur.red && t > tc + tFlap(L) + 0.3;
       // on a red step only the figure turns red: the part after the last '·' (or everything when there is none)
-      const redFrom = cur.text.includes('·') ? L - cur.text.length + cur.text.lastIndexOf('·') + 1 : 0;
+      // (or, when red is a string, from where that string starts: red: '−15%')
+      const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? L - cur.text.length + cur.text.lastIndexOf(cur.red)
+        : cur.text.includes('·') ? L - cur.text.length + cur.text.lastIndexOf('·') + 1 : 0;
       let x = x0;
       for (let i = 0; i < L; i++) {
         const sl = slots[i], w = sl === 'n' ? NW : sl === 'g' ? GW : TW, a = from[i], b = to[i], stopAt = tc + tFlap(i);
@@ -265,23 +277,23 @@ export default function makeGraphics(H) {
 
   // ================================================================ timeline
   // { year, date (small line above the year), label, word, red }
+  // only events with a RESEARCH row (§0, §7, §2a, §1); Lucent's 1996 spin-off has no row, so it is not here
   const EVENTS = [
-    { year: '1961', label: 'Bunker finds the Sarir oil field in Libya' },
-    { year: '1971', date: '15 AUG', label: 'Nixon closes the gold window' },
-    { year: '1973', label: 'Libya nationalises Sarir; the Hunts start buying silver' },
-    { year: '1979', date: 'JUL', label: 'IMIC set up in Bermuda with two Saudi investors' },
-    { year: '1980', date: '17–18 JAN', label: 'Silver hits about $50' },
-    { year: '1980', date: '27 MAR', label: 'Silver Thursday: $10.80', red: true },
-    { year: '1988', date: 'AUG – SEP', label: '$134M civil verdict; Chapter 11' },
-    { year: '2011', date: '25 APR', label: '$49.85, a 31-year high' },
-    { year: '2025', date: 'OCT', label: 'Silver breaks $50' },
-    { year: '2026', date: '29 JAN', label: 'Record: about $121' },
+    { year: '2000', date: '10 MAR', label: 'Nasdaq record close: 5,048.62' },
+    { year: '2000', date: '30 SEP', label: 'Lucent: $8.1B of financing for its own customers' },
+    { year: '2002', date: '9 OCT', label: 'Nasdaq bottoms, −77.9% from the peak' },
+    { year: '2009', date: '14 JAN', label: 'Nortel files for creditor protection' },
+    { year: '2015', date: '23 APR', label: 'Nasdaq finally closes above its 2000 peak' },
+    { year: '2025', date: '22 SEP', label: 'Nvidia–OpenAI letter of intent: “up to $100B”' },
+    { year: '2026', date: '17 AUG', label: 'Nvidia guarantees up to $105B of OpenAI’s leases' },
+    { year: '2026', date: '6 OCT', label: 'Nasdaq record close: 27,599.79' },
+    { year: '2026', date: '14–16 OCT', label: 'AI selloff: Nasdaq −4.5% in a week', red: true },
   ];
   const yearNum = (y) => parseInt(String(y), 10);
   async function timeline(ctx, shot) {
     const Pm = shot.params ?? {};
     const ev = (Pm.events ?? EVENTS).map(e => (typeof e === 'object' ? e : EVENTS.find(x => String(x.year) === String(e) || `${x.date} ${x.year}` === String(e)) ?? { year: String(e), label: '' }));
-    const D = shot.duration ?? 8, n = ev.length, sp = Pm.spacing ?? (n > 1 ? Math.min(330, 1480 / (n - 1)) : 0), X = (i) => 960 - sp * (n - 1) / 2 + i * sp;
+    const D = shot.duration ?? 8, n = ev.length, sp = Pm.spacing ?? (n > 1 ? Math.min(330, 1450 / (n - 1)) : 0), X = (i) => 960 - sp * (n - 1) / 2 + i * sp;
     const fi = (f) => { if (f == null) return null; const s = String(f); const i = ev.findIndex(e => `${e.date ?? ''} ${e.year}`.trim() === s || e.label === s); return i >= 0 ? i : (j => (j < 0 ? null : j))(ev.findIndex(e => String(e.year) === s)); };
     const hasF = Pm.focus != null, focus = hasF ? (Array.isArray(Pm.focus) ? Pm.focus.map(fi) : [fi(Pm.focus), fi(Pm.focus)]) : [null, null];
     const T = hasF && !ev.some(e => e.word) ? ev.map((_, i) => 0.15 + i * 0.08) : G.cues(shot, ev, { from: 0.3, span: Math.min(D * 0.62, Math.max(0.6 * (n - 1), D - 2.4)) });
@@ -302,7 +314,7 @@ export default function makeGraphics(H) {
         const x = X(i), up = i % 2 === 0;
         const act = !hasF || (i >= lo && i <= hi), red = hasF ? act : !!e.red, col = red ? P.red : P.ink;
         // a gap marker on the axis where years are skipped
-        if (i > 0 && yearNum(e.year) - yearNum(ev[i - 1].year) > 12) { const bx = x - sp / 2; g.save(); g.strokeStyle = P.paper; g.lineWidth = 10; g.beginPath(); g.moveTo(bx - 12, y + 22); g.lineTo(bx + 2, y - 22); g.moveTo(bx + 6, y + 22); g.lineTo(bx + 20, y - 22); g.stroke(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.beginPath(); g.moveTo(bx - 14, y + 22); g.lineTo(bx, y - 22); g.moveTo(bx + 8, y + 22); g.lineTo(bx + 22, y - 22); g.stroke(); g.restore(); }
+        if (i > 0 && yearNum(e.year) - yearNum(ev[i - 1].year) > (Pm.gapYears ?? 4)) { const bx = x - sp / 2; g.save(); g.strokeStyle = P.paper; g.lineWidth = 10; g.beginPath(); g.moveTo(bx - 12, y + 22); g.lineTo(bx + 2, y - 22); g.moveTo(bx + 6, y + 22); g.lineTo(bx + 20, y - 22); g.stroke(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.beginPath(); g.moveTo(bx - 14, y + 22); g.lineTo(bx, y - 22); g.moveTo(bx + 8, y + 22); g.lineTo(bx + 22, y - 22); g.stroke(); g.restore(); }
         g.save(); g.globalAlpha = act ? 1 : 0.38;
         const stem = 96 * E.outCubic(kk); g.strokeStyle = col; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); g.lineTo(x, up ? y - stem : y + stem); g.stroke();
         G.pin(g, x, y, t, kk, { color: red ? P.red : P.teal, r: 11, pulse: red });
@@ -314,8 +326,8 @@ export default function makeGraphics(H) {
         lines.forEach((l, j) => G.text(g, l, x, top + j * 32, { size: 26, weight: 700, align: 'center', color: P.ink, alpha: E.outCubic(range(t, T[i], T[i] + 0.6)) }));
         g.restore();
       });
-      k.flat(); G.kicker(g, Pm.title ?? 'FROM OIL TO SILVER · 1961 – 2026', 120, 110, range(t, 0, 0.6));
-      G.source(g, Pm.source ?? 'SOURCES: TIME (7 APR 1980); FED HISTORY; SEC STAFF REPORT (1982); LA TIMES (1988); INVESTMENTNEWS; CNN; REUTERS', range(t, 0.6, 1.4));
+      k.flat(); G.kicker(g, Pm.title ?? 'TWO BOOMS · 2000 – 2026', 120, 110, range(t, 0, 0.6));
+      G.source(g, Pm.source ?? 'SOURCES: YAHOO FINANCE PRICE HISTORY; LUCENT 10-K (2001); NORTEL (2009); NVIDIA PR & 8-K; AP (16 OCT 2026)', range(t, 0.6, 1.4));
     }, { push: 0.03, dx: 30 });
   }
 

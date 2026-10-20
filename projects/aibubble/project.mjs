@@ -81,7 +81,7 @@ const shots = [
   S('ai-chart', L(36, 37), { mode: 'gap', at: 0.2, stepAt: NEVER }),
   S('ai-chart', L(38, 39), { mode: 'gap', at: 0, stepAt: 'scaled' }),
   S('ai-chart', L(40), { mode: 'gartner', at: 'eight' }),
-  S('quote', L(41), { text: 'At the moment, we have more compute capacity than we have demand.', by: 'John-David Lovelock', role: 'Distinguished VP Analyst, Gartner · 19 Oct 2026', highlight: ['more', 'compute', 'demand'], source: 'SOURCE: CNBC INTERVIEW (VIA REPORTS)' }),
+  S('quote', L(41), { text: 'At the moment, we have more compute capacity than we have demand.', by: 'John-David Lovelock', role: 'Analyst, Gartner · 19 Oct 2026', highlight: ['more', 'compute', 'demand'], source: 'SOURCE: CNBC INTERVIEW (VIA REPORTS)' }),
   S('circle', L(42), { hot: ['ORACLE', 'COREWEAVE'], caption: 'THE BORROWERS', camera: [{ pos: [-44, 20, 14], look: [-12, 3, -4], mm: 34 }, { pos: [-40, 18, 4], look: [-12, 3, -4], mm: 36 }] }),
   S('doc', L(43), { doc: 'oracle10q', at: 'values' }),
   S('figures', L(44), { figs: [{ w: 'suit', c: 'red', clip: 'idle', x: 0, z: 0, ry: 0.2, label: 'LARRY ELLISON', labelAt: 'Larry' }], props: ['plinth'], cam: 'orbit', caption: '10 SEPTEMBER 2025', source: 'MANNEQUIN · ILLUSTRATION', sky: true },

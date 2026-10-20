@@ -121,7 +121,7 @@ export default function aiSets(H) {
       const disc = new THREE.Mesh(new THREE.CylinderGeometry(R + 4.5, R + 4.8, 1.4, 128), S.clay('#f4f2ee', { rough: 0.6, coat: 0.3 })); disc.position.y = -0.7; disc.receiveShadow = true; scene.add(disc);
       const pos = {}; const towers = {};
       names.forEach((n, i) => { const a = (i / names.length) * Math.PI * 2 - Math.PI / 2; const x = Math.cos(a) * R, z = Math.sin(a) * R; pos[n] = [x, z];
-        const [g, acc] = colors[n] ?? ['#22262c', '#14233d']; const t = tower({ w: 2.6, d: 2.6, h: P0.heights?.[n] ?? ((n === 'NVIDIA' || n === 'LUCENT') ? 10 : n === 'OPENAI' ? 8.5 : 6 + (i % 3)), glass: g, accent: acc, label: n, labelSize: 1.7, shape: n === 'OPENAI' ? 'cyl' : 'box' }); t.position.set(x, 0, z); scene.add(t); towers[n] = t; });
+        const [g, acc] = colors[n] ?? ['#22262c', '#14233d']; const t = tower({ w: 2.6, d: 2.6, h: P0.heights?.[n] ?? ((n === 'NVIDIA' || n === 'LUCENT') ? 10 : n === 'OPENAI' ? 8.5 : 6 + (i % 3)), glass: g, accent: acc, label: n, labelSize: 1.7, shape: n === 'OPENAI' ? 'cyl' : 'box' }); t.position.set(x, 0, z); if (P0.tilt?.[n]) { t.rotation.x = P0.tilt[n]; t.position.y = -0.2; } scene.add(t); towers[n] = t; });
       // flows: arc tubes (drawn on) + bills hopping along each arc
       const flows = (P0.flows ?? []).map((f, i) => {
         const a = pos[f.from], b = pos[f.to]; if (!a || !b) return null;
@@ -150,7 +150,7 @@ export default function aiSets(H) {
             const k = S.inOut(S.range(t, fl.at, fl.at + 0.9)); fl.tube.geometry.setDrawRange(0, Math.floor(fl.tube.geometry.index.count * k / 3) * 3); fl.tube.visible = k > 0;
             fl.bills.forEach((b, j) => { const u = ((t - fl.at - 0.6) * 0.35 + j / fl.bills.length) % 1; const show = t > fl.at + 0.6 + j * 0.2; b.visible = show; if (show) { const p = fl.curve.getPointAt(Math.max(0, u)); b.position.copy(p); b.rotation.y = t * 2 + j; } });
             const nx = flows[flows.indexOf(fl) + 1], off = P0.keepPills || !nx ? 1 : 1 - S.range(t, nx.at, nx.at + 0.3);
-            const q = fl.curve.getPoint(0.5).project(camera); fl.pillEl.at((q.x * 0.5 + 0.5) * 1080 * ctx.width / ctx.height, (-q.y * 0.5 + 0.5) * 1080 - 14, q.z < 1 ? S.range(t, fl.at + 0.5, fl.at + 0.9) * off : 0);
+            const q = fl.curve.getPoint(0.5).project(camera); fl.pillEl.at((q.x * 0.5 + 0.5) * 1080 * ctx.width / ctx.height, (-q.y * 0.5 + 0.5) * 1080 - 14, q.z < 1 && !P0.noPills ? S.range(t, fl.at + 0.5, fl.at + 0.9) * off : 0);
           }
           for (const tw of Object.values(towers)) { const lb = tw.userData.label; if (lb) { const w = lb.getWorldPosition(new THREE.Vector3()); lb.lookAt(camera.position.x, w.y, camera.position.z); } }
           for (const [n, tw] of Object.entries(towers)) { const hot = !P0.hot || P0.hot.includes(n); tw.userData.label && (tw.userData.label.material.opacity = hot ? 1 : 0.35, tw.userData.label.material.transparent = true); }
