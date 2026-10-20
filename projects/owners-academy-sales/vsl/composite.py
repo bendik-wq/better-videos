@@ -13,7 +13,8 @@ import sys
 # face panel, matches --L/--top/--face-w/--face-h in stage.html (PANEL=x,y,w,h for other layouts,
 # e.g. PANEL=90,520,900,1060 for stage-v.css)
 X, Y, W, H = map(int, os.environ.get("PANEL", "96,112,576,824").split(","))
-FPS = 25
+FPS = 25  # replaced by the timeline's own fps in main() (e.g. 24000/1001 to match camera footage)
+FPS_ARG = "25"
 # sit the webcam in the navy palette, and add grain so the upscale doesn't look waxy
 # (FACE_GRAIN=2 or so for clean camera footage that wasn't upscaled)
 GRAIN = int(os.environ.get("FACE_GRAIN", 7))
@@ -27,6 +28,9 @@ def ff(*args):
 
 def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
     tl = json.load(open(tl_path))
+    global FPS, FPS_ARG
+    FPS = tl.get("fps", 25)
+    FPS_ARG = "24000/1001" if abs(FPS - 24000 / 1001) < 1e-4 else str(FPS)
     parts = os.path.join(out_dir, "parts")
     os.makedirs(parts, exist_ok=True)
     vlist, alist = [], []
@@ -37,14 +41,14 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
         a = os.path.join(parts, f"{i:02d}-a.wav")
         if s["kind"] == "clip":
             ff("-i", os.path.join(face_dir, f"{s['id']}.mp4"), "-vf", f"{FACE_VF},tpad=stop_mode=clone:stop=50",
-               "-frames:v", str(nf), "-r", str(FPS), "-c:v", "libx264", "-preset", "medium", "-crf", "16", v)
+               "-frames:v", str(nf), "-r", FPS_ARG, "-c:v", "libx264", "-preset", "medium", "-crf", "16", v)
             fade = 0.06
             ff("-ss", f"{s['in']:.3f}", "-t", f"{dur:.3f}", "-i", src, "-vn",
                "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fade:.3f}:d={fade},loudnorm=I=-16:TP=-1.5:LRA=11,"
                       f"aresample=48000,apad=whole_dur={nf / FPS:.4f},atrim=end={nf / FPS:.4f}",
                "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", a)
         else:
-            ff("-f", "lavfi", "-i", f"color=c=0x121b2e:s={W}x{H}:r={FPS}", "-frames:v", str(nf),
+            ff("-f", "lavfi", "-i", f"color=c=0x121b2e:s={W}x{H}:r={FPS_ARG}", "-frames:v", str(nf),
                "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p", v)
             ff("-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", f"{nf / FPS:.4f}", "-c:a", "pcm_s16le", a)
         vlist.append(v)
@@ -69,7 +73,7 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
        "-loop", "1", "-i", os.path.join(out_dir, "face-mask.png"),
        "-loop", "1", "-i", os.path.join(out_dir, "face-frame.png"),
        "-i", audio, "-filter_complex", fc,
-       "-map", "[v]", "-map", "4:a", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-r", str(FPS),
+       "-map", "[v]", "-map", "4:a", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-r", FPS_ARG,
        "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out)
     print("->", out)
 

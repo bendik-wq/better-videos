@@ -1,4 +1,4 @@
-// Graphics for the full-talk cut (industry-full). Every beat from the short and long cuts is placed at
+// Graphics for the full-talk cuts (industry-full, and industry-continuous via the 'whole' clip). Every beat from the short and long cuts is placed at
 // the same moment of the source recording, plus beats for the sections only the full cut contains.
 // Writes beats-full.json (part id -> beats), which beats.mjs merges in.
 //   node gen-full-beats.mjs
@@ -28,7 +28,7 @@ const extra = [
 
 const abs = [];
 for (const [key, list_] of Object.entries(beats)) {
-  if (!s[key] || key.startsWith('all-')) continue;
+  if (!s[key] || key.startsWith('all-') || key === 'whole' || key.includes('~')) continue;
   for (const b of list_) abs.push([+(s[key].in + b.at).toFixed(2), b.html]);
 }
 abs.push(...extra);
@@ -43,6 +43,14 @@ for (const [t, html] of abs) {
   const p = parts.find((id) => t >= s[id].in - 0.05 && t < s[id].out) ?? parts.find((id) => s[id].in > t);
   if (!p) continue;
   (out[p] ||= []).push({ at: +Math.max(0, t - s[p].in).toFixed(2), html });
+}
+// the continuous cut plays the source as one clip ('whole'), so every beat sits at its source time
+const seenW = new Set();
+out.whole = [];
+for (const [t, html] of abs) {
+  if (seenW.has(`${t}|${html}`) || t < s.whole.in || t >= s.whole.out) continue;
+  seenW.add(`${t}|${html}`);
+  out.whole.push({ at: +(t - s.whole.in).toFixed(2), html });
 }
 fs.writeFileSync(new URL('./beats-full.json', import.meta.url), JSON.stringify(out, null, 1));
 console.log(`${Object.values(out).flat().length} beats over ${Object.keys(out).length} parts`);

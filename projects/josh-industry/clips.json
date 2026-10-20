@@ -645,6 +645,59 @@
     "close~ig#1",
     "close~ig#2"
    ]
+  },
+  "industry-continuous": {
+   "title": "Which industry should you buy into? Full talk, one continuous take (Josh, 16 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 the full talk",
+     "title": "Which industry should you <em>buy into</em>?",
+     "poster": true,
+     "dur": 3.2
+    }
+   },
+   "chapterMarks": [
+    [
+     54.1,
+     "From scratch"
+    ],
+    [
+     154.4,
+     "Pivot fast"
+    ],
+    [
+     232.4,
+     "The first deal"
+    ],
+    [
+     331.5,
+     "What made it work"
+    ],
+    [
+     409.8,
+     "Who you are"
+    ],
+    [
+     471.3,
+     "Pick, then pivot"
+    ],
+    [
+     523.8,
+     "Allied health vs GPs"
+    ]
+   ],
+   "base_sequence": [
+    "whole"
+   ],
+   "sequence": [
+    "whole"
+   ],
+   "chapters": {
+    "start": "Already in business"
+   }
   }
  }
 }

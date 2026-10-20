@@ -33,6 +33,7 @@ s["acq"] = from_words(367.4, 376.2, pad_out=0.12)    # "And that's why ... playi
 s["pena"] = from_words(475.7, 498.84)             # Dan Pena's phone-book joke (swear dropped below)
 s["rejected"] = from_words(500.2, 523.58, pad_out=0.12)  # "I went in ... rejected ... glad I made that pivot"
 s["allied"] = from_words(533.7, 561.98, pad_out=0.15)    # "In physiotherapy ... we empower the person"
+s["whole"] = from_words(0.0, 648.6)                # the entire talk as one clip (industry-continuous)
 s["gp-b-short"] = from_words(196.0, 202.3)        # "...about buying their business" (Reel 3: he smokes right after)
 s["glad"] = from_words(626.8, 629.88)             # "I'm glad I came into physiotherapy ..."
 # the whole talk, uncut, in chapter-sized pieces (industry-full); only long silences get trimmed
@@ -63,6 +64,10 @@ used = set()
 for cut in c["cuts"].values():
   base = cut.setdefault("base_sequence", cut["sequence"])
   gap = cut.get("gap", GAP)
+  if cut.get("split") is False:  # continuous cuts keep their clips whole: no trims, no jump cuts
+      cut["sequence"] = base
+      used.update(x for x in base if isinstance(x, str))
+      continue
   seq = []
   for item in base:
       if not isinstance(item, str):

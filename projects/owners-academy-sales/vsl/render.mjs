@@ -4,6 +4,7 @@
 //   node vsl/render.mjs timeline.json out/part.mp4 --from 60 --to 90
 //   node vsl/render.mjs timeline.json out/chunks --chunks 3000      # resumable, 2-min chunks
 //   node vsl/render.mjs --overlay out/                             # face-panel frame + mask PNGs
+//   --bg-speed 0 freezes the silk background (much smaller files for the same face quality)
 //   add --vertical for the 1080x1920 Reels layout (stage-v.css); --overlay out/ --size 900x1060 --radius 26 for its panel
 import fs from 'node:fs';
 import path from 'node:path';
@@ -61,6 +62,7 @@ if (V) {
   await page.addStyleTag({ path: path.join(HERE, 'stage-v.css') });
   await page.evaluate(() => window.resizeSilk && window.resizeSilk(540, 960));
 }
+if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 await page.evaluate(() => document.fonts.ready);
 
@@ -75,10 +77,11 @@ if (opt('--stills')) {
 }
 
 const fps = TL.fps;
+const fpsArg = Math.abs(fps - 24000 / 1001) < 1e-4 ? '24000/1001' : String(fps); // camera-native 23.976
 
 async function encode(from, n, file) {
-const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
-  '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(fps), '-f', 'mp4', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', fpsArg, '-c:v', 'mjpeg', '-i', '-',
+  '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4', file], { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
 for (let i = 0; i < n; i++) {
   await page.evaluate((t) => window.render(t), from + i / fps);

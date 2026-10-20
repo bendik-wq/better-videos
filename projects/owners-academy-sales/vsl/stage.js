@@ -77,7 +77,8 @@
   }
   function silk(t) {
     if (!gl) return;
-    gl.uniform1f(uT, 40 + t * 2.5);
+    // window.silkSpeed (render.mjs --bg-speed): 0 freezes the background, which leaves the encoder's bits for the face
+    gl.uniform1f(uT, 40 + t * 2.5 * (window.silkSpeed ?? 1));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 

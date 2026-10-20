@@ -11,7 +11,9 @@ import numpy as np
 import cv2
 
 PW, PH = map(int, os.environ.get("PANEL_SIZE", "576x824").split("x"))  # panel size (matches composite.py)
-FPS = 25
+# FPS=23.976 keeps the camera's own frame rate (no duplicated frames); default 25 for the older cuts
+FPS_ARG = "24000/1001" if os.environ.get("FPS") == "23.976" else "25"
+FPS = 24000 / 1001 if FPS_ARG != "25" else 25
 # decode size: half of 4K by default; FACE_HQ=1 crops straight from the 4K frame (sharper, ~3x slower)
 HQ = os.environ.get("FACE_HQ") == "1"
 SW, SH = (3840, 2160) if HQ else (1920, 1080)
@@ -46,7 +48,7 @@ def crop_box(tr, t):
 
 def frames(src, t_in, dur):
     p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{t_in:.3f}", "-t", f"{dur:.3f}", "-i", src, "-map", "0:v:0",
-                          "-vf", f"fps={FPS},scale={SW}:{SH}:flags=bicubic", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                          "-vf", f"fps={FPS_ARG},scale={SW}:{SH}:flags=bicubic", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                          stdout=subprocess.PIPE)
     n = SW * SH * 3
     while True:
@@ -72,7 +74,7 @@ def main():
             continue
         tmp = dst[:-4] + ".part" + dst[-4:]
         enc = None if sheet else subprocess.Popen(
-            ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{PW}x{PH}", "-r", str(FPS),
+            ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{PW}x{PH}", "-r", FPS_ARG,
              "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "15", "-pix_fmt", "yuv420p", tmp],
             stdin=subprocess.PIPE)
         thumbs = []
@@ -84,7 +86,7 @@ def main():
             if HQ:  # light unsharp mask: brings back fine detail lost in the downscale
                 img = cv2.addWeighted(img, 1.35, cv2.GaussianBlur(img, (0, 0), 1.1), -0.35, 0)
             if sheet:
-                if n % (FPS // int(os.environ.get("SHEET_FPS", 1))) == 0:
+                if n % (int(round(FPS)) // int(os.environ.get("SHEET_FPS", 1))) == 0:
                     thumbs.append(cv2.resize(img, (240, 240 * PH // PW)))
             else:
                 enc.stdin.write(img.tobytes())

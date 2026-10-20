@@ -88,6 +88,14 @@ captions.forEach((c, i) => {
   c.t1 = Math.min(captions[i + 1]?.t0 ?? Infinity, last, seg.t1);
 });
 
-const out = { fps: 25, duration: +t.toFixed(3), segments, beats: allBeats, captions, chapters: chaps };
+// cut.chapterMarks: [[source seconds, name], ...] put chapters inside one long clip (no cards, no cuts)
+for (const [src, name] of cut.chapterMarks || []) {
+  const seg = segments.find((x) => x.kind === 'clip' && src >= x.in && src < x.out);
+  if (seg) chaps.push({ name, t0: seg.t0 + (src - seg.in) });
+}
+chaps.sort((a, b) => a.t0 - b.t0);
+// cut.fps: e.g. 23.976 so camera footage keeps its own frame rate (no duplicated frames)
+const fps = cut.fps === 23.976 ? 24000 / 1001 : cut.fps || 25;
+const out = { fps, duration: +t.toFixed(3), segments, beats: allBeats, captions, chapters: chaps };
 process.stdout.write(JSON.stringify(out));
 process.stderr.write(`${cutName}: ${Math.floor(t / 60)}m${String(Math.round(t % 60)).padStart(2, '0')}s, ${segments.length} segments, ${allBeats.length} beats, ${captions.length} caption lines\n`);
