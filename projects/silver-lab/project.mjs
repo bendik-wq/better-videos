@@ -29,6 +29,10 @@ const shots = [
   { id: 'heir', set: 'heirlooms', min: 4, params: { mode: 'table' } },
   { id: 'coins', set: 'heirlooms', min: 4, params: { mode: 'coins' } },
   { id: 'banks', set: 'bailout', min: 5, params: { mode: 'banks' } },
+  { id: 'thA', set: 'thumb-vault', min: 2, params: { unit: 2.6, layers: 6, nx: 6, shrinkX: 1, nz: 8, boxH: 13, pad: false, studioBars: true, skyTilt: 0.22, clip1: 'idle', clip2: 'idle_b', keys: [{ pos: [5.5, 7.2, 14.5], look: [0, 6.0, -5], mm: 30 }] } },
+  { id: 'thA2', set: 'thumb-vault', min: 2, params: { unit: 2.6, layers: 6, nx: 6, shrinkX: 1, nz: 8, boxH: 13, pad: false, studioBars: true, skyTilt: -0.3, skyRot: 2.4, clip1: 'look_around', clip2: 'idle', keys: [{ pos: [-5, 5.5, 15.5], look: [0, 6.0, -5], mm: 30 }] } },
+  { id: 'thC', set: 'thumb-floor', min: 2, params: { skyTilt: 0.22 } },
+  { id: 'thB', set: 'map', min: 3, params: { mode: 'us', pins: [{ name: 'Dallas', lon: -96.8, lat: 32.78 }, { name: 'New York', lon: -74, lat: 40.7 }], routes: [['Dallas', 'New York']], hl: ['US-TX'], title: '', kicker: '', source: '', at: 0 } },
 ];
 export default {
   title: 'silver lab', fps: 60, width: 1920, height: 1080,

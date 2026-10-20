@@ -293,7 +293,7 @@ export function priceBoard({ w = 6, h = 1.6, title = 'SILVER · $/OZ' } = {}) {
 // ---------------------------------------------------------------- mannequins (the Reconstructed look): rigged MakeHuman bodies with mocap clips,
 // every surface one glossy solid colour. Blue = the Hunts' side / the public, red = the antagonist of a scene, pale cyan = the crowd.
 import * as PE from '/engine/people/index.js';
-export const MQ = { blue: '#1d5bff', red: '#ff2a17', cyan: '#bfe4ee', white: '#f1f1ef', navy: '#14233d' };
+export const MQ = { blue: '#1d5bff', red: '#f01a0c', cyan: '#bfe4ee', white: '#f1f1ef', navy: '#14233d' };
 export async function loadMannequins(ids = ['suit']) { await PE.preload({ wardrobe: ids }); }
 const mqMats = new Map();
 export function mqMat(color, o = {}) {
