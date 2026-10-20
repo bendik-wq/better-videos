@@ -85,7 +85,7 @@ export default function oner(H) {
       const b1 = fig({ hat: 'cowboy', coat: '#14233d', tie: '#e0241b' }); b1.position.set(6.4, TOP, -2.6); b1.rotation.y = -0.5;
       const b2 = fig({ hat: 'stetson', coat: '#5b6b80' }); b2.position.set(7.6, TOP, -2.0); b2.rotation.y = -0.8;
       st.applyEnv();
-      const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.6, intensity: 1.8, falloff: 0.8 }, dof: { focus: 6, range: 2, bokeh: 3.6 }, bloom: { intensity: 1.2, threshold: 1.1, radius: 0.75 }, tone: 'neutral', quality: P0.quality ?? 'high' });
+      const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.6, intensity: 1.8, falloff: 0.8 }, dof: { focus: 6, range: 2, bokeh: 3.6 }, bloom: { intensity: 1.2, threshold: 1.1, radius: 0.75 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
 
       // ---- DOM: date slab + price counter + brothers pill + reveal caption
       const layer = H.layerOf(ctx);

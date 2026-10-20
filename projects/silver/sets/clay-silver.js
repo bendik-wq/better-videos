@@ -21,7 +21,7 @@ async function stage(H, ctx, shot, o = {}) {
   let fx = null;
   const finish = () => {
     st.applyEnv();
-    fx = H.P.post(ctx, scene, camera, { ao: { radius: o.aoR ?? 0.8, intensity: o.aoI ?? 1.8, falloff: 0.8 }, dof: o.dof === false ? false : { focus: 10, range: o.dofRange ?? 4, bokeh: o.bokeh ?? 2.6 }, bloom: o.bloom ?? { intensity: 0.7, threshold: 1.25, radius: 0.7 }, tone: 'neutral', quality: P0.quality ?? 'high' });
+    fx = H.P.post(ctx, scene, camera, { ao: { radius: o.aoR ?? 0.8, intensity: o.aoI ?? 1.8, falloff: 0.8 }, dof: o.dof === false ? false : { focus: 10, range: o.dofRange ?? 4, bokeh: o.bokeh ?? 2.6 }, bloom: o.bloom ?? { intensity: 0.7, threshold: 1.25, radius: 0.7 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
     return fx;
   };
   // project a world point to 1080p overlay px

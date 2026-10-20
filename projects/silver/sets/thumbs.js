@@ -72,7 +72,7 @@ export default function thumbs(H) {
       scene.add(b1.root, b2.root);
       for (const o of [box, pad]) o.traverse(m => { if (m.isMesh && m.material) { m.material.envMap = sky.env; m.material.envMapIntensity = 0.7; } });
       if (P0.studioBars) { mat.envMap = S.studioEnv(ctx.renderer); mat.envMapIntensity = 1.6; } else { mat.envMap = sky.env; mat.envMapIntensity = 1.5; }
-      const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.8, intensity: 2.0, falloff: 0.8 }, tone: 'neutral', quality: 'high' });
+      const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.8, intensity: 2.0, falloff: 0.8 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
       const layer = H.layerOf(ctx);
       return {
         scene, camera, layer,
@@ -97,7 +97,7 @@ export default function thumbs(H) {
     const clips = ['fists', 'argue', 'point', 'phone', 'look_around', 'fists', 'argue'];
     const ppl = clips.map((c, i) => { const m = PR.mannequin(['suit', 'suit_b', 'office', 'casual_a'][i % 4], i === (P0.redAt ?? 3) ? PR.MQ.red : PR.MQ.blue, { unit: 2.4, hat: i === (P0.redAt ?? 3) ? 'cowboy' : null }); m.root.position.set(-5.6 + i * 1.85, fy, -4.2 + (i % 2) * 1.6); m.root.rotation.y = Math.PI + (i - 3) * 0.12; scene.add(m.root); return { m, c, ph: i * 0.37 }; });
     box.traverse(m => { if (m.isMesh && m.material) { m.material.envMap = sky.env; m.material.envMapIntensity = 0.7; } });
-    H.P.post(ctx, scene, camera, { ao: { radius: 0.8, intensity: 2.0, falloff: 0.8 }, tone: 'neutral', quality: 'high' });
+    H.P.post(ctx, scene, camera, { ao: { radius: 0.8, intensity: 2.0, falloff: 0.8 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
     return { scene, camera, layer: H.layerOf(ctx), update(t) { for (const p of ppl) p.m.play(p.c, p.ph + 0.8 + t).update(); S.rig(camera, P0.keys ?? [{ pos: [2.5, 5.2, 12.5], look: [0, 5.4, -5], mm: 30 }], t, { t0: 0, t1: shot.duration ?? 4, float: 0 }); } };
   }
   return { 'thumb-vault': vaultCut, cutaway: vaultCut, 'thumb-floor': floorCut };
