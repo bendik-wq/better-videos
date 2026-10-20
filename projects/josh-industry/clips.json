@@ -486,6 +486,165 @@
     "all-8#2",
     "all-8#3"
    ]
+  },
+  "ig-1-cold-email": {
+   "title": "Instagram Reel: ig-1-cold-email",
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "deal-a",
+    "deal-b",
+    "deal-c"
+   ],
+   "sequence": [
+    "deal-a~ig#1",
+    "deal-b~ig#1",
+    "deal-c~ig#1",
+    "deal-c~ig#2",
+    "deal-c~ig#3"
+   ]
+  },
+  "ig-2-know-industry": {
+   "title": "Instagram Reel: ig-2-know-industry",
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "board",
+    "role",
+    "acq"
+   ],
+   "sequence": [
+    "board~ig#1",
+    "role~ig#1",
+    "role~ig#2",
+    "acq~ig#1",
+    "acq~ig#2"
+   ]
+  },
+  "ig-3-pivot": {
+   "title": "Instagram Reel: ig-3-pivot",
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "gp",
+    "gp-b",
+    "physio-p",
+    "pivot-made",
+    "physio-b"
+   ],
+   "sequence": [
+    "gp~ig#1",
+    "gp~ig#2",
+    "gp~ig#3",
+    "gp~ig#4",
+    "gp~ig#5",
+    "gp~ig#6",
+    "gp~ig#7",
+    "gp~ig#8",
+    "gp-b~ig#1",
+    "physio-p~ig#1",
+    "pivot-made~ig#1",
+    "physio-b~ig#1"
+   ]
+  },
+  "ig-4-phone-book": {
+   "title": "Instagram Reel: ig-4-phone-book",
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "pena",
+    "rejected"
+   ],
+   "sequence": [
+    "pena~ig#1",
+    "pena~ig#2",
+    "pena~ig#3",
+    "rejected~ig#1",
+    "rejected~ig#2",
+    "rejected~ig#3",
+    "rejected~ig#4"
+   ]
+  },
+  "ig-5-who-you-are": {
+   "title": "Instagram Reel: ig-5-who-you-are",
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "match",
+    "christian",
+    "close"
+   ],
+   "sequence": [
+    "match~ig#1",
+    "match~ig#2",
+    "match~ig#3",
+    "christian~ig#1",
+    "christian~ig#2",
+    "christian~ig#3",
+    "christian~ig#4",
+    "close~ig#1",
+    "close~ig#2"
+   ]
   }
  }
 }

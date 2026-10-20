@@ -10,7 +10,9 @@ import os
 import subprocess
 import sys
 
-X, Y, W, H = 96, 112, 576, 824  # face panel, matches --L/--top/--face-w/--face-h in stage.html
+# face panel, matches --L/--top/--face-w/--face-h in stage.html (PANEL=x,y,w,h for other layouts,
+# e.g. PANEL=90,520,900,1060 for stage-v.css)
+X, Y, W, H = map(int, os.environ.get("PANEL", "96,112,576,824").split(","))
 FPS = 25
 # sit the webcam in the navy palette, and add grain so the upscale doesn't look waxy
 # (FACE_GRAIN=2 or so for clean camera footage that wasn't upscaled)

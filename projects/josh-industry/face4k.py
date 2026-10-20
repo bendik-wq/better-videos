@@ -10,13 +10,14 @@ import json, os, subprocess, sys
 import numpy as np
 import cv2
 
-PW, PH, FPS = 576, 824, 25      # panel size (matches composite.py)
+PW, PH = map(int, os.environ.get("PANEL_SIZE", "576x824").split("x"))  # panel size (matches composite.py)
+FPS = 25
 # decode size: half of 4K by default; FACE_HQ=1 crops straight from the 4K frame (sharper, ~3x slower)
 HQ = os.environ.get("FACE_HQ") == "1"
 SW, SH = (3840, 2160) if HQ else (1920, 1080)
 K = SW / 3840                   # track.json is in 4K coords
 HEAD = 0.36                     # face centre sits this far down the crop
-FILL = 0.30                     # face height as a share of crop height
+FILL = float(os.environ.get("FILL", 0.30))  # face height as a share of crop height
 
 
 def crop_box(tr, t):

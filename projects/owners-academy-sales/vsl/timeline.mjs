@@ -35,7 +35,8 @@ const segments = [], allBeats = [], captions = [], chaps = [];
 let t = 0;
 const cut = spec.cuts[cutName];
 const chapterNames = cut.chapters ?? chapters;
-const seq = [{ card: 'intro' }, ...cut.sequence, { card: 'end' }];
+// cut.intro === false: start straight on the first clip (Reels hooks)
+const seq = [...(cut.intro === false ? [] : [{ card: 'intro' }]), ...cut.sequence, { card: 'end' }];
 for (const item of seq) {
   if (typeof item === 'object' && item.chapter) { // chapter marker with no card (keeps the talk flowing)
     chaps.push({ name: item.chapter, t0: t });

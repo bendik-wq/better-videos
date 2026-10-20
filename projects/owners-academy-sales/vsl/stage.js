@@ -68,6 +68,12 @@
     const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
     ['#0b1220', '#13234a', '#1c2f6b', '#2a2457', '#3a2a3c'].forEach((c, i) => gl.uniform3fv(gl.getUniformLocation(prog, 'c' + i), hex(c)));
     uT = gl.getUniformLocation(prog, 't');
+    // portrait layouts (render.mjs --vertical) resize the canvas after load
+    window.resizeSilk = (w, h) => {
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(gl.getUniformLocation(prog, 'r'), w, h);
+    };
   }
   function silk(t) {
     if (!gl) return;

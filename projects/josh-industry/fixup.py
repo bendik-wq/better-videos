@@ -84,19 +84,25 @@ for cut in c["cuts"].values():
           # pad 0.2 s into a cut, but never into the neighbouring (possibly dropped) word
           a = max(clip["in"], p[0][1] - 0.6) if i0 == 0 else max(p[0][1] - 0.2, ws[i0 - 1][2] + 0.03)
           b = min(clip["out"], p[-1][2] + 0.6) if i1 == len(ws) - 1 else min(p[-1][2] + 0.2, ws[i1 + 1][1] - 0.03)
-          pid = f"{item}#{n + 1}"  # parts never overwrite the snapped originals
+          pid = f"{item}{cut.get('ns', '')}#{n + 1}"  # parts never overwrite the snapped originals; ns keeps differently-split cuts apart
           s[pid] = {"in": round(a, 2), "out": round(b, 2), "snapped": True, "text": " ".join(w[0] for w in p),
                     "words": [[w[0], round(w[1] - a, 2), round(w[2] - a, 2)] for w in p]}
           seq.append(pid)
   cut["sequence"] = seq
   used.update(x for x in seq if isinstance(x, str))
 # hand-set cut points (source seconds) where word timings were too loose, checked against the waveform
-EDGE = {"pena#1": {"out": 486.58}, "pena#2": {"in": 487.22}}  # the swear sits at 486.62-487.18
-for pid, e in EDGE.items():
-    if pid in s:
-        shift = e.get("in", s[pid]["in"]) - s[pid]["in"]
-        s[pid]["in"], s[pid]["out"] = round(s[pid]["in"] + shift, 2), round(e.get("out", s[pid]["out"]), 2)
-        s[pid]["words"] = [[w, round(max(0, a - shift), 2), round(b - shift, 2)] for w, a, b in s[pid]["words"]]
+# (lo, hi, out, in): a part ending inside lo..hi ends at `out`; one starting inside it starts at `in`
+EDGE = [(486.4, 487.4, 486.58, 487.22)]  # Dan Pena line: the swear sits at 486.62-487.18
+for pid in used:
+    if "#" not in pid or "all-" in pid:
+        continue
+    for lo, hi, e_out, e_in in EDGE:
+        if lo < s[pid]["out"] < hi:
+            s[pid]["out"] = e_out
+        if lo < s[pid]["in"] < hi:
+            shift = e_in - s[pid]["in"]
+            s[pid]["in"] = e_in
+            s[pid]["words"] = [[w, round(max(0, a - shift), 2), round(b - shift, 2)] for w, a, b in s[pid]["words"]]
 json.dump(c, open("clips.json", "w"), indent=1)
 s = {k: v for k, v in s.items() if '#' not in k or k in used}
 json.dump(s, open(sys.argv[2], "w"), indent=1)

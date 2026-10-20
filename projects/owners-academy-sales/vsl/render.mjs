@@ -4,6 +4,7 @@
 //   node vsl/render.mjs timeline.json out/part.mp4 --from 60 --to 90
 //   node vsl/render.mjs timeline.json out/chunks --chunks 3000      # resumable, 2-min chunks
 //   node vsl/render.mjs --overlay out/                             # face-panel frame + mask PNGs
+//   add --vertical for the 1080x1920 Reels layout (stage-v.css); --overlay out/ --size 900x1060 --radius 26 for its panel
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -20,7 +21,8 @@ const browser = await chromium.launch({
   executablePath: exe,
   args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--font-render-hinting=none'],
 });
-const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+const V = args.includes('--vertical');
+const page = await browser.newPage({ viewport: V ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
 
 if (args[0] === '--overlay') {
   // Static layers for the face panel: a rounded mask, and the frame with Josh's name card on top.
@@ -28,23 +30,25 @@ if (args[0] === '--overlay') {
   fs.mkdirSync(out, { recursive: true });
   await page.goto('file://' + path.join(HERE, 'stage.html'));
   await page.evaluate(() => document.fonts.ready);
-  await page.setViewportSize({ width: 576, height: 824 });
-  const base = `html,body{width:576px;height:824px;background:transparent!important;overflow:hidden}body>*{display:none!important}#ov{display:block!important;position:fixed;inset:0}`;
+  const [OW, OH] = (opt('--size') || '576x824').split('x').map(Number);
+  const RAD = Number(opt('--radius') || 18);
+  await page.setViewportSize({ width: OW, height: OH });
+  const base = `html,body{width:${OW}px;height:${OH}px;background:transparent!important;overflow:hidden}body>*{display:none!important}#ov{display:block!important;position:fixed;inset:0}`;
   await page.addStyleTag({ content: base });
   await page.evaluate(() => { const d = document.createElement('div'); d.id = 'ov'; document.body.appendChild(d); });
-  await page.evaluate(() => {
-    document.getElementById('ov').innerHTML = '<div style="position:absolute;inset:0;border-radius:18px;background:#fff"></div>';
-  });
+  await page.evaluate((r) => {
+    document.getElementById('ov').innerHTML = `<div style="position:absolute;inset:0;border-radius:${r}px;background:#fff"></div>`;
+  }, RAD);
   await page.screenshot({ path: path.join(out, 'face-mask.png'), omitBackground: true });
-  await page.evaluate(() => {
+  await page.evaluate((r) => {
     document.getElementById('ov').innerHTML = `
-      <div style="position:absolute;inset:0;border-radius:18px;background:radial-gradient(120% 90% at 45% 42%,rgba(11,18,32,0) 55%,rgba(11,18,32,.38) 100%)"></div>
-      <div style="position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)"></div>
-      <div style="position:absolute;left:0;right:0;bottom:0;height:240px;border-radius:0 0 18px 18px;background:linear-gradient(180deg,rgba(11,18,32,0),rgba(11,18,32,.86))"></div>
+      <div style="position:absolute;inset:0;border-radius:${r}px;background:radial-gradient(120% 90% at 45% 42%,rgba(11,18,32,0) 55%,rgba(11,18,32,.38) 100%)"></div>
+      <div style="position:absolute;inset:0;border-radius:${r}px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:240px;border-radius:0 0 ${r}px ${r}px;background:linear-gradient(180deg,rgba(11,18,32,0),rgba(11,18,32,.86))"></div>
       <div style="position:absolute;left:30px;bottom:28px;display:flex;align-items:center;gap:16px;font-family:Inter">
         <div style="width:56px;height:56px;border-radius:50%;background:#e9edf5;color:#0d1526;display:grid;place-items:center;font:600 20px/1 Inter">JL</div>
         <div style="color:#8a93a6;font:400 20px/1.3 Inter"><div style="color:#f3f5f9;font:500 24px/1.3 Inter">Josh Li</div>Founder, JC Health Group</div></div>`;
-  });
+  }, RAD);
   await page.screenshot({ path: path.join(out, 'face-frame.png'), omitBackground: true });
   await browser.close();
   process.exit(0);
@@ -53,6 +57,10 @@ if (args[0] === '--overlay') {
 const [tlPath, outPath] = args;
 const TL = JSON.parse(fs.readFileSync(tlPath, 'utf8'));
 await page.goto('file://' + path.join(HERE, 'stage.html'));
+if (V) {
+  await page.addStyleTag({ path: path.join(HERE, 'stage-v.css') });
+  await page.evaluate(() => window.resizeSilk && window.resizeSilk(540, 960));
+}
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 await page.evaluate(() => document.fonts.ready);
 

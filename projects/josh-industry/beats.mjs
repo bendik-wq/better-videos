@@ -109,3 +109,14 @@ export const beats = {
 import fs from 'node:fs';
 const fullPath = new URL('./beats-full.json', import.meta.url);
 if (fs.existsSync(fullPath)) Object.assign(beats, JSON.parse(fs.readFileSync(fullPath, 'utf8')));
+
+// Instagram Reels (ig-* cuts, vertical): one hook headline that stays up for the whole clip.
+// Delay -1 so the hook is already fully on screen in the first frame (that frame is the cover).
+const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
+Object.assign(beats, {
+  'deal-a~ig#1': hook('My first acquisition started with <em>one cold email</em>.'),
+  'board~ig#1': hook('You don\'t need to <em>know the industry</em> to buy into it.'),
+  'gp~ig#1': hook('My first target industry <em>wouldn\'t talk to me</em>.'),
+  'pena~ig#1': hook('How to pick an industry: <em>throw a phone book</em>.'),
+  'match~ig#1': hook('Pick the industry that fits <em>who you are</em>.'),
+});
