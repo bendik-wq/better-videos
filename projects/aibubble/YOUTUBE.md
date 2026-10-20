@@ -1,6 +1,6 @@
 # YouTube upload: How the AI Bubble Pops
 
-- **File:** `out/deliver/aibubble-1080p60.mp4` (1080p, 60 fps, ≈12:34). Download link added after delivery.
+- **File:** `out/deliver/aibubble-1080p60.mp4` (1080p, 60 fps, 12:34). Download: https://gofile.io/d/3aqLzFhX (md5 75da624039bc25f8ab48530780c4a4dc). 720p parts: `out/deliver/aibubble-part1…8.mp4`.
 - **Title:** How the AI Bubble Pops
 - **Title test (Test & Compare, thumbnail fixed):** the lead vs "Nvidia Is Paying Its Customer's Rent".
 - **Thumbnails (Test & Compare, title fixed):**
