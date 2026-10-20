@@ -217,6 +217,179 @@
     "christian",
     "close"
    ]
+  },
+  "industry-long": {
+   "title": "Which industry should you buy into? Long form (Josh, 16 Oct)",
+   "layout": "split",
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 the long version",
+     "title": "Which industry should you <em>buy into</em>?",
+     "poster": true,
+     "dur": 3.2
+    },
+    "Starting from scratch": {
+     "eyebrow": "Part 2",
+     "title": "Starting <em>from scratch</em>"
+    },
+    "Pivot fast": {
+     "eyebrow": "Part 3",
+     "title": "Wrong door? <em>Pivot fast.</em>"
+    },
+    "The first deal": {
+     "eyebrow": "Part 4",
+     "title": "The <em>first deal</em>"
+    },
+    "What made it work": {
+     "eyebrow": "Part 5",
+     "title": "What made it <em>work</em>"
+    },
+    "Play to who you are": {
+     "eyebrow": "Part 6",
+     "title": "Play to <em>who you are</em>"
+    },
+    "Pick, then pivot": {
+     "eyebrow": "Part 7",
+     "title": "Pick one. <em>Pivot</em> if you must."
+    }
+   },
+   "chapters": {
+    "start": "Already in business",
+    "Starting from scratch": "From scratch",
+    "Pivot fast": "Pivot fast",
+    "The first deal": "The first deal",
+    "What made it work": "What made it work",
+    "Play to who you are": "Who you are",
+    "Pick, then pivot": "Pick, then pivot"
+   },
+   "base_sequence": [
+    "greet",
+    "q",
+    "lane",
+    "stagnant-a",
+    "stagnant-b",
+    "hardsay",
+    {
+     "card": "Starting from scratch"
+    },
+    "scratch",
+    "why-hc",
+    "bluecollar",
+    "how-hc",
+    {
+     "card": "Pivot fast"
+    },
+    "gp",
+    "gp-b",
+    "physio-p",
+    "pivot-made",
+    "physio-b",
+    {
+     "card": "The first deal"
+    },
+    "deal-a",
+    "site",
+    "partner",
+    "deal-b",
+    "deal-c",
+    {
+     "card": "What made it work"
+    },
+    "why-work",
+    "board",
+    "role",
+    "acq",
+    "archetype",
+    {
+     "card": "Play to who you are"
+    },
+    "match",
+    "christian",
+    {
+     "card": "Pick, then pivot"
+    },
+    "pena",
+    "rejected",
+    "allied",
+    "glad",
+    "close"
+   ],
+   "sequence": [
+    "greet#1",
+    "q#1",
+    "q#2",
+    "lane#1",
+    "stagnant-a#1",
+    "stagnant-b#1",
+    "hardsay#1",
+    {
+     "card": "Starting from scratch"
+    },
+    "scratch#1",
+    "why-hc#1",
+    "why-hc#2",
+    "bluecollar#1",
+    "bluecollar#2",
+    "bluecollar#3",
+    "bluecollar#4",
+    "how-hc#1",
+    {
+     "card": "Pivot fast"
+    },
+    "gp#1",
+    "gp#2",
+    "gp#3",
+    "gp#4",
+    "gp#5",
+    "gp#6",
+    "gp-b#1",
+    "physio-p#1",
+    "pivot-made#1",
+    "physio-b#1",
+    {
+     "card": "The first deal"
+    },
+    "deal-a#1",
+    "site#1",
+    "partner#1",
+    "partner#2",
+    "deal-b#1",
+    "deal-c#1",
+    "deal-c#2",
+    {
+     "card": "What made it work"
+    },
+    "why-work#1",
+    "board#1",
+    "role#1",
+    "role#2",
+    "acq#1",
+    "acq#2",
+    "archetype#1",
+    {
+     "card": "Play to who you are"
+    },
+    "match#1",
+    "match#2",
+    "christian#1",
+    "christian#2",
+    "christian#3",
+    {
+     "card": "Pick, then pivot"
+    },
+    "pena#1",
+    "pena#2",
+    "pena#3",
+    "rejected#1",
+    "rejected#2",
+    "rejected#3",
+    "rejected#4",
+    "allied#1",
+    "allied#2",
+    "glad#1",
+    "close#1",
+    "close#2"
+   ]
   }
  }
 }
