@@ -263,7 +263,6 @@
     "Pick, then pivot": "Pick, then pivot"
    },
    "base_sequence": [
-    "greet",
     "q",
     "lane",
     "stagnant-a",
@@ -315,7 +314,6 @@
     "close"
    ],
    "sequence": [
-    "greet#1",
     "q#1",
     "q#2",
     "lane#1",

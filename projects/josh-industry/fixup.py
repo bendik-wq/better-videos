@@ -78,6 +78,13 @@ for cut in c["cuts"].values():
           seq.append(pid)
   cut["sequence"] = seq
   used.update(x for x in seq if isinstance(x, str))
+# hand-set cut points (source seconds) where word timings were too loose, checked against the waveform
+EDGE = {"pena#1": {"out": 486.58}, "pena#2": {"in": 487.22}}  # the swear sits at 486.62-487.18
+for pid, e in EDGE.items():
+    if pid in s:
+        shift = e.get("in", s[pid]["in"]) - s[pid]["in"]
+        s[pid]["in"], s[pid]["out"] = round(s[pid]["in"] + shift, 2), round(e.get("out", s[pid]["out"]), 2)
+        s[pid]["words"] = [[w, round(max(0, a - shift), 2), round(b - shift, 2)] for w, a, b in s[pid]["words"]]
 json.dump(c, open("clips.json", "w"), indent=1)
 s = {k: v for k, v in s.items() if '#' not in k or k in used}
 json.dump(s, open(sys.argv[2], "w"), indent=1)

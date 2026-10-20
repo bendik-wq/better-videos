@@ -8952,69 +8952,6 @@
    ]
   ]
  },
- "greet#1": {
-  "in": 0.0,
-  "out": 3.55,
-  "snapped": true,
-  "text": "Good morning, friends and family, boys and girls, ladies and gentlemen.",
-  "words": [
-   [
-    "Good",
-    0.0,
-    0.14
-   ],
-   [
-    "morning,",
-    0.14,
-    0.34
-   ],
-   [
-    "friends",
-    0.84,
-    1.0
-   ],
-   [
-    "and",
-    1.0,
-    1.16
-   ],
-   [
-    "family,",
-    1.16,
-    1.46
-   ],
-   [
-    "boys",
-    1.96,
-    2.16
-   ],
-   [
-    "and",
-    2.16,
-    2.3
-   ],
-   [
-    "girls,",
-    2.3,
-    2.54
-   ],
-   [
-    "ladies",
-    2.74,
-    2.86
-   ],
-   [
-    "and",
-    2.86,
-    3.08
-   ],
-   [
-    "gentlemen.",
-    3.08,
-    3.3
-   ]
-  ]
- },
  "hardsay#1": {
   "in": 47.71,
   "out": 53.46,
@@ -10084,7 +10021,7 @@
  },
  "pena#1": {
   "in": 475.61,
-  "out": 486.93,
+  "out": 486.58,
   "snapped": true,
   "text": "For some of you guys know that I learned from my virtual mentor, Dan Pena, and if you watch his material, you'll see the joke, how to pick an industry,",
   "words": [
@@ -10241,95 +10178,95 @@
   ]
  },
  "pena#2": {
-  "in": 487.18,
+  "in": 487.22,
   "out": 491.87,
   "snapped": true,
   "text": "get a phone book, throw it on the ground and whatever page it lands on, just pick",
   "words": [
    [
     "get",
-    -0.03,
-    0.33
+    0,
+    0.29
    ],
    [
     "a",
-    0.33,
-    0.93
+    0.29,
+    0.89
    ],
    [
     "phone",
-    0.93,
-    1.13
+    0.89,
+    1.09
    ],
    [
     "book,",
-    1.13,
-    1.39
+    1.09,
+    1.35
    ],
    [
     "throw",
-    1.43,
-    1.65
+    1.39,
+    1.61
    ],
    [
     "it",
-    1.65,
-    1.73
+    1.61,
+    1.69
    ],
    [
     "on",
-    1.73,
-    1.81
+    1.69,
+    1.77
    ],
    [
     "the",
-    1.81,
-    1.93
+    1.77,
+    1.89
    ],
    [
     "ground",
-    1.93,
-    2.19
+    1.89,
+    2.15
    ],
    [
     "and",
-    2.19,
-    2.75
+    2.15,
+    2.71
    ],
    [
     "whatever",
-    2.75,
-    2.97
+    2.71,
+    2.93
    ],
    [
     "page",
-    2.97,
-    3.29
+    2.93,
+    3.25
    ],
    [
     "it",
-    3.29,
-    3.45
+    3.25,
+    3.41
    ],
    [
     "lands",
-    3.45,
-    3.65
+    3.41,
+    3.61
    ],
    [
     "on,",
-    3.65,
-    3.87
+    3.61,
+    3.83
    ],
    [
     "just",
-    3.97,
-    4.11
+    3.93,
+    4.07
    ],
    [
     "pick",
-    4.11,
-    4.49
+    4.07,
+    4.45
    ]
   ]
  },
