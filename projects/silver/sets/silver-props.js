@@ -289,3 +289,34 @@ export function priceBoard({ w = 6, h = 1.6, title = 'SILVER · $/OZ' } = {}) {
   G.userData.setText('$0.00');
   return G;
 }
+
+// ---------------------------------------------------------------- mannequins (the Reconstructed look): rigged MakeHuman bodies with mocap clips,
+// every surface one glossy solid colour. Blue = the Hunts' side / the public, red = the antagonist of a scene, pale cyan = the crowd.
+import * as PE from '/engine/people/index.js';
+export const MQ = { blue: '#1d5bff', red: '#ff2a17', cyan: '#bfe4ee', white: '#f1f1ef', navy: '#14233d' };
+export async function loadMannequins(ids = ['suit']) { await PE.preload({ wardrobe: ids }); }
+const mqMats = new Map();
+export function mqMat(color, o = {}) {
+  const k = color + JSON.stringify(o); if (mqMats.has(k)) return mqMats.get(k);
+  const m = new THREE.MeshPhysicalMaterial({ color, roughness: o.rough ?? 0.38, metalness: 0, clearcoat: o.coat ?? 0.7, clearcoatRoughness: 0.22, sheen: 0.25, sheenColor: new THREE.Color('#ffffff'), transparent: !!o.opacity, opacity: o.opacity ?? 1 });
+  mqMats.set(k, m); return m;
+}
+// mannequin(id, color, { hat: 'cowboy'|'stetson'|null, height (m, default 1.8 → scaled to scene units by `unit`), unit (scene units per metre, default 1) })
+export function mannequin(id = 'suit', color = MQ.blue, { hat = null, unit = 1, opacity = null } = {}) {
+  const mat = mqMat(color, { opacity });
+  const p = PE.person(id, { dress: () => mat, scale: unit });
+  if (hat) {
+    const H = new THREE.Group(), hm = mqMat(color, { opacity });
+    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.012, 40), hm); brim.scale.z = 0.85;
+    const bp = brim.geometry.attributes.position; for (let i = 0; i < bp.count; i++) { const x = bp.getX(i); bp.setY(i, bp.getY(i) + x * x * 0.9); } brim.geometry.computeVertexNormals();
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.105, 0.12, 32), hm); crown.position.y = 0.065; crown.scale.z = 0.88;
+    const dent = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 8), hm); dent.position.y = 0.12; dent.scale.set(1.2, 0.3, 1);
+    H.add(brim, crown, dent); H.traverse(o => { if (o.isMesh) o.castShadow = true; });
+    const head = p.bones.head; head.add(H); H.userData.isHat = true; p.hat = H;
+    // head bone: y runs up the head; the crown sits ~0.17 m above the joint
+    H.position.set(0, 0.145, 0.0);
+  }
+  p.mat = mat;
+  return p;
+}
+export { PE };

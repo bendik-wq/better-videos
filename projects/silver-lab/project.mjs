@@ -19,8 +19,16 @@ const shots = [
   { id: 'board', set: 'boardroom', min: 6, params: { stampAt: 3 } },
   { id: 'queue', set: 'queue', min: 6, params: {} },
   { id: 'oil', set: 'oilfield', min: 6, params: { mode: 'collateral' } },
-  { id: 'hero', set: 'hero-bar', min: 5, params: { date: '17 JAN 1980', red: true } },
+  { id: 'hero', set: 'hero-bar', min: 2, params: { date: '17 JAN 1980', red: true, quality: process.env.Q || 'high' } },
   { id: 'bail', set: 'bailout', min: 6, params: {} },
+  { id: 'tv', set: 'thumb-vault', min: 2, params: {} },
+  { id: 'fig1', set: 'figures', min: 4, params: { props: ['car'], figs: [{ w: 'suit', c: 'red', hat: 'cowboy', clip: 'idle', label: 'NELSON BUNKER HUNT', x: 0, z: 0, ry: 0.4 }], cam: 'push' } },
+  { id: 'fig2', set: 'figures', min: 4, params: { props: ['desk', 'phone'], figs: [{ w: 'suit', c: 'red', hat: 'cowboy', clip: 'talk', x: -0.6, z: 0, ry: 0.5 }, { w: 'suit_b', c: 'blue', clip: 'idle', x: 0.9, z: 1.8, ry: 3.6 }], cam: 'wide' } },
+  { id: 'fig3', set: 'figures', min: 4, params: { props: ['cashflow', 'crowd'], flow: { from: [-1.5, 0.6], to: [1.5, 0.6], at: 0.5, n: 8 }, figs: [{ w: 'suit', c: 'blue', clip: 'idle', x: -1.8, z: 0, ry: 0.8 }, { w: 'overcoat', c: 'red', hat: 'cowboy', clip: 'idle_b', x: 1.8, z: 0, ry: -0.8 }], cam: 'wide' } },
+  { id: 'cube', set: 'cube', min: 5, params: {} },
+  { id: 'heir', set: 'heirlooms', min: 4, params: { mode: 'table' } },
+  { id: 'coins', set: 'heirlooms', min: 4, params: { mode: 'coins' } },
+  { id: 'banks', set: 'bailout', min: 5, params: { mode: 'banks' } },
 ];
 export default {
   title: 'silver lab', fps: 60, width: 1920, height: 1080,

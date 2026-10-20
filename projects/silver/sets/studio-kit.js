@@ -335,7 +335,7 @@ export function rig(camera, keys, t, { t0 = 0, t1 = 8, ease = smoother, float = 
   const mms = keys.map(k => k.mm ?? 35); const mmf = (mms.length - 1) * u, mi = Math.min(mms.length - 2, Math.floor(mmf));
   const mm = mms.length === 1 ? mms[0] : lerp(mms[mi], mms[mi + 1], smoother(mmf - mi));
   if (float) { p[0] += noise1(t * 0.31, seed) * float; p[1] += noise1(t * 0.27, seed + 7) * float * 0.7; l[0] += noise1(t * 0.23, seed + 3) * float * 0.6; l[1] += noise1(t * 0.29, seed + 5) * float * 0.5; }
-  camera.position.set(...p); camera.lookAt(...l);
-  const fov = mmToFov(mm); if (Math.abs(camera.fov - fov) > 1e-4) { camera.fov = fov; camera.updateProjectionMatrix(); }
+  camera.position.set(...p); camera.lookAt(...l); camera.updateMatrixWorld(true);
+  const fov = mmToFov(mm); if (Math.abs(camera.fov - fov) > 1e-4) { camera.fov = fov; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(true);
   return { pos: p, look: l, mm, dist: Math.hypot(p[0] - l[0], p[1] - l[1], p[2] - l[2]) };
 }

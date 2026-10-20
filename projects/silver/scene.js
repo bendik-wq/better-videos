@@ -34,7 +34,7 @@ import * as CK from '/projects/panama/sets/clay-kit.js';
 import { planCuts } from '/projects/silver/cuts.mjs';
 
 const ROOT = '/projects/silver/sets/';
-const LIBS = ['graphics', 'graphics-data', 'graphics-maps', 'graphics-docs', 'lab', 'clay-silver', 'oner'];
+const LIBS = ['graphics', 'graphics-data', 'graphics-maps', 'graphics-docs', 'lab', 'clay-silver', 'oner', 'thumbs'];
 let extra = [];
 try { const r = await fetch(ROOT + 'libs.json'); if (r.ok) extra = await r.json(); } catch { /* optional */ }
 const loaded = [], loadErrors = {};

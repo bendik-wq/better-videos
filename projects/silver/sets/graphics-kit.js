@@ -1,9 +1,9 @@
-// Mortgage bright graphics kit (episode 6, "The Auction That Sets Your Mortgage Rate"): palette, fonts, the 2D canvas
-// set, camera drift, Treasury-ledger drawing helpers. Shared by graphics.js, graphics-data.js, graphics-maps.js and
-// graphics-docs.js. Not a set library: the default export returns no sets, so a runtime that loads every sets/*.js can
-// load this file harmlessly.
+// Silver bright graphics kit (episode 7, "The Brothers Who Tried to Buy All the Silver"): palette, fonts, the 2D canvas
+// set, camera drift, ledger drawing helpers, the silver key closes and an image loader. Shared by graphics.js,
+// graphics-data.js, graphics-maps.js and graphics-docs.js. Not a set library: the default export returns no sets, so a
+// runtime that loads every sets/*.js can load this file harmlessly. (Adapted from projects/mortgage/sets/graphics-kit.js.)
 //
-// Money identity (same bright house as Panama, docs/library/bright-style/STYLE.md): bright cool paper #f7f6f1 with
+// Money identity (same bright house as Panama/Mortgage, docs/library/bright-style/STYLE.md): bright cool paper #f7f6f1 with
 // faint ledger rules, ink navy #14233d, sage #a9c5ae and teal #2a8c86 accents, and ONE red #e0241b reserved for the
 // number that matters. Figures in Plex Mono (the ledger), headlines in Inter (OFL, assets/fonts), quotes in
 // Instrument Serif. Everything is authored on a 1920x1080 grid and is a pure function of (t, p): seeded noise only.
@@ -23,7 +23,7 @@ export const P = {
   red: '#e0241b', redSoft: '#f8d3cf', redPale: '#fdeceb',
   land: '#eef0e8', landSide: '#c9d2c6', landEdge: '#aab7a8', sea: '#cfe5e3', seaDeep: '#a9d2cf', shelf: '#e0efec',
 };
-export const F = { sans: 'Inter, "Archivo Narrow", sans-serif', serif: '"Instrument Serif", serif', mono: '"Plex Mono", monospace' };
+export const F = { sans: 'Inter, "Archivo Narrow", sans-serif', serif: '"Instrument Serif", serif', mono: '"Plex Mono", monospace', narrow: '"Archivo Narrow", Inter, sans-serif' };
 
 let fontsP = null;
 export function loadFonts() {
@@ -31,9 +31,9 @@ export function loadFonts() {
     try {
       const f = new FontFace('Inter', 'url(/projects/mortgage/assets/fonts/Inter-latin.woff2)', { weight: '100 900' });
       await f.load(); document.fonts.add(f);
-    } catch (e) { console.warn('[mortgage] Inter not loaded:', e.message); }
+    } catch (e) { console.warn('[silver] Inter not loaded:', e.message); }
     await Promise.all(['500', '600', '700', '800', '900'].map(w => document.fonts.load(`${w} 40px Inter`)).concat(
-      [document.fonts.load('40px "Instrument Serif"'), document.fonts.load('italic 40px "Instrument Serif"'), document.fonts.load('500 40px "Plex Mono"'), document.fonts.load('400 40px "Plex Mono"')]));
+      [document.fonts.load('40px "Instrument Serif"'), document.fonts.load('italic 40px "Instrument Serif"'), document.fonts.load('500 40px "Plex Mono"'), document.fonts.load('400 40px "Plex Mono"'), document.fonts.load('700 40px "Archivo Narrow"'), document.fonts.load('400 40px "Archivo Narrow"')]));
   })();
 }
 
@@ -253,24 +253,34 @@ export function drawPoly(g, pts, cum, k) {
 // smooth a polyline (Chaikin)
 export function smooth(pts, n = 2) { let p = pts; for (let k = 0; k < n; k++) { const q = [p[0]]; for (let i = 0; i < p.length - 1; i++) { const [a, b] = [p[i], p[i + 1]]; q.push([a[0] * 0.75 + b[0] * 0.25, a[1] * 0.75 + b[1] * 0.25], [a[0] * 0.25 + b[0] * 0.75, a[1] * 0.25 + b[1] * 0.75]); } q.push(p.at(-1)); p = q; } return p; }
 
-// ---------------------------------------------------------------- data (FRED CSVs in projects/mortgage/assets/data)
-// series(name) -> { t: Float64Array (ms UTC), v: Float32Array }, missing values ('.' or empty) dropped
-const SER = {};
-export function series(name) {
-  return SER[name] ??= (async () => {
-    const txt = await (await fetch(`/projects/mortgage/assets/data/${name}.csv`)).text();
-    const rows = txt.trim().split(/\r?\n/).slice(1), t = [], v = [];
-    for (const l of rows) { const [d, x] = l.split(','); const n = parseFloat(x); if (!Number.isFinite(n)) continue; const [y, m, dd] = d.split('-').map(Number); t.push(Date.UTC(y, m - 1, dd)); v.push(n); }
-    const s = { t: Float64Array.from(t), v: Float32Array.from(v) };
-    s.at = (date) => { const ms = typeof date === 'number' ? date : Date.parse(date + 'T00:00:00Z'); let lo = 0, hi = s.t.length - 1; if (ms <= s.t[0]) return s.v[0]; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (s.t[m] <= ms) lo = m; else hi = m; } return s.t[hi] <= ms ? s.v[hi] : s.v[lo]; };
-    return s;
-  })();
-}
+// ---------------------------------------------------------------- dates
 export const ms = (d) => Date.parse(d + 'T00:00:00Z');
 export const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 export const dstr = (d) => { const x = new Date(typeof d === 'number' ? d : ms(d)); return `${x.getUTCDate()} ${MON[x.getUTCMonth()]} ${x.getUTCFullYear()}`; };
-// monthly payment, principal and interest (RESEARCH §7a): M = P i / (1 − (1+i)^−n)
-export const payment = (P0, ratePct, n = 360) => { const i = ratePct / 1200; return P0 * i / (1 - Math.pow(1 + i, -n)); };
+
+// ---------------------------------------------------------------- silver key prices (RESEARCH.md; sparse, NOT a daily series)
+// [date, $/oz, short label]. Spot closes from the SEC staff report (S01) unless noted. Charts join them with straight
+// segments and say so in their source line.
+export const KEY7980 = [
+  ['1979-07-31', 9.0, '~$9'],      // S01 p.32 ("below $10 per ounce prior to August 1, 1979"; position ~123M oz)
+  ['1979-12-31', 34.45, '$34.45'], // S01 p.4
+  ['1980-01-17', 48.70, '$48.70'], // S01 p.37 fn16: record Comex spot settle (intraday high $50.36, p.65; see D1)
+  ['1980-01-22', 34.00, '$34.00'], // S01 p.35
+  ['1980-03-10', 29.75, '$29.75'], // S01 pp.7, 35
+  ['1980-03-25', 20.20, '$20.20'], // S01 pp.78–79
+  ['1980-03-26', 15.80, '$15.80'], // S01 p.93
+  ['1980-03-27', 10.80, '$10.80'], // S01 p.3: Silver Thursday
+];
+export const KEY_SRC = 'SILVER, KEY SPOT CLOSES 1979–80 · SEC STAFF REPORT (1982) · LINE JOINS POINTS';
+// the key line as [ms, v] points
+export const keyPts = (rows = KEY7980) => rows.map(([d, v]) => [ms(d), v]);
+
+// ---------------------------------------------------------------- images (archival photos in projects/silver/assets/photos)
+const IMG = {};
+export function image(url) {
+  return IMG[url] ??= new Promise((res, rej) => { const im = new Image(); im.decoding = 'async'; im.onload = () => res(im); im.onerror = () => rej(new Error(`image not found: ${url}`)); im.src = url; })
+    .then(async (im) => { try { await im.decode(); } catch { /* already decoded */ } return im; });
+}
 
 export const esc = (s) => String(s ?? '');
 export default function makeGraphicsKit() { return {}; }

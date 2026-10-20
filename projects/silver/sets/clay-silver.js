@@ -72,7 +72,7 @@ export default function claySilver(H) {
       const fx = G.finish();
       const midY = max / unit * BAR.h * 0.45;
       const keys = P0.mode === 'crash'
-        ? [{ pos: [x0 + (n - 1) * gapX + 6, midY * 1.4 + 2, 16], look: [x0 + (n - 1) * gapX - 2, midY, 0], mm: 40 }, { pos: [x0 + (n - 1) * gapX + 3, midY * 1.0 + 1, 13], look: [x0 + (n - 1) * gapX - 1, midY * 0.6, 0], mm: 45 }]
+        ? [{ pos: [x0 + (n - 1) * gapX * 0.5 + 10, midY * 2.1 + 2, midY * 3.3 + 14], look: [x0 + (n - 1) * gapX * 0.5, midY, 0], mm: 35 }, { pos: [x0 + (n - 1) * gapX * 0.5 + 8, midY * 1.9 + 2, midY * 3.1 + 13], look: [x0 + (n - 1) * gapX * 0.5 + 0.5, midY * 0.95, 0], mm: 35 }]
         : [{ pos: [x0 - 6, 3, 15], look: [x0 + 2, 2, 0], mm: 38 }, { pos: [x0 + (n - 1) * gapX * 0.5, midY + 3, 22], look: [0, midY, 0], mm: 35 }, { pos: [x0 + (n - 1) * gapX + 5, midY * 1.6 + 3, 18], look: [x0 + (n - 1) * gapX - 2, midY * 1.4, 0], mm: 40 }];
       return {
         scene, camera: G.camera, layer: G.layer,
@@ -95,7 +95,7 @@ export default function claySilver(H) {
             }
             const top = [c.x, (P0.mode === 'crash' && i === crashIdx && crashTo !== null && t > crashAt + 0.6 ? Math.round(crashTo / unit) : c.layers) * BAR.h + 0.6, 0];
             const [px, py, vis] = G.toPx(top); const a = S.range(t, (P0.mode === 'hold' || P0.mode === 'crash' ? 0.3 : c.at + c.layers * 0.035), (P0.mode === 'hold' || P0.mode === 'crash' ? 0.7 : c.at + c.layers * 0.035 + 0.4));
-            if (P0.mode === 'crash' && i === crashIdx && crashTo !== null && t > crashAt + 0.6) pills[i].innerHTML = `${P0.crashLabel ?? 'NEXT DAY'} · <b style="color:#e0241b">$${crashTo.toFixed(2)}</b>`;
+            if (P0.mode === 'crash' && i === crashIdx && crashTo !== null && t > crashAt + 0.6) pills[i].innerHTML = P0.crashText ?? `${P0.crashLabel ?? 'NEXT DAY'} · <b style="color:#e0241b">$${crashTo.toFixed(2)}</b>`;
             pills[i].at(px, py, vis ? a : 0);
           }
           bars.instanceMatrix.needsUpdate = true;
@@ -173,8 +173,10 @@ export default function claySilver(H) {
       const plane = PR.jet({ scale: 2.2 }); scene.add(plane);
       const geo = S.barGeometry(), mat = S.barMaterial();
       const N = 28; const pile = new THREE.InstancedMesh(geo, mat, N); pile.castShadow = true; scene.add(pile);
-      const guards = [PR.person({ hat: 'cowboy', coat: '#6e4529' }), PR.person({ hat: 'stetson', coat: '#14233d' }), PR.person({ hat: 'cowboy', coat: '#3b4250' })];
-      guards.forEach((g, i) => { g.scale.setScalar(1.2); g.position.set(-4 + i * 2.4, 0, 5.5 + (i % 2) * 0.6); g.rotation.y = -0.4 + i * 0.3; scene.add(g); });
+      await PR.loadMannequins(['casual_a', 'casual_b']);
+      const gm = [0, 1, 2].map(i => PR.mannequin(i % 2 ? 'casual_b' : 'casual_a', PR.MQ.red, { hat: 'cowboy', unit: 1.2 }));
+      const guards = gm.map(m => m.root);
+      guards.forEach((g, i) => { g.position.set(-4 + i * 2.4, 0, 5.5 + (i % 2) * 0.6); g.rotation.y = -0.4 + i * 0.3; scene.add(g); });
       const label = pillAt(H, G.layer, P0.label ?? 'DALLAS → ZURICH', { size: 28 });
       G.finish();
       const at = G.cue(P0.at, 0.8), off = G.cue(P0.takeoffAt, G.dur * 0.62);
@@ -190,8 +192,8 @@ export default function claySilver(H) {
             const p = [S.lerp(from[0], into[0], S.inOut(u)), S.lerp(from[1], into[1], S.inOut(u)) + Math.sin(Math.PI * u) * 1.2, S.lerp(from[2], into[2], S.inOut(u))];
             S.place(pile, i, p, [0, 0.3 + u * 1.2, 0], u >= 1 ? 0.0001 : 0.6 * (1 - u * 0.5)); }
           pile.instanceMatrix.needsUpdate = true;
-          guards.forEach((g, i) => { g.rotation.y = -0.4 + i * 0.3 + Math.sin(t * 0.8 + i) * 0.08 + S.range(t, off, off + 1) * 0.6; });
-          const c = G.cam([{ pos: [-12, 4, 18], look: [0, 1.5, 0], mm: 32 }, { pos: [-4, 3, 16], look: [3, 1.8, 0], mm: 32 }, { pos: [8, 5, 18], look: [16, 4, -1], mm: 30 }], t);
+          guards.forEach((g, i) => { gm[i].play(i === 1 ? 'look_around' : 'idle', t + i).update(); g.rotation.y = -0.4 + i * 0.3 + S.range(t, off, off + 1) * 0.6; });
+          const c = G.cam(P0.camera ?? [{ pos: [2, 6, 26], look: [1, 1.6, 0], mm: 32 }, { pos: [6, 5, 24], look: [3, 1.8, 0], mm: 32 }, { pos: [12, 6, 24], look: [14, 4, -1], mm: 30 }], t);
           const [px, py, vis] = G.toPx([x, 4.5 + lift * lift * 1.2, -0.5]); label.at(px, py, vis ? S.range(t, at + 0.6, at + 1.0) : 0);
           G.frame(t);
         },
@@ -251,7 +253,8 @@ export default function claySilver(H) {
       const table = new THREE.Mesh(S.roundBox(9, 0.25, 4, 0.12), S.wood({ coat: 0.6 })); table.position.y = 2.2; table.castShadow = table.receiveShadow = true; scene.add(table);
       for (const x of [-3.8, 3.8]) for (const z of [-1.5, 1.5]) { const l = new THREE.Mesh(S.roundBox(0.25, 2.2, 0.25, 0.05), S.wood()); l.position.set(x, 0, z); l.castShadow = true; scene.add(l); }
       const figs = [];
-      for (let i = 0; i < 8; i++) { const side = i < 4 ? -1 : 1; const p = PR.person({ coat: ['#14233d', '#3b4250', '#5b6b80', '#2b2f38'][i % 4], tie: i === 2 ? '#e0241b' : null }); p.position.set(-3 + (i % 4) * 2, 0, side * 2.9); p.rotation.y = side < 0 ? 0 : Math.PI; p.scale.setScalar(1.15); scene.add(p); figs.push(p); }
+      await PR.loadMannequins(['suit', 'suit_b', 'office']);
+      for (let i = 0; i < 8; i++) { const side = i < 4 ? -1 : 1; const m = PR.mannequin(['suit', 'suit_b', 'office'][i % 3], PR.MQ.blue, { unit: 2.4 }); const p = m.root; p.position.set(-3.3 + (i % 4) * 2.2, 0, side * 3.1); p.rotation.y = side < 0 ? 0 : Math.PI; scene.add(p); figs.push({ m, ph: i * 0.7, clip: ['idle', 'talk', 'idle_b', 'look_around'][i % 4] }); }
       const doc = PR.sheet((g, W, Hh) => {
         g.fillStyle = '#14233d'; g.font = `700 ${Hh * 0.06}px 'Archivo Narrow'`; g.fillText(P0.docOrg ?? 'COMMODITY EXCHANGE, INC.', W * 0.08, Hh * 0.1);
         g.font = `700 ${Hh * 0.1}px 'Archivo Narrow'`; g.fillText(P0.docTitle ?? 'SILVER RULE 7', W * 0.08, Hh * 0.22);
@@ -272,9 +275,9 @@ export default function claySilver(H) {
           stamp.position.set(0.05 + lift * 1.2, Math.max(2.6, y), 0.5); stamp.rotation.set(0, 0.08, -lift * 0.3);
           ink.material.opacity = t >= at ? 1 : 0; ink.material.transparent = true; ink.visible = t >= at;
           // heads turn to the doc as the stamp lands
-          figs.forEach((f, i) => { f.userData.head.rotation.y = Math.sin(t * 0.6 + i) * 0.12; });
+          figs.forEach((f) => f.m.play(f.clip, f.ph + t).update());
           const kick = t > at ? Math.exp(-(t - at) * 8) * Math.sin((t - at) * 60) * 0.03 : 0;
-          G.cam([{ pos: [-7, 7.5, 9], look: [0, 2.3, 0], mm: 35 }, { pos: [-1.2, 6.6, 4.6], look: [0.05, 2.35, 0.4], mm: 50 }], t, { focus: undefined });
+          G.cam(P0.camera ?? [{ pos: [-13, 9.5, 17], look: [0, 3.0, 0], mm: 32 }, { pos: [-9, 8.5, 15], look: [0, 3.0, 0.2], mm: 34 }], t);
           G.camera.position.y += kick;
           G.frame(t);
         },
@@ -289,9 +292,9 @@ export default function claySilver(H) {
       const door = new THREE.Mesh(S.roundBox(1.4, 2.4, 0.1, 0.04), S.clay('#14233d')); door.position.set(3.2, 0.54, 0.05); scene.add(door);
       const people = []; const N = P0.count ?? 26; const r = S.rng(5);
       const coats = ['#14233d', '#e0241b', '#2a8c86', '#a9c5ae', '#5b6b80', '#c9a45a', '#7b5235', '#3b4250'];
-      for (let i = 0; i < N; i++) { const p = PR.person({ coat: coats[i % coats.length], hat: r() < 0.35 ? 'cap' : null }); const s = 0.85 + r() * 0.25; p.scale.setScalar(s); p.position.set(2.2 - i * 1.15 - r() * 0.3, 0, 1.6 + Math.sin(i * 0.5) * 0.6 + (r() - 0.5) * 0.4); p.rotation.y = Math.PI / 2 + (r() - 0.5) * 0.5; scene.add(p); people.push(p);
-        // each holds something silver (a little box of forks / a candlestick)
-        const held = new THREE.Mesh(i % 3 === 0 ? new THREE.CylinderGeometry(0.08, 0.12, 0.6, 16) : S.roundBox(0.5, 0.2, 0.35, 0.04), i % 3 === 0 ? S.polishedSilver() : S.clay('#7b5235')); held.position.set(0.32, 0.95, 0.15); held.castShadow = true; p.add(held); }
+      await PR.loadMannequins(['casual_a', 'casual_b', 'overcoat', 'casual_f']);
+      for (let i = 0; i < N; i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'overcoat', 'casual_f'][i % 4], i === (P0.blueAt ?? 6) ? PR.MQ.blue : PR.MQ.cyan, {}); const p = m.root; p.scale.multiplyScalar(0.95 + r() * 0.1); p.position.set(2.2 - i * 1.0 - r() * 0.3, 0, 1.6 + Math.sin(i * 0.5) * 0.6 + (r() - 0.5) * 0.4); p.rotation.y = Math.PI / 2 + (r() - 0.5) * 0.5; scene.add(p); people.push({ m, ph: r() * 4, clip: ['idle', 'wait', 'idle_b', 'look_around'][i % 4] });
+        const held = new THREE.Mesh(i % 3 === 0 ? new THREE.CylinderGeometry(0.05, 0.08, 0.35, 16) : S.roundBox(0.34, 0.12, 0.24, 0.03), i % 3 === 0 ? S.polishedSilver() : S.clay('#7b5235')); held.castShadow = true; scene.add(held); people.at(-1).held = held; }
       // snow: small white points falling (pure function of t)
       const SN = 1400, sg = new THREE.BufferGeometry(), sp = new Float32Array(SN * 3), seeds = []; for (let i = 0; i < SN; i++) seeds.push([r() * 50 - 30, r() * 14, r() * 24 - 8, 0.4 + r() * 0.6]);
       sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
@@ -302,7 +305,7 @@ export default function claySilver(H) {
         update(t) {
           for (let i = 0; i < SN; i++) { const [x, y, z, v] = seeds[i]; sp[i * 3] = x + Math.sin(t * 0.7 + i) * 0.3; sp[i * 3 + 1] = ((y - t * v) % 14 + 14) % 14; sp[i * 3 + 2] = z; }
           sg.attributes.position.needsUpdate = true;
-          people.forEach((p, i) => { p.position.y = Math.max(0, Math.sin(t * 2 + i)) * 0.0; p.rotation.z = Math.sin(t * 1.1 + i * 1.7) * 0.02; });
+          people.forEach((p) => { p.m.play(p.clip, p.ph + t).update(); const hp = p.m.worldPos('hand_r'); p.held.position.set(hp.x, hp.y - 0.08, hp.z); });
           G.cam([{ pos: [-26, 3.5, 12], look: [-10, 1.4, 1], mm: 40 }, { pos: [-8, 3.2, 12], look: [2, 1.6, 0], mm: 38 }], t);
           G.frame(t);
         },
@@ -325,6 +328,138 @@ export default function claySilver(H) {
           rigs.forEach((o, i) => o.userData.tick?.(t + i * 0.7));
           tags.forEach((tg, i) => { const s = P0.mode === 'collateral' ? pop(t, tagAt + i * 0.12) : 0; tg.visible = s > 0.001; tg.scale.setScalar(Math.max(0.001, s)); tg.rotation.y = Math.sin(t * 1.5 + i) * 0.1; });
           G.cam([{ pos: [-20, 7, 20], look: [-4, 2, -3], mm: 32 }, { pos: [4, 6.5, 22], look: [2, 2, -3], mm: 32 }], t);
+          G.frame(t);
+        },
+      };
+    },
+
+
+    // ================================================================ figures: glossy mannequins (Reconstructed look) on the studio floor, 1 unit = 1 m
+    // params: figs [{ w (wardrobe 'suit'|'overcoat'|'office'|'casual_a'|...), c ('red'|'blue'|'cyan'|'white'|hex), hat, clip ('idle'), t0, x, z, ry, label, labelAt }]
+    //   props: ['desk' | 'witness' | 'cash' | 'cashflow' | 'bars' | 'balance' | 'phone' | 'car' | 'crowd' | 'plinth'], flow: { from: [x,z], to: [x,z], at, n }
+    //   cam: 'push' | 'orbit' | 'low' | 'wide' | 'close' (or camera keys), focusOn: figure index, tilt (balance), sky (true: blue sky backdrop)
+    async figures(ctx, shot) {
+      const P0 = shot.params ?? {};
+      const figs = P0.figs ?? [{ w: 'suit', c: 'red', hat: 'cowboy', clip: 'idle', x: 0, z: 0, ry: 0.3 }];
+      const wards = [...new Set([...figs.map(f => f.w ?? 'suit'), ...(P0.props ?? []).includes('crowd') ? ['casual_a', 'casual_b', 'office'] : []])];
+      await PR.loadMannequins(wards);
+      const G = await stage(H, ctx, shot, { span: P0.span ?? 4, caption: P0caption(shot, null), source: P0src(shot, null), bokeh: 3.2, dofRange: 1.2, aoR: 0.25, aoI: 1.6, contact: { w: 10, d: 8, blur: 2.2, darkness: 1.2, opacity: 0.75 } });
+      const { scene } = G; const props = new Set(P0.props ?? []);
+      const col = (c) => PR.MQ[c] ?? c ?? PR.MQ.blue;
+      const people = figs.map((f, i) => { const m = PR.mannequin(f.w ?? 'suit', col(f.c), { hat: f.hat ?? null }); m.root.position.set(f.x ?? 0, 0, f.z ?? 0); m.root.rotation.y = f.ry ?? 0; scene.add(m.root); return { m, f }; });
+      let crowd = [];
+      if (props.has('crowd')) { const r = S.rng(7); for (let i = 0; i < (P0.crowdN ?? 14); i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'office'][i % 3], PR.MQ.cyan, {}); m.root.position.set(-4 + (i % 7) * 1.2 + r() * 0.3, 0, -2.2 - Math.floor(i / 7) * 1.2 + r() * 0.3); m.root.rotation.y = (r() - 0.5) * 0.8; scene.add(m.root); crowd.push({ m, ph: r() * 5, clip: ['idle', 'idle_b', 'phone', 'look_around'][i % 4] }); } }
+      const S01 = (o, s) => { o.scale.multiplyScalar(s); scene.add(o); return o; };
+      if (props.has('desk')) { const d = new THREE.Mesh(S.roundBox(2.0, 0.76, 0.9, 0.04), S.wood({ coat: 0.5 })); d.position.set(P0.deskX ?? 0, 0, P0.deskZ ?? 0.9); d.castShadow = d.receiveShadow = true; scene.add(d); }
+      if (props.has('witness')) { const d = new THREE.Mesh(S.roundBox(3.2, 0.76, 0.8, 0.04), S.wood({ coat: 0.5 })); d.position.set(0, 0, 0.75); d.castShadow = d.receiveShadow = true; scene.add(d);
+        for (const x of [-0.7, 0.7]) { const mic = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.35, 8), S.clay('#2b2f38')); mic.position.set(x, 0.93, 0.55); mic.rotation.x = -0.5; scene.add(mic); const hd = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 10), S.clay('#2b2f38')); hd.position.set(x, 1.08, 0.47); scene.add(hd); }
+        const plate = PR.labelPlane(P0.plate ?? 'HUNT', { w: 0.8, h: 0.16 }); plate.position.set(0, 0.79, 1.16); plate.rotation.x = -0.25; scene.add(plate); }
+      if (props.has('bars')) { const b = S.instances(S.barGeometry(), S.barMaterial(), barStack(P0.barsN ?? 10, { cols: 2, rows: 2, x: 0, z: 0 })); b.scale.setScalar(0.1); b.position.set(...(P0.barsAt ?? [0.9, 0, 0.6])); scene.add(b); }
+      if (props.has('cash')) for (let i = 0; i < 6; i++) { const c = PR.cashStack(); c.scale.setScalar(0.1); c.position.set((P0.cashAt?.[0] ?? -0.9) + (i % 2) * 0.17, Math.floor(i / 2) * 0.03, (P0.cashAt?.[2] ?? 0.6)); scene.add(c); }
+      let bal = null; if (props.has('balance')) { bal = PR.balance(); bal.scale.setScalar(P0.balanceScale ?? 0.4); bal.position.set(...(P0.balanceAt ?? [0, 0, 0.9])); scene.add(bal);
+        const coin = new THREE.Mesh(S.coinGeometry({ r: 0.19 }), S.polishedSilver()); coin.scale.setScalar(1.6); bal.userData.pans[0].add(coin); coin.position.y = -1.78;
+        const bb = S.instances(S.barGeometry(), S.barMaterial(), barStack(6, { cols: 1, rows: 2 })); bb.scale.setScalar(0.5); bb.position.y = -1.78; bal.userData.pans[1].add(bb); }
+      let ph = null; if (props.has('phone')) { ph = PR.phone(); ph.scale.setScalar(0.11); ph.position.set(...(P0.phoneAt ?? [0.35, 0.76, 0.85])); ph.rotation.y = -0.4; scene.add(ph); }
+      if (props.has('car')) { const car = new THREE.Group(); const body = S.glossy(P0.carColor ?? '#e9e6df', { rough: 0.25, coat: 0.9 });
+        const lower = new THREE.Mesh(S.roundBox(5.6, 0.75, 2.0, 0.25), body); lower.position.y = 0.28; car.add(lower); const cab = new THREE.Mesh(S.roundBox(2.8, 0.6, 1.8, 0.22), body); cab.position.set(-0.3, 1.0, 0); car.add(cab);
+        const glass = new THREE.Mesh(S.roundBox(2.6, 0.45, 1.82, 0.18), S.glossy('#22303f', { rough: 0.1, coat: 1 })); glass.position.set(-0.3, 1.06, 0); car.add(glass);
+        for (const x of [-1.8, 1.8]) for (const z of [-0.9, 0.9]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.28, 24).rotateX(Math.PI / 2), S.clay('#22262c')); wh.position.set(x, 0.36, z); car.add(wh); }
+        car.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); car.position.set(...(P0.carAt ?? [-3.2, 0, -1.4])); car.rotation.y = P0.carRy ?? 0.25; scene.add(car); }
+      if (props.has('plinth')) { const pl = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.5, 0.12, 64), S.clay('#f4f2ee', { rough: 0.5, coat: 0.4 })); pl.position.y = -0.06; pl.receiveShadow = true; scene.add(pl); }
+      // cash flow: bundles hop on arcs from `from` to `to` (who pays whom)
+      const flow = P0.flow ?? null; const hop = [];
+      if (props.has('cashflow') && flow) for (let i = 0; i < (flow.n ?? 10); i++) { const c = PR.cashStack(); c.scale.setScalar(0.24); scene.add(c); hop.push(c); }
+      const labels = people.map(p => p.f.label ? pillAt(H, G.layer, p.f.label, { size: 24, dot: p.f.c === 'red' ? '#e0241b' : null }) : null);
+      G.finish();
+      const D = G.dur, fz = people[P0.focusOn ?? 0]?.f ?? { x: 0, z: 0 };
+      const cx = fz.x ?? 0, cz = fz.z ?? 0;
+      const presets = {
+        push: [{ pos: [cx + 1.4, 1.55, cz + 5.2], look: [cx, 1.2, cz], mm: 50 }, { pos: [cx + 0.9, 1.5, cz + 3.6], look: [cx, 1.3, cz], mm: 55 }],
+        orbit: [{ pos: [cx + 4.2, 1.7, cz + 3.0], look: [cx, 1.0, cz], mm: 40 }, { pos: [cx + 1.0, 1.6, cz + 5.0], look: [cx, 1.05, cz], mm: 40 }, { pos: [cx - 3.4, 1.7, cz + 3.6], look: [cx, 1.05, cz], mm: 40 }],
+        low: [{ pos: [cx + 2.2, 0.45, cz + 4.6], look: [cx, 1.5, cz], mm: 32 }, { pos: [cx + 1.2, 0.5, cz + 4.0], look: [cx, 1.55, cz], mm: 32 }],
+        wide: [{ pos: [cx - 3.5, 3.4, cz + 9.5], look: [cx, 0.9, cz - 0.5], mm: 35 }, { pos: [cx + 2.5, 3.0, cz + 9.0], look: [cx, 0.9, cz - 0.5], mm: 35 }],
+        close: [{ pos: [cx + 0.8, 1.65, cz + 2.4], look: [cx, 1.45, cz], mm: 70 }, { pos: [cx + 0.5, 1.62, cz + 2.0], look: [cx, 1.5, cz], mm: 75 }],
+        high: [{ pos: [cx + 3, 6.5, cz + 6.5], look: [cx, 0.6, cz], mm: 35 }, { pos: [cx + 1.5, 5.8, cz + 6.0], look: [cx, 0.6, cz], mm: 35 }],
+      };
+      const allX = [...figs.map(f => f.x ?? 0), ...(bal ? [bal.position.x] : [])]; const mx = (Math.min(...allX) + Math.max(...allX)) / 2, spanX = Math.max(...allX) - Math.min(...allX);
+      presets.pair = [{ pos: [mx + 0.6, 1.5, 3.4 + spanX * 1.0], look: [mx, 1.0, 0.2], mm: 40 }, { pos: [mx + 0.2, 1.45, 3.0 + spanX * 0.9], look: [mx, 1.05, 0.2], mm: 42 }];
+      const keys = Array.isArray(P0.cam) ? P0.cam : (P0.camera ?? presets[P0.cam ?? 'push']);
+      return {
+        scene, camera: G.camera, layer: G.layer,
+        update(t) {
+          for (const { m, f } of people) { m.play(f.clip ?? 'idle', (f.t0 ?? 0.5) + t).update(); }
+          for (const c of crowd) c.m.play(c.clip, c.ph + t).update();
+          if (bal) bal.userData.set((P0.tilt ?? -0.18) * S.smoother(S.range(t, G.cue(P0.tiltAt, 0.8), G.cue(P0.tiltAt, 0.8) + 1.4)));
+          if (ph) ph.userData.ring(t - G.cue(P0.ringAt, 0.6), P0.ring !== false);
+          if (hop.length) { const at = G.cue(flow.at, 0.6), period = flow.period ?? 0.45; hop.forEach((c, i) => {
+            const t0 = at + i * period, u = S.range(t, t0, t0 + 0.9); const a = flow.from, b = flow.to;
+            c.visible = t >= t0 - 0.05; c.position.set(S.lerp(a[0], b[0], S.inOut(u)), 0.9 + Math.sin(Math.PI * u) * 0.9 - (u >= 1 ? 0.9 - Math.floor(i / 2) * 0.03 - 0.0 : 0), S.lerp(a[1], b[1], S.inOut(u)) + (u >= 1 ? (i % 2) * 0.12 : 0)); c.rotation.y = u * 3; }); }
+          G.cam(keys, t);
+          people.forEach(({ m, f }, i) => { if (!labels[i]) return; m.root.updateMatrixWorld(true); const hp = m.worldPos('head'); const [x, y, v] = G.toPx([hp.x, hp.y + 0.42, hp.z]); labels[i].at(x, y, v ? S.range(t, G.cue(f.labelAt, 0.6), G.cue(f.labelAt, 0.6) + 0.35) : 0); });
+          G.frame(t);
+        },
+      };
+    },
+
+    // ================================================================ cube: 195M oz as one solid silver cube (8.3 m), beside a three-storey house and people for scale
+    async cube(ctx, shot) {
+      const P0 = shot.params ?? {};
+      await PR.loadMannequins(['casual_a', 'office']);
+      const G = await stage(H, ctx, shot, { span: 14, caption: P0caption(shot, '195 MILLION OUNCES, AS ONE CUBE'), source: P0src(shot, 'OUR MATH: 195M OZ × 31.1 G ÷ 10.49 G/CM³ ≈ 578 M³ · SEC STAFF REPORT (1982)'), fog: [120, 320], bokeh: 1.4, dofRange: 10 });
+      const { scene } = G; const side = 8.33;
+      const cubeMat = S.silverMat({ rough: 0.4, env: 1.0, color: '#c4c9cf' }); const cubeG = new THREE.Mesh(S.roundBox(side, side, side, 0.12, 4), cubeMat); cubeG.castShadow = cubeG.receiveShadow = true; scene.add(cubeG);
+      const house = new THREE.Group(); const wall = S.clay('#f1ede6'), roof = S.clay('#14233d', { rough: 0.6 });
+      const hb = new THREE.Mesh(S.roundBox(5, 9.0, 4, 0.06), wall); house.add(hb);
+      const rs = new THREE.Shape([new THREE.Vector2(-2.8, 0), new THREE.Vector2(2.8, 0), new THREE.Vector2(0, 2.2)]); const rg = new THREE.Mesh(new THREE.ExtrudeGeometry(rs, { depth: 4.4, bevelEnabled: false }), roof); rg.position.set(0, 9.0, -2.2); house.add(rg);
+      for (let f = 0; f < 3; f++) for (const x of [-1.4, 1.4]) { const w = new THREE.Mesh(S.roundBox(1.0, 1.3, 0.06, 0.03), S.glossy('#9fc1d8', { rough: 0.1 })); w.position.set(x, 1.0 + f * 2.9, 2.02); house.add(w); }
+      house.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); house.position.set(-10.5, 0, -1.0); scene.add(house);
+      const ppl = [0, 1, 2].map(i => { const m = PR.mannequin(i === 1 ? 'office' : 'casual_a', PR.MQ.blue); m.root.position.set(5.6 + i * 0.9, 0, 4.8 - i * 0.4); m.root.rotation.y = -0.6; scene.add(m.root); return m; });
+      const tag = pillAt(H, G.layer, P0.tag ?? '≈ 8.3 M · 6,065 TONNES', { size: 28 });
+      G.finish();
+      const at = G.cue(P0.at, 0.6);
+      return {
+        scene, camera: G.camera, layer: G.layer,
+        update(t) {
+          const s = S.spring(t - at, { zeta: 0.55, freq: 1.3 }); cubeG.scale.set(1, Math.max(0.001, s), 1); cubeG.position.y = 0;
+          ppl.forEach((m, i) => m.play(i === 0 ? 'look_around' : 'idle', t + i).update());
+          G.cam(P0.camera ?? [{ pos: [14, 2.2, 24], look: [-1, 4.5, 0], mm: 32 }, { pos: [6, 1.6, 22], look: [-2, 5, 0], mm: 30 }], t);
+          const [x, y, v] = G.toPx([0, side + 0.8, 0]); tag.at(x, y, v ? S.range(t, at + 0.8, at + 1.2) : 0);
+          G.frame(t);
+        },
+      };
+    },
+
+    // ================================================================ heirlooms: grandma's silver on velvet (macro product shots)
+    // mode 'table' (fork, spoon, candlestick, coins, a film canister; price tags rise at `at`) | 'coins' (a heap of coins: the Byzantine collection) | 'fork' (the ending: one fork)
+    async heirlooms(ctx, shot) {
+      const P0 = shot.params ?? {}; const mode = P0.mode ?? 'table';
+      const G = await stage(H, ctx, shot, { span: 3, caption: P0caption(shot, null), source: P0src(shot, null), bokeh: 4.5, dofRange: 0.5, aoR: 0.12, aoI: 1.5, contact: { w: 8, d: 6, blur: 2, darkness: 1.2, opacity: 0.7 } });
+      const { scene } = G;
+      const cloth = new THREE.Mesh(S.roundBox(9, 0.1, 6, 0.04), S.velvet(P0.velvet ?? '#1d3557')); cloth.receiveShadow = true; scene.add(cloth);
+      const tags = [];
+      const fork = new THREE.Mesh(PR.forkGeometry(), S.polishedSilver({ rough: 0.06 })); fork.castShadow = true; fork.position.set(0, 0.1, 0.4); fork.rotation.y = 0.5; if (mode === 'fork') fork.scale.setScalar(1.5); scene.add(fork);
+      if (mode === 'table' || mode === 'coins') { fork.visible = mode === 'table'; }
+      if (mode === 'table') {
+        const spoon = new THREE.Mesh(PR.spoonGeometry(), S.polishedSilver({ rough: 0.06 })); spoon.castShadow = true; spoon.position.set(0.3, 0.1, 1.1); spoon.rotation.y = 0.35; scene.add(spoon);
+        const cs = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.28, 0], [0.3, 0.05], [0.08, 0.12], [0.06, 0.9], [0.1, 1.0], [0.14, 1.04], [0.06, 1.1], [0, 1.1]].map(([x, y]) => new THREE.Vector2(x, y)), 48), S.polishedSilver({ rough: 0.08 })); cs.scale.setScalar(1.3); cs.position.set(-1.6, 0.1, -0.6); cs.castShadow = true; scene.add(cs);
+        const film = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.45, 32), S.glossy('#2b2f38', { rough: 0.3 })); film.position.set(1.7, 0.33, -0.3); film.castShadow = true; scene.add(film);
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.06, 32), S.glossy('#e0241b')); cap.position.set(1.7, 0.58, -0.3); scene.add(cap);
+        const coins = S.instances(S.coinGeometry(), S.polishedSilver({ rough: 0.12 }), Array.from({ length: 7 }, (_, i) => ({ p: [1.0 + (i % 3) * 0.1, 0.1 + i * 0.022, 1.0], r: [0, i, 0], s: 1.3 }))); scene.add(coins);
+        for (const [x, z, txt] of P0.tags ?? [[0.4, 0.4, '+'], [-1.6, -0.6, '+'], [1.7, -0.3, '+']]) { const lp = PR.labelPlane(txt, { w: 0.6, h: 0.22, red: true }); lp.position.set(x, 1.0, z + 0.2); scene.add(lp); tags.push(lp); }
+      }
+      let heap = null;
+      if (mode === 'coins') { const r = S.rng(3), items = []; for (let i = 0; i < 420; i++) { const a = r() * 6.28, d = Math.pow(r(), 0.7) * 2.2; const h = Math.max(0, 0.9 - d * 0.38) * r(); items.push({ p: [Math.cos(a) * d, 0.1 + h, Math.sin(a) * d * 0.8], r: [(r() - 0.5) * 1.2, r() * 6, (r() - 0.5) * 1.2], s: 1.5 }); }
+        heap = S.instances(S.coinGeometry(), S.goldMat({ color: '#e8cf8a', rough: 0.22 }), items); scene.add(heap); }
+      G.finish();
+      const at = G.cue(P0.at, 1.0);
+      const keys = P0.camera ?? (mode === 'fork' ? [{ pos: [5.0, 3.2, 8.0], look: [0, 0.2, 0.4], mm: 50 }, { pos: [3.8, 2.4, 6.4], look: [0, 0.2, 0.4], mm: 55 }]
+        : mode === 'coins' ? [{ pos: [3.6, 2.2, 5.0], look: [0, 0.4, 0], mm: 50 }, { pos: [2.4, 1.6, 4.2], look: [0, 0.4, 0], mm: 55 }]
+        : [{ pos: [-0.5, 2.4, 5.6], look: [0, 0.4, 0.2], mm: 45 }, { pos: [0.8, 1.9, 4.8], look: [0.2, 0.4, 0.2], mm: 50 }]);
+      return {
+        scene, camera: G.camera, layer: G.layer,
+        update(t) {
+          tags.forEach((tg, i) => { const s = pop(t, at + i * 0.25); tg.scale.setScalar(Math.max(0.001, s)); tg.position.y = 0.9 + S.range(t, at + i * 0.25, at + 3) * 0.35; tg.rotation.y = Math.sin(t + i) * 0.1; });
+          G.cam(keys, t);
           G.frame(t);
         },
       };
@@ -360,7 +495,11 @@ export default function claySilver(H) {
     async bailout(ctx, shot) {
       const G = await stage(H, ctx, shot, { span: 16, caption: P0caption(shot, 'THE RESCUE LOAN'), source: P0src(shot, 'ILLUSTRATION') });
       const { P0, scene } = G;
-      const bank = PR.building({ w: 10, d: 6, h: 5, cols: 6, label: P0.bankLabel ?? 'THE BANKS' }); bank.position.set(0, 0, -4); scene.add(bank);
+      const banks = P0.mode === 'banks' ? (P0.banks ?? ['BARCLAYS', 'DEUTSCHE BANK', 'CANADIAN BANKS']) : null;
+      const bank = PR.building({ w: 10, d: 6, h: 5, cols: 6, label: P0.bankLabel ?? 'THE BANKS' }); bank.position.set(0, 0, -4); if (!banks) scene.add(bank);
+      const noTags = [];
+      if (banks) banks.forEach((n, i) => { const b = PR.building({ w: 6, d: 4.5, h: 3.6, cols: 4, label: n }); b.position.set((i - 1) * 8, 0, -3); scene.add(b);
+        const tg = PR.labelPlane(P0.no ?? 'NO', { w: 2.2, h: 1.0, red: true }); tg.position.set((i - 1) * 8, 5.9, -0.4); tg.visible = false; scene.add(tg); noTags.push(tg); });
       const cash = new THREE.Group(); scene.add(cash); const stacks = [];
       for (let i = 0; i < 24; i++) { const c = PR.cashStack(); c.position.set(((i % 6) - 2.5) * 1.75, Math.floor(i / 12) * 0.3, 3 + (Math.floor(i / 6) % 2) * 0.8); cash.add(c); stacks.push(c); }
       const amount = H.K.div(G.layer, `opacity:0;left:50%;top:14%;transform:translateX(-50%);font:700 ${110 * H.sc()}px 'Archivo Narrow';color:#14233d`, P0.amount ?? '$1.1 BILLION');
@@ -369,6 +508,8 @@ export default function claySilver(H) {
       return {
         scene, camera: G.camera, layer: G.layer,
         update(t) {
+          noTags.forEach((tg, i) => { const k = pop(t, G.cue((P0.noAt ?? [])[i], at + i * 0.9)); tg.visible = k > 0.001; tg.scale.setScalar(Math.max(0.001, k)); tg.rotation.z = (i - 1) * 0.06; });
+          if (banks) { cash.visible = false; amount.style.opacity = '0'; G.cam([{ pos: [-6, 7, 26], look: [0, 3, -2], mm: 35 }, { pos: [5, 6, 24], look: [0, 3, -2], mm: 35 }], t); G.frame(t); return; }
           stacks.forEach((c, i) => { const s = pop(t, at + i * 0.06, { zeta: 0.5, freq: 2.6 }); c.scale.setScalar(Math.max(0.001, s)); c.position.y = Math.floor(i / 12) * 0.3 + (1 - Math.min(1, s)) * 1.2; });
           amount.style.opacity = String(S.range(t, at + 0.6, at + 1.0));
           G.cam([{ pos: [-10, 6, 20], look: [0, 3, -1], mm: 35 }, { pos: [6, 5, 19], look: [0, 3, -1], mm: 35 }], t);

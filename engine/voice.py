@@ -365,7 +365,31 @@ def main(jobs_path):
     V = jobs["voice"]; cache = jobs["cache"]; root = jobs.get("root", ".")
     os.makedirs(cache, exist_ok=True)
     out = {}
-    if V.get("engine") == "elevenlabs":  # parallel requests, with neighbouring lines as context
+    if V.get("engine") == "elevenlabs" and V.get("perLine"):  # one request per script line (newline-separated in a shot),
+        # cached by the line's text alone, so regrouping lines into shots never re-buys audio; shots are assembled from lines
+        sh = jobs["shots"]; lines = []
+        for s in sh: lines += [l.strip() for l in s["text"].split("\n") if l.strip()]
+        ldir = os.path.join(cache, "lines"); os.makedirs(ldir, exist_ok=True)
+        lkey = lambda l: hashlib.sha1(json.dumps([{k: v for k, v in V.items() if k not in ("say", "perLine", "lineGap")}, l, "el1"]).encode()).hexdigest()[:16]
+        todo, seen = [], set()
+        for i, l in enumerate(lines):
+            wav = os.path.join(ldir, f"{lkey(l)}.wav")
+            if not os.path.exists(wav) and wav not in seen: seen.add(wav); todo.append((l, wav, lines[i - 1] if i else None, lines[i + 1] if i + 1 < len(lines) else None))
+        if todo:
+            print(f"[vo] elevenlabs: {len(todo)} lines ({sum(len(el_text(t[0])) for t in todo)} chars)", file=sys.stderr)
+            if V.get("budget") and sum(len(el_text(t[0])) for t in todo) > int(V["budget"]): raise SystemExit(f"[vo] over budget: {sum(len(el_text(t[0])) for t in todo)} chars > {V['budget']}")
+            elevenlabs_batch(todo)
+        for s in sh:
+            key = hashlib.sha1(json.dumps([{k: v for k, v in V.items() if k != "say"}, s["text"], "el1"]).encode()).hexdigest()[:12]
+            wav = os.path.join(cache, f"{s['id']}-{key}.wav")
+            if os.path.exists(wav): continue
+            parts, gap = [], float(V.get("lineGap", 0.32))
+            for l in [l.strip() for l in s["text"].split("\n") if l.strip()]:
+                with wave.open(os.path.join(ldir, f"{lkey(l)}.wav")) as w: sr = w.getframerate(); a = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").astype(np.float32) / 32767
+                if parts: parts.append(np.zeros(int(sr * gap), np.float32))
+                parts.append(a)
+            write_wav(wav, np.concatenate(parts), sr)
+    elif V.get("engine") == "elevenlabs":  # parallel requests, with neighbouring lines as context
         todo, sh = [], jobs["shots"]
         for i, s in enumerate(sh):
             key = hashlib.sha1(json.dumps([{k: v for k, v in V.items() if k != "say"}, s["text"], "el1"]).encode()).hexdigest()[:12]

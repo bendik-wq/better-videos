@@ -1,187 +1,215 @@
-// Mortgage bright maps: paper-cut 2.5D maps on pale teal water, real coastlines (Natural Earth 1:50m, public domain).
-//   holders  who holds US Treasuries abroad (TIC, end-Aug 2026): paper columns rise from Tokyo, London and Beijing;
-//            Japan $1,068B (a dashed ghost of its Feb level, −$171B, "holdings fell; partly price"), UK $1,010B,
-//            China $591B; card: all foreign $9.33T ≈ 29% of debt held by the public; caveat: custodian location.
-//            params: at (columns), japanAt (the −$171B ghost), totalAt (card), others (true: Belgium, Luxembourg), title
-//   map      params.mode (or view): 'uk' (London pin, the 2022 gilt crisis card) | 'us' (Orange County pin, 1994 card)
-//            params: pins [{ name, lon, lat, word }], at (the card), title, source
-// Geography: projects/mortgage/assets/geo/mortgage.json, built by assets/geo/build.py.
+// Silver bright maps (episode 7), restyled toward the "Reconstructed" look: white / pale-grey relief land on a pale
+// blue-grey sea, the highlighted region extruded in red, red teardrop map pins with a white dot, red dashed route arcs
+// that draw on. Real coastlines and borders: Natural Earth 1:50m (public domain).
+//   map   params.mode: 'world' (default pins Dallas, Libya (Sarir), Bermuda, Saudi Arabia, Zurich, Lima; routes
+//         Dallas -> Bermuda, Saudi Arabia -> Bermuda) | 'us' (Dallas, New York, Chicago, Washington, Boca Raton;
+//         Texas raised; routes Dallas -> New York, Dallas -> Chicago)
+//         params: pins [{ name, lon, lat, sub, word, side: 'l'|'r', dy }], routes [[fromName, toName, word?]],
+//         hl (ISO3 codes, or 'US-TX' style state codes in 'us'), title, kicker, source, at (first pin), cam
+// Geography: projects/silver/assets/geo/silver.json, built by assets/geo/build.py from the Natural Earth GeoJSON.
 import * as G from './graphics-kit.js';
 
 const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
 let GEO = null;
-const geo = () => GEO ??= fetch('/projects/mortgage/assets/geo/mortgage.json').then(r => r.json());
+const geo = () => GEO ??= fetch('/projects/silver/assets/geo/silver.json').then(r => r.json());
+
+// the "Reconstructed" map palette (pale relief land, blue-grey sea, red for the subject)
+const MP = {
+  seaTop: '#e9eef2', seaBot: '#d2dbe3', grat: 'rgba(70,95,120,0.07)',
+  land: '#fdfdfc', land2: '#eef0f2', side: '#c3cbd3', edge: 'rgba(70,88,108,0.55)', border: 'rgba(90,106,124,0.32)',
+  far: '#f1f3f4', far2: '#e4e8eb', lake: '#dbe3ea',
+  red: P.red, redTop: '#ec3b30', redSide: '#9c150d', redEdge: 'rgba(255,255,255,0.7)',
+};
+
+const MAPS = {
+  world: {
+    data: 'world', box: [-124, -30, 66, 62], rect: [40, 230, 1840, 800], hl: [],
+    pins: [
+      { name: 'Dallas', lon: -96.8, lat: 32.78, sub: 'THE HUNTS', side: 'l' },
+      { name: 'Libya', lon: 22.4, lat: 27.6, sub: 'SARIR OIL FIELD', side: 'l', dy: -62 },
+      { name: 'Bermuda', lon: -64.78, lat: 32.3, sub: 'IMIC · JUL 1979', side: 'r' },
+      { name: 'Saudi Arabia', lon: 46.68, lat: 24.71, sub: 'SAUDI PARTNERS', side: 'r', dy: 20 },
+      { name: 'Zurich', lon: 8.54, lat: 47.37, sub: 'LENDER: SWISS BANK CORP.', side: 'r', dy: -18 },
+      { name: 'Lima', lon: -77.04, lat: -12.05, sub: 'MINPECO · PERU', side: 'r' },
+    ],
+    routes: [['Dallas', 'Bermuda'], ['Saudi Arabia', 'Bermuda']],
+    kicker: 'THE HUNT SILVER PLAY · 1961 – 1988', title: 'From Dallas to the world',
+    src: 'SOURCES: TIME (7 APR 1980); SEC STAFF REPORT (1982); LA TIMES (1988) · MAP: NATURAL EARTH',
+  },
+  us: {
+    data: 'us', box: [-124.6, 24.3, -66.8, 49.4], rect: [40, 220, 1840, 820], hl: ['US-TX'],
+    pins: [
+      { name: 'Dallas', lon: -96.8, lat: 32.78, sub: 'THE HUNTS', side: 'l' },
+      { name: 'Chicago', lon: -87.63, lat: 41.88, sub: 'CHICAGO BOARD OF TRADE', side: 'l', dy: -10 },
+      { name: 'New York', lon: -74.0, lat: 40.71, sub: 'COMEX · BACHE', side: 'r', dy: -34 },
+      { name: 'Washington', lon: -77.04, lat: 38.9, sub: 'FED · CFTC · CONGRESS', side: 'r', dy: 34 },
+      { name: 'Boca Raton', lon: -80.1, lat: 26.37, sub: 'BANKERS · 30 MAR 1980', side: 'r' },
+    ],
+    routes: [['Dallas', 'New York'], ['Dallas', 'Chicago']],
+    kicker: 'UNITED STATES · 1979 – 1980', title: 'Where the crisis played out',
+    src: 'SOURCES: SEC STAFF REPORT (1982); HOUSE HEARINGS (1980) · MAP: NATURAL EARTH',
+  },
+};
 
 export default function makeMaps(H) {
   const set = async (ctx, shot, paint, cam) => { await G.loadFonts(); return G.canvasSet(H, ctx, shot, paint, cam); };
 
-  // ---------------------------------------------------------------- projection and paper
-  function proj(box, rect = [0, 0, 1920, 1080], pad = 1) {
+  // ---------------------------------------------------------------- projection and paths
+  function proj(box, rect) {
     const [w, s, e, n] = box, kx = Math.cos(((s + n) / 2) * Math.PI / 180);
-    const sc = Math.min(rect[2] / ((e - w) * kx), rect[3] / (n - s)) * pad;
+    const sc = Math.min(rect[2] / ((e - w) * kx), rect[3] / (n - s));
     const cx = (w + e) / 2, cy = (s + n) / 2;
     return { X: (lon) => rect[0] + rect[2] / 2 + (lon - cx) * kx * sc, Y: (lat) => rect[1] + rect[3] / 2 - (lat - cy) * sc, sc, kx };
   }
-  function landPath(rings, pr, box = null) {
-    const path = new Path2D();
+  function pathOf(rings, pr, box) {
+    const path = new Path2D(), mx = (box[2] - box[0]) * 0.35, my = (box[3] - box[1]) * 0.35;
     for (const r of rings) {
-      if (box) { let lo0 = 1e9, lo1 = -1e9, la0 = 1e9, la1 = -1e9; for (let i = 0; i < r.length; i += 2) { if (r[i] < lo0) lo0 = r[i]; if (r[i] > lo1) lo1 = r[i]; if (r[i + 1] < la0) la0 = r[i + 1]; if (r[i + 1] > la1) la1 = r[i + 1]; }
-        const mx = (box[2] - box[0]) * 0.3, my = (box[3] - box[1]) * 0.3; if (lo1 < box[0] - mx || lo0 > box[2] + mx || la1 < box[1] - my || la0 > box[3] + my) continue; }
+      let lo0 = 1e9, lo1 = -1e9, la0 = 1e9, la1 = -1e9; for (let i = 0; i < r.length; i += 2) { if (r[i] < lo0) lo0 = r[i]; if (r[i] > lo1) lo1 = r[i]; if (r[i + 1] < la0) la0 = r[i + 1]; if (r[i + 1] > la1) la1 = r[i + 1]; }
+      if (lo1 < box[0] - mx || lo0 > box[2] + mx || la1 < box[1] - my || la0 > box[3] + my) continue;
       path.moveTo(pr.X(r[0]), pr.Y(r[1])); for (let i = 2; i < r.length; i += 2) path.lineTo(pr.X(r[i]), pr.Y(r[i + 1])); path.closePath();
     }
     return path;
   }
-  function paperLand(g, path, { ext = 5, lift = 1, top = P.land, side = P.landSide, shelf = true, shelfW = 14, edge = P.landEdge, grainA = 0.35 } = {}) {
-    if (shelf) { g.save(); g.lineJoin = 'round'; g.strokeStyle = P.shelf; g.lineWidth = shelfW; g.stroke(path); g.restore(); }
-    g.save(); G.shadow(g, lift); g.translate(0, ext); g.fillStyle = side; g.fill(path); G.noShadow(g); g.restore();
-    g.save(); g.fillStyle = top; g.fill(path); g.clip(path); G.grain(g, 2400, 1500, grainA, -240, -210);
-    const gr = g.createLinearGradient(0, 0, 1920, 1080); gr.addColorStop(0, 'rgba(255,255,255,0.22)'); gr.addColorStop(1, 'rgba(40,60,90,0.05)'); g.fillStyle = gr; g.fillRect(-240, -210, 2400, 1500);
-    g.restore();
-    g.save(); g.strokeStyle = edge; g.lineWidth = 1.3; g.lineJoin = 'round'; g.stroke(path); g.restore();
+  // relief land: a thin extruded side, a pale top, an inner shade along every coast, faint seeded "terrain" blotches
+  function reliefLand(c, path, { top = MP.land, top2 = MP.land2, side = MP.side, ext = 5, seed = 7, relief = 1 } = {}) {
+    c.save(); G.shadow(c, 0.7, 0.8); c.translate(0, ext); c.fillStyle = side; c.fill(path); G.noShadow(c); c.restore();
+    for (let i = ext - 1; i > 0; i--) { c.save(); c.translate(0, i); c.fillStyle = side; c.fill(path); c.restore(); }
+    c.save(); const gr = c.createLinearGradient(0, 0, 0, 1080); gr.addColorStop(0, top); gr.addColorStop(1, top2); c.fillStyle = gr; c.fill(path); c.clip(path);
+    // terrain: soft seeded blotches (pure function of the seed)
+    const r = rng(seed); for (let i = 0; i < 70 * relief; i++) { const x = r() * 1920, y = r() * 1080, rad = 30 + r() * 140, a = 0.025 + r() * 0.045; const bg = c.createRadialGradient(x, y, 0, x, y, rad); bg.addColorStop(0, `rgba(120,135,150,${a})`); bg.addColorStop(1, 'rgba(120,135,150,0)'); c.fillStyle = bg; c.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+    // inner shade along the coast (inset shadow): a big rect with the land as a hole, its shadow falls inside
+    c.shadowColor = 'rgba(55,75,98,0.28)'; c.shadowBlur = 16 * G_S; c.shadowOffsetX = 3 * G_S; c.shadowOffsetY = 5 * G_S;
+    const hole = new Path2D(); hole.rect(-400, -400, 2720, 1880); hole.addPath(path); c.fillStyle = '#000'; c.fill(hole, 'evenodd');
+    c.restore();
   }
-  function sea(g, t) {
-    const gr = g.createLinearGradient(0, -200, 0, 1300); gr.addColorStop(0, '#d9ecea'); gr.addColorStop(1, P.seaDeep); g.fillStyle = gr; g.fillRect(-240, -210, 2400, 1500);
-    // faint graticule: the ledger, at sea
-    g.save(); g.strokeStyle = 'rgba(29,106,102,0.10)'; g.lineWidth = 1.5; for (let x = -240; x < 2200; x += 80) { g.beginPath(); g.moveTo(x, -210); g.lineTo(x, 1300); g.stroke(); } for (let y = -210; y < 1300; y += 80) { g.beginPath(); g.moveTo(-240, y); g.lineTo(2200, y); g.stroke(); } g.restore();
-    G.grain(g, 2400, 1500, 0.22, -240, -210);
+  let G_S = 1;
+  function sea(c, pr) {
+    const gr = c.createLinearGradient(0, -200, 0, 1300); gr.addColorStop(0, MP.seaTop); gr.addColorStop(1, MP.seaBot); c.fillStyle = gr; c.fillRect(-240, -240, 2400, 1560);
+    const vg = c.createRadialGradient(960, 540, 300, 960, 540, 1300); vg.addColorStop(0, 'rgba(255,255,255,0.35)'); vg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = vg; c.fillRect(-240, -240, 2400, 1560);
+    // graticule every 10 degrees
+    c.save(); c.strokeStyle = MP.grat; c.lineWidth = 1.2;
+    for (let lon = -180; lon <= 180; lon += 10) { const x = pr.X(lon); if (x < -240 || x > 2160) continue; c.beginPath(); c.moveTo(x, -240); c.lineTo(x, 1320); c.stroke(); }
+    for (let lat = -80; lat <= 80; lat += 10) { const y = pr.Y(lat); if (y < -240 || y > 1320) continue; c.beginPath(); c.moveTo(-240, y); c.lineTo(2160, y); c.stroke(); }
+    c.restore();
+    G.grain(c, 2400, 1560, 0.18, -240, -240);
   }
-  // the static paper drawn once into a cache (with margin for the camera drift)
+  // the static map drawn once into a cache (with margin for the camera drift)
   function cachedBase(k, draw) {
-    const M0 = 120, CS = k.S * 1.1, c = G.mk((1920 + 2 * M0) * CS, (1080 + 2 * M0) * CS), x = c.getContext('2d');
-    x.setTransform(CS, 0, 0, CS, M0 * CS, M0 * CS); G.setS(CS); draw(x); G.setS(k.S);
-    return (g) => g.drawImage(c, -M0, -M0, 1920 + 2 * M0, 1080 + 2 * M0);
+    const M0 = 120, CS = k.S * 1.12, cv = G.mk((1920 + 2 * M0) * CS, (1080 + 2 * M0) * CS), x = cv.getContext('2d');
+    x.setTransform(CS, 0, 0, CS, M0 * CS, M0 * CS); G.setS(CS); G_S = CS; draw(x); G.setS(k.S); G_S = k.S;
+    return (g) => g.drawImage(cv, -M0, -M0, 1920 + 2 * M0, 1080 + 2 * M0);
   }
-  // a 2.5D paper column standing on (x, y): front, side, top
-  function column(g, x, y, h, { w = 64, d = 22, front = P.ink, side = P.navySoft, top = '#4a5f86', alpha = 1 } = {}) {
-    if (h <= 0) return;
-    g.save(); g.globalAlpha *= alpha; G.shadow(g, 1.1);
-    g.fillStyle = front; g.fillRect(x - w / 2, y - h, w, h); G.noShadow(g);
-    g.fillStyle = side; g.beginPath(); g.moveTo(x + w / 2, y); g.lineTo(x + w / 2 + d, y - d * 0.6); g.lineTo(x + w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2, y - h); g.closePath(); g.fill();
-    g.fillStyle = top; g.beginPath(); g.moveTo(x - w / 2, y - h); g.lineTo(x - w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2, y - h); g.closePath(); g.fill();
+
+  // ---------------------------------------------------------------- marks
+  // red teardrop pin (tip at x, y) with a white dot; drops in on a spring, a ground shadow grows under it
+  function teardrop(g, x, y, t, k, { R = 22, color = MP.red } = {}) {
+    if (k <= 0) return;
+    const drop = E.spring(clamp(k)), fall = (1 - drop) * -70, sc = 0.6 + 0.4 * E.outBack(clamp(k * 1.4));
+    // ground shadow + pulse ring
+    g.save(); g.globalAlpha = clamp(k * 2) * 0.35; g.fillStyle = 'rgba(30,40,55,1)'; g.beginPath(); g.ellipse(x, y, R * 0.55 * drop, R * 0.2 * drop, 0, 0, TAU); g.fill(); g.restore();
+    if (k >= 1) { const ph = (t * 0.6) % 1; g.save(); g.strokeStyle = color; g.globalAlpha = (1 - ph) * 0.5; g.lineWidth = 2.5; g.beginPath(); g.ellipse(x, y, R * (0.5 + ph * 1.6), R * (0.18 + ph * 0.6), 0, 0, TAU); g.stroke(); g.restore(); }
+    g.save(); g.translate(x, y + fall); g.scale(sc, sc);
+    const cy = -R * 1.75;
+    g.beginPath(); g.moveTo(0, 0);
+    g.bezierCurveTo(-R * 0.35, -R * 0.55, -R, cy + R * 0.55, -R, cy);
+    g.arc(0, cy, R, Math.PI, 0);
+    g.bezierCurveTo(R, cy + R * 0.55, R * 0.35, -R * 0.55, 0, 0); g.closePath();
+    G.shadow(g, 0.8); g.fillStyle = color; g.fill(); G.noShadow(g);
+    const hl = g.createLinearGradient(-R, cy - R, R, cy + R); hl.addColorStop(0, 'rgba(255,255,255,0.28)'); hl.addColorStop(0.6, 'rgba(255,255,255,0)'); g.fillStyle = hl; g.fill();
+    g.fillStyle = P.white; g.beginPath(); g.arc(0, cy, R * 0.42, 0, TAU); g.fill();
     g.restore();
   }
-
-  // ================================================================ holders
-  const HOLD = [
-    { key: 'JPN', name: 'JAPAN', lon: 139.7, lat: 35.7, v: 1068.3, ghost: 1239.3, word: 'Japan' },
-    { key: 'GBR', name: 'UK', lon: -0.13, lat: 51.5, v: 1009.5, word: 'Britain' },
-    { key: 'CHN', name: 'CHINA', lon: 116.4, lat: 39.9, v: 590.7, word: 'China' },
-  ];
-  const OTHERS = [{ key: 'BEL', name: 'BELGIUM', lon: 4.35, lat: 50.85, v: 490.5 }, { key: 'LUX', name: 'LUXEMBOURG', lon: 6.13, lat: 49.6, v: 448.2 }];
-  async function holders(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 10, gj = await geo();
-    const box = [-24, 4, 156, 68], rect = [0, 250, 1920, 830], pr = proj(box, rect, 1.04);
-    const rings = Object.values(gj.world).flat(), hlKeys = HOLD.map(h => h.key);
-    const list = [...HOLD, ...(Pm.others ? OTHERS : [])];
-    const T = G.cues(shot, list, { from: 0.6, span: Math.max(1.6, D * 0.3) });
-    const tJ = G.cue(shot, Pm.japanAt, T[0] + 1.6), tC = G.cue(shot, Pm.totalAt, Math.min(D - 3, Math.max(...T) + 1.6)), tV = tC + 0.8;
-    const HS = 250 / 1100; // px per $B
-    let base = null;
-    return set(ctx, shot, (g, t, p, k) => {
-      k.view(0.6); sea(g, t);
-      k.view(1);
-      if (!base) base = cachedBase(k, (c) => {
-        const land = landPath(rings, pr, box); paperLand(c, land, { ext: 4, lift: 0.6, shelfW: 9 });
-        c.save(); c.strokeStyle = 'rgba(20,35,61,0.12)'; c.lineWidth = 1; c.stroke(land); c.restore();
-        hlKeys.forEach((kk) => { const hp = landPath(gj.world[kk] ?? [], pr, box); c.save(); c.translate(0, -3); paperLand(c, hp, { ext: 6, lift: 0.8, top: P.sagePale, side: P.sage, shelf: false, edge: P.sageDeep }); c.restore(); });
-      });
-      base(g);
-      // columns rise from the financial centres
-      k.view(1.12);
-      list.forEach((h, i) => {
-        const kk = E.outCubic(range(t, T[i], T[i] + 1.2)), x = pr.X(h.lon), y = pr.Y(h.lat), small = !HOLD.includes(h);
-        G.pin(g, x, y, t, range(t, T[i] - 0.3, T[i] + 0.2), { color: P.ink, r: 7, pulse: false });
-        if (h.ghost) { const kg = range(t, tJ, tJ + 0.7); if (kg > 0) { const hg = h.ghost * HS; g.save(); g.globalAlpha = clamp(kg * 2); g.setLineDash([8, 7]); g.strokeStyle = P.red; g.lineWidth = 3; g.strokeRect(x - 32, y - hg, 64, hg - h.v * HS * kk); g.restore(); } }
-        column(g, x, y, h.v * HS * kk, { w: small ? 40 : 64, d: small ? 14 : 22, front: small ? P.steel : P.ink, side: small ? '#7386a0' : P.navySoft, top: small ? '#b4c2d4' : '#4a5f86' });
-        const top = y - h.v * HS * kk - 12, kp = range(t, T[i] + 0.6, T[i] + 1.1);
-        if (h.key === 'JPN') G.pill(g, `${h.name} $${G.fmt(h.v)}B`, x + 40, y - h.ghost * HS - 104, { size: 30, k: kp, align: 'right', fam: F.mono, weight: 500, dot: P.ink });
-        else if (h.key === 'CHN') G.pill(g, `${h.name} $${G.fmt(h.v)}B`, x - 44, top + 52, { size: 30, k: kp, align: 'right', fam: F.mono, weight: 500, dot: P.ink });
-        else if (!small) G.pill(g, `${h.name} $${G.fmt(h.v)}B`, x + 60, top + 24, { size: 30, k: kp, fam: F.mono, weight: 500, dot: P.ink });
-        else G.pill(g, `${h.name} $${G.fmt(h.v)}B`, x + 40, top + 70 + i * 0, { size: 20, k: kp, fam: F.mono, weight: 500 });
-      });
-      // Japan's fall
-      const kj = range(t, tJ + 0.3, tJ + 0.9);
-      if (kj > 0) {
-        const h = HOLD[0], x = pr.X(h.lon), y = pr.Y(h.lat), yg = y - h.ghost * HS;
-        G.pill(g, '−$171B SINCE FEB', x + 40, yg - 48, { size: 26, k: kj, fill: P.red, color: P.white, fam: F.mono, weight: 500, align: 'right' });
-        G.text(g, 'HOLDINGS FELL; PARTLY PRICE', x - 46, yg + 24, { size: 20, weight: 500, fam: F.mono, color: P.ink, track: 0.06, align: 'right', alpha: range(t, tJ + 0.6, tJ + 1.2) });
-      }
-      // the total card, and the caveat
-      k.view(1);
-      const kc = range(t, tC, tC + 0.6);
-      if (kc > 0) {
-        g.save(); g.globalAlpha = clamp(kc * 2); g.translate(0, (1 - E.outCubic(kc)) * 20);
-        G.card(g, 80, 700, 700, 260, { r: 22, lift: 1.3 });
-        G.fig(g, 'ALL FOREIGN HOLDERS', 116, 752, { size: 20, color: P.inkSoft, track: 0.1 });
-        G.fig(g, '$9.33T', 112, 852, { size: 92, color: P.ink });
-        G.text(g, '≈ 29% of US debt', 470, 810, { size: 36, weight: 900, color: P.ink });
-        G.text(g, 'held by the public', 470, 852, { size: 30, weight: 700, color: P.inkSoft });
-        G.fig(g, 'OF $32.41T · 31 AUG 2026 · OUR MATH', 116, 920, { size: 18, color: P.tealDeep, track: 0.06 });
-        g.restore();
-      }
-      const kv = range(t, tV, tV + 0.6);
-      G.pill(g, 'COUNTRY = WHERE THE CUSTODIAN SITS, NOT NECESSARILY THE OWNER', 80, 1000, { size: 20, k: kv, fam: F.mono, weight: 500, fill: P.white, dot: P.inkFaint });
-      k.flat();
-      G.kicker(g, Pm.kicker ?? 'FOREIGN HOLDINGS OF US TREASURIES · BY COUNTRY', 80, 92, range(t, 0.05, 0.6));
-      G.riseText(g, Pm.title ?? 'The biggest overseas customers', 80, 160, range(t, 0.12, 0.9), { size: 58, weight: 800 });
-      G.asOf(g, 'AS OF END-AUG 2026', 1840, 80, range(t, 0.4, 0.9), { align: 'right' });
-      G.source(g, Pm.source ?? 'SOURCE: US TREASURY TIC, TABLE 5 (MARKET VALUE) · MAP: NATURAL EARTH', range(t, 0.6, 1.4), { y: 1046 });
-    }, { push: 0.03, dx: 24, dy: 8, fx: 1100, fy: 560 });
+  // a label card: name (Inter 800) over a mono sub line, beside the pin head
+  function label(g, x, y, k, name, sub, side = 'r', dy = 0) {
+    if (k <= 0) return;
+    const wn = G.measure(g, name, 30, 800), ws = sub ? G.measure(g, sub, 16, 500, F.mono, 0.08) : 0, W = Math.max(wn, ws) + 36, Hh = sub ? 74 : 50;
+    const ax = side === 'l' ? x - 34 - W : x + 34, ay = y + dy - Hh / 2;
+    g.save(); g.globalAlpha *= clamp(k * 2); const s = E.outBack(clamp(k)); g.translate(side === 'l' ? ax + W : ax, y + dy); g.scale(s, s); g.translate(-(side === 'l' ? ax + W : ax), -(y + dy));
+    G.card(g, ax, ay, W, Hh, { r: 10, lift: 0.7, grainA: 0 });
+    G.text(g, name, ax + 18, ay + 35, { size: 30, weight: 800, color: P.ink });
+    if (sub) G.fig(g, sub, ax + 19, ay + 60, { size: 16, color: P.inkSoft, track: 0.08 });
+    g.restore();
+  }
+  // a red dashed arc from a to b (bowing up), drawn on to k, the dashes marching slowly
+  function route(g, a, b, t, k) {
+    if (k <= 0) return;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const nx = -(b[1] - a[1]) / d, ny = (b[0] - a[0]) / d, s = ny > 0 ? -1 : 1, c = [mx + nx * d * 0.28 * s, my + ny * d * 0.28 * s];
+    const N = 80, pts = []; for (let i = 0; i <= N; i++) { const u = i / N; pts.push([(1 - u) ** 2 * a[0] + 2 * (1 - u) * u * c[0] + u * u * b[0], (1 - u) ** 2 * a[1] + 2 * (1 - u) * u * c[1] + u * u * b[1]]); }
+    const n = Math.max(1, Math.round(N * E.inOutCubic(clamp(k))));
+    g.save(); g.strokeStyle = 'rgba(255,255,255,0.8)'; g.lineWidth = 8; g.lineCap = 'round'; g.beginPath(); pts.slice(0, n + 1).forEach((p, i) => (i ? g.lineTo(...p) : g.moveTo(...p))); g.stroke();
+    g.strokeStyle = MP.red; g.lineWidth = 4.5; g.setLineDash([14, 10]); g.lineDashOffset = -t * 18; g.stroke(); g.restore();
+    const h = pts[n], pv = pts[Math.max(0, n - 2)], ang = Math.atan2(h[1] - pv[1], h[0] - pv[0]);
+    g.save(); g.translate(...h); g.rotate(ang); g.fillStyle = MP.red; g.beginPath(); g.moveTo(10, 0); g.lineTo(-8, -8); g.lineTo(-8, 8); g.closePath(); g.fill(); g.restore();
   }
 
-  // ================================================================ map: 'uk' | 'us'
-  const MAPS = {
-    uk: { data: 'europe', box: [-11.5, 49.4, 4.5, 59.6], rect: [900, 110, 960, 900], hl: ['GBR'], pin: { name: 'London', lon: -0.13, lat: 51.5 },
-      kicker: 'UNITED KINGDOM · SEPTEMBER – OCTOBER 2022', title: 'The gilt crisis', src: 'SOURCES: BANK OF ENGLAND (28 SEP 2022 NOTICE; QUARTERLY BULLETIN 2023); GOV.UK · MAP: NATURAL EARTH',
-      card: [['23 SEP 2022', 'THE “MINI-BUDGET”: BIG TAX CUTS'], ['+1.30 PTS', '30-YEAR GILT YIELD, IN 3 DAYS', true], ['£19.3BN', 'GILTS BOUGHT BY THE BANK OF ENGLAND'], ['20 OCT', 'THE PRIME MINISTER SAYS SHE WILL RESIGN']],
-      quote: '“on whatever scale is necessary”' },
-    us: { data: 'usw', box: [-125, 31.6, -113.2, 42.6], rect: [900, 110, 960, 900], hl: ['US-CA'], pin: { name: 'Orange County', lon: -117.83, lat: 33.72 },
-      kicker: 'CALIFORNIA · 1994', title: 'Orange County bets on low rates', src: 'SOURCES: THE BOND BUYER (1999); SEN. LOCKYER MEMO (13 DEC 1994) · MAP: NATURAL EARTH',
-      card: [['1994', 'THE COUNTY FUND BETS RATES STAY LOW'], ['$1.64BN', 'LOST', true], ['6 DEC 1994', 'FILES FOR BANKRUPTCY'], ['THE LARGEST', 'US MUNICIPAL BANKRUPTCY, AT THE TIME']] },
-  };
+  // ================================================================ map
   async function map(ctx, shot) {
-    const Pm = shot.params ?? {}, mode = String(Pm.mode ?? Pm.view ?? 'uk'), V = MAPS[mode] ?? MAPS.uk, D = shot.duration ?? 8, gj = await geo();
-    const set0 = gj[V.data], pr = proj(V.box, V.rect, 1.0);
-    const rings = Object.values(set0).flat(), hl = V.hl.flatMap(k => set0[k] ?? []);
-    const pins = Pm.pins ?? [V.pin], PT = G.cues(shot, pins, { from: 0.5, span: 1 });
-    const tC = G.cue(shot, Pm.at, 1.0), rows = V.card;
-    let base = null;
+    const Pm = shot.params ?? {}, mode = String(Pm.mode ?? Pm.view ?? 'world'), V = MAPS[mode] ?? MAPS.world, D = shot.duration ?? 8, gj = await geo();
+    const layer = gj[V.data], pr = proj(V.box, V.rect);
+    const keys = Object.keys(layer), usKeys = keys.filter(k => k.startsWith('US-'));
+    const hlKeys = [].concat(Pm.hl ?? V.hl);
+    const pins = (Pm.pins ?? V.pins).map(p => ({ ...(V.pins.find(q => q.name === p.name) ?? {}), ...p }));
+    const t1 = G.cue(shot, Pm.at, 0.6);
+    const PT = pins.map((pn, i) => G.cue(shot, pn.word, t1 + i * Math.min(0.5, Math.max(0.25, (D * 0.45) / Math.max(1, pins.length)))));
+    const routes = (Pm.routes ?? V.routes).map(([a, b, w]) => {
+      const ia = pins.findIndex(p => p.name === a), ib = pins.findIndex(p => p.name === b);
+      return ia < 0 || ib < 0 ? null : { ia, ib, t: G.cue(shot, w, Math.max(PT[ia], PT[ib]) + 0.5) };
+    }).filter(Boolean);
+    const tH = hlKeys.length ? G.cue(shot, Pm.hlAt, 0.3) : 0;
+    let base = null, hlPath = null;
     return set(ctx, shot, (g, t, p, k) => {
-      k.view(0.6); sea(g, t);
       k.view(1);
-      if (!base) base = cachedBase(k, (c) => {
-        const land = landPath(rings, pr, V.box); paperLand(c, land, { ext: 6, lift: 0.8 });
-        c.save(); c.strokeStyle = 'rgba(20,35,61,0.16)'; c.lineWidth = 1.2; c.stroke(land); c.restore();
-      });
+      if (!base) {
+        base = cachedBase(k, (c) => {
+          sea(c, pr);
+          if (mode === 'us') {
+            const far = pathOf(keys.filter(k => !k.startsWith('US-')).flatMap(k => layer[k]), pr, V.box);
+            reliefLand(c, far, { top: MP.far, top2: MP.far2, ext: 3, seed: 3, relief: 0.6 });
+            const us = pathOf(usKeys.flatMap(k => layer[k]), pr, V.box);
+            reliefLand(c, us, { ext: 6, seed: 11 });
+            c.save(); c.strokeStyle = MP.border; c.lineWidth = 1.1; c.lineJoin = 'round'; c.stroke(us); c.restore();
+            c.save(); c.fillStyle = MP.lake; c.fill(pathOf(Object.values(gj.lakes).flat(), pr, V.box)); c.strokeStyle = MP.edge; c.lineWidth = 0.8; c.stroke(pathOf(Object.values(gj.lakes).flat(), pr, V.box)); c.restore();
+            c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.2; c.stroke(far); c.restore();
+          } else {
+            const land = pathOf(keys.flatMap(k => layer[k]), pr, V.box);
+            reliefLand(c, land, { ext: 5, seed: 19 });
+            c.save(); c.strokeStyle = MP.border; c.lineWidth = 1; c.lineJoin = 'round'; c.stroke(land); c.restore();
+          }
+        });
+        hlPath = hlKeys.length ? pathOf(hlKeys.flatMap(k => layer[k] ?? []), pr, V.box) : null;
+      }
       base(g);
-      const kh = E.outBack(range(t, 0.3, 1.1)), hp = landPath(hl, pr, V.box);
-      g.save(); g.translate(0, -10 * kh); paperLand(g, hp, { ext: 6 + 10 * kh, lift: 0.4 + 1.1 * kh, top: P.sagePale, side: P.sage, shelf: false, edge: P.sageDeep, grainA: 0.3 }); g.restore();
-      k.view(1.12);
+      // the highlighted region rises in red
+      if (hlPath) {
+        const kh = E.spring(range(t, tH, tH + 1.3)), lift = 16 * clamp(kh, 0, 1.2);
+        if (kh > 0) {
+          g.save(); g.globalAlpha = clamp(range(t, tH, tH + 0.25));
+          g.save(); G.shadow(g, 0.6 + kh); g.fillStyle = MP.redSide; g.fill(hlPath); G.noShadow(g); g.restore();
+          for (let i = 0; i < lift; i += 1.5) { g.save(); g.translate(0, -i); g.fillStyle = MP.redSide; g.fill(hlPath); g.restore(); }
+          g.save(); g.translate(0, -lift); const gr = g.createLinearGradient(0, 200, 0, 900); gr.addColorStop(0, MP.redTop); gr.addColorStop(1, MP.red); g.fillStyle = gr; g.fill(hlPath);
+          g.strokeStyle = MP.redEdge; g.lineWidth = 1.4; g.lineJoin = 'round'; g.stroke(hlPath); g.restore();
+          g.restore();
+        }
+      }
+      // routes under the pins
+      k.view(1.02);
+      const at = (i) => [pr.X(pins[i].lon), pr.Y(pins[i].lat)];
+      routes.forEach(r => route(g, at(r.ia), at(r.ib), t, range(t, r.t, r.t + 1.2)));
+      // pins and labels
       pins.forEach((pn, i) => {
-        const x = pr.X(pn.lon), y = pr.Y(pn.lat) - 10 * kh, kk = range(t, PT[i], PT[i] + 0.5);
-        G.pin(g, x, y, t, kk, { color: P.red });
-        G.pill(g, pn.name, x + 28, y, { size: 30, k: kk, weight: 800 });
+        const [x, y] = at(i), kk = range(t, PT[i], PT[i] + 0.7);
+        teardrop(g, x, y, t, kk, { R: 20 });
+        label(g, x, y - 36, range(t, PT[i] + 0.25, PT[i] + 0.75), pn.name, pn.sub, pn.side ?? (x > 1500 ? 'l' : 'r'), pn.dy ?? 0);
       });
-      k.view(1);
-      // the card
-      const cx0 = 90, cy0 = 270, cw = 760;
-      G.card(g, cx0, cy0, cw, 120 + rows.length * 128 + (V.quote ? 70 : 0), { r: 26, lift: 1.3, alpha: clamp(range(t, tC - 0.6, tC) * 2) });
-      rows.forEach(([a, b, red], i) => {
-        const kk = range(t, tC + i * 0.45, tC + i * 0.45 + 0.6), y = cy0 + 104 + i * 128;
-        if (kk <= 0) return;
-        g.save(); g.globalAlpha = clamp(kk * 2); g.translate((1 - E.outCubic(kk)) * 20, 0);
-        G.fig(g, a, cx0 + 44, y, { size: 56, color: red ? P.red : P.ink });
-        G.fig(g, b, cx0 + 46, y + 40, { size: 20, color: P.inkSoft, track: 0.08 });
-        if (i < rows.length - 1) { g.fillStyle = P.rule; g.fillRect(cx0 + 44, y + 70, cw - 88, 2); }
-        g.restore();
-      });
-      if (V.quote) G.text(g, V.quote, cx0 + 44, cy0 + 120 + rows.length * 128 + 10, { size: 40, weight: 400, fam: F.serif, style: 'italic', color: P.tealDeep, alpha: range(t, tC + rows.length * 0.45, tC + rows.length * 0.45 + 0.6) });
       k.flat();
-      G.kicker(g, Pm.kicker ?? V.kicker, 90, 120, range(t, 0.05, 0.6));
-      G.riseText(g, Pm.title ?? V.title, 90, 200, range(t, 0.12, 0.9), { size: 62, weight: 800 });
+      // header on a soft paper fade so it reads over the map
+      const hg = g.createLinearGradient(0, 0, 0, 260); hg.addColorStop(0, 'rgba(247,246,241,0.92)'); hg.addColorStop(0.7, 'rgba(247,246,241,0.55)'); hg.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = hg; g.fillRect(0, 0, 1920, 260);
+      G.kicker(g, Pm.kicker ?? V.kicker, 90, 110, range(t, 0.05, 0.6));
+      G.riseText(g, Pm.title ?? V.title, 90, 186, range(t, 0.12, 0.9), { size: 62, weight: 800 });
       G.source(g, Pm.source ?? V.src, range(t, 0.6, 1.4), { y: 1046 });
-    }, { push: 0.04, dx: 24, dy: 8, fx: 1300, fy: 560 });
+    }, { push: 0.045, dx: 20, dy: 8, fx: 960, fy: 560 });
   }
 
-  return { holders, map };
+  return { map };
 }
