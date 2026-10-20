@@ -33,6 +33,7 @@ s["acq"] = from_words(367.4, 376.2, pad_out=0.12)    # "And that's why ... playi
 s["pena"] = from_words(475.7, 498.84)             # Dan Pena's phone-book joke (swear dropped below)
 s["rejected"] = from_words(500.2, 523.58, pad_out=0.12)  # "I went in ... rejected ... glad I made that pivot"
 s["allied"] = from_words(533.7, 561.98, pad_out=0.15)    # "In physiotherapy ... we empower the person"
+s["gp-b-short"] = from_words(196.0, 202.3)        # "...about buying their business" (Reel 3: he smokes right after)
 s["glad"] = from_words(626.8, 629.88)             # "I'm glad I came into physiotherapy ..."
 # the whole talk, uncut, in chapter-sized pieces (industry-full); only long silences get trimmed
 FULL = [(0.0, 53.1), (54.1, 153.8), (154.5, 232.5), (233.0, 331.0), (331.7, 409.3), (409.8, 475.0), (475.7, 523.7), (523.8, 649.0)]

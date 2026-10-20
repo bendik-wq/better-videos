@@ -1,7 +1,7 @@
 /* Vertical 1080x1920 layout for Instagram Reels / Stories (render.mjs --vertical).
-   Hook headline at the top, Josh in a large panel, big centred captions over the bottom of the panel.
+   Hook headline at the top, Josh in a square panel, big centred captions under it.
    Keeps the 9:16 safe zones clear: nothing important in the top 120 px or the bottom 300 px. */
-:root { --vL: 90px; --vtop: 520px; --vface-w: 900px; --vface-h: 1060px; }
+:root { --vL: 90px; --vtop: 480px; --vface-w: 900px; --vface-h: 900px; }
 html, body { width: 1080px !important; height: 1920px !important; }
 #silk { width: 1080px !important; height: 1920px !important; }
 #scrim { background: linear-gradient(180deg, rgba(11,18,32,.35) 0%, rgba(11,18,32,.10) 40%, rgba(11,18,32,.55) 100%) !important; }
@@ -13,14 +13,14 @@ header { left: var(--vL) !important; right: var(--vL) !important; top: 150px !im
 #face { left: var(--vL) !important; top: var(--vtop) !important; width: var(--vface-w) !important; height: var(--vface-h) !important; border-radius: 26px !important; }
 
 /* the hook sits between the wordmark and the panel */
-#stage { left: var(--vL) !important; right: var(--vL) !important; top: 220px !important; height: 280px !important; }
+#stage { left: var(--vL) !important; right: var(--vL) !important; top: 205px !important; height: 260px !important; }
 .beat { justify-content: center !important; align-items: center !important; text-align: center; gap: 14px !important; }
 .beat .eyebrow { font-size: 26px !important; }
 .beat .big { font-size: 74px !important; line-height: 1.04 !important; }
 .beat .mid { font-size: 70px !important; line-height: 1.05 !important; }
 
-/* captions: two lines max, centred, over the lower part of the panel */
-#cap { left: 110px !important; right: 110px !important; top: 1300px !important; height: 210px !important; justify-content: center; }
+/* captions: two lines max, centred, between the panel and Instagram's bottom bar */
+#cap { left: 90px !important; right: 90px !important; top: 1410px !important; height: 180px !important; justify-content: center; }
 #cap .line { font: 600 54px/1.22 var(--sans) !important; color: rgba(243,245,249,.78) !important; white-space: normal !important;
   text-align: center; text-wrap: balance; text-shadow: 0 2px 18px rgba(0,0,0,.65), 0 1px 3px rgba(0,0,0,.6); }
 #cap .w.on { color: #fff !important; background: linear-gradient(transparent 60%, var(--hl) 60%) !important; }

@@ -563,7 +563,7 @@
    },
    "base_sequence": [
     "gp",
-    "gp-b",
+    "gp-b-short",
     "physio-p",
     "pivot-made",
     "physio-b"
@@ -577,7 +577,7 @@
     "gp~ig#6",
     "gp~ig#7",
     "gp~ig#8",
-    "gp-b~ig#1",
+    "gp-b-short~ig#1",
     "physio-p~ig#1",
     "pivot-made~ig#1",
     "physio-b~ig#1"

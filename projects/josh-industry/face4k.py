@@ -20,6 +20,12 @@ HEAD = 0.36                     # face centre sits this far down the crop
 FILL = float(os.environ.get("FILL", 0.30))  # face height as a share of crop height
 
 
+# ZOOM=spans.json: [[t0, t1, fill, xshift, head], ...] in source seconds. Inside a span the crop punches in
+# (face fills `fill` of the height, sits `head` down it) and slides `xshift` crop-widths right, which keeps
+# a hand on the left of frame (Josh's cigarette hand) out of shot. Hard switch at the edges: a jump zoom.
+ZOOM = json.load(open(os.environ["ZOOM"])) if os.environ.get("ZOOM") else []
+
+
 def crop_box(tr, t):
     """Crop (x, y, w, h) in SW x SH coords for time t, from the smoothed track."""
     c = tr["c"]
@@ -27,10 +33,14 @@ def crop_box(tr, t):
     a, b = int(i), min(int(i) + 1, len(c) - 1)
     f = i - a
     cx, cy, fh = [(c[a][k] * (1 - f) + c[b][k] * f) * K for k in range(3)]  # 4K coords -> decode size
-    h = min(SH, max(620 * K * 2, fh / FILL))
+    fill, shift, head = FILL, 0.0, HEAD
+    for z in ZOOM:
+        if z[0] <= t < z[1]:
+            fill, shift, head = z[2], z[3], z[4]
+    h = min(SH, max(620 * K * 2 * FILL / fill, fh / fill))
     w = h * PW / PH
-    x = min(max(cx - w / 2, 0), SW - w)
-    y = min(max(cy - h * HEAD, 0), SH - h)
+    x = min(max(cx - w / 2 + shift * w, 0), SW - w)
+    y = min(max(cy - h * head, 0), SH - h)
     return x, y, w, h
 
 
@@ -74,8 +84,8 @@ def main():
             if HQ:  # light unsharp mask: brings back fine detail lost in the downscale
                 img = cv2.addWeighted(img, 1.35, cv2.GaussianBlur(img, (0, 0), 1.1), -0.35, 0)
             if sheet:
-                if n % FPS == 0:
-                    thumbs.append(cv2.resize(img, (PW // 3, PH // 3)))
+                if n % (FPS // int(os.environ.get("SHEET_FPS", 1))) == 0:
+                    thumbs.append(cv2.resize(img, (240, 240 * PH // PW)))
             else:
                 enc.stdin.write(img.tobytes())
         if sheet:
