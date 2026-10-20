@@ -11,7 +11,10 @@ import numpy as np
 import cv2
 
 PW, PH, FPS = 576, 824, 25      # panel size (matches composite.py)
-SW, SH = 1920, 1080             # decode size (half of 4K)
+# decode size: half of 4K by default; FACE_HQ=1 crops straight from the 4K frame (sharper, ~3x slower)
+HQ = os.environ.get("FACE_HQ") == "1"
+SW, SH = (3840, 2160) if HQ else (1920, 1080)
+K = SW / 3840                   # track.json is in 4K coords
 HEAD = 0.36                     # face centre sits this far down the crop
 FILL = 0.30                     # face height as a share of crop height
 
@@ -22,8 +25,8 @@ def crop_box(tr, t):
     i = min(max(t * tr["fps"], 0), len(c) - 1)
     a, b = int(i), min(int(i) + 1, len(c) - 1)
     f = i - a
-    cx, cy, fh = [(c[a][k] * (1 - f) + c[b][k] * f) / 2 for k in range(3)]  # 4K -> 1080p
-    h = min(SH, max(620, fh / FILL))
+    cx, cy, fh = [(c[a][k] * (1 - f) + c[b][k] * f) * K for k in range(3)]  # 4K coords -> decode size
+    h = min(SH, max(620 * K * 2, fh / FILL))
     w = h * PW / PH
     x = min(max(cx - w / 2, 0), SW - w)
     y = min(max(cy - h * HEAD, 0), SH - h)
@@ -67,6 +70,8 @@ def main():
             # sub-pixel crop + resize in one warp, so slow drifts don't step
             m = np.float32([[PW / w, 0, -x * PW / w], [0, PH / h, -y * PH / h]])
             img = cv2.warpAffine(fr, m, (PW, PH), flags=cv2.INTER_AREA if w > PW else cv2.INTER_CUBIC)
+            if HQ:  # light unsharp mask: brings back fine detail lost in the downscale
+                img = cv2.addWeighted(img, 1.35, cv2.GaussianBlur(img, (0, 0), 1.1), -0.35, 0)
             if sheet:
                 if n % FPS == 0:
                     thumbs.append(cv2.resize(img, (PW // 3, PH // 3)))
