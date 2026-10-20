@@ -34,7 +34,7 @@ import * as CK from '/projects/panama/sets/clay-kit.js';
 import { planCuts } from '/projects/aibubble/cuts.mjs';
 
 const ROOT = '/projects/aibubble/sets/';
-const LIBS = ['graphics', 'graphics-data', 'graphics-maps', 'graphics-docs', 'thumbs', 'ai-sets', 'oner'];
+const LIBS = ['graphics', 'graphics-data', 'graphics-maps', 'graphics-docs', 'thumbs', 'clay-silver', 'ai-sets', 'oner'];
 let extra = [];
 try { const r = await fetch(ROOT + 'libs.json'); if (r.ok) extra = await r.json(); } catch { /* optional */ }
 const loaded = [], loadErrors = {};

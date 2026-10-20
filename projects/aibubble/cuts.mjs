@@ -15,10 +15,10 @@
 //   push           into a data graphic from a 3D set (going deeper into the same idea)
 //   dip-black      into a chapter card
 export const HARD_OUT = new Set(['cold-open', 'title', 'chapter']);
-export const DIORAMAS = new Set(['price-tower', 'vault', 'airlift', 'margin', 'boardroom', 'queue', 'oilfield', 'hero-bar', 'bailout', 'figures', 'cube', 'heirlooms', 'cutaway', 'house-block', 'bid-stack', 'seesaw', 'pipe', 'debt-tower', 'vault']);
+export const DIORAMAS = new Set(['bubble', 'circle', 'campus', 'gpu', 'dominoes', 'fund', 'price-tower', 'vault', 'airlift', 'margin', 'boardroom', 'queue', 'oilfield', 'hero-bar', 'bailout', 'figures', 'cube', 'heirlooms', 'cutaway', 'house-block', 'bid-stack', 'seesaw', 'pipe', 'debt-tower', 'vault']);
 export const AERIALS = new Set(['suburb', 'aerial']);
 export const ARCHIVE = new Set(['archive', 'photo', 'doc', 'quote', 'document', 'newspaper']);
-export const DATA = new Set(['silver-chart', 'numbers', 'chart', 'line', 'bars', 'counter', 'map', 'lake-level', 'budget', 'auction', 'timeline', 'rates', 'payment', 'bidders', 'holders', 'calendar', 'bignumber', 'gauge']);
+export const DATA = new Set(['ai-chart', 'dealmap', 'silver-chart', 'numbers', 'chart', 'line', 'bars', 'counter', 'map', 'lake-level', 'budget', 'auction', 'timeline', 'rates', 'payment', 'bidders', 'holders', 'calendar', 'bignumber', 'gauge']);
 const ALIAS = { 'dip-to-black': 'dip-black', dip: 'dip-black', zoom: 'zoom-through', match: 'match-cut', xray: 'match-dissolve' };
 const FALLBACK = { cut: 0, dissolve: 0.45, 'match-dissolve': 0.9, 'match-cut': 0.5, 'dip-black': 0.8, push: 0.42, 'zoom-through': 0.55 };
 export const normName = (n) => ALIAS[n] ?? n;
