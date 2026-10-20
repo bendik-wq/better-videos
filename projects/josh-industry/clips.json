@@ -1,0 +1,224 @@
+{
+ "source": "Google Drive: YOUFUCK/Oct 16/DJI_20261016061233_0001_D.MP4 (Josh, 16 Oct 2026, 10:49, 4K)",
+ "clips": {
+  "q": {
+   "from": "0:00:11",
+   "to": "0:00:17",
+   "start": "What kind of industry should you",
+   "end": "question I get a lot of the time"
+  },
+  "lane": {
+   "from": "0:00:30",
+   "to": "0:00:37",
+   "start": "If you're already in business, you're making cash",
+   "end": "and you're growing, stay in your lane"
+  },
+  "stagnant-a": {
+   "from": "0:00:37",
+   "to": "0:00:41",
+   "start": "If you're in business and you've been stagnant",
+   "end": "for the last 15, 20 years"
+  },
+  "stagnant-b": {
+   "from": "0:00:43",
+   "to": "0:00:45",
+   "start": "Must be some deeper",
+   "end": "some deeper issues"
+  },
+  "scratch": {
+   "from": "0:00:54",
+   "to": "0:01:07",
+   "start": "If you've never been in business before",
+   "end": "I chose healthcare"
+  },
+  "why-hc": {
+   "from": "0:01:07",
+   "to": "0:01:26",
+   "start": "Why did I choose healthcare",
+   "end": "the community around me"
+  },
+  "gp": {
+   "from": "0:02:34",
+   "to": "0:03:15",
+   "start": "Now, it's not to say that I didn't pivot",
+   "end": "weren't taking new patients"
+  },
+  "gp-b": {
+   "from": "0:03:16",
+   "to": "0:03:30",
+   "start": "And I couldn't really have that conversation",
+   "end": "navigate through the nuance"
+  },
+  "physio-b": {
+   "from": "0:03:46",
+   "to": "0:03:53",
+   "start": "How responsive, how receptive",
+   "end": "to start those conversations"
+  },
+  "deal-a": {
+   "from": "0:03:53",
+   "to": "0:03:58",
+   "start": "My first deal was actually",
+   "end": "was actually a call back"
+  },
+  "deal-b": {
+   "from": "0:04:34",
+   "to": "0:05:00",
+   "start": "this was off one cold email",
+   "end": "we're in business"
+  },
+  "deal-c": {
+   "from": "0:05:09",
+   "to": "0:05:32",
+   "start": "The conversation got started",
+   "end": "relied on my board of directors"
+  },
+  "board": {
+   "from": "0:05:39",
+   "to": "0:05:58",
+   "start": "It's not that I knew about the industry",
+   "end": "govern the direction of the company"
+  },
+  "archetype": {
+   "from": "0:06:19",
+   "to": "0:06:50",
+   "start": "It is difficult and it is reserved",
+   "end": "put yourself in a position to succeed"
+  },
+  "match": {
+   "from": "0:07:08",
+   "to": "0:07:24",
+   "start": "I could have went down finance",
+   "end": "the more ground work, go into that"
+  },
+  "christian": {
+   "from": "0:07:24",
+   "to": "0:07:46",
+   "start": "I've got a good friend, Christian",
+   "end": "it fits the picture"
+  },
+  "close": {
+   "from": "0:10:32",
+   "to": "0:10:48",
+   "start": "If you want to pick an industry, stop overthinking it",
+   "end": "here's to your success"
+  }
+ },
+ "cuts": {
+  "industry": {
+   "title": "Which industry should you buy into? (Josh, 16 Oct)",
+   "layout": "split",
+   "cards": {
+    "intro": {
+     "eyebrow": "For owners and first-time buyers",
+     "title": "Which industry should you <em>buy into</em>?",
+     "poster": true,
+     "dur": 3.0
+    },
+    "Starting from scratch": {
+     "eyebrow": "Part 2",
+     "title": "Starting <em>from scratch</em>"
+    },
+    "Pivot fast": {
+     "eyebrow": "Part 3",
+     "title": "Wrong door? <em>Pivot fast.</em>"
+    },
+    "The first deal": {
+     "eyebrow": "Part 4",
+     "title": "The <em>first deal</em>"
+    },
+    "Play to who you are": {
+     "eyebrow": "Part 5",
+     "title": "Play to <em>who you are</em>"
+    }
+   },
+   "chapters": {
+    "start": "Already in business",
+    "Starting from scratch": "From scratch",
+    "Pivot fast": "Pivot fast",
+    "The first deal": "The first deal",
+    "Play to who you are": "Who you are"
+   },
+   "sequence": [
+    "q#1",
+    "q#2",
+    "lane#1",
+    "stagnant-a#1",
+    "stagnant-b#1",
+    {
+     "card": "Starting from scratch"
+    },
+    "scratch#1",
+    "why-hc#1",
+    "why-hc#2",
+    {
+     "card": "Pivot fast"
+    },
+    "gp#1",
+    "gp#2",
+    "gp#3",
+    "gp#4",
+    "gp#5",
+    "gp#6",
+    "gp-b#1",
+    "physio-a#1",
+    "physio-p#1",
+    "pivot-made#1",
+    "physio-b#1",
+    {
+     "card": "The first deal"
+    },
+    "deal-a#1",
+    "deal-b#1",
+    "deal-c#1",
+    "deal-c#2",
+    "board#1",
+    {
+     "card": "Play to who you are"
+    },
+    "archetype#1",
+    "match#1",
+    "match#2",
+    "christian#1",
+    "christian#2",
+    "christian#3",
+    "close#1",
+    "close#2"
+   ],
+   "base_sequence": [
+    "q",
+    "lane",
+    "stagnant-a",
+    "stagnant-b",
+    {
+     "card": "Starting from scratch"
+    },
+    "scratch",
+    "why-hc",
+    {
+     "card": "Pivot fast"
+    },
+    "gp",
+    "gp-b",
+    "physio-a",
+    "physio-p",
+    "pivot-made",
+    "physio-b",
+    {
+     "card": "The first deal"
+    },
+    "deal-a",
+    "deal-b",
+    "deal-c",
+    "board",
+    {
+     "card": "Play to who you are"
+    },
+    "archetype",
+    "match",
+    "christian",
+    "close"
+   ]
+  }
+ }
+}
