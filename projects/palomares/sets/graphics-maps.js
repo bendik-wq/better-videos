@@ -59,7 +59,7 @@ const MAPS = {
     data: 'iberia', box: [-10.0, 35.5, 4.4, 44.0], rect: [40, 210, 1840, 850], main: ['ESP'],
     pins: ['Torrejón', 'Morón', 'Palomares'].map(pinOf), red: ['Palomares'],
     routes: [['Morón', 'Palomares']],
-    words: [['Mediterranean Sea', 2.2, 38.6], ['Atlantic Ocean', -9.0, 36.2], ['ALMERÍA', -2.55, 37.62, true], ['SPAIN', -4.2, 39.2, true]],
+    words: [['Mediterranean Sea', 2.2, 38.6], ['Atlantic Ocean', -9.0, 36.2], ['ALMERÍA', -2.75, 36.98, true], ['SPAIN', -4.2, 39.2, true]],
     kicker: '17 JAN 1966 · SOUTHERN SPAIN', title: 'The refuelling over Palomares',
     src: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009) · MAP: NATURAL EARTH',
   },
@@ -72,7 +72,7 @@ const MAPS = {
   world: {
     data: 'world', box: [-84, 24, 34, 54], rect: [40, 240, 1840, 780], main: [],
     pins: [pinOf('Seymour Johnson AFB'), { ...pinOf('Palomares'), sub: 'REFUELLING OVER SPAIN · 17 JAN 1966', dy: -56 }], red: ['Palomares'], routes: [],
-    words: [['Atlantic Ocean', -47, 29.5], ['Mediterranean', 5.5, 38.6]],
+    words: [['Atlantic Ocean', -47, 27.0]],
     kicker: 'OPERATION CHROME DOME · AIRBORNE ALERT', title: 'A 24-hour patrol, refuelled over Spain',
     src: 'ROUTE ILLUSTRATIVE · SOURCES: B. MORAN (2009); DNA PALOMARES SUMMARY REPORT (1975) · MAP: NATURAL EARTH',
   },
@@ -270,12 +270,12 @@ export default function makeMaps(H) {
         }
         // towns and the beach
         const kt = (i) => range(t, 0.5 + i * 0.18, 1.0 + i * 0.18);
-        town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -34, size: 34, sub: 'POP. ABOUT 2,000 IN 1966', dot: false });
+        town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -46, size: 34, sub: 'POP. ABOUT 2,000 IN 1966', dot: false });
         town(g, ...at(pinOf('Villaricos')), kt(1), 'Villaricos', { side: 'r', dy: -22 });
         town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: 'PRESS BOATS' });
         town(g, ...at(pinOf('Camp Wilson beach')), kt(4), 'Camp Wilson beach', { side: 'r', dy: 20, size: 22, sub: 'THE 8 MAR SWIM (AFTERNOON)' });
         // Águilas, off the top edge: an arrow
-        { const ka = kt(5); if (ka > 0) { const x = 1700, y = 70; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
+        { const ka = kt(5); if (ka > 0) { const x = 1860, y = 300; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
           G.text(g, 'Águilas', x - 44, y + 44, { size: 26, weight: 800, align: 'right', color: P.ink, alpha: ka }); G.text(g, 'SIMÓ’S HOME PORT', x - 44, y + 68, { size: 15, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.08, alpha: ka }); } }
         // bombs 1-3: numbered discs
         LAND_BOMBS.forEach((b, i) => {
@@ -300,9 +300,9 @@ export default function makeMaps(H) {
         const a = at(pinOf('Seymour Johnson AFB')), b = at(pinOf('Palomares')), east = [pr.X(21), pr.Y(35.4)], tr = PT[1] + 0.4;
         route(g, a, b, t, range(t, tr, tr + 1.6), { bow: 0.16 });
         const e1 = route(g, b, east, t, range(t, tr + 1.6, tr + 2.6), { bow: 0.12, head: false, dash: [6, 10] });
-        const ke = range(t, tr + 2.4, tr + 3.0); if (ke > 0) { G.text(g, 'TOWARD THE SOVIET FRONTIER …', east[0] - 20, east[1] + 42, { size: 18, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(ke) }); }
+        const ke = range(t, tr + 2.4, tr + 3.0); if (ke > 0) { G.text(g, 'TOWARD THE SOVIET FRONTIER …', 1860, east[1] + 90, { size: 18, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: E.outCubic(ke) }); }
         route(g, east, a, t, range(t, tr + 3.0, tr + 4.4), { bow: -0.1, color: P.tealDeep, dash: [4, 12], width: 3 });
-        const kh = range(t, tr + 4.0, tr + 4.6); if (kh > 0) G.text(g, '… AND HOME, 24 HOURS LATER', pr.X(-37), pr.Y(31.2), { size: 18, weight: 500, fam: F.mono, align: 'center', color: P.tealDeep, track: 0.1, alpha: E.outCubic(kh) });
+        const kh = range(t, tr + 4.0, tr + 4.6); if (kh > 0) G.text(g, '… AND HOME, 24 HOURS LATER', pr.X(-30), pr.Y(29.2), { size: 18, weight: 500, fam: F.mono, align: 'center', color: P.tealDeep, track: 0.1, alpha: E.outCubic(kh) });
       }
       // pins and labels
       pins.forEach((pn, i) => {

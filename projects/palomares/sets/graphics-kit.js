@@ -92,7 +92,7 @@ function grainTile() {
 }
 export function grain(g, w = 1920, h = 1080, a = 0.45, x0 = 0, y0 = 0) {
   if (!grainCache.has(g)) grainCache.set(g, g.createPattern(grainTile(), 'repeat'));
-  g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = a; g.fillStyle = grainCache.get(g); g.fillRect(x0, y0, w, h); g.restore();
+  g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha *= a; g.fillStyle = grainCache.get(g); g.fillRect(x0, y0, w, h); g.restore();
 }
 // ledger rules: thin horizontal lines every `step`, optional column rules and a double margin line (teal, never red)
 export function ledgerLines(g, x0, y0, w, h, { step = 54, cols = [], margin = null, color = P.ledger, colColor = P.ledgerCol, alpha = 1 } = {}) {
@@ -122,7 +122,11 @@ export const noShadow = (g) => { g.shadowColor = 'rgba(0,0,0,0)'; g.shadowBlur =
 export const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
 export function card(g, x, y, w, h, { r = 22, fill = P.card, lift = 1, S = SS, alpha = 1, grainA = 0.3, stroke = null } = {}) {
   if (alpha <= 0 || w <= 0 || h <= 0) return;
-  g.save(); g.globalAlpha *= alpha; shadow(g, lift, 1, S); rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill(); noShadow(g);
+  g.save(); g.globalAlpha *= alpha;
+  // the drop shadow as a filtered shape (canvas shadowBlur leaves a hard edge at the blur's extent on big cards in Chrome)
+  g.save(); g.filter = `blur(${((10 + 22 * lift) * S / 2).toFixed(2)}px)`; g.fillStyle = `rgba(20,35,61,${0.11 + 0.06 * lift})`;
+  rr(g, x + 2 + 4 * lift, y + 5 + 11 * lift, w, h, r); g.fill(); g.restore();
+  rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill();
   if (grainA) { g.save(); rr(g, x, y, w, h, r); g.clip(); grain(g, w, h, grainA, x, y); g.restore(); }
   if (stroke) { rr(g, x, y, w, h, r); g.strokeStyle = stroke; g.lineWidth = 2; g.stroke(); }
   g.restore();
@@ -311,8 +315,9 @@ export function drawSection(g, S, { t = 0, alpha = 1, dark = 0, village = true, 
   const bg = g.createLinearGradient(0, S.Y(-340), 0, yb);
   const k0 = clamp((S.ys - S.Y(-340)) / (yb - S.Y(-340)));
   bg.addColorStop(0, '#f3f4ee'); bg.addColorStop(k0, '#e9ebe2'); bg.addColorStop(Math.min(1, k0 + 0.001), '#ebe6d6'); bg.addColorStop(1, '#d8d1bc');
-  g.save(); shadow(g, 0.5, 0.7); g.fillStyle = bg; g.fill(bed); noShadow(g); g.restore();
-  g.save(); g.clip(bed); grain(g, xr - S.x0 + 200, yb - S.Y(-400), 0.35, S.x0 - 100, S.Y(-400)); g.restore();
+  g.save(); g.filter = `blur(${(9 * SS).toFixed(1)}px)`; g.fillStyle = 'rgba(20,35,61,0.10)'; g.translate(3, 7); g.fill(bed); g.restore();
+  g.fillStyle = bg; g.fill(bed);
+  g.save(); g.clip(bed); const gx = Math.max(-300, S.pts[0][0]); grain(g, xr - gx + 200, yb - S.Y(-400), 0.35, gx, S.Y(-400)); g.restore();
   g.save(); g.strokeStyle = P.ink; g.lineWidth = 2.6; g.lineJoin = 'round'; g.beginPath(); line.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); g.restore();
   // the surface: navy line with a slow swell
   g.save(); g.strokeStyle = P.ink; g.lineWidth = 3; g.beginPath();

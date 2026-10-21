@@ -20,7 +20,7 @@
 //   photo  a photo in a white border card on paper with an eased Ken Burns push, caption slab and credit line.
 //          params: file (in projects/palomares/assets/photos/, or an absolute /projects/... path), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
 //          Bundled (public domain, see assets/photos/CREDITS.md): petrel-bomb-curv-1966.jpg · petrel-bomb-officials-1966.jpg ·
-//          petrel-bomb-chute-1966.jpg · alvin-1964.jpg · palomares-barrels-1966.jpg (+ uss-skill-feb1966.jpg, b52g-kc135a-refuel-1992.jpg when present)
+//          petrel-bomb-chute-1966.jpg · alvin-1964.jpg · palomares-barrels-1966.jpg · uss-skill-feb1966.jpg · b52g-kc135a-refuel-1992.jpg
 // Every word on a recreated sheet is either a verbatim quote from RESEARCH.md or a plain summary of a RESEARCH fact;
 // brackets and ellipses mark our edits.
 import * as G from './graphics-kit.js';

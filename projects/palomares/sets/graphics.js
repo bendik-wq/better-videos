@@ -59,7 +59,7 @@ export default function makeGraphics(H) {
       } else {
         const sx2 = S.X(U.refind), [bx, by] = S.at(U.refind, 6), u = E.inOutCubic(range(t, T.raise + 0.35, T.out));
         shipA = range(t, T.raise - 0.2, T.raise + 0.2); shipX = bx; line = range(t, T.raise, T.raise + 0.35);
-        x = sx2; y = lerp(by, S.ys - 4, u); a = lerp(0.2, -0.05, u); chute = 0.6 * (1 - u * 0.5);
+        x = sx2; y = lerp(by, S.ys - 16, u); a = lerp(0.2, 0, u); chute = 0.6 * (1 - u);
       }
       if (shipA > 0) {
         G.ship(g, shipX + 30, S.ys, 0.85, { alpha: shipA });
@@ -256,14 +256,14 @@ export default function makeGraphics(H) {
     { day: 75, label: 'FOUND AGAIN', sub: '2 APR 1966 · 2,800 FT · 250 FT DEEPER' },
     { day: 80, label: 'LIFTED', sub: '7 APR 1966 · ON THE DECK OF USS PETREL' },
   ];
-  const dayStep = (d) => { const o = typeof d === 'number' ? (DAYS.find(x => x.day === d) ?? { day: d }) : d; return { ...o, text: o.text ?? `DAY ${o.day}` }; };
+  // the number is right-aligned in two tiles ('DAY  1', 'DAY 44'), as a real split-flap board would show it
+  const dayStep = (d) => { const o = typeof d === 'number' ? (DAYS.find(x => x.day === d) ?? { day: d }) : d; return { ...o, text: o.text ?? `DAY ${String(o.day).padStart(2, ' ')}` }; };
   const PRESETS = {
-    day: { align: 'center', kicker: 'DAYS AFTER THE CRASH · 17 JAN 1966', title: 'The hunt for bomb 4',
+    day: { align: 'left', kicker: 'DAYS AFTER THE CRASH · 17 JAN 1966', title: 'The hunt for bomb 4',
       source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); STATE DEPT HISTORY (1985); B. MORAN (2009)', steps: DAYS },
     alt: { align: 'center', kicker: '17 JAN 1966 · ABOUT 10:22 AM LOCAL', title: 'Over Palomares',
       source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009)',
-      steps: [{ text: '31,000 FT', label: 'THE REFUELLING ALTITUDE', sub: 'B-52G “TEA 16” MEETS KC-135A “TROUBADOUR 14”' },
-        { text: '150 FT', label: 'BETWEEN BOMBER AND TANKER', sub: 'THE B-52 FLEW ABOUT 150 FT BELOW THE TANKER' }] },
+      steps: [{ text: '31,000 FT', label: 'THE REFUELLING ALTITUDE', sub: 'B-52G “TEA 16” ABOUT 150 FT BELOW KC-135A “TROUBADOUR 14”' }] },
     // the analog clock layout (face: true): each step's time = [h, m] (24 h); hands sweep forward between steps
     clock: { align: 'right', face: true, kicker: 'THREE TIMES THAT MATTER', title: 'The clock',
       source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009) AND HER 2004 ARTICLE; USS PETREL DECK LOG VIA MORAN',
@@ -394,7 +394,7 @@ export default function makeGraphics(H) {
     const lo = Math.min(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1), hi = Math.max(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1);
     // the camera along the axis: the first event sits at x 230, the last at 1690; centred if everything fits
     const span = X(n - 1), fits = span <= 1320, cMin = X(0) + 600, cMax = X(n - 1) - 600;
-    const cAt = (i) => clamp(X(i) + sp * 0.5, cMin, cMax);
+    const cAt = (i) => clamp(X(i) - 390, cMin, cMax); // the newest event sits right of centre, the older ones fill the left
     const camX = (t) => {
       if (fits) return span / 2;
       if (hasF) return clamp((X(lo) + X(hi)) / 2, cMin, cMax);
@@ -432,13 +432,13 @@ export default function makeGraphics(H) {
         if (e.asof) G.asOf(g, e.asof, x, up ? top - 52 : top + ls.length * 34 + 22, range(t, T[i] + 0.3, T[i] + 0.8), { align: 'center', size: 16 });
         g.restore();
       });
+      // edge fades so panned events slide under paper, not off a cliff
+      if (!fits) { k.flat(); const L0 = g.createLinearGradient(0, 0, 150, 0); L0.addColorStop(0, 'rgba(247,246,241,1)'); L0.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = L0; g.fillRect(0, 0, 150, 1080);
+        const R0 = g.createLinearGradient(1770, 0, 1920, 0); R0.addColorStop(0, 'rgba(247,246,241,0)'); R0.addColorStop(1, 'rgba(247,246,241,1)'); g.fillStyle = R0; g.fillRect(1770, 0, 150, 1080); }
       // the running year, top right: the year of the latest event on screen
       { let iy = 0; ev.forEach((e, i) => { if (t >= T[i] && (hasF ? i <= hi : true)) iy = i; }); if (hasF) iy = hi;
         let ic = iy; while (ic > 0 && String(ev[ic - 1].year) === String(ev[iy].year)) ic--;
         k.flat(); G.riseText(g, String(ev[iy].year), 1800, 128, range(t, T[ic] - 0.1, T[ic] + 0.5), { size: 72, weight: 500, fam: F.mono, align: 'right', color: P.tealDeep, track: -0.02 }); k.view(1); }
-      // edge fades so panned events slide under paper, not off a cliff
-      if (!fits) { k.flat(); const L0 = g.createLinearGradient(0, 0, 150, 0); L0.addColorStop(0, 'rgba(247,246,241,1)'); L0.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = L0; g.fillRect(0, 260, 150, 720);
-        const R0 = g.createLinearGradient(1770, 0, 1920, 0); R0.addColorStop(0, 'rgba(247,246,241,0)'); R0.addColorStop(1, 'rgba(247,246,241,1)'); g.fillStyle = R0; g.fillRect(1770, 260, 150, 720); }
       k.flat(); G.kicker(g, Pm.title ?? 'BOMB 4 · 1966 – 2026', 120, 110, range(t, 0, 0.6));
       G.source(g, Pm.source ?? 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); STATE DEPT HISTORY (1985); B. MORAN (2009); CSN; KERRY (2015); ACTUALIDAD ALMANZORA (OCT 2026)', range(t, 0.6, 1.4), { size: 15 });
     }, { push: 0.025, dx: 10 });

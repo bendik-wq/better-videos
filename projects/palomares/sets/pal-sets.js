@@ -28,6 +28,7 @@
 import * as THREE from 'three';
 import * as S from './studio-kit.js';
 import * as PR from './silver-props.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const v3 = (a) => new THREE.Vector3(...a);
 const RED = '#e0241b';
@@ -66,7 +67,7 @@ function b28Tex(seed = 1) {
     for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(${r() < 0.5 ? '200,205,212' : '255,255,255'},${0.05 + r() * 0.08})`; g.fillRect(0, r() * H, W, 1 + r() * 2); }
     const yOf = (v) => (1 - v) * H;
     // panel seams
-    g.fillStyle = 'rgba(120,130,140,0.55)'; for (const v of [0.11, 0.33, 0.62, 0.79]) g.fillRect(0, yOf(v) - 2, W, 3);
+    g.fillStyle = 'rgba(120,130,140,0.4)'; for (const v of [0.5]) g.fillRect(0, yOf(v) - 1, W, 2);
     // white tape patches
     g.fillStyle = 'rgba(255,255,255,0.95)';
     for (const [u, v, w, h] of [[0.12, 0.5, 0.1, 0.05], [0.62, 0.42, 0.08, 0.035], [0.3, 0.7, 0.06, 0.03], [0.82, 0.58, 0.07, 0.05], [0.47, 0.26, 0.05, 0.03]]) g.fillRect(u * W, yOf(v), w * W, h * H);
@@ -82,17 +83,18 @@ let B28GEO = null;
 function b28Geos() {
   if (B28GEO) return B28GEO;
   const { L, R } = B28; const pts = [];
-  // tail plate → tail cone → body → blunt rounded frangible nose
-  pts.push(new THREE.Vector2(0.001, 0), new THREE.Vector2(2.15, 0), new THREE.Vector2(2.25, 0.25));
-  for (let i = 0; i <= 6; i++) { const u = i / 6; pts.push(new THREE.Vector2(S.lerp(2.3, R, S.smoother(u)), 0.4 + u * 4.2)); }
-  pts.push(new THREE.Vector2(R, 28.6));
-  const nL = L - 28.6; for (let i = 1; i <= 14; i++) { const s = i / 14; const rr = R * Math.pow(1 - Math.pow(s, 2.3), 1 / 2.3); pts.push(new THREE.Vector2(Math.max(0.001, rr), 28.6 + s * nL)); }
+  // B28 (museum / Petrel-deck photos): flat circular tail plate, short slightly tapered tail section carrying 4 small trapezoidal fins,
+  // a small shoulder, a long straight cylinder, and a BLUNT rounded nose cap (elliptical, ~0.7 D long). Stubby, not a rocket.
+  pts.push(new THREE.Vector2(0.001, 0), new THREE.Vector2(2.1, 0), new THREE.Vector2(2.3, 0.2));
+  pts.push(new THREE.Vector2(2.4, 3.5), new THREE.Vector2(2.55, 6.9), new THREE.Vector2(2.6, 7.1), new THREE.Vector2(R, 7.5));
+  for (let i = 1; i <= 12; i++) pts.push(new THREE.Vector2(R, 7.5 + i * (33.0 - 7.5) / 12));
+  const nL = L - 33.0; for (let i = 1; i <= 8; i++) { const a = i / 8 * Math.PI / 2; pts.push(new THREE.Vector2(Math.max(0.001, R * Math.cos(a)), 33.0 + Math.sin(a) * nL)); }
   const body = new THREE.LatheGeometry(pts, 64);
-  // fin: trapezoid in (r, y), extruded thin
-  const sh = new THREE.Shape(); sh.moveTo(R - 0.4, 0.6); sh.lineTo(R - 0.4, 8.6); sh.lineTo(5.6, 3.9); sh.lineTo(5.6, 0.3); sh.closePath();
-  const fin = new THREE.ExtrudeGeometry(sh, { depth: 0.28, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.08, bevelSegments: 2 }).translate(0, 0, -0.14);
+  // fin: small trapezoid on the tail section (root 0.4→5.6, tip 0.4→4.2), squared-off trailing edge at the tail
+  const sh = new THREE.Shape(); sh.moveTo(2.2, 0.4); sh.lineTo(2.2, 5.2); sh.lineTo(4.35, 4.4); sh.lineTo(4.35, 0.4); sh.closePath();
+  const fin = new THREE.ExtrudeGeometry(sh, { depth: 0.32, bevelEnabled: true, bevelThickness: 0.07, bevelSize: 0.07, bevelSegments: 2 }).translate(0, 0, -0.16);
   const ring = new THREE.TorusGeometry(R + 0.01, 0.06, 6, 64).rotateX(Math.PI / 2);
-  const plate = new THREE.CylinderGeometry(2.05, 2.05, 0.3, 48).translate(0, 0.1, 0);
+  const plate = new THREE.CylinderGeometry(2.0, 2.0, 0.3, 48).translate(0, 0.1, 0);
   return (B28GEO = { body, fin, ring, plate });
 }
 // b28({ tint, seed, damaged }) → Group (y-up, tail at origin). userData.mats = materials (for lighting changes)
@@ -103,19 +105,17 @@ export function b28({ seed = 1, color = '#ffffff', rough = 0.34, metal = 0.25 } 
   const darkM = S.clay('#9aa3ad', { rough: 0.5 });
   G.add(mk(geo.body, skin));
   for (let k = 0; k < 4; k++) { const f = mk(geo.fin, finM); f.rotation.y = k * Math.PI / 2 + Math.PI / 4; G.add(f); }
-  for (const y of [4.6, 12.1, 22.8]) { const r = mk(geo.ring, darkM, { cast: false }); r.position.y = y; G.add(r); }
+  for (const y of [7.5, 33.0]) { const r = mk(geo.ring, darkM, { cast: false }); r.position.y = y; G.add(r); }
   const pl = mk(geo.plate, darkM); pl.position.y = -0.12; G.add(pl);
   G.userData.mats = [skin, finM];
   return G;
 }
 // the side silhouette of the B28 (incl. two fins), in the group's local xy plane, closed polyline (for the dashed outline)
 function b28Silhouette() {
-  const { L, R } = B28; const right = [];
-  right.push([5.6, 0.3], [5.6, 3.9], [R + 0.05, 7.9]);
-  right.push([R + 0.05, 28.6]); const nL = L - 28.6;
-  for (let i = 1; i <= 12; i++) { const s = i / 12; right.push([R * Math.pow(1 - Math.pow(s, 2.3), 1 / 2.3) + 0.05, 28.6 + s * nL]); }
+  const { L, R } = B28; const e = 0.08; const right = [[2.3 + e, 0], [2.4 + e, 0.4], [4.35 + e, 0.4], [4.35 + e, 4.4], [2.52 + e, 5.1], [2.6 + e, 7.1], [R + e, 7.5], [R + e, 33.0]];
+  const nL = L - 33.0; for (let i = 1; i <= 10; i++) { const a = i / 10 * Math.PI / 2; right.push([(R + e) * Math.cos(a), 33.0 + Math.sin(a) * (nL + e)]); }
   const left = right.slice(0, -1).reverse().map(([x, y]) => [-x, y]);
-  return [[0, 0.3], ...right.map(([x, y], i) => i === 0 ? [x, y] : [x, y]), ...left, [-5.6, 0.3], [0, 0.3]];
+  return [[0, 0], ...right, ...left, [-(2.3 + e), 0], [0, 0]];
 }
 // red dashed outline of the bomb silhouette (capsule dashes). .draw(k) reveals 0..1 of the dashes
 export function dashedOutline(poly, { dash = 3.0, gap = 1.9, r = 0.55, color = RED, emissive = 0.35 } = {}) {
@@ -251,27 +251,58 @@ function cloudField({ n = 46, area = 2600, y = -320, seed = 5, scale = 1 } = {})
 }
 
 // ---------------------------------------------------------------- fireball + debris (emissive spheres for bloom; instanced shards)
-function fireball({ n = 34, seed = 3 } = {}) {
+// lumpy puff geometry (noise-displaced icosphere), shared
+let LUMP = null;
+function lumpGeo() { if (LUMP) return LUMP; const g0 = new THREE.IcosahedronGeometry(1, 3); g0.deleteAttribute('normal'); g0.deleteAttribute('uv'); const g = mergeVertices(g0); const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) { const v = new THREE.Vector3().fromBufferAttribute(p, i); const k = 1 + 0.14 * Math.sin(v.x * 4.1 + v.y * 2.3) * Math.cos(v.z * 3.7 - v.x) + 0.08 * Math.sin(v.y * 7.3 + v.z * 5.1); p.setXYZ(i, v.x * k, v.y * k, v.z * k); }
+  g.computeVertexNormals(); return (LUMP = g); }
+// fireball: white-hot core flash → many small flickering puffs whose heat rolls outward (white → yellow → orange → red), cooling into
+// dark smoke that trails and rises. set(dt, scale, drift[x,y,z]) ; dt = seconds since contact. HDR colours feed the bloom.
+function fireball({ n = 120, seed = 3 } = {}) {
   const r = S.rng(seed); const G = new THREE.Group();
-  const fireM = new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#ff6a10', emissiveIntensity: 0.85, roughness: 0.9, fog: false });
-  const coreM = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 2.0, 1.2), transparent: true, fog: false });
-  const smokeM = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 1 });
-  const fire = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), fireM, n), smoke = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), smokeM, n);
-  fire.frustumCulled = smoke.frustumCulled = false; smoke.castShadow = false;
-  for (let i = 0; i < n; i++) { const u = r(); fire.setColorAt(i, new THREE.Color().setHSL(0.06 + u * 0.08, 1, 0.55 + u * 0.15)); smoke.setColorAt(i, new THREE.Color().setScalar(0.45 + r() * 0.22)); }
+  const fireM = new THREE.MeshBasicMaterial({ color: '#ffffff', fog: false });
+  const coreM = new THREE.MeshBasicMaterial({ color: new THREE.Color(6, 5.5, 4.6), transparent: true, fog: false });
+  const smokeM = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 1, envMapIntensity: 0.4 });
+  const fire = new THREE.InstancedMesh(lumpGeo(), fireM, n), smoke = new THREE.InstancedMesh(lumpGeo(), smokeM, n);
+  fire.frustumCulled = smoke.frustumCulled = false; fire.castShadow = false; smoke.castShadow = false;
   const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 3), coreM); G.add(core, fire, smoke);
-  const P = Array.from({ length: n }, () => { const u = r() * 2 - 1, a = r() * TAU, s = Math.sqrt(1 - u * u); return { d: [s * Math.cos(a) * 1.4, u * 0.7, s * Math.sin(a)], sp: 0.5 + r(), sz: 0.6 + r() * 0.8, ph: r() }; });
-  G.userData = { set(dt, scale = 1, drift = [0, 0, 0]) {
+  const P = Array.from({ length: n }, () => { const u = r() * 2 - 1, a = r() * TAU, s2 = Math.sqrt(1 - u * u); return { d: [s2 * Math.cos(a) * 1.5, u * 0.75, s2 * Math.sin(a)], rr: Math.pow(r(), 0.8), sz: 0.6 + r() * 0.7, ph: r(), sg: 0.2 + r() * 0.2, rot: [r() * 6, r() * 6, r() * 6] }; });
+  P.forEach((p, i) => smoke.setColorAt(i, new THREE.Color().setScalar(p.sg)));
+  const C = [[1, new THREE.Color(3.0, 2.8, 2.2)], [0.8, new THREE.Color(1.7, 1.25, 0.3)], [0.55, new THREE.Color(1.35, 0.5, 0.06)], [0.3, new THREE.Color(0.85, 0.16, 0.03)], [0, new THREE.Color(0.25, 0.06, 0.03)]];
+  const heatCol = (h) => { for (let k = 1; k < C.length; k++) if (h >= C[k][0]) return C[k][1].clone().lerp(C[k - 1][1], (h - C[k][0]) / (C[k - 1][0] - C[k][0])); return C.at(-1)[1].clone(); };
+  fire.setColorAt(0, new THREE.Color()); smoke.instanceColor.needsUpdate = true;
+  G.userData = { set(dt, scale = 1, drift = [0, 0, 0], t = 0) {
     const on = dt > 0; G.visible = on; if (!on) return;
-    const k = 1 - Math.exp(-dt * 2.2);
-    core.scale.setScalar(scale * (0.4 + 2.2 * k) * Math.max(0, 1 - dt / 1.4)); coreM.opacity = clamp01(1.3 - dt);
-    P.forEach((p, i) => { const R = scale * (1.2 + 5.5 * k * p.sp); const pos = [p.d[0] * R + drift[0] * dt, p.d[1] * R + drift[1] * dt + dt * 0.8 * scale, p.d[2] * R + drift[2] * dt];
-      const fs = scale * p.sz * (1.2 + 2.6 * k) * Math.max(0, 1 - Math.max(0, dt - 0.6 - p.ph) / 1.6);
-      S.place(fire, i, pos, [0, 0, 0], Math.max(0.0001, fs));
-      const ss = scale * p.sz * (0.4 + 2.4 * clamp01((dt - 0.35 - p.ph * 0.4) / 2.5)) * (dt > 0.35 + p.ph * 0.4 ? 1 : 0.0001);
-      S.place(smoke, i, [pos[0] * 1.15, pos[1] * 1.1 + dt * 0.6 * scale, pos[2] * 1.15], [0, 0, 0], Math.max(0.0001, ss)); });
-    fire.instanceMatrix.needsUpdate = smoke.instanceMatrix.needsUpdate = true;
-    fireM.emissiveIntensity = 0.85 * clamp01(2.4 - dt * 0.6); } };
+    const k = 1 - Math.exp(-dt * 6); const cf = Math.max(0, 1 - dt / 0.8);
+    core.scale.setScalar(Math.max(0.001, scale * (0.8 + 3.2 * k) * cf)); coreM.color.setRGB(6 * cf + 3 * (1 - cf), 5.5 * cf + 1.6 * (1 - cf), 4.6 * cf + 0.3 * (1 - cf)); coreM.opacity = clamp01(cf * 1.4);
+    P.forEach((p, i) => { const a = dt * 1.1 - p.rr * 0.55 - p.ph * 0.15; // heat front rolls outward
+      const R = scale * (0.5 + 4.6 * (1 - Math.exp(-Math.max(0, a) * 1.8))) * (0.2 + p.rr);
+      const base = [p.d[0] * R + drift[0] * dt, p.d[1] * R + drift[1] * dt + dt * 0.5 * scale, p.d[2] * R + drift[2] * dt];
+      const h = a < 0 ? 0 : clamp01(1 - a / 1.7) * (0.82 + 0.18 * Math.sin(t * 27 + i * 7.3));
+      const grow = a < 0 ? 0 : Math.min(1, a / 0.12);
+      const fs = scale * p.sz * (0.45 + 1.4 * h) * grow; S.place(fire, i, base, p.rot, a > 0 && h > 0.02 ? fs : 0.0001); fire.setColorAt(i, heatCol(h));
+      const b = a - 0.9; // cooled into smoke: trails (drift) and rises
+      const ss = b < 0 ? 0.0001 : scale * p.sz * Math.min(2.6, 0.8 + b * 0.9);
+      S.place(smoke, i, [base[0] + drift[0] * b * 0.8, base[1] + b * 1.6 * scale, base[2] + drift[2] * b * 0.8], p.rot, ss); });
+    fire.instanceMatrix.needsUpdate = smoke.instanceMatrix.needsUpdate = true; fire.instanceColor.needsUpdate = true; } };
+  return G;
+}
+// burning debris: pieces on ballistic arcs with glowing trails (instanced spheres sampled back along each path)
+function burningDebris({ n = 16, trail = 18, seed = 13 } = {}) {
+  const r = S.rng(seed); const G = new THREE.Group();
+  const heads = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.25, 0.7), S.glossy('#9aa3ad', { rough: 0.4 }), n); heads.frustumCulled = false;
+  const tr = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshBasicMaterial({ color: '#ffffff', fog: false }), n * trail); tr.frustumCulled = false;
+  G.add(heads, tr);
+  const P = Array.from({ length: n }, () => { const a = r() * TAU, el = -0.2 + r() * 1.2, v = 9 + r() * 16; return { v: [Math.cos(a) * Math.cos(el) * v * 1.3, Math.sin(el) * v, Math.sin(a) * Math.cos(el) * v * 0.7], w: [r() * 6, r() * 6, r() * 6], sz: 0.5 + r() * 1.3, life: 2.2 + r() * 2.5 }; });
+  const pos = (p, t) => [p.v[0] * t - 5 * t * t, p.v[1] * t - 4.9 * t * t, p.v[2] * t];
+  const hot = new THREE.Color(1.8, 0.85, 0.12), cool = new THREE.Color(0.3, 0.28, 0.26);
+  G.userData = { set(dt, o = [0, 0, 0]) { G.position.set(...o);
+    P.forEach((p, i) => { const on = dt > 0; S.place(heads, i, on ? pos(p, dt) : [0, -1e4, 0], [p.w[0] * dt, p.w[1] * dt, p.w[2] * dt], on ? p.sz : 0.0001);
+      for (let k = 0; k < trail; k++) { const tt = dt - k * 0.035; const j = i * trail + k; const burn = clamp01(1 - dt / p.life);
+        if (!on || tt < 0) { S.place(tr, j, [0, -1e4, 0], [0, 0, 0], 0.0001); continue; }
+        const f = k / trail; S.place(tr, j, pos(p, tt), [0, 0, 0], (0.5 + 0.45 * p.sz) * (1 - f * 0.8) * (0.4 + 0.6 * burn)); tr.setColorAt(j, hot.clone().multiplyScalar(burn * (1 - f)).add(cool.clone().multiplyScalar(f + (1 - burn) * 0.6))); } });
+    heads.instanceMatrix.needsUpdate = tr.instanceMatrix.needsUpdate = true; if (tr.instanceColor) tr.instanceColor.needsUpdate = true; } };
+  G.userData.set(-1);
   return G;
 }
 function debris({ n = 70, seed = 9, mat } = {}) {
@@ -707,45 +738,46 @@ export default function palSets(H) {
     async sea(ctx, shot) {
       const P0 = shot.params ?? {}; const mode = P0.mode ?? 'search';
       const night = mode === 'snap' && P0.night !== false;
-      const G = await stage(H, ctx, shot, { target: [0, -30, -12], span: 80, az: 150, el: 62, sky: true, seed: P0.seed ?? 9, far: 2000, keyI: night ? 0.55 : 1.45, hemi: night ? 0.15 : 0.3,
+      const G = await stage(H, ctx, shot, { target: [-14, -16, -12], span: 60, az: 150, el: 62, sky: true, seed: P0.seed ?? 9, far: 2000, keyI: night ? 0.55 : 1.45, hemi: night ? 0.15 : 0.3,
         caption: { search: 'THE SEARCH · FEB–MAR 1966', found: '15 MAR 1966 · CONTACT #261', lift: '24 MAR 1966 · ONE LINE', snap: 'ABOUT 9 PM · 24 MAR 1966', refind: '2 APR 1966 · FOUND AGAIN', curv: '7 APR 1966 · CURV', raise: '7 APR 1966 · THE LIFT' }[mode],
         ownPills: true, source: { search: 'ILLUSTRATION · DEPTHS: DNA 1975', found: 'SOURCE: DNA 1975 · US NAVY 1967', lift: 'SOURCE: MORAN 2009 · RECONSTRUCTION', snap: 'SOURCE: DNA 1975; MORAN 2009 · RECONSTRUCTION', refind: 'SOURCE: DNA 1975', curv: 'SOURCE: MORAN 2009 · RECONSTRUCTION', raise: 'SOURCE: DNA 1975; MORAN 2009' }[mode] });
       const { scene, camera } = G; const dur = G.dur; const r = S.rng(3);
-      const X0 = -70, X1 = 70, ZB = -26, Z0 = 0, YB = -68, ZM = -12;
-      // seabed profile (y = -depth/50 ft)
-      const ctrl = [[-82, 1.0], [-70, -2], [-45, -5], [-30, -13], [-18, -37], [-12, -42.6], [-9.5, -43.6], [-4, -50.3], [-1.5, -52.6], [2.5, -55.2], [6, -56.0], [12, -57.1], [24, -58], [40, -59.5], [70, -61]];
+      const X0 = -70, X1 = 70, ZB = -26, Z0 = 0, YB = -32.5, ZM = -12;
+      // seabed profile (y = -depth/100 ft; x compressed): shelf, ridge rim (~2,130 ft), steep canyon wall (find ~2,550 ft), gentler plain (2,800–2,850 ft)
+      const ctrl = [[-82, 1.0], [-70, -1], [-55, -2.5], [-42, -6.5], [-32, -17], [-25, -21.3], [-22.5, -21.8], [-19.5, -24.0], [-17, -26.6], [-15, -27.8], [-11, -28.3], [-4, -28.6], [10, -29.2], [40, -30], [70, -30.6]];
       const spl = new THREE.SplineCurve(ctrl.map(([x, y]) => new THREE.Vector2(x, y))).getPoints(700);
       const f = (x) => { for (let i = 1; i < spl.length; i++) if (spl[i].x >= x) { const a = spl[i - 1], b = spl[i]; return S.lerp(a.y, b.y, (x - a.x) / Math.max(1e-6, b.x - a.x)); } return spl.at(-1).y; };
       const T2 = (x) => { const d = (f(x + 0.3) - f(x - 0.3)) / 0.6; const L = Math.hypot(1, d); return new THREE.Vector3(1 / L, d / L, 0); };
       const N2 = (x) => { const t = T2(x); return new THREE.Vector3(-t.y, t.x, 0); };
       const surf = (x, z = ZM) => new THREE.Vector3(x, f(x), z);
       // seabed solid: profile extruded through the block depth
-      { const sh = new THREE.Shape(); sh.moveTo(X0, YB); for (let x = X0; x <= X1 + 1e-6; x += 0.5) sh.lineTo(x, f(x)); sh.lineTo(X1, YB); sh.closePath();
+      { const sh = new THREE.Shape(); sh.moveTo(X0, YB); for (let x = X0; x <= X1 + 1e-6; x += 0.25) sh.lineTo(x, f(x)); sh.lineTo(X1, YB); sh.closePath();
         const g = new THREE.ExtrudeGeometry(sh, { depth: Z0 - ZB, bevelEnabled: false, curveSegments: 1 }).translate(0, 0, ZB);
+        { const gp = g.attributes.position, gn = g.attributes.normal; for (let i = 0; i < gp.count; i++) { const x = gp.getX(i), y = gp.getY(i); if (Math.abs(gn.getZ(i)) < 0.5 && x > X0 + 1e-3 && x < X1 - 1e-3 && Math.abs(y - f(x)) < 1e-3) { const n = N2(x); gn.setXYZ(i, n.x, n.y, 0); } } gn.needsUpdate = true; }
         const capTex = S.canvasTex(512, 512, (c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#f0e2c2'); gr.addColorStop(1, '#dcc49a'); c.fillStyle = gr; c.fillRect(0, 0, w, h); for (let i = 0; i < 26; i++) { c.fillStyle = `rgba(${i % 2 ? '255,250,235' : '150,120,80'},0.13)`; const y = i * h / 26 + (r() - 0.5) * 8; c.fillRect(0, y, w, 3 + r() * 9); } }, { repeat: [1 / 140, 1 / 70] });
-        capTex.offset.set(0, 68 / 70); capTex.wrapS = capTex.wrapT = THREE.RepeatWrapping;
+        capTex.repeat.set(1 / 140, 1 / 33); capTex.offset.set(0, 1); capTex.wrapS = capTex.wrapT = THREE.RepeatWrapping;
         const bed = mk(g, [new THREE.MeshPhysicalMaterial({ map: capTex, roughness: 0.9, envMapIntensity: 0.7 }), S.clay('#c8c2b0', { rough: 0.9, sheen: 0.1 })]); scene.add(bed); }
       // land wedge at the left end: the Spanish coast with a few white houses
       { const sh = new THREE.Shape(); sh.moveTo(-86, YB); sh.lineTo(-86, 4.2); sh.lineTo(-79, 3.6); sh.lineTo(-74, 1.4); sh.lineTo(-70.2, -1.8); sh.lineTo(-70, YB); sh.closePath();
         scene.add(mk(new THREE.ExtrudeGeometry(sh, { depth: Z0 - ZB, bevelEnabled: false }).translate(0, 0, ZB), [S.clay('#d8bf8f', { rough: 0.9 }), S.clay('#e6d3a4', { rough: 0.85 })]));
         for (let i = 0; i < 7; i++) { const h = mk(S.roundBox(1.4 + r(), 1.2 + r() * 0.8, 1.4, 0.1), S.clay('#fbfaf6', { rough: 0.5 })); h.position.set(-84.5 + (i % 4) * 2.0, 3.9, -6 - Math.floor(i / 4) * 6 - r() * 4); scene.add(h); } }
       // water: back wall gradient (cyan → ultramarine, never muddy), right end wall, translucent front face, glossy surface
-      const wcol = night ? [new THREE.Color('#2f7fd0'), new THREE.Color('#163f9a'), new THREE.Color('#0e2a78')] : [new THREE.Color('#86e0f0'), new THREE.Color('#2f8fd8'), new THREE.Color('#1b47b4')];
-      const gradAt = (y) => { const u = clamp01(-y / 62); return u < 0.5 ? wcol[0].clone().lerp(wcol[1], u * 2) : wcol[1].clone().lerp(wcol[2], (u - 0.5) * 2); };
+      const wcol = night ? [new THREE.Color('#2366b4'), new THREE.Color('#0f2f78'), new THREE.Color('#071a4a')] : [new THREE.Color('#86e0f0'), new THREE.Color('#2f8fd8'), new THREE.Color('#1b47b4')];
+      const gradAt = (y) => { const u = clamp01(-y / 31); return u < 0.5 ? wcol[0].clone().lerp(wcol[1], u * 2) : wcol[1].clone().lerp(wcol[2], (u - 0.5) * 2); };
       const gradGeo = (geo, axisY = true) => { const p = geo.attributes.position, c = []; for (let i = 0; i < p.count; i++) { const col = gradAt(p.getY(i)); c.push(col.r, col.g, col.b); } geo.setAttribute('color', new THREE.Float32BufferAttribute(c, 3)); return geo; };
-      const back = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(X1 - X0, 64, 1, 32).translate((X0 + X1) / 2, -32, ZB + 0.02)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(back);
-      const endW = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(Z0 - ZB, 62, 1, 32).rotateY(Math.PI / 2).translate(X1, -31, (Z0 + ZB) / 2)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(endW);
+      const back = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(X1 - X0, 36, 1, 32).translate((X0 + X1) / 2, -18, ZB + 0.02)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(back);
+      const endW = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(Z0 - ZB, 31, 1, 32).rotateY(Math.PI / 2).translate(X1, -15.5, (Z0 + ZB) / 2)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(endW);
       { const sh = new THREE.Shape(); sh.moveTo(X0, 0); for (let x = X0; x <= X1 + 1e-6; x += 0.5) sh.lineTo(x, f(x)); sh.lineTo(X1, 0); sh.closePath();
         const fg = gradGeo(new THREE.ShapeGeometry(sh, 1)); const front = new THREE.Mesh(fg, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: ['search', 'lift', 'raise'].includes(mode) ? 0.14 : 0.0, depthWrite: false, fog: false })); front.visible = ['search', 'lift', 'raise'].includes(mode); front.position.z = Z0 + 0.03; front.renderOrder = 6; scene.add(front); }
       const sg = new THREE.PlaneGeometry(X1 - X0, Z0 - ZB, 70, 12).rotateX(-Math.PI / 2).translate((X0 + X1) / 2, 0, (Z0 + ZB) / 2); const sBase = sg.attributes.position.array.slice();
       const seaTop = mk(sg, new THREE.MeshPhysicalMaterial({ color: night ? '#2a62b8' : '#3fa6dc', roughness: 0.12, transparent: true, opacity: 0.8, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.4, depthWrite: false }), { cast: false }); seaTop.renderOrder = 7; scene.add(seaTop);
       const lip = mk(new THREE.PlaneGeometry(X1 - X0, 0.6).translate((X0 + X1) / 2, -0.3, Z0 + 0.05), new THREE.MeshBasicMaterial({ color: '#d8f4fb', transparent: true, opacity: 0.7, fog: false }), { cast: false }); scene.add(lip);
       // depth ruler (right end, front face)
-      const ruler = []; if (P0.depths !== false) for (const ft of [0, 1000, 2000, 3000]) { const y = -ft / 50; const tk = mk(S.roundBox(3.2, 0.3, 0.3, 0.08), S.clay('#ffffff')); tk.position.set(X1 + 1.0, y - 0.15, Z0 + 0.2); scene.add(tk);
-        const lb = PR.labelPlane(ft ? `${ft.toLocaleString('en-US')} FT` : 'SURFACE', { w: 11, h: 2.6, bg: '#ffffff', color: '#14233d', radius: 0.3 }); lb.material.alphaTest = 0.5; lb.material.emissive = new THREE.Color('#ffffff'); lb.material.emissiveMap = lb.material.map; lb.material.emissiveIntensity = 0.6; lb.position.set(X1 + 8.6, y, Z0 + 0.4); scene.add(lb); ruler.push(lb); }
+      const ruler = []; if (P0.depths !== false) for (const ft of [0, 1000, 2000, 3000]) { const y = -ft / 100; const tk = mk(S.roundBox(2.2, 0.22, 0.22, 0.06), S.clay('#ffffff')); tk.position.set(X1 + 0.8, y - 0.11, Z0 + 0.2); scene.add(tk);
+        const lb = PR.labelPlane(ft ? `${ft.toLocaleString('en-US')} FT` : 'SURFACE', { w: 6.4, h: 1.5, bg: '#ffffff', color: '#14233d', radius: 0.3 }); lb.material.alphaTest = 0.5; lb.material.emissive = new THREE.Color('#ffffff'); lb.material.emissiveMap = lb.material.map; lb.material.emissiveIntensity = 0.6; lb.position.set(X1 + 5.2, y, Z0 + 0.4); scene.add(lb); ruler.push(lb); }
       // sites
-      const xF = -3.0, xR = 7.5, xC = 11.5;
-      const BK = 4.2 / B28.L; // bomb exaggerated to 4.2 units long
+      const xF = -18.2, xR = -13.4, xC = -6;
+      const BK = 5.4 / B28.L; // bomb exaggerated to 5.4 units long (~550 ft at this depth scale) so it reads in a full-column frame
       const placeBomb = (b, x, { roll = 0, lift = 0, z = ZM } = {}) => { const t = T2(x), n = N2(x); const base = surf(x, z).add(n.clone().multiplyScalar(B28.R * BK + 0.05 + lift)).sub(t.clone().multiplyScalar(B28.L * BK * 0.5));
         b.position.copy(base); b.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), t); b.rotateY(roll); return base; };
       const bomb = b28(); bomb.scale.setScalar(BK); scene.add(bomb);
@@ -766,40 +798,42 @@ export default function palSets(H) {
           p.setXYZ(i, w.x, w.y, w.z); }
         p.needsUpdate = true; drapeGeo.computeVertexNormals(); };
       // furrow (found mode): darker groove down the slope from the ridge rim
-      const furrow = []; for (let x = -11.5; x < xF - 1.2; x += 0.35) furrow.push({ p: [x, f(x) + 0.02, ZM], r: [0, 0, Math.atan2(T2(x).y, T2(x).x)], sv: [0.42, 0.06, 0.5] });
+      const furrow = []; for (let x = -24; x < xF - 1.6; x += 0.3) furrow.push({ p: [x, f(x) + 0.02, ZM], r: [0, 0, Math.atan2(T2(x).y, T2(x).x)], sv: [0.36, 0.06, 0.6] });
       const furrowM = S.instances(S.roundBox(1, 1, 1, 0.3, 2), S.clay('#c9ad80', { rough: 1 }), furrow, { cast: false }); furrowM.visible = mode === 'found' || mode === 'search'; scene.add(furrowM);
       // ships
-      const minesweeper = ship({ len: 15, beam: 2.8 }); minesweeper.position.set(-26, 0, -8); scene.add(minesweeper);
-      const navy2 = ship({ len: 20, beam: 3.4 }); navy2.position.set(32, 0, -19); navy2.rotation.y = 0.15; scene.add(navy2);
-      const navy3 = ship({ len: 17, beam: 3 }); navy3.position.set(-48, 0, -20); navy3.rotation.y = Math.PI; scene.add(navy3);
-      const trawler = ship({ len: 8, beam: 2.2, kind: 'trawler' }); trawler.position.set(-58, 0, -4); trawler.rotation.y = 0.4; scene.add(trawler);
-      const mizar = ship({ len: 20, beam: 3.4, kind: 'mizar', color: '#d3d9de' }); mizar.position.set(xF, 0, ZM); mizar.visible = mode === 'lift' || mode === 'snap'; scene.add(mizar);
-      const petrel = ship({ len: 20, beam: 3.6, kind: 'petrel' }); petrel.position.set(xC + 6, 0, ZM); petrel.visible = mode === 'curv' || mode === 'raise'; scene.add(petrel);
-      if (mizar.visible || petrel.visible) { navy2.position.x = 44; }
+      const minesweeper = ship({ len: 11, beam: 2.1 }); minesweeper.position.set(-36, 0, -8); scene.add(minesweeper);
+      const navy2 = ship({ len: 14, beam: 2.5 }); navy2.position.set(14, 0, -19); navy2.rotation.y = 0.15; scene.add(navy2);
+      const navy3 = ship({ len: 12, beam: 2.2 }); navy3.position.set(-52, 0, -20); navy3.rotation.y = Math.PI; scene.add(navy3);
+      const trawler = ship({ len: 6, beam: 1.7, kind: 'trawler' }); trawler.position.set(-62, 0, -4); trawler.rotation.y = 0.4; scene.add(trawler);
+      const mizar = ship({ len: 15, beam: 2.7, kind: 'mizar', color: '#d3d9de' }); mizar.position.set(xF + 0.6, 0, ZM); mizar.visible = mode === 'lift' || mode === 'snap'; scene.add(mizar);
+      const petrel = ship({ len: 15, beam: 2.8, kind: 'petrel' }); petrel.position.set(xC + 5, 0, ZM); petrel.visible = mode === 'curv' || mode === 'raise'; scene.add(petrel);
+      if (mizar.visible || petrel.visible) { navy2.position.x = 22; }
+      // night: deck work lights on Mizar
+      if (night) for (const [x, y] of [[-3, 2.6], [2, 3.2], [-5.5, 1.6]]) { const l = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 2.6, 1.8), fog: false })); l.position.set(x, y, 1.2); mizar.add(l); }
       // Alvin (exaggerated: 22 ft → 5.5 units)
-      const alv = alvin(); alv.scale.setScalar(5.5 / 22); scene.add(alv); alv.visible = ['search', 'found', 'refind'].includes(mode);
-      const lampBeam = beam({ len: 10, rad: 2.6, opacity: night ? 0.4 : 0.28 }); scene.add(lampBeam); lampBeam.visible = alv.visible;
+      const alv = alvin(); alv.scale.setScalar(7 / 22); scene.add(alv); alv.visible = ['search', 'found', 'refind'].includes(mode);
+      const lampBeam = beam({ len: 10, rad: 3.0, opacity: night ? 0.4 : 0.28 }); scene.add(lampBeam); lampBeam.visible = alv.visible;
       const spot = new THREE.SpotLight('#f4f8ff', 0, 40, 0.42, 0.6, 0); scene.add(spot, spot.target);
       // rigging: POODL frame + strobe, anchor, main line, grapnel line, stubs
       const steel = S.clay('#8d97a2', { rough: 0.4 });
       const poodl = new THREE.Group(); { const rr = rods(9, steel); poodl.add(rr); for (let k = 0; k < 8; k++) { const a = k / 8 * TAU; rr.set(k, new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(Math.cos(a) * 0.8, 0, Math.sin(a) * 0.8), 0.05); } rr.set(8, new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(0, 2.2, 0), 0.08); rr.done();
         const ring = mk(new THREE.TorusGeometry(0.8, 0.06, 6, 24).rotateX(Math.PI / 2), steel); poodl.add(ring); }
       const strobeM = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 3, 3.2), fog: false }); const strobe = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), strobeM); strobe.position.y = 1.9; poodl.add(strobe);
-      const strobeL = new THREE.PointLight('#dfe9ff', 0, 30, 0); strobe.add(strobeL);
+      const strobeL = new THREE.PointLight('#dfe9ff', 0, 40, 0); strobe.add(strobeL);
       scene.add(poodl); poodl.visible = mode === 'lift' || mode === 'snap';
       const anchor = new THREE.Group(); { const sh = mk(new THREE.CylinderGeometry(0.1, 0.1, 1.6, 8).translate(0, 0.8, 0), steel); anchor.add(sh); for (const s2 of [-1, 1]) { const fl = mk(S.roundBox(0.7, 0.12, 0.35, 0.05), steel); fl.position.set(s2 * 0.35, 0.1, 0); fl.rotation.z = s2 * 0.6; anchor.add(fl); } const rg = mk(new THREE.TorusGeometry(0.2, 0.05, 6, 16), steel); rg.position.y = 1.7; anchor.add(rg); }
       scene.add(anchor); anchor.visible = poodl.visible;
-      const mainLine = rope(40, '#f3efe2', 0.09), grapLine = rope(30, '#f3efe2', 0.1), stub = rope(6, '#f3efe2', 0.1); scene.add(mainLine, grapLine, stub);
+      const mainLine = rope(40, '#f3efe2', 0.14), grapLine = rope(30, '#f3efe2', 0.15), stub = rope(6, '#f3efe2', 0.15); scene.add(mainLine, grapLine, stub);
       const fray = rods(28, S.clay('#f3efe2', { rough: 0.8 })); scene.add(fray); const frayDirs = Array.from({ length: 28 }, () => new THREE.Vector3(r() - 0.5, r() - 0.5, r() - 0.5).normalize());
       // billowing canopy (lift/snap/curv/raise): inflated, tethered to the bomb by risers
-      const can = canopy({ r: 4.0, h: 2.8, gores: 16 }); scene.add(can); const risers = rods(17, S.clay('#ddd5bd', { rough: 0.8 })); scene.add(risers);
+      const can = canopy({ r: 5.2, h: 3.6, gores: 16 }); scene.add(can); const risers = rods(17, S.clay('#ddd5bd', { rough: 0.8 })); scene.add(risers);
       // sand plume (snap), sonar rings (search), CURV (curv/raise), cable for CURV
       const NS = 46, sandM = new THREE.MeshStandardMaterial({ color: '#e8d3a8', roughness: 1, transparent: true, opacity: 0.5, depthWrite: false });
       const sand = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), sandM, NS); sand.frustumCulled = false; sand.renderOrder = 4; scene.add(sand);
       const sandP = Array.from({ length: NS }, (_, i) => ({ u: i / NS, a: r() * TAU, sz: 0.5 + r() * 0.9, up: 0.4 + r() }));
       const ringM = new THREE.MeshBasicMaterial({ color: '#e9fbff', transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
       const rings = [0, 1, 2, 3].map(() => { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.012, 6, 64, Math.PI), ringM.clone()); m.rotation.z = Math.PI; m.renderOrder = 6; scene.add(m); return m; });
-      const cv = curv(); cv.scale.setScalar(6 / 13); scene.add(cv); cv.visible = mode === 'curv' || mode === 'raise';
+      const cv = curv(); cv.scale.setScalar(7.5 / 13); scene.add(cv); cv.visible = mode === 'curv' || mode === 'raise';
       const umb = rope(30, '#2e333a', 0.07); scene.add(umb); const lines2 = rope(30, '#f3efe2', 0.08); scene.add(lines2);
       // red hand-drawn loop (thumbnail B) around the break
       const loopSvg = P0.loop ? (() => { const d = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); d.setAttribute('width', '100%'); d.setAttribute('height', '100%'); d.setAttribute('viewBox', `0 0 ${1080 * ctx.width / ctx.height} 1080`); d.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:visible'; G.layer.appendChild(d);
@@ -820,22 +854,28 @@ export default function palSets(H) {
         const el = H.pill(G.layer, p.text, { size: p.size ?? 26, dot: p.red ? RED : null }); el.at(0, 0, 0); return { ...p, el, t0: G.cue(c, 0.8 + i), t1: u == null ? Infinity : G.cue(u, Infinity) }; });
       // cameras
       const F = surf(xF), R2 = surf(xR), C2 = surf(xC);
+      // full-column framing: surface + ships at the top, the gradient, the line, the slope in the bottom third
       const keys = P0.camera ?? {
-        search: [{ pos: [-10, -6, 120], look: [-6, -28, -12], mm: 26 }, { pos: [6, -10, 118], look: [-2, -30, -12], mm: 26 }],
-        found: [{ pos: [-7, -41, 12], look: [-7, -46, -12], mm: 32 }, { pos: [-1.5, -46.8, 6], look: [-3.6, -50.9, -12], mm: 36 }],
-        lift: [{ pos: [-30, -10, 70], look: [-4, -27, -12], mm: 26 }, { pos: [-22, -16, 64], look: [-3, -30, -12], mm: 26 }],
-        snap: [{ pos: [-7, -40, 14], look: [-5.2, -44.8, -12], mm: 26 }, { pos: [-4, -41.5, 14], look: [-3.8, -46.2, -12], mm: 26 }, { pos: [6.5, -50, 11], look: [5.5, -55, -12], mm: 30 }],
-        refind: [{ pos: [-6, -46, 18], look: [2, -52.5, -12], mm: 32 }, { pos: [6, -51.5, 7], look: [7, -55.6, -12], mm: 36 }],
-        curv: [{ pos: [0, -44, 22], look: [11, -51.5, -12], mm: 32 }, { pos: [6, -46, 20], look: [11.5, -53, -12], mm: 34 }],
-        raise: [{ pos: [28, -44, 34], look: [11, -50, -12], mm: 28 }, { pos: [28, -26, 36], look: [12, -26, -12], mm: 28 }, { pos: [22, -5, 22], look: [12, -5, -12], mm: 30 }],
+        search: [{ pos: [-12, -14, 74], look: [-10, -15, -12], mm: 26 }, { pos: [-6, -15, 72], look: [-8, -15.5, -12], mm: 26 }],
+        found: [{ pos: [-6, -14, 46], look: [-8, -14.5, -12], mm: 26 }, { pos: [-11, -20, 28], look: [-14, -21.5, -12], mm: 26 }],
+        lift: [{ pos: [-4, -14, 48], look: [-7, -14.5, -12], mm: 26 }, { pos: [-7, -14.5, 46], look: [-8, -15, -12], mm: 26 }],
+        refind: [{ pos: [-4, -15, 44], look: [-7, -16, -12], mm: 26 }, { pos: [-7, -22, 27], look: [-10, -23.5, -12], mm: 26 }],
+        curv: [{ pos: [2, -18, 36], look: [-1, -19, -12], mm: 26 }, { pos: [1, -19.5, 32], look: [-1, -20.5, -12], mm: 27 }],
+        raise: [{ pos: [3, -15, 50], look: [-1, -15, -12], mm: 26 }, { pos: [2, -13, 50], look: [-1, -13.5, -12], mm: 26 }],
       }[mode];
+      // snap: two moves split at the break: a slow push down the line toward the rig, then a follow of the slide
+      const snapA = [{ pos: [-4, -14, 48], look: [-7, -14.5, -12], mm: 26 }, { pos: [-11, -19.5, 28], look: [-14, -20.5, -12], mm: 26 }];
+      const snapB = [{ pos: [-11, -19.5, 28], look: [-14, -20.5, -12], mm: 26 }, { pos: [-9, -22, 25], look: [-12, -23.5, -12], mm: 26 }, { pos: [-7, -23.5, 24], look: [-10, -25, -12], mm: 26 }];
       G.st.key.shadow.camera.far = 600; G.st.key.shadow.camera.updateProjectionMatrix();
       G.finish({ ao: { radius: 1.2, intensity: 1.6, falloff: 0.8 }, bloom: { intensity: night ? 0.9 : 0.4, threshold: 1.6, radius: 0.5 } });
+      // a moonless night over the snap (RESEARCH G1: ~9% crescent, set or setting by 9:15 pm)
+      if (night) scene.background = S.canvasTex(1024, 576, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#060d24'); gr.addColorStop(0.7, '#13285a'); gr.addColorStop(1, '#22407a'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+        const rr = S.rng(5); for (let i = 0; i < 260; i++) { g.fillStyle = `rgba(255,255,255,${0.3 + rr() * 0.6})`; g.beginPath(); g.arc(rr() * w, rr() * h * 0.75, 0.4 + rr() * 1.1, 0, 7); g.fill(); } });
       const tmp = new THREE.Vector3();
       return { scene, camera, layer: G.layer, update(t) {
-        const c = G.cam(keys, t, { float: 0.05 });
+        if (mode === 'snap' && !P0.camera) { if (t < at) S.rig(camera, snapA, t, { t0: 0, t1: at, float: 0.04 }); else S.rig(camera, snapB, t, { t0: at, t1: dur, float: 0.04 }); } else G.cam(keys, t, { float: 0.05 });
         // camera shake at the snap
-        if (mode === 'snap') { const ds = t - at; if (ds > 0 && ds < 1.0) { const a = (1 - ds) * 0.35; camera.position.x += Math.sin(t * 61) * a; camera.position.y += Math.cos(t * 47) * a; camera.updateMatrixWorld(true); } }
+        if (mode === 'snap') { const ds = t - at; if (ds > 0 && ds < 1.0) { const a = (1 - ds) * 0.45; camera.position.x += Math.sin(t * 61) * a; camera.position.y += Math.cos(t * 47) * a; camera.updateMatrixWorld(true); } }
         // sea surface waves
         { const p = sg.attributes.position; for (let i = 0; i < p.count; i++) { const x = sBase[i * 3], z = sBase[i * 3 + 2]; p.setY(i, 0.12 * Math.sin(x * 0.35 + t * 1.3) + 0.08 * Math.sin(z * 0.6 - t * 1.1 + x * 0.1)); } p.needsUpdate = true; sg.computeVertexNormals(); }
         for (const sh of [minesweeper, navy2, navy3, trawler, mizar, petrel]) { sh.position.y = 0.06 * Math.sin(t * 1.2 + sh.position.x); sh.rotation.z = 0.02 * Math.sin(t * 0.9 + sh.position.x); }
@@ -846,56 +886,56 @@ export default function palSets(H) {
           const tgtX = mode === 'refind' ? xR : xF; bx = tgtX;
           // Alvin path: down the slope toward the target, lamp sweeping, then landing on it at `at`
           const u = ease(S.range(t, 0, mode === 'search' ? dur : at));
-          const ax = mode === 'search' ? S.lerp(-24, -9, u) : mode === 'found' ? S.lerp(-11.5, tgtX - 4.0, u) : S.lerp(xF - 2, tgtX - 4.6, u);
-          const ay = (mode === 'search' ? S.lerp(-22, -36, u) : f(ax) + S.lerp(5.5, 3.0, u)) + Math.sin(t * 0.9) * 0.15;
-          alv.position.set(ax, ay, ZM + 1.5); alv.rotation.set(0, 0, mode === 'search' ? -0.15 : -0.32 + Math.sin(t * 0.6) * 0.03);
+          const ax = mode === 'search' ? S.lerp(-34, -21, u) : mode === 'found' ? S.lerp(xF - 9, tgtX - 5.5, u) : S.lerp(xF - 3, tgtX - 6, u);
+          const ay = (mode === 'search' ? S.lerp(-8, -19, u) : f(ax) + S.lerp(6.5, 4.0, u)) + Math.sin(t * 0.9) * 0.15;
+          alv.position.set(ax, ay, ZM + 2.5); alv.rotation.set(0, 0, mode === 'search' ? -0.15 : -0.32 + Math.sin(t * 0.6) * 0.03);
           alv.userData.prop.rotation.x = t * 6;
           const lampW = alv.localToWorld(alv.userData.lamps[0].clone()); const targetB = surf(tgtX).add(new THREE.Vector3(0, 0.3, 0));
           const sweep = mode === 'search' ? new THREE.Vector3(ax + 9 + Math.sin(t * 0.8) * 3, f(ax + 9) + 0.2, ZM) : targetB.clone().lerp(surf(ax + 8 + Math.sin(t * 1.1) * 2.5), 1 - ease(S.range(t, at - 1.4, at)));
           lampBeam.aim(lampW, sweep); spot.position.copy(lampW); spot.target.position.copy(sweep); spot.target.updateMatrixWorld();
           spot.intensity = mode === 'search' ? 1.2 : S.lerp(1.0, 2.2, S.range(t, at - 0.3, at + 0.4));
-          tg.alvin = alv.position.clone().add(new THREE.Vector3(0, 2.6, 0));
+          tg.alvin = alv.position.clone().add(new THREE.Vector3(0, 3.4, 0));
           // sonar pings from the minesweeper
-          rings.forEach((m, i) => { const per = 2.2, dt = ((t - i * per * 0.5 - (mode === 'search' ? 0.2 : 99)) % (per * 2)); const on = mode === 'search' && t > i * per * 0.5 && dt >= 0; m.visible = on; if (on) { const R = 1 + dt * 18; m.position.set(minesweeper.position.x, -1.0, minesweeper.position.z); m.scale.set(R, R, R); m.material.opacity = 0.75 * (1 - dt / (per * 2)); } });
-          tg.ping = new THREE.Vector3(minesweeper.position.x + 6, -8, minesweeper.position.z);
+          rings.forEach((m, i) => { const per = 2.2, dt = ((t - i * per * 0.5 - (mode === 'search' ? 0.2 : 99)) % (per * 2)); const on = mode === 'search' && t > i * per * 0.5 && dt >= 0; m.visible = on; if (on) { const R = 1 + dt * 9; m.position.set(minesweeper.position.x, -1.0, minesweeper.position.z); m.scale.set(R, R, R); m.material.opacity = 0.75 * (1 - dt / (per * 2)); } });
+          tg.ping = new THREE.Vector3(minesweeper.position.x + 5, -5, minesweeper.position.z);
         } else rings.forEach(m => (m.visible = false));
         if (mode === 'lift' || mode === 'snap') {
           // Mizar winches a 3½-in nylon line through its centre well; POODL 38 ft above the anchor; 300-ft line from the anchor to a grapnel in the risers
-          const well = new THREE.Vector3(xF - 1, -1.0, ZM);
+          const well = new THREE.Vector3(xF + 0.6, -0.8, ZM);
           const ds = t - at; const snapped = mode === 'snap' && ds > 0;
           const pre = mode === 'snap' ? ease(S.range(t, 0.2, at)) : ease(S.range(t, at + 2.2, dur)); // winch progress before the break
-          const anchorBase = surf(xF - 4.6).add(new THREE.Vector3(0, 0.05, 0));
-          let anc = anchorBase.clone(); anc.y += pre * 3.2; anc.x += pre * 0.6;
-          if (snapped) { const k = 1 - Math.exp(-ds * 2.2); anc.y += k * 9; anc.x -= k * 0.8; }
+          const anchorBase = surf(xF - 5.5).add(new THREE.Vector3(0, 0.05, 0));
+          let anc = anchorBase.clone(); anc.y += pre * 3.0; anc.x += pre * 0.8;
+          if (snapped) { const k = 1 - Math.exp(-ds * 2.6); anc.y += k * 5; anc.x -= k * 0.8; }
           anchor.position.copy(anc); anchor.rotation.z = snapped ? Math.sin(ds * 5) * 0.4 * Math.exp(-ds) : pre * 0.4;
           poodl.position.copy(anc).add(new THREE.Vector3(0, 3.0, 0));
           // main line: from POODL up to Mizar's well (drawn upward in lift mode)
           const draw = mode === 'lift' ? ease(S.range(t, at, at + 2.0)) : 1;
-          const mp = []; const top = poodl.position.clone().add(new THREE.Vector3(0, 2.2, 0)); for (let i = 0; i <= 30; i++) { const u2 = i / 30 * draw; mp.push(top.clone().lerp(well, u2).add(new THREE.Vector3(Math.sin(u2 * Math.PI) * (1 - pre) * 2.2, 0, 0))); } mainLine.setPoints(mp, 0.09);
+          const mp = []; const top = poodl.position.clone().add(new THREE.Vector3(0, 2.2, 0)); const whip = snapped ? 2.6 * Math.exp(-ds * 1.4) : 0; for (let i = 0; i <= 39; i++) { const u2 = i / 39 * draw; mp.push(top.clone().lerp(well, u2).add(new THREE.Vector3(Math.sin(u2 * Math.PI) * (1 - pre) * 2.2 + whip * Math.sin(u2 * Math.PI * 3 - ds * 14) * Math.sin(u2 * Math.PI), 0, whip * 0.5 * Math.cos(u2 * Math.PI * 2 - ds * 11) * Math.sin(u2 * Math.PI)))); } mainLine.setPoints(mp, 0.14);
           poodl.visible = anchor.visible = draw > 0.98 || mode === 'snap';
           if (mode === 'lift') { poodl.visible = anchor.visible = true; }
           // the bomb: dragged slightly upslope as Mizar drifts, lifted off the bottom; after the break it drops and slides down to the re-find spot
-          let bxNow = xF - pre * 0.8, bl = pre * (mode === 'snap' ? 0.9 : 0.4);
-          if (snapped) { const fall = clamp01(ds / 0.5); bl = bl * (1 - fall * fall); const sl = ease(S.range(ds, 0.35, 3.6)); bxNow = S.lerp(xF - 0.8, xR, sl); roll = 0.3 + sl * 7.5; lift = bl + Math.abs(Math.sin(sl * Math.PI * 3)) * 0.5 * (1 - sl); }
+          let bxNow = xF - pre * 0.9, bl = pre * (mode === 'snap' ? 1.4 : 0.5);
+          if (snapped) { const fall = clamp01(ds / 0.45); bl = bl * (1 - fall * fall); const sl = S.inOutSine(S.range(ds, 0.3, 3.4)); bxNow = S.lerp(xF - 0.9, xR, sl); roll = 0.3 + sl * 9.5; lift = bl + Math.abs(Math.sin(sl * Math.PI * 3)) * 0.8 * (1 - sl); }
           else lift = bl;
           bx = bxNow;
           // grapnel line: anchor → chute risers (taut as the winch takes strain); after the break: a long stub trails the bomb, a short frayed stump hangs off the anchor
           const conf = surf(bx).add(N2(bx).multiplyScalar(lift + 0.9)).sub(T2(bx).multiplyScalar(B28.L * BK * 0.5 + 1.2));
           const brk = anc.clone().lerp(conf, 0.12);
-          if (!snapped) { const sag = (1 - pre) * 1.6 + 0.1; grapLine.setPoints(sagCurve(anc.clone().add(new THREE.Vector3(0, 0.2, 0)), conf, -sag * 0, 24).map((p, i, arr) => { const u2 = i / (arr.length - 1); return p.add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * sag, 0)); }), 0.1); stub.setPoints([], 0.1); }
+          if (!snapped) { const sag = (1 - pre) * 1.6 + 0.1; grapLine.setPoints(sagCurve(anc.clone().add(new THREE.Vector3(0, 0.2, 0)), conf, -sag * 0, 24).map((p, i, arr) => { const u2 = i / (arr.length - 1); return p.add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * sag, 0)); }), 0.15); stub.setPoints([], 0.1); }
           else { const brkFall = brk.clone(); brkFall.y -= Math.min(4, ds * ds * 3); brkFall.x += ds * 0.6;
-            const lower = []; for (let i = 0; i <= 20; i++) { const u2 = i / 20; lower.push(brkFall.clone().lerp(conf, u2).add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * Math.min(2.4, ds * 2), 0))); } grapLine.setPoints(lower, 0.1);
+            const lower = []; for (let i = 0; i <= 20; i++) { const u2 = i / 20; lower.push(brkFall.clone().lerp(conf, u2).add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * Math.min(2.4, ds * 2), 0))); } grapLine.setPoints(lower, 0.15);
             const stp = anc.clone().add(new THREE.Vector3(0, 0.2, 0)); stub.setPoints([stp, stp.clone().add(new THREE.Vector3(0.15, -1.2, 0)).add(new THREE.Vector3(Math.sin(ds * 6) * 0.2 * Math.exp(-ds), 0, 0))], 0.1); }
           // frayed burst at the break
-          for (let i = 0; i < 28; i++) { if (!snapped || ds > 1.6) { fray.hide(i); continue; } const k = 1 - Math.exp(-ds * 6); const d0 = frayDirs[i]; const a = brk.clone().add(d0.clone().multiplyScalar(0.15)); const b = brk.clone().add(d0.clone().multiplyScalar(0.3 + k * (0.8 + (i % 4) * 0.25))); b.y -= ds * ds * 0.6; fray.set(i, a, b, 0.035 * (1 - ds / 1.6) + 0.005); } fray.done();
+          for (let i = 0; i < 28; i++) { if (!snapped || ds > 1.6) { fray.hide(i); continue; } const k = 1 - Math.exp(-ds * 6); const d0 = frayDirs[i]; const a = brk.clone().add(d0.clone().multiplyScalar(0.15)); const b = brk.clone().add(d0.clone().multiplyScalar(0.4 + k * (1.3 + (i % 4) * 0.4))); b.y -= ds * ds * 0.6; fray.set(i, a, b, 0.035 * (1 - ds / 1.6) + 0.005); } fray.done();
           // strobe on POODL (the only light at the bottom that night)
-          const blink = ((t * 1.2) % 1) < 0.08; strobeM.color.setScalar(blink ? 4 : 0.5); strobeL.intensity = mode === 'snap' ? (blink ? 9 : 0.6) : 0;
+          const blink = ((t * 1.2) % 1) < 0.08; strobeM.color.setScalar(blink ? 4 : 0.5); strobeL.intensity = mode === 'snap' ? (blink ? 14 : 1.2) : 0;
           // sand plume as it slides
           for (let i = 0; i < NS; i++) { const sp = sandP[i]; const tt = snapped ? ds - 0.35 - sp.u * 3.2 : -1; if (tt < 0) { S.place(sand, i, [0, -500, 0], [0, 0, 0], 0.0001); continue; }
-            const x = S.lerp(xF - 0.8, xR, ease(clamp01(sp.u * 1.05))); const p0 = surf(x).add(new THREE.Vector3(Math.cos(sp.a) * 0.6, 0.2, Math.sin(sp.a) * 1.2));
-            S.place(sand, i, [p0.x + tt * 0.5, p0.y + Math.min(3, tt * sp.up * 1.4), p0.z], [0, 0, 0], sp.sz * 0.45 * Math.min(2.2, 0.4 + tt * 0.8)); }
+            const x = S.lerp(xF - 0.8, xR, ease(clamp01(sp.u * 1.05))); const p0 = surf(x).add(new THREE.Vector3(Math.cos(sp.a) * 0.8, 0.3, Math.sin(sp.a) * 1.6));
+            S.place(sand, i, [p0.x + tt * 0.6, p0.y + Math.min(4, tt * sp.up * 1.6), p0.z], [0, 0, 0], sp.sz * 0.6 * Math.min(2.4, 0.4 + tt * 0.9)); }
           sand.instanceMatrix.needsUpdate = true; sandM.opacity = snapped ? 0.42 * (1 - S.range(ds, 3.5, 7)) : 0;
-          tg.ship = mizar.position.clone().add(new THREE.Vector3(0, 4.6, 0)); tg.line = top.clone().lerp(well, 0.55).add(new THREE.Vector3(0.4, 0, 0)); tg.break = brk.clone().add(new THREE.Vector3(0, 0.4, 0));
+          tg.ship = mizar.position.clone().add(new THREE.Vector3(0, 4.2, 0)); tg.line = top.clone().lerp(well, 0.55).add(new THREE.Vector3(0.4, 0, 0)); tg.break = brk.clone().add(new THREE.Vector3(0, 0.4, 0));
           canOn = true; drapeOn = false; bombFree = { conf, open: snapped ? 0.35 + 0.65 * (1 - S.range(ds, 0.2, 2.5)) : 0.35 + pre * 0.65 };
           if (loopSvg) { const [px, py, v] = G.toPx(brk); const [bxp, byp] = G.toPx(surf(bx)); const cx = (px + bxp) / 2, cy = (py + byp) / 2, rx = Math.max(140, Math.abs(px - bxp) * 0.7 + 90), ry = Math.max(110, Math.abs(py - byp) * 0.7 + 80);
             let d = ''; for (let i = 0; i <= 64; i++) { const a = i / 64 * TAU * 1.08 - 0.4, w = 1 + 0.05 * Math.sin(a * 3 + 1); d += `${i ? 'L' : 'M'}${(cx + Math.cos(a) * rx * w).toFixed(1)},${(cy + Math.sin(a) * ry * w).toFixed(1)}`; } loopSvg.setAttribute('d', d); loopSvg.style.opacity = v && snapped ? String(S.range(ds, 0.3, 0.6)) : '0'; }
@@ -904,13 +944,13 @@ export default function palSets(H) {
           // the bomb on the deeper plain (~2,850 ft), chute billowing "like a giant jellyfish"; CURV flies in and fouls in the canopy; then the lift
           bx = xC; canOn = true; drapeOn = false;
           const rise = mode === 'raise' ? ease(S.range(t, at, dur * 0.92)) : 0;
-          const yUp = rise * (-(f(xC)) - 6);
+          const yUp = rise * (-(f(xC)) - 10);
           const foul = mode === 'curv' ? ease(S.range(t, 0, at)) : 1;
           lift = 0.2 + yUp + (mode === 'raise' ? S.range(t, at, at + 1) * 1.2 : 0);
           const conf = surf(bx).add(N2(bx).multiplyScalar(lift + 0.9)).sub(T2(bx).multiplyScalar(B28.L * BK * 0.5 + 1.0));
           bombFree = { conf, open: 0.85 + 0.15 * Math.sin(t * 1.1), squash: mode === 'curv' ? 0.15 + 0.25 * S.range(t, at, at + 1.5) : 0.35 };
           // CURV
-          const cvTarget = conf.clone().add(new THREE.Vector3(-1.6, 4.0, 0.6));
+          const cvTarget = conf.clone().add(new THREE.Vector3(-2.0, 5.0, 0.8));
           cv.position.copy(new THREE.Vector3(xC - 12, f(xC) + 9, ZM + 1.5).lerp(cvTarget, foul)); cv.rotation.set(0, 0.25, -0.12 + Math.sin(t * 0.9) * 0.03 + (mode === 'curv' ? S.range(t, at, at + 1) * 0.35 : 0.35));
           const sh = petrel.position.clone().add(new THREE.Vector3(-4, -0.5, 0)); const cvTop = cv.position.clone().add(new THREE.Vector3(0, 1.8, 0));
           const um = []; for (let i = 0; i <= 28; i++) { const u2 = i / 28; um.push(cvTop.clone().lerp(sh, u2).add(new THREE.Vector3(Math.sin(Math.PI * u2) * 3 * (1 - rise), 0, 0))); } umb.setPoints(um, 0.07);
@@ -923,10 +963,10 @@ export default function palSets(H) {
         if (bombFree && (mode === 'curv' || mode === 'raise') && lift > 2) { // hanging below the rising bundle, nose down, tangled a third of the way up
           const conf = bombFree.conf; bomb.position.copy(conf).add(new THREE.Vector3(0.3, -0.8, 0)); bomb.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI + 0.25 + Math.sin(t * 0.8) * 0.06);
         } else placeBomb(bomb, bx, { roll, lift });
-        drape.visible = drapeOn; if (drapeOn) setDrape(bx, { t, R: 2.9, off: -1.7 });
+        drape.visible = drapeOn; if (drapeOn) setDrape(bx, { t, R: 3.7, off: -2.2 });
         can.visible = canOn; risers.visible = canOn;
         if (canOn && bombFree) { const o = bombFree.open; const T = T2(bx); const conf = bombFree.conf;
-          const apexDir = (mode === 'lift' || mode === 'snap') ? new THREE.Vector3(1, 0.5, 0.35).normalize() : new THREE.Vector3(-0.35, 1, 0).normalize(); const cpos = conf.clone().addScaledVector(apexDir, 3.4 + o * 1.4);
+          const apexDir = (mode === 'lift' || mode === 'snap') ? new THREE.Vector3(1, 0.5, 0.35).normalize() : new THREE.Vector3(-0.35, 1, 0).normalize(); const cpos = conf.clone().addScaledVector(apexDir, 4.4 + o * 1.9);
           can.position.copy(cpos); can.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), apexDir); can.rotateY(t * 0.05);
           can.scale.set(0.45 + o * 0.55, 0.35 + o * 0.65, 0.45 + o * 0.55); can.userData.set({ breath: 0.5 + 0.5 * Math.sin(t * 1.4), squash: (1 - o) * 0.6 + (bombFree.squash ?? 0), t });
           can.updateMatrixWorld(true); const tail = bomb.localToWorld(new THREE.Vector3(0, 0, 0));
@@ -1101,8 +1141,14 @@ export default function palSets(H) {
       const bm = b52(); scene.add(bm);
       const clouds = cloudField({ n: 60, area: 4200, y: -380, seed: 5, scale: 1.4 }); scene.add(clouds);
       const sea = mk(new THREE.PlaneGeometry(30000, 30000).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#3b86c9', roughness: 0.5 }), { cast: false, receive: false }); sea.position.y = -2400;
-      const fb = fireball({ n: 40 }); scene.add(fb); const deb = debris({ n: 80 }); scene.add(deb);
-      const flash = H.K.div(G.layer, 'opacity:0;inset:0;background:radial-gradient(circle at 50% 45%, rgba(255,250,235,1) 0%, rgba(255,236,190,.85) 35%, rgba(255,220,160,0) 75%)');
+      const fb = fireball({ n: 130 }); scene.add(fb); const deb = debris({ n: 60 }); scene.add(deb); const burn = burningDebris({ n: 18 }); scene.add(burn);
+      // collision: each aircraft is two clipped halves that move together until contact, then break apart
+      let tkA = null, bmA = null; const clips = [];
+      if (mode === 'collision') { ctx.renderer.localClippingEnabled = true; tkA = kc135(); scene.add(tkA); bmA = b52(); scene.add(bmA);
+        const clipGroup = (g, nx, cut) => { const local = new THREE.Plane(new THREE.Vector3(nx, 0, 0), -nx * cut), world = local.clone(); const mats = new Set();
+          g.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => mats.add(m)); }); mats.forEach(m => { m.clippingPlanes = [world]; m.clipShadows = true; m.side = THREE.DoubleSide; }); clips.push({ g, local, world }); };
+        clipGroup(tk, 1, -11.5); clipGroup(tkA, -1, -11.5); clipGroup(bm, 1, 8); clipGroup(bmA, -1, 8); }
+      const flash = H.K.div(G.layer, 'opacity:0;inset:0;background:radial-gradient(circle at 50% 45%, rgba(255,252,240,1) 0%, rgba(255,236,190,.6) 30%, rgba(255,220,160,0) 65%)');
       // bombs (fall mode): four B28s at 1 unit = 1 m (scale 0.1), three with chutes
       const bombs = []; if (mode === 'fall') {
         const specs = [{ r: 2.6, line: 6, at: 0.0 }, { r: 0, line: 0, at: 99 }, { r: 2.6, line: 6, at: 0.5, torn: true }, { r: 8.5, line: 13, at: 0.25 }];
@@ -1119,8 +1165,8 @@ export default function palSets(H) {
       const contact = tipC.clone().sub(recep); // bomber position at hook-up
       const speed = P0.speed ?? 55;
       const keys = P0.camera ?? {
-        approach: [{ pos: [4, -26, 92], look: [-22, -4, 0], mm: 30 }, { pos: [-14, -22, 88], look: [-25, -5, 0], mm: 32 }],
-        collision: [{ pos: [2, -24, 104], look: [-20, -5, 0], mm: 28 }, { pos: [-8, -30, 118], look: [-24, -14, 0], mm: 28 }],
+        approach: [{ pos: [-2, -19, 78], look: [-20, -3, 0], mm: 30 }, { pos: [-16, -16, 72], look: [-24, -4, 0], mm: 32 }],
+        collision: [{ pos: [-2, -20, 84], look: [-20, -4, 0], mm: 28 }, { pos: [-10, -26, 104], look: [-26, -14, 0], mm: 28 }],
         fall: [{ pos: [30, 0, 110], look: [-20, -30, 0], mm: 28 }, { pos: [20, -170, 120], look: [-22, -200, 0], mm: 30 }],
       }[mode];
       const tmp = new THREE.Vector3();
@@ -1141,22 +1187,28 @@ export default function palSets(H) {
           // hooked up, then a slight overrun and pitch-up into the tanker (USAF board: "overran ... pitched upward")
           const ov = ease(S.range(t, at - 2.2, at)); const dt = t - at;
           bm.position.set(contact.x + ov * 5.5, contact.y + ov * 2.2 + bob * 0.8, 0); bm.rotation.set(0, 0, ov * 0.07);
-          if (dt > 0) { // after impact: the wrecks fall away behind and down, tumbling
-            const fall = dt * dt * 2.6; bm.position.x -= dt * 14; bm.position.y -= fall; bm.rotation.z += -dt * 0.22; bm.rotation.x = dt * 0.18;
-            tk.position.x -= dt * 9; tk.position.y -= fall * 0.8; tk.rotation.z = -dt * 0.16; tk.rotation.x = -dt * 0.1;
-            bm.userData.wing.rotation.x = Math.min(0.5, dt * 0.25);
+          bmA.position.copy(bm.position); bmA.rotation.copy(bm.rotation); tkA.position.copy(tk.position); tkA.rotation.copy(tk.rotation);
+          if (dt > 0) { // after impact: both break apart and fall away behind and down, tumbling
+            const d2 = dt * dt;
+            tk.position.add(new THREE.Vector3(-dt * 7, -d2 * 2.0, 0)); tk.rotation.set(-dt * 0.1, 0, -dt * 0.22);
+            tkA.position.add(new THREE.Vector3(-dt * 13, -d2 * 2.6 + dt * 1.2, dt * 2)); tkA.rotation.set(0, dt * 0.35, dt * 0.5);
+            bm.position.add(new THREE.Vector3(-dt * 9, -d2 * 3.4, dt * 1.0)); bm.rotation.set(dt * 0.5, 0, bm.rotation.z - dt * 0.7);
+            bmA.position.add(new THREE.Vector3(-dt * 12, -d2 * 2.4, 0)); bmA.rotation.set(dt * 0.22, 0, bmA.rotation.z - dt * 0.18);
+            bmA.userData.wing.rotation.x = Math.min(0.5, dt * 0.25);
           }
+          for (const c of clips) { c.g.updateMatrixWorld(true); c.world.copy(c.local).applyMatrix4(c.g.matrixWorld); }
           bang = ang - ov * 0.08;
         } else { // fall: wreckage high above, burning; bombs drop out
           bm.visible = false; tk.visible = false;
         }
-        tk.userData.boom.rotation.z = bang; tk.userData.nozzle.position.x = -tk.userData.tubeLen - (ext - 1) * 0 ; tk.userData.nozzle.scale.x = 1; tk.userData.nozzle.position.x = -tk.userData.tubeLen + (1 - ext) * tk.userData.nozLen;
+        tk.userData.boom.rotation.z = bang; if (tkA) { tkA.userData.boom.rotation.z = bang; tkA.userData.nozzle.position.x = -tkA.userData.tubeLen + (1 - ext) * tkA.userData.nozLen; } tk.userData.nozzle.position.x = -tk.userData.tubeLen - (ext - 1) * 0 ; tk.userData.nozzle.scale.x = 1; tk.userData.nozzle.position.x = -tk.userData.tubeLen + (1 - ext) * tk.userData.nozLen;
         // fireball + debris
         if (mode === 'collision') { const dt = t - at; const hit = bm.position.clone().add(recep).add(new THREE.Vector3(1, 1, 0));
-          fb.position.copy(dt > 0 ? tmp.set(contact.x + 26, contact.y + 6, 0) : hit); fb.userData.set(dt, 2.6, [-10, -4, 0]); deb.userData.set(dt, [contact.x + 24, contact.y + 6, 0]);
-          flash.style.opacity = String(dt > 0 ? Math.max(0, 0.95 * Math.exp(-dt * 3.5)) : 0);
+          const hp = tmp.set(contact.x + 5.5 + recep.x - 2, contact.y + 2.2 + recep.y + 1.6, 0);
+          fb.position.copy(hp); fb.userData.set(dt, 2.9, [-9, -2.5, 0], t); deb.userData.set(dt, [hp.x, hp.y, hp.z]); burn.userData.set(dt, [hp.x, hp.y, hp.z]);
+          flash.style.opacity = String(dt > 0 ? Math.max(0, 0.7 * Math.exp(-dt * 4)) : 0);
           bm.visible = tk.visible = !(dt > 0.25 && dt < 99) || true; }
-        else if (mode === 'fall') { fb.position.set(-30, 70, -90); fb.userData.set(1.6 + t * 0.6, 4, [-6, 0, 0]); deb.userData.set(1.2 + t, [-30, 70, -90]); }
+        else if (mode === 'fall') { fb.position.set(-30, 70, -90); fb.userData.set(1.6 + t * 0.6, 4, [-6, 0, 0], t); deb.userData.set(1.2 + t, [-30, 70, -90]); }
         else { fb.userData.set(-1); deb.userData.set(-1); }
         if (mode === 'fall') {
           const chAt = G.cue(P0.chutes, at + 0.9);
