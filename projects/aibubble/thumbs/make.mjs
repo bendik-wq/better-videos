@@ -6,20 +6,25 @@ const here = path.dirname(fileURLToPath(import.meta.url)), root = path.resolve(h
 const img = (f) => 'data:image/jpeg;base64,' + fs.readFileSync(path.join(here, 'src', f)).toString('base64');
 const inter = 'data:font/woff2;base64,' + fs.readFileSync(path.join(root, 'projects/mortgage/assets/fonts/Inter-latin.woff2')).toString('base64');
 const coil = fs.readFileSync(path.join(root, 'brand/out/logo.svg'), 'utf8').replace(/width="800" height="800"/, 'width="66" height="66"').replace('<rect width="800" height="800" fill="#f7f6f1"/>', '').replace(/<circle cx="400" cy="400" r="368"[^>]*\/>/, '');
-const CSS = `@font-face{font-family:'Inter';src:url(${inter}) format('woff2');font-weight:100 900}*{margin:0;padding:0;box-sizing:border-box}body{width:1280px;height:720px;overflow:hidden;position:relative;font-family:Inter}
-.bg{position:absolute;inset:0;background-size:cover;background-position:center}
+const CSS = `@font-face{font-family:'Inter';src:url(${inter}) format('woff2');font-weight:100 900}*{margin:0;padding:0;box-sizing:border-box}body{width:1280px;height:720px;overflow:hidden;position:relative;font-family:Inter;background:#1172d9}
+.bg{position:absolute;inset:0;background-repeat:no-repeat;filter:saturate(1.35) contrast(1.12) brightness(1.03)}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,20,60,.38) 100%)}
 .badge{position:absolute;left:22px;top:22px;width:74px;height:74px;border-radius:50%;background:#f7f6f1;box-shadow:0 3px 10px rgba(0,0,0,.25);padding:4px}
-.big{position:absolute;font:900 italic 104px Inter;color:#fff;letter-spacing:.01em;text-shadow:0 5px 0 #9b120a,0 12px 28px rgba(0,0,0,.35)}
-.pill{position:absolute;background:#e0241b;color:#fff;font:800 64px Inter;padding:6px 26px 10px;border-radius:16px;box-shadow:0 8px 22px rgba(0,0,0,.28)}
-.tag{position:absolute;background:#fff;color:#14233d;font:800 40px Inter;padding:4px 16px 6px;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.2)}`;
+.big{position:absolute;font:900 italic 150px/1 Inter;color:#fff;letter-spacing:-.01em;text-shadow:-3px 0px 0 #14233d,3px 0px 0 #14233d,0px -3px 0 #14233d,0px 3px 0 #14233d,-2px -2px 0 #14233d,2px 2px 0 #14233d,-2px 2px 0 #14233d,2px -2px 0 #14233d,0 9px 0 #e0241b,0 16px 34px rgba(0,0,0,.45)}
+.pill{position:absolute;background:#e0241b;color:#fff;font:900 128px/1 Inter;padding:14px 34px 20px;border-radius:22px;box-shadow:0 12px 30px rgba(0,0,0,.35);letter-spacing:-.02em}
+.sub{position:absolute;background:#fff;color:#14233d;font:900 50px/1 Inter;padding:10px 22px 12px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.25);letter-spacing:.02em}
+.tag{position:absolute;background:#14233d;color:#fff;font:900 58px/1 Inter;padding:8px 20px 12px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.ring{position:absolute;border:9px solid #e0241b;border-radius:50%;box-shadow:0 0 0 4px #fff,0 0 30px rgba(224,36,27,.7)}`;
 const T = {
-  A: `<div class="bg" style="background-image:url(${img('A.jpg')});background-size:116%;background-position:22% 42%"></div>
-      <div class="big" style="left:760px;top:430px;transform:rotate(-5deg)">POP?</div>`,
-  B: `<div class="bg" style="background-image:url(${img('B.jpg')});background-size:122%;background-position:50% 40%"></div>
-      <div class="pill" style="left:840px;top:560px;transform:rotate(-3deg)"><span style="display:inline-block;width:30px;height:30px;border-radius:50%;background:#fff;margin-right:16px;vertical-align:6px"></span>$105B</div>`,
-  C: `<div class="bg" style="background-image:url(${img('C.jpg')});background-size:118%;background-position:72% 40%"></div>
-      <div class="tag" style="left:290px;top:186px">2000</div><div class="tag" style="left:1000px;top:78px">2026</div>
-      <div class="big" style="left:470px;top:520px;transform:rotate(-4deg)">AGAIN?</div>`,
+  A: `<div class="bg" style="background-image:url(${img('A.jpg')});background-size:1900px auto;background-position:-210px -175px"></div><div class="vig"></div>
+      <div class="ring" style="left:720px;top:205px;width:150px;height:150px"></div>
+      <div class="big" style="left:760px;top:470px;transform:rotate(-6deg)">POP?</div>`,
+  B: `<div class="bg" style="background-image:url(${img('B.jpg')});background-size:1500px auto;background-position:-40px -60px"></div><div class="vig"></div>
+      <div class="pill" style="left:56px;top:430px;transform:rotate(-4deg)">$105B</div>
+      <div class="sub" style="left:86px;top:600px;transform:rotate(-4deg)">RENT GUARANTEE</div>`,
+  C: `<div class="bg" style="background-image:url(${img('C.jpg')});background-size:1400px auto;background-position:-70px -40px"></div><div class="vig"></div>
+      <div class="tag" style="left:40px;top:110px">2000</div><div class="tag" style="left:1010px;top:110px">2026</div>
+      <div class="big" style="left:430px;top:530px;transform:rotate(-5deg)">AGAIN?</div>`,
 };
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' }).catch(() => chromium.launch());
 for (const [k, body] of Object.entries(T)) {

@@ -96,7 +96,7 @@ function economy({ labels = ['NVIDIA', 'OPENAI', 'ORACLE'], extra = true } = {})
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(10, 10.4, 0.6, 96), S.clay('#f4f2ee', { rough: 0.6, coat: 0.3 })); disc.position.y = -0.3; disc.receiveShadow = true; G.add(disc);
   const ring = new THREE.Mesh(new THREE.TorusGeometry(10.2, 0.08, 12, 128).rotateX(Math.PI / 2), S.clay('#14233d')); ring.position.y = 0.02; G.add(ring);
   const spots = [[0, -4.2], [4.6, 2.4], [-4.6, 2.4]];
-  const towers = labels.map((l, i) => { const t = tower({ w: [2.8, 2.6, 2.6][i % 3], d: [2.8, 2.6, 2.6][i % 3], h: [9.5, 7.6, 8.2][i % 3], label: l, glass: ['#1f3326', '#22262c', '#3a2424'][i % 3], accent: ['#76b900', '#14233d', '#e0241b'][i % 3], shape: i === 1 ? 'cyl' : 'box' }); t.position.set(spots[i][0], 0, spots[i][1]); G.add(t); return t; });
+  const towers = labels.map((l, i) => { const t = tower({ w: [2.8, 2.6, 2.6][i % 3], d: [2.8, 2.6, 2.6][i % 3], h: [9.5, 7.6, 8.2][i % 3], label: l, glass: ['#4f7a52', '#4a5260', '#8a4a46'][i % 3], accent: ['#76b900', '#14233d', '#e0241b'][i % 3], shape: i === 1 ? 'cyl' : 'box' }); t.position.set(spots[i][0], 0, spots[i][1]); G.add(t); return t; });
   if (extra) { const dc1 = datacenter({ w: 5.5, d: 2.6 }); dc1.position.set(-0.4, 0, 4.6); G.add(dc1); const dc2 = datacenter({ w: 3.6, d: 2.2 }); dc2.position.set(6.2, 0, -3.6); dc2.rotation.y = 0.6; G.add(dc2); const dc3 = datacenter({ w: 3.6, d: 2.2 }); dc3.position.set(-6.2, 0, -3.4); dc3.rotation.y = -0.6; G.add(dc3); }
   const loopPts = spots.map(([x, z], i) => [x * 0.6, 3.2 + i * 0.2, z * 0.6]);
   const loop = moneyLoop([[0, 8.6, -3.4], [3.2, 9.8, -0.4], [4.4, 7.6, 2.0], [0.6, 8.6, 2.6], [-4.4, 8.4, 2.0], [-3.2, 9.8, -0.6]], { n: 14, scale: 0.9 }); G.add(loop);
@@ -130,7 +130,7 @@ export default function aiSets(H) {
         { const dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz) || 1, sp = P0.spread ?? 2.6; mid[0] += -dz / L * sp; mid[2] += dx / L * sp; }
         const curve = new THREE.QuadraticBezierCurve3(v3([a[0], ha * 0.7, a[1]]), v3(mid), v3([b[0], hb * 0.7, b[1]]));
         const col = f.kind === 'guarantee' ? '#e0241b' : f.kind === 'buy' ? '#2a8c86' : '#14233d';
-        const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.16, 10, false), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.25, roughness: 0.4 })); scene.add(tube);
+        const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, (P0.tube ?? 0.16) * (f.kind === 'guarantee' ? (P0.tubeHot ?? 1) : 1), 12, false), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: f.kind === 'guarantee' ? (P0.glow ?? 0.25) : 0.25, roughness: 0.4 })); scene.add(tube);
         const bills = []; for (let k = 0; k < 4; k++) { const c = PR.cashStack({ w: 1.56, d: 0.66, h: 0.12 }); c.scale.setScalar(0.7); scene.add(c); bills.push(c); }
         return { f, curve, tube, bills, mid, at: S.cue(shot, f.at, 0.8 + i * 1.2) };
       }).filter(Boolean);
@@ -206,9 +206,10 @@ export default function aiSets(H) {
       for (let i = 0; i < 40; i++) { const cap = new THREE.Mesh(S.roundBox(0.12, 0.06, 0.07, 0.01), S.clay('#c9a45a')); cap.position.set(-2.6 + (i % 20) * 0.27, 0.1, i < 20 ? -1.85 : 1.6); G.add(cap); }
       const layer = H.layerOf(ctx); const cap = P0.caption ? H.caption(layer, P0.caption, 'left:5.5%;top:7.5%', { at: 0.35 }) : null; H.sourceLine(layer, P0.source ?? null);
       st.applyEnv();
+      if (P0.sky) { const { paintedSky } = await import('./thumbs.js'); scene.background = paintedSky(P0.seed ?? 4); scene.fog = null; st.cyc.visible = false; st.contact.plane.visible = false; G.rotation.x = P0.tiltX ?? 0; }
       const fx = H.P.post(ctx, scene, camera, { ao: { radius: 0.15, intensity: 1.6, falloff: 0.8 }, dof: { focus: 9, range: 1.6, bokeh: 4 }, bloom: { intensity: 0.4, threshold: 1.4 }, tone: 'neutral', quality: P0.quality ?? 'medium' });
       const dur = shot.duration ?? 6;
-      return { scene, camera, layer, update(t) { G.rotation.y = -0.5 + t / dur * 0.6; const c = S.rig(camera, P0.camera ?? [{ pos: [6.2, 4.8, 9.4], look: [0, 0.2, 0], mm: 55 }, { pos: [4.8, 3.8, 8.0], look: [0, 0.2, 0], mm: 60 }], t, { t0: 0, t1: dur, float: 0.01 }); fx.focus(c.dist); cap?.type(t); st.contact.update([st.cyc]); } };
+      return { scene, camera, layer, update(t) { G.rotation.y = P0.spinY ?? (-0.5 + t / dur * 0.6); const c = S.rig(camera, P0.camera ?? [{ pos: [6.2, 4.8, 9.4], look: [0, 0.2, 0], mm: 55 }, { pos: [4.8, 3.8, 8.0], look: [0, 0.2, 0], mm: 60 }], t, { t0: 0, t1: dur, float: 0.01 }); fx.focus(c.dist); cap?.type(t); if (st.contact.plane.visible) st.contact.update([st.cyc]); } };
     },
 
     // ================================================================ dominoes: the chain. Labelled slabs topple one after another (cue per slab)
@@ -294,7 +295,7 @@ export default function aiSets(H) {
       const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.12, 14, 24).translate(0, 7, 0), nm); shaft.castShadow = true; needle.add(shaft);
       const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06, 1.2, 24).translate(0, -0.6, 0).rotateZ(Math.PI), nm); needle.add(tip);
       const head = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 20), S.glossy('#e0241b', { rough: 0.25, coat: 1 })); head.position.y = 14.4; needle.add(head);
-      needle.rotation.z = -Math.PI / 2 - 0.35; needle.visible = mode === 'needle' || mode === 'pop'; world.add(needle);
+      if (P0.needleScale) { needle.scale.set(P0.needleScale, 1, P0.needleScale); head.scale.set(1, P0.needleScale, 1); } needle.rotation.z = -Math.PI / 2 - 0.35; needle.visible = mode === 'needle' || mode === 'pop'; world.add(needle);
       // droplets for the pop
       const ND = 420, drops = new THREE.InstancedMesh(new THREE.SphereGeometry(0.12, 8, 6), new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.05, transmission: 0, iridescence: 1, transparent: true, opacity: 0.7, envMapIntensity: 2 }), ND);
       const dirs = []; const r = S.rng(11); for (let i = 0; i < ND; i++) { const u = r() * 2 - 1, a = r() * 6.283; const s = Math.sqrt(1 - u * u); dirs.push([s * Math.cos(a), u, s * Math.sin(a), 0.6 + r() * 0.8]); }
@@ -322,7 +323,7 @@ export default function aiSets(H) {
           const pop = mode === 'pop' ? t - popAt : -1;
           film.rotation.y = t * 0.05; film.scale.set(1 + Math.sin(t * 1.3) * 0.006, 1 + Math.sin(t * 1.1 + 1) * 0.008, 1 + Math.sin(t * 1.7 + 2) * 0.006);
           // needle: slides in from the right toward the film
-          if (needle.visible) { const k = S.inOut(S.range(t, needleAt, mode === 'pop' ? popAt : dur)); const d = mode === 'pop' ? S.lerp(R + 9, R - 0.1, k) : S.lerp(R + 14, R + 1.2, k);
+          if (needle.visible) { const k = S.inOut(S.range(t, needleAt, mode === 'pop' ? popAt : dur)); const d = mode === 'pop' ? S.lerp(R + 9, R - 0.1, k) : S.lerp(R + 14, P0.needleEnd ?? R + 1.2, k);
             needle.position.set(Math.cos(0.35) * d, 4 + Math.sin(0.35) * d, 0.0); }
           film.visible = pop < 0; drops.visible = pop >= 0 && pop < 2.5;
           if (pop >= 0) { for (let i = 0; i < ND; i++) { const [x, y, z, s] = dirs[i]; const rr = R + pop * 9 * s; const g = 4 + y * rr - 9.8 * pop * pop * 0.6; S.place(drops, i, [x * rr, g, z * rr], [0, 0, 0], Math.max(0.0001, 1 - pop / 2.5)); } drops.instanceMatrix.needsUpdate = true;

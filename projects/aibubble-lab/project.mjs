@@ -11,13 +11,10 @@ const shots = [
   { id: 'dom', set: 'dominoes', min: 10, params: {} },
   { id: 'fund', set: 'fund', min: 6, params: {} },
   // thumbnails (rendered at --stills=0.95; composited by projects/aibubble/thumbs/make.mjs)
-  { id: 'thA', set: 'bubble', min: 3, params: { mode: 'needle', needleAt: 0, seed: 7, camera: [{ pos: [-6, 10, 46], look: [6, 7.5, 0], mm: 35 }] } },
-  { id: 'thB', set: 'circle', min: 4, params: { noPills: true, caption: null, seed: 4, flows: [
-    { from: 'NVIDIA', to: 'OPENAI', kind: 'invest', at: 0 }, { from: 'OPENAI', to: 'ORACLE', kind: 'buy', at: 0.1 }, { from: 'ORACLE', to: 'NVIDIA', kind: 'buy', at: 0.2 },
-    { from: 'AMAZON', to: 'OPENAI', kind: 'invest', at: 0.3 }, { from: 'OPENAI', to: 'MICROSOFT', kind: 'buy', at: 0.4 }, { from: 'NVIDIA', to: 'OPENAI', kind: 'guarantee', at: 0.5 }],
-    camera: [{ pos: [4, 30, 34], look: [0, 3, 0], mm: 30 }] } },
-  { id: 'thC', set: 'circle', min: 3, params: { towers: ['LUCENT', 'NVIDIA'], radius: 5, seed: 9, caption: null, tilt: { LUCENT: -0.55, NVIDIA: 0.07 }, heights: { LUCENT: 11, NVIDIA: 12 },
-    camera: [{ pos: [-34, 9, 0], look: [0, 6.5, 0], mm: 34 }] } },
+  { id: 'thA', set: 'bubble', min: 3, params: { mode: 'needle', needleAt: 0, seed: 7, needleEnd: 13.25, needleScale: 2.6, speed: 0, camera: [{ pos: [8, 10.5, 47], look: [8, 8.2, 0], mm: 30 }] } },
+  { id: 'thB', set: 'gpu', min: 3, params: { sky: true, seed: 4, label: 'NVIDIA', spinY: -0.35, tiltX: 0.12, camera: [{ pos: [3.6, 4.6, 7.2], look: [0.6, -0.1, 0], mm: 38 }] } },
+  { id: 'thC', set: 'circle', min: 3, params: { towers: ['LUCENT', 'NVIDIA'], radius: 5, seed: 9, caption: null, tilt: { LUCENT: -0.62, NVIDIA: 0.1 }, heights: { LUCENT: 12, NVIDIA: 14 },
+    camera: [{ pos: [-19, 3, 0.8], look: [0, 7.5, 0], mm: 24 }] } },
 ];
 export default {
   title: 'aibubble lab', fps: 60, width: 1920, height: 1080,

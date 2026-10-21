@@ -5,7 +5,7 @@
 - **Title test (Test & Compare, thumbnail fixed):** the lead vs "Nvidia Is Paying Its Customer's Rent".
 - **Thumbnails (Test & Compare, title fixed):**
   - `thumbs/A.jpg`: the bubble holding the AI economy, a red needle, "POP?" (lead).
-  - `thumbs/B.jpg`: the circle of company towers with money arcs, "$105B".
+  - `thumbs/B.jpg`: a glossy Nvidia chip floating on the sky, "$105B · RENT GUARANTEE".
   - `thumbs/C.jpg`: Lucent toppling beside Nvidia, "2000 / 2026 · AGAIN?".
 
   Rebuild with `node projects/aibubble/thumbs/make.mjs` (renders come from `projects/aibubble-lab` thA/thB/thC at `--stills=0.95`).
