@@ -1,11 +1,13 @@
-// AI-bubble bright graphics (episode 8, "How the AI Bubble Pops"): cards painted on a 2D canvas.
-//   title      the episode title card (the Nasdaq key-close line 2000 -> 2026 draws behind the type, key-close tape)
-//   chapter    chapter card on ledger paper, the Nasdaq key-close line drawing on to the right, a red pulse at the 2026 record
+// Palomares bright graphics (episode 9, "America Lost the Same H-Bomb Twice"): cards painted on a 2D canvas.
+//   title      the episode title card; behind the type a seabed section where bomb 4 drops, is lifted, drops again and is
+//              lifted out (the "twice" motif), with a navy tape of the five states
+//   chapter    chapter card on ledger paper; the same section on the right, a red pulse at the chapter's state
+//              (params.state: 'lost' | 'found' | 'lost-again' | 'lifted' | 'today')
 //   quote      verbatim quote card, words appear as they are spoken
 //   bignumber  a generic count-up card
-//   counter    split-flap board (presets oct14 · oct15, or any steps)
-//   timeline   horizontal ledger timeline (10 Mar 2000 Nasdaq peak … 14–16 Oct 2026 selloff)
-// Params for every set: projects/aibubble/SETS-graphics.md. Every number on screen comes from RESEARCH.md.
+//   counter    split-flap board (presets day · alt · clock, or any steps; the clock preset adds a big analog clock)
+//   timeline   horizontal ledger timeline that pans (17 Jan 1966 … the 2026 status)
+// Params for every set: projects/palomares/SETS-graphics.md. Every number on screen comes from RESEARCH.md.
 // Format: makeGraphics(H) -> { name: async (ctx, shot) => ({ scene, camera, layer, canvas, update(t, p) }) }.
 import * as G from './graphics-kit.js';
 import * as M from '/engine/motion.js';
@@ -15,105 +17,172 @@ const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
 export default function makeGraphics(H) {
   const set = async (ctx, shot, paint, cam) => { await G.loadFonts(); return G.canvasSet(H, ctx, shot, paint, cam); };
 
-  // the key closes drawn on to fraction u (by length) in rect [x0, y0, x1, y1], value range yr.
-  // Straight segments between the sparse points (never smoothed: they are not a daily series). Returns the head.
-  function keyLine(g, pts, rect, yr, u, { color = P.teal, width = 6, fill = P.tealPale, fillA = 0.9, dots = true, t = 0, redEnd = true } = {}) {
-    const [x0, y0, x1, y1] = rect, tA = pts[0][0], tB = pts.at(-1)[0];
-    const X = (tt) => x0 + (tt - tA) / (tB - tA) * (x1 - x0), Y = (v) => y1 - (v - yr[0]) / (yr[1] - yr[0]) * (y1 - y0);
-    const xy = pts.map(([tt, v]) => [X(tt), Y(v)]), cum = G.polyLen(xy);
-    if (u <= 0) return null;
-    const head = G.polyAt(xy, cum, u);
-    const done = xy.filter((_, i) => cum[i] <= cum.at(-1) * u + 1e-6);
-    if (fill) { g.save(); g.globalAlpha *= fillA; g.beginPath(); g.moveTo(xy[0][0], y1); done.forEach(([x, y]) => g.lineTo(x, y)); g.lineTo(head.x, head.y); g.lineTo(head.x, y1); g.closePath(); g.fillStyle = fill; g.fill(); g.restore(); }
-    g.save(); g.strokeStyle = color; g.lineWidth = width; g.lineJoin = 'round'; g.lineCap = 'round'; G.drawPoly(g, xy, cum, u); g.restore();
-    if (dots) done.forEach(([x, y], i) => { if (i === xy.length - 1 && redEnd) return; g.save(); g.fillStyle = P.white; g.beginPath(); g.arc(x, y, width * 1.25, 0, TAU); g.fill(); g.strokeStyle = color; g.lineWidth = width * 0.6; g.stroke(); g.restore(); });
-    return { x: head.x, y: head.y, done: u >= 1, xy, X, Y };
+  // a lift line from a ship at the surface down to (x, y); cut 0..1 parts it (the lower stub stays, the upper end whips up)
+  function liftLine(g, x, ys, y, k, { cut = 0, color = P.ink, w = 3 } = {}) {
+    if (k <= 0) return;
+    const yEnd = lerp(ys, y, E.outCubic(clamp(k)));
+    g.save(); g.strokeStyle = color; g.lineWidth = w; g.lineCap = 'round';
+    if (cut <= 0) { g.beginPath(); g.moveTo(x, ys); g.lineTo(x, yEnd); g.stroke(); g.restore(); return; }
+    const gapY = lerp(ys, y, 0.72), up = E.outCubic(clamp(cut)) * (gapY - ys) * 0.55;
+    g.beginPath(); g.moveTo(x, ys); g.lineTo(x + Math.sin(cut * 9) * 6 * (1 - cut), gapY - up); g.stroke();
+    g.globalAlpha *= 1 - clamp(cut * 1.4); g.beginPath(); g.moveTo(x, gapY + 8); g.lineTo(x, y); g.stroke();
+    g.restore();
   }
-  const KP = G.keyPts();
 
   // ================================================================ title
+  // The motif, in story order: 17 Jan the bomb sinks (chute) to the ridge rim and slides down the furrow to 2,550 ft (found
+  // 15 Mar); 24 Mar a line comes down, lifts it a little, parts; it falls and slides to 2,800 ft (re-found 2 Apr); 7 Apr it
+  // is lifted to the ship. Depths: S01 p.94. The tape names the five states.
   async function title(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 6, lines = Pm.lines ?? ['HOW THE', 'AI BUBBLE', 'POPS'];
-    const drawEnd = Math.min(D * 0.75, 4.6);
+    const Pm = shot.params ?? {}, D = shot.duration ?? 7, lines = Pm.lines ?? ['AMERICA LOST', 'THE SAME', 'H-BOMB TWICE'];
+    const sp = clamp((D - 0.8) / 6.2, 0.55, 1.4);
+    const T = { drop: 0.45, rim: 0.45 + 0.9 * sp, found: 0.45 + 1.35 * sp, lift: 0.45 + 2.0 * sp, snap: 0.45 + 2.75 * sp, settle: 0.45 + 3.45 * sp, refound: 0.45 + 3.95 * sp, raise: 0.45 + 4.45 * sp, out: 0.45 + 5.5 * sp };
+    const U = G.UPOS;
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.2); G.paper(g, { step: 60 });
-      // the Nasdaq key closes, 10 Mar 2000 -> 6 Oct 2026, drawing on behind the type (navy end: the title's red is its last line)
+      // the section across the lower frame
       k.view(0.45);
-      const u = E.inOutSine(range(t, 0.1, drawEnd));
-      const hd = keyLine(g, KP, [80, 560, 1780, 880], [0, 30000], u, { color: 'rgba(42,140,134,0.55)', width: 7, fill: 'rgba(210,233,228,0.7)' });
-      if (hd) G.pin(g, hd.x, hd.y, t, range(t, 0.2, 0.6), { color: hd.done ? P.ink : P.teal, r: 10, pulse: hd.done });
-      // a soft paper halo so the type never sits on the line
-      const halo = g.createRadialGradient(960, 430, 120, 960, 430, 900); halo.addColorStop(0, 'rgba(247,246,241,0.94)'); halo.addColorStop(0.55, 'rgba(247,246,241,0.62)'); halo.addColorStop(1, 'rgba(247,246,241,0)');
-      g.save(); g.scale(1, 0.55); g.fillStyle = halo; g.fillRect(-200, 0, 2320, 1700); g.restore();
-      // type
+      const S = G.section([-60, 660, 2040, 280]);
+      G.drawSection(g, S, { t, alpha: E.outCubic(range(t, 0, 0.7)), dark: 0.35 });
+      // bomb 4's path, a pure function of t
+      const L = 86, sx = S.X(U.touch);
+      let x, y, a, chute = 0, ghost = false, alpha = 1, shipA = 0, line = 0, cut = 0, shipX = S.X(U.find) - 10;
+      if (t < T.rim) { const u = E.inOutSine(range(t, T.drop, T.rim)); x = sx; y = lerp(S.ys - 10, S.at(U.touch, 6)[1], u); a = Math.PI / 2 - 0.25; chute = 1; alpha = range(t, T.drop, T.drop + 0.2); }
+      else if (t < T.lift) { const u = E.inOutCubic(range(t, T.rim + 0.05, T.found)); const uu = lerp(U.touch, U.find, u); [x, y] = S.at(uu, 6); a = S.ang(uu) + 0.05; chute = 1 - u * 0.4; }
+      else if (t < T.snap) { [x, y] = S.at(U.find, 6); a = S.ang(U.find); chute = 0.6; shipA = range(t, T.lift - 0.3, T.lift + 0.2); shipX = x; line = range(t, T.lift, T.lift + 0.45); y -= 16 * E.inOutSine(range(t, T.lift + 0.45, T.snap)); }
+      else if (t < T.raise) {
+        const u = E.inOutCubic(range(t, T.snap + 0.12, T.settle)), uu = lerp(U.find, U.refind, u);
+        [x, y] = S.at(uu, 6); a = S.ang(uu) * (1 - u) + 0.2 * u + Math.sin(u * Math.PI) * 0.6; chute = 0.6;
+        const f = S.at(U.find, 6); if (t < T.snap + 0.12) { y = f[1] - 16 + 16 * E.inCubic(range(t, T.snap, T.snap + 0.12)); }
+        shipA = 1 - range(t, T.settle, T.settle + 0.4); shipX = f[0]; line = 1; cut = range(t, T.snap, T.snap + 0.5);
+        ghost = t > T.settle && t < T.refound; // nine days of not knowing
+      } else {
+        const sx2 = S.X(U.refind), [bx, by] = S.at(U.refind, 6), u = E.inOutCubic(range(t, T.raise + 0.35, T.out));
+        shipA = range(t, T.raise - 0.2, T.raise + 0.2); shipX = bx; line = range(t, T.raise, T.raise + 0.35);
+        x = sx2; y = lerp(by, S.ys - 4, u); a = lerp(0.2, -0.05, u); chute = 0.6 * (1 - u * 0.5);
+      }
+      if (shipA > 0) {
+        G.ship(g, shipX + 30, S.ys, 0.85, { alpha: shipA });
+        if (line > 0) liftLine(g, shipX, S.ys + 8, t < T.raise ? S.at(U.find, 6)[1] - (cut > 0 ? 0 : 16 * E.inOutSine(range(t, T.lift + 0.45, T.snap))) : y, line, { cut });
+      }
+      G.bomb(g, x, y, a, L, { chute, ghost, t, alpha });
+      if (ghost) G.text(g, '?', x + 56, y - 26, { size: 44, weight: 800, color: P.ink, alpha: 0.85 });
+      // type, on a soft paper halo
       k.view(1);
-      const size = Pm.size ?? 146, y0 = Pm.y ?? 300;
+      const halo = g.createRadialGradient(960, 360, 100, 960, 360, 860); halo.addColorStop(0, 'rgba(247,246,241,0.9)'); halo.addColorStop(0.6, 'rgba(247,246,241,0.5)'); halo.addColorStop(1, 'rgba(247,246,241,0)');
+      g.save(); g.scale(1, 0.6); g.fillStyle = halo; g.fillRect(-200, 0, 2320, 1100); g.restore();
+      const size = Pm.size ?? 142, y0 = Pm.y ?? 222;
       lines.forEach((l, i) => {
         const red = i === lines.length - 1;
-        G.riseText(g, l, 960, y0 + i * size * 1.0, range(t, 0.25 + i * 0.2, 1.25 + i * 0.2), { size, weight: 900, align: 'center', color: red ? P.red : P.ink, track: -0.02, maxW: 1700 });
+        G.riseText(g, l, 960, y0 + i * size * 1.0, range(t, 0.2 + i * 0.18, 1.2 + i * 0.18), { size, weight: 900, align: 'center', color: red ? P.red : P.ink, track: -0.02, maxW: 1700 });
       });
-      // the tape: Nasdaq key closes (S52, S05), revealed one by one; the 2026 record on a teal chip
+      if (Pm.sub) G.text(g, Pm.sub, 960, y0 + (lines.length - 1) * size + 76, { size: 24, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.16, upper: true, alpha: E.outCubic(range(t, 1.4, 2.0)) });
+      // the tape: the five states of bomb 4, each lighting as the motif reaches it
       k.view(0.8);
-      const ty = 950, kt = range(t, 0.6, 1.1);
+      const ty = 1000, kt = range(t, 0.3, 0.8);
       if (kt > 0) {
-        g.save(); g.globalAlpha = clamp(kt * 2); G.shadow(g, 0.8); g.fillStyle = P.ink; g.fillRect(-200, ty - 44, 2320, 88); G.noShadow(g);
-        const lab = 'NASDAQ COMPOSITE', items = [['10 MAR 2000', '5,048.62'], ['9 OCT 2002', '1,114.11'], ['23 APR 2015', 'BACK ABOVE'], ['6 OCT 2026', '27,599.79', true]];
-        const wl = G.measure(g, lab, 21, 500, F.mono, 0.12), wi = items.map(([d, v]) => G.measure(g, d, 21, 500, F.mono, 0.1) + 14 + G.measure(g, v, 32, 500, F.mono) + 60);
-        const TW = wl + 50 + wi.reduce((a, b) => a + b, 0) - 60, ts = Math.min(1, 1700 / TW);
+        g.save(); g.globalAlpha = clamp(kt * 2); G.shadow(g, 0.8); g.fillStyle = P.ink; g.fillRect(-200, ty - 40, 2320, 80); G.noShadow(g);
+        const items = [['17 JAN 1966', 'LOST', T.drop], ['15 MAR', 'FOUND · 2,550 FT', T.found], ['24 MAR', 'LOST AGAIN', T.snap], ['2 APR', 'FOUND · 2,800 FT', T.refound], ['7 APR', 'LIFTED', T.out - 0.3]];
+        const wi = items.map(([d, v]) => G.measure(g, d, 19, 500, F.mono, 0.1) + 12 + G.measure(g, v, 26, 500, F.mono, 0.04) + 64);
+        const TW = wi.reduce((a, b) => a + b, 0) - 64, ts = Math.min(1, 1760 / TW);
         g.translate(960, ty); g.scale(ts, ts); g.translate(-960, -ty);
-        let x = 960 - TW / 2;
-        G.text(g, lab, x, ty + 8, { size: 21, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.7)', track: 0.12 }); x += wl + 50;
-        items.forEach(([d, v, hi], i) => {
-          const ki = range(t, 0.9 + i * 0.32, 1.3 + i * 0.32); if (ki <= 0) { x += wi[i]; return; }
-          g.save(); g.globalAlpha *= ki; g.translate(0, (1 - E.outCubic(ki)) * 10);
-          G.text(g, d, x, ty + 8, { size: 21, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.7)', track: 0.1 });
-          const vx = x + G.measure(g, d, 21, 500, F.mono, 0.1) + 14, vw = G.measure(g, v, 32, 500, F.mono);
-          if (hi) { G.rr(g, vx - 10, ty - 25, vw + 20, 48, 8); g.fillStyle = P.teal; g.fill(); }
-          G.text(g, v, vx, ty + 11, { size: 32, weight: 500, fam: F.mono, color: P.white });
-          g.restore(); x += wi[i];
+        let xx = 960 - TW / 2, cur = 0; items.forEach((it, i) => { if (t >= it[2]) cur = i; });
+        items.forEach(([d, v, at], i) => {
+          const ki = range(t, at, at + 0.4), on = i === cur && t >= at;
+          g.save(); g.globalAlpha *= ki > 0 ? 0.45 + 0.55 * ki : 0.22;
+          G.text(g, d, xx, ty + 8, { size: 19, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.72)', track: 0.1 });
+          const vx = xx + G.measure(g, d, 19, 500, F.mono, 0.1) + 12, vw = G.measure(g, v, 26, 500, F.mono, 0.04);
+          if (on) { G.rr(g, vx - 10, ty - 22, vw + 20, 42, 8); g.fillStyle = P.teal; g.fill(); }
+          G.text(g, v, vx, ty + 9, { size: 26, weight: 500, fam: F.mono, color: P.white, track: 0.04 });
+          g.restore(); xx += wi[i];
         });
         g.restore();
       }
       k.flat();
-      if (Pm.sub) G.text(g, Pm.sub, 960, 1046, { size: 22, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.16, upper: true, alpha: E.outCubic(range(t, 1.6, 2.2)) });
-      else G.text(g, Pm.source ?? 'NASDAQ COMPOSITE · KEY CLOSES ONLY · YAHOO FINANCE PRICE HISTORY · LINE JOINS POINTS', 960, 1046, { size: 17, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.12, alpha: E.outCubic(range(t, 1.8, 2.4)) });
+      G.text(g, Pm.source ?? 'DEPTHS: DNA PALOMARES SUMMARY REPORT (1975) · SECTION SCHEMATIC, NOT TO SCALE', 1880, 1068, { size: 13, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: 0.8 * E.outCubic(range(t, 1.6, 2.2)) });
     }, { push: 0.05, dx: 0 });
   }
 
-  // ================================================================ chapter: ledger paper, the Nasdaq key line on the right
+  // ================================================================ chapter: ledger paper, the section card on the right
+  // state labels: RESEARCH §1, §5c, §6, §7, §10 (the fence: G4, ⏱)
+  const STATES = {
+    lost: { label: '17 JAN 1966 · BOMB 4 IS MISSING', sub: 'A FISHERMAN SAW A PARACHUTE GO INTO THE SEA' },
+    found: { label: '15 MAR 1966 · FOUND AT 2,550 FT', sub: 'ALVIN, ON A 70° SLOPE' },
+    'lost-again': { label: '24 MAR 1966 · THE LINE PARTS', sub: 'LOST AGAIN, FOR NINE DAYS' },
+    lifted: { label: '7 APR 1966 · LIFTED', sub: '80 DAYS AFTER THE CRASH' },
+    today: { label: 'THE FENCE IS STILL UP', sub: 'PALOMARES, 2026', asof: 'AS OF 21 OCT 2026' },
+  };
   async function chapter(ctx, shot) {
     const Pm = shot.params ?? {}, D = Math.max(3.5, shot.duration ?? 4), num = String(Pm.num ?? 1).padStart(2, '0');
     const ttl = String(Pm.title ?? 'Chapter'), sub = Pm.sub ?? '';
-    const dEnd = Math.min(D * 0.8, 3.1);
+    const state = STATES[Pm.state] ? Pm.state : 'found', ST = { ...STATES[state], ...(Pm.label ? { label: Pm.label } : {}), ...(Pm.stateSub ? { sub: Pm.stateSub } : {}) };
+    const tIn = 0.25, tB = Math.min(1.0, D * 0.3), tP = Math.min(1.9, D * 0.5);
+    const U = G.UPOS;
     return set(ctx, shot, (g, t, p, k) => {
-      k.view(0.3); G.paper(g, { step: 54, margin: 96, cols: [1040, 1240, 1440, 1640] });
-      // right: the line, on its own ledger columns
+      k.view(0.3); G.paper(g, { step: 54, margin: 96 });
+      // right: the section card
       k.view(0.7);
-      const u = E.inOutSine(range(t, 0.15, dEnd));
-      const hd = keyLine(g, KP, [1060, 330, 1800, 900], [0, 30000], u, { color: P.teal, width: 7, fill: 'rgba(210,233,228,0.85)' });
-      if (hd) {
-        G.pin(g, hd.x, hd.y, t, range(t, 0.3, 0.8), { color: hd.done ? P.red : P.teal, r: 11, pulse: hd.done });
-        const pk = hd.xy[0], kp = range(t, 0.3, 0.9);
-        G.fig(g, '5,048.62', pk[0] + 6, pk[1] - 26, { size: 22, align: 'left', color: P.ink, alpha: E.outCubic(kp) });
-        G.fig(g, '2000', pk[0], 938, { size: 18, align: 'left', color: P.inkSoft, alpha: E.outCubic(kp) });
-        const ke = range(t, dEnd, dEnd + 0.45);
-        if (hd.done) {
-          G.fig(g, '27,599.79', hd.x - 56, hd.y + 8, { size: 34, align: 'right', color: P.red, alpha: E.outCubic(ke) });
-          G.fig(g, 'RECORD · 6 OCT 2026', hd.x - 56, hd.y + 38, { size: 16, align: 'right', color: P.inkSoft, track: 0.08, alpha: E.outCubic(ke) });
-          G.asOf(g, 'AS OF 20 OCT 2026', hd.x - 56, hd.y - 50, range(t, dEnd + 0.2, dEnd + 0.7), { align: 'right', size: 16 });
-          G.fig(g, '2026', hd.x, 938, { size: 18, align: 'right', color: P.inkSoft, alpha: E.outCubic(ke) });
+      const cx0 = 1030, cy0 = 214, cw = 800, ch = 620, kc = E.outCubic(range(t, 0.05, 0.7));
+      g.save(); g.translate(0, (1 - kc) * 30); g.globalAlpha = kc;
+      G.card(g, cx0, cy0, cw, ch, { r: 24, lift: 1.1 });
+      g.save(); G.rr(g, cx0, cy0, cw, ch, 24); g.clip();
+      const FOCUS = { lost: [U.simo, 420], found: [U.find, 470], 'lost-again': [U.find, 470], lifted: [U.lift, 520], today: [0.03, 190] }[state];
+      const SW = 1000, S = G.section([cx0 + FOCUS[1] - FOCUS[0] * SW, cy0 + 170, SW, 400], { landK: 0.8 });
+      G.drawSection(g, S, { t, dark: state === 'lost-again' ? 0.8 : 0.3, x1: cx0 + cw + 20 });
+      const kb = range(t, tB, tB + 0.9), kp = range(t, tP, tP + 0.5);
+      let px = 0, py = 0;
+      if (state === 'lost') {
+        // nothing to point at but water: rings on the surface where the chute went in, a dashed "?" below
+        px = S.X(U.simo); py = S.ys;
+        for (let q = 0; q < 3; q++) { const ph = (t * 0.5 + q / 3) % 1; g.save(); g.strokeStyle = P.ink; g.globalAlpha = (1 - ph) * 0.5 * kb; g.lineWidth = 2; g.beginPath(); g.ellipse(px, py, 16 + ph * 70, 5 + ph * 18, 0, 0, TAU); g.stroke(); g.restore(); }
+        G.bomb(g, px, lerp(py + 20, py + 120, E.inOutSine(kb)), Math.PI / 2 - 0.2, 46, { ghost: true, alpha: kb * (1 - 0.6 * range(t, tP + 0.4, tP + 1.6)) });
+        G.text(g, '?', px + 30, py + 150, { size: 64, weight: 800, color: P.ink, alpha: E.outCubic(range(t, tP, tP + 0.6)) });
+      } else if (state === 'found' || state === 'lost-again') {
+        const [bx, by] = S.at(U.find, 5);
+        const a = S.ang(U.find);
+        if (state === 'found') { const [fx, fy] = S.at(U.find, 7); G.bomb(g, fx, lerp(fy - 160, fy, E.outCubic(kb)), lerp(Math.PI / 2, a, E.inOutCubic(kb)), 70, { chute: 0.7, t, alpha: clamp(kb * 3) }); px = fx; py = fy; }
+        else {
+          G.ship(g, bx + 26, S.ys, 0.75, { alpha: clamp(kb * 3) });
+          liftLine(g, bx, S.ys + 8, by - 10, 1, { cut: range(t, tB + 0.3, tB + 0.9) });
+          G.bomb(g, bx, by, a, 52, { ghost: true, alpha: clamp(kb * 3) });
+          // where did it go? a dashed arrow downslope into the dark
+          const [rx, ry] = S.at(U.refind, 26), ka = E.inOutCubic(range(t, tB + 0.7, tB + 1.6));
+          g.save(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.setLineDash([8, 7]); g.globalAlpha = 0.8; g.beginPath(); g.moveTo(bx + 18, by + 4); g.quadraticCurveTo(bx + 70, ry - 6, lerp(bx + 18, rx, ka), lerp(by + 4, ry, ka)); g.stroke(); g.restore();
+          G.text(g, '?', rx + 10, ry - 10, { size: 54, weight: 800, color: P.ink, alpha: E.outCubic(range(t, tB + 1.4, tB + 2.0)) });
+          px = bx; py = lerp(S.ys, by, 0.72);
         }
+      } else if (state === 'lifted') {
+        const [lx, ly] = S.at(U.lift, 7), u = E.inOutCubic(kb), by = lerp(ly, S.ys + 34, u);
+        G.bomb(g, lx, ly, S.ang(U.lift), 66, { ghost: true, alpha: 0.7 });
+        g.save(); g.strokeStyle = P.ink; g.lineWidth = 2; g.setLineDash([3, 8]); g.globalAlpha = 0.6; g.beginPath(); g.moveTo(lx + 40, ly - 10); g.lineTo(lx + 40, by + 10); g.stroke(); g.restore();
+        G.ship(g, lx + 30, S.ys, 0.8);
+        liftLine(g, lx, S.ys + 8, by - 8, 1);
+        G.bomb(g, lx, by, Math.PI / 2 * 0.9, 66, { chute: 0.45, t });
+        px = lx; py = by;
+      } else if (state === 'today') {
+        // the sea is empty; on the land, a fenced plot
+        const f0 = S.X(-0.13), f1 = S.X(0.0), fy = S.Y(G.bedFt(-0.1)) + 2;
+        G.fence(g, f0, lerp(f0, f1, E.outCubic(kb)), fy, 44);
+        px = (f0 + f1) / 2; py = fy - 22;
       }
-      G.text(g, 'NASDAQ COMPOSITE · KEY CLOSES · 2000 – 2026', 1800, 960, { size: 17, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.1, align: 'right', alpha: range(t, 0.8, 1.4) });
-      G.text(g, 'YAHOO FINANCE PRICE HISTORY · LINE JOINS POINTS', 1800, 990, { size: 15, weight: 500, fam: F.mono, color: P.inkFaint, track: 0.1, align: 'right', alpha: range(t, 1.0, 1.6) });
+      g.restore();
+      G.pulse(g, px, py, t, kp, { r: state === 'found' || state === 'lifted' ? 30 : state === 'today' ? 22 : 11, dot: state === 'lost' || state === 'lost-again' });
+      // the card's small caption
+      G.text(g, 'BOMB 4 · SCHEMATIC SECTION · NOT TO SCALE', cx0 + 28, cy0 + 44, { size: 15, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12 });
+      g.restore();
+      // the state, under the card
+      const ks = range(t, tP + 0.1, tP + 0.7);
+      G.slab(g, ST.label, cx0, cy0 + ch + 56, { size: 30, k: ks });
+      G.text(g, ST.sub, cx0 + 4, cy0 + ch + 116, { size: 20, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12, alpha: E.outCubic(range(t, tP + 0.4, tP + 1.0)) });
+      if (ST.asof) G.asOf(g, ST.asof, cx0 + cw, cy0 + ch + 56, range(t, tP + 0.5, tP + 1.0), { align: 'right', size: 17 });
       // left: the type
       k.view(1);
       G.text(g, 'CHAPTER', 160, 300, { size: 30, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.3, alpha: E.outCubic(range(t, 0.1, 0.6)) });
       g.fillStyle = P.teal; g.fillRect(160, 330, 90 * E.emphasized(range(t, 0.1, 0.7)), 6);
       G.text(g, num, 148, 540, { size: 220, weight: 500, fam: F.mono, color: P.ink, track: -0.04, alpha: E.outCubic(range(t, 0.1, 0.5)) });
-      const big = ttl.length > 22 ? 84 : ttl.length > 16 ? 96 : 128, lines = G.wrap(g, ttl, 840, big, 900);
-      lines.forEach((l, i) => G.riseText(g, l, 156, 690 + i * big * 1.02, range(t, 0.35 + i * 0.12, 1.2 + i * 0.12), { size: big, weight: 900, color: P.ink, track: -0.015 }));
-      if (sub) G.wrap(g, sub, 820, 36, 600).forEach((l, i) => G.text(g, l, 160, 690 + (lines.length - 1) * big * 1.02 + 76 + i * 46, { size: 36, weight: 600, color: P.inkSoft, alpha: E.outCubic(range(t, 1.0 + i * 0.1, 1.7 + i * 0.1)) }));
+      const big = ttl.length > 22 ? 78 : ttl.length > 16 ? 92 : 118, lines = G.wrap(g, ttl, 800, big, 900);
+      lines.forEach((l, i) => G.riseText(g, l, 156, 690 + i * big * 1.02, range(t, tIn + 0.1 + i * 0.12, tIn + 0.95 + i * 0.12), { size: big, weight: 900, color: P.ink, track: -0.015 }));
+      if (sub) G.wrap(g, sub, 780, 36, 600).forEach((l, i) => G.text(g, l, 160, 690 + (lines.length - 1) * big * 1.02 + 76 + i * 46, { size: 36, weight: 600, color: P.inkSoft, alpha: E.outCubic(range(t, 1.0 + i * 0.1, 1.7 + i * 0.1)) }));
     }, { push: 0.04, dx: 20 });
   }
 
@@ -176,38 +245,55 @@ export default function makeGraphics(H) {
     });
   }
 
-  // ================================================================ counter: the split-flap board (prices and clocks)
-  // 14 Oct 2026 was a Wednesday (RESEARCH 1.8 "Wed 14 Oct"); 15 Oct a Thursday.
+  // ================================================================ counter: the split-flap board (days, altitudes, clocks)
+  // DAY n = n days after the crash (17 Jan 1966): RESEARCH counts "80 days after the crash" for 7 Apr (READ FIRST 7, D34),
+  // so 2 Mar = day 44 (the DoD statement's "44 days since the accident"), 15 Mar = 57, 24 Mar = 66, 2 Apr = 75, 7 Apr = 80.
+  const DAYS = [
+    { day: 1, label: 'BOMB 4 IS MISSING', sub: '18 JAN 1966 · BOMBS 2 AND 3 FOUND ON LAND' },
+    { day: 44, label: 'THE US ADMITS IT', sub: '2 MAR 1966 · A WEAPON “HAS NOT YET BEEN RECOVERED”' },
+    { day: 57, label: 'FOUND', sub: '15 MAR 1966 · BY ALVIN, 2,550 FT DOWN' },
+    { day: 66, label: 'LOST AGAIN', sub: '24 MAR 1966 · THE LIFT LINE PARTS', red: true },
+    { day: 75, label: 'FOUND AGAIN', sub: '2 APR 1966 · 2,800 FT · 250 FT DEEPER' },
+    { day: 80, label: 'LIFTED', sub: '7 APR 1966 · ON THE DECK OF USS PETREL' },
+  ];
+  const dayStep = (d) => { const o = typeof d === 'number' ? (DAYS.find(x => x.day === d) ?? { day: d }) : d; return { ...o, text: o.text ?? `DAY ${o.day}` }; };
   const PRESETS = {
-    oct14: { align: 'center', kicker: 'WED 14 OCT 2026 · THE TRIGGER DAY', title: 'One hot number, then the selloff', source: 'SOURCES: BLS CPI RELEASE (14 OCT 2026); REUTERS (14 OCT 2026)',
-      steps: [{ text: 'WED 14 OCT 2026', label: 'THE DAY IT CRACKED', sub: 'NASDAQ −1.88% · ITS BIGGEST DROP SINCE 23 JUL' },
-        { text: 'CPI 3.7%', label: 'US INFLATION, SEPTEMBER, YEAR ON YEAR', sub: 'UP FROM 3.4% IN AUGUST · RELEASED THAT MORNING' },
-        { text: 'ORACLE −8.8%', label: 'ORACLE, IN ONE DAY', sub: 'CLOSE $130.55 · VOLUME 61% ABOVE AVERAGE', red: '−8.8%' },
-        { text: 'COREWEAVE −15%', label: 'COREWEAVE, IN ONE DAY', sub: 'TO $65.78, AFTER A SELL-OFF IN ITS BONDS', red: '−15%' }] },
-    oct15: { align: 'center', kicker: 'THU 15 OCT 2026 · SEOUL', title: 'South Korea trips the switch', source: 'SOURCE: CNN (15 OCT 2026)',
-      steps: [{ text: 'KOSPI −7.6%', label: 'SOUTH KOREA’S MARKET, IN ONE DAY', sub: 'SK HYNIX −11% · SAMSUNG −9.5% · NIKKEI −4.9%', red: '−7.6%' },
-        { text: 'CIRCUIT BREAKER', label: 'TRIGGERED', sub: 'HOME OF THE WORLD’S MEMORY-CHIP GIANTS', red: true }] },
+    day: { align: 'center', kicker: 'DAYS AFTER THE CRASH · 17 JAN 1966', title: 'The hunt for bomb 4',
+      source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); STATE DEPT HISTORY (1985); B. MORAN (2009)', steps: DAYS },
+    alt: { align: 'center', kicker: '17 JAN 1966 · ABOUT 10:22 AM LOCAL', title: 'Over Palomares',
+      source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009)',
+      steps: [{ text: '31,000 FT', label: 'THE REFUELLING ALTITUDE', sub: 'B-52G “TEA 16” MEETS KC-135A “TROUBADOUR 14”' },
+        { text: '150 FT', label: 'BETWEEN BOMBER AND TANKER', sub: 'THE B-52 FLEW ABOUT 150 FT BELOW THE TANKER' }] },
+    // the analog clock layout (face: true): each step's time = [h, m] (24 h); hands sweep forward between steps
+    clock: { align: 'right', face: true, kicker: 'THREE TIMES THAT MATTER', title: 'The clock',
+      source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009) AND HER 2004 ARTICLE; USS PETREL DECK LOG VIA MORAN',
+      steps: [{ time: [10, 22], text: '10:22 AM', label: 'THE COLLISION', sub: '17 JAN 1966 · ABOUT 10:22 LOCAL (0922Z)' },
+        { time: [21, 15], text: '9:15 PM', label: 'THE LINE PARTS', sub: '24 MAR 1966 · “ABOUT 9:15 PM”, PER BARBARA MORAN', red: true },
+        { time: [8, 46], text: '8:46 AM', label: 'WEAPON ON DECK', sub: '7 APR 1966 · USS PETREL’S DECK LOG, VIA MORAN' }] },
   };
   const FLAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   async function counter(ctx, shot) {
-    const Pm = shot.params ?? {}, pre = PRESETS[Pm.preset ?? (Pm.steps ? '' : 'oct14')] ?? {};
-    const steps = (Pm.steps ?? pre.steps ?? [{ text: '—' }]).map(s => (typeof s === 'string' ? { text: s } : s));
+    const Pm = shot.params ?? {}, pre = PRESETS[Pm.preset ?? (Pm.steps || Pm.days ? '' : 'day')] ?? {};
+    let steps = Pm.days ? [].concat(Pm.days).map(dayStep) : (Pm.steps ?? pre.steps ?? [{ text: '—' }]);
+    steps = steps.map(s => (typeof s === 'string' ? { text: s } : s.text ? s : dayStep(s)));
     const D = shot.duration ?? 8, clk = Pm.clock ?? pre.clock;
-    const T = G.cues(shot, steps, { from: 0.35, span: Math.max(1.6 * (steps.length - 1), D * 0.5) });
+    const face = Pm.face ?? pre.face ?? steps.some(s => s.time);
+    const T = G.cues(shot, steps, { from: 0.35, span: Math.max(1.6 * (steps.length - 1), D * 0.55) });
     const L = Math.max(...steps.map(s => s.text.length));
     const align = Pm.align ?? pre.align ?? 'right';
     const pad = (s) => (align === 'center' ? s.padStart(Math.floor((L + s.length) / 2), ' ').padEnd(L, ' ') : s.padStart(L, ' ')).split('');
     const narrow = (c) => /[:.,·]/.test(c);
-    // fixed slot widths: punctuation slots are narrow, spaces common to every step are gaps
     const slots = Array.from({ length: L }, (_, i) => {
       const cs = steps.map(s => pad(s.text)[i]);
       if (cs.every(c => c === ' ')) return 'g';
       return cs.every(c => narrow(c) || c === ' ') ? 'n' : 'w';
     });
     const unit = slots.reduce((a, s) => a + (s === 'n' ? 0.42 : s === 'g' ? 0.3 : 1), 0) + 0.06 * (L - 1);
-    const TW = Pm.tile ?? Math.min(196, 1600 / unit), TH = TW * 1.36, NW = TW * 0.42, GW = TW * 0.3, gap = TW * 0.06;
+    const BX = face ? 1330 : 960, BW = face ? 860 : 1600;
+    const TW = Pm.tile ?? Math.min(face ? 150 : 196, BW / unit), TH = TW * 1.36, NW = TW * 0.42, GW = TW * 0.3, gap = TW * 0.06;
     const boardW = slots.reduce((a, s) => a + (s === 'n' ? NW : s === 'g' ? GW : TW) + gap, -gap);
-    const tFlap = (i) => 0.42 + i * Math.min(0.09, 1.1 / L); // settle delay per slot
+    const tFlap = (i) => 0.42 + i * Math.min(0.09, 1.1 / L);
+    const mins = (s) => (s?.time ? s.time[0] * 60 + s.time[1] : null);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.4); G.paper(g);
       k.view(0.7);
@@ -217,11 +303,9 @@ export default function makeGraphics(H) {
       let si = 0; for (let i = 0; i < steps.length; i++) if (t >= T[i]) si = i;
       const cur = steps[si], prev = steps[Math.max(0, si - 1)], tc = T[si];
       const from = si === 0 ? pad('').map(() => ' ') : pad(prev.text), to = pad(cur.text);
-      const x0 = 960 - boardW / 2, y0 = 380 + Math.max(0, (180 - TH) * 0.5);
+      const x0 = BX - boardW / 2, y0 = (face ? 400 : 380) + Math.max(0, (180 - TH) * 0.5);
       G.card(g, x0 - TW * 0.22, y0 - TW * 0.22, boardW + TW * 0.44, TH + TW * 0.44, { r: 26, fill: P.ink, lift: 1.4, grainA: 0 });
       const redNow = cur.red && t > tc + tFlap(L) + 0.3;
-      // on a red step only the figure turns red: the part after the last '·' (or everything when there is none)
-      // (or, when red is a string, from where that string starts: red: '−15%')
       const off = align === 'center' ? Math.floor((L + cur.text.length) / 2) - cur.text.length : L - cur.text.length;
       const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? off + cur.text.lastIndexOf(cur.red)
         : cur.text.includes('·') ? off + cur.text.lastIndexOf('·') + 1 : 0;
@@ -241,11 +325,9 @@ export default function makeGraphics(H) {
         const da = digit(a), db = digit(b), moving = t >= tc && t < stopAt && a !== b;
         const fs = (c) => (c === '%' || c === '$' || c === '−' ? TW * 0.8 : /[A-Z]/.test(c) ? TW * (/[MW]/.test(c) ? 0.78 : 0.9) : TW * 1.0);
         if (moving && da != null && db != null) {
-          // digit reel
           const dist = 22 + ((db - da) % 11 + 11) % 11, uu = E.outCubic(range(t, tc, stopAt)), pos = da + dist * uu;
-          for (let j = -1; j <= 1; j++) { const d = ((Math.floor(pos) + j) % 11 + 11) % 11, off = (pos - Math.floor(pos) - j) * TH; if (d !== 10) G.text(g, String(d), x + w / 2, y0 + TH * 0.75 - off, { size: TW * 1.0, weight: 800, align: 'center', color: P.ink, alpha: uu < 0.8 ? 0.55 : 1 }); }
+          for (let j = -1; j <= 1; j++) { const d = ((Math.floor(pos) + j) % 11 + 11) % 11, o = (pos - Math.floor(pos) - j) * TH; if (d !== 10) G.text(g, String(d), x + w / 2, y0 + TH * 0.75 - o, { size: TW * 1.0, weight: 800, align: 'center', color: P.ink, alpha: uu < 0.8 ? 0.55 : 1 }); }
         } else if (moving) {
-          // split flap: cycle seeded letters, each flip squashes the tile's glyph
           const n = 6, uu = range(t, tc, stopAt), idx = Math.min(n, Math.floor(uu * n)), r = rng(G.hash(i, si));
           const seq = Array.from({ length: n }, () => FLAP[Math.floor(r() * FLAP.length)]); seq.push(b);
           const c = idx >= n ? b : seq[idx], ph = (uu * n) % 1, sq = idx >= n ? 1 : Math.abs(Math.cos(ph * Math.PI));
@@ -261,76 +343,105 @@ export default function makeGraphics(H) {
         g.fillStyle = P.ink; g.fillRect(x - 2, y0 + TH / 2 - TW * 0.04, 4, TW * 0.08); g.fillRect(x + w - 2, y0 + TH / 2 - TW * 0.04, 4, TW * 0.08);
         x += w + gap;
       }
-      const yl = y0 + TH + 150, kl = range(t, tc + 0.3, tc + 1.1);
-      G.riseText(g, cur.label ?? '', 960, yl, kl, { size: 60, weight: 800, align: 'center', color: P.ink, track: 0.01, maxW: 1600 });
-      if (cur.sub) G.text(g, cur.sub, 960, yl + 56, { size: 26, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(range(t, tc + 0.6, tc + 1.3)), maxW: 1600 });
-      // a step tracker (several steps): one dot per step, the current one filled
+      const yl = y0 + TH + (face ? 130 : 150), kl = range(t, tc + 0.3, tc + 1.1);
+      G.riseText(g, cur.label ?? '', BX, yl, kl, { size: face ? 54 : 60, weight: 800, align: 'center', color: P.ink, track: 0.01, maxW: BW });
+      if (cur.sub) G.text(g, cur.sub, BX, yl + 52, { size: face ? 22 : 26, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(range(t, tc + 0.6, tc + 1.3)), maxW: BW });
       if (steps.length > 1) {
-        const n = steps.length, gx = 960 - (n - 1) * 30;
+        const n = steps.length, gx = BX - (n - 1) * 30;
         steps.forEach((st, i) => { const on = t >= T[i], kk = E.outBack(range(t, T[i], T[i] + 0.4)); g.save(); g.fillStyle = P.rule; g.beginPath(); g.arc(gx + i * 60, yl + 120, 9, 0, TAU); g.fill(); if (on) { g.fillStyle = i === si ? (st.red ? P.red : P.teal) : P.inkFaint; g.beginPath(); g.arc(gx + i * 60, yl + 120, 9 * kk, 0, TAU); g.fill(); } g.restore(); });
       }
-      // an analog clock for clock presets: the second hand sweeps, the minute hand creeps
-      if (clk) { const ss = (t * 6) % 60; G.clock(g, 1700, 200, 96, clk[0], clk[1] + ss / 60 - 0.5, ss, { red: true, k: E.outBack(range(t, 0.2, 0.8)) }); }
+      // the big analog clock (face): the hands sweep forward from the previous step's time to this one
+      if (face) {
+        let m = mins(steps[0]) ?? 0;
+        for (let i = 1; i <= si; i++) { const a0 = mins(steps[i - 1]), a1 = mins(steps[i]); if (a0 == null || a1 == null) continue; const fwd = ((a1 - a0) % 1440 + 1440) % 1440; m += fwd * E.inOutCubic(range(t, T[i], T[i] + 1.3)); }
+        const hh = Math.floor(m / 60), mm = m % 60, ss = (t * 6) % 60;
+        G.clock(g, 470, 600, 240, hh, mm, ss, { red: !!(cur.red && redNow), k: E.outBack(range(t, 0.15, 0.8)) });
+      }
+      if (clk && !face) { const ss = (t * 6) % 60; G.clock(g, 1700, 200, 96, clk[0], clk[1] + ss / 60 - 0.5, ss, { red: true, k: E.outBack(range(t, 0.2, 0.8)) }); }
       const asof = cur.asof ?? Pm.asof ?? pre.asof;
       if (asof) G.asOf(g, asof, 1770, 150, range(t, 0.6, 1.1), { align: 'right' });
       k.flat(); G.source(g, Pm.source ?? pre.source, range(t, 0.8, 1.6));
     }, { push: 0.035 });
   }
 
-  // ================================================================ timeline
-  // { year, date (small line above the year), label, word, red }
-  // only events with a RESEARCH row (§0, §7, §2a, §1); Lucent's 1996 spin-off has no row, so it is not here
+  // ================================================================ timeline (pans when the events don't fit)
+  // { date ('17 JAN'), year, label, word, red, asof } — every row is in RESEARCH §1 (dates ✓ unless noted in SETS-graphics.md)
   const EVENTS = [
-    { year: '2000', date: '10 MAR', label: 'Nasdaq record close: 5,048.62' },
-    { year: '2000', date: '30 SEP', label: 'Lucent: $8.1B of financing for its own customers' },
-    { year: '2002', date: '9 OCT', label: 'Nasdaq bottoms, −77.9% from the peak' },
-    { year: '2009', date: '14 JAN', label: 'Nortel files for creditor protection' },
-    { year: '2015', date: '23 APR', label: 'Nasdaq finally closes above its 2000 peak' },
-    { year: '2025', date: '22 SEP', label: 'Nvidia–OpenAI letter of intent: “up to $100B”' },
-    { year: '2026', date: '17 AUG', label: 'Nvidia guarantees up to $105B of OpenAI’s leases' },
-    { year: '2026', date: '6 OCT', label: 'Nasdaq record close: 27,599.79' },
-    { year: '2026', date: '14–16 OCT', label: 'AI selloff: Nasdaq −4.5% in a week', red: true },
+    { date: '17 JAN', year: '1966', label: 'B-52 and tanker collide at 31,000 ft. Four H-bombs fall' },
+    { date: '18 JAN', year: '1966', label: 'Bombs 2 and 3 found on land. Bomb 4 is missing' },
+    { date: '22 JAN', year: '1966', label: 'Fisherman Simó guides USS Pinnacle to where he saw a chute' },
+    { date: '9 FEB', year: '1966', label: 'Alvin arrives off Palomares' },
+    { date: '1 MAR', year: '1966', label: 'Alvin photographs a furrow on the slope' },
+    { date: '8 MAR', year: '1966', label: 'The ambassador swims to prove the sea is safe' },
+    { date: '15 MAR', year: '1966', label: 'Found: 2,550 ft down, on a 70° slope' },
+    { date: '24 MAR', year: '1966', label: 'The lift line parts. Lost again', red: true },
+    { date: '2 APR', year: '1966', label: 'Found again, at 2,800 ft' },
+    { date: '7 APR', year: '1966', label: 'Lifted, 80 days after the crash' },
+    { date: '21 JAN', year: '1968', label: 'Thule: another B-52 crash. Nuclear airborne alert ends' },
+    { date: '2006–09', year: '2006', label: 'CIEMAT survey maps the plutonium left in the soil', yearless: true },
+    { date: '19 OCT', year: '2015', label: 'US–Spain statement of intent. Not binding' },
+    { date: 'OCT', year: '2026', label: 'Fence still up. Lawsuit still awaiting a ruling', asof: 'AS OF 21 OCT 2026' },
   ];
   const yearNum = (y) => parseInt(String(y), 10);
   async function timeline(ctx, shot) {
     const Pm = shot.params ?? {};
     const ev = (Pm.events ?? EVENTS).map(e => (typeof e === 'object' ? e : EVENTS.find(x => String(x.year) === String(e) || `${x.date} ${x.year}` === String(e)) ?? { year: String(e), label: '' }));
-    const D = shot.duration ?? 8, n = ev.length, sp = Pm.spacing ?? (n > 1 ? Math.min(330, 1400 / (n - 1)) : 0), X = (i) => 960 - sp * (n - 1) / 2 + i * sp;
-    const fi = (f) => { if (f == null) return null; const s = String(f); const i = ev.findIndex(e => `${e.date ?? ''} ${e.year}`.trim() === s || e.label === s); return i >= 0 ? i : (j => (j < 0 ? null : j))(ev.findIndex(e => String(e.year) === s)); };
+    const D = shot.duration ?? 14, n = ev.length, sp = Pm.spacing ?? 270, X = (i) => i * sp;
+    const fi = (f) => { if (f == null) return null; const s = String(f); const i = ev.findIndex(e => `${e.date ?? ''} ${e.year}`.trim() === s || e.label === s || e.date === s); return i >= 0 ? i : (j => (j < 0 ? null : j))(ev.findIndex(e => String(e.year) === s)); };
     const hasF = Pm.focus != null, focus = hasF ? (Array.isArray(Pm.focus) ? Pm.focus.map(fi) : [fi(Pm.focus), fi(Pm.focus)]) : [null, null];
-    const T = hasF && !ev.some(e => e.word) ? ev.map((_, i) => 0.15 + i * 0.08) : G.cues(shot, ev, { from: 0.3, span: Math.min(D * 0.62, Math.max(0.6 * (n - 1), D - 2.4)) });
-    const lw = Math.min(300, sp * 1.75);
+    const T = hasF && !ev.some(e => e.word) ? ev.map((_, i) => 0.15 + i * 0.05) : G.cues(shot, ev, { from: 0.4, span: Math.min(D * 0.78, Math.max(0.7 * (n - 1), D - 2.4)) });
+    const lw = Math.min(380, sp * 1.55);
     const lo = Math.min(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1), hi = Math.max(focus[0] ?? -1, focus[1] ?? focus[0] ?? -1);
+    // the camera along the axis: the first event sits at x 230, the last at 1690; centred if everything fits
+    const span = X(n - 1), fits = span <= 1320, cMin = X(0) + 600, cMax = X(n - 1) - 600;
+    const cAt = (i) => clamp(X(i) + sp * 0.5, cMin, cMax);
+    const camX = (t) => {
+      if (fits) return span / 2;
+      if (hasF) return clamp((X(lo) + X(hi)) / 2, cMin, cMax);
+      let c = cMin; for (let i = 0; i < n; i++) { const prev = i ? cAt(i - 1) : cMin; c += (cAt(i) - prev) * E.inOutSine(range(t, T[i] - 0.6, T[i] + 0.5)); } return c;
+    };
+    const showYear = (i) => i === 0 || String(ev[i].year) !== String(ev[i - 1].year);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.3); G.paper(g);
       k.view(1);
-      const y = 590;
-      // the axis: a navy ledger rule with fine ticks, drawn on as the events arrive
-      const reach = Math.max(...ev.map((e, i) => (t >= T[i] - 0.4 ? X(i) + sp * 0.6 * E.outCubic(range(t, T[i] - 0.4, T[i] + 0.2)) : 0)), X(0));
+      const y = 590, cx = camX(t), SX = (i) => 960 + X(i) - cx;
+      // the axis, drawn on as events arrive
+      const reach = Math.max(...ev.map((e, i) => (t >= T[i] - 0.4 ? SX(i) + sp * 0.6 * E.outCubic(range(t, T[i] - 0.4, T[i] + 0.2)) : -400)), SX(0));
       g.save(); g.beginPath(); g.rect(-200, 0, reach + 200, 1080); g.clip();
       g.fillStyle = P.ink; g.fillRect(-200, y - 3, 2320, 6);
-      for (let x = -200; x < 2120; x += 24) { g.fillStyle = P.rule; g.fillRect(x, y + 10, 2, 10); }
+      for (let x = (SX(0) % 24) - 240; x < 2120; x += 24) { g.fillStyle = P.rule; g.fillRect(x, y + 10, 2, 10); }
       g.restore();
       ev.forEach((e, i) => {
+        const x = SX(i); if (x < -420 || x > 2340) return;
         const kk = range(t, T[i] - 0.4, T[i] + 0.4); if (kk <= 0) return;
-        const x = X(i), up = i % 2 === 0;
+        const up = i % 2 === 0;
         const act = !hasF || (i >= lo && i <= hi), red = hasF ? act : !!e.red, col = red ? P.red : P.ink;
-        // a gap marker on the axis where years are skipped
-        if (i > 0 && yearNum(e.year) - yearNum(ev[i - 1].year) > (Pm.gapYears ?? 4)) { const bx = x - sp / 2; g.save(); g.strokeStyle = P.paper; g.lineWidth = 10; g.beginPath(); g.moveTo(bx - 12, y + 22); g.lineTo(bx + 2, y - 22); g.moveTo(bx + 6, y + 22); g.lineTo(bx + 20, y - 22); g.stroke(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.beginPath(); g.moveTo(bx - 14, y + 22); g.lineTo(bx, y - 22); g.moveTo(bx + 8, y + 22); g.lineTo(bx + 22, y - 22); g.stroke(); g.restore(); }
-        g.save(); g.globalAlpha = act ? 1 : 0.38;
-        const stem = 96 * E.outCubic(kk); g.strokeStyle = col; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); g.lineTo(x, up ? y - stem : y + stem); g.stroke();
+        if (i > 0 && yearNum(e.year) - yearNum(ev[i - 1].year) > (Pm.gapYears ?? 1)) { const bx = x - sp / 2; g.save(); g.strokeStyle = P.paper; g.lineWidth = 10; g.beginPath(); g.moveTo(bx - 12, y + 22); g.lineTo(bx + 2, y - 22); g.moveTo(bx + 6, y + 22); g.lineTo(bx + 20, y - 22); g.stroke(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.beginPath(); g.moveTo(bx - 14, y + 22); g.lineTo(bx, y - 22); g.moveTo(bx + 8, y + 22); g.lineTo(bx + 22, y - 22); g.stroke(); g.restore(); }
+        g.save(); g.globalAlpha = act ? 1 : 0.36;
+        const stem = 78 * E.outCubic(kk); g.strokeStyle = col; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); g.lineTo(x, up ? y - stem : y + stem); g.stroke();
         G.pin(g, x, y, t, kk, { color: red ? P.red : P.teal, r: 11, pulse: red });
-        const ys = String(e.year), ysz = Math.min(80, sp * 0.5), ty = up ? y - 126 : y + 128 + ysz * 0.72;
-        if (e.date) G.text(g, e.date, x, ty - ysz * 0.86, { size: 20, weight: 500, fam: F.mono, align: 'center', color: red ? P.red : P.inkSoft, track: 0.1, alpha: E.outCubic(range(t, T[i] - 0.1, T[i] + 0.4)) });
-        G.riseText(g, ys, x, ty, kk, { size: ysz, weight: 500, fam: F.mono, align: 'center', color: col, track: -0.04 });
-        const lines = G.wrap(g, e.label, lw, 26, 700);
-        const top = up ? ty - ysz * 0.86 - (e.date ? 34 : 4) - 14 - (lines.length - 1) * 32 : ty + 44;
-        lines.forEach((l, j) => G.text(g, l, x, top + j * 32, { size: 26, weight: 700, align: 'center', color: P.ink, alpha: E.outCubic(range(t, T[i], T[i] + 0.6)) }));
+        const ka = E.outCubic(range(t, T[i] - 0.1, T[i] + 0.5));
+        // date (big mono), year (teal, only when it changes), label (Inter)
+        const dY = up ? y - 104 : y + 136, yrY = up ? dY - 44 : dY + 40;
+        G.riseText(g, e.date ?? '', x, dY, kk, { size: 40, weight: 500, fam: F.mono, align: 'center', color: col, track: -0.02 });
+        const yr = showYear(i) && !e.yearless;
+        if (yr) G.text(g, String(e.year), x, yrY, { size: 24, weight: 500, fam: F.mono, align: 'center', color: red ? P.red : P.tealDeep, track: 0.12, alpha: ka });
+        const ls = G.wrap(g, e.label ?? '', lw, 27, 700);
+        const top = up ? (yr ? yrY - 40 : dY - 58) - (ls.length - 1) * 34 : (yr ? yrY + 50 : dY + 54);
+        ls.forEach((l, j) => G.text(g, l, x, top + j * 34, { size: 27, weight: 700, align: 'center', color: P.ink, alpha: E.outCubic(range(t, T[i], T[i] + 0.6)) }));
+        if (e.asof) G.asOf(g, e.asof, x, up ? top - 52 : top + ls.length * 34 + 22, range(t, T[i] + 0.3, T[i] + 0.8), { align: 'center', size: 16 });
         g.restore();
       });
-      k.flat(); G.kicker(g, Pm.title ?? 'TWO BOOMS · 2000 – 2026', 120, 110, range(t, 0, 0.6));
-      G.source(g, Pm.source ?? 'SOURCES: YAHOO FINANCE PRICE HISTORY; LUCENT 10-K (2001); NORTEL (2009); NVIDIA PR & 8-K; AP (16 OCT 2026)', range(t, 0.6, 1.4));
-    }, { push: 0.03, dx: 30 });
+      // the running year, top right: the year of the latest event on screen
+      { let iy = 0; ev.forEach((e, i) => { if (t >= T[i] && (hasF ? i <= hi : true)) iy = i; }); if (hasF) iy = hi;
+        let ic = iy; while (ic > 0 && String(ev[ic - 1].year) === String(ev[iy].year)) ic--;
+        k.flat(); G.riseText(g, String(ev[iy].year), 1800, 128, range(t, T[ic] - 0.1, T[ic] + 0.5), { size: 72, weight: 500, fam: F.mono, align: 'right', color: P.tealDeep, track: -0.02 }); k.view(1); }
+      // edge fades so panned events slide under paper, not off a cliff
+      if (!fits) { k.flat(); const L0 = g.createLinearGradient(0, 0, 150, 0); L0.addColorStop(0, 'rgba(247,246,241,1)'); L0.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = L0; g.fillRect(0, 260, 150, 720);
+        const R0 = g.createLinearGradient(1770, 0, 1920, 0); R0.addColorStop(0, 'rgba(247,246,241,0)'); R0.addColorStop(1, 'rgba(247,246,241,1)'); g.fillStyle = R0; g.fillRect(1770, 260, 150, 720); }
+      k.flat(); G.kicker(g, Pm.title ?? 'BOMB 4 · 1966 – 2026', 120, 110, range(t, 0, 0.6));
+      G.source(g, Pm.source ?? 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); STATE DEPT HISTORY (1985); B. MORAN (2009); CSN; KERRY (2015); ACTUALIDAD ALMANZORA (OCT 2026)', range(t, 0.6, 1.4), { size: 15 });
+    }, { push: 0.025, dx: 10 });
   }
 
   return { title, chapter, quote, bignumber, counter, timeline };

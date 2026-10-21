@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Build projects/aibubble/assets/geo/world.json for the `map` set from Natural Earth 1:50m (public domain).
+"""Build projects/palomares/assets/geo/world.json for the `map` set from Natural Earth 1:50m (public domain).
 
-  python3 -I projects/aibubble/assets/geo/build.py <dir with the Natural Earth geojson files>
+  python3 -I projects/palomares/assets/geo/build.py <dir with the Natural Earth geojson files>
 
 Inputs (github.com/nvkelso/natural-earth-vector, geojson/): ne_50m_admin_0_countries, ne_50m_admin_1_states_provinces_lakes,
 ne_50m_lakes. Output rings are flat [lon, lat, lon, lat, ...] arrays, rounded; outer rings only.
   world   50m countries, Douglas-Peucker 0.05 deg, keyed by ISO3            (map mode 'world')
   us      50m US states in the lower-48 box (keys 'US-TX' ...) + CAN/MEX/CUB/BHS, DP 0.015 (map mode 'us')
   lakes   50m lakes (Great Lakes etc.) in the lower-48 box, DP 0.015
+  iberia  50m countries around Iberia (ESP PRT FRA AND GIB MAR DZA), DP 0.006, keyed by ISO3   (map mode 'spain')
+The 'coast' mode uses almeria.json from build_coast.py (Natural Earth 10m + EMODnet isobaths).
 """
 import sys, os, json
 SRC = sys.argv[1]; OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'world.json')
@@ -50,5 +52,7 @@ us = collect('ne_50m_admin_1_states_provinces_lakes.geojson', 0.015, lambda p: p
              keep=lambda p: p.get('adm0_a3') == 'USA' and p.get('iso_3166_2') not in ('US-AK', 'US-HI'))
 us.update(collect('ne_50m_admin_0_countries.geojson', 0.015, iso, box=US_BOX, nd=3, keep=lambda p: iso(p) in ('CAN', 'MEX', 'CUB', 'BHS', 'GTM')))
 lakes = collect('ne_50m_lakes.geojson', 0.015, lambda p: p.get('name') or 'lake', box=US_BOX, nd=3, minpts=6, keep=lambda p: (p.get('scalerank') or 9) <= 2)
-json.dump({'source': 'Natural Earth 1:50m (public domain), simplified by build.py', 'world': world, 'us': us, 'lakes': lakes}, open(OUT, 'w'), separators=(',', ':'))
+IB_BOX = (-12, 33, 6, 46)
+iberia = collect('ne_50m_admin_0_countries.geojson', 0.006, iso, box=IB_BOX, nd=3, keep=lambda p: iso(p) in ('ESP', 'PRT', 'FRA', 'AND', 'GIB', 'MAR', 'DZA'))
+json.dump({'source': 'Natural Earth 1:50m (public domain), simplified by build.py', 'world': world, 'us': us, 'lakes': lakes, 'iberia': iberia}, open(OUT, 'w'), separators=(',', ':'))
 print(OUT, os.path.getsize(OUT), 'bytes;', len(world), 'countries;', len(us), 'us shapes;', len(lakes), 'lakes')

@@ -1,16 +1,26 @@
-// AI-bubble document and archive sets (episode 8).
-//   doc    typographic RECREATIONS of SEC filings (never facsimiles): every sheet says on screen that it is recreated
-//          and from what; quoted phrases are verbatim from RESEARCH.md, everything else is a labelled summary. params.doc:
-//     'nvidia8k'     NVIDIA 8-K, 17 Aug 2026: up to $105B guarantee of OpenAI's Ohio leases     keys: shortfall cap term gw tenant rating items form date
-//     'nvidia10k'    NVIDIA 10-K, filed 25 Feb 2026: "There is no assurance …"                    keys: assurance agreement form date
-//     'nvidia10q'    NVIDIA 10-Q, quarter to 26 Jul 2026: AI clouds "currently lack …"            keys: lack financing power form date
-//     'coreweave8k'  CoreWeave 8-K, Sep 2025: NVIDIA "is obligated to purchase the residual …"    keys: residual value date form
-//     'oracle10q'    Oracle 10-Q, quarter to 31 Aug 2026: $125.0B debt, fair value $105.7B (≈85¢), FCF −$5.4B, $20B ATM   keys: debt fair cents capex fcf atm form date
-//     'lucent10k'    Lucent 10-K405, FY2001 (Dec 2001): "Adverse industry conditions …"           keys: clec creditworthiness program commit provisions form date
-//     'amdwarrant'   AMD 8-K, 6 Oct 2025: warrant, 160M shares at $0.01, targets "escalate to $600"  keys: shares price gw expiry 600 form date
+// Palomares document and archive sets (episode 9).
+//   doc    typographic RECREATIONS (never facsimiles): every sheet says on screen that it is recreated and from what;
+//          quoted phrases are verbatim from RESEARCH.md, everything else is a labelled summary. params.doc:
+//     'dna1975'        DNA Palomares Summary Report, 15 Jan 1975, p.94: found 2,550 ft / 70° / contact #261; one line severed;
+//                      re-found 120 yd on 210°T at 2,800 ft; "much anxiety… 8 days"   keys: find slope contact severed refind yards anxiety
+//     'navyreport'     US Navy, Aircraft Salvage Operation Mediterranean, Final Report (1967), quoted via Moran (report not
+//                      seen): "…was improvised."; the Navy's own cost maths          keys: readiness improvised cost day
+//     'alvinlog'       Alvin, Dive 128, 15 Mar 1966: a recreated dive SUMMARY card (not the log): crew, contact #261,
+//                      2,550 ft, 70°, 10 h 23 min, 8:12 pm, "ALVIN reports INSTRUMENT PANEL."   keys: dive depth contact slope time code
+//     'telegram'       Embassy Madrid to State, 22 Jan 1966 (FRUS XII doc 191): "…admitting officially one bomb still
+//                      missing… utmost urgency…"                                   keys: missing urgency date
+//     'cable2009'      State cable 129362, 14 Dec 2009 (Clinton–Moratinos, leaked): "…made no commitment."   keys: opinion commitment date
+//     'nyt2016'        NYT, Dave Philipps, 19 Jun 2016 (a recreated clipping): 40 veterans / 21 cancer / 9 died; Thompson;
+//                      Odland's "sleeping dog"                                      keys: headline cancer safe sleeping
+//     'statement2015'  US–Spain statement of intent, 19 Oct 2015: the Spanish text as reported + Kerry's "once and for all"
+//                                                                                   keys: title asap funds binding anytime once
+//     'court2026'      the Spanish lawsuit, status AS OF 21 OCT 2026 (press reports): witnesses refused; the State's brief
+//                      «Palomares nunca ha sido un accidente nuclear»; «pendiente de fallo»   keys: witnesses never competent pending
 //          other params: highlight (key or [keys]), at (cue or [cues] per highlight), zoom, tilt, label (false hides), source
 //   photo  a photo in a white border card on paper with an eased Ken Burns push, caption slab and credit line.
-//          params: file (in projects/aibubble/assets/photos/, or an absolute /projects/... path), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
+//          params: file (in projects/palomares/assets/photos/, or an absolute /projects/... path), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
+//          Bundled (public domain, see assets/photos/CREDITS.md): petrel-bomb-curv-1966.jpg · petrel-bomb-officials-1966.jpg ·
+//          petrel-bomb-chute-1966.jpg · alvin-1964.jpg · palomares-barrels-1966.jpg (+ uss-skill-feb1966.jpg, b52g-kc135a-refuel-1992.jpg when present)
 // Every word on a recreated sheet is either a verbatim quote from RESEARCH.md or a plain summary of a RESEARCH fact;
 // brackets and ellipses mark our edits.
 import * as G from './graphics-kit.js';
@@ -24,118 +34,138 @@ const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
 //         ['rule', y, o]      o = { x0, x1, w, double, color }
 //         ['box', x, y, w, h, o]  o = { lw, color, r, text, size, fam, track, key }
 const INK = '#17181c', GREY = '#55524b', NOTE = { size: 8.5, style: 'italic', fam: F.serif, color: '#6d6a62', lh: 12 };
-// the SEC cover block: UNITED STATES / SEC / Washington / FORM / kind / registrant / date line (y 64 … 272)
-const sec = (form, kind, company, date) => [
-  ['t', 62, 'UNITED STATES', { align: 'c', size: 11, fam: F.narrow, weight: 700, track: 0.3 }],
-  ['t', 82, 'SECURITIES AND EXCHANGE COMMISSION', { align: 'c', size: 15, fam: F.serif, track: 0.08 }],
-  ['t', 99, 'Washington, D.C. 20549', { align: 'c', size: 10, fam: F.serif, style: 'italic', color: GREY }],
-  ['rule', 114, { double: true }],
-  ['t', 164, form, { align: 'c', size: 40, weight: 900, track: 0.02, key: 'form' }],
-  ['t', 188, kind, { align: 'c', size: 11.5, fam: F.narrow, weight: 700, track: 0.3, color: GREY }],
-  ['t', 228, company, { align: 'c', size: 21, fam: F.serif, track: 0.06 }],
-  ['t', 250, date, { align: 'c', size: 11, fam: F.serif, style: 'italic', key: 'date' }],
-  ['rule', 270, {}],
-];
+// a document head: centred lines (y 62 …), then a rule. lines: [text, o]
+const head = (lines, ruleY) => [...lines.map(([y, s, o]) => ['t', y, s, { align: 'c', ...o }]), ['rule', ruleY, { double: true }]];
+const NARROW = { size: 11, fam: F.narrow, weight: 700, track: 0.3 };
 const DOCS = {
-  nvidia8k: {
-    w: 612, h: 730, paper: '#fbfaf6', ink: INK, def: ['cap', 'shortfall', 'rating'], tilt: -0.7,
+  // S01 p.94 (✓). The OSTI copy is partial; these passages are the ones the fact-check read.
+  dna1975: {
+    w: 612, h: 650, paper: '#f8f5ec', ink: '#1d1b16', typed: true, def: ['find', 'severed', 'refind'], tilt: -0.6,
     blocks: [
-      ...sec('FORM 8-K', 'CURRENT REPORT', 'NVIDIA CORPORATION', 'Date of report: August 17, 2026'),
-      ['t', 300, 'ITEMS 1.01 AND 2.03 · AN OFF-BALANCE-SHEET OBLIGATION', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY, key: 'items' }],
-      ['row', 338, 'Guarantee, capped at', 'up to $105 billion', { key: 'cap', bold: true, size: 15 }],
-      ['row', 372, 'Leases', '20-year terms', { key: 'term' }],
-      ['row', 406, 'Data-centre capacity', '~4.25 GW · Pike County, Ohio', { key: 'gw' }],
-      ['row', 440, 'Tenant', 'OpenAI', { key: 'tenant' }],
-      ['p', 492, '[If OpenAI becomes insolvent or fails to pay,] “NVIDIA will pay an amount generally equal to any shortfall …”', { size: 18, lh: 26, fam: F.serif, marks: { shortfall: '“NVIDIA will pay an amount generally equal to any shortfall …”' } }],
-      ['p', 586, '[The guarantee ends early upon] “… OpenAI achieving a satisfactory credit rating.”', { size: 18, lh: 26, fam: F.serif, marks: { rating: 'OpenAI achieving a satisfactory credit rating.”' } }],
-      ['rule', 646, {}],
-      ['p', 672, 'Recreated text. Quoted phrases are verbatim from NVIDIA’s Form 8-K of 17 Aug 2026; the table and bracketed words are our summary. OpenAI must reimburse NVIDIA for any payment.', NOTE],
+      ...head([[64, 'DEFENSE NUCLEAR AGENCY', NARROW], [100, 'PALOMARES SUMMARY REPORT', { size: 20, weight: 600, track: 0.04, key: 'title' }], [124, '15 January 1975', { size: 11.5, color: '#55524b' }]], 142),
+      ['t', 176, '[The search at sea, p. 94:]', { size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['p', 210, '“…on 15 March ALVIN successfully backed down the furrow to discover a parachute enshrouded object… at a depth of 2550 feet lying on a 70 degree slope. The object was designated contact #261.”', { size: 14, lh: 23, marks: { find: 'at a depth of 2550 feet', slope: 'lying on a 70 degree slope.', contact: 'designated contact #261.”' } }],
+      ['p', 318, '“…an abortive attempt to raise contact #261 on one line that was severed in the attempt, dropping the object…”', { size: 14, lh: 23, marks: { severed: 'one line that was severed in the attempt, dropping the object…”' } }],
+      ['p', 392, '“…on 2 April the object, still chute enshrouded, was located on a bearing of 210° T., a distance of 120 yards from its position on 15 March and now at a depth of 2800 feet.”', { size: 14, lh: 23, marks: { yards: 'a distance of 120 yards', refind: 'now at a depth of 2800 feet.”' } }],
+      ['p', 504, '“…much anxiety for a period of 8 days…”', { size: 14, lh: 23, marks: { anxiety: '“…much anxiety for a period of 8 days…”' } }],
+      ['rule', 546, {}],
+      ['p', 572, 'Recreated text, not a facsimile. Passages are verbatim from the Defense Nuclear Agency’s Palomares Summary Report (15 Jan 1975), p. 94; ellipses mark our cuts. The State Department’s 1985 history counts the gap as 9 days.', NOTE],
     ],
-    label: 'RECREATED TEXT · NVIDIA FORM 8-K, 17 AUG 2026', src: 'SOURCE: NVIDIA CORP., FORM 8-K (17 AUG 2026), ITEMS 1.01 AND 2.03 · SEC EDGAR',
+    label: 'RECREATED TEXT · DNA PALOMARES SUMMARY REPORT, 1975', src: 'SOURCE: DEFENSE NUCLEAR AGENCY, PALOMARES SUMMARY REPORT (15 JAN 1975), P. 94 · OSTI OPENNET',
   },
-  nvidia10k: {
-    w: 612, h: 560, paper: '#fbfaf6', ink: INK, def: ['assurance'], tilt: 0.7,
+  // S24 is not online: the quote is S40 (Moran) quoting the Navy's Final Report (⚑); the cost is the Navy's maths via S40 ch.17 (⚑)
+  navyreport: {
+    w: 612, h: 580, paper: '#f6f3ea', ink: '#1d1a14', typed: true, def: ['improvised', 'cost'], tilt: 0.8,
     blocks: [
-      ...sec('FORM 10-K', 'ANNUAL REPORT', 'NVIDIA CORPORATION', 'Fiscal year ended January 25, 2026 · filed February 25, 2026'),
-      ['t', 304, '[On the September 2025 letter of intent to invest “up to $100 billion” in OpenAI:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
-      ['p', 352, '“There is no assurance that we will enter into an investment and partnership agreement with OpenAI or that a transaction will be completed.”', { size: 23, lh: 32, fam: F.serif, marks: { assurance: 'There is no assurance', agreement: 'or that a transaction will be completed.”' } }],
-      ['rule', 478, {}],
-      ['p', 504, 'Recreated text. The quotation is verbatim from NVIDIA’s Form 10-K filed 25 Feb 2026; the bracketed line is our summary.', NOTE],
+      ...head([[64, 'DEPARTMENT OF THE NAVY', NARROW], [100, 'AIRCRAFT SALVAGE OPERATION', { size: 18, weight: 600, track: 0.04 }], [124, 'MEDITERRANEAN', { size: 18, weight: 600, track: 0.04 }], [148, 'Final Report · 1967', { size: 11.5, color: '#55524b' }]], 166),
+      ['t', 200, '[Its own verdict, as quoted by Barbara Moran:]', { size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['p', 236, '“The Navy had achieved no interim readiness for search and recovery… The entire operation, from its initial inception to its termination, was improvised.”', { size: 15, lh: 24, marks: { readiness: 'no interim readiness for search and recovery…', improvised: 'was improvised.”' } }],
+      ['t', 350, '[What it cost, by the Navy’s own maths:]', { size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['row', 384, 'Total', '$10,230,744', { key: 'cost', bold: true, size: 14 }],
+      ['row', 414, 'Per day', '$126,305', { key: 'day', size: 14 }],
+      ['row', 444, 'Billed to the Air Force', '$6.5 million', { size: 14 }],
+      ['rule', 476, {}],
+      ['p', 502, 'Recreated text. The Navy’s 1967 Final Report is not online and we have not seen it: the quotation and the cost figures are as given by Barbara Moran, The Day We Lost the H-Bomb (2009), citing it and the DNA report.', NOTE],
     ],
-    label: 'RECREATED TEXT · NVIDIA FORM 10-K, 25 FEB 2026', src: 'SOURCE: NVIDIA CORP., FORM 10-K FOR FISCAL 2026 (FILED 25 FEB 2026) · SEC EDGAR',
+    label: 'RECREATED TEXT · US NAVY FINAL REPORT (1967), VIA B. MORAN', src: 'SOURCE: US NAVY, AIRCRAFT SALVOPS MED FINAL REPORT (1967), AS QUOTED IN B. MORAN (2009) · REPORT NOT SEEN',
   },
-  nvidia10q: {
-    w: 612, h: 640, paper: '#fbfaf6', ink: INK, def: ['lack', 'financing'], tilt: -0.8,
+  // a dive SUMMARY card, explicitly not the log: depth/slope/contact S01 (✓); crew, times and the note S40 (⚑)
+  alvinlog: {
+    w: 560, h: 560, paper: '#fbfaf3', ink: '#1b2236', card: true, typed: true, def: ['depth', 'code'], tilt: -1.1,
     blocks: [
-      ...sec('FORM 10-Q', 'QUARTERLY REPORT', 'NVIDIA CORPORATION', 'Quarter ended July 26, 2026 · filed August 26, 2026'),
-      ['t', 304, '[On the AI cloud providers NVIDIA now backs, which:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
-      ['p', 352, '“… currently lack the ability to secure long-term infrastructure contracts and investment-grade financing capacity …”', { size: 23, lh: 32, fam: F.serif, marks: { lack: 'currently lack the ability', financing: 'investment-grade financing capacity' } }],
-      ['t', 488, '[On demand, customers may delay purchases:]', { x: 72, size: 11.5, fam: F.serif, style: 'italic', color: GREY }],
-      ['p', 520, '“… due to the lack of availability of data center infrastructure …”', { size: 16, lh: 23, fam: F.serif, marks: { power: 'lack of availability of data center infrastructure' } }],
-      ['rule', 560, {}],
-      ['p', 586, 'Recreated text. Quotations are verbatim from NVIDIA’s Form 10-Q for the quarter ended 26 Jul 2026; bracketed lines are our summary.', NOTE],
+      ['t', 52, 'ALVIN · DIVE 128', { x: 40, size: 22, weight: 600, track: 0.04, key: 'dive' }],
+      ['t', 52, '15 MAR 1966', { align: 'r', size: 14, key: 'date' }],
+      ['rule', 72, { x0: 40, x1: 520 }],
+      ['row', 112, 'Pilots', 'McCamis, Wilson', { size: 13.5 }],
+      ['row', 138, 'Observer', 'Bartlett', { size: 13.5 }],
+      ['row', 164, 'Target', 'contact #261', { key: 'contact', size: 13.5 }],
+      ['row', 190, 'Depth', '2,550 ft', { key: 'depth', size: 15, bold: true }],
+      ['row', 216, 'Slope', '70°', { key: 'slope', size: 13.5 }],
+      ['row', 242, 'Time down', '10 h 23 min', { key: 'time', size: 13.5 }],
+      ['row', 268, 'Back aboard', '8:12 pm · USS Fort Snelling', { size: 13.5 }],
+      ['t', 318, '[The note handed to Adm. Guest:]', { x: 40, size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['box', 40, 336, 480, 54, { text: '“ALVIN reports INSTRUMENT PANEL.”', size: 17, fam: F.mono, track: 0.02, key: 'code' }],
+      ['p', 432, 'Recreated summary card, NOT the dive log (we have not seen it). Depth, slope and contact number: DNA report (1975). Crew, times and the note (the find’s code word): Barbara Moran (2009).', { ...NOTE, x: 40, w: 480 }],
     ],
-    label: 'RECREATED TEXT · NVIDIA FORM 10-Q, AUG 2026', src: 'SOURCE: NVIDIA CORP., FORM 10-Q, QUARTER ENDED 26 JUL 2026 (FILED 26 AUG 2026) · SEC EDGAR',
+    label: 'RECREATED SUMMARY · ALVIN DIVE 128, 15 MAR 1966 · NOT THE LOG', src: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975), P. 94; B. MORAN, THE DAY WE LOST THE H-BOMB (2009)',
   },
-  coreweave8k: {
-    w: 612, h: 620, paper: '#fbfaf6', ink: INK, def: ['residual', 'value'], tilt: 0.8,
+  // S03 doc 191 (✓, FRUS): Duke's telegram of 22 Jan 1966
+  telegram: {
+    w: 612, h: 450, paper: '#f4f1e6', ink: '#202020', typed: true, def: ['missing', 'urgency'], tilt: 0.9,
     blocks: [
-      ...sec('FORM 8-K', 'CURRENT REPORT', 'COREWEAVE, INC.', 'Date of report: September 9, 2025 · filed September 15, 2025'),
-      ['row', 316, 'Order from', 'NVIDIA', {}],
-      ['row', 350, 'Initial order value', '$6.3 billion', { key: 'value', bold: true, size: 15 }],
-      ['row', 384, 'Runs through', 'April 13, 2032', { key: 'date' }],
-      ['p', 440, '[NVIDIA] “is obligated to purchase the residual unsold capacity through April 13, 2032.”', { size: 22, lh: 31, fam: F.serif, marks: { residual: 'is obligated to purchase the residual unsold capacity' } }],
+      ...head([[64, 'TELEGRAM', { size: 22, weight: 600, track: 0.3 }], [92, 'FROM THE EMBASSY IN SPAIN TO THE DEPARTMENT OF STATE', { size: 10.5, track: 0.08 }], [114, 'Madrid, January 22, 1966', { size: 11.5, color: '#55524b', key: 'date' }]], 132),
+      ['t', 166, '[Ambassador Angier Biddle Duke, five days after the crash:]', { size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['p', 204, '“If much more time elapses without success in search, we may be faced with practical necessity admitting officially one bomb still missing… It therefore clearly of utmost urgency that no effort be spared locate fourth bomb.”', { size: 16, lh: 26, marks: { missing: 'admitting officially one bomb still missing…', urgency: 'utmost urgency that no effort be spared locate fourth bomb.”' } }],
+      ['rule', 350, {}],
+      ['p', 376, 'Recreated text, not a facsimile. The quotation is verbatim from Foreign Relations of the United States, 1964–68, vol. XII, document 191.', NOTE],
+    ],
+    label: 'RECREATED TEXT · EMBASSY MADRID TELEGRAM, 22 JAN 1966', src: 'SOURCE: FOREIGN RELATIONS OF THE UNITED STATES 1964–68, VOL. XII, DOC. 191 · HISTORY.STATE.GOV',
+  },
+  // S23 (✓ T1 leaked): STATE 129362, 14 Dec 2009
+  cable2009: {
+    w: 612, h: 480, paper: '#fbfaf6', ink: INK, typed: true, def: ['opinion', 'commitment'], tilt: -0.7,
+    blocks: [
+      ...head([[64, 'DEPARTMENT OF STATE CABLE', { size: 16, weight: 600, track: 0.2 }], [90, 'STATE 129362', { size: 12, track: 0.1 }], [112, 'December 14, 2009', { size: 11.5, color: '#55524b', key: 'date' }]], 130),
+      ['t', 164, '[Spain’s foreign minister meets Secretary of State Clinton:]', { size: 11, color: '#55524b', fam: F.serif, style: 'italic' }],
+      ['p', 200, '“Moratinos asked the Secretary for a real response — whatever you can do — to be helpful in terms of Spanish public opinion, which he feared could turn against the U.S. if news of the results of a recent study of the site’s nuclear contamination were to spread. The Secretary noted that she remembered the accident when it happened but made no commitment.”', { size: 14, lh: 23, marks: { opinion: 'to be helpful in terms of Spanish public opinion,', commitment: 'but made no commitment.”' } }],
+      ['rule', 396, {}],
+      ['p', 422, 'Recreated text, not a facsimile. The quotation is verbatim from the cable as published by WikiLeaks (2010).', NOTE],
+    ],
+    label: 'RECREATED TEXT · STATE DEPT CABLE, 14 DEC 2009 (LEAKED)', src: 'SOURCE: US STATE DEPT CABLE STATE 129362 (14 DEC 2009), VIA WIKILEAKS',
+  },
+  // S61 (T5, ⚑): "NYT reported" / "veterans say"; no causation
+  nyt2016: {
+    w: 612, h: 600, paper: '#f3efe3', ink: '#1a1a1a', news: true, def: ['cancer', 'sleeping'], tilt: 0.7,
+    blocks: [
+      ['t', 54, 'THE NEW YORK TIMES · 19 JUNE 2016', { align: 'c', size: 11, fam: F.narrow, weight: 700, track: 0.3, color: '#55524b' }],
+      ['rule', 70, { double: true }],
+      ['p', 110, 'Decades Later, Sickness Among Airmen After a Hydrogen Bomb Accident', { size: 30, lh: 34, fam: F.serif, marks: { headline: 'Decades Later, Sickness Among Airmen' } }],
+      ['t', 196, 'By DAVE PHILIPPS', { size: 10.5, fam: F.narrow, weight: 700, track: 0.2, color: '#55524b' }],
+      ['rule', 214, { w: 0.8 }],
+      ['p', 248, '“Of 40 veterans… The New York Times identified, 21 had cancer. Nine had died from it… no formal mortality study has ever been done.”', { size: 16, lh: 24, fam: F.serif, marks: { cancer: '21 had cancer. Nine had died from it…' } }],
+      ['p', 334, 'Frank B. Thompson, an Air Force band trombonist: “They told us it was safe, and we were dumb enough, I guess, to believe them.”', { size: 16, lh: 24, fam: F.serif, marks: { safe: '“They told us it was safe,' } }],
+      ['p', 420, 'Dr. Lawrence T. Odland, the Air Force’s chief of radiation testing: “The sleeping dog policy? It was to leave it alone. Let it lie.”', { size: 16, lh: 24, fam: F.serif, marks: { sleeping: '“The sleeping dog policy? It was to leave it alone. Let it lie.”' } }],
+      ['rule', 498, {}],
+      ['p', 522, 'Recreated layout, not a facsimile. Headline and quoted lines are verbatim from the New York Times article; the attributions are ours. These are veterans’ accounts as the Times reported them: no medical cause is claimed.', NOTE],
+    ],
+    label: 'RECREATED TEXT · NEW YORK TIMES, 19 JUN 2016', src: 'SOURCE: DAVE PHILIPPS, THE NEW YORK TIMES (19 JUN 2016) · VETERANS’ ACCOUNTS AS REPORTED',
+  },
+  // S17 (✓) Kerry; the text as reported in S68/S76 (⚑): never "finalized" or binding (§13)
+  statement2015: {
+    w: 612, h: 660, paper: '#fbfaf6', ink: INK, def: ['binding', 'once'], tilt: -0.6,
+    blocks: [
+      ...head([[66, 'UNITED STATES · SPAIN', NARROW], [104, 'STATEMENT OF INTENT', { size: 26, weight: 800, track: 0.04, key: 'title' }], [128, 'Declaración de intenciones · Madrid, 19 October 2015', { size: 11.5, fam: F.serif, style: 'italic', color: '#55524b' }]], 146),
+      ['t', 180, 'WHAT THE TEXT SAYS (AS REPORTED)', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: '#55524b' }],
+      ['row', 214, 'Negotiate a binding deal', '«tan pronto como sea posible»', { key: 'asap', size: 13, fam: F.serif }],
+      ['row', 246, 'The soil goes to', 'a site in the United States', { size: 13, fam: F.serif }],
+      ['row', 278, 'Subject to', '«disponibilidad de fondos»', { key: 'funds', size: 13, fam: F.serif }],
+      ['row', 310, 'Legal force', '«no supone… obligación jurídicamente vinculante»', { key: 'binding', size: 13, fam: F.serif, bold: true }],
+      ['row', 342, 'Either side may stop', '«en cualquier momento»', { key: 'anytime', size: 13, fam: F.serif }],
+      ['t', 392, '[Secretary of State John Kerry, that day:]', { x: 72, size: 11, fam: F.serif, style: 'italic', color: '#55524b' }],
+      ['p', 426, '“…we were able to sign a memorandum that will form a new path to achieve additional remediation at that site. And we have to build on today’s signing to take further action to resolve, once and for all, this very important issue.”', { size: 16, lh: 25, fam: F.serif, marks: { once: 'once and for all,' } }],
       ['rule', 540, {}],
-      ['p', 566, 'Recreated text. The quotation is verbatim from CoreWeave’s Form 8-K (filed 15 Sep 2025); the table and bracketed word are our summary.', NOTE],
+      ['p', 564, 'Recreated summary. The Spanish phrases are the declaration’s text as reported (Público; Milicia y Democracia, 2016); we have not seen the signed original. In English: “as soon as possible”, “availability of funds”, “creates no legally binding obligation”, “at any time”. Kerry: remarks, 19 Oct 2015.', NOTE],
     ],
-    label: 'RECREATED TEXT · COREWEAVE FORM 8-K, SEP 2025', src: 'SOURCE: COREWEAVE, INC., FORM 8-K (DATED 9 SEP 2025, FILED 15 SEP 2025) · SEC EDGAR',
+    label: 'RECREATED SUMMARY · US–SPAIN STATEMENT OF INTENT, 19 OCT 2015', src: 'SOURCES: KERRY REMARKS (STATE.GOV, 19 OCT 2015); TEXT AS REPORTED BY PÚBLICO (2016), MILICIA Y DEMOCRACIA (2016)',
   },
-  oracle10q: {
-    w: 612, h: 720, paper: '#fbfaf6', ink: INK, def: ['fair', 'fcf'], tilt: -0.6,
+  // ⏱ G4 (T5 press, re-checked 21 Oct 2026); §10d. The brief's quote is the outlet's report of a brief we have not seen.
+  court2026: {
+    w: 612, h: 700, paper: '#fbfaf6', ink: INK, def: ['never', 'pending'], tilt: 0.6, asof: 'AS OF 21 OCT 2026',
     blocks: [
-      ...sec('FORM 10-Q', 'QUARTERLY REPORT', 'ORACLE CORPORATION', 'Quarter ended August 31, 2026 · filed September 11, 2026'),
-      ['t', 304, 'SENIOR NOTES AND OTHER BORROWINGS, 31 AUG 2026', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
-      ['row', 338, 'Carrying value', '$125.0 billion', { key: 'debt', fam: F.mono, size: 14 }],
-      ['row', 370, 'Estimated fair value', '$105.7 billion', { key: 'fair', fam: F.mono, size: 14, bold: true }],
-      ['row', 402, 'Fair value per $1 of debt (our math)', '≈ 85¢', { key: 'cents', fam: F.mono, size: 14, bold: true }],
-      ['t', 452, 'FIRST QUARTER OF FISCAL 2027 · JUN – AUG 2026', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
-      ['row', 486, 'Operating cash flow', '$23.1 billion', { fam: F.mono, size: 14 }],
-      ['row', 518, 'Capital expenditures', '−$28.5 billion', { key: 'capex', fam: F.mono, size: 14 }],
-      ['rule', 536, { x0: 380, x1: 540 }],
-      ['row', 568, 'Free cash flow (our math)', '−$5.4 billion', { key: 'fcf', fam: F.mono, size: 17, bold: true }],
-      ['row', 608, 'At-the-market stock sales', '$20B programme, all used', { key: 'atm', fam: F.mono, size: 14 }],
-      ['rule', 634, {}],
-      ['p', 660, 'Recreated summary of figures in Oracle’s Form 10-Q for the quarter ended 31 Aug 2026, not the filing’s layout. Rows marked “our math” are our calculation from those figures.', NOTE],
+      ...head([[66, 'AUDIENCIA NACIONAL · MADRID', NARROW], [102, 'The Palomares cleanup case', { size: 24, fam: F.serif }], [126, 'Ecologistas en Acción v. the Ministry for the Ecological Transition (MITECO)', { size: 11, fam: F.serif, style: 'italic', color: '#55524b' }]], 144),
+      ['t', 178, 'CASE STATUS, FROM PRESS REPORTS', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: '#55524b' }],
+      ['row', 212, 'Filed 2024 · admitted', 'Jan 2025', { size: 13.5, fam: F.serif }],
+      ['row', 244, '23 Jan 2026', 'witnesses refused: a «cuestión jurídica»', { key: 'witnesses', size: 13.5, fam: F.serif }],
+      ['row', 276, 'Oct 2026', 'is the court competent? Both sides: yes', { key: 'competent', size: 13.5, fam: F.serif }],
+      ['t', 326, '[The State’s closing brief, 13 Apr 2026, as reported:]', { x: 72, size: 11, fam: F.serif, style: 'italic', color: '#55524b' }],
+      ['p', 362, '«Palomares nunca ha sido un accidente nuclear»', { size: 23, lh: 30, fam: F.serif, marks: { never: '«Palomares nunca ha sido un accidente nuclear»' } }],
+      ['t', 400, '(“Palomares was never a nuclear accident”)', { x: 72, size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
+      ['box', 72, 432, 468, 64, { text: 'STATUS: «PENDIENTE DE FALLO»', size: 20, fam: F.sans, track: 0.04, key: 'pending' }],
+      ['t', 520, '(awaiting judgment)', { align: 'c', size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
+      ['rule', 560, {}],
+      ['p', 584, 'Recreated summary from press reports (Actualidad Almanzora, 13 Apr and 19 Oct 2026; elDiario.es); we have not seen the court documents. The case is live: re-check before publishing.', NOTE],
     ],
-    label: 'RECREATED SUMMARY · ORACLE FORM 10-Q, SEP 2026', src: 'SOURCE: ORACLE CORP., FORM 10-Q, QUARTER ENDED 31 AUG 2026 (FILED 11 SEP 2026) · SEC EDGAR',
-  },
-  lucent10k: {
-    w: 612, h: 620, paper: '#f6f3ea', ink: '#1d1a14', def: ['clec', 'creditworthiness', 'commit'], tilt: 0.9,
-    blocks: [
-      ...sec('FORM 10-K405', 'ANNUAL REPORT', 'LUCENT TECHNOLOGIES INC.', 'Fiscal year ended September 30, 2001 · filed December 28, 2001'),
-      ['p', 320, '“Adverse industry conditions, such as the continued softening in the CLEC market, have negatively affected the creditworthiness of several customers that participate in our customer financing program.”', { size: 21, lh: 30, fam: F.serif, marks: { clec: 'continued softening in the CLEC market,', creditworthiness: 'negatively affected the creditworthiness', program: 'our customer financing program.”' } }],
-      ['rule', 448, {}],
-      ['row', 484, 'Customer financing committed, 30 Sep 2000', '$8.1 billion', { key: 'commit', size: 14, bold: true }],
-      ['row', 518, 'Provisions incl. customer financing, FY2001', '$2.2 billion', { key: 'provisions', size: 14, bold: true }],
-      ['rule', 544, {}],
-      ['p', 570, 'Recreated text. The quotation is verbatim from Lucent’s Form 10-K405 for fiscal 2001; the figures are summarised from it and the FY2000 10-K/A. CLEC: competitive local exchange carrier.', NOTE],
-    ],
-    label: 'RECREATED TEXT · LUCENT FORM 10-K405, DEC 2001', src: 'SOURCE: LUCENT TECHNOLOGIES, FORM 10-K405 FOR FISCAL 2001 (FILED 28 DEC 2001); FORM 10-K/A FY2000 · SEC EDGAR',
-  },
-  amdwarrant: {
-    w: 612, h: 660, paper: '#fbfaf6', ink: INK, def: ['shares', 'price', '600'], tilt: -0.8,
-    blocks: [
-      ...sec('FORM 8-K', 'CURRENT REPORT', 'ADVANCED MICRO DEVICES, INC.', 'Date of report: October 6, 2025'),
-      ['t', 304, 'WARRANT ISSUED TO OPENAI', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: GREY }],
-      ['row', 340, 'Shares of AMD common stock', 'up to 160,000,000', { key: 'shares', fam: F.mono, size: 15, bold: true }],
-      ['row', 374, 'Exercise price', '$0.01 per share', { key: 'price', fam: F.mono, size: 15, bold: true }],
-      ['row', 408, 'Vests as OpenAI buys', 'up to 6 GW of AMD GPUs', { key: 'gw', fam: F.mono, size: 14 }],
-      ['row', 442, 'Expires', 'October 5, 2030', { key: 'expiry', fam: F.mono, size: 14 }],
-      ['p', 494, '[Vesting is also tied to AMD’s share price reaching targets] “that escalate to $600 per share.”', { size: 19, lh: 27, fam: F.serif, marks: { 600: '“that escalate to $600 per share.”' } }],
-      ['rule', 572, {}],
-      ['p', 598, 'Recreated summary of AMD’s Form 8-K of 6 Oct 2025; the quoted phrase is verbatim, the table and bracketed words are our summary. AMD gave Meta an identical warrant on 23 Feb 2026.', NOTE],
-    ],
-    label: 'RECREATED SUMMARY · AMD FORM 8-K, 6 OCT 2025', src: 'SOURCE: ADVANCED MICRO DEVICES, FORM 8-K (6 OCT 2025) · SEC EDGAR',
+    label: 'RECREATED SUMMARY · AUDIENCIA NACIONAL CASE, FROM PRESS REPORTS', src: 'SOURCES: ACTUALIDAD ALMANZORA (13 APR, 19 OCT 2026); ELDIARIO.ES (2026) · STATUS AS OF 21 OCT 2026',
   },
 };
 
@@ -207,7 +237,7 @@ export default function makeDocs(H) {
 
   // ================================================================ doc
   async function doc(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 7, Dc = DOCS[Pm.doc ?? 'nvidia8k'] ?? DOCS.nvidia8k;
+    const Pm = shot.params ?? {}, D = shot.duration ?? 7, Dc = DOCS[Pm.doc ?? 'dna1975'] ?? DOCS.dna1975;
     await G.loadFonts();
     const L = layout(Dc);
     const keys = [].concat(Pm.highlight ?? Dc.def).filter(k => L.keys[k]);
@@ -252,6 +282,7 @@ export default function makeDocs(H) {
       // a soft desk-coloured header band so the label reads over the page
       const hb = g.createLinearGradient(0, 0, 0, 150); hb.addColorStop(0, 'rgba(223,230,225,0.95)'); hb.addColorStop(0.6, 'rgba(223,230,225,0.7)'); hb.addColorStop(1, 'rgba(223,230,225,0)'); g.fillStyle = hb; g.fillRect(0, 0, 1920, 150);
       if (Pm.label !== false) G.pill(g, Dc.label, 80, 84, { size: 21, k: range(t, 0.3, 0.8), fam: F.mono, weight: 500, fill: P.ink, color: P.white, dot: P.teal });
+      if (Dc.asof) G.asOf(g, Dc.asof, 1840, 84, range(t, 0.5, 1.0), { align: 'right', size: 19 });
       G.source(g, Pm.source ?? Dc.src, range(t, 0.6, 1.4), { size: 16 });
     }, { push: 0.025, dx: 26, dy: 8 });
   }
@@ -259,8 +290,8 @@ export default function makeDocs(H) {
   // ================================================================ photo: an archival photo, Ken Burns, caption, credit
   async function photo(ctx, shot) {
     const Pm = shot.params ?? {}, D = shot.duration ?? 7, file = String(Pm.file ?? '');
-    if (!file) throw new Error('photo: params.file is required (projects/aibubble/assets/photos/<file> or an absolute /projects/... path)');
-    const im = await G.image(file.startsWith('/') ? file : `/projects/aibubble/assets/photos/${file}`);
+    if (!file) throw new Error('photo: params.file is required (projects/palomares/assets/photos/<file> or an absolute /projects/... path)');
+    const im = await G.image(file.startsWith('/') ? file : `/projects/palomares/assets/photos/${file}`);
     const iw = im.naturalWidth, ih = im.naturalHeight, ar = iw / ih;
     const cutout = Pm.cutout ?? /\.png$/i.test(file), portrait = ar < 1.05;
     const zoom = Pm.zoom ?? 1.14, focus = Pm.focus ?? [0.5, 0.45], maxScale = Pm.maxScale ?? 1.7;

@@ -1,55 +1,80 @@
-// AI-bubble bright maps and the deal map (episode 8). Maps keep the "Reconstructed" look: white / pale-grey relief land
-// on a pale blue-grey sea, the highlighted region extruded in red, red teardrop pins with a white dot, red dashed route
-// arcs that draw on. Real coastlines and borders: Natural Earth 1:50m (public domain).
-//   map      params.mode: 'us' (default pins Pike County OH, Abilene TX, Louisiana; Ohio raised) | 'world' (New York,
-//            Seoul, Tokyo, Hsinchu; South Korea raised; route New York -> Seoul)
-//            params: pins [{ name, lon, lat, sub, word, side: 'l'|'r', dy }] (a name matching a known pin inherits its
-//            fields), routes [[fromName, toName, word?]], hl (ISO3 codes, or 'US-OH' style state codes in 'us'), hlAt,
-//            title, kicker, source, at (first pin), cam
-//   dealmap  a flat network diagram of the circle: company nodes on a ring, arrows drawing on one by one with amount
-//            labels (RESEARCH §2a), cued by steps [{ from, to, label, sub, kind, word }] or edge ids ('C3'); ends with the
-//            loop traced in red. params: steps, nodes, loopAt, loop (false: no loop), title, kicker, source
-// Geography: projects/aibubble/assets/geo/world.json (copy of the silver build; assets/geo/build.py rebuilds it).
+// Palomares bright maps (episode 9). The "Reconstructed" look: white / pale-grey relief land on a pale blue-grey sea, red
+// teardrop pins with a white dot, red dashed route arcs that draw on, white label cards.
+//   map   params.mode:
+//     'spain'  Iberia (Natural Earth 1:50m): Torrejón (16th Air Force), Morón (the tankers), Palomares (red); the tankers'
+//              route Morón -> the refuelling area; Almería, Mediterranean and Atlantic lettering
+//     'coast'  the Palomares coast, zoomed: Natural Earth 1:10m coastline, land relief and isobaths in feet (500-ft steps,
+//              EMODnet Bathymetry), the dry Almanzora (approximate course), the village, Villaricos, Garrucha, Camp Wilson
+//              beach, bombs 1-3 as numbered discs with a legend, Guest's 51-sq-mi search wedge (shape illustrative) and bomb
+//              4's find area (reconstruction, red); Águilas, off the top edge, as an arrow
+//     'world'  the Chrome Dome airborne-alert route, illustrative: Seymour Johnson AFB (NC) -> across the Atlantic -> the
+//              refuelling over Spain -> into the Mediterranean "toward the Soviet frontier" -> and home
+//          params: pins [{ name, lon, lat, sub, word, side 'l'|'r', dy, color }] (a known name inherits its fields; in
+//          'coast' a pin is a red teardrop + card), routes [[fromName, toName, word?]], at (first pin), title, kicker,
+//          source, cam; coast only: wedge (false hides), find (false hides), legend (false hides), wedgeAt, findAt
+// Geography: projects/palomares/assets/geo/world.json (Natural Earth 1:50m, build.py) and almeria.json + almeria-relief.png
+// (build_coast.py: Natural Earth 1:10m + EMODnet Bathymetry, CC BY 4.0, credited on screen).
 import * as G from './graphics-kit.js';
 
 const { P, F, E, clamp, lerp, range, sstep, TAU, rng } = G;
-let GEO = null;
-const geo = () => GEO ??= fetch('/projects/aibubble/assets/geo/world.json').then(r => r.json());
+let GEO = null, COAST = null;
+const geo = () => GEO ??= fetch('/projects/palomares/assets/geo/world.json').then(r => r.json());
+const coast = () => COAST ??= fetch('/projects/palomares/assets/geo/almeria.json').then(r => r.json());
 
 // the "Reconstructed" map palette (pale relief land, blue-grey sea, red for the subject)
 const MP = {
   seaTop: '#e9eef2', seaBot: '#d2dbe3', grat: 'rgba(70,95,120,0.07)',
   land: '#fdfdfc', land2: '#eef0f2', side: '#c3cbd3', edge: 'rgba(70,88,108,0.55)', border: 'rgba(90,106,124,0.32)',
-  far: '#f1f3f4', far2: '#e4e8eb', lake: '#dbe3ea',
+  far: '#f1f3f4', far2: '#e4e8eb', lake: '#dbe3ea', iso: 'rgba(42,140,134,0.55)',
   red: P.red, redTop: '#ec3b30', redSide: '#9c150d', redEdge: 'rgba(255,255,255,0.7)',
 };
 
-// every pin a map can name (a pin given by name only inherits these fields); the modes list which ones show by default
+// every pin a map can name (a pin given by name only inherits these fields); RESEARCH §11.7 (OSM/Photon, S112) unless noted
 const KNOWN = [
-  { name: 'Pike County, Ohio', lon: -83.0, lat: 39.0, sub: 'NVIDIA-GUARANTEED LEASES · 4.25 GW', side: 'r', dy: -20 },
-  { name: 'Abilene, Texas', lon: -99.73, lat: 32.45, sub: 'ORACLE · OPENAI DATA CENTRE', side: 'l' },
-  { name: 'Louisiana', lon: -91.5, lat: 32.5, sub: 'META “HYPERION” · ~$27B · OFF BALANCE SHEET', side: 'r', dy: 30 },
-  { name: 'El Paso', lon: -106.49, lat: 31.76, sub: 'META’S SECOND JV · JUL 2026', side: 'l' },
-  { name: 'New York', lon: -74.0, lat: 40.71, sub: 'NASDAQ −4.5% IN A WEEK · 16 OCT', side: 'r' },
-  { name: 'Seoul', lon: 126.98, lat: 37.57, sub: 'KOSPI −7.6% · CIRCUIT BREAKER', side: 'l', dy: -40 },
-  { name: 'Tokyo', lon: 139.69, lat: 35.69, sub: 'NIKKEI −4.9%', side: 'l', dy: 34 },
-  { name: 'Taiwan', lon: 120.97, lat: 24.8, sub: 'TSMC: A CAUTIOUS 2027 OUTLOOK', side: 'l', dy: 40 },
+  { name: 'Palomares', lon: -1.7973, lat: 37.2474, sub: '17 JAN 1966 · FOUR H-BOMBS FALL', side: 'r' },
+  { name: 'Torrejón', lon: -3.4458, lat: 40.4967, sub: '16TH AIR FORCE HQ, NEAR MADRID', side: 'r' },        // RESEARCH §1 (10:27 call)
+  { name: 'Morón', lon: -5.616, lat: 37.175, sub: 'THE KC-135 TANKERS FLEW FROM HERE', side: 'l', dy: 46 },   // RESEARCH 2.4
+  { name: 'Seymour Johnson AFB', lon: -77.96, lat: 35.34, sub: 'NORTH CAROLINA · TEA 16’S HOME BASE', side: 'r', dy: 40 }, // RESEARCH 2.3
+  { name: 'Villaricos', lon: -1.7714, lat: 37.2486 },
+  { name: 'Garrucha', lon: -1.82, lat: 37.185 },
+  { name: 'Cuevas del Almanzora', lon: -1.881, lat: 37.296 },
+  { name: 'Camp Wilson beach', lon: -1.7954, lat: 37.2325, sub: 'QUITAPELLEJOS · THE 8 MAR AFTERNOON SWIM' },
+  { name: 'Mojácar parador', lon: -1.831, lat: 37.132, sub: 'THE 8 MAR MORNING SWIM' },
+  { name: 'Águilas', lon: -1.58, lat: 37.41, sub: 'SIMÓ’S HOME PORT' },
+  // bomb 4: the canyon where 2,550-2,850 ft is first reached (RESEARCH §11.3, S38: a reconstruction)
+  { name: 'Bomb 4', lon: -1.725, lat: 37.175, sub: 'FOUND 15 MAR · 2,550 FT · ABOUT 5 MI OUT', side: 'r' },
 ];
 const pinOf = (n) => KNOWN.find(p => p.name === n);
+// bombs 1-3 on land (RESEARCH §3c, §11.7): CSN zone centroids for 2 and 3; bomb 1 inferred (riverbed, ~300 m from the coast)
+const LAND_BOMBS = [
+  { n: 1, lon: -1.777, lat: 37.244, text: 'DRY RIVERBED · INTACT · 17 JAN' },
+  { n: 2, lon: -1.8128, lat: 37.2439, text: 'WEST OF THE VILLAGE · HE EXPLODED · 18 JAN' },
+  { n: 3, lon: -1.7928, lat: 37.2476, text: 'EAST EDGE · HE PARTLY EXPLODED · 18 JAN' },
+];
+// the dry Almanzora's lower course, approximate (north and east of the village, to the mouth at 37.242 N, 1.775 W; §11.7)
+const ALMANZORA = [[-1.905, 37.302], [-1.884, 37.293], [-1.862, 37.283], [-1.84, 37.273], [-1.822, 37.266], [-1.806, 37.261], [-1.792, 37.256], [-1.782, 37.249], [-1.775, 37.242]];
+
 const MAPS = {
-  us: {
-    data: 'us', box: [-124.6, 24.3, -66.8, 49.4], rect: [40, 220, 1840, 820], hl: ['US-OH'],
-    pins: ['Pike County, Ohio', 'Abilene, Texas', 'Louisiana'].map(pinOf),
-    routes: [],
-    kicker: 'UNITED STATES · DATA-CENTRE SITES IN THIS STORY', title: 'Where the money is being poured',
-    src: 'SOURCES: NVIDIA 8-K (17 AUG 2026); META 10-Q (2026); BLOOMBERG VIA REPORTS (MAR 2026) · MAP: NATURAL EARTH',
+  spain: {
+    data: 'iberia', box: [-10.0, 35.5, 4.4, 44.0], rect: [40, 210, 1840, 850], main: ['ESP'],
+    pins: ['Torrejón', 'Morón', 'Palomares'].map(pinOf), red: ['Palomares'],
+    routes: [['Morón', 'Palomares']],
+    words: [['Mediterranean Sea', 2.2, 38.6], ['Atlantic Ocean', -9.0, 36.2], ['ALMERÍA', -2.55, 37.62, true], ['SPAIN', -4.2, 39.2, true]],
+    kicker: '17 JAN 1966 · SOUTHERN SPAIN', title: 'The refuelling over Palomares',
+    src: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009) · MAP: NATURAL EARTH',
+  },
+  coast: {
+    data: 'coast', box: [-1.96, 37.135, -1.55, 37.302], rect: [0, 0, 1920, 1080],
+    pins: ['Bomb 4'].map(pinOf), red: ['Bomb 4'], routes: [],
+    kicker: 'PALOMARES · 1966', title: 'Three on land, one in the sea',
+    src: 'COAST: NATURAL EARTH · DEPTHS: EMODNET BATHYMETRY · BOMB 4 SITE AND SEARCH WEDGE: RECONSTRUCTION · RESEARCH: CSN; DNA (1975); MORAN (2009)',
   },
   world: {
-    data: 'world', box: [-126, -4, 158, 66], rect: [40, 240, 1840, 790], hl: ['KOR'],
-    pins: ['New York', 'Seoul', 'Taiwan'].map(pinOf),
-    routes: [['New York', 'Seoul']],
-    kicker: '14 – 16 OCT 2026 · THE SELLOFF GOES GLOBAL', title: 'From New York to Seoul',
-    src: 'SOURCES: AP (16 OCT 2026); CNN (15 OCT 2026); REUTERS (14–15 OCT 2026) · MAP: NATURAL EARTH',
+    data: 'world', box: [-84, 24, 34, 54], rect: [40, 240, 1840, 780], main: [],
+    pins: [pinOf('Seymour Johnson AFB'), { ...pinOf('Palomares'), sub: 'REFUELLING OVER SPAIN · 17 JAN 1966', dy: -56 }], red: ['Palomares'], routes: [],
+    words: [['Atlantic Ocean', -47, 29.5], ['Mediterranean', 5.5, 38.6]],
+    kicker: 'OPERATION CHROME DOME · AIRBORNE ALERT', title: 'A 24-hour patrol, refuelled over Spain',
+    src: 'ROUTE ILLUSTRATIVE · SOURCES: B. MORAN (2009); DNA PALOMARES SUMMARY REPORT (1975) · MAP: NATURAL EARTH',
   },
 };
 
@@ -63,12 +88,14 @@ export default function makeMaps(H) {
     const cx = (w + e) / 2, cy = (s + n) / 2;
     return { X: (lon) => rect[0] + rect[2] / 2 + (lon - cx) * kx * sc, Y: (lat) => rect[1] + rect[3] / 2 - (lat - cy) * sc, sc, kx };
   }
-  function pathOf(rings, pr, box) {
+  function pathOf(rings, pr, box, { smooth = 0, close = true } = {}) {
     const path = new Path2D(), mx = (box[2] - box[0]) * 0.35, my = (box[3] - box[1]) * 0.35;
     for (const r of rings) {
       let lo0 = 1e9, lo1 = -1e9, la0 = 1e9, la1 = -1e9; for (let i = 0; i < r.length; i += 2) { if (r[i] < lo0) lo0 = r[i]; if (r[i] > lo1) lo1 = r[i]; if (r[i + 1] < la0) la0 = r[i + 1]; if (r[i + 1] > la1) la1 = r[i + 1]; }
       if (lo1 < box[0] - mx || lo0 > box[2] + mx || la1 < box[1] - my || la0 > box[3] + my) continue;
-      path.moveTo(pr.X(r[0]), pr.Y(r[1])); for (let i = 2; i < r.length; i += 2) path.lineTo(pr.X(r[i]), pr.Y(r[i + 1])); path.closePath();
+      let pts = []; for (let i = 0; i < r.length; i += 2) pts.push([pr.X(r[i]), pr.Y(r[i + 1])]);
+      if (smooth) pts = G.smooth(pts, smooth);
+      path.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) path.lineTo(pts[i][0], pts[i][1]); if (close) path.closePath();
     }
     return path;
   }
@@ -77,37 +104,38 @@ export default function makeMaps(H) {
     c.save(); G.shadow(c, 0.7, 0.8); c.translate(0, ext); c.fillStyle = side; c.fill(path); G.noShadow(c); c.restore();
     for (let i = ext - 1; i > 0; i--) { c.save(); c.translate(0, i); c.fillStyle = side; c.fill(path); c.restore(); }
     c.save(); const gr = c.createLinearGradient(0, 0, 0, 1080); gr.addColorStop(0, top); gr.addColorStop(1, top2); c.fillStyle = gr; c.fill(path); c.clip(path);
-    // terrain: soft seeded blotches (pure function of the seed)
     const r = rng(seed); for (let i = 0; i < 70 * relief; i++) { const x = r() * 1920, y = r() * 1080, rad = 30 + r() * 140, a = 0.025 + r() * 0.045; const bg = c.createRadialGradient(x, y, 0, x, y, rad); bg.addColorStop(0, `rgba(120,135,150,${a})`); bg.addColorStop(1, 'rgba(120,135,150,0)'); c.fillStyle = bg; c.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
-    // inner shade along the coast (inset shadow): a big rect with the land as a hole, its shadow falls inside
     c.shadowColor = 'rgba(55,75,98,0.28)'; c.shadowBlur = 16 * G_S; c.shadowOffsetX = 3 * G_S; c.shadowOffsetY = 5 * G_S;
     const hole = new Path2D(); hole.rect(-400, -400, 2720, 1880); hole.addPath(path); c.fillStyle = '#000'; c.fill(hole, 'evenodd');
     c.restore();
   }
   let G_S = 1;
-  function sea(c, pr) {
+  function sea(c, pr, { grat = 10 } = {}) {
     const gr = c.createLinearGradient(0, -200, 0, 1300); gr.addColorStop(0, MP.seaTop); gr.addColorStop(1, MP.seaBot); c.fillStyle = gr; c.fillRect(-240, -240, 2400, 1560);
     const vg = c.createRadialGradient(960, 540, 300, 960, 540, 1300); vg.addColorStop(0, 'rgba(255,255,255,0.35)'); vg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = vg; c.fillRect(-240, -240, 2400, 1560);
-    // graticule every 10 degrees
-    c.save(); c.strokeStyle = MP.grat; c.lineWidth = 1.2;
-    for (let lon = -180; lon <= 180; lon += 10) { const x = pr.X(lon); if (x < -240 || x > 2160) continue; c.beginPath(); c.moveTo(x, -240); c.lineTo(x, 1320); c.stroke(); }
-    for (let lat = -80; lat <= 80; lat += 10) { const y = pr.Y(lat); if (y < -240 || y > 1320) continue; c.beginPath(); c.moveTo(-240, y); c.lineTo(2160, y); c.stroke(); }
-    c.restore();
+    if (grat) {
+      c.save(); c.strokeStyle = MP.grat; c.lineWidth = 1.2;
+      for (let lon = -180; lon <= 180; lon += grat) { const x = pr.X(lon); if (x < -240 || x > 2160) continue; c.beginPath(); c.moveTo(x, -240); c.lineTo(x, 1320); c.stroke(); }
+      for (let lat = -80; lat <= 80; lat += grat) { const y = pr.Y(lat); if (y < -240 || y > 1320) continue; c.beginPath(); c.moveTo(-240, y); c.lineTo(2160, y); c.stroke(); }
+      c.restore();
+    }
     G.grain(c, 2400, 1560, 0.18, -240, -240);
   }
-  // the static map drawn once into a cache (with margin for the camera drift)
   function cachedBase(k, draw) {
     const M0 = 120, CS = k.S * 1.12, cv = G.mk((1920 + 2 * M0) * CS, (1080 + 2 * M0) * CS), x = cv.getContext('2d');
     x.setTransform(CS, 0, 0, CS, M0 * CS, M0 * CS); G.setS(CS); G_S = CS; draw(x); G.setS(k.S); G_S = k.S;
     return (g) => g.drawImage(cv, -M0, -M0, 1920 + 2 * M0, 1080 + 2 * M0);
   }
+  // sea/land lettering: italic serif for water, spaced caps for land
+  function word(c, s, x, y, caps = false, a = 1) {
+    if (caps) G.text(c, s, x, y, { size: 24, weight: 600, fam: F.narrow, align: 'center', color: 'rgba(70,88,108,0.75)', track: 0.32, alpha: a });
+    else G.text(c, s, x, y, { size: 34, weight: 400, fam: F.serif, style: 'italic', align: 'center', color: 'rgba(55,90,115,0.7)', alpha: a });
+  }
 
   // ---------------------------------------------------------------- marks
-  // red teardrop pin (tip at x, y) with a white dot; drops in on a spring, a ground shadow grows under it
   function teardrop(g, x, y, t, k, { R = 22, color = MP.red } = {}) {
     if (k <= 0) return;
     const drop = E.spring(clamp(k)), fall = (1 - drop) * -70, sc = 0.6 + 0.4 * E.outBack(clamp(k * 1.4));
-    // ground shadow + pulse ring
     g.save(); g.globalAlpha = clamp(k * 2) * 0.35; g.fillStyle = 'rgba(30,40,55,1)'; g.beginPath(); g.ellipse(x, y, R * 0.55 * drop, R * 0.2 * drop, 0, 0, TAU); g.fill(); g.restore();
     if (k >= 1) { const ph = (t * 0.6) % 1; g.save(); g.strokeStyle = color; g.globalAlpha = (1 - ph) * 0.5; g.lineWidth = 2.5; g.beginPath(); g.ellipse(x, y, R * (0.5 + ph * 1.6), R * (0.18 + ph * 0.6), 0, 0, TAU); g.stroke(); g.restore(); }
     g.save(); g.translate(x, y + fall); g.scale(sc, sc);
@@ -121,7 +149,6 @@ export default function makeMaps(H) {
     g.fillStyle = P.white; g.beginPath(); g.arc(0, cy, R * 0.42, 0, TAU); g.fill();
     g.restore();
   }
-  // a label card: name (Inter 800) over a mono sub line, beside the pin head
   function label(g, x, y, k, name, sub, side = 'r', dy = 0) {
     if (k <= 0) return;
     const wn = G.measure(g, name, 30, 800), ws = sub ? G.measure(g, sub, 16, 500, F.mono, 0.08) : 0, W = Math.max(wn, ws) + 36, Hh = sub ? 74 : 50;
@@ -132,239 +159,164 @@ export default function makeMaps(H) {
     if (sub) G.fig(g, sub, ax + 19, ay + 60, { size: 16, color: P.inkSoft, track: 0.08 });
     g.restore();
   }
-  // a red dashed arc from a to b (bowing up), drawn on to k, the dashes marching slowly
-  function route(g, a, b, t, k) {
+  // a town on the coast map: a small navy dot and a name on a paper halo
+  function town(g, x, y, k, name, { side = 'r', dy = 0, size = 26, sub = null, dot = true } = {}) {
+    if (k <= 0) return;
+    g.save(); g.globalAlpha *= clamp(k * 2);
+    if (dot) { g.fillStyle = P.white; g.beginPath(); g.arc(x, y, 8, 0, TAU); g.fill(); g.fillStyle = P.ink; g.beginPath(); g.arc(x, y, 5.5, 0, TAU); g.fill(); }
+    const tx = side === 'l' ? x - 16 : x + 16, al = side === 'l' ? 'right' : 'left';
+    g.save(); g.shadowColor = 'rgba(253,253,252,0.95)'; g.shadowBlur = 10 * G_S; G.text(g, name, tx, y + dy + size * 0.36, { size, weight: 800, align: al, color: P.ink }); if (sub) G.text(g, sub, tx, y + dy + size * 0.36 + 24, { size: 15, weight: 500, fam: F.mono, align: al, color: P.inkSoft, track: 0.08 }); g.restore();
+    g.restore();
+  }
+  // a red dashed arc from a to b, drawn on to k (bow: the arc's bulge as a fraction of the distance; sign flips the side)
+  function route(g, a, b, t, k, { bow = 0.28, color = MP.red, dash = [14, 10], width = 4.5, head = true } = {}) {
     if (k <= 0) return;
     const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, d = Math.hypot(b[0] - a[0], b[1] - a[1]);
-    const nx = -(b[1] - a[1]) / d, ny = (b[0] - a[0]) / d, s = ny > 0 ? -1 : 1, c = [mx + nx * d * 0.28 * s, my + ny * d * 0.28 * s];
+    const nx = -(b[1] - a[1]) / d, ny = (b[0] - a[0]) / d, s = ny > 0 ? -1 : 1, c = [mx + nx * d * bow * s, my + ny * d * bow * s];
     const N = 80, pts = []; for (let i = 0; i <= N; i++) { const u = i / N; pts.push([(1 - u) ** 2 * a[0] + 2 * (1 - u) * u * c[0] + u * u * b[0], (1 - u) ** 2 * a[1] + 2 * (1 - u) * u * c[1] + u * u * b[1]]); }
     const n = Math.max(1, Math.round(N * E.inOutCubic(clamp(k))));
-    g.save(); g.strokeStyle = 'rgba(255,255,255,0.8)'; g.lineWidth = 8; g.lineCap = 'round'; g.beginPath(); pts.slice(0, n + 1).forEach((p, i) => (i ? g.lineTo(...p) : g.moveTo(...p))); g.stroke();
-    g.strokeStyle = MP.red; g.lineWidth = 4.5; g.setLineDash([14, 10]); g.lineDashOffset = -t * 18; g.stroke(); g.restore();
-    const h = pts[n], pv = pts[Math.max(0, n - 2)], ang = Math.atan2(h[1] - pv[1], h[0] - pv[0]);
-    g.save(); g.translate(...h); g.rotate(ang); g.fillStyle = MP.red; g.beginPath(); g.moveTo(10, 0); g.lineTo(-8, -8); g.lineTo(-8, 8); g.closePath(); g.fill(); g.restore();
+    g.save(); g.strokeStyle = 'rgba(255,255,255,0.8)'; g.lineWidth = width + 3.5; g.lineCap = 'round'; g.beginPath(); pts.slice(0, n + 1).forEach((p, i) => (i ? g.lineTo(...p) : g.moveTo(...p))); g.stroke();
+    g.strokeStyle = color; g.lineWidth = width; g.setLineDash(dash); g.lineDashOffset = -t * 18; g.stroke(); g.restore();
+    if (head) { const h = pts[n], pv = pts[Math.max(0, n - 2)], ang = Math.atan2(h[1] - pv[1], h[0] - pv[0]);
+      g.save(); g.translate(...h); g.rotate(ang); g.fillStyle = color; g.beginPath(); g.moveTo(10, 0); g.lineTo(-8, -8); g.lineTo(-8, 8); g.closePath(); g.fill(); g.restore(); }
+    return pts[n];
   }
 
   // ================================================================ map
   async function map(ctx, shot) {
-    const Pm = shot.params ?? {}, mode = String(Pm.mode ?? Pm.view ?? 'us'), V = MAPS[mode] ?? MAPS.us, D = shot.duration ?? 8, gj = await geo();
-    const layer = gj[V.data], pr = proj(V.box, V.rect);
-    const keys = Object.keys(layer), usKeys = keys.filter(k => k.startsWith('US-'));
-    const hlKeys = [].concat(Pm.hl ?? V.hl);
+    const Pm = shot.params ?? {}, mode = MAPS[Pm.mode] ? String(Pm.mode) : 'spain', V = MAPS[mode], D = shot.duration ?? 8;
+    const gj = mode === 'coast' ? null : await geo(), cj = mode === 'coast' ? await coast() : null;
+    const relief = mode === 'coast' ? await G.image('/projects/palomares/assets/geo/' + cj.relief.file).catch(() => null) : null;
+    const pr = proj(V.box, V.rect);
     const pins = (Pm.pins ?? V.pins).map(p => (typeof p === 'string' ? { name: p } : p)).map(p => ({ ...(pinOf(p.name) ?? {}), ...p })).filter(p => p.lon != null);
-    const t1 = G.cue(shot, Pm.at, 0.6);
-    const PT = pins.map((pn, i) => G.cue(shot, pn.word, t1 + i * Math.min(0.5, Math.max(0.25, (D * 0.45) / Math.max(1, pins.length)))));
+    const t1 = G.cue(shot, Pm.at, mode === 'coast' ? 2.2 : 0.6);
+    const PT = pins.map((pn, i) => G.cue(shot, pn.word, t1 + i * Math.min(0.6, Math.max(0.3, (D * 0.45) / Math.max(1, pins.length)))));
     const routes = (Pm.routes ?? V.routes).map(([a, b, w]) => {
       const ia = pins.findIndex(p => p.name === a), ib = pins.findIndex(p => p.name === b);
       return ia < 0 || ib < 0 ? null : { ia, ib, t: G.cue(shot, w, Math.max(PT[ia], PT[ib]) + 0.5) };
     }).filter(Boolean);
-    const tH = hlKeys.length ? G.cue(shot, Pm.hlAt, 0.3) : 0;
-    let base = null, hlPath = null;
+    const isRed = (pn) => pn.color === MP.red || (pn.color == null && (V.red ?? []).includes(pn.name));
+    // coast cues
+    const tW = G.cue(shot, Pm.wedgeAt, Math.min(D * 0.55, 4.4)), tF = G.cue(shot, Pm.findAt, t1);
+    let base = null;
     return set(ctx, shot, (g, t, p, k) => {
       k.view(1);
       if (!base) {
         base = cachedBase(k, (c) => {
-          sea(c, pr);
-          if (mode === 'us') {
-            const far = pathOf(keys.filter(k => !k.startsWith('US-')).flatMap(k => layer[k]), pr, V.box);
-            reliefLand(c, far, { top: MP.far, top2: MP.far2, ext: 3, seed: 3, relief: 0.6 });
-            const us = pathOf(usKeys.flatMap(k => layer[k]), pr, V.box);
-            reliefLand(c, us, { ext: 6, seed: 11 });
-            c.save(); c.strokeStyle = MP.border; c.lineWidth = 1.1; c.lineJoin = 'round'; c.stroke(us); c.restore();
-            c.save(); c.fillStyle = MP.lake; c.fill(pathOf(Object.values(gj.lakes).flat(), pr, V.box)); c.strokeStyle = MP.edge; c.lineWidth = 0.8; c.stroke(pathOf(Object.values(gj.lakes).flat(), pr, V.box)); c.restore();
-            c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.2; c.stroke(far); c.restore();
+          if (mode === 'coast') {
+            sea(c, pr, { grat: 0 });
+            // isobaths (feet), offshore only, with labels on a paper halo
+            const land = pathOf(cj.land, pr, cj.box, { smooth: 1 });
+            Object.entries(cj.depth).forEach(([ft, lines]) => {
+              const path = pathOf(lines, pr, cj.box, { smooth: 1, close: false });
+              c.save(); c.strokeStyle = MP.iso; c.lineWidth = ft === '2500' ? 2.6 : 1.6; c.setLineDash(ft === '2500' ? [] : [10, 6]); c.stroke(path); c.restore();
+            });
+            // deeper water a touch darker: fill the sea beyond the 1,500-ft line softly (pure decoration, no claim)
+            reliefLand(c, land, { ext: 6, seed: 29, relief: 0.4 });
+            if (relief) { c.save(); c.clip(land); c.globalAlpha = 0.3; c.globalCompositeOperation = 'multiply'; c.filter = `blur(${1.5 * G_S}px)`; const [w, s, e, n] = cj.relief.box; c.drawImage(relief, pr.X(w), pr.Y(n), pr.X(e) - pr.X(w), pr.Y(s) - pr.Y(n)); c.restore(); }
+            c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.6; c.stroke(land); c.restore();
+            // the dry Almanzora (approximate course)
+            const rv = G.smooth(ALMANZORA.map(([lo, la]) => [pr.X(lo), pr.Y(la)]), 2);
+            c.save(); c.strokeStyle = 'rgba(120,150,170,0.55)'; c.lineWidth = 7; c.lineCap = 'round'; c.lineJoin = 'round'; c.setLineDash([2, 10]); c.beginPath(); rv.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.stroke(); c.restore();
+            const ri = rv[Math.floor(rv.length * 0.6)], rj = rv[Math.floor(rv.length * 0.6) + 3];
+            c.save(); c.translate(ri[0], ri[1] - 16); c.rotate(Math.atan2(rj[1] - ri[1], rj[0] - ri[0])); G.text(c, 'Río Almanzora (dry bed, approx.)', 0, 0, { size: 22, weight: 400, fam: F.serif, style: 'italic', align: 'center', color: 'rgba(55,90,115,0.85)' }); c.restore();
+            // isobath labels: the vertex of each line nearest a reference point out at sea
+            Object.entries(cj.depth).forEach(([ft, lines]) => {
+              let best = null; lines.forEach(r => { for (let i = 2; i < r.length - 2; i += 2) { const x = pr.X(r[i]), y = pr.Y(r[i + 1]), d = Math.hypot(x - 1500, y - 1010); if (x > 60 && x < 1860 && y > 300 && y < 1040 && (!best || d < best.d)) best = { d, x, y, a: Math.atan2(pr.Y(r[i + 3]) - pr.Y(r[i - 1]), pr.X(r[i + 2]) - pr.X(r[i - 2])) }; } });
+              if (!best) return; let a = best.a; if (a > Math.PI / 2) a -= Math.PI; if (a < -Math.PI / 2) a += Math.PI;
+              c.save(); c.translate(best.x, best.y); c.rotate(a); const s = `${G.fmt(+ft)} FT`, w = G.measure(c, s, 17, 500, F.mono, 0.08);
+              G.rr(c, -w / 2 - 8, -13, w + 16, 26, 6); c.fillStyle = 'rgba(233,238,242,0.92)'; c.fill(); G.text(c, s, 0, 6, { size: 17, weight: 500, fam: F.mono, align: 'center', color: P.tealDeep, track: 0.08 }); c.restore();
+            });
+            word(c, 'Mediterranean Sea', pr.X(-1.6), pr.Y(37.165), false, 0.9);
+            word(c, 'ALMERÍA · SPAIN', pr.X(-1.9), pr.Y(37.18), true);
           } else {
-            const land = pathOf(keys.flatMap(k => layer[k]), pr, V.box);
-            reliefLand(c, land, { ext: 5, seed: 19 });
-            c.save(); c.strokeStyle = MP.border; c.lineWidth = 1; c.lineJoin = 'round'; c.stroke(land); c.restore();
+            sea(c, pr);
+            const layer = gj[V.data], keys = Object.keys(layer), main = V.main ?? [];
+            const far = pathOf(keys.filter(k => !main.includes(k)).flatMap(k => layer[k]), pr, V.box);
+            if (main.length) {
+              if (V.data !== 'world') { const wk = Object.keys(gj.world).filter(k => !keys.includes(k) && k !== 'GIB'); reliefLand(c, pathOf(wk.flatMap(k => gj.world[k]), pr, V.box), { top: MP.far, top2: MP.far2, ext: 3, seed: 5, relief: 0.4 }); }
+              reliefLand(c, far, { top: MP.far, top2: MP.far2, ext: 3, seed: 3, relief: 0.6 });
+              const ml = pathOf(main.flatMap(k => layer[k]), pr, V.box);
+              reliefLand(c, ml, { ext: 6, seed: 11 });
+              c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.2; c.stroke(far); c.stroke(ml); c.restore();
+            } else {
+              reliefLand(c, far, { ext: 5, seed: 19 });
+              c.save(); c.strokeStyle = MP.border; c.lineWidth = 1; c.lineJoin = 'round'; c.stroke(far); c.restore();
+            }
+            (V.words ?? []).forEach(([s, lo, la, caps]) => word(c, s, pr.X(lo), pr.Y(la), !!caps));
           }
         });
-        hlPath = hlKeys.length ? pathOf(hlKeys.flatMap(k => layer[k] ?? []), pr, V.box) : null;
-        // a pin standing on the raised (red) region turns navy so it stays visible: one red per frame
-        if (hlPath) { const hc = G.mk(8, 8).getContext('2d'); pins.forEach(pn => { pn.onHl = hc.isPointInPath(hlPath, pr.X(pn.lon), pr.Y(pn.lat)); }); }
       }
       base(g);
-      // the highlighted region rises in red
-      if (hlPath) {
-        const kh = E.spring(range(t, tH, tH + 1.3)), lift = 16 * clamp(kh, 0, 1.2);
-        if (kh > 0) {
-          g.save(); g.globalAlpha = clamp(range(t, tH, tH + 0.25));
-          g.save(); G.shadow(g, 0.6 + kh); g.fillStyle = MP.redSide; g.fill(hlPath); G.noShadow(g); g.restore();
-          for (let i = 0; i < lift; i += 1.5) { g.save(); g.translate(0, -i); g.fillStyle = MP.redSide; g.fill(hlPath); g.restore(); }
-          g.save(); g.translate(0, -lift); const gr = g.createLinearGradient(0, 200, 0, 900); gr.addColorStop(0, MP.redTop); gr.addColorStop(1, MP.red); g.fillStyle = gr; g.fill(hlPath);
-          g.strokeStyle = MP.redEdge; g.lineWidth = 1.4; g.lineJoin = 'round'; g.stroke(hlPath); g.restore();
-          g.restore();
+      k.view(1.02);
+      const at = (pn) => [pr.X(pn.lon), pr.Y(pn.lat)];
+      if (mode === 'coast') {
+        // Guest's first search area: a 51-sq-mi wedge from the Almanzora mouth (area per Moran; the shape is illustrative)
+        if (Pm.wedge !== false) {
+          const kw = E.inOutCubic(range(t, tW, tW + 1.2));
+          if (kw > 0) {
+            const [ox, oy] = [pr.X(-1.775), pr.Y(37.242)], R = 12.97 / 111.2 * pr.sc, a0 = (95 - 90) * Math.PI / 180, a1 = a0 + (90 * Math.PI / 180) * kw;
+            g.save(); g.beginPath(); g.moveTo(ox, oy); g.arc(ox, oy, R, a0, a1); g.closePath(); g.fillStyle = 'rgba(42,140,134,0.10)'; g.fill(); g.strokeStyle = 'rgba(29,106,102,0.7)'; g.lineWidth = 2.4; g.setLineDash([12, 8]); g.stroke(); g.restore();
+            const ka = range(t, tW + 0.8, tW + 1.4), lx = ox + Math.cos(a0 + 0.25) * R - 30, ly = oy + Math.sin(a0 + 0.25) * R;
+            G.pill(g, 'FIRST SEA SEARCH AREA · 24 JAN · 51 SQ MI', lx, ly, { size: 17, k: ka, fam: F.mono, weight: 500, fill: P.white, color: P.tealDeep, dot: P.teal, lift: 0.5, align: 'right' });
+            G.text(g, 'AREA PER MORAN · SHAPE ILLUSTRATIVE', lx - 12, ly + 38, { size: 13, weight: 500, fam: F.mono, color: P.tealDeep, track: 0.08, align: 'right', alpha: E.outCubic(ka) });
+          }
+        }
+        // bomb 4's find area: the canyon where 2,550-2,850 ft is first reached (37.165-37.185 N, 1.71-1.74 W; reconstruction)
+        if (Pm.find !== false) {
+          const kf = range(t, tF - 0.3, tF + 0.6);
+          if (kf > 0) { const cx = pr.X(-1.725), cy = pr.Y(37.175), rx = 0.015 * pr.kx * pr.sc, ry = 0.01 * pr.sc;
+            g.save(); g.globalAlpha = clamp(kf * 2); g.fillStyle = 'rgba(224,36,27,0.08)'; g.beginPath(); g.ellipse(cx, cy, rx * E.outBack(clamp(kf)), ry * E.outBack(clamp(kf)), -0.35, 0, TAU); g.fill(); g.strokeStyle = MP.red; g.lineWidth = 3; g.setLineDash([9, 7]); g.lineDashOffset = -t * 10; g.stroke(); g.restore(); }
+        }
+        // towns and the beach
+        const kt = (i) => range(t, 0.5 + i * 0.18, 1.0 + i * 0.18);
+        town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -34, size: 34, sub: 'POP. ABOUT 2,000 IN 1966', dot: false });
+        town(g, ...at(pinOf('Villaricos')), kt(1), 'Villaricos', { side: 'r', dy: -22 });
+        town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: 'PRESS BOATS' });
+        town(g, ...at(pinOf('Camp Wilson beach')), kt(4), 'Camp Wilson beach', { side: 'r', dy: 20, size: 22, sub: 'THE 8 MAR SWIM (AFTERNOON)' });
+        // Águilas, off the top edge: an arrow
+        { const ka = kt(5); if (ka > 0) { const x = 1700, y = 70; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
+          G.text(g, 'Águilas', x - 44, y + 44, { size: 26, weight: 800, align: 'right', color: P.ink, alpha: ka }); G.text(g, 'SIMÓ’S HOME PORT', x - 44, y + 68, { size: 15, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.08, alpha: ka }); } }
+        // bombs 1-3: numbered discs
+        LAND_BOMBS.forEach((b, i) => {
+          const kb = E.outBack(range(t, 1.1 + i * 0.3, 1.6 + i * 0.3)); if (kb <= 0) return; const x = pr.X(b.lon), y = pr.Y(b.lat);
+          g.save(); g.translate(x, y); g.scale(kb, kb); G.shadow(g, 0.6); g.fillStyle = P.ink; g.beginPath(); g.arc(0, 0, 17, 0, TAU); g.fill(); G.noShadow(g);
+          g.strokeStyle = P.white; g.lineWidth = 3; g.stroke(); G.text(g, String(b.n), 0, 8, { size: 22, weight: 800, align: 'center', color: P.white }); g.restore();
+        });
+        // legend card for 1-3 (bottom left)
+        if (Pm.legend !== false) {
+          const kl = range(t, 1.6, 2.3); if (kl > 0) {
+            const x0 = 70, y0 = 790, w = 610, h = 210;
+            g.save(); g.globalAlpha = E.outCubic(kl); g.translate(0, (1 - E.outCubic(kl)) * 20); G.card(g, x0, y0, w, h, { r: 16, lift: 0.9, grainA: 0 });
+            G.text(g, 'THE THREE BOMBS ON LAND', x0 + 28, y0 + 42, { size: 16, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12 });
+            LAND_BOMBS.forEach((b, i) => { const yy = y0 + 86 + i * 44; g.fillStyle = P.ink; g.beginPath(); g.arc(x0 + 44, yy - 8, 15, 0, TAU); g.fill(); G.text(g, String(b.n), x0 + 44, yy - 1, { size: 19, weight: 800, align: 'center', color: P.white }); G.text(g, b.text, x0 + 74, yy - 1, { size: 17, weight: 500, fam: F.mono, color: P.ink, track: 0.04 }); });
+            g.restore();
+          }
         }
       }
-      // routes under the pins
-      k.view(1.02);
-      const at = (i) => [pr.X(pins[i].lon), pr.Y(pins[i].lat)];
-      routes.forEach(r => route(g, at(r.ia), at(r.ib), t, range(t, r.t, r.t + 1.2)));
+      // routes (spain: tankers from Morón; world: the Chrome Dome loop)
+      routes.forEach(r => route(g, at(pins[r.ia]), at(pins[r.ib]), t, range(t, r.t, r.t + 1.2), { bow: mode === 'spain' ? 0.12 : 0.28 }));
+      if (mode === 'world' && !Pm.routes) {
+        const a = at(pinOf('Seymour Johnson AFB')), b = at(pinOf('Palomares')), east = [pr.X(21), pr.Y(35.4)], tr = PT[1] + 0.4;
+        route(g, a, b, t, range(t, tr, tr + 1.6), { bow: 0.16 });
+        const e1 = route(g, b, east, t, range(t, tr + 1.6, tr + 2.6), { bow: 0.12, head: false, dash: [6, 10] });
+        const ke = range(t, tr + 2.4, tr + 3.0); if (ke > 0) { G.text(g, 'TOWARD THE SOVIET FRONTIER …', east[0] - 20, east[1] + 42, { size: 18, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(ke) }); }
+        route(g, east, a, t, range(t, tr + 3.0, tr + 4.4), { bow: -0.1, color: P.tealDeep, dash: [4, 12], width: 3 });
+        const kh = range(t, tr + 4.0, tr + 4.6); if (kh > 0) G.text(g, '… AND HOME, 24 HOURS LATER', pr.X(-37), pr.Y(31.2), { size: 18, weight: 500, fam: F.mono, align: 'center', color: P.tealDeep, track: 0.1, alpha: E.outCubic(kh) });
+      }
       // pins and labels
       pins.forEach((pn, i) => {
-        const [x, y] = at(i), kk = range(t, PT[i], PT[i] + 0.7);
-        teardrop(g, x, y, t, kk, { R: 20, color: pn.color ?? (pn.onHl ? P.ink : MP.red) });
+        const [x, y] = at(pn), kk = range(t, PT[i], PT[i] + 0.7);
+        teardrop(g, x, y, t, kk, { R: 20, color: pn.color ?? (isRed(pn) ? MP.red : P.ink) });
         label(g, x, y - 36, range(t, PT[i] + 0.25, PT[i] + 0.75), pn.name, pn.sub, pn.side ?? (x > 1500 ? 'l' : 'r'), pn.dy ?? 0);
       });
       k.flat();
-      // header on a soft paper fade so it reads over the map
-      const hg = g.createLinearGradient(0, 0, 0, 260); hg.addColorStop(0, 'rgba(247,246,241,0.92)'); hg.addColorStop(0.7, 'rgba(247,246,241,0.55)'); hg.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = hg; g.fillRect(0, 0, 1920, 260);
+      const hg = g.createLinearGradient(0, 0, 0, 260); hg.addColorStop(0, 'rgba(247,246,241,0.94)'); hg.addColorStop(0.7, 'rgba(247,246,241,0.6)'); hg.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = hg; g.fillRect(0, 0, 1920, 260);
       G.kicker(g, Pm.kicker ?? V.kicker, 90, 110, range(t, 0.05, 0.6));
       G.riseText(g, Pm.title ?? V.title, 90, 186, range(t, 0.12, 0.9), { size: 62, weight: 800 });
-      G.source(g, Pm.source ?? V.src, range(t, 0.6, 1.4), { y: 1046 });
+      G.source(g, Pm.source ?? V.src, range(t, 0.6, 1.4), { y: 1046, size: mode === 'coast' ? 13 : 16 });
     }, { push: 0.045, dx: 20, dy: 8, fx: 960, fy: 560 });
   }
 
-  // ================================================================ dealmap: the circle as a flat network diagram
-  // Edge library: RESEARCH §2a rows (C-numbers). kind: INVESTS (teal) · BUYS (navy) · GUARANTEES (navy, dashed) ·
-  // WARRANT (teal, dashed) · BOOKS (a badge on one node, no arrow). Amounts are as RESEARCH words them.
-  const EDGES = {
-    C1: { from: 'NVIDIA', to: 'OPENAI', kind: 'INVESTS', label: 'UP TO $100B', sub: 'LETTER OF INTENT · SEP 2025 · NEVER BINDING' },
-    C2: { from: 'NVIDIA', to: 'OPENAI', kind: 'INVESTS', label: '$30B STAKE', sub: 'REPLACED A $100B LETTER OF INTENT', word: 'hundred' },
-    C3: { from: 'NVIDIA', to: 'OPENAI', kind: 'GUARANTEES', label: 'UP TO $105B', sub: 'OF OPENAI’S OHIO DATA-CENTRE LEASES', word: 'guarantee' },
-    C4: { from: 'OPENAI', to: 'ORACLE', kind: 'BUYS', label: '>$300B', sub: 'CLOUD CONTRACTS · REPORTED', word: 'Oracle' },
-    C5: { from: 'ORACLE', to: 'NVIDIA', kind: 'BUYS', label: 'SERVERS', sub: 'CAPEX $28.5B IN ONE QUARTER', word: 'servers' },
-    C6: { from: 'OPENAI', to: 'AMD', kind: 'BUYS', label: '6 GW', sub: 'OF AMD CHIPS · FIRST 1 GW BINDING', word: 'AMD' },
-    C6w: { from: 'AMD', to: 'OPENAI', kind: 'WARRANT', label: '160M SHARES', sub: 'AT $0.01 EACH', word: 'cent' },
-    C6m: { from: 'AMD', to: 'META', kind: 'WARRANT', label: '160M SHARES', sub: 'AN IDENTICAL WARRANT · FEB 2026' },
-    C7: { from: 'OPENAI', to: 'COREWEAVE', kind: 'BUYS', label: '$6.5B ORDER', sub: 'CLOUD CAPACITY · SEP 2025' },
-    C8: { from: 'NVIDIA', to: 'COREWEAVE', kind: 'GUARANTEES', label: '$6.3B', sub: 'BUYS ANY UNSOLD CAPACITY TO 2032', word: 'promised' },
-    C9: { from: 'NVIDIA', to: 'COREWEAVE', kind: 'INVESTS', label: '$2B STAKE', sub: 'NEW SHARES · JAN 2026', word: 'CoreWeave' },
-    C9b: { from: 'COREWEAVE', to: 'NVIDIA', kind: 'BUYS', label: 'ALL ITS GPUs', sub: 'NVIDIA SUPPLIES EVERY ONE' },
-    C10: { from: 'MICROSOFT', to: 'OPENAI', kind: 'INVESTS', label: '$11.9B', sub: 'FUNDED, OF $13.0B COMMITTED', word: 'Microsoft' },
-    C11: { from: 'OPENAI', to: 'MICROSOFT', kind: 'BUYS', label: '$24.1B', sub: 'MICROSOFT’S REVENUE FROM OPENAI · FY2026', word: 'booked' },
-    C12: { from: 'AMAZON', to: 'OPENAI', kind: 'INVESTS', label: '$50B', sub: '$15B PAID · $35B ON MILESTONES', word: 'Amazon' },
-    C13: { from: 'OPENAI', to: 'AMAZON', kind: 'BUYS', label: '+$100B', sub: 'MORE AWS CLOUD, OVER 8 YEARS', word: 'expanded' },
-    C17a: { from: 'NVIDIA', to: 'ANTHROPIC', kind: 'INVESTS', label: 'UP TO $10B', sub: 'NOV 2025' },
-    C17b: { from: 'MICROSOFT', to: 'ANTHROPIC', kind: 'INVESTS', label: 'UP TO $5B', sub: 'NOV 2025' },
-    C17c: { from: 'ANTHROPIC', to: 'MICROSOFT', kind: 'BUYS', label: '$30B', sub: 'AZURE CLOUD · NOV 2025' },
-    C20: { from: 'ALPHABET', kind: 'BOOKS', label: '$99B', sub: 'PAPER GAINS ON STAKES · Q2 2026', word: 'Alphabet' },
-    C24: { from: 'META', to: 'COREWEAVE', kind: 'BUYS', label: 'UP TO $21B', sub: 'GPU CLOUD · MAR 2026' },
-  };
-  // SCRIPT chapter 2 (lines 21–31), in order; META and ANTHROPIC get their own rows so every node is in the circle
-  const DEAL_STEPS = ['C2', 'C3', 'C4', 'C5', 'C6', 'C6w', 'C12', 'C13', 'C10', 'C11', 'C9', 'C8', 'C24', 'C17a', 'C20'];
-  // OPENAI sits in the middle by default (the script calls it "the center of the circle"); params.center: null puts it on the ring
-  const RING = ['NVIDIA', 'COREWEAVE', 'META', 'ALPHABET', 'ANTHROPIC', 'MICROSOFT', 'AMAZON', 'AMD', 'ORACLE'];
-  const KIND = {
-    INVESTS: { col: P.teal, dash: null }, BUYS: { col: P.ink, dash: null }, GUARANTEES: { col: P.ink, dash: [16, 10] },
-    WARRANT: { col: P.tealDeep, dash: [4, 9] }, BOOKS: { col: P.sageDeep, dash: null },
-  };
-  const DEAL_SRC = 'SOURCES: SEC FILINGS (NVIDIA, AMD, AMAZON, MICROSOFT, COREWEAVE, ALPHABET, META); COMPANY RELEASES; FT AND WSJ AS REPORTED · RESEARCH §2';
-
-  async function dealmap(ctx, shot) {
-    const Pm = shot.params ?? {}, D = shot.duration ?? 20;
-    const norm = (st) => { const e = typeof st === 'string' ? { id: st, ...(EDGES[st] ?? { from: st, kind: 'BOOKS', label: st }) } : { ...(st.id ? EDGES[st.id] : {}), ...st };
-      e.from = String(e.from ?? '').toUpperCase(); e.to = e.to ? String(e.to).toUpperCase() : null; if (e.to === e.from) e.to = null; e.kind = String(e.kind ?? (e.to ? 'BUYS' : 'BOOKS')).toUpperCase(); return e; };
-    const pre = [].concat(Pm.pre ?? []).map(norm), steps = [].concat(Pm.steps ?? DEAL_STEPS).map(norm), all = [...pre, ...steps];
-    const hubName = Pm.center === undefined ? 'OPENAI' : Pm.center ? String(Pm.center).toUpperCase() : null;
-    const names = (Pm.nodes ?? (hubName ? RING : [...RING.slice(0, 5), 'OPENAI', ...RING.slice(5)])).map(n => String(n).toUpperCase()).filter(n => n !== hubName);
-    for (const e of all) for (const n of [e.from, e.to]) if (n && n !== hubName && !names.includes(n)) names.push(n);
-    const loopOn = Pm.loop ?? !Pm.steps;
-    const T = G.cues(shot, steps, { from: 0.9, span: Math.max(0.9 * (steps.length - 1), D - (loopOn ? 4.0 : 2.4) - 0.9) });
-    const tLoop = G.cue(shot, Pm.loopAt, (T.at(-1) ?? 0.9) + 1.4);
-    const CX = 960, CY = 606, RX = 700, RY = 330;
-    const mg = G.mk(4, 4).getContext('2d');
-    const mkNode = (n, i, a, x, y) => { const hub = n === 'OPENAI' || n === hubName, size = hub ? 36 : 29;
-      return { n, i, a, x, y, w: G.measure(mg, n, size, 800, F.sans, 0.02) + (hub ? 64 : 48), h: hub ? 76 : 62, size, hub }; };
-    const nodes = names.map((n, i) => { const a = -Math.PI / 2 + i / names.length * TAU; return mkNode(n, i, a, CX + Math.cos(a) * RX, CY + Math.sin(a) * RY); });
-    if (hubName) nodes.push(mkNode(hubName, names.length, Math.PI / 2, CX, CY + 10));
-    const node = (n) => nodes.find(q => q.n === n);
-    // edge geometry: pairs with several edges fan out; a lone edge bows slightly
-    const pairs = {}; all.forEach((e, i) => { if (!e.to) return; const k = [e.from, e.to].sort().join('|'); (pairs[k] ??= []).push(i); });
-    const inside = (p, nd, pad) => Math.abs(p[0] - nd.x) < nd.w / 2 + pad && Math.abs(p[1] - nd.y) < nd.h / 2 + pad;
-    const geom = all.map((e, i) => {
-      if (!e.to) return null;
-      const A = node(e.from), B = node(e.to), k = [e.from, e.to].sort(), list = pairs[k.join('|')], j = list.indexOf(i), n = list.length;
-      const P0 = node(k[0]), P1 = node(k[1]), dx = P1.x - P0.x, dy = P1.y - P0.y, dist = Math.hypot(dx, dy), nx = -dy / dist, ny = dx / dist;
-      const o = n === 1 ? 0.08 : (j - (n - 1) / 2) * Math.max(0.26, 150 / dist);
-      const c = [(A.x + B.x) / 2 + nx * o * dist, (A.y + B.y) / 2 + ny * o * dist];
-      const N = 160, pts = []; for (let q = 0; q <= N; q++) { const u = q / N; pts.push([(1 - u) ** 2 * A.x + 2 * (1 - u) * u * c[0] + u * u * B.x, (1 - u) ** 2 * A.y + 2 * (1 - u) * u * c[1] + u * u * B.y]); }
-      let s0 = 0; while (s0 < N && inside(pts[s0], A, 10)) s0++;
-      let s1 = N; while (s1 > 0 && inside(pts[s1], B, 16)) s1--;
-      const seg = pts.slice(s0, s1 + 1), cum = G.polyLen(seg);
-      return { seg, cum, mid: G.polyAt(seg, cum, n === 1 ? 0.5 : 0.5 + (j - (n - 1) / 2) * 0.22) };
-    });
-    const stepAt = (i) => (i < pre.length ? -10 : T[i - pre.length]);
-    // a white card label; big = the current step, small = a compact amount pill once it is old news
-    function edgeLabel(g, e, x, y, k, big) {
-      if (k <= 0) return;
-      const K = KIND[e.kind] ?? KIND.BUYS;
-      if (!big) { G.pill(g, e.label, x, y, { size: 17, align: 'center', k, fam: F.mono, weight: 500, color: K.col === P.ink ? P.ink : P.tealDeep, lift: 0.4, pad: 0.45 }); return; }
-      const w1 = G.measure(g, e.kind, 15, 500, F.mono, 0.14), w2 = G.measure(g, e.label, 34, 800), w3 = e.sub ? G.measure(g, e.sub, 14, 500, F.mono, 0.08) : 0;
-      const W = Math.max(w1, w2, w3) + 44, Hh = e.sub ? 118 : 92, x0 = clamp(x - W / 2, 90, 1830 - W), y0 = y - Hh / 2;
-      g.save(); g.globalAlpha *= clamp(k * 2); const s = 0.9 + 0.1 * E.outBack(clamp(k)); g.translate(x0 + W / 2, y); g.scale(s, s); g.translate(-(x0 + W / 2), -y);
-      G.card(g, x0, y0, W, Hh, { r: 14, lift: 1.0, grainA: 0 });
-      g.fillStyle = K.col; g.fillRect(x0, y0 + 14, 6, Hh - 28);
-      G.text(g, e.kind, x0 + 24, y0 + 32, { size: 15, weight: 500, fam: F.mono, color: K.col === P.ink ? P.inkSoft : P.tealDeep, track: 0.14 });
-      G.text(g, e.label, x0 + 22, y0 + 72, { size: 34, weight: 800, color: P.ink });
-      if (e.sub) G.text(g, e.sub, x0 + 24, y0 + 100, { size: 14, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.08 });
-      g.restore();
-    }
-    return set(ctx, shot, (g, t, p, k) => {
-      k.view(0.3); G.paper(g, { ledger: true, step: 54 });
-      k.view(1);
-      // the current step (latest one already cued)
-      let cur = -1; all.forEach((e, i) => { if (t >= stepAt(i)) cur = i; });
-      const loopK = loopOn ? range(t, tLoop, tLoop + 1.6) : 0;
-      // the ring guide (faint) and, at the end, the loop in red, drawn clockwise from the top
-      g.save(); g.strokeStyle = 'rgba(20,35,61,0.10)'; g.lineWidth = 2; g.setLineDash([3, 9]); g.globalAlpha = E.outCubic(range(t, 0.1, 0.8));
-      g.beginPath(); g.ellipse(CX, CY, RX, RY, 0, 0, TAU); g.stroke(); g.restore();
-      if (loopK > 0) {
-        const a0 = -Math.PI / 2, a1 = a0 + TAU * E.inOutCubic(loopK);
-        g.save(); g.strokeStyle = P.red; g.lineWidth = 7; g.lineCap = 'round'; g.globalAlpha = 0.9; g.beginPath(); g.ellipse(CX, CY, RX, RY, 0, a0, a1); g.stroke();
-        // arrowheads riding the loop
-        for (let q = 0; q < 10; q++) { const a = a0 + (q + 0.5) / 10 * TAU; if (a > a1) break; const px = CX + Math.cos(a) * RX, py = CY + Math.sin(a) * RY, tx = -Math.sin(a) * RX, ty = Math.cos(a) * RY, ang = Math.atan2(ty, tx);
-          g.save(); g.translate(px, py); g.rotate(ang); g.fillStyle = P.red; g.beginPath(); g.moveTo(13, 0); g.lineTo(-9, -10); g.lineTo(-9, 10); g.closePath(); g.fill(); g.restore(); }
-        g.restore();
-      }
-      // edges
-      all.forEach((e, i) => {
-        const gm = geom[i]; if (!gm) return;
-        const ts = stepAt(i), kd = E.inOutCubic(range(t, ts, ts + 0.8)); if (kd <= 0) return;
-        const K = KIND[e.kind] ?? KIND.BUYS, isCur = i === cur, old = !isCur && loopK <= 0;
-        g.save(); g.globalAlpha = old ? 0.55 : 1; g.strokeStyle = K.col; g.lineWidth = isCur ? 6 : 4; g.lineCap = 'round'; g.lineJoin = 'round';
-        if (K.dash) g.setLineDash(K.dash.map(d => d * (isCur ? 1 : 0.8)));
-        const hd = G.drawPoly(g, gm.seg, gm.cum, kd); g.setLineDash([]);
-        if (hd) { g.translate(hd.x, hd.y); g.rotate(hd.ang); g.fillStyle = K.col; const s = isCur ? 1.15 : 0.95; g.beginPath(); g.moveTo(14 * s, 0); g.lineTo(-10 * s, -11 * s); g.lineTo(-10 * s, 11 * s); g.closePath(); g.fill(); }
-        g.restore();
-        // money pulses running along a finished edge
-        if (kd >= 1) for (let q = 0; q < 3; q++) { const u = ((t - ts) * 0.32 + q / 3) % 1, pp = G.polyAt(gm.seg, gm.cum, u); g.save(); g.globalAlpha = (old ? 0.45 : 0.85) * Math.sin(u * Math.PI); g.fillStyle = K.col; g.beginPath(); g.arc(pp.x, pp.y, isCur ? 6 : 4.5, 0, TAU); g.fill(); g.restore(); }
-      });
-      // labels: compact pills for old edges (under the nodes), then the nodes, then the current card on top
-      all.forEach((e, i) => { const gm = geom[i]; if (!gm || i === cur) return; const kl = range(t, stepAt(i) + 0.4, stepAt(i) + 0.9); edgeLabel(g, e, gm.mid.x, gm.mid.y, kl, false); });
-      // nodes
-      nodes.forEach((nd) => {
-        const kn = E.outBack(range(t, 0.15 + nd.i * 0.06, 0.65 + nd.i * 0.06)); if (kn <= 0) return;
-        const ce = all[cur], act = ce && (ce.from === nd.n || ce.to === nd.n) && loopK <= 0;
-        g.save(); g.translate(nd.x, nd.y); g.scale(kn, kn);
-        G.card(g, -nd.w / 2, -nd.h / 2, nd.w, nd.h, { r: nd.h / 2, fill: nd.hub ? P.ink : P.white, lift: act ? 1.3 : 0.8, grainA: 0 });
-        if (act) { g.strokeStyle = P.teal; g.lineWidth = 4; G.rr(g, -nd.w / 2 - 6, -nd.h / 2 - 6, nd.w + 12, nd.h + 12, nd.h / 2 + 6); g.stroke(); }
-        G.text(g, nd.n, 0, nd.size * 0.36, { size: nd.size, weight: 800, align: 'center', color: nd.hub ? P.white : P.ink, track: 0.02 });
-        g.restore();
-      });
-
-      // badges (BOOKS steps): a card under the node
-      all.forEach((e, i) => {
-        if (e.to) return; const nd = node(e.from), kb = range(t, stepAt(i) + 0.1, stepAt(i) + 0.7); if (kb <= 0 || !nd) return;
-        const txt = `${e.label}${e.sub ? ' · ' + e.sub.split(' · ')[0] : ''}`, bw = G.measure(g, txt, 16, 500, F.mono) + 40;
-        const bx = clamp(nd.x, 100 + bw / 2, 1820 - bw / 2), by = nd.y + nd.h / 2 + 34;
-        if (i === cur && loopK <= 0) edgeLabel(g, e, clamp(nd.x, 300, 1620), by + 50, kb, true); else G.pill(g, txt, bx, by, { size: 16, align: 'center', k: kb, fam: F.mono, weight: 500, fill: P.mint, color: P.tealDeep, lift: 0.4 });
-      });
-      if (cur >= 0 && geom[cur] && loopK <= 0) { const gm = geom[cur], ts = stepAt(cur); edgeLabel(g, all[cur], gm.mid.x, gm.mid.y, range(t, ts + 0.45, ts + 0.95), true); }
-      if (cur >= 0 && geom[cur] && loopK > 0) edgeLabel(g, all[cur], geom[cur].mid.x, geom[cur].mid.y, 1, false);
-      // header, legend, the loop slab
-      k.flat();
-      G.kicker(g, Pm.kicker ?? 'WHO PAYS WHOM · ARROWS = MONEY OR PROMISES', 90, 104, range(t, 0.05, 0.6));
-      G.riseText(g, Pm.title ?? 'Follow the money', 90, 176, range(t, 0.12, 0.9), { size: 58, weight: 800 });
-      const lg = [['INVESTS', 'INVESTS'], ['BUYS', 'BUYS'], ['GUARANTEES', 'GUARANTEES'], ['WARRANT', 'GIVES A WARRANT']];
-      let lx = 92;
-      lg.forEach(([kd, txt], q) => { const K = KIND[kd], x = lx, y = 1000, kk = E.outCubic(range(t, 0.6 + q * 0.1, 1.1 + q * 0.1)); lx += 52 + G.measure(g, txt, 15, 500, F.mono, 0.08) + 44;
-        g.save(); g.globalAlpha = kk; g.strokeStyle = K.col; g.lineWidth = 4; if (K.dash) g.setLineDash(K.dash.map(d => d * 0.6)); g.beginPath(); g.moveTo(x, y - 6); g.lineTo(x + 40, y - 6); g.stroke(); g.restore();
-        G.text(g, txt, x + 52, y, { size: 15, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.08, alpha: kk }); });
-      if (loopK > 0) G.slab(g, Pm.loopLabel ?? 'IT’S A CIRCLE', 1830, 130, { size: 40, fill: P.red, align: 'right', k: range(t, tLoop + 0.8, tLoop + 1.4) });
-      G.source(g, Pm.source ?? DEAL_SRC, range(t, 0.6, 1.4), { y: 1046, size: 13, x: 1840 });
-    }, { push: 0.022, dx: 14, dy: 6 });
-  }
-
-  return { map, dealmap };
+  return { map };
 }
