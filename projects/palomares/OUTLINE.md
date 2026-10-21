@@ -1,6 +1,6 @@
 # OUTLINE: America Lost the Same H-Bomb Twice (episode 9)
 
-A/B title: "America Lost an H-Bomb. Then Lost It Again". Narration: `SCRIPT.md`, **revision 5** (after critic round 4: retention 8.6, facts 9.2, climax 8.6, ear 8.5; 140 lines, 2,662 words by `wc`, 72 pauses, about 18:35 of narration and about 18:47 with six 2 s chapter cards; see "What revision 5 changed" in §0). The figures that follow describe revision 4 (after critic round 3: retention 8.4, facts 8.5, climax 8.6, ear 8.2). 143 lines, **2,683 words by `wc`, 2,714 spoken words when hyphenated numbers are split (the retention critic's method), 68 `|` pauses. At 150 wpm plus 0.7 s per pause that is about 18:53 of narration, about 19:05 with six 2 s chapter cards** (revision 3 was about 19:45 with pauses). Timestamps in §2, §3a and the chapter headings in §3 are revision-4 times *with* the pause allowance. **Line numbers: §0 (revision 4 table), §1, §2, §3a and the round-3 rejected notes use revision-4 numbers. The beat bodies in §3–§9 still carry revision-3 numbers; convert them with the map in §0.**
+A/B title: "America Lost an H-Bomb. Then Lost It Again". Narration: `SCRIPT.md`, **revision 8** (after critic round 6: retention 9.1, facts 9.2, climax 9.0, ear 8.9; 140 VO lines, 44 and 94 retired; 2,622 spoken words, 87 pauses, about 18:30 of narration and about 18:42 with six 2 s chapter cards; see "What revision 8 changed" in §0; §4 and §5 are in revision-8 numbers). Before that, **revision 7** (after critic round 5: retention 8.8, facts 8.9, climax 9.1, ear 8.7; 141 VO lines on rev-5 numbers with 20a/20b and 35a/35b, 94 retired; 2,623 words by `wc`, 83 pauses, about 18:27 of narration and about 18:39 with six 2 s chapter cards; see "What revision 7 changed" in §0; §4 and §5 are in revision-7 numbers). Before that, **revision 5** (after critic round 4: retention 8.6, facts 9.2, climax 8.6, ear 8.5; 140 lines, 2,662 words by `wc`, 72 pauses, about 18:35 of narration and about 18:47 with six 2 s chapter cards; see "What revision 5 changed" in §0). The figures that follow describe revision 4 (after critic round 3: retention 8.4, facts 8.5, climax 8.6, ear 8.2). 143 lines, **2,683 words by `wc`, 2,714 spoken words when hyphenated numbers are split (the retention critic's method), 68 `|` pauses. At 150 wpm plus 0.7 s per pause that is about 18:53 of narration, about 19:05 with six 2 s chapter cards** (revision 3 was about 19:45 with pauses). Timestamps in §2, §3a and the chapter headings in §3 are revision-4 times *with* the pause allowance. **Line numbers: §0 (revision 4 table), §1, §2, §3a and the round-3 rejected notes use revision-4 numbers. The beat bodies in §3–§9 still carry revision-3 numbers; convert them with the map in §0.**
 
 ## 0. How this structure was chosen
 
@@ -9,6 +9,40 @@ The judges' scores: dual 88.7, thriller 84.7, puzzle 76.7. **The spine is the du
 **Grafted in from the other two outlines:**
 - **From thriller:** the split-flap DAY counter on a DAY 0 basis; the parachute as a physical thread through every chapter; Kuralt's "mislay" line followed by "Two days after Kuralt's broadcast, they had mislaid it"; Guest's moonless-night metaphor paid off on 24 March (and again, inverted, under the full moon on 7 April); the double reversal in Ch.5 (fouled, then the robot is the third line).
 - **From puzzle:** the red dashed outline of bomb #4 (fills at FOUND, empties at the snap, fills for good on deck); the "recovered today" press release drafted early, which fades on screen as the line goes slack; "So did the Navy ignore him? No."; "Finding it was the easy part."; "The calculator hadn't found it."
+
+**What revision 8 changed (critic round 6).** Line numbers are revision-8 numbers: revision-7 numbers with 44 retired (the sequence runs 43 → 45); nothing else moved. Runtime: 2,623 → 2,622 spoken words and 83 → 87 pauses, about 18:39 → 18:42 with cards (about 18:52 with digit years counted as spoken words), inside 16–19 min and the 2,450–2,650 band. No sentence over 25 words.
+
+| Problem (critic) | Fix |
+|---|---|
+| L55 "Breakfast, lunch and dinner." has no speaker (ear: blocking; retention) | "They were fed tomatoes from the contaminated fields. One military policeman: \| 'Breakfast, lunch and dinner.'" (§9, Wayne Hugart, MP; his name goes on the 55 caption with "NYT reported (2016)") |
+| L43–47 the flattest 40 s of Ch.2 (retention) | 44 cut; Alvin is introduced when it acts: 48 "Day forty-three. The tiny submarine, Alvin, catches a furrow on the seabed." (echoes the hook's "one tiny submarine"; 22 FT · ROOM FOR 3 on the 48 caption, the turntable shot moves to the head of 48) |
+| Ch.2 tense drift (climax) | 39–40 and 46–47 in present tense ("sketches… redraws… makes sense"; "maps… runs… takes one look"), matching 36, 41–45 and 48 |
+| L47 "It" points nowhere (climax, ear) | "Palomares was one of the first big searches run on the odds." |
+| L85 implies the nylon line parted (climax) | "For three minutes, the bomb hangs half a mile below Mizar." "The line goes slack" stays (Moody and Lindbergh, §6.9); the 88 stump becomes the reveal of where it broke (READ FIRST #5). VISUALS 85 no longer shows the break point |
+| L88 repeats L84's anchor coming up (climax) | "An hour later, they reel the anchor in." (§6.9 "another hour to reel in the anchor") |
+| L105 the line count jumps from one to "the third" (climax) | "Curve set line one, then line two. \| Each one dragged the bomb deeper still." (§7c: buoyed line 4 Apr, second line 5 Apr) |
+| "Day eighty" said twice, blunting 118 (retention) | 106 "One in the morning. Curve goes down…"; the 106 caption keeps the date ("CURV dives, ~01:00, 7 Apr, per Moran", D45) and drops the DAY 80 counter |
+| L117 soft "someone else will" payoff (climax, optional) | "Eight forty-six in the morning. An American deck. Nobody else's. \| The ship's log: 'Weapon on deck with parachute.'" No Soviet wording; 1 s hold after "Nobody else's." |
+| L132 slow (retention, optional) | "…eligible for radiation compensation in 2012. The airmen who dug up that soil? \| 2022. \| Victor Skaar took Veterans Affairs to court." The gap becomes a sting; "Skaar covered by the 2022 law" is still never said |
+| Facts precision | 22 "the policeman who reports it" (§3c, Howe tipped off); 33 "can't get there in time" (§5.3); 37 "Fish, maybe. Or a parachute, partly filled with air bubbles." (§5b, no longer framed as a quote); 100 "Back home, a board…" (RESEARCH never places the Vance board); 137 "they said it outright" (the 2025 brief already argued "neither a nuclear accident", §10d/S70) |
+| Ear fixes | 57 "the cutoff was sixty thousand" ("line" kept for the rope); 75 "a steel frame shaped like a giant shuttlecock" (simile owned, no quote marks); 91 "A snag on the anchor?" (§6.10 "fouled on the anchor flukes"); 103 "its patched-up cable"; 124 "rings about a hundred acres"; 125 "Around the year 2000" |
+| Edit notes (retention) | VISUALS 120 under about 6 s; hard cut 122 → 123 with no breath |
+
+**What revision 7 changed (critic round 5).** Line numbers are revision-7 numbers, which are the revision-5/6 numbers plus a/b suffixes; nothing else moved. Runtime: 2,672 → 2,623 words and 72 → 83 pauses, about 18:53 → 18:39 with cards (about 18:49 with digit years counted as spoken words), down from the 19:00 ceiling.
+
+| Problem (critic) | Fix |
+|---|---|
+| L20 (49 words) and L35 (50 words) break the 25-word rule; "three strikes" has no speaker (retention, ear: blocking; climax) | 20a "A fishing boat picks up the co-pilot, Mike Rooney. \| In port, it rams the dock." 20b "Then he's put in a bread truck, and the driver keeps looking back at him. \| Rooney does the math: plane crash, boat wreck. One more, and 'that's going to be three strikes and I'm out.'" (§2d, S01 bread trucks; Rooney quote §12). 35a "…A reporter asked an Air Force spokesman about it. \| 'What bomb?' Just debris, he said." 35b "So the reporter tried again… \| The reply: 'There is no sign of the thing that is not the bomb.'" Each half gets its own REPORTER / USAF card change |
+| L48 furrow quote heard as Wilson's (facts: blocking) | 48 "Day forty-three. Alvin's camera catches a furrow on the seabed. \| Marvin McCamis, an Alvin pilot watching from the surface, said it looked 'like a barrel had been dragged over the bottom.'" (§5b 1 Mar: McCamis on surface control). Wilson's name moves to the 48 caption ("Dive 119: Rainnie, Wilson"). VISUALS 48 drops the DOC frame for a credited QUOTE tag. 63 becomes "Today, McCamis takes the controls." |
+| L66 caps in VO (ear: blocking; climax) | "Alvin reports instrument panel." in normal case; caps on the card only |
+| L133 quote opens with no speaker; "again" points at nothing (ear: blocking) | "Skaar says: 'First they told me…' \| In January 2026, the court turned him down." ("again" cut; the 13 earlier opinions stay off the VO) |
+| Runtime at the ceiling (retention) | Cut 94 (the irony line before the Ch.4 out; its chart folds into the 93 shot), "twenty-seven" (46), "at most" (72), "Divers cut the robot free" (116, caption), "by the official estimate" (127, caption), "Fishermen pull three survivors" (20a), "in his pickup" (18), "To one man, it looked like 'a big white toilet'" (44, caption; it was also a loosely attributed quote), "Day after day. \|" → "Days of nothing." (99), "lobbying" (101), "Out at sea, the hunt was dying" → "Back at sea, day fifty-six" (59), "the chute with" (62), "His point" tightened (111), "as if on something sharp" (89; 91 now says "A sharp rock?") |
+| Long shot-holds with no pause (retention) | `\|` added at the sentence boundary in 25, 40, 46, 47, 48, 55, 58, 75, 77, 100, 110 and 130 (20a/20b carry one each) |
+| Unattributed quotes (facts, ear) | 65 "Both pilots shout" (§5c Dive 128: "both men shouted"); 96 "McCamis said" (§6.14); 103 "Its pilot, Larry Brady, said" (§7a); 107 "Brady:" |
+| 57–58 read as a range, not a loosened standard; "clean" overstated (ear, facts) | 57 "At first, soil had to go if it read over seven thousand counts a minute on a radiation meter. \| By the end, the line was sixty thousand, more than eight times looser." 58 "…\| Some soil and crops that read between those two numbers went into trenches…" (§4.18, §4.19, §4.26) |
+| 91 states the power cut, then "Or…" confuses; "cut" ×3 (ear) | "Mizar's captain had cut power mid-lift, and the ship had drifted. Was that it? A sharp rock? The anchor? \| Nobody ever figured it out for sure." (§6.10: the drift is fact, the cause is not) |
+| Ear fixes | 28 "only" dropped (facts); 46 "a Navy scientist, John Craven"; 47 "Guest took one look at Richardson"; 77 the rig in one spoken chain ("From the hook, a rope runs to an anchor, then the steel frame, then one nylon line…"); 104 "Curve's engineer"; 128 "As reported, it wasn't binding."; 132 "Veterans Affairs"; US spelling throughout (math, memorizes, apologizes, shoveled, gray, meter, "looking back") |
+| Visual and timing only (climax) | 95: 1 s of black before the Ch.5 card; 117: 1 s hold after "on an American deck" with a Lotsman silhouette or the Kuralt card, no "Soviet" wording |
 
 **What revision 5 changed (critic round 4).** Line numbers in this block are revision-5 numbers unless marked "old". Runtime: 2,683 → 2,662 words and 68 → 72 pauses, about 19:05 → 18:47 with cards, while adding the "What bomb?" set-up, the three-minute hang and the Kuralt payoff.
 
@@ -106,7 +140,7 @@ The judges' scores: dual 88.7, thriller 84.7, puzzle 76.7. **The spine is the du
 5. **On-screen credits (revision-4 lines).** "As told to Barbara Moran" on L14, L32–33, L35, L45 ("big white toilet"), L48, L49 (furrow quote: credit "Marvin McCamis, as told to Barbara Moran"; McCamis was on the surface, Wilson in the sub), L62–63, L64–67, L68, L71 (cigarette, Moran via S50), L74 (Moody, recalled 16 Mar), L82, L84 (Moody's request, §6.6), L85, L88–94, L98–101, L103 (Sproull), L104–113, L118 (Petrel log via Moran), L121 (scroll text, S01 via S40). **L43 is different:** caption "paraphrase, Barbara Moran", no quote marks, no typewriter card. L40: the engineer's "convinced absolutely" line may sit as a small caption under the redrawn sketch (Maydew, as told to Moran). L54: caption "A State Department history: the swim 'probably saved the tourist season'" (S02). L77–78 Kuralt: "CBS, 22 Mar 1966, as quoted by Barbara Moran". L102 "much anxiety": "DNA Palomares Summary Report, 1975, p.94" page card (not the Navy report). L110 fouling: caption "7 Apr, ~1 a.m. (Moran); S41 dates the tangle 6 Apr" (D45). L115 Guest's "I'd prefer combat": caption "press conference, 8 Apr 1966". L124 casing: "National Museum of Nuclear Science & History, Albuquerque". L130: "statement of intent, non-binding as reported". L135–136: "NYT reported, 2016". L46 Lotsman: "LA Times, 8 Mar 1966; Moran".
 6. **Reconstruction captions** (our own astronomy, Gap-fill G1/G2): L85 "sunset ≈ 7:20 pm (reconstruction); winch start ~7:30–8 pm per Moran/Szulc"; L86 "≈9% crescent (reconstruction)"; L115 "≈97% moon, setting west (reconstruction)". L90 time caption: "about 9 pm, 24 March".
 7. **⏱ Re-check on VO-lock day and publish day (revision-4 lines):** L9 the fence; L126–127 the fence today; L130 no agreement; L132 the April 2026 brief (attributed to Actualidad Almanzora, 13 Apr 2026); L133 "still awaits a ruling" (19 Oct 2026); L134 €0.68 (TSJ Andalucía, via elDiario.es 5 Mar 2026); L138–139 Skaar ("still fighting the VA in court": CAVC denied mandamus on 22 Jan 2026; check CourtListener for anything newer); L140 lettuces and fence; L141 the mayor's present-tense quote (January 2026); L142 1,600 homes ("environmentalists say": Ecologistas en Acción black-flag report, repeated by elDiario). If the fence is gone, L9 becomes the packaging fallback: "The plutonium in Palomares never left."
-8. **Words and numbers to test in TTS:** B-52; U.S.; Simó Orts; "Parece un torpedo"; Angier Biddle Duke; Poodle; Curve; Mizar; Aluminaut; Paco el de la Bomba; "two-sixty-one"; "fourteen hundred"; "INSTRUMENT PANEL" (read as words, not shouted); years as digits (1966, 1968, 1980s, 2000, 2007, 2012, 2015, 2025, 2026): each must come out as "nineteen sixty-six", "twenty fifteen" and so on, never "one thousand nine hundred". If any fails, write that year as words in the VO text only.
+8. **Words and numbers to test in TTS:** (rev 7 adds: Rooney; Larry Brady; Veterans Affairs; "instrument panel" is now normal case in the VO text; "Mojácar" only if it is ever voiced, currently caption-only) B-52; U.S.; Simó Orts; "Parece un torpedo"; Angier Biddle Duke; Poodle; Curve; Mizar; Aluminaut; Paco el de la Bomba; "two-sixty-one"; "fourteen hundred"; "INSTRUMENT PANEL" (read as words, not shouted); years as digits (1966, 1968, 1980s, 2000, 2007, 2012, 2015, 2025, 2026): each must come out as "nineteen sixty-six", "twenty fifteen" and so on, never "one thousand nine hundred". If any fails, write that year as words in the VO text only.
 9. **Visual flags:** L31 "half a man with his guts trailing": a silhouette under the small chute, no gore on the mannequins. L45 the concrete block: a grey cube on a white plinth with the buoy chain, scale figure beside it. L75 the cigarette: one glowing ember in a black frame, three mannequin silhouettes, no faces. L92 Moody's unrepeatable thought: bleep card. L97 suspect split card: **four tiles, ship drifting / rock / anchor / bad rope**; the drifting-ship tile lights first (that's the one the plant set up), then all four grey out on "Nobody ever figured it out". L60 threshold bar: 7,000 → (100,000 AEC "perfectly satisfactory" ghost tick) → 60,000. L135 dose bar chart: "< 0.1 mSv/yr (CIEMAT, Jan 2026)" vs "1 mSv/yr public limit", plus a small caption "CSN 2013: no disease attributable to the accident". L138 timeline 2012 vs 2022. L140 elDiario.es line on a quote card credited "elDiario.es, 16 Jan 2026"; population "just over 2,000" may sit in the caption.
 10. **Night variant (round-3 ear flag).** L71 (the dark sub), L80–94 (24 March) and L115 (pre-dawn lift) cannot use the sky-blue backdrop. Night kit: a deep navy painted sky with a few stars, the same white models, deck work-lights as warm pools on Mizar and Petrel, and at the bottom **Poodle's strobe as the only light** (a blink every ~2 s that reveals the frayed nylon line and the chute, then black). L71: one ember and three silhouettes in black. L115: the navy sky lifts to dawn blue as the bomb rises, so the toolkit's sky-blue returns on "Weapon on deck" (L118). The 0:27 flash-forward under L8 follows the same kit: a frayed nylon line on a dark slope with Poodle's strobe, never a hawser (READ FIRST #5). L32 "half a man, with his guts trailing" stays a silhouette or a chute-only shot. L43: no typewriter card (paraphrase).
 
@@ -307,105 +341,118 @@ This supersedes the §4 timings wherever they differ. ★★★ major, ★★ cl
 
 57 peaks, 12 at ★★★. Every ★★+ gap is ≤ 46 s; the 10:42–11:13 run (rig build) is a deliberate suspense ramp with ★ beats inside it and Mizar named from L80. The old 5:44–6:29, 10:22–11:56 and 16:11–17:16 gaps are closed by Lotsman (L46), the split Kuralt beat plus Moody's return (L74–78), and the place-first Ch.6 open (L126–129).
 
-## 4. Climax map: 60 peaks, longest gap 43 s
+## 4. Climax map (revision 8 numbers; revision-7 times): 66 peaks, longest gap 42 s
+
+Times are revision-7 estimates at 150 wpm, 0.7 s per `|` and 2 s per chapter card (end 18:39). Revision 8 moves them by at most a few seconds (Ch.2 about −5 s after the 44 cut, then +1–3 s from the four new pauses; end about 18:42); line 44 is retired. They replace the revision-3/4 map, which named beats that have since been cut (the tail-explosion dispute, the "broken leg" code, Paco el de la Bomba, the 1,400-tons irony line).
 
 | # | Time | Lines | Weight | Peak |
 |---|---|---|---|---|
 | 1 | 0:00 | 1–2 | ★★★ | A bomber hits its own tanker; four H-bombs fall |
-| 2 | 0:19 | 4 | ★★ | "The fourth is gone." |
-| 3 | 0:37 | 8 | ★★★ | "And they lose it again." |
-| 4 | 0:39 | 9 | ★★ | The fence is still up |
-| 5 | 1:15 | 14–15 | ★★ | Collision set-piece |
-| 6 | 1:34 | 16 | ★ | The official finding vs the survivors |
-| 7 | 1:56 | 18–19 | ★★ | The chute pulled out by hand; 7 dead, 4 alive |
-| 8 | 2:24 | 20 | ★ | "And now a car. Three strikes and I'm out." |
-| 9 | 2:57 | 23–24 | ★★ | Two bombs burst; "why didn't Palomares vanish?" |
-| 10 | 3:09 | 25–26 | ★★ | Why no nuclear blast (wow 1) |
-| 11 | 3:17 | 27–29 | ★★★ | "The rack held four." "Just not on land." |
-| 12 | 4:13 | 34 | ★★ | "What other flyer?" |
-| 13 | 4:20 | 35 | ★ | "What bomb?" |
-| 14 | 4:37 | 37–38 | ★★ | Same two echoes, then "school of fish" |
-| 15 | 4:58 | 39 | ★ | "Did the Navy ignore him? No." |
-| 16 | 5:30 | 42–43 | ★★★ | The dead man was the bomb (wow 2) |
-| 17 | 5:40 | 44–45 | ★★ | "I have your bomb." It's a concrete block |
-| 18 | 5:55 | 47 | ★ | Twenty-one hours sealed in a storm |
-| 19 | 6:15 | 49 | ★ | "Where the hell did you get this high school kid?" |
-| 20 | 6:29 | 50–51 | ★★ | The furrow, then "It can't find it." (cliff) |
-| 21 | 6:46 | 52 | ★★ | DAY 44: "One of our H-bombs is missing." |
-| 22 | 7:20 | 54 | ★★ | "If this is radioactivity, I love it!" |
-| 23 | 7:40 | 57 | ★★★ | The plutonium was in the fields behind the beach |
-| 24 | 8:08 | 59 | ★ | Skaar: "Hell, no." |
-| 25 | 8:15 | 60–63 | ★★ | Clean was haggled (×8); the trenches have no record |
-| 26 | 8:34 | 64 | ★ | The hunt is dying (low point) |
-| 27 | 8:46 | 66 | ★★ | "One more day, and that's all." |
-| 28 | 9:07 | 71 | ★★★ | FOUND: "That's it! That's it!" |
-| 29 | 9:09 | 72–73 | ★★ | Guest's note; Simó hears: 57 days |
-| 30 | 9:33 | 75 | ★ | Eight hours in the dark; one cigarette |
-| 31 | 9:45 | 76 | ★★ | "The calculator hadn't found it." |
-| 32 | 9:51 | 77 | ★★ | "Finding it was the easy part." |
-| 33 | 10:11 | 79 | ★ | Poodle falls; the bomb shifts |
-| 34 | 10:22 | 80–81 | ★★ | "Recovered today" draft; "mislay"; "someone else will" |
-| 35 | 11:12 | 85–86 | ★ | Alvin ordered up: nobody on the bottom |
-| 36 | 11:24 | 87 | ★ | The captain refuses the small boats |
-| 37 | 11:56 | 91–93 | ★★★ | THE LINE GOES SLACK |
-| 38 | 12:11 | 94–96 | ★★ | The frayed stump; Moody's guilt |
-| 39 | 12:33 | 97 | ★★ | The captain cut power — or a rock; nobody knows |
-| 40 | 12:44 | 98–100 | ★★ | "They had mislaid it"; 1,400 tons shipped, one bomb not held |
-| 41 | 13:01 | 101 | ★ | "Now we got to go find it again." (cliff) |
-| 42 | 13:14 | 103 | ★★ | Aluminaut passes the spot: "saw nothing" |
-| 43 | 13:23 | 104 | ★ | Uphill track: a false lead |
-| 44 | 13:30 | 105 | ★★ | DAY 69, 72, 74 "Nothing"; "much anxiety" |
-| 45 | 13:42 | 106–107 | ★★★ | RE-FOUND, 250 ft deeper |
-| 46 | 14:13 | 110 | ★ | Dragged deeper still |
-| 47 | 14:27 | 112–113 | ★★★ | "We're fouled." |
-| 48 | 14:36 | 114 | ★ | The robot team's head faints |
-| 49 | 14:56 | 116 | ★★ | The trapped robot is the third line |
-| 50 | 15:05 | 117 | ★ | "The admiral had a broken leg" |
-| 51 | 15:16 | 118 | ★ | Small boats this time; "I'd prefer combat" |
-| 52 | 15:39 | 121–122 | ★★★ | "Weapon on deck with parachute." DAY 80 |
-| 53 | 15:51 | 124 | ★★ | Paco el de la Bomba |
-| 54 | 15:59 | 125–126 | ★★ | The maths later finds the *Scorpion* |
-| 55 | 16:35 | 130 | ★★ | "Higher than first estimated"; the fence goes up |
-| 56 | 16:46 | 131 | ★★ | The trenches found by radar |
-| 57 | 17:16 | 134 | ★★★ | Spain: "never a nuclear accident" |
-| 58 | 17:38 | 136 | ★★ | €75 vs €0.68 |
-| 59 | 17:48–18:12 | 137–139 | ★★ | Samples thrown out; the law didn't cover him; Skaar, 89 |
-| 60 | 18:50 | 143 | ★★★ | "The rest of it never left." |
+| 2 | 0:18 | 4 | ★★ | "The fourth is gone." |
+| 3 | 0:37 | 8 | ★★★ | "And they lose it again." (flash-forward) |
+| 4 | 0:39 | 9–10 | ★★ | The fence is still up; two questions |
+| 5 | 1:13 | 14–15 | ★★ | Collision set-piece: "all hell seemed to break loose" |
+| 6 | 1:35 | 17 | ★ | The chute pulled out by hand, opening just before the ground |
+| 7 | 1:51 | 19 | ★★ | "Seven dead. Four alive." |
+| 8 | 1:57–2:03 | 20a–20b | ★ | Boat wreck, bread truck: "three strikes and I'm out" |
+| 9 | 2:45 | 24 | ★★ | Two bombs burst: "So why didn't Palomares vanish?" |
+| 10 | 2:53–3:04 | 25–26 | ★★ | No nuclear blast, just plutonium dust (wow 1) |
+| 11 | 3:09–3:21 | 27–29 | ★★★ | "The rack held four." "Just not on land." |
+| 12 | 3:39–3:46 | 31–32 | ★★ | Half a man; the dead man hits the sea and is gone |
+| 13 | 4:04 | 34 | ★★ | "What other flyer?" |
+| 14 | 4:13–4:23 | 35a–35b | ★★ | "What bomb?" / "no sign of the thing that is not the bomb" |
+| 15 | 4:43–4:47 | 37–38 | ★ | Fish, or a parachute holding air; "Did the Navy ignore him? No." |
+| 16 | 5:06 | 40 | ★★★ | The dead man was the bomb (wow 2) |
+| 17 | 5:24–5:32 | 42–43 | ★★ | "I have your bomb." It's a concrete block |
+| 18 | 5:42 | 45 | ★★ | A Soviet spy ship, 25 yards from a warship |
+| 19 | 6:04 | 47 | ★ | "Where the hell did you get this high school kid?" |
+| 20 | 6:18–6:31 | 48–49 | ★★ | The tiny submarine finds the furrow, then loses it; the clock runs out (cliff) |
+| 21 | 6:40 | 50 | ★★ | DAY 44: "One of our H-bombs is missing." |
+| 22 | 6:55 | 52 | ★★ | "If this is radioactivity, I love it!" |
+| 23 | 7:12 | 54 | ★★★ | The plutonium was in the fields behind the beach |
+| 24 | 7:18–7:30 | 55–56 | ★ | Tomatoes, three meals a day; Skaar: "Hell, no." |
+| 25 | 7:39–7:52 | 57–58 | ★★ | The line moved ×8; trenches with no record |
+| 26 | 8:10 | 59 | ★ | Moody flies home (low point) |
+| 27 | 8:27 | 61 | ★★ | "One more day, and that's all." |
+| 28 | 8:54 | 65 | ★★★ | FOUND: "That's it! That's it!" |
+| 29 | 9:03–9:14 | 66–67 | ★★ | Guest's note; Simó hears the news |
+| 30 | 9:23 | 68 | ★ | Eight hours in the dark, one cigarette |
+| 31 | 9:35 | 69 | ★★ | "The calculator hadn't found it." |
+| 32 | 9:42 | 70 | ★★★ | "Losing it would take three minutes." (cliff) |
+| 33 | 9:55–10:00 | 71–72 | ★★ | Moody comes back; the bomb slides 20 ft |
+| 34 | 10:09–10:17 | 73–74 | ★★ | "Mislay"; "someone else will" |
+| 35 | 10:26 | 75 | ★ | Poodle falls over; the bomb shifts |
+| 36 | 11:03–11:08 | 79–80 | ★ | Alvin ordered up: nobody on the bottom |
+| 37 | 11:14 | 81 | ★ | The captain refuses the small boats |
+| 38 | 11:32 | 83 | ★★ | The moonless night is no longer a figure of speech |
+| 39 | 11:37–11:59 | 84–87 | ★★★ | It lifts, hangs three minutes, the line goes slack: gone again |
+| 40 | 12:04–12:15 | 88–90 | ★★ | The frayed stump; Moody's guilt |
+| 41 | 12:19 | 91 | ★ | Drift, a rock or a snag on the anchor: never determined |
+| 42 | 12:30 | 92 | ★★ | "Two days later, America did." |
+| 43 | 12:44 | 95 | ★★ | "Now we got to go find it again." (cliff, 1 s black) |
+| 44 | 12:58–13:06 | 97–98 | ★ | Aluminaut sees nothing; a false lead |
+| 45 | 13:15 | 100 | ★★ | The board: "mud all over the face of everyone" |
+| 46 | 13:36 | 102 | ★★★ | RE-FOUND, 250 ft deeper |
+| 47 | 14:03 | 105 | ★ | Line one, line two: dragged deeper still |
+| 48 | 14:17 | 107 | ★★★ | "We're fouled." |
+| 49 | 14:24 | 109 | ★ | The robot team's head faints |
+| 50 | 14:43 | 111 | ★★ | The trapped robot is the third line |
+| 51 | 14:55 | 113 | ★★ | Two small boats: Moody's payoff |
+| 52 | 15:18 | 117 | ★★★ | "An American deck. Nobody else's." "Weapon on deck with parachute." DAY 80 (1 s hold) |
+| 53 | 15:32 | 120 | ★★ | The scroll credits the fisherman |
+| 54 | 15:42–15:51 | 121–122 | ★★ | The math later finds the *Scorpion* |
+| 55 | 15:55 | 123 | ★★ | Not all of that dust got on a ship (cliff) |
+| 56 | 16:09 | 125 | ★★ | "Higher than first estimated"; the fence goes up |
+| 57 | 16:18 | 126 | ★★ | The trenches found by radar |
+| 58 | 16:29 | 127 | ★ | About a pound of plutonium under the fence |
+| 59 | 16:49 | 129 | ★★★ | €75 a square meter vs sixty-eight cents |
+| 60 | 16:59–17:13 | 130–131 | ★★ | Two in three samples thrown out; "bow your head" |
+| 61 | 17:22–17:35 | 132–133 | ★★ | Skaar: "I helped make them"; denied at 89 |
+| 62 | 17:50 | 134 | ★ | Lettuces by the fence; no sign says why |
+| 63 | 17:56–18:14 | 135–137 | ★★★ | "Clean it up" → "Palomares was never a nuclear accident" |
+| 64 | 18:21 | 138 | ★ | "No judge has ruled." |
+| 65 | 18:27 | 139 | ★★ | 1,600 homes beside the swim beach |
+| 66 | 18:34 | 140 | ★★★ | "The rest of it never left." |
 
-Plus L132 (a pound of plutonium, number drop), L133 (no agreement) and L142 (1,600 homes, ★★) as setup beats in Ch.6. **Totals:** 60 peaks, about one every 19 s; 15 major (★★★). Longest gaps: 10:22 → 11:12 (50 s, the rig build, carried by the time card and the isolation beat; the old 70 s no-turn stretch now has the small-boat refusal at 11:24); 3:17 → 4:13 (56 s across the card into the Simó scene, judged acceptable by retention); 16:46 → 17:16 (30 s). No other gap exceeds 40 s.
+**Totals:** 66 peaks, about one every 17 s; 14 major (★★★), and the longest stretch between ★★★ peaks is about 1:45 (3:21 → 5:06, carried by four ★★ beats: the sighting, "What other flyer?", "What bomb?" and "Did the Navy ignore him?"). Longest gaps between any peaks: 2:03 → 2:45 (42 s: the wing in the tomato field, bomb one and bomb two, each a discovery beat with an image); 10:26 → 11:03 (37 s, the rig build, carried by the date card and "for one day only"); 0:46 → 1:13 (27 s across the Ch.1 card). No other gap exceeds 30 s.
 
-## 5. Open-loop ledger
+## 5. Open-loop ledger (revision 8 numbers; revision-7 times)
 
-**Question loops** (at most 4 open at once: L1–L3 run the whole video, plus one chapter loop).
+**Question loops** (at most 4 open at once: Q1–Q3 run the whole video, plus one chapter loop).
 
 | ID | Opened | Question (viewer's words) | Closed | Payoff |
 |---|---|---|---|---|
-| L1 | 0:19 L4 | Do they ever get bomb #4 back? | 15:39 L121 | "Weapon on deck with parachute", DAY 80 (false close 9:07, reopened 11:56, flicker 13:42) |
-| L2 | 0:37 L8 | How do you lose a bomb you already have on a line? | 11:56–12:33 L91–97 | Frayed stump; the captain's power cut among the suspects; "Nobody ever figured it out for sure" |
-| L3 | 0:39 L9 / L10 | Why is there still plutonium behind that fence? | 16:22–18:56 L128–143 | Trenches, a pound under the fence, no deal, Spain's U-turn, the sting |
-| L4 | 4:07 L34 | What did the fisherman really see? | 5:30 L42 | The dead man was bomb four |
-| L7 | 6:40 L51 | Where did the furrow go? | 8:34 L64 → 9:01 L69 | Re-found after twelve days; McCamis backs down it to the bomb |
-| L8 | 11:24 L87 | Will refusing the small boats matter? | 12:33 L97 → 15:16 L118 | The captain cut power and the ship drifted; on 7 April two small boats hold the ship |
+| Q1 | 0:18 L4 | Do they ever get bomb #4 back? | 15:18 L117 | "Weapon on deck with parachute", DAY 80 (false close 8:54 L65, reopened 11:59 L87, flicker 13:36 L102) |
+| Q2 | 0:37 L8 | How do you lose a bomb you already have on a line? | 11:44–12:19 L85–91 | Re-armed at 9:42 L70 ("three minutes"); the three-minute hang, the frayed stump, drift / rock / anchor, "Nobody ever figured it out for sure" |
+| Q3 | 0:39 L9–10 | Why is there still plutonium behind that fence? | 16:04–18:34 L124–140 | Re-armed at 15:55 L123; the fence, the trenches, a pound under the fence, no deal, the state's U-turn, the sting |
+| Q4 | 3:46 L32 → 4:04 L34 | What did the fisherman really see? | 5:06 L40 | The dead man was bomb four |
+| Q5 | 6:31 L49 | Will they find the furrow before the search is called off? | 8:38–8:54 L63–65 | "One more day" (61), McCamis back on the furrow, FOUND |
+| Q6 | 11:14 L81 | Will refusing the small boats matter? | 12:19 L91 → 14:55 L113 | The ship drifted (one candidate); on 7 April two small boats hold Petrel |
+| Q7 | 14:24 L109 | Will Guest cut Curve loose? | 14:43 L111 | Mooney's argument: the trapped robot is the third line |
+| Q8 | 17:56 L135 | Will anyone clean it up? | 18:06–18:21 L136–138 | The state says it was "never a nuclear accident"; "No judge has ruled" (left open on purpose into 140) |
 
 **Plants and callbacks**
 
-| ID | Planted | Paid off |
+| Plant | Planted | Paid off |
 |---|---|---|
-| L5 "Remember that calculator" | 6:15 L49 (Craven and Richardson L48) | 9:45 L76 ("hadn't found it") → 16:09 L126 (*Scorpion*) |
-| L6 Trenches with no record | 8:25 L62–63 | 16:22 L128 (callback) → 16:46 L131 (2007 radar) |
-| "I have your bomb" | 5:40 L44–45 (concrete block) | 9:07 L71 ("That's it!" — the real one) |
-| "The dead man in the parachute" | Ch.2 card, 3:33 | 9:19 L73 ("Fifty-seven days after the dead man in the parachute") |
-| Victor Skaar | 8:08 L59 ("Keep an eye on that name") | 18:12 L139 ("didn't settle his own claims"; "I helped make them"; 89) |
-| Brad Mooney | 8:39 L65 (pushes back) | 14:43 L115 ("the officer who'd begged for one more day") |
-| Guest's "moonless night" | 5:04 L40 | 11:45 L89 (almost no moon) → 15:16 L118 (nearly full moon, "this time") |
-| Simó | 3:33 L30 | 5:40 L44 (the block) → 8:52 L67 / 9:19 L73 (the find) → 15:51 L124 (Paco el de la Bomba) |
-| Swim beach | 7:14–7:40 L53–57 | 18:44 L142 (1,600 homes) |
-| Kuralt "mislay" / "someone else will" | 10:29 L81 | 12:44 L98; the "someone else" stakes run under the nine days (L102–105) |
-| "Recovered today" draft | 10:22 L80 | fades at 11:56 (visual only) |
-| Tomatoes | 2:28 L21 | 7:48 L58 (fed to the troops) → 18:30 L140 (lettuces) |
-| Parachute thread | 3:25 L28 (tail cover) | L32, L42, L70, L75, L83, L107, L110, L113, L120–121 ("with parachute") |
-| Red dashed Outline | 0:19 | fills 9:07 → empties 11:56 → flickers 13:42 → fills 15:39 |
-| DAY counter | 0:39 (22,192) | 0 → 80 through the hunt; ticks 67…74 in the nine days; resumes at 16:22; 22,192 at 18:50 |
+| "Remember that calculator" | 6:04 L47 (Craven and Richardson L46) | 9:35 L69 ("hadn't found it") → 15:42–15:51 L121–122 (*Scorpion*, "Just not this bomb") |
+| Trenches with no record | 7:52 L58 | 16:18 L126 (2007 radar) |
+| "I have your bomb" | 5:24 L42–43 (concrete block) | 8:54 L65 (the real one) |
+| "The dead man in the parachute" | Ch.2 card, 3:27 | 9:14 L67 ("close to where he saw the dead man fall") |
+| Victor Skaar | 7:30 L56 ("Keep an eye on that name") | 17:22–17:35 L132–133 ("I helped make them"; denied at 89) |
+| Brad Mooney | 8:19 L60 (pushes back) | 14:31 L110 ("the lieutenant who'd won that one more day") |
+| Marvin McCamis | 6:18 L48 (furrow quote, from the surface) | 8:38 L63 (at the controls) → 8:54 L65 → 11:03 L79 (ordered up) → 12:44 L95 → 12:51 L96 → 13:27 L101 (the clod) |
+| Red Moody | 8:10 L59 (flies home) | 9:55 L71 → 11:14 L81 → 12:15 L90 → 14:55 L113 |
+| Guest's "moonless night" | 4:47 L38 | 11:32 L83 → 14:51 L112 (nearly full moon) |
+| Simó | 3:29 L30 | 5:24 L42 (the block) → 8:32 L62 / 9:14 L67 (the find) → 15:32 L120 (the scroll) |
+| Lotsman / "someone else will" | 5:42 L45 | 10:17 L74 (Kuralt) → 15:18 L117 ("An American deck. Nobody else's.", 1 s hold, Lotsman silhouette or Kuralt card; no Soviet wording) |
+| Kuralt's "mislay" | 10:09 L73 | 12:30 L92 ("Two days later, America did.") |
+| "Three minutes" | 9:42 L70 | 11:44 L85 ("half a mile below Mizar"; where it broke is the 88 reveal) |
+| Swim beach | 6:48–7:12 L51–54 | 18:27 L139 (1,600 homes) |
+| Tomatoes | 2:18 L21 | 7:18 L55 (fed to the troops; an MP: "Breakfast, lunch and dinner.") → 17:50 L134 (lettuces) |
+| Parachute thread | 3:13 L28 (tail cover) | L29, L32, L40, L65, L77, L102, L108, L111, L116–117 ("with parachute") |
+| Red dashed outline | 0:18 | fills 8:54 → empties 11:44 → flickers 13:36 → fills 15:18 |
+| DAY counter | 0:39 (22,192) | 0 → 80 through the hunt; 22,192 again at 18:34 |
 
 ## 6. Re-hook ledger (every ≤40 s; group and interrupt never repeat back to back)
 
@@ -652,3 +699,35 @@ Line numbers in quotes are revision-4 numbers; the revision-5 line is given afte
 - **Retention, L21 cut "One rescue boat rams the dock":** not needed after the other cuts. The ear critic's version (20) makes the boat Rooney's and sets up "Boat wreck."
 - **Our own runtime cuts (no critic asked):** old L16 "That's the official finding. Two survivors always insisted something exploded in the bomber's tail first." (a side mystery never paid off; now a caption over the fireball); "Some officers believed him. Some didn't." (37; 38's "Did the Navy ignore him?" carries the doubt).
 
+## Rejected notes (critic round 5)
+
+Line numbers are revision-7 numbers.
+
+- **Ear, L7 "They get a line on it" → "They hook it.":** rejected. L7 is inside the locked hook (packaging.md), and the line is meant both ways: a lead and, literally, the lift line that parts at 85. The 7 visual already shows the line dropping and taking strain.
+- **Facts, L65 cut "Silt hanging in the lights" as unsourced:** the detail is sourced (RESEARCH §11: bottom "gray and featureless", "silt clouds hanging 15–20 min", S40), so it was not a facts problem. It was cut anyway for runtime and stays in the 65 shot (silt in the lamp).
+- **Facts and ear, L48 keep "With the pilot Val Wilson aboard" and add McCamis:** written that way, then trimmed: naming both pilots in one line cost 7 words and two names, and Wilson is never heard again. Wilson goes on the 48 caption ("Dive 119: Rainnie, Wilson"); the VO names only the man who said the line and places him "watching from the surface", which is what the facts critic asked for.
+- **Ear, L65 "McCamis: 'That's it! That's it!'":** changed to "Both pilots shout" because §5c says "both men shouted" (McCamis and Wilson). Crediting McCamis alone would narrow the source.
+- **Ear, L91 "Maybe Mizar's captain eased off the power":** rejected. §6.10 says the captain "had cut power" and the ship "had drifted"; "eased off" softens a sourced fact, and "Maybe" would turn the drift itself into a guess. The drift stays as fact and the cause as an open question ("Was that it?").
+- **Ear, L20 "Rooney thought:":** written as "Rooney does the math:". RESEARCH §12 has the line as Rooney's own spoken account ("I'm saying to myself…"), so "thought" is fine, but "does the math" sets up the three-count and the retention critic's wording keeps it on Rooney.
+- **Retention, L20 drop "and the driver keeps turning round to look at him":** kept in short form ("the driver keeps looking back at him"). Without it, "three strikes" has no reason: Rooney fears a car wreck because the driver isn't watching the road (§12).
+- **Climax, L20 drop "Fishermen pull three survivors from the sea":** used, but the boat still has to be set up, so 20a reads "A fishing boat picks up the co-pilot, Mike Rooney. \| In port, it rams the dock."
+- **Retention, L127 "by the official estimate" to a caption:** used (caption "official estimate" on the 127 chart). The figure is still official; only the spoken hedge moved.
+- **Retention, L99 drop "Day after day.":** used as "Days of nothing." so the nine days still read as a stretch of time, not one empty search.
+- **Retention, L63 "Alvin's other pilot, Marvin McCamis, takes the controls" / ear "Flying today:":** moot. McCamis is now introduced at 48, so 63 reads "Today, McCamis takes the controls."
+- **Retention, L120 move the scroll:** no change needed (the order already has it after 119); the medallion shot is kept quick in VISUALS.
+- **Retention, L128 "It wasn't binding, as reported.":** used, with the hedge first ("As reported, it wasn't binding."), so it cannot be heard as our own legal finding (round-4 note).
+- **Our own runtime cuts (no critic asked):** "To one man, it looked like 'a big white toilet'" (44, now a caption; it was also a loosely attributed quote under the ear rule), "in his pickup" (18), "lobbying" (101), "the hunt was dying" (59; the line still shows it through Duke and Moody), "as if on something sharp" (89; 91's "A sharp rock?" carries it). These pay for the eleven new pauses.
+
+## Rejected notes (critic round 6)
+
+Line numbers are revision-8 numbers. No edit was rejected outright: none conflicted with RESEARCH.md and none weakened the story. Where a suggested wording was changed, the reason is below.
+
+- **Ear/retention, L55 "One MP remembered:" / "One military policeman:":** used the ear wording ("One military policeman:") with a pause before the quote. "MP" alone can be heard as "Member of Parliament" in a Spain story; Hugart's name goes on the caption, not the VO, to save words.
+- **Retention, L48 "The tiny submarine, Alvin, catches a furrow":** used as written; "room for three" is on the 48 caption so 68's "Three men sit in the dark" still has its set-up on screen.
+- **Facts, L37 "a parachute partly filled with air bubbles" vs "Maybe fish. Maybe a parachute holding air.":** written as "Fish, maybe. Or a parachute, partly filled with air bubbles.", keeping the source's words without the "The report:" quote frame. The DOC card keeps the full "partially filled" wording.
+- **Ear, L91 "The anchor's edge?":** not used. §6.10 says "fouled on the anchor flukes", not an edge; "A snag on the anchor?" says the same without the jargon word "flukes".
+- **Ear, L75 own the simile vs caption credit:** owned in VO ("shaped like a giant shuttlecock"), since it describes shape, not a claim; the 75 shot keeps "shuttlecock" as a label.
+- **Ear, L125 test "Around 2000" in ElevenLabs:** not left to a test; written "Around the year 2000" (+2 words) so the quantity reading cannot happen.
+- **Climax, Ch.2 tense (past or present):** went present for 39–40 and 46–47, since 36, 41–45 and 48 are already present; 38 ("took in… later compared") and 47's "Palomares was one of the first big searches" stay past because they are the narrator looking back.
+- **Climax, L117 "Nobody else's" (optional):** used; it costs 2 words, and the runtime stays at about 18:42. It pays 74 without implying a live Soviet race (no Lotsman wording in VO; the silhouette stays a visual).
+- **Retention, keep the L120–122 coda:** kept, as the critic advised; handled in the edit (VISUALS 120 under about 6 s, hard cut 122 → 123).

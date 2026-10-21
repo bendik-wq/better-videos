@@ -1,6 +1,6 @@
 # VISUALS: America Lost the Same H-Bomb Twice (episode 9)
 
-One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). This is the brief for `shot-design`, which picks camera, lens, transitions and timing. Set names refer to `SETS-3d.md` (`sky`, `bomb`, `village`, `sea`, `grid`, `alvin`, `trawler`) and `SETS-graphics.md` (`title`, `chapter`, `quote`, `bignumber`, `counter`, `timeline`, `depth`, `map`, `doc`, `photo`).
+One visual idea per numbered line of `SCRIPT.md` (revision 8, lines 1–140: 20 and 35 split into a/b, 44 and 94 retired; all other numbers unchanged). This is the brief for `shot-design`, which picks camera, lens, transitions and timing. Set names refer to `SETS-3d.md` (`sky`, `bomb`, `village`, `sea`, `grid`, `alvin`, `trawler`) and `SETS-graphics.md` (`title`, `chapter`, `quote`, `bignumber`, `counter`, `timeline`, `depth`, `map`, `doc`, `photo`).
 
 **Toolkit tags:** **3D** = diorama on the painted sky-blue backdrop (white models, glossy mannequins, no likenesses) · **SEA** = vertical sea cutaway · **MAP** · **DOC** = recreated document (always labelled RECREATED) · **CTR** = split-flap counter · **CHART** · **QUOTE** = quote card · **MANN** = mannequin vignette.
 
@@ -24,7 +24,7 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 | H2 | **Four fall, three land** | 3, 21–27 | `village` impacts → dust: a tabletop Palomares with riverbed, cemetery, houses and tomato rows. Bomb 1 lies intact, craters 2 and 3 puff, then a translucent red-orange tint settles on the fields |
 | H3 | **Simó's sighting** | 5, 30–33 | `trawler` sighting: shrimp boat with nets astern, two chutes, the big one splashing and vanishing. Then `pointing`: the mannequin points at flat water, with the mountain and chimney lined up on shore |
 | H4 | **The probability grid** | 6, 46–47 | `grid`: Spanish coast relief, the sea cut into squares that rise cell by cell in heat colours. Fisherman's pin. The red X arrives late (69). Values are labelled illustrative |
-| H5 | **The find, 15 March** | 63–68 | `sea` found + `alvin` hero: white Alvin backing down a 70° slope, its lamp sweeping grey silt, then the parachute and a fin. Lights off, three tiny pilot mannequins in the dark, and one cigarette ember |
+| H5 | **The find, 15 March** | 48 (Alvin intro), 63–68 | `sea` found + `alvin` hero: white Alvin backing down a 70° slope, its lamp sweeping grey silt, then the parachute and a fin. Lights off, three tiny pilot mannequins in the dark, and one cigarette ember |
 | H6 | **The ambassador's swim** | 51–54 | New mini-diorama: a sunny Mediterranean beach, a mannequin in a blue bathrobe, bathing cap and loafers, press mannequins with cameras on the sand. Second beat: the same beach, with the tinted fields behind the dunes |
 | H7 | **24 March: lost again** | 76–88 | `sea` lift → snap, night variant: Mizar's deck lights on a black sea, the moonless sky, the line down to POODL blinking its strobe, the anchor, the grapnel in the risers. Three minutes of hang, then a frayed burst; the bomb drops, slides and tumbles downslope in a sand plume. **The centrepiece of the video** |
 | H8 | **CURV fouled** | 103–111 | `sea` curv: the black-tanked robot with its "python" cable splice flies into the billowing canopy and is swallowed. The tangle becomes the third line |
@@ -57,7 +57,8 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 17. **MANN** a mannequin still strapped to a white ejection seat, falling. He tears the chute out by hand and it blooms just above the hills.
 18. **MANN** villager mannequins around a pickup truck on a dirt road. A tiny red cross marks the clinic in Vera on an inset **MAP**.
 19. **CTR** split-flap: DEAD 7 · ALIVE 4. Under it, a two-plane diagram: tanker 4/4, bomber 3/7.
-20. **MANN** three-panel strip: a fishing boat ramming a white dock, a little bread van, the driver turning round. Labels tick on: PLANE ✗ · BOAT ✗ · TRUCK ?
+20a. **MANN** a fishing boat hauls a co-pilot mannequin aboard, then rams a white dock in port. Name tag ROONEY. Labels tick on: PLANE ✗ · BOAT ✗
+20b. **MANN** a little bread van on a dirt road, the driver turned round to look at the passenger. The third label ticks on: TRUCK ? Credit pill "as told to Barbara Moran".
 21. **3D** `village`: a burning wing in tomato rows, with silver chaff strands hanging like tinsel in white trees.
 22. **3D** `village` impacts: bomb 1 lies in the dry riverbed under its chute. A Guardia Civil mannequin points. Spanish caption with the translation.
 23. **3D** `village`: push to the crater behind the cemetery wall, scale bar 20 FT. Then bomb 3 lies beside white houses.
@@ -77,7 +78,8 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 32. ★H3 **3D** `trawler` sighting: the big chute with a still, dark shape hits the water hard. Rings, then nothing.
 33. **3D** POV from the deck: a mountain lined up behind an old chimney on the shore, with a thin red alignment line drawn between them.
 34. **MANN** an office: the fisherman mannequin and an Air Force lawyer mannequin across a desk. The **QUOTE** "What other flyer?" lands.
-35. **QUOTE** three stacked cards labelled REPORTER / USAF / USAF, each line typing in. A deadpan beat on the last one.
+35a. **QUOTE** two stacked cards, REPORTER (paraphrase, no quote marks) then USAF: "What bomb?"
+35b. **QUOTE** card change: REPORTER (paraphrase) then USAF: "There is no sign of the thing that is not the bomb." A deadpan hold on the last card.
 36. **SEA** `sea` search: a minesweeper steered by eye, sonar rings spreading, two faint echoes at about 2,000 ft. Caption DAY 5.
 37. **DOC** a recreated sonar report line, "fish, or a parachute partially filled with air bubbles", with a red underline.
 38. **MAP** `map` coast: Guest's first search wedge drawn on, with Simó's point inside it (green tick). Then Guest's "moonless night" **QUOTE**.
@@ -86,11 +88,11 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 41. **SEA** the shrimp boat inside a red restricted-zone boundary, its net drawn taut over something huge.
 42. **3D** a radio handset on the boat, with a speech card: "paraphrase, Barbara Moran", no quote marks.
 43. **SEA** the net comes up: a big grey concrete block with a buoy line. Label "4,000 LB". A comic hold.
-44. ★H5 **3D** `alvin` hero: the white 1966 Alvin turns slowly on the sky backdrop. Size bar 22 FT, a three-seat sphere ghosted inside. "big white toilet" **QUOTE** tag.
+44. *Retired in revision 8 (VO cut). The Alvin hero turntable, size bar 22 FT, three-seat sphere and "a big white toilet" caption move to the head of 48.*
 45. **MAP** `map` coast: a red Soviet ship icon parks at the zone edge. A red 25 YD gap closes to a warship. CTR DAY 31.
 46. ★H4 **3D** `grid`: cells rising row by row. Inset of a mechanical desk calculator with a CTR clock, 11 PM–3 AM.
 47. **QUOTE** "Where the hell did you get this high school kid?" Then the calculator with a red ring: "Remember that calculator".
-48. **SEA** `sea` search: Alvin's lamp crosses a long furrow on the slope. **DOC**-style photo frame: "like a barrel had been dragged". CTR DAY 43.
+48. ★H5 **3D** `alvin` hero, short (about 2 s): the white 1966 Alvin turns on the sky backdrop on "The tiny submarine, Alvin". Size bar 22 FT · ROOM FOR 3, a three-seat sphere ghosted inside; small caption "a big white toilet", as told to Barbara Moran. Then **SEA** `sea` search: Alvin's lamp crosses a long furrow on the slope (caption "Dive 119: Rainnie, Wilson"). Then a surface-control inset with a McCamis mannequin at a headset and a **QUOTE** tag "like a barrel had been dragged over the bottom", credited "Marvin McCamis (surface control), as told to Barbara Moran". No DOC frame. CTR DAY 43.
 49. **SEA** the furrow fades into grey silt and Alvin turns away. A **CTR** in the corner starts counting down.
 
 ## 3. ONE MORE DAY
@@ -102,18 +104,18 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 52. ★H6 **3D** beach diorama: the ambassador mannequin in a blue bathrobe, cap and loafers, press mannequins on the sand. "I love it!" **QUOTE** pops. CTR DAY 50.
 53. ★H6 **3D** the same mannequin swimming at a second beach, labelled PALOMARES · AFTERNOON. **MAP** inset with two pins.
 54. ★H6 **3D** pull back from the bather: behind the dunes, the fields still carry the red tint.
-55. **MANN** soldier mannequins with legs dangling into a crater, eating lunches. A tomato crate in the foreground. "NYT reported (2016)" tag.
+55. **MANN** soldier mannequins with legs dangling into a crater, eating lunches. A tomato crate in the foreground. On "One military policeman:" a name tag "Wayne Hugart, MP" and the **QUOTE** "Breakfast, lunch and dinner." "NYT reported (2016)" tag.
 56. **MANN** one mannequin holding a meter, name tag SKAAR. A red ring on him: "Keep an eye on that name".
-57. **CHART** a radiation-meter dial: the "clean" needle line slides from 7,000 to 60,000 cpm, with a red ×8.6 tag.
+57. **CHART** a radiation-meter dial: the "must go" cutoff slides from 7,000 to 60,000 cpm, with a red ×8.6 tag.
 58. **3D** `village` cleanup: barrels lined up for shipping, a plough turning soil. Then a trench outline drawn in a dashed line with a "?" on it.
 59. **SEA** the fleet thins out on the surface. CTR DAY 56. A small plane icon labelled MOODY flies off frame.
 60. **CHART** `grid` with a pill: "98% SEARCHED". Lieutenant and admiral mannequins face off across a chart table.
 61. **QUOTE** "All right, goddamn it. One more day, and that's all." The CTR flips to DAY 57.
 62. **3D** the fisherman mannequin on a white minesweeper deck, holding his nets out to the Navy.
-63. ★H5 **SEA** `sea` found: Alvin dives. Pilot mannequins in the viewports. A small birthday-candle icon on the pilot card for McCamis.
+63. ★H5 **SEA** `sea` found: Alvin dives. Pilot mannequins in the viewports (McCamis at the controls, Wilson beside him). A small birthday-candle icon on the pilot card for McCamis.
 64. ★H5 **SEA** Alvin backing down the 70° slope, stern first, the furrow framed in its front window. Depth chip "HALF A MILE".
-65. ★H5 **SEA** `sea` found: grey silt in the lamp, then the off-white chute, then a fin. The red loop lands. "That's it!" card.
-66. **DOC** `alvinlog` / a note card: "ALVIN reports INSTRUMENT PANEL." **MANN** an admiral standing up from a lunch table.
+65. ★H5 **SEA** `sea` found: grey silt in the lamp, then the off-white chute, then a fin. The red loop lands. "That's it!" card, credited to both pilots (McCamis, Wilson).
+66. **DOC** `alvinlog` / a note card: "ALVIN reports INSTRUMENT PANEL." (caps on the card only; the VO reads it in normal case). **MANN** an admiral standing up from a lunch table.
 67. **MAP** `map` coast: Simó's point and the find site X close together. Caption "close to where he saw it fall".
 68. ★H5 **SEA** Alvin wedged in a crevice with its lights off, near-black, one orange ember glowing in the viewport. CTR 8 H.
 69. ★H4 **3D** `grid`: the red X lands, not on the hottest cell. Three icons light up: landmarks, furrow, crew.
@@ -137,34 +139,34 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 82. ★H7 **3D** Mizar at sunset, the winch turning, mannequins watching the line, one head bowed. RECONSTRUCTION tag.
 83. ★H7 **3D** the sky goes fully dark and moonless. The "moonless night" **QUOTE** echoes.
 84. ★H7 **SEA** `sea` snap: POODL rises, the anchor clears, the bomb lifts off the seabed. CTR clock about 9 PM.
-85. ★H7 **SEA** the bomb hangs while a CTR counts 3 minutes. Instruments jump, the frayed burst, the line goes slack. Silent beat.
+85. ★H7 **SEA** the bomb hangs half a mile below Mizar's hull while a CTR counts 3 minutes. Instruments jump; the nylon line above goes slack. Keep the frame on the slack line and the bomb dropping out of the light: do NOT show where it parted (the stump is the 88 reveal). Silent beat.
 86. **MANN** two mannequins at the rail staring down a slack line. Moran credit pill.
 87. ★H7 **SEA** the bomb tumbles and slides downslope in a sand plume and vanishes into black. Red text: LOST AGAIN.
 88. **3D** the anchor hauled up on Mizar's deck under work lights, the line below it ending in a frayed stump.
 89. **3D** a macro of the frayed stump: three-quarters of the strands cleanly cut (marked red), the rest split.
 90. **MANN** a diver mannequin alone on deck, head down.
-91. **CHART** a three-suspect board: SHIP DRIFT · ROCK · ANCHOR, each with "?". The stamp reads "NEVER DETERMINED".
+91. **CHART** a three-suspect board: SHIP DRIFT · ROCK · ANCHOR SNAG, each with "?". The stamp reads "NEVER DETERMINED".
 92. **CTR** 22 MAR (Kuralt) → 24 MAR. The "mislay" card cracks.
-93. **MAP** `map` world: a ship route from Spain to South Carolina, with barrels stacked on deck.
-94. **CHART** a pile of 4,800 barrels, "1,400 TONS", beside one empty red dashed bomb outline.
-95. **MANN** a mess-table dinner, one mannequin slumped over his plate. Moran credit pill. Chapter cliffhanger.
+93. **MAP** `map` world: a ship route from Spain to South Carolina, with barrels stacked on deck. End on a silent chart (the old 94 graphic): a pile of 4,800 barrels, "1,400 TONS", beside one empty red dashed bomb outline.
+94. *(retired in revision 7: the VO line is cut and its chart folds into 93.)*
+95. **MANN** a mess-table dinner, one mannequin slumped over his plate. Moran credit pill. Chapter cliffhanger: hold 1 s of black after the line, before the Ch.5 card, so the chapter doesn't end on the laugh.
 
 ## 5. THE THIRD LINE
 
 `chapter` 5, state `lost-again`.
 
-96. **SEA** Alvin's lamp on the old site next morning: the seabed churned up, "torn up by bulldozers".
+96. **SEA** Alvin's lamp on the old site next morning: the seabed churned up. **QUOTE** tag "torn up by bulldozers", credited McCamis, as told to Barbara Moran.
 97. **SEA** a red-orange Aluminaut passes the old spot again and again. A 100 FT ring, nothing inside it.
 98. **SEA** an uphill track lights up, then a red ✗ "FALSE LEAD".
 99. **CTR** days flipping: 25 MAR … 1 APR. The "much anxiety" **DOC** line from the DNA summary report.
-100. **MANN** a Washington board table. The "mud all over the face" **QUOTE**.
+100. **MANN** a board table (no city label; RESEARCH does not place it). The "mud all over the face" **QUOTE**.
 101. ★H5 **SEA** `sea` refind: Alvin heads downhill and its lamp finds an out-of-place clod. CTR DAY 75.
 102. **SEA** `depth`: the chute "tightly wrapped", a ghost pill at the old spot, and a red arrow 120 YD · +250 FT.
-103. ★H8 **3D** a CURV hero: black-tanked frame, its cable with a fat taped splice. "python swallowed a dog" **QUOTE**.
+103. ★H8 **3D** a CURV hero: black-tanked frame, its cable with a fat taped splice. "python swallowed a dog" **QUOTE**, credited Larry Brady (CURV pilot), as told to Barbara Moran.
 104. **MANN** an engineer and an admiral at a chart. Three line icons, two of them greyed. "I can't help that."
-105. **SEA** the line drags the bomb deeper, depth chip rolling to about 2,850 FT.
-106. **SEA** CURV descends in the dark. CTR DAY 80 · 1:00 AM.
-107. **QUOTE** "We're fouled." Black card, no day caption.
+105. **SEA** two beats: a LINE 1 tag on the buoyed line, then LINE 2 (caption "5 Apr, just before midnight"); each time the bomb slides deeper, depth chip rolling to about 2,850 FT. A small tally 1 · 2 · ▢ so the third slot stays visibly empty into 106.
+106. **SEA** CURV descends in the dark. CTR 1:00 AM, caption "CURV dives, ~01:00, 7 Apr, per Moran" (no DAY 80 counter here: the VO saves "eighty" for 118). The tally fills its third slot as a dashed outline.
+107. **QUOTE** "We're fouled." (Brady). Black card, no day caption.
 108. ★H8 **SEA** `sea` curv: CURV swallowed by the billowing canopy, tangled with the bomb.
 109. **MANN** a wardroom: an admiral pointing at a cable cutter, and a mannequin fainting backwards.
 110. **MANN** an empty wardroom, two mannequins only. The Mooney **QUOTE** card.
@@ -173,13 +175,13 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 113. ★H9 **3D** two small boats bow and stern holding Petrel steady. A callback inset: Mizar's empty sides (81).
 114. **QUOTE** "I'd prefer combat any day to this."
 115. ★H9 **SEA** `sea` raise: the bundle lifts so smoothly that the dust barely stirs.
-116. ★H9 **3D** the chute breaking the surface. Diver mannequins cut CURV free.
-117. ★H9 **3D** the bomb swung onto Petrel's deck in low morning sun. **DOC** deck-log line: "Weapon on deck with parachute." CTR 8:46 AM.
+116. ★H9 **3D** the chute breaking the surface. Diver mannequins cut CURV free; caption "Divers cut CURV free" (cut from VO).
+117. ★H9 **3D** the bomb swung onto Petrel's deck in low morning sun. **DOC** deck-log line: "Weapon on deck with parachute." CTR 8:46 AM. Hold 1 s after "Nobody else's." and drop a brief Lotsman silhouette on the horizon card (or flash the Kuralt "someone else will" card), so the 74 payoff shows without new VO. No "Soviet" wording.
 118. **CTR** DAY 80, with the caption "80 days after the crash".
 119. **MANN** a quiet deck, no cheering, an admiral mannequin alone. "Thank God" **QUOTE**.
-120. **DOC** a recreated scroll and a medallion on velvet, with "profound knowledge of the sea" underlined.
+120. **DOC** a recreated scroll and a medallion on velvet, with "profound knowledge of the sea" underlined. Keep the shot under about 6 s (retention: the coda after 117 is the likeliest drop point).
 121. **MAP** `map` world: the Atlantic in 1968. Grid cells, with a red X within 200 YD of the hottest cell. "USS SCORPION".
-122. ★H4 **3D** `grid`: the calculator callback, the Scorpion cell glowing, the Palomares cell dark.
+122. ★H4 **3D** `grid`: the calculator callback, the Scorpion cell glowing, the Palomares cell dark. Hard cut straight into 123 with no breath or music tail.
 123. **3D** `village` dust: a ship sails off frame, and the tint is still on the fields.
 
 ## 6. THE REST OF IT
@@ -189,12 +191,12 @@ One visual idea per numbered line of `SCRIPT.md` (revision 6, lines 1–140). Th
 124. ★H10 **3D** `village` fence: a wide shot of the fenced plots today, "about 100 acres" (41 ha). AS OF pill.
 125. **DOC** "higher than first estimated" (CIEMAT). Then fence posts rising around the worst plots.
 126. **3D** a ground-radar cart sweeping a field. Two dashed trench outlines appear under the soil. Caption "2007".
-127. **CHART** 20 Olympic pools of soil stacked beside a 1 LB (≈485 g) plutonium marker.
+127. **CHART** 20 Olympic pools of soil stacked beside a 1 LB (≈485 g) plutonium marker. Caption "official estimate" (moved from VO).
 128. **DOC** `statement2015`: "once and for all" highlighted, then a red "NON-BINDING (as reported)" stamp. AS OF pill.
 129. **CHART** a price drop: €75 per m² → €0.68, the second number in red.
 130. **DOC** `nyt2016`: a bar of 1,500+ samples with two in three greyed out as "thrown out". NYT tag.
 131. **QUOTE** "All you can do is bow your head and say you are sorry." NYT reported (2016).
-132. **CHART** `timeline`: Savannah River workers 2012 vs airmen 2022. A mannequin SKAAR at a courthouse step.
+132. **CHART** `timeline`: Savannah River workers 2012 lights up; on "The airmen who dug up that soil?" an empty marker blinks on the track, then slams to 2022 on the beat (ten-year gap bracket). A mannequin SKAAR at a courthouse step.
 133. **QUOTE** the Skaar records line, then **DOC** a court order "PETITION DENIED", 22 JAN 2026. AS OF pill.
 134. ★H10 **3D** `village` fence: low angle on the lettuces, the fence 5 m behind, and a sign that names no reason.
 135. **QUOTE** two cards: the mayor's line, then the villagers' line (translated, with the source).
