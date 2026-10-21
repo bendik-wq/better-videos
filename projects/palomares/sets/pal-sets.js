@@ -111,15 +111,20 @@ export function b28({ seed = 1, color = '#ffffff', rough = 0.34, metal = 0.25 } 
   return G;
 }
 // the side silhouette of the B28 (incl. two fins), in the group's local xy plane, closed polyline (for the dashed outline)
+// side outline of the B28 as polylines: the body (flat tail plate, straight sides, blunt rounded nose) + the two fins seen edge-out
 function b28Silhouette() {
-  const { L, R } = B28; const e = 0.08; const right = [[2.3 + e, 0], [2.4 + e, 0.4], [4.35 + e, 0.4], [4.35 + e, 4.4], [2.52 + e, 5.1], [2.6 + e, 7.1], [R + e, 7.5], [R + e, 33.0]];
-  const nL = L - 33.0; for (let i = 1; i <= 10; i++) { const a = i / 10 * Math.PI / 2; right.push([(R + e) * Math.cos(a), 33.0 + Math.sin(a) * (nL + e)]); }
+  const { L, R } = B28; const e = 0.1; const nL = L - 33.0;
+  const right = [[2.3 + e, 0], [2.4 + e, 3.5], [2.6 + e, 7.1], [R + e, 7.5], [R + e, 33.0]];
+  for (let i = 1; i <= 12; i++) { const a = i / 12 * Math.PI / 2; right.push([(R + e) * Math.cos(a), 33.0 + Math.sin(a) * (nL + e)]); }
   const left = right.slice(0, -1).reverse().map(([x, y]) => [-x, y]);
-  return [[0, 0], ...right, ...left, [-(2.3 + e), 0], [0, 0]];
+  const body = [[0, 0], ...right, ...left, [0, 0]];
+  const fin = (sg) => [[sg * (2.45 + e), 5.0], [sg * (4.35 + e), 4.4], [sg * (4.35 + e), 0.4], [sg * (2.4 + e), 0.4]];
+  return [body, fin(1), fin(-1)];
 }
 // red dashed outline of the bomb silhouette (capsule dashes). .draw(k) reveals 0..1 of the dashes
 export function dashedOutline(poly, { dash = 3.0, gap = 1.9, r = 0.55, color = RED, emissive = 0.35 } = {}) {
   const G = new THREE.Group(); const m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.3, clearcoat: 0.8, emissive: color, emissiveIntensity: emissive });
+  if (Array.isArray(poly[0][0])) { const parts = poly.map((pl, i) => dashedOutline(pl, { dash: i ? 1.6 : dash, gap: i ? 1.0 : gap, r, color, emissive })); parts.forEach(p => G.add(p)); G.userData = { dashes: [], draw(k) { parts.forEach(p => p.userData.draw(k)); } }; return G; }
   const P = poly.map(([x, y]) => new THREE.Vector3(x, y, 0)); const segs = []; let L = 0;
   for (let i = 1; i < P.length; i++) { const l = P[i].distanceTo(P[i - 1]); segs.push([P[i - 1], P[i], L, l]); L += l; }
   const at = (s) => { for (const [a, b, s0, l] of segs) if (s <= s0 + l) return a.clone().lerp(b, (s - s0) / l); return P.at(-1).clone(); };
@@ -765,7 +770,7 @@ export default function palSets(H) {
       const wcol = night ? [new THREE.Color('#2366b4'), new THREE.Color('#0f2f78'), new THREE.Color('#071a4a')] : [new THREE.Color('#86e0f0'), new THREE.Color('#2f8fd8'), new THREE.Color('#1b47b4')];
       const gradAt = (y) => { const u = clamp01(-y / 31); return u < 0.5 ? wcol[0].clone().lerp(wcol[1], u * 2) : wcol[1].clone().lerp(wcol[2], (u - 0.5) * 2); };
       const gradGeo = (geo, axisY = true) => { const p = geo.attributes.position, c = []; for (let i = 0; i < p.count; i++) { const col = gradAt(p.getY(i)); c.push(col.r, col.g, col.b); } geo.setAttribute('color', new THREE.Float32BufferAttribute(c, 3)); return geo; };
-      const back = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(X1 - X0, 36, 1, 32).translate((X0 + X1) / 2, -18, ZB + 0.02)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(back);
+      const back = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(X1 - X0, 32.5, 1, 32).translate((X0 + X1) / 2, -16.25, ZB + 0.02)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(back);
       const endW = new THREE.Mesh(gradGeo(new THREE.PlaneGeometry(Z0 - ZB, 31, 1, 32).rotateY(Math.PI / 2).translate(X1, -15.5, (Z0 + ZB) / 2)), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })); scene.add(endW);
       { const sh = new THREE.Shape(); sh.moveTo(X0, 0); for (let x = X0; x <= X1 + 1e-6; x += 0.5) sh.lineTo(x, f(x)); sh.lineTo(X1, 0); sh.closePath();
         const fg = gradGeo(new THREE.ShapeGeometry(sh, 1)); const front = new THREE.Mesh(fg, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: ['search', 'lift', 'raise'].includes(mode) ? 0.14 : 0.0, depthWrite: false, fog: false })); front.visible = ['search', 'lift', 'raise'].includes(mode); front.position.z = Z0 + 0.03; front.renderOrder = 6; scene.add(front); }
@@ -819,7 +824,7 @@ export default function palSets(H) {
       const poodl = new THREE.Group(); { const rr = rods(9, steel); poodl.add(rr); for (let k = 0; k < 8; k++) { const a = k / 8 * TAU; rr.set(k, new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(Math.cos(a) * 0.8, 0, Math.sin(a) * 0.8), 0.05); } rr.set(8, new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(0, 2.2, 0), 0.08); rr.done();
         const ring = mk(new THREE.TorusGeometry(0.8, 0.06, 6, 24).rotateX(Math.PI / 2), steel); poodl.add(ring); }
       const strobeM = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 3, 3.2), fog: false }); const strobe = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), strobeM); strobe.position.y = 1.9; poodl.add(strobe);
-      const strobeL = new THREE.PointLight('#dfe9ff', 0, 40, 0); strobe.add(strobeL);
+      const strobeL = new THREE.PointLight('#dfe9ff', 0, 22, 0); strobe.add(strobeL);
       scene.add(poodl); poodl.visible = mode === 'lift' || mode === 'snap';
       const anchor = new THREE.Group(); { const sh = mk(new THREE.CylinderGeometry(0.1, 0.1, 1.6, 8).translate(0, 0.8, 0), steel); anchor.add(sh); for (const s2 of [-1, 1]) { const fl = mk(S.roundBox(0.7, 0.12, 0.35, 0.05), steel); fl.position.set(s2 * 0.35, 0.1, 0); fl.rotation.z = s2 * 0.6; anchor.add(fl); } const rg = mk(new THREE.TorusGeometry(0.2, 0.05, 6, 16), steel); rg.position.y = 1.7; anchor.add(rg); }
       scene.add(anchor); anchor.visible = poodl.visible;
@@ -865,7 +870,7 @@ export default function palSets(H) {
       }[mode];
       // snap: two moves split at the break: a slow push down the line toward the rig, then a follow of the slide
       const snapA = [{ pos: [-4, -14, 48], look: [-7, -14.5, -12], mm: 26 }, { pos: [-11, -19.5, 28], look: [-14, -20.5, -12], mm: 26 }];
-      const snapB = [{ pos: [-11, -19.5, 28], look: [-14, -20.5, -12], mm: 26 }, { pos: [-9, -22, 25], look: [-12, -23.5, -12], mm: 26 }, { pos: [-7, -23.5, 24], look: [-10, -25, -12], mm: 26 }];
+      const snapB = [{ pos: [-11, -19.5, 28], look: [-14, -20.5, -12], mm: 26 }, { pos: [-11, -22.5, 21], look: [-13.5, -24.5, -12], mm: 26 }, { pos: [-10, -24, 16], look: [-12.6, -26.6, -12], mm: 27 }];
       G.st.key.shadow.camera.far = 600; G.st.key.shadow.camera.updateProjectionMatrix();
       G.finish({ ao: { radius: 1.2, intensity: 1.6, falloff: 0.8 }, bloom: { intensity: night ? 0.9 : 0.4, threshold: 1.6, radius: 0.5 } });
       // a moonless night over the snap (RESEARCH G1: ~9% crescent, set or setting by 9:15 pm)
@@ -923,13 +928,13 @@ export default function palSets(H) {
           const conf = surf(bx).add(N2(bx).multiplyScalar(lift + 0.9)).sub(T2(bx).multiplyScalar(B28.L * BK * 0.5 + 1.2));
           const brk = anc.clone().lerp(conf, 0.12);
           if (!snapped) { const sag = (1 - pre) * 1.6 + 0.1; grapLine.setPoints(sagCurve(anc.clone().add(new THREE.Vector3(0, 0.2, 0)), conf, -sag * 0, 24).map((p, i, arr) => { const u2 = i / (arr.length - 1); return p.add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * sag, 0)); }), 0.15); stub.setPoints([], 0.1); }
-          else { const brkFall = brk.clone(); brkFall.y -= Math.min(4, ds * ds * 3); brkFall.x += ds * 0.6;
-            const lower = []; for (let i = 0; i <= 20; i++) { const u2 = i / 20; lower.push(brkFall.clone().lerp(conf, u2).add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * Math.min(2.4, ds * 2), 0))); } grapLine.setPoints(lower, 0.15);
+          else { const brkFall = brk.clone(); brkFall.y -= Math.min(4, ds * ds * 3); brkFall.x += ds * 0.6; brkFall.lerp(surf(bx - 5).add(new THREE.Vector3(0, 0.3, 1.0)), ease(S.range(ds, 0.3, 2.8)));
+            const lower = []; for (let i = 0; i <= 20; i++) { const u2 = i / 20; lower.push(brkFall.clone().lerp(conf, u2).add(new THREE.Vector3(0, -Math.sin(Math.PI * u2) * Math.min(2.4, ds * 2) * (1 - S.range(ds, 1.5, 3)), 0))); } grapLine.setPoints(lower, 0.15);
             const stp = anc.clone().add(new THREE.Vector3(0, 0.2, 0)); stub.setPoints([stp, stp.clone().add(new THREE.Vector3(0.15, -1.2, 0)).add(new THREE.Vector3(Math.sin(ds * 6) * 0.2 * Math.exp(-ds), 0, 0))], 0.1); }
           // frayed burst at the break
           for (let i = 0; i < 28; i++) { if (!snapped || ds > 1.6) { fray.hide(i); continue; } const k = 1 - Math.exp(-ds * 6); const d0 = frayDirs[i]; const a = brk.clone().add(d0.clone().multiplyScalar(0.15)); const b = brk.clone().add(d0.clone().multiplyScalar(0.4 + k * (1.3 + (i % 4) * 0.4))); b.y -= ds * ds * 0.6; fray.set(i, a, b, 0.035 * (1 - ds / 1.6) + 0.005); } fray.done();
           // strobe on POODL (the only light at the bottom that night)
-          const blink = ((t * 1.2) % 1) < 0.08; strobeM.color.setScalar(blink ? 4 : 0.5); strobeL.intensity = mode === 'snap' ? (blink ? 14 : 1.2) : 0;
+          const blink = ((t * 1.2) % 1) < 0.08; strobeM.color.setScalar(blink ? 4 : 0.5); strobeL.intensity = mode === 'snap' ? (blink ? 5 : 0.9) : 0;
           // sand plume as it slides
           for (let i = 0; i < NS; i++) { const sp = sandP[i]; const tt = snapped ? ds - 0.35 - sp.u * 3.2 : -1; if (tt < 0) { S.place(sand, i, [0, -500, 0], [0, 0, 0], 0.0001); continue; }
             const x = S.lerp(xF - 0.8, xR, ease(clamp01(sp.u * 1.05))); const p0 = surf(x).add(new THREE.Vector3(Math.cos(sp.a) * 0.8, 0.3, Math.sin(sp.a) * 1.6));
