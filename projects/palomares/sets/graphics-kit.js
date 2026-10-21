@@ -77,6 +77,9 @@ export function canvasSet(Hh, ctx, shot, paint, cam = {}) {
     scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(), layer, canvas: cv, k,
     async update(t, p) {
       k.t = t; setS(S); g.setTransform(S, 0, 0, S, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none'; noShadow(g); g.letterSpacing = '0px'; g.setLineDash([]);
+      // an opaque base every frame: the paper is drawn with a slow push and soft alphas, so without this the previous
+      // shot's pixels (split-flap tile outlines, cards) ghost through the comp
+      g.fillStyle = P.paper ?? '#f7f6f1'; g.fillRect(0, 0, 1920, 1080);
       await paint(g, t, p ?? t / D, k);
     },
     dispose() { layer?.remove?.(); },
@@ -87,12 +90,14 @@ export function canvasSet(Hh, ctx, shot, paint, cam = {}) {
 const grainCache = new WeakMap(); let GRAIN = null;
 function grainTile() {
   if (GRAIN) return GRAIN; GRAIN = mk(256, 256); const x = GRAIN.getContext('2d'), im = x.createImageData(256, 256), r = rng(17);
-  for (let i = 0; i < im.data.length; i += 4) { const v = 238 + r() * 17; im.data[i] = v - 1; im.data[i + 1] = v; im.data[i + 2] = v; im.data[i + 3] = 255; }
+  // black speckles with alpha (1 - v/255), drawn source-over: the same result as multiplying by a v-grey tile, without the
+  // multiply composite (its scratch layer ghosted old pixels on the software canvas)
+  for (let i = 0; i < im.data.length; i += 4) { const v = 238 + r() * 17; im.data[i] = 1; im.data[i + 1] = 0; im.data[i + 2] = 0; im.data[i + 3] = Math.round(255 - v); }
   x.putImageData(im, 0, 0); return GRAIN;
 }
 export function grain(g, w = 1920, h = 1080, a = 0.45, x0 = 0, y0 = 0) {
   if (!grainCache.has(g)) grainCache.set(g, g.createPattern(grainTile(), 'repeat'));
-  g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha *= a; g.fillStyle = grainCache.get(g); g.fillRect(x0, y0, w, h); g.restore();
+  g.save(); g.globalAlpha *= a; g.fillStyle = grainCache.get(g); g.fillRect(x0, y0, w, h); g.restore();
 }
 // ledger rules: thin horizontal lines every `step`, optional column rules and a double margin line (teal, never red)
 export function ledgerLines(g, x0, y0, w, h, { step = 54, cols = [], margin = null, color = P.ledger, colColor = P.ledgerCol, alpha = 1 } = {}) {
@@ -124,8 +129,11 @@ export function card(g, x, y, w, h, { r = 22, fill = P.card, lift = 1, S = SS, a
   if (alpha <= 0 || w <= 0 || h <= 0) return;
   g.save(); g.globalAlpha *= alpha;
   // the drop shadow as a filtered shape (canvas shadowBlur leaves a hard edge at the blur's extent on big cards in Chrome)
-  g.save(); g.filter = `blur(${((10 + 22 * lift) * S / 2).toFixed(2)}px)`; g.fillStyle = `rgba(20,35,61,${0.11 + 0.06 * lift})`;
-  rr(g, x + 2 + 4 * lift, y + 5 + 11 * lift, w, h, r); g.fill(); g.restore();
+  // (stacked translucent rounded rects instead of ctx.filter blur: the filter's scratch layer is not cleared on the software
+  // canvas, so a previous shot's clip edges ghosted through big cards)
+  { const b = (10 + 22 * lift) / 2, A = 0.11 + 0.06 * lift, N = 9, sx = x + 2 + 4 * lift, sy = y + 5 + 11 * lift; g.save();
+    for (let i = 0; i < N; i++) { const e = b * (1 - 2 * (i + 0.5) / N); g.fillStyle = `rgba(20,35,61,${(A / N * 1.25).toFixed(4)})`; rr(g, sx - e, sy - e, w + 2 * e, h + 2 * e, Math.max(1, r + e)); g.fill(); }
+    g.restore(); }
   rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill();
   if (grainA) { g.save(); rr(g, x, y, w, h, r); g.clip(); grain(g, w, h, grainA, x, y); g.restore(); }
   if (stroke) { rr(g, x, y, w, h, r); g.strokeStyle = stroke; g.lineWidth = 2; g.stroke(); }
@@ -315,7 +323,8 @@ export function drawSection(g, S, { t = 0, alpha = 1, dark = 0, village = true, 
   const bg = g.createLinearGradient(0, S.Y(-340), 0, yb);
   const k0 = clamp((S.ys - S.Y(-340)) / (yb - S.Y(-340)));
   bg.addColorStop(0, '#f3f4ee'); bg.addColorStop(k0, '#e9ebe2'); bg.addColorStop(Math.min(1, k0 + 0.001), '#ebe6d6'); bg.addColorStop(1, '#d8d1bc');
-  g.save(); g.filter = `blur(${(9 * SS).toFixed(1)}px)`; g.fillStyle = 'rgba(20,35,61,0.10)'; g.translate(3, 7); g.fill(bed); g.restore();
+  // soft shadow by jittered stacked fills (no ctx.filter: its scratch layer ghosts old pixels on the software canvas)
+  g.save(); g.fillStyle = 'rgba(20,35,61,0.016)'; for (let i = 0; i < 8; i++) { const a = i * 0.785, rr2 = 4.5; g.save(); g.translate(3 + Math.cos(a) * rr2, 7 + Math.sin(a) * rr2); g.fill(bed); g.restore(); } g.restore();
   g.fillStyle = bg; g.fill(bed);
   g.save(); g.clip(bed); const gx = Math.max(-300, S.pts[0][0]); grain(g, xr - gx + 200, yb - S.Y(-400), 0.35, gx, S.Y(-400)); g.restore();
   g.save(); g.strokeStyle = P.ink; g.lineWidth = 2.6; g.lineJoin = 'round'; g.beginPath(); line.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); g.restore();

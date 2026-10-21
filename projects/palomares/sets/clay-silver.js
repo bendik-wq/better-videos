@@ -21,7 +21,12 @@ async function stage(H, ctx, shot, o = {}) {
   let fx = null;
   // sky: a floating white disc on the painted blue sky (Reconstructed look) instead of the studio cyc
   const skyTex = P0.sky ? (await import('./thumbs.js')).paintedSky(P0.seed ?? 5) : null;
-  if (skyTex) { const r = P0.skyDisc ?? 7; const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.02, 0.8, 128), S.clay('#f4f2ee', { rough: 0.6, coat: 0.3 })); d.position.y = -0.4; d.receiveShadow = true; scene.add(d); }
+  if (skyTex) { const r = P0.skyDisc ?? 7; const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.02, 0.8, 128), S.clay(P0.beach != null ? '#ead9ae' : '#f4f2ee', { rough: P0.beach != null ? 0.85 : 0.6, coat: P0.beach != null ? 0 : 0.3 })); d.position.y = -0.4; d.receiveShadow = true; scene.add(d);
+    // beach (figures, P0.beach = z of the waterline): the sea covers the disc behind the waterline and runs to the horizon
+    if (P0.beach != null) { const zw = P0.beach; const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 300).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: '#2f9ad6', roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, transparent: true, opacity: 0.88, envMapIntensity: 1.3 }));
+      water.position.set(0, 0.06, zw - 150); water.receiveShadow = true; scene.add(water);
+      const cw = 2 * Math.sqrt(Math.max(1, r * r - zw * zw)); const foam = new THREE.Mesh(new THREE.PlaneGeometry(cw, 0.35).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#f4fbfd', roughness: 0.7, transparent: true, opacity: 0.85 })); foam.position.set(0, 0.07, zw + 0.1); scene.add(foam);
+      const wet = new THREE.Mesh(new THREE.PlaneGeometry(cw, 1.2).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#cdb98a', roughness: 0.4, polygonOffset: true, polygonOffsetFactor: -2 })); wet.position.set(0, 0.005, zw + 0.7); scene.add(wet); } }
   const finish = () => {
     if (skyTex) { scene.background = skyTex; scene.fog = null; st.cyc.visible = false; }
     st.applyEnv();
@@ -350,7 +355,11 @@ export default function claySilver(H) {
       const G = await stage(H, ctx, shot, { span: P0.span ?? 4, caption: P0caption(shot, null), source: P0src(shot, null), bokeh: 3.2, dofRange: 1.2, aoR: 0.25, aoI: 1.6, contact: { w: 10, d: 8, blur: 2.2, darkness: 1.2, opacity: 0.75 } });
       const { scene } = G; const props = new Set(P0.props ?? []);
       const col = (c) => PR.MQ[c] ?? c ?? PR.MQ.blue;
-      const people = figs.map((f, i) => { const m = PR.mannequin(f.w ?? 'suit', col(f.c), { hat: f.hat ?? null }); m.root.position.set(f.x ?? 0, 0, f.z ?? 0); m.root.rotation.y = f.ry ?? 0; scene.add(m.root); return { m, f }; });
+      // f.lie: lying on his side on the floor (fainted), head toward -x, front to camera
+      const people = figs.map((f, i) => { const m = PR.mannequin(f.w ?? 'suit', col(f.c), { hat: f.hat ?? null });
+        if (f.lie) { const gL = new THREE.Group(); gL.position.set(f.x ?? 0, 0.16, f.z ?? 0); gL.rotation.y = f.ry ?? 0; m.root.rotation.z = Math.PI / 2; gL.add(m.root); scene.add(gL); }
+        else { m.root.position.set(f.x ?? 0, 0, f.z ?? 0); m.root.rotation.y = f.ry ?? 0; scene.add(m.root); }
+        return { m, f }; });
       let crowd = [];
       if (props.has('crowd')) { const r = S.rng(7); for (let i = 0; i < (P0.crowdN ?? 14); i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'office'][i % 3], PR.MQ.cyan, {}); m.root.position.set(-4 + (i % 7) * 1.2 + r() * 0.3, 0, -2.2 - Math.floor(i / 7) * 1.2 + r() * 0.3); m.root.rotation.y = (r() - 0.5) * 0.8; scene.add(m.root); crowd.push({ m, ph: r() * 5, clip: ['idle', 'idle_b', 'phone', 'look_around'][i % 4] }); } }
       const S01 = (o, s) => { o.scale.multiplyScalar(s); scene.add(o); return o; };
@@ -369,11 +378,45 @@ export default function claySilver(H) {
         const glass = new THREE.Mesh(S.roundBox(2.6, 0.45, 1.82, 0.18), S.glossy('#22303f', { rough: 0.1, coat: 1 })); glass.position.set(-0.3, 1.06, 0); car.add(glass);
         for (const x of [-1.8, 1.8]) for (const z of [-0.9, 0.9]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.28, 24).rotateX(Math.PI / 2), S.clay('#22262c')); wh.position.set(x, 0.36, z); car.add(wh); }
         car.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); car.position.set(...(P0.carAt ?? [-3.2, 0, -1.4])); car.rotation.y = P0.carRy ?? 0.25; scene.add(car); }
+      // small props (Palomares): plate (bomb 4's round tail cover), calculator (a Friden on the desk), sketch (paper with a chute doodle),
+      // scroll (a scroll and a medallion on a stand), crate (tomatoes). Positions: P0.<name>At. Named pill targets: plate, calculator, sketch, scroll, crate
+      const propT = {}; const deskTop = [P0.deskX ?? 0, 0.78, P0.deskZ ?? 0.9];
+      if (props.has('plate')) { const pg = new THREE.Group(); const pm = S.glossy('#c9ced4', { rough: 0.35, coat: 0.6 }); const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.03, 48), pm); pg.add(disc);
+        for (const sx of [-0.12, 0.12]) { const flat = new THREE.Mesh(S.roundBox(0.05, 0.05, 0.16, 0.01), S.clay('#8d97a2')); flat.position.set(sx, 0.03, 0); pg.add(flat); }
+        pg.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); pg.position.set(...(P0.plateAt ?? [0.55, 0.27, 0.35])); pg.rotation.set(1.25, -0.5, 0); scene.add(pg); propT.plate = [pg.position.x, pg.position.y + 0.42, pg.position.z]; }
+      if (props.has('calculator')) { const cg = new THREE.Group(); const body = new THREE.Mesh(S.roundBox(0.36, 0.11, 0.32, 0.03), S.glossy('#d9d4c4', { rough: 0.4 })); cg.add(body);
+        const top = new THREE.Mesh(S.roundBox(0.3, 0.02, 0.2, 0.008), S.clay('#4a4f57')); top.position.set(0, 0.065, 0.03); cg.add(top);
+        const keys = []; for (let i = 0; i < 10; i++) for (let j = 0; j < 6; j++) keys.push({ p: [-0.135 + i * 0.03, 0.08, -0.04 + j * 0.026], sv: [0.022, 0.012, 0.02], c: j < 1 ? '#e0241b' : '#f4f2ee' });
+        cg.add(S.instances(S.roundBox(1, 1, 1, 0.2, 1), S.clay('#ffffff'), keys, { cast: false })); const cr = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.08, 12).rotateZ(Math.PI / 2), S.clay('#2b2f38')); cr.position.set(0.21, 0.04, 0); cg.add(cr);
+        cg.traverse(o => { if (o.isMesh) o.castShadow = true; }); cg.position.set(...(P0.calculatorAt ?? [deskTop[0] + 0.35, deskTop[1], deskTop[2]])); cg.rotation.y = -0.3; scene.add(cg); propT.calculator = [cg.position.x, cg.position.y + 0.35, cg.position.z]; }
+      if (props.has('sketch')) { const tex = S.canvasTex(512, 380, (g, w, h) => { g.fillStyle = '#fbfaf5'; g.fillRect(0, 0, w, h); g.strokeStyle = '#2b3a55'; g.lineWidth = 6; g.lineCap = 'round';
+          g.beginPath(); g.arc(w * 0.42, h * 0.38, 90, Math.PI, 0); g.stroke(); for (const dx of [-90, -45, 0, 45, 90]) { g.beginPath(); g.moveTo(w * 0.42 + dx, h * 0.38); g.lineTo(w * 0.42, h * 0.72); g.stroke(); } g.fillStyle = '#2b3a55'; g.fillRect(w * 0.42 - 12, h * 0.72, 24, 46);
+          g.beginPath(); g.moveTo(w * 0.05, h * 0.9); for (let x = 0; x < w; x += 20) g.lineTo(x, h * 0.9 + Math.sin(x * 0.05) * 6); g.stroke(); });
+        const sk = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.31).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 })); sk.position.set(...(P0.sketchAt ?? [deskTop[0] - 0.1, deskTop[1] + 0.005, deskTop[2] + 0.05])); sk.rotation.y = 0.15; sk.receiveShadow = true; scene.add(sk); propT.sketch = [sk.position.x, sk.position.y + 0.3, sk.position.z]; }
+      if (props.has('scroll')) { const sg = new THREE.Group(); const stand = new THREE.Mesh(S.roundBox(0.6, 0.95, 0.45, 0.04), S.wood({ coat: 0.5 })); stand.position.y = 0; sg.add(stand);
+        const scr = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.44, 24).rotateZ(Math.PI / 2), S.clay('#f6f1e1')); scr.position.set(0, 0.99, 0.06); sg.add(scr); const rib = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.04, 24).rotateZ(Math.PI / 2), S.clay('#2a5c9a')); rib.position.copy(scr.position); sg.add(rib);
+        const med = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.015, 32), S.glossy('#d2a845', { rough: 0.25, coat: 0.9 })); med.position.set(0.16, 0.965, -0.1); sg.add(med);
+        sg.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); sg.position.set(...(P0.scrollAt ?? [0.75, 0, 0.2])); scene.add(sg); propT.scroll = [sg.position.x, 1.35, sg.position.z]; }
+      if (props.has('crate')) { const cg = new THREE.Group(); const box = new THREE.Mesh(S.roundBox(0.55, 0.28, 0.38, 0.02), S.wood({ coat: 0.3 })); cg.add(box); const r7 = S.rng(3); const tom = [];
+        for (let i = 0; i < 24; i++) tom.push({ p: [-0.22 + (i % 6) * 0.088 + (r7() - 0.5) * 0.02, 0.3 + (r7()) * 0.03, -0.13 + Math.floor(i / 6) * 0.088], s: 0.045 }); cg.add(S.instances(new THREE.SphereGeometry(1, 14, 10), S.glossy('#e0241b', { rough: 0.3 }), tom));
+        cg.traverse(o => { if (o.isMesh) o.castShadow = true; }); cg.position.set(...(P0.crateAt ?? [0, 0, 0.9])); scene.add(cg); propT.crate = [cg.position.x, 0.75, cg.position.z]; }
+      if (props.has('jet')) { const j = PR.jet({ scale: P0.jetScale ?? 1.5 }); j.position.set(...(P0.jetAt ?? [-2.6, 0, -2.6])); j.rotation.y = P0.jetRy ?? 0.35; j.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); scene.add(j); propT.jet = [j.position.x, 2.2, j.position.z]; }
       if (props.has('plinth')) { const pl = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.5, 0.12, 64), S.clay('#f4f2ee', { rough: 0.5, coat: 0.4 })); pl.position.y = -0.06; pl.receiveShadow = true; scene.add(pl); }
       // cash flow: bundles hop on arcs from `from` to `to` (who pays whom)
       const flow = P0.flow ?? null; const hop = [];
       if (props.has('cashflow') && flow) for (let i = 0; i < (flow.n ?? 10); i++) { const c = PR.cashStack(); c.scale.setScalar(0.24); scene.add(c); hop.push(c); }
       const labels = people.map(p => p.f.label ? pillAt(H, G.layer, p.f.label, { size: 24, dot: p.f.c === 'red' ? '#e0241b' : null }) : null);
+      // extra pills on props / points: P0.pills [{ text, target: name | [x,y,z], at, red }]
+      const xPills = (P0.pills ?? []).map(p => ({ ...p, el: pillAt(H, G.layer, p.text, { size: p.size ?? 24, dot: p.red ? '#e0241b' : null }), t0: G.cue(p.at, 0.6) }));
+      // night (L80–88): dark navy backdrop instead of the cyc, a dim key, a warm deck lamp and a cool rim; the figures' materials
+      // are cloned so the dimmer environment does not leak into other shots' shared mannequin materials
+      if (P0.night) { scene.background = S.canvasTex(1024, 576, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#050b1f'); gr.addColorStop(0.65, '#0f2350'); gr.addColorStop(1, '#1c3566'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+          const rr = S.rng(9); for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(255,255,255,${0.25 + rr() * 0.6})`; g.beginPath(); g.arc(rr() * w, rr() * h * 0.6, 0.4 + rr(), 0, 7); g.fill(); } });
+        scene.fog = null; G.st.cyc.visible = false; G.st.key.intensity *= 0.28;
+        const deck = new THREE.Mesh(new THREE.CylinderGeometry(6, 6.1, 0.3, 96), S.clay('#3c4656', { rough: 0.8 })); deck.position.y = -0.15; deck.receiveShadow = true; scene.add(deck);
+        const lamp = new THREE.PointLight('#ffcf8a', 9, 14, 1.6); lamp.position.set(1.6, 3.4, 2.4); scene.add(lamp); const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 3.2, 2) })); bulb.position.copy(lamp.position); scene.add(bulb);
+        const rimL = new THREE.DirectionalLight('#8fb4ff', 1.6); rimL.position.set(-4, 3, -6); scene.add(rimL);
+        for (const { m } of [...people, ...crowd]) m.root.traverse(o => { if (o.isMesh && o.material && !o.material.userData?.night) { o.material = o.material.clone(); o.material.envMapIntensity = 0.22; o.material.userData = { night: true }; } }); }
       G.finish();
       const D = G.dur, fz = people[P0.focusOn ?? 0]?.f ?? { x: 0, z: 0 };
       const cx = fz.x ?? 0, cz = fz.z ?? 0;
@@ -399,6 +442,7 @@ export default function claySilver(H) {
             const t0 = at + i * period, u = S.range(t, t0, t0 + 0.9); const a = flow.from, b = flow.to;
             c.visible = t >= t0 - 0.05; c.position.set(S.lerp(a[0], b[0], S.inOut(u)), 0.9 + Math.sin(Math.PI * u) * 0.9 - (u >= 1 ? 0.9 - Math.floor(i / 2) * 0.03 - 0.0 : 0), S.lerp(a[1], b[1], S.inOut(u)) + (u >= 1 ? (i % 2) * 0.12 : 0)); c.rotation.y = u * 3; }); }
           G.cam(keys, t);
+          for (const p of xPills) { const q = typeof p.target === 'string' ? propT[p.target] : p.target; if (!q) { p.el.at(0, 0, 0); continue; } const [x, y, v] = G.toPx(q); p.el.at(x, y, v ? S.range(t, p.t0, p.t0 + 0.35) : 0); }
           people.forEach(({ m, f }, i) => { if (!labels[i]) return; m.root.updateMatrixWorld(true); const hp = m.worldPos('head'); const [x, y, v] = G.toPx([hp.x, hp.y + 0.42, hp.z]); labels[i].at(x, y, v ? S.range(t, G.cue(f.labelAt, 0.6), G.cue(f.labelAt, 0.6) + 0.35) : 0); });
           G.frame(t);
         },

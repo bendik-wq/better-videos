@@ -3,12 +3,13 @@
 //           Five cued steps, each a pure function of t:
 //             drop    17 Jan: bomb 4 sinks under its chute and touches down on a ridge rim at 355 fathoms (2,130 ft)
 //             find    15 Mar: it has slid down a ~400-ft furrow to 2,550 ft on a "70 degree slope"; Alvin finds it
-//             lost    24 Mar, ~9:15 pm: a line from the ship, a short lift (height unknown), the line parts; it falls and
+//             lost    24 Mar, ~9 pm: a line from the ship, a short lift (height unknown), the line parts; it falls and
 //                     slides away (drawn as a dashed ghost: nine days of not knowing)
 //             refind  2 Apr: found again at 2,800 ft, 120 yd downslope: a red bracket "+250 FT DEEPER" on the axis
 //             lift    7 Apr: dragged to ~2,850 ft, lifted to the ship ("Weapon on deck" 08:46)
 //           params: steps (subset/order of the names above), dropAt, findAt, lostAt, refindAt, liftAt (seconds or spoken
-//           words), compare (true: depth marks for divers / Cubmarine / Deep Jeep; false hides), title, kicker, source
+//           words), compare (true: depth marks for divers / Cubmarine / Deep Jeep; false hides), title, kicker, source,
+//           cards ({ step: { date, head, sub, chip } } overrides a step's caption card / axis chip)
 // Depths: DNA Palomares Summary Report (S01 p.94, ✓); lift depth and times via Moran (S40, ⚑). Never "300 ft deeper" (§13).
 import * as G from './graphics-kit.js';
 
@@ -18,7 +19,7 @@ const { P, F, E, clamp, lerp, range, TAU } = G;
 const STEP = {
   drop: { date: '17 JAN 1966', head: 'It hits the water', sub: ['TOUCHES DOWN ON A RIDGE RIM AT 355 FATHOMS', '(2,130 FT), THEN SLIDES OVER THE EDGE'], chip: ['2,130 FT', 'touch'] },
   find: { date: '15 MAR 1966', head: 'Found: 2,550 ft down', sub: ['BY ALVIN · ON A “70 DEGREE SLOPE”', 'AT THE END OF A ~400-FT FURROW'], chip: ['2,550 FT', 'find'] },
-  lost: { date: '24 MAR 1966 · ABOUT 9:15 PM', head: 'The line parts', sub: ['LIFTED ON ONE LINE · NO SOURCE SAYS HOW HIGH', 'TIME PER BARBARA MORAN'], red: true },
+  lost: { date: '24 MAR 1966 · ABOUT 9 PM', head: 'The line parts', sub: ['LIFTED ON ONE LINE · NO SOURCE SAYS HOW HIGH', 'TIME PER BARBARA MORAN'], red: true },
   refind: { date: '2 APR 1966', head: 'Found again: 2,800 ft', sub: ['120 YARDS DOWNSLOPE, ON A GENTLER PLAIN', 'NINE DAYS AFTER THE LINE PARTED'], chip: ['2,800 FT', 'refind'] },
   lift: { date: '7 APR 1966', head: 'Lifted from ~2,850 ft', sub: ['“WEAPON ON DECK” 08:46 (PETREL LOG, VIA MORAN)', '80 DAYS AFTER THE CRASH'], chip: ['~2,850 FT', 'lift'] },
 };
@@ -100,7 +101,7 @@ export default function makeData(H) {
       k.view(0.8);
       const chips = steps.filter(s => STEP[s].chip && t >= T[s] - (s === 'drop' ? 0 : 0.2));
       chips.forEach((s) => {
-        const [lab, key] = STEP[s].chip, kc = range(t, T[s] + (s === 'drop' ? 0.5 : 0), T[s] + (s === 'drop' ? 1.0 : 0.5));
+        const [lab, key] = (Pm.cards?.[s]?.chip ?? STEP[s].chip), kc = range(t, T[s] + (s === 'drop' ? 0.5 : 0), T[s] + (s === 'drop' ? 1.0 : 0.5));
         if (s === 'refind' && has('lift') && t > T.lift + 0.4) return; // 2,800 and 2,850 sit 12 px apart: the lift chip replaces it
         const ft = G.DEPTH[key] ?? G.DEPTH.lift, y = S.Y(ft), cur = s === st || (st === 'lost' && s === 'find');
         const [px] = at(U[key] ?? U.lift);
@@ -118,7 +119,7 @@ export default function makeData(H) {
       // ---- the caption card for the current step (over the seabed, lower left), with a leader to the bomb
       k.view(1);
       if (st) {
-        const C = STEP[st], kc = E.outCubic(range(t, T[st] - (st === 'drop' ? 0.3 : 0.1), T[st] + 0.5)), cx = 250, cy = 540, cw = 600;
+        const C = { ...STEP[st], ...(Pm.cards?.[st] ?? {}) }, kc = E.outCubic(range(t, T[st] - (st === 'drop' ? 0.3 : 0.1), T[st] + 0.5)), cx = 250, cy = 540, cw = 600;
         const red = C.red && st === 'lost', ch = 196;
         g.save(); g.globalAlpha = kc; g.translate(0, (1 - kc) * 16);
         G.card(g, cx, cy, cw, ch, { r: 18, lift: 1.0 });

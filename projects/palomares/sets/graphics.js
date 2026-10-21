@@ -190,7 +190,9 @@ export default function makeGraphics(H) {
   async function quote(ctx, shot) {
     const Pm = shot.params ?? {}, txt = String(Pm.text ?? ''), D = shot.duration ?? 7;
     const words = txt.split(/\s+/).filter(Boolean);
-    const said = (shot.words ?? []).length ? M.wordTimes(shot, txt, { fallback: 0.5, gap: 0.16 }) : words.map((_, i) => 0.4 + i * Math.min(0.16, (D * 0.55) / Math.max(1, words.length)));
+    const said0 = (shot.words ?? []).length ? M.wordTimes(shot, txt, { fallback: 0.5, gap: 0.16 }) : words.map((_, i) => 0.4 + i * Math.min(0.16, (D * 0.55) / Math.max(1, words.length)));
+    // never lag the VO: every word is in by ~58% of the clip (a paused frame late in the shot shows the whole quote)
+    const said = said0.map((s, i) => Math.min(s, 0.25 + (i / Math.max(1, words.length - 1)) * Math.max(0.4, D * 0.58 - 0.25)));
     const hl = [].concat(Pm.highlight ?? []).map(s => String(s).toLowerCase().replace(/[^a-z0-9.,$%]/g, ''));
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.4); G.paper(g);
@@ -214,7 +216,7 @@ export default function makeGraphics(H) {
           x += ww + sp;
         });
       });
-      const tb = Math.min((said.at(-1) ?? 1) + 0.4, D - 1.2), yb = top + h + 36;
+      const tb = 0.3, yb = top + h + 36; // the byline is up from the start: a paused frame always says who is speaking
       if (Pm.by) { g.fillStyle = P.teal; g.fillRect(330, yb - 36, 56 * E.emphasized(range(t, tb, tb + 0.5)), 5); G.text(g, `— ${Pm.by}`, 330, yb + 12, { size: 38, weight: 800, alpha: E.outCubic(range(t, tb, tb + 0.6)), maxW: 1380 }); }
       if (Pm.role) G.text(g, Pm.role, 330, yb + 58, { size: 22, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.1, upper: true, alpha: E.outCubic(range(t, tb + 0.2, tb + 0.8)), maxW: 1380 });
       k.flat(); G.source(g, Pm.source, range(t, 0.6, 1.4));
@@ -268,7 +270,7 @@ export default function makeGraphics(H) {
     clock: { align: 'right', face: true, kicker: 'THREE TIMES THAT MATTER', title: 'The clock',
       source: 'SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009) AND HER 2004 ARTICLE; USS PETREL DECK LOG VIA MORAN',
       steps: [{ time: [10, 22], text: '10:22 AM', label: 'THE COLLISION', sub: '17 JAN 1966 · ABOUT 10:22 LOCAL (0922Z)' },
-        { time: [21, 15], text: '9:15 PM', label: 'THE LINE PARTS', sub: '24 MAR 1966 · “ABOUT 9:15 PM”, PER BARBARA MORAN', red: true },
+        { time: [21, 0], text: '~9 PM', label: 'THE LINE PARTS', sub: '24 MAR 1966 · ABOUT 9 PM · PER MORAN', red: true },
         { time: [8, 46], text: '8:46 AM', label: 'WEAPON ON DECK', sub: '7 APR 1966 · USS PETREL’S DECK LOG, VIA MORAN' }] },
   };
   const FLAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -292,7 +294,12 @@ export default function makeGraphics(H) {
     const BX = face ? 1330 : 960, BW = face ? 860 : 1600;
     const TW = Pm.tile ?? Math.min(face ? 150 : 196, BW / unit), TH = TW * 1.36, NW = TW * 0.42, GW = TW * 0.3, gap = TW * 0.06;
     const boardW = slots.reduce((a, s) => a + (s === 'n' ? NW : s === 'g' ? GW : TW) + gap, -gap);
-    const tFlap = (i) => 0.42 + i * Math.min(0.09, 1.1 / L);
+    // flap timing fits the step's window: tiles land within ~0.35–0.85 s, leaving >= ~1.3 s settled before the next step / the cut.
+    // Short clips (< 2.2 s, or settled: true) open already settled on their single step.
+    const settled = Pm.settled ?? D < 2.2; if (settled) T[0] = Math.min(T[0], 0);
+    const win = (si) => (si + 1 < steps.length ? T[si + 1] : D) - T[si];
+    const fd = (si) => (settled && si === 0 ? 0 : clamp(Math.min(0.85, win(si) - 1.3), 0.35, 0.85));
+    const tFlapS = (i, si) => fd(si) * (L > 1 ? 0.35 + 0.65 * i / (L - 1) : 1);
     const mins = (s) => (s?.time ? s.time[0] * 60 + s.time[1] : null);
     return set(ctx, shot, (g, t, p, k) => {
       k.view(0.4); G.paper(g);
@@ -305,7 +312,8 @@ export default function makeGraphics(H) {
       const from = si === 0 ? pad('').map(() => ' ') : pad(prev.text), to = pad(cur.text);
       const x0 = BX - boardW / 2, y0 = (face ? 400 : 380) + Math.max(0, (180 - TH) * 0.5);
       G.card(g, x0 - TW * 0.22, y0 - TW * 0.22, boardW + TW * 0.44, TH + TW * 0.44, { r: 26, fill: P.ink, lift: 1.4, grainA: 0 });
-      const redNow = cur.red && t > tc + tFlap(L) + 0.3;
+      const fdc = fd(si), tFlap = (i) => tFlapS(Math.min(i, L - 1), si);
+      const redNow = cur.red && t > tc + fdc + 0.15;
       const off = align === 'center' ? Math.floor((L + cur.text.length) / 2) - cur.text.length : L - cur.text.length;
       const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? off + cur.text.lastIndexOf(cur.red)
         : cur.text.includes('·') ? off + cur.text.lastIndexOf('·') + 1 : 0;
@@ -315,7 +323,7 @@ export default function makeGraphics(H) {
         if (sl === 'g') { x += w + gap; continue; }
         const col = redNow && i >= redFrom ? P.red : P.ink;
         if (sl === 'n') {
-          const c = t < tc && si === 0 ? ' ' : (t < stopAt - 0.2 ? a : b);
+          const c = t < tc && si === 0 ? ' ' : (t < stopAt - 0.1 ? a : b);
           if (c.trim()) G.text(g, c, x + w / 2, y0 + TH * 0.74, { size: TW * 0.95, weight: 800, align: 'center', color: redNow && i > redFrom ? '#ff6a5c' : P.white });
           x += w + gap; continue;
         }
@@ -343,9 +351,9 @@ export default function makeGraphics(H) {
         g.fillStyle = P.ink; g.fillRect(x - 2, y0 + TH / 2 - TW * 0.04, 4, TW * 0.08); g.fillRect(x + w - 2, y0 + TH / 2 - TW * 0.04, 4, TW * 0.08);
         x += w + gap;
       }
-      const yl = y0 + TH + (face ? 130 : 150), kl = range(t, tc + 0.3, tc + 1.1);
+      const yl = y0 + TH + (face ? 130 : 150), kl = range(t, tc + 0.1, tc + fdc + 0.3);
       G.riseText(g, cur.label ?? '', BX, yl, kl, { size: face ? 54 : 60, weight: 800, align: 'center', color: P.ink, track: 0.01, maxW: BW });
-      if (cur.sub) G.text(g, cur.sub, BX, yl + 52, { size: face ? 22 : 26, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(range(t, tc + 0.6, tc + 1.3)), maxW: BW });
+      if (cur.sub) G.text(g, cur.sub, BX, yl + 52, { size: face ? 22 : 26, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.1, alpha: E.outCubic(range(t, tc + 0.2, tc + fdc + 0.45)), maxW: BW });
       if (steps.length > 1) {
         const n = steps.length, gx = BX - (n - 1) * 30;
         steps.forEach((st, i) => { const on = t >= T[i], kk = E.outBack(range(t, T[i], T[i] + 0.4)); g.save(); g.fillStyle = P.rule; g.beginPath(); g.arc(gx + i * 60, yl + 120, 9, 0, TAU); g.fill(); if (on) { g.fillStyle = i === si ? (st.red ? P.red : P.teal) : P.inkFaint; g.beginPath(); g.arc(gx + i * 60, yl + 120, 9 * kk, 0, TAU); g.fill(); } g.restore(); });
@@ -444,5 +452,55 @@ export default function makeGraphics(H) {
     }, { push: 0.025, dx: 10 });
   }
 
-  return { title, chapter, quote, bignumber, counter, timeline };
+  // ================================================================ implosion: why bombs 2 and 3 did not go nuclear (simplified, RESEARCH §3)
+  // Two panels. Left (at `everyAt`): a core ringed by 12 charges; all fire at once, arrows inward, the core is squeezed evenly.
+  // Right (at `sideAt`): only the left-hand charges fire (red); the core is blown apart to the right. No yields, no internals.
+  // params: everyAt ('every'), sideAt ('one'), kicker, title, source, labels [left, right], subs [left, right]
+  async function implosion(ctx, shot) {
+    const Pm = shot.params ?? {}, D = shot.duration ?? 9;
+    const tA = G.cue(shot, Pm.everyAt ?? 'every', 0.8), tB = G.cue(shot, Pm.sideAt ?? 'one', D * 0.5);
+    const labels = Pm.labels ?? ['A NUCLEAR BLAST', 'A CRASH'], subs = Pm.subs ?? ['EVERY CHARGE FIRES AT ONCE · THE CORE IS SQUEEZED', 'ONE SIDE FIRES · THE CORE IS BLOWN APART'];
+    const N = 12, r0 = 112, r1 = 200, rc = 66;
+    const shards = Array.from({ length: 11 }, (_, i) => { const r = rng(G.hash(i, 7)); return { a: (r() - 0.5) * 1.3, sp: 0.55 + r() * 0.6, s: 9 + r() * 12, rot: r() * 6 }; });
+    const panel = (g, cx, cy, t, side, kIn) => {
+      if (kIn <= 0) return; g.save(); g.globalAlpha *= kIn;
+      const t0 = side ? tB : tA, fire = (i) => !side || Math.cos(((i + 0.5) / N) * TAU) < -0.45; // left-hand charges only on the crash side
+      const flash = range(t, t0, t0 + 0.25) * (1 - range(t, t0 + 0.35, t0 + 1.1));
+      // charges (wedges)
+      for (let i = 0; i < N; i++) { const a0 = (i / N) * TAU + 0.04, a1 = ((i + 1) / N) * TAU - 0.04, on = fire(i);
+        g.beginPath(); g.arc(cx, cy, r1, a0, a1); g.arc(cx, cy, r0, a1, a0, true); g.closePath();
+        const hot = on ? flash : 0; g.fillStyle = hot > 0.02 ? (side ? `rgba(224,36,27,${0.35 + 0.65 * hot})` : `rgba(255,214,120,${0.4 + 0.6 * hot})`) : (on && t > t0 ? (side ? 'rgba(224,36,27,0.28)' : 'rgba(42,140,134,0.30)') : '#dfe6e1');
+        g.fill(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.stroke(); }
+      // arrows inward from the firing charges
+      for (let i = 0; i < N; i++) { if (!fire(i)) continue; const ka = E.outCubic(range(t, t0 + 0.05, t0 + 0.6)); if (ka <= 0) continue; const a = ((i + 0.5) / N) * TAU;
+        const x0 = cx + Math.cos(a) * (r0 - 6), y0 = cy + Math.sin(a) * (r0 - 6), L = (r0 - rc - 14) * ka, x1 = x0 - Math.cos(a) * L, y1 = y0 - Math.sin(a) * L;
+        g.strokeStyle = side ? P.red : P.tealDeep; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+        g.fillStyle = g.strokeStyle; g.beginPath(); g.moveTo(x1 - Math.cos(a) * 14, y1 - Math.sin(a) * 14); g.lineTo(x1 + Math.sin(a) * 9, y1 - Math.cos(a) * 9); g.lineTo(x1 - Math.sin(a) * 9, y1 + Math.cos(a) * 9); g.closePath(); g.fill(); }
+      // the core
+      if (!side) { const sq = 1 - 0.42 * E.inOutCubic(range(t, t0 + 0.3, t0 + 1.0)); const glow = range(t, t0 + 0.8, t0 + 1.3);
+        if (glow > 0) { const gr = g.createRadialGradient(cx, cy, 0, cx, cy, rc * 1.6); gr.addColorStop(0, `rgba(255,236,170,${0.9 * glow})`); gr.addColorStop(1, 'rgba(255,236,170,0)'); g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, rc * 1.6, 0, TAU); g.fill(); }
+        g.fillStyle = '#9aa3ad'; g.beginPath(); g.arc(cx, cy, rc * sq, 0, TAU); g.fill(); g.strokeStyle = P.ink; g.lineWidth = 3; g.stroke(); }
+      else { const ks = E.outCubic(range(t, t0 + 0.35, t0 + 1.8));
+        if (ks <= 0) { g.fillStyle = '#9aa3ad'; g.beginPath(); g.arc(cx, cy, rc, 0, TAU); g.fill(); g.strokeStyle = P.ink; g.lineWidth = 3; g.stroke(); }
+        else { g.save(); g.setLineDash([8, 8]); g.strokeStyle = 'rgba(20,35,61,0.45)'; g.lineWidth = 2.5; g.beginPath(); g.arc(cx, cy, rc, 0, TAU); g.stroke(); g.restore();
+          shards.forEach((sh) => { const d = ks * 330 * sh.sp, x = cx + Math.cos(sh.a) * d, y = cy + Math.sin(sh.a) * d * 0.9; g.save(); g.translate(x, y); g.rotate(sh.rot + ks * 3); g.fillStyle = P.red; g.beginPath(); g.moveTo(-sh.s, -sh.s * 0.6); g.lineTo(sh.s, -sh.s * 0.3); g.lineTo(sh.s * 0.4, sh.s * 0.7); g.lineTo(-sh.s * 0.7, sh.s * 0.5); g.closePath(); g.fill(); g.restore(); }); } }
+      g.restore();
+      const kl = range(t, t0 - 0.2, t0 + 0.5);
+      G.riseText(g, labels[side], cx, cy - r1 - 46, kl, { size: 46, weight: 800, align: 'center', color: side ? P.red : P.ink });
+      G.text(g, subs[side], cx, cy + r1 + 70, { size: 21, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.08, alpha: E.outCubic(range(t, t0 + 0.4, t0 + 1.0)), maxW: 760 });
+      if (!side) G.text(g, 'CORE', cx, cy + 8, { size: 20, weight: 700, fam: F.mono, align: 'center', color: P.white, alpha: kIn * (1 - range(t, tA + 0.3, tA + 0.6)) });
+    };
+    return set(ctx, shot, (g, t, p, k) => {
+      k.view(0.4); G.paper(g);
+      k.view(0.7);
+      G.kicker(g, Pm.kicker ?? 'WHY THERE WAS NO NUCLEAR BLAST', 150, 150, range(t, 0.05, 0.6));
+      G.riseText(g, Pm.title ?? 'Every charge at once, or one side', 150, 236, range(t, 0.15, 1.0), { size: 68, weight: 800, maxW: 1620 });
+      k.view(1);
+      panel(g, 560, 610, t, 0, E.outCubic(range(t, 0.2, 0.8)));
+      panel(g, 1360, 610, t, 1, E.outCubic(range(t, tB - 0.6, tB)));
+      k.flat(); G.source(g, Pm.source ?? 'SIMPLIFIED · SOURCES: DNA PALOMARES SUMMARY REPORT (1975); B. MORAN (2009)', range(t, 0.8, 1.6));
+    }, { push: 0.03 });
+  }
+
+  return { title, chapter, quote, bignumber, counter, timeline, implosion };
 }

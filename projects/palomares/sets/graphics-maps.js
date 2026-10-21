@@ -48,8 +48,8 @@ const pinOf = (n) => KNOWN.find(p => p.name === n);
 // bombs 1-3 on land (RESEARCH §3c, §11.7): CSN zone centroids for 2 and 3; bomb 1 inferred (riverbed, ~300 m from the coast)
 const LAND_BOMBS = [
   { n: 1, lon: -1.777, lat: 37.244, text: 'DRY RIVERBED · INTACT · 17 JAN' },
-  { n: 2, lon: -1.8128, lat: 37.2439, text: 'WEST OF THE VILLAGE · HE EXPLODED · 18 JAN' },
-  { n: 3, lon: -1.7928, lat: 37.2476, text: 'EAST EDGE · HE PARTLY EXPLODED · 18 JAN' },
+  { n: 2, lon: -1.8128, lat: 37.2439, text: 'WEST OF THE VILLAGE · EXPLOSIVE WENT OFF · 18 JAN' },
+  { n: 3, lon: -1.7928, lat: 37.2476, text: 'EAST EDGE · EXPLOSIVE PARTLY WENT OFF · 18 JAN' },
 ];
 // the dry Almanzora's lower course, approximate (north and east of the village, to the mouth at 37.242 N, 1.775 W; §11.7)
 const ALMANZORA = [[-1.905, 37.302], [-1.884, 37.293], [-1.862, 37.283], [-1.84, 37.273], [-1.822, 37.266], [-1.806, 37.261], [-1.792, 37.256], [-1.782, 37.249], [-1.775, 37.242]];
@@ -187,7 +187,9 @@ export default function makeMaps(H) {
     const Pm = shot.params ?? {}, mode = MAPS[Pm.mode] ? String(Pm.mode) : 'spain', V = MAPS[mode], D = shot.duration ?? 8;
     const gj = mode === 'coast' ? null : await geo(), cj = mode === 'coast' ? await coast() : null;
     const relief = mode === 'coast' ? await G.image('/projects/palomares/assets/geo/' + cj.relief.file).catch(() => null) : null;
-    const pr = proj(V.box, V.rect);
+    // Pm.box [w, s, e, n] reframes the map (e.g. the US East Coast); Pm.hide: base labels to leave out
+    // ('Palomares' | 'Villaricos' | 'Garrucha' | 'Camp Wilson beach' | 'Águilas' | 'river'); a pinned town's base label is left out too
+    const BOX = Pm.box ?? V.box, pr = proj(BOX, V.rect);
     const pins = (Pm.pins ?? V.pins).map(p => (typeof p === 'string' ? { name: p } : p)).map(p => ({ ...(pinOf(p.name) ?? {}), ...p })).filter(p => p.lon != null);
     const t1 = G.cue(shot, Pm.at, mode === 'coast' ? 2.2 : 0.6);
     const PT = pins.map((pn, i) => G.cue(shot, pn.word, t1 + i * Math.min(0.6, Math.max(0.3, (D * 0.45) / Math.max(1, pins.length)))));
@@ -195,6 +197,7 @@ export default function makeMaps(H) {
       const ia = pins.findIndex(p => p.name === a), ib = pins.findIndex(p => p.name === b);
       return ia < 0 || ib < 0 ? null : { ia, ib, t: G.cue(shot, w, Math.max(PT[ia], PT[ib]) + 0.5) };
     }).filter(Boolean);
+    const hide = new Set([...(Pm.hide ?? []), ...pins.map(p => p.name)]); const hidden = (n) => hide.has(n);
     const isRed = (pn) => pn.color === MP.red || (pn.color == null && (V.red ?? []).includes(pn.name));
     // coast cues
     const tW = G.cue(shot, Pm.wedgeAt, Math.min(D * 0.55, 4.4)), tF = G.cue(shot, Pm.findAt, t1);
@@ -219,7 +222,7 @@ export default function makeMaps(H) {
             const rv = G.smooth(ALMANZORA.map(([lo, la]) => [pr.X(lo), pr.Y(la)]), 2);
             c.save(); c.strokeStyle = 'rgba(120,150,170,0.55)'; c.lineWidth = 7; c.lineCap = 'round'; c.lineJoin = 'round'; c.setLineDash([2, 10]); c.beginPath(); rv.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.stroke(); c.restore();
             const ri = rv[Math.floor(rv.length * 0.6)], rj = rv[Math.floor(rv.length * 0.6) + 3];
-            c.save(); c.translate(ri[0], ri[1] - 16); c.rotate(Math.atan2(rj[1] - ri[1], rj[0] - ri[0])); G.text(c, 'Río Almanzora (dry bed, approx.)', 0, 0, { size: 22, weight: 400, fam: F.serif, style: 'italic', align: 'center', color: 'rgba(55,90,115,0.85)' }); c.restore();
+            if (!hidden('river')) { c.save(); c.translate(ri[0], ri[1] - 16); c.rotate(Math.atan2(rj[1] - ri[1], rj[0] - ri[0])); G.text(c, 'Río Almanzora (dry bed, approx.)', 0, 0, { size: 22, weight: 400, fam: F.serif, style: 'italic', align: 'center', color: 'rgba(55,90,115,0.85)' }); c.restore(); }
             // isobath labels: the vertex of each line nearest a reference point out at sea
             Object.entries(cj.depth).forEach(([ft, lines]) => {
               let best = null; lines.forEach(r => { for (let i = 2; i < r.length - 2; i += 2) { const x = pr.X(r[i]), y = pr.Y(r[i + 1]), d = Math.hypot(x - 1500, y - 1010); if (x > 60 && x < 1860 && y > 300 && y < 1040 && (!best || d < best.d)) best = { d, x, y, a: Math.atan2(pr.Y(r[i + 3]) - pr.Y(r[i - 1]), pr.X(r[i + 2]) - pr.X(r[i - 2])) }; } });
@@ -232,18 +235,18 @@ export default function makeMaps(H) {
           } else {
             sea(c, pr);
             const layer = gj[V.data], keys = Object.keys(layer), main = V.main ?? [];
-            const far = pathOf(keys.filter(k => !main.includes(k)).flatMap(k => layer[k]), pr, V.box);
+            const far = pathOf(keys.filter(k => !main.includes(k)).flatMap(k => layer[k]), pr, BOX);
             if (main.length) {
-              if (V.data !== 'world') { const wk = Object.keys(gj.world).filter(k => !keys.includes(k) && k !== 'GIB'); reliefLand(c, pathOf(wk.flatMap(k => gj.world[k]), pr, V.box), { top: MP.far, top2: MP.far2, ext: 3, seed: 5, relief: 0.4 }); }
+              if (V.data !== 'world') { const wk = Object.keys(gj.world).filter(k => !keys.includes(k) && k !== 'GIB'); reliefLand(c, pathOf(wk.flatMap(k => gj.world[k]), pr, BOX), { top: MP.far, top2: MP.far2, ext: 3, seed: 5, relief: 0.4 }); }
               reliefLand(c, far, { top: MP.far, top2: MP.far2, ext: 3, seed: 3, relief: 0.6 });
-              const ml = pathOf(main.flatMap(k => layer[k]), pr, V.box);
+              const ml = pathOf(main.flatMap(k => layer[k]), pr, BOX);
               reliefLand(c, ml, { ext: 6, seed: 11 });
               c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.2; c.stroke(far); c.stroke(ml); c.restore();
             } else {
               reliefLand(c, far, { ext: 5, seed: 19 });
               c.save(); c.strokeStyle = MP.border; c.lineWidth = 1; c.lineJoin = 'round'; c.stroke(far); c.restore();
             }
-            (V.words ?? []).forEach(([s, lo, la, caps]) => word(c, s, pr.X(lo), pr.Y(la), !!caps));
+            (Pm.words ?? V.words ?? []).forEach(([s, lo, la, caps]) => word(c, s, pr.X(lo), pr.Y(la), !!caps));
           }
         });
       }
@@ -270,12 +273,12 @@ export default function makeMaps(H) {
         }
         // towns and the beach
         const kt = (i) => range(t, 0.5 + i * 0.18, 1.0 + i * 0.18);
-        town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -46, size: 34, sub: 'POP. ABOUT 2,000 IN 1966', dot: false });
-        town(g, ...at(pinOf('Villaricos')), kt(1), 'Villaricos', { side: 'r', dy: -22 });
-        town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: 'PRESS BOATS' });
-        town(g, ...at(pinOf('Camp Wilson beach')), kt(4), 'Camp Wilson beach', { side: 'r', dy: 20, size: 22, sub: 'THE 8 MAR SWIM (AFTERNOON)' });
+        if (!hidden('Palomares')) town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -46, size: 34, sub: Pm.townSub === undefined ? 'POP. ABOUT 2,000 IN 1966' : Pm.townSub, dot: false });
+        if (!hidden('Villaricos')) town(g, ...at(pinOf('Villaricos')), kt(1), 'Villaricos', { side: 'r', dy: -22 });
+        if (!hidden('Garrucha')) town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: 'PRESS BOATS' });
+        if (!hidden('Camp Wilson beach')) town(g, ...at(pinOf('Camp Wilson beach')), kt(4), 'Camp Wilson beach', { side: 'r', dy: 20, size: 22, sub: 'THE 8 MAR SWIM (AFTERNOON)' });
         // Águilas, off the top edge: an arrow
-        { const ka = kt(5); if (ka > 0) { const x = 1860, y = 300; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
+        { const ka = hidden('Águilas') ? 0 : kt(5); if (ka > 0) { const x = 1860, y = 300; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
           G.text(g, 'Águilas', x - 44, y + 44, { size: 26, weight: 800, align: 'right', color: P.ink, alpha: ka }); G.text(g, 'SIMÓ’S HOME PORT', x - 44, y + 68, { size: 15, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.08, alpha: ka }); } }
         // bombs 1-3: numbered discs
         LAND_BOMBS.forEach((b, i) => {

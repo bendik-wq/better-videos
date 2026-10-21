@@ -163,7 +163,7 @@ const DOCS = {
       ['box', 72, 432, 468, 64, { text: 'STATUS: «PENDIENTE DE FALLO»', size: 20, fam: F.sans, track: 0.04, key: 'pending' }],
       ['t', 520, '(awaiting judgment)', { align: 'c', size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
       ['rule', 560, {}],
-      ['p', 584, 'Recreated summary from press reports (Actualidad Almanzora, 13 Apr and 19 Oct 2026; elDiario.es); we have not seen the court documents. The case is live: re-check before publishing.', NOTE],
+      ['p', 584, 'Recreated summary from press reports (Actualidad Almanzora, 13 Apr and 19 Oct 2026; elDiario.es).', NOTE],
     ],
     label: 'RECREATED SUMMARY · AUDIENCIA NACIONAL CASE, FROM PRESS REPORTS', src: 'SOURCES: ACTUALIDAD ALMANZORA (13 APR, 19 OCT 2026); ELDIARIO.ES (2026) · STATUS AS OF 21 OCT 2026',
   },
@@ -256,6 +256,10 @@ export default function makeDocs(H) {
         const u0 = E.inOutCubic(range(t, 0.25, Math.max(1.0, T[0] - 0.1))); f = [lerp(start[0], fo(HL[0])[0], u0), lerp(start[1], fo(HL[0])[1], u0)]; Z = lerp(Z0, zOf(HL[0]), u0);
         for (let i = 1; i < HL.length; i++) { const u = E.inOutCubic(range(t, T[i] - 0.9, T[i] - 0.05)); f = [lerp(f[0], fo(HL[i])[0], u), lerp(f[1], fo(HL[i])[1], u)]; Z = lerp(Z, zOf(HL[i]), u); }
       }
+      // keep the sheet clear of the label pill (top) and the source line (bottom): the sheet's top edge lands >= 165 px down and
+      // its bottom edge <= 985 px when the page fits; a page taller than the window is clamped so the focus keeps the nearer edge clear
+      { const cy = 560, top = (165 - cy) / Z, bot = (985 - cy) / Z; const lo = Dc.h - bot, hi = -top; // f[1] must be <= hi (top clear) and >= lo (bottom clear)
+        f = [f[0], lo <= hi ? clamp(f[1], lo, hi) : clamp(f[1], hi, lo)]; }
       // the desk: a ledger blotter, its own parallax
       k.view(0.35); g.fillStyle = P.desk; g.fillRect(-200, -200, 2320, 1480);
       G.ledgerLines(g, -200, -200, 2320, 1480, { step: 46, cols: [300, 700, 1100, 1500], color: 'rgba(29,106,102,0.12)', colColor: 'rgba(29,106,102,0.10)' }); G.grain(g, 2320, 1480, 0.4, -200, -200);
@@ -280,7 +284,8 @@ export default function makeDocs(H) {
       // labels float above the paper
       k.flat();
       // a soft desk-coloured header band so the label reads over the page
-      const hb = g.createLinearGradient(0, 0, 0, 150); hb.addColorStop(0, 'rgba(223,230,225,0.95)'); hb.addColorStop(0.6, 'rgba(223,230,225,0.7)'); hb.addColorStop(1, 'rgba(223,230,225,0)'); g.fillStyle = hb; g.fillRect(0, 0, 1920, 150);
+      const hb = g.createLinearGradient(0, 0, 0, 160); hb.addColorStop(0, 'rgba(223,230,225,0.98)'); hb.addColorStop(0.72, 'rgba(223,230,225,0.95)'); hb.addColorStop(1, 'rgba(223,230,225,0)'); g.fillStyle = hb; g.fillRect(0, 0, 1920, 160);
+      const fb = g.createLinearGradient(0, 990, 0, 1080); fb.addColorStop(0, 'rgba(223,230,225,0)'); fb.addColorStop(0.35, 'rgba(223,230,225,0.96)'); fb.addColorStop(1, 'rgba(223,230,225,0.98)'); g.fillStyle = fb; g.fillRect(0, 990, 1920, 90);
       if (Pm.label !== false) G.pill(g, Dc.label, 80, 84, { size: 21, k: range(t, 0.3, 0.8), fam: F.mono, weight: 500, fill: P.ink, color: P.white, dot: P.teal });
       if (Dc.asof) G.asOf(g, Dc.asof, 1840, 84, range(t, 0.5, 1.0), { align: 'right', size: 19 });
       G.source(g, Pm.source ?? Dc.src, range(t, 0.6, 1.4), { size: 16 });
