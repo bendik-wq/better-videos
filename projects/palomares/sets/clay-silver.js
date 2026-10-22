@@ -23,7 +23,9 @@ async function stage(H, ctx, shot, o = {}) {
   const skyTex = P0.sky ? (await import('./thumbs.js')).paintedSky(P0.seed ?? 5) : null;
   if (skyTex) { const r = P0.skyDisc ?? 7; const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.02, 0.8, 128), S.clay(P0.beach != null ? '#ead9ae' : (P0.discColor ?? '#f4f2ee'), { rough: P0.beach != null ? 0.85 : 0.6, coat: P0.beach != null ? 0 : 0.3 })); d.position.y = -0.4; d.receiveShadow = true; scene.add(d);
     // beach (figures, P0.beach = z of the waterline): the sea covers the disc behind the waterline and runs to the horizon
-    if (P0.beach != null) { const zw = P0.beach; const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 300).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: '#2f9ad6', roughness: 0.3, clearcoat: 0.3, clearcoatRoughness: 0.3, transparent: true, opacity: 0.9, envMapIntensity: 0.35 }));
+    if (P0.beach != null) { const zw = P0.beach; const rq = S.rng(13); const ripple = S.canvasTex(512, 512, (g, w, h) => { g.fillStyle = '#dce9f2'; g.fillRect(0, 0, w, h); for (let i = 0; i < 150; i++) { const x = rq() * w, y = rq() * h, l = 8 + rq() * 26; g.strokeStyle = `rgba(255,255,255,${0.5 + rq() * 0.5})`; g.lineWidth = 1 + rq() * 1.5; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + l / 2, y - 2 - rq() * 2, x + l, y); g.stroke(); } }, { repeat: [300, 150] });
+      // a lit-only sea (no env reflection: at the grazing beach angle any reflection mirrored the grey studio env as a muddy wall)
+      const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 300).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: ripple, color: '#5cc2f2', emissive: '#2a86c4', emissiveIntensity: 0.55, roughness: 0.9, metalness: 0, envMapIntensity: 0.0 }));
       water.position.set(0, 0.06, zw - 150); water.receiveShadow = true; scene.add(water); // a matte sea: the glossy one mirrored the studio softboxes as a grey wall and a white slab
       const cw = 2 * Math.sqrt(Math.max(1, r * r - zw * zw)); const foam = new THREE.Mesh(new THREE.PlaneGeometry(cw, 0.35).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#f4fbfd', roughness: 0.7, transparent: true, opacity: 0.85 })); foam.position.set(0, 0.07, zw + 0.1); scene.add(foam);
       const wet = new THREE.Mesh(new THREE.PlaneGeometry(cw, 1.2).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#cdb98a', roughness: 0.4, polygonOffset: true, polygonOffsetFactor: -2 })); wet.position.set(0, 0.005, zw + 0.7); scene.add(wet); } }
@@ -344,8 +346,9 @@ export default function claySilver(H) {
 
 
     // ================================================================ figures: glossy mannequins (Reconstructed look) on the studio floor, 1 unit = 1 m
-    // params: figs [{ w (wardrobe 'suit'|'overcoat'|'office'|'casual_a'|...), c ('red'|'blue'|'cyan'|'white'|hex), hat, clip ('idle'), t0, x, z, ry, label, labelAt }]
+    // params: figs [{ w (wardrobe 'suit'|'overcoat'|'office'|'casual_a'|...), c ('red'|'blue'|'cyan'|'white'|hex), hat, clip ('idle'), t0, x, z, ry, label, labelAt, headDown (rad) }]
     //   props: ['desk' | 'witness' | 'cash' | 'cashflow' | 'bars' | 'balance' | 'phone' | 'car' | 'crowd' | 'plinth'], flow: { from: [x,z], to: [x,z], at, n }
+    //   crowd: crowdN, crowdAt [x,z] (first person), crowdGap (x spacing), crowdRy (facing)
     //   cam: 'push' | 'orbit' | 'low' | 'wide' | 'close' (or camera keys), focusOn: figure index, tilt (balance), sky (true: blue sky backdrop)
     async figures(ctx, shot) {
       const P0 = shot.params ?? {};
@@ -364,7 +367,7 @@ export default function claySilver(H) {
         if (f.cap && m.bones?.head) { const cap = new THREE.Mesh(new THREE.SphereGeometry(0.112, 28, 12, 0, Math.PI * 2, 0, Math.PI * 0.52), S.glossy(typeof f.cap === 'string' ? f.cap : '#f6f6f2', { rough: 0.25, coat: 0.8 })); cap.position.set(0, f.capY ?? 0.09, f.capZ ?? 0.0); cap.castShadow = true; m.bones.head.add(cap); }
         return { m, f }; });
       let crowd = [];
-      if (props.has('crowd')) { const r = S.rng(7); for (let i = 0; i < (P0.crowdN ?? 14); i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'office'][i % 3], PR.MQ.cyan, {}); m.root.position.set(-4 + (i % 7) * 1.2 + r() * 0.3, 0, -2.2 - Math.floor(i / 7) * 1.2 + r() * 0.3); m.root.rotation.y = (r() - 0.5) * 0.8; scene.add(m.root); crowd.push({ m, ph: r() * 5, clip: ['idle', 'idle_b', 'phone', 'look_around'][i % 4] }); } }
+      if (props.has('crowd')) { const r = S.rng(7); for (let i = 0; i < (P0.crowdN ?? 14); i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'office'][i % 3], PR.MQ.cyan, {}); const [cx0, cz0] = P0.crowdAt ?? [-4, -2.2], gap = P0.crowdGap ?? 1.2; m.root.position.set(cx0 + (i % 7) * gap + r() * 0.3, 0, cz0 - Math.floor(i / 7) * 1.2 + r() * 0.3); m.root.rotation.y = (P0.crowdRy ?? 0) + (r() - 0.5) * 0.8; scene.add(m.root); crowd.push({ m, ph: r() * 5, clip: ['idle', 'idle_b', 'phone', 'look_around'][i % 4] }); } }
       const S01 = (o, s) => { o.scale.multiplyScalar(s); scene.add(o); return o; };
       if (props.has('desk')) { const d = new THREE.Mesh(S.roundBox(2.0, 0.76, 0.9, 0.04), S.wood({ coat: 0.5 })); d.position.set(P0.deskX ?? 0, 0, P0.deskZ ?? 0.9); d.castShadow = d.receiveShadow = true; scene.add(d); }
       if (props.has('witness')) { const d = new THREE.Mesh(S.roundBox(3.2, 0.76, 0.8, 0.04), S.wood({ coat: 0.5 })); d.position.set(0, 0, 0.75); d.castShadow = d.receiveShadow = true; scene.add(d);
@@ -465,7 +468,10 @@ export default function claySilver(H) {
       return {
         scene, camera: G.camera, layer: G.layer,
         update(t) {
-          for (const { m, f } of people) { m.play(f.clip ?? 'idle', (f.t0 ?? 0.5) + t).update();
+          for (const { m, f } of people) { m.play(f.clip ?? 'idle', (f.t0 ?? 0.5) + t);
+            // f.headDown (rad): bow the head and round the shoulders over the clip (stricken / praying), else the clip as is
+            if (f.headDown) { const a = f.headDown; m.offset({ spine_02: [a * 0.12, 0, 0], spine_03: [a * 0.2, 0, 0], neck_01: [a * 0.45, 0, 0], head: [a * 0.55, 0, 0] }); }
+            m.update();
             // f.hold: 'plate' — the figure holds the plate in front of his chest, both hands on its rim (IK), face to camera
             if (f.hold === 'plate' && propT.plateG) { const pg = propT.plateG, yaw = m.root.rotation.y; m.root.updateMatrixWorld(true); const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw)), right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
               const c = m.worldPos('spine_03').addScaledVector(fwd, 0.3).add(new THREE.Vector3(0, -0.12 + 0.01 * Math.sin(t * 1.3), 0)); pg.position.copy(c); pg.rotation.set(Math.PI / 2 - 0.25, yaw, 0, 'YXZ'); pg.updateMatrixWorld(true);

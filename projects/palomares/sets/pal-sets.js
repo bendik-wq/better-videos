@@ -98,31 +98,67 @@ function b28Geos() {
   return (B28GEO = { body, fin, ring, plate });
 }
 // b28({ tint, seed, damaged }) → Group (y-up, tail at origin). userData.mats = materials (for lighting changes)
-// damaged: dented, split casing with scorch (bombs 2 and 3: the conventional explosive went off, at least in part)
+// damaged: a crumpled, dented casing torn open on one side (petals of skin peeled outward, the charred inside showing),
+// the nose section kinked and crushed (bombs 2 and 3: the conventional explosive went off, at least in part)
+// B28TEAR: the tear centre in the bomb's local frame (y along the body; phi = atan2(x, z), the lathe angle)
+export const B28TEAR = { y: 22.5, phi: -0.36, hw: 2.6, hh: 4.2 };
 let B28DMG = null;
 function b28DamagedBody() {
-  if (B28DMG) return B28DMG; const { L, R } = B28; const g = b28Geos().body.clone(); const p = g.attributes.position; const r = S.rng(41);
+  if (B28DMG) return B28DMG; const { L, R } = B28; const T = B28TEAR; const r = S.rng(41);
+  // a finer lathe than the intact bomb (the tear and the creases need the resolution)
+  const pts = [new THREE.Vector2(0.001, 0), new THREE.Vector2(2.1, 0), new THREE.Vector2(2.3, 0.2), new THREE.Vector2(2.4, 3.5), new THREE.Vector2(2.55, 6.9), new THREE.Vector2(2.6, 7.1), new THREE.Vector2(R, 7.5)];
+  const nC = 86; for (let i = 1; i <= nC; i++) pts.push(new THREE.Vector2(R, 7.5 + i * (33.0 - 7.5) / nC));
+  const nL = L - 33.0; for (let i = 1; i <= 14; i++) { const a = i / 14 * Math.PI / 2; pts.push(new THREE.Vector2(Math.max(0.001, R * Math.cos(a)), 33.0 + Math.sin(a) * nL)); }
+  const g0 = new THREE.LatheGeometry(pts, 160); const p = g0.attributes.position, uv = g0.attributes.uv;
   const dents = Array.from({ length: 9 }, () => ({ y: 6 + r() * (L - 8), a: r() * TAU, s: 1.2 + r() * 2.2, d: 0.35 + r() * 0.7 }));
-  for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i); const rr = Math.hypot(x, z); if (rr < 0.05) continue; const a = Math.atan2(z, x); let k = 1;
-    for (const d of dents) { const da = Math.atan2(Math.sin(a - d.a), Math.cos(a - d.a)); const w = Math.exp(-((y - d.y) ** 2) / (d.s * d.s) - (da * da) / 0.35); k -= d.d * w / R; }
-    // the nose is crushed and flattened on one side; the casing bulges near the split
-    if (y > L - 6) { const u = (y - (L - 6)) / 6; k *= 1 - 0.32 * u * (0.5 + 0.5 * Math.cos(a - 0.6)); }
-    if (y > 17 && y < 21) k *= 1 + 0.08 * Math.sin(Math.PI * (y - 17) / 4);
-    p.setXYZ(i, x * k, y, z * k); }
-  g.computeVertexNormals(); return (B28DMG = g);
+  const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+  // the tear: an elliptical hole with a jagged, petal-like rim (rho < 1 + jag), in arc-length units around the tear centre
+  const tearRho = (y, ph) => { const ax = wrapA(ph - T.phi) * R / T.hw, ay = (y - T.y) / T.hh; const th = Math.atan2(ay, ax);
+    const jag = 0.2 * Math.sin(7 * th + 0.4) + 0.08 * Math.sin(11 * th + 1.3); return { rho: Math.hypot(ax, ay), jag, ax, ay }; };
+  const hole = new Uint8Array(p.count);
+  for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i); const rr = Math.hypot(x, z); uv.setY(i, y / L); if (rr < 0.05) continue;
+    const ph = Math.atan2(x, z); let k = 1;
+    for (const d of dents) { const da = wrapA(ph - d.a); const w = Math.exp(-((y - d.y) ** 2) / (d.s * d.s) - (da * da) / 0.35); k -= d.d * w / R; }
+    const { rho, jag, ax, ay } = tearRho(y, ph); const e = rho - (1 + jag);
+    if (e < 0) hole[i] = 1;
+    // crumple: sharp creases (|sin|) strongest around the tear, faint over the rest of the casing
+    if (y > 7.6 && y < 34) { const amp = 0.02 + 0.42 * Math.exp(-((rho - 1.15) ** 2) / 0.9);
+      const cr = Math.abs(Math.sin(1.25 * y + 3 * ph)) * 0.8 + 0.6 * Math.abs(Math.sin(0.9 * y - 5 * ph + 0.5)) + 0.35 * Math.abs(Math.sin(2.1 * y + 7 * ph + 2.0));
+      k -= amp * (cr - 0.8) / R; }
+    // petals: the skin at the rim peels outward and curls away from the hole
+    if (e >= 0 && e < 0.9) { const f = (1 - e / 0.9) ** 2; k += (0.75 * f) / R; }
+    // the nose is crushed and flattened on one side
+    if (y > L - 6) { const u = (y - (L - 6)) / 6; k *= 1 - 0.32 * u * (0.5 + 0.5 * Math.cos(ph - 0.6)); }
+    let nx = x * k, ny = y, nz = z * k;
+    // the casing is kinked at the tear: the nose section droops a little (local +x is world-down once the bomb lies on its side)
+    if (y > T.y) { const kap = 0.07 * Math.min(1, (y - T.y) / 3); const dy = ny - T.y; const c = Math.cos(kap), sn = Math.sin(kap); const x2 = nx * c + dy * sn, y2 = -nx * sn + dy * c; nx = x2; ny = T.y + y2; }
+    p.setXYZ(i, nx, ny, nz); }
+  // drop the triangles inside the tear (all three corners in the hole, or the centroid in it)
+  const idx = g0.index.array, keep = [];
+  for (let t = 0; t < idx.length; t += 3) { const [a, b, c] = [idx[t], idx[t + 1], idx[t + 2]]; if (hole[a] + hole[b] + hole[c] >= 2) continue; keep.push(a, b, c); }
+  g0.setIndex(keep); g0.computeVertexNormals(); return (B28DMG = g0);
 }
 let B28DMGTEX = null;
-function b28DamagedTex() { if (B28DMGTEX) return B28DMGTEX; const base = b28Tex(1).image; const r = S.rng(77);
+function b28DamagedTex() { if (B28DMGTEX) return B28DMGTEX; const base = b28Tex(1).image; const r = S.rng(77); const { L, R } = B28; const T = B28TEAR;
   return (B28DMGTEX = S.canvasTex(1024, 1024, (g, W, H) => { g.drawImage(base, 0, 0, W, H);
-    for (let i = 0; i < 26; i++) { const x = r() * W, y = (0.1 + r() * 0.85) * H, rad = (30 + r() * 120) * 0.45; if (i % 3) continue; const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, 'rgba(40,32,26,0.4)'); gr.addColorStop(0.6, 'rgba(70,58,44,0.16)'); gr.addColorStop(1, 'rgba(90,80,60,0)'); g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
-    // a torn split around the middle seam
-    g.strokeStyle = '#3a3f46'; g.lineWidth = 3; g.beginPath(); for (let x = 0; x <= W; x += 24) { const y = 0.48 * H + Math.sin(x * 0.05) * 14 + (r() - 0.5) * 18; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); })); }
+    // grime: a few small sooty patches (no big smudges)
+    for (let i = 0; i < 26; i++) { const x = r() * W, y = (0.1 + r() * 0.85) * H, rad = (20 + r() * 60) * 0.45; if (i % 3) continue; const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, 'rgba(60,52,44,0.22)'); gr.addColorStop(1, 'rgba(90,80,60,0)'); g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+    // scorch around the tear rim (u = lathe angle / 2pi, v = y / L), drawn twice across the u seam
+    const u0 = ((T.phi % TAU) + TAU) % TAU / TAU, v0 = T.y / L, rw = (T.hw / (TAU * R)) * W * 1.9, rh = (T.hh / L) * H * 1.6;
+    for (const du of [-1, 0, 1]) { const cx = (u0 + du) * W, cy = (1 - v0) * H; g.save(); g.translate(cx, cy); g.scale(rw / rh, 1);
+      const gr = g.createRadialGradient(0, 0, rh * 0.4, 0, 0, rh); gr.addColorStop(0, 'rgba(38,30,24,0.85)'); gr.addColorStop(0.55, 'rgba(60,48,36,0.45)'); gr.addColorStop(1, 'rgba(90,80,60,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, rh, 0, TAU); g.fill(); g.restore(); }
+    // scratches
+    g.strokeStyle = 'rgba(70,74,80,0.5)'; g.lineWidth = 1.5; for (let i = 0; i < 40; i++) { const x = r() * W, y = (0.2 + r() * 0.7) * H; g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 60, y + (r() - 0.5) * 20); g.stroke(); } })); }
 export function b28({ seed = 1, color = '#ffffff', rough = 0.34, metal = 0.25, damaged = false } = {}) {
   const G = new THREE.Group(); const geo = damaged ? { ...b28Geos(), body: b28DamagedBody() } : b28Geos();
-  const skin = new THREE.MeshPhysicalMaterial({ map: damaged ? b28DamagedTex() : b28Tex(seed), color, metalness: metal, roughness: damaged ? 0.55 : rough, clearcoat: damaged ? 0.1 : 0.45, clearcoatRoughness: 0.25, envMapIntensity: 1.1 });
+  const skin = new THREE.MeshPhysicalMaterial({ map: damaged ? b28DamagedTex() : b28Tex(seed), color, metalness: metal, roughness: damaged ? 0.5 : rough, clearcoat: damaged ? 0.15 : 0.45, clearcoatRoughness: 0.25, envMapIntensity: 1.1, side: damaged ? THREE.DoubleSide : THREE.FrontSide });
   const finM = new THREE.MeshPhysicalMaterial({ color: '#e6e9ec', metalness: metal, roughness: rough + 0.05, clearcoat: 0.3, envMapIntensity: 1.1 });
   const darkM = S.clay('#9aa3ad', { rough: 0.5 });
   G.add(mk(geo.body, skin));
+  if (damaged) { // the charred inside, seen through the tear: a dark core + a couple of torn inner rings
+    const T = B28TEAR, coreM = S.clay('#2e2925', { rough: 0.95 }), ringM = S.clay('#55504a', { rough: 0.8 });
+    const core = mk(new THREE.CylinderGeometry(B28.R * 0.8, B28.R * 0.8, T.hh * 2.6, 32), coreM, { cast: false }); core.position.y = T.y; G.add(core);
+    for (const dy of [-1.6, 1.4]) { const rg = mk(new THREE.TorusGeometry(B28.R * 0.86, 0.16, 6, 40, 4.2).rotateX(Math.PI / 2), ringM, { cast: false }); rg.position.y = T.y + dy; rg.rotation.y = T.phi + 2.1 + dy; G.add(rg); } }
   for (let k = 0; k < 4; k++) { const f = mk(geo.fin, finM); f.rotation.y = k * Math.PI / 2 + Math.PI / 4; if (damaged) { f.rotation.z = [0.25, -0.1, 0.4, 0][k]; f.rotation.x = [0, 0.3, -0.15, 0.2][k]; if (k === 3) f.visible = false; } G.add(f); }
   if (!damaged) for (const y of [7.5, 33.0]) { const r = mk(geo.ring, darkM, { cast: false }); r.position.y = y; G.add(r); } // the dented casing would leave the joint rings floating
   const pl = mk(geo.plate, darkM); pl.position.y = -0.12; G.add(pl);
@@ -157,6 +193,29 @@ export function dashedOutline(poly, { dash = 3.0, gap = 1.9, r = 0.55, color = R
     const cap2 = mk(new THREE.SphereGeometry(r, 10, 8), m, { cast: false }); cap2.position.copy(b); d.add(cap2);
   }
   G.userData = { dashes, draw(k) { const n = Math.ceil(dashes.length * clamp01(k)); dashes.forEach((d, i) => { d.visible = i < n; }); } };
+  return G;
+}
+// the empty 4th slot (replaces the dashed bomb silhouette, which read badly): a red dashed rectangular footprint on the floor
+// where the bomb would stand, plus a big glossy red 3D '?' floating in the slot at bomb height.
+// emptySlot({ w, d, h, stroke }) → Group; userData.draw(k) reveals the footprint (0..1), userData.pop(k) scales the '?' in (0..1),
+// userData.face(camera) turns the '?' (upright) toward the camera. Local origin = the slot centre on the floor.
+export function emptySlot({ w = 13, d = 14, h = B28.L, stroke = 0.5 } = {}) {
+  const G = new THREE.Group();
+  const rect = [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2], [-w / 2, -d / 2]];
+  const foot = dashedOutline(rect, { dash: 2.2, gap: 1.5, r: stroke }); foot.rotation.x = -Math.PI / 2; foot.position.y = stroke * 0.6; G.add(foot);
+  const fill = mk(new THREE.PlaneGeometry(w, d).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: RED, transparent: true, opacity: 0.16, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }), { cast: false }); fill.position.y = 0.04; G.add(fill);
+  // the '?': a tube hook (arc + neck) and a ball dot, in a unit of bomb heights
+  const m = new THREE.MeshPhysicalMaterial({ color: RED, roughness: 0.28, clearcoat: 0.9, clearcoatRoughness: 0.15, emissive: RED, emissiveIntensity: 0.25 });
+  const s = h / 36.8, tr = 1.75 * s, cx = 0, cy = 27 * s, rr = 6.2 * s; const pts = [];
+  for (let i = 0; i <= 28; i++) { const a = (150 - i * (210 / 28)) * Math.PI / 180; pts.push(new THREE.Vector3(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 0)); } // 150° → -60°
+  pts.push(new THREE.Vector3(1.2 * s, 18.6 * s, 0), new THREE.Vector3(0, 16.4 * s, 0), new THREE.Vector3(0, 13.4 * s, 0));
+  const Q = new THREE.Group(); const hook = mk(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'centripetal'), 96, tr, 20, false), m); Q.add(hook);
+  for (const p of [pts[0], pts.at(-1)]) { const cap = mk(new THREE.SphereGeometry(tr, 20, 14), m); cap.position.copy(p); Q.add(cap); }
+  const dot = mk(new THREE.SphereGeometry(tr * 1.35, 24, 18), m); dot.position.set(0, 8.4 * s, 0); Q.add(dot);
+  const qp = new THREE.Group(); qp.add(Q); G.add(qp);
+  G.userData = { foot, q: qp, draw(k) { foot.userData.draw(k); fill.material.opacity = 0.16 * clamp01(k); },
+    pop(k) { const e = clamp01(k); qp.visible = e > 0.001; const o = e < 1 ? 1 + 0.12 * Math.sin(Math.PI * e) : 1; qp.scale.setScalar(Math.max(0.001, e * o)); qp.position.y = (1 - e) * 4 * s; },
+    face(camera) { const wp = G.getWorldPosition(new THREE.Vector3()); qp.rotation.y = Math.atan2(camera.position.x - wp.x, camera.position.z - wp.z) - G.rotation.y; } };
   return G;
 }
 
@@ -385,7 +444,7 @@ export function curv() {
   return G;
 }
 // a Navy ship in haze grey (lightened): hull planform with a pointed bow, superstructure, funnel, mast. Units: ship ~ len long along +x
-export function ship({ len = 14, beam = 2.4, color = '#bcc6cf', kind = 'navy' } = {}) {
+export function ship({ len = 14, beam = 2.4, color = '#bcc6cf', kind = 'navy', detail = null } = {}) {
   const G = new THREE.Group(); const hullM = S.glossy(color, { rough: 0.35 }), deck = S.clay('#9ea8b2', { rough: 0.7 }), sup = S.glossy(kind === 'trawler' ? '#ffffff' : '#dfe5ea', { rough: 0.35 });
   const L = len, B = beam, Hh = kind === 'trawler' ? 1.0 : 1.5;
   const plan = [[-L / 2, -B / 2], [L * 0.22, -B / 2], [L / 2, 0], [L * 0.22, B / 2], [-L / 2, B / 2]];
@@ -406,6 +465,34 @@ export function ship({ len = 14, beam = 2.4, color = '#bcc6cf', kind = 'navy' } 
   if (kind === 'mizar') { const af = new THREE.Group(); af.position.set(-L * 0.25, y0, 0); G.add(af); for (const z of [-0.7, 0.7]) { const leg = mk(new THREE.CylinderGeometry(0.07, 0.07, 2.8, 8).translate(0, 1.4, 0), S.clay('#e0241b' === color ? color : '#f2a33a')); leg.position.z = z; leg.rotation.x = z * 0.15; af.add(leg); } }
   if (kind === 'petrel') { const bm = mk(new THREE.CylinderGeometry(0.07, 0.09, 4, 8).translate(0, 2, 0), sup); bm.position.set(-L * 0.36, y0, 0); bm.rotation.z = 0.6; G.add(bm); const cap = mk(new THREE.CylinderGeometry(0.3, 0.35, 0.4, 16), S.clay('#6f7c88')); cap.position.set(-L * 0.3, y0 + 0.2, 0); G.add(cap); }
   G.userData = { well: new THREE.Vector3(kind === 'petrel' ? -L * 0.4 : 0, 0, 0) };
+  // detail ({ hull: '470', nets: true }): close-up dressing for a navy ship (a minesweeper): hull numbers on the bow, a bow gun,
+  // deck rails, bridge windows, life-raft canisters, a radar bar, the sweep-gear reel and gallows aft, optionally a heap of nets
+  if (detail) { const dark = S.clay('#3b4652', { rough: 0.5 }), glass = S.glossy('#2c3e52', { rough: 0.1 }), railM = S.clay('#e9edf0', { rough: 0.5 });
+    if (detail.hull) for (const sg of [1, -1]) { const lab = PR.labelPlane(detail.hull, { w: 1.05, h: 0.48, bg: null, color: '#1f2a36' }); lab.material.alphaTest = 0.4;
+      const nx = B / 2, nz = 0.28 * L; lab.rotation.y = Math.atan2(nx, sg * nz); const u = 0.3; lab.position.set(L * u, 0.42, sg * (B / 2) * (1 - (u - 0.22) / 0.28) + sg * 0.2); G.add(lab); }
+    const gb = mk(new THREE.CylinderGeometry(0.3, 0.34, 0.3, 20), sup); gb.position.set(L * 0.3, y0 + 0.15, 0); G.add(gb);
+    const gt = mk(S.roundBox(0.5, 0.26, 0.42, 0.08), sup); gt.position.set(L * 0.3, y0 + 0.3, 0); G.add(gt);
+    const bar = mk(new THREE.CylinderGeometry(0.045, 0.05, 1.1, 10).rotateZ(-Math.PI / 2 + 0.18).translate(0.55, 0.05, 0), dark); bar.position.set(L * 0.3, y0 + 0.36, 0); G.add(bar);
+    // bridge windows: a dark band of panes on the front and sides of the upper block
+    for (let i = 0; i < 5; i++) { const w = mk(new THREE.BoxGeometry(0.03, 0.2, 0.18), glass, { cast: false }); w.position.set(L * 0.08 + L * 0.075 + 0.01, y0 + 1.42, (i - 2) * 0.24); G.add(w); }
+    for (const sg of [1, -1]) for (let i = 0; i < 3; i++) { const w = mk(new THREE.BoxGeometry(0.22, 0.2, 0.03), glass, { cast: false }); w.position.set(L * 0.08 + (i - 1) * 0.3, y0 + 1.42, sg * (B * 0.275 + 0.01)); G.add(w); }
+    // portholes on the lower superstructure
+    for (const sg of [1, -1]) for (let i = 0; i < 5; i++) { const ph = mk(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 14).rotateX(Math.PI / 2), dark, { cast: false }); ph.position.set(L * 0.05 + (i - 2) * 0.55, y0 + 0.6, sg * (B * 0.35 + 0.01)); G.add(ph); }
+    // rails: two runs around the deck edge, with stanchions
+    const edge = [[-L / 2 + 0.15, B / 2 - 0.08], [L * 0.22, B / 2 - 0.08], [L / 2 - 0.35, 0], [L * 0.22, -B / 2 + 0.08], [-L / 2 + 0.15, -B / 2 + 0.08]];
+    for (const hgt of [0.2, 0.36]) G.add(mk(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(edge.map(([x, z]) => new THREE.Vector3(x, y0 + hgt, z)), false, 'catmullrom', 0.0), 160, 0.018, 5, false), railM, { cast: false }));
+    const st = []; for (let k = 1; k < edge.length; k++) { const [ax, az] = edge[k - 1], [bx, bz] = edge[k]; const l = Math.hypot(bx - ax, bz - az), n = Math.max(1, Math.round(l / 0.5)); for (let q = 0; q <= n; q++) st.push({ p: [S.lerp(ax, bx, q / n), y0 + 0.18, S.lerp(az, bz, q / n)], sv: [0.02, 0.36, 0.02] }); }
+    G.add(S.instances(new THREE.CylinderGeometry(1, 1, 1, 5), railM, st, { cast: false }));
+    // life-raft canisters on the superstructure sides, a radar bar on the mast
+    for (const sg of [1, -1]) for (const dx of [-0.35, 0.35]) { const c = mk(new THREE.CapsuleGeometry(0.13, 0.32, 4, 12).rotateZ(Math.PI / 2), S.clay('#f4f4f2', { rough: 0.5 })); c.position.set(L * 0.05 + dx - 0.4, y0 + 1.22, sg * (B * 0.36)); G.add(c); }
+    const rad = mk(S.roundBox(1.1, 0.12, 0.16, 0.05), dark); rad.position.set(L * 0.1, y0 + 4.9, 0); G.add(rad);
+    // sweep gear aft: a big cable reel and a gallows frame
+    const reel = mk(new THREE.CylinderGeometry(0.42, 0.42, 0.9, 24).rotateX(Math.PI / 2), S.clay('#8d98a3', { rough: 0.5 })); reel.position.set(-L * 0.3, y0 + 0.45, 0); G.add(reel);
+    for (const z of [-0.65, 0.65]) { const leg = mk(new THREE.CylinderGeometry(0.05, 0.05, 1.5, 8).translate(0, 0.75, 0), sup); leg.position.set(-L / 2 + 0.35, y0, z); G.add(leg); }
+    const beamT = mk(new THREE.CylinderGeometry(0.05, 0.05, 1.4, 8).rotateX(Math.PI / 2), sup); beamT.position.set(-L / 2 + 0.35, y0 + 1.5, 0); G.add(beamT);
+    if (detail.nets) { const rq = S.rng(9), nh = []; for (let i = 0; i < 40; i++) { const a = rq() * TAU, rr = Math.sqrt(rq()) * 0.55; nh.push({ p: [-L * 0.17 + Math.cos(a) * rr * 1.3, y0 + 0.08 + (0.55 - rr) * 0.35 * rq(), Math.sin(a) * rr], s: 0.16 + rq() * 0.14, c: rq() < 0.5 ? '#6f7d5a' : '#5d6a4b' }); }
+      G.add(S.instances(new THREE.IcosahedronGeometry(1, 1), S.clay('#ffffff', { rough: 0.95 }), nh, { cast: true })); }
+    G.userData.deckY = y0; }
   return G;
 }
 
@@ -506,19 +593,16 @@ export default function palSets(H) {
         else { const chockM = S.wood({ coat: 0.4 }); for (const x of [-11, 11]) { const c = mk(S.roundBox(3, 2.2, 9, 0.3), chockM); c.position.set(x, 7, 0); scene.add(c); } }
         const b = b28({ damaged: dmg }); b.rotation.z = -Math.PI / 2 + (dmg ? 0.04 : 0); const piv = new THREE.Group(); piv.position.set(0, 7 + (dmg ? 0.6 : 2.0) + R, 0); b.position.x = -L / 2; piv.add(b); scene.add(piv); bombs.push(piv);
         extra.piv = piv; extra.b = b;
-        if (dmg && P0.scorch) { const band = mk(new THREE.TorusGeometry(R * 1.03, 0.55, 10, 48).rotateX(Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: RED, emissive: RED, emissiveIntensity: 0.45, roughness: 0.45 }), { cast: false }); band.position.y = 23.2; b.add(band);
-          const soot = mk(new THREE.CylinderGeometry(R * 1.015, R * 1.015, 5.5, 40, 1, true), new THREE.MeshStandardMaterial({ color: '#3a3330', roughness: 1, transparent: true, opacity: 0.55, depthWrite: false }), { cast: false }); soot.position.y = 23.2; b.add(soot); } // P0.scorch: the split where the explosive went off, in the red accent
+        // the tear (see b28 damaged) is the damage; the red accent is a small pill on it (P0.pills target 'tear'), no ring
       } else if (mode === 'four') {
         const xs = P0.xs ?? [-39, -24, -9, 8.5];
         for (let i = 0; i < 3; i++) { const b = b28({ seed: 1 + i }); b.position.set(xs[i], 0, 0); b.rotation.y = Math.PI / 4 + (i - 1) * 0.06; scene.add(b); bombs.push(b); }
-        const ol = dashedOutline(b28Silhouette(), { r: P0.stroke ?? 0.62 }); ol.position.set(xs[3], 0.2, 0); scene.add(ol); extra.ol = ol;
-        if (P0.second) { const o2 = dashedOutline(b28Silhouette(), { r: P0.stroke2 ?? P0.stroke ?? 0.62 }); o2.position.set(xs[3] + 22, P0.secondY ?? 3.4, 6); o2.rotation.z = -1.35; scene.add(o2); extra.ol2 = o2; }
-        // a faint dashed footprint ring on the floor, the empty slot
-        const ring = mk(new THREE.RingGeometry(5.0, 5.6, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: RED, transparent: true, opacity: 0.35, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }), { cast: false }); ring.position.set(xs[3], 0.05, 0); scene.add(ring); extra.ring = ring;
+        // the empty 4th slot: a red dashed footprint on the floor + a big red '?' at bomb height (no bomb-shaped outline; no second outline)
+        const slot = emptySlot({ stroke: P0.stroke ?? 0.5 }); slot.position.set(xs[3], 0, 0); scene.add(slot); extra.slot = slot;
       } else if (mode === 'numbers') {
         const missing = new Set(P0.missing ?? []);
         for (let i = 0; i < 4; i++) { const x = (i - 1.5) * 20;
-          let b; if (missing.has(i + 1)) { b = dashedOutline(b28Silhouette(), { r: 0.5 }); b.position.set(x, 0.2, 0); }
+          let b; if (missing.has(i + 1)) { b = emptySlot({ stroke: 0.45 }); b.position.set(x, 0, 0); }
           else { b = b28({ seed: 1 + i }); b.position.set(x, 0, 0); b.rotation.y = 0.45; }
           scene.add(b); const num = PR.labelPlane(String(i + 1), { w: 7, h: 7, bg: '#ffffff', color: '#14233d', radius: 0.5 }); num.material.alphaTest = 0.5; num.position.set(x, L + 7, 0); scene.add(num);
           bombs.push({ b, num, x, missing: missing.has(i + 1), at: G.cue((P0.at ?? [])[i], 0.7 + i * 0.9) }); }
@@ -557,12 +641,11 @@ export default function palSets(H) {
         const c = G.cam(keys, t, { float: mode === 'four' ? 0.0 : 0.04 });
         if (mode === 'hero') { extra.piv.rotation.y = (P0.spin ?? 0.09) * t - 0.25;
           if (P0.popAt != null) { const k = ease(S.range(t, G.cue(P0.popAt, dur * 0.6), G.cue(P0.popAt, dur * 0.6) + 0.8)); const pl = extra.b.userData.plate; pl.position.set(k * 0.8, -0.12 - k * 5.0, k * 4.5); pl.rotation.set(k * 1.1, 0, k * 0.7); } } // P0.popAt: the tail cover blows off
-        if (mode === 'four') { const k = P0.drawAt == null ? 1 : S.range(t, G.cue(P0.drawAt, 0.5), G.cue(P0.drawAt, 0.5) + 1.2); extra.ol.userData.draw(k); extra.ol.quaternion.copy(camera.quaternion);
-          if (extra.ol2) { extra.ol2.userData.draw(S.range(t, G.cue(P0.secondAt, dur * 0.5), G.cue(P0.secondAt, dur * 0.5) + 0.9)); extra.ol2.quaternion.copy(camera.quaternion); extra.ol2.rotateZ(-1.35); }
+        if (mode === 'four') { const t0 = P0.drawAt == null ? -2 : G.cue(P0.drawAt, 0.5); extra.slot.userData.draw(S.range(t, t0, t0 + 0.9)); extra.slot.userData.pop(ease(S.range(t, t0 + 0.5, t0 + 1.1))); extra.slot.userData.face(camera);
           if (title) title.style.opacity = String(S.range(t, G.cue(P0.titleAt, 0), G.cue(P0.titleAt, 0) + 0.4)); }
         if (mode === 'numbers') bombs.forEach((b, i) => { const k = S.range(t, b.at, b.at + 0.35); b.num.visible = k < 1; extra.numLit[i].visible = k > 0; const s = 1 + 0.25 * Math.sin(Math.PI * k);
           extra.numLit[i].scale.setScalar(s); faceCam([b.num, extra.numLit[i]], camera);
-          if (b.missing) { b.b.userData.draw(S.range(t, b.at, b.at + 0.6)); b.b.quaternion.copy(camera.quaternion); }
+          if (b.missing) { b.b.userData.draw(S.range(t, b.at, b.at + 0.6)); b.b.userData.pop(ease(S.range(t, b.at + 0.2, b.at + 0.8))); b.b.userData.face(camera); }
           else b.b.userData.mats.forEach(m => { m.emissive = m.emissive ?? new THREE.Color(); m.emissive.set('#ffffff'); m.emissiveIntensity = 0.0; m.color.setScalar(S.lerp(0.62, 1, k)); });
           const sp = statusPills[i]; if (sp) { const [x, y, v] = G.toPx([b.x, -3, 6]); sp.at(x, y + 60, v ? S.range(t, b.at + 0.3, b.at + 0.6) : 0); } });
         if (mode === 'chute') { const sw = Math.sin(t * 1.1) * 0.12 + Math.sin(t * 0.47 + 1) * 0.05; extra.rig.rotation.z = sw; extra.rig.rotation.x = Math.sin(t * 0.8 + 0.4) * 0.05; extra.rig.rotation.y = t * 0.05;
@@ -570,7 +653,8 @@ export default function palSets(H) {
           const im = extra.cl, it = im.userData.items; it.forEach((p, i) => S.place(im, i, [p.p[0] * 0.8, p.p[1] - 700 + t * 18, p.p[2] * 0.3 - 1900], [0, 0, 0], p.sv)); im.instanceMatrix.needsUpdate = true; }
         // pill targets: in hero mode the bomb lies on the plinth (y ≈ 9.6); the tail plate is the bomb group's origin
         if (mode === 'hero') { extra.piv.updateMatrixWorld(true); const tail = extra.b.userData.plate.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 1.5, 0)), nose = extra.b.localToWorld(new THREE.Vector3(0, L, 0));
-          G.frame(t, { bomb: extra.piv.position.clone().add(new THREE.Vector3(0, R + 3, 0)), tail, nose }); }
+          const tear = extra.b.localToWorld(new THREE.Vector3(Math.sin(B28TEAR.phi) * (R + 0.6), B28TEAR.y, Math.cos(B28TEAR.phi) * (R + 0.6)));
+          G.frame(t, { bomb: extra.piv.position.clone().add(new THREE.Vector3(0, R + 3, 0)), tail, nose, tear }); }
         else if (mode === 'chute') { extra.rig.updateMatrixWorld(true); G.frame(t, { bomb: extra.b.localToWorld(new THREE.Vector3(R * 1.6, L * 0.55, 0)), chute: extra.can.localToWorld(new THREE.Vector3(0, 0, 0)) }); }
         else G.frame(t, { bomb: [0, 20, 0] });
       } };
@@ -677,6 +761,22 @@ export default function palSets(H) {
       // sites: bomb 1 (intact, riverbed), craters at 2 and 3
       const small = (k = 0.026) => { const b = b28(); b.scale.setScalar(k); return b; };
       const b1 = small(); b1.rotation.set(0, 0.7, Math.PI / 2 - 0.08); b1.position.set(SITE.b1[0] + 0.85, 0.07, SITE.b1[1] + 0.1); W.add(b1); // in the middle of the gravel bed (not half on the bank)
+      // impacts: close-up detail of the dry riverbed around bomb 1 (the ground texture alone is a blur up close):
+      // pebbles and cobbles on the gravel bed, low earth banks on both sides with dry scrub and cane
+      if (mode === 'impacts' && P0.riverDetail !== false) { const rq = S.rng(23), B1C = [18.49, 4.18], peb = [], bank = [], scrub = [], cane = [];
+        const seg = river.slice(3); // the stretch from (15.6,-5) to the mouth
+        const along = (f) => { const k = f * (seg.length - 1), j = Math.min(seg.length - 2, Math.floor(k)), u = k - j; const [ax, az] = seg[j], [bx, bz] = seg[j + 1]; const l = Math.hypot(bx - ax, bz - az); return { x: S.lerp(ax, bx, u), z: S.lerp(az, bz, u), nx: -(bz - az) / l, nz: (bx - ax) / l }; };
+        for (let i = 0; i < 2600; i++) { const q = along(rq()); const o = (rq() - 0.5) * 1.5; const x = q.x + q.nx * o, z = q.z + q.nz * o; if (Math.hypot(x - B1C[0], z - B1C[1]) > 4.2 || inSea(x, z)) continue;
+          if (Math.hypot(x - B1C[0], z - B1C[1]) < 0.55 && rq() < 0.8) continue; const big = rq() < 0.12, s = big ? 0.035 + rq() * 0.03 : 0.01 + rq() * 0.022;
+          peb.push({ p: [x, s * 0.25, z], r: [rq() * 3, rq() * 3, rq() * 3], sv: [s * (1 + rq() * 0.6), s * 0.55, s], c: ['#c9c6bf', '#e9e6df', '#b7b2a8', '#d8cfbd', '#a9a39a'][Math.floor(rq() * 5)] }); }
+        for (let i = 0; i < 520; i++) { const q = along(rq()); for (const sd of [-1, 1]) { const o = sd * (0.86 + rq() * 0.14); const x = q.x + q.nx * o, z = q.z + q.nz * o; if (Math.hypot(x - B1C[0], z - B1C[1]) > 4.6 || inSea(x, z + 0.3)) continue;
+          bank.push({ p: [x, -0.02, z], r: [0, rq() * 3, 0], sv: [0.16 + rq() * 0.12, 0.07 + rq() * 0.06, 0.16 + rq() * 0.12], c: rq() < 0.5 ? '#d2b983' : '#c8ab73' });
+          if (rq() < 0.16) scrub.push({ p: [x + q.nx * sd * 0.12, 0.08, z + q.nz * sd * 0.12], s: 0.05 + rq() * 0.06, c: rq() < 0.5 ? '#8a9a5c' : '#a3a46a' });
+          if (rq() < 0.07) for (let c = 0; c < 4; c++) cane.push({ p: [x + q.nx * sd * 0.15 + (rq() - 0.5) * 0.08, 0.16, z + q.nz * sd * 0.15 + (rq() - 0.5) * 0.08], r: [(rq() - 0.5) * 0.3, 0, (rq() - 0.5) * 0.3], sv: [0.012, 0.3 + rq() * 0.15, 0.012], c: rq() < 0.5 ? '#b7a46a' : '#c9b27a' }); } }
+        W.add(S.instances(new THREE.IcosahedronGeometry(1, 1), S.clay('#ffffff', { rough: 0.8 }), peb, { cast: true }));
+        W.add(S.instances(new THREE.SphereGeometry(1, 14, 8, 0, TAU, 0, Math.PI / 2), S.clay('#ffffff', { rough: 0.9 }), bank, { cast: true }));
+        W.add(S.instances(new THREE.IcosahedronGeometry(1, 1), S.clay('#ffffff', { rough: 0.85 }), scrub, { cast: true }));
+        W.add(S.instances(new THREE.CylinderGeometry(0.5, 1, 1, 5), S.clay('#ffffff', { rough: 0.8 }), cane, { cast: true })); }
       const chute1 = mk(new THREE.CircleGeometry(0.42, 16).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: '#e9e8e4', roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 }), { cast: false }); chute1.scale.set(1.3, 1, 0.8); chute1.position.set(SITE.b1[0] - 0.15, 0.02, SITE.b1[1] - 0.4); W.add(chute1);
       const crater = (x, z, s) => { const g = new THREE.Group(); g.position.set(x, 0, z);
         const rim = mk(new THREE.TorusGeometry(0.55, 0.16, 10, 40).rotateX(Math.PI / 2), S.clay('#c9ad79', { rough: 0.9 })); rim.scale.y = 0.6; g.add(rim);
@@ -853,6 +953,7 @@ export default function palSets(H) {
     // re-found 2 Apr 120 yd SSW at 2,800 ft on a gentler plain; dragged to ~2,850 ft; CURV fouled in the chute; lifted 7 Apr.
     async sea(ctx, shot) {
       const P0 = shot.params ?? {}; const mode = P0.mode ?? 'search';
+      if (P0.salute) await PR.loadMannequins(['casual_a']);
       const night = (mode === 'snap' && P0.night !== false) || P0.night === true;
       const G = await stage(H, ctx, shot, { target: [-14, -16, -12], span: 60, az: 150, el: 62, sky: true, seed: P0.seed ?? 9, far: 2000, keyI: night ? 0.55 : 1.45, hemi: night ? 0.15 : 0.3,
         caption: { search: 'THE SEARCH · FEB–MAR 1966', found: '15 MAR 1966 · CONTACT #261', lift: '24 MAR 1966 · ONE LINE', snap: 'ABOUT 9 PM · 24 MAR 1966', refind: '2 APR 1966 · FOUND AGAIN', curv: '7 APR 1966 · CURV', raise: '7 APR 1966 · THE LIFT' }[mode],
@@ -877,7 +978,7 @@ export default function palSets(H) {
         const bed = mk(g, [new THREE.MeshPhysicalMaterial({ map: capTex, roughness: 0.9, envMapIntensity: 0.7 }), S.clay('#c8c2b0', { rough: 0.9, sheen: 0.1 })]); scene.add(bed);
         if (night && P0.dim != null && mode !== 'snap') { bed.material[1].color.set('#8ea3cc'); bed.material[0].color.set('#9aa6c4'); bed.material[0].emissive = new THREE.Color('#1a2a52'); } } // a dimmed night frame: the seabed goes cool blue-navy, not brown
       // land wedge at the left end: the Spanish coast with a few white houses
-      { const sh = new THREE.Shape(); sh.moveTo(-86, YS); sh.lineTo(-86, 4.2); sh.lineTo(-79, 3.6); sh.lineTo(-74, 1.4); sh.lineTo(-70.2, -1.8); sh.lineTo(-70, YS); sh.closePath();
+      if (!P0.openSea) { const sh = new THREE.Shape(); sh.moveTo(-86, YS); sh.lineTo(-86, 4.2); sh.lineTo(-79, 3.6); sh.lineTo(-74, 1.4); sh.lineTo(-70.2, -1.8); sh.lineTo(-70, YS); sh.closePath();
         scene.add(mk(new THREE.ExtrudeGeometry(sh, { depth: Z0 - ZB, bevelEnabled: false }).translate(0, 0, ZB), [S.clay('#d8bf8f', { rough: 0.9 }), S.clay('#e6d3a4', { rough: 0.85 })]));
         for (let i = 0; i < 7; i++) { const h = mk(S.roundBox(1.4 + r(), 1.2 + r() * 0.8, 1.4, 0.1), S.clay('#fbfaf6', { rough: 0.5 })); h.position.set(-84.5 + (i % 4) * 2.0, 3.9, -6 - Math.floor(i / 4) * 6 - r() * 4); scene.add(h); } }
       // water: back wall gradient (cyan → ultramarine, never muddy), right end wall, translucent front face, glossy surface
@@ -893,6 +994,10 @@ export default function palSets(H) {
       // the surface seen from below (cameras under the waterline): flat water colour, so the ships sit on a sea band, not on sky
       const seaUnder = new THREE.Mesh(sg, new THREE.MeshBasicMaterial({ color: night ? '#1d4f9a' : '#7fd3ee', transparent: true, opacity: 0.92, side: THREE.BackSide, depthWrite: false, fog: false })); seaUnder.renderOrder = 7; scene.add(seaUnder);
       const lip = mk(new THREE.PlaneGeometry(X1 - X0, 0.6).translate((X0 + X1) / 2, -0.3, Z0 + 0.05), new THREE.MeshBasicMaterial({ color: '#d8f4fb', transparent: true, opacity: 0.7, fog: false }), { cast: false }); scene.add(lip);
+      // P0.openSea: a surface-only shot (camera above the water): one wide opaque sea plane replaces the cutaway's translucent top,
+      // so no seabed, back wall or front face shows through or past the edges
+      if (P0.openSea) { seaTop.visible = seaUnder.visible = lip.visible = false; const rq = S.rng(31); const ripple = S.canvasTex(512, 512, (g, w, h) => { g.fillStyle = '#dce9f2'; g.fillRect(0, 0, w, h); for (let i = 0; i < 150; i++) { const x = rq() * w, y = rq() * h, l = 8 + rq() * 26; g.strokeStyle = `rgba(255,255,255,${0.5 + rq() * 0.5})`; g.lineWidth = 1 + rq() * 1.5; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + l / 2, y - 2 - rq() * 2, x + l, y); g.stroke(); } }, { repeat: [260, 260] });
+        const os = mk(new THREE.CircleGeometry(1200, 96).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: ripple, color: night ? '#2f6cc6' : '#42b0ec', roughness: 0.55, metalness: 0, envMapIntensity: 0.35 }), { cast: false }); os.position.y = 0.0; scene.add(os); } // matte-ish: a glossy plane mirrored the studio softbox as a white column
       // depth ruler (right end, front face)
       const ruler = []; if (P0.depths !== false) for (const ft of [0, 1000, 2000, 3000]) { const y = -ft / 100; const tk = mk(S.roundBox(2.2, 0.22, 0.22, 0.06), S.clay('#ffffff')); tk.position.set(X1 + 0.8, y - 0.11, Z0 + 0.2); scene.add(tk);
         const lb = PR.labelPlane(ft ? `${ft.toLocaleString('en-US')} FT` : 'SURFACE', { w: 6.4, h: 1.5, bg: '#ffffff', color: '#14233d', radius: 0.3 }); lb.material.alphaTest = 0.5; lb.material.emissive = new THREE.Color('#ffffff'); lb.material.emissiveMap = lb.material.map; lb.material.emissiveIntensity = 0.6; lb.position.set(X1 + 5.2, y, Z0 + 0.4); scene.add(lb); ruler.push(lb); }
@@ -934,12 +1039,14 @@ export default function palSets(H) {
       const echoX = P0.echoSpread ? [-30.2, -26.4] : [-28.3, -27.2]; const echoes = P0.echoes ? echoX.map((x, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.62 * (P0.echoScale ?? 1), 16, 12), new THREE.MeshBasicMaterial({ color: P0.echoSpread ? new THREE.Color(0.5, 2.0, 2.6) : new THREE.Color(2.4, 2.4, 2.6), fog: false })); m.position.copy(surf(x, ZM + (P0.echoSpread ? 0.5 + i * 4.5 : 1.5 + i * 2.2))).add(new THREE.Vector3(0, 0.6, 0)); scene.add(m);
         const halo = new THREE.Mesh(new THREE.RingGeometry(0.7 * (P0.echoScale ?? 1), 0.85 * (P0.echoScale ?? 1), 40), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.8, depthWrite: false, fog: false })); m.add(halo); return { m, halo, ph: i * 0.6 }; }) : [];
       // ships
-      const minesweeper = ship({ len: 11, beam: 2.1 }); minesweeper.position.set(-36, 0, ZS); scene.add(minesweeper);
+      const minesweeper = ship({ len: 11, beam: 2.1, detail: P0.salute ? { hull: '470', nets: true } : null }); minesweeper.position.set(-36, 0, ZS); scene.add(minesweeper);
+      // P0.salute: the close-up of USS Salute (MSO-470) with Simó aboard by his nets (a mannequin, exaggerated ~1.6x so it reads)
+      let simoA = null; if (P0.salute) { simoA = PR.mannequin('casual_a', PR.MQ.cyan, { unit: 0.42 }); simoA.root.position.set(-11 * 0.12, minesweeper.userData.deckY, 0.68); simoA.root.rotation.y = 0.9; minesweeper.add(simoA.root); }
       const navy2 = ship({ len: 14, beam: 2.5 }); navy2.position.set(14, 0, ZS - 0.4); navy2.rotation.y = 0.15; scene.add(navy2);
       const navy3 = ship({ len: 12, beam: 2.2 }); navy3.position.set(-52, 0, ZS - 0.3); navy3.rotation.y = Math.PI; scene.add(navy3);
       if (P0.fleet === false) navy2.visible = navy3.visible = false; // P0.fleet: false hides the two extra warships (day 5: only the minesweepers)
       const extraShips = []; { const rq = S.rng(41); for (let i = 0; i < (P0.fleetN ?? 0); i++) { const sh = ship({ len: 8 + rq() * 6, beam: 1.7 + rq() * 0.8 }); sh.position.set(-64 + (i + rq() * 0.6) * (96 / Math.max(1, P0.fleetN)), 0, -5 - rq() * 18); sh.rotation.y = (rq() - 0.5) * 1.2 + (rq() < 0.5 ? Math.PI : 0); scene.add(sh); extraShips.push(sh); } } // P0.fleetN: n more ships spread over the surface ("dozens of ships")
-      const trawler = ship({ len: 6, beam: 1.7, kind: 'trawler' }); trawler.position.set(-62, 0, ZS + 0.4); trawler.rotation.y = 0.4; scene.add(trawler);
+      const trawler = ship({ len: 6, beam: 1.7, kind: 'trawler' }); trawler.position.set(-62, 0, ZS + 0.4); trawler.rotation.y = 0.4; scene.add(trawler); if (P0.salute) trawler.visible = false;
       const mizar = ship({ len: 15, beam: 2.7, kind: 'mizar', color: '#d3d9de' }); mizar.position.set(xF + 0.6, 0, ZS); mizar.visible = mode === 'lift' || mode === 'snap'; scene.add(mizar);
       const petrel = ship({ len: 15, beam: 2.8, kind: 'petrel' }); petrel.position.set(xC + 5, 0, ZS); petrel.visible = mode === 'curv' || mode === 'raise'; scene.add(petrel);
       if (mizar.visible || petrel.visible) { navy2.position.x = 22; }
@@ -1137,6 +1244,7 @@ export default function palSets(H) {
         if (mode === 'found' || mode === 'refind') tg.bomb = surf(bx).add(new THREE.Vector3(0.6, 2.6, 0));
         if (clodX != null) tg.clod = surf(clodX).add(new THREE.Vector3(0, 1.4, 0));
         tg.sweeper = minesweeper.position.clone().add(new THREE.Vector3(0, 4.6, 0));
+        if (simoA) { simoA.play('idle', t + 2).update(); minesweeper.updateMatrixWorld(true); tg.simo = simoA.worldPos('head').add(new THREE.Vector3(0, 0.25, 0)); }
         tg.furrow = surf(-22.2).add(new THREE.Vector3(0, P0.furrowPillY ?? 1.0, 0));
         tg.bombMid = bomb.localToWorld(new THREE.Vector3(0, B28.L * 0.5, 0)).add(new THREE.Vector3(0, 1.4, 0));
         tg.fin = bomb.localToWorld(new THREE.Vector3(0, B28.L * 0.06, 0)).add(new THREE.Vector3(0, 0.9, 0)); // the tail end (fins), upslope
