@@ -1,6 +1,6 @@
 # YouTube upload: America Lost the Same H-Bomb Twice
 
-- **File:** `out/deliver/palomares-1080p60.mp4` (1080p, 60 fps, 19:18). Download link added after delivery. 720p parts: `out/deliver/palomares-part1…8.mp4`.
+- **File:** `out/deliver/palomares-1080p60.mp4` (1080p, 60 fps, 19:18). Download: https://gofile.io/d/4JABZgiC (md5 ece730986d498e6de9f4c1ddcaac8d55). 720p parts: `out/deliver/palomares-part1…8.mp4`.
 - **Title:** America Lost the Same H-Bomb Twice
 - **Title test (Test & Compare, thumbnail fixed):** the lead vs "America Lost an H-Bomb. Then Lost It Again".
 - **Thumbnails (Test & Compare, title fixed):**
