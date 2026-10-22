@@ -386,6 +386,7 @@ export function ship(g, x, y, s = 1, { alpha = 1, color = P.ink } = {}) {
 export function fence(g, x0, x1, y, h = 26, { alpha = 1, color = P.ink } = {}) {
   if (alpha <= 0) return;
   g.save(); g.globalAlpha *= alpha; g.strokeStyle = color; g.lineWidth = 2.2;
+  if (!(x1 - x0 > 0.5)) { g.restore(); return; } // zero width (start of the draw-on): nothing to draw, and the post step would be 0
   for (let x = x0; x <= x1 + 0.1; x += (x1 - x0) / Math.max(1, Math.round((x1 - x0) / 22))) { g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - h); g.stroke(); }
   g.lineWidth = 1; g.globalAlpha *= 0.6; g.beginPath();
   for (let x = x0; x < x1; x += 7) { g.moveTo(x, y - h + 3); g.lineTo(Math.min(x1, x + 7), y - 2); g.moveTo(Math.min(x1, x + 7), y - h + 3); g.lineTo(x, y - 2); }
