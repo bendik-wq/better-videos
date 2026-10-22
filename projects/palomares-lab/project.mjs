@@ -8,6 +8,10 @@ const shots = [
   // bomb: hero B28
   { id: 'bomb-hero', set: 'bomb', min: 6, params: { mode: 'hero', caption: 'MARK 28 · 12 FT · MORE THAN A TON' } },
   { id: 'bomb-four', set: 'bomb', min: 5, params: { mode: 'four', title: "WHERE'S #4?" } },
+  // thumbnails (render at --stills=0.95; composited by projects/palomares/thumbs/make.mjs)
+  { id: 'thA', set: 'bomb', min: 4, params: { mode: 'four', title: null, caption: null, source: null, drawAt: 0.2 } },
+  { id: 'thB', set: 'sea', min: 10, params: { mode: 'snap', night: false, loop: true, caption: null, source: null, pills: [] } },
+  { id: 'thC', set: 'village', min: 6, params: { mode: 'fence', caption: null, source: null, pills: [], camera: [{ pos: [9.4, 0.42, 1], look: [8.17, 0.24, -0.35], mm: 34 }] } },
   { id: 'bomb-chute', set: 'bomb', min: 6, params: { mode: 'chute' } },
   { id: 'bomb-numbers', set: 'bomb', min: 6, params: { mode: 'numbers', status: ['RIVERBED · INTACT', 'CEMETERY · CRACKED OPEN', 'VILLAGE EDGE · CRACKED OPEN', 'THE SEA · MISSING'] } },
   // village: Palomares diorama
