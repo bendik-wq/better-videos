@@ -55,7 +55,7 @@ export default function makeData(H) {
       if (cmp) COMPARE.forEach(([ft, lab], i) => {
         const kc = range(t, 0.5 + i * 0.15, 1.1 + i * 0.15) * (1 - 0.55 * range(t, (T[steps[1]] ?? 4) - 0.5, (T[steps[1]] ?? 4) + 0.5)); if (kc <= 0) return;
         const y = S.Y(ft); g.save(); g.globalAlpha = kc; g.strokeStyle = P.tealDeep; g.lineWidth = 1.6; g.setLineDash([6, 8]); g.beginPath(); g.moveTo(ax + 4, y); g.lineTo(1860, y); g.stroke(); g.restore();
-        G.text(g, lab, ax + 18, y - 8, { size: 16, weight: 500, fam: F.mono, color: P.tealDeep, track: 0.08, alpha: kc });
+        G.text(g, lab, ft < 200 ? 440 : ax + 18, y - 8, { size: 16, /* the shallowest label starts right of the shore houses */ weight: 500, fam: F.mono, color: P.tealDeep, track: 0.08, alpha: kc });
       });
       // ---- bomb 4's state at t
       const L = 84, at = (u) => S.at(u, 7);
@@ -82,8 +82,11 @@ export default function makeData(H) {
         const uu = lerp(U.refind, U.lift, d); [bx, by] = at(uu); ba = S.ang(uu); chute = 0.6; show = true;
         const sx0 = at(U.lift)[0]; G.ship(g, sx0 + 34, S.ys, 1.0, { alpha: range(t, 0.2, 0.6) });
         // the two lines fan apart at the surface (bow and stern of the ship) and meet the bundle at two points; line 2 in teal
-        [[t1, -30, P.ink, 'LINE 1'], [t2, 34, P.tealDeep, 'LINE 2']].forEach(([tl, dx, lc, lb]) => { const kl = E.outCubic(range(t, tl, tl + 0.6)); if (kl <= 0) return; g.save(); g.strokeStyle = lc; g.lineWidth = 3.5; g.beginPath(); g.moveTo(sx0 + dx, S.ys + 10); g.lineTo(lerp(sx0 + dx, bx + dx * 0.25, kl), lerp(S.ys + 10, by - 12, kl)); g.stroke(); g.restore();
-          if (kl >= 1) G.text(g, lb, sx0 + dx + (dx > 0 ? 14 : -14), S.ys + 70 + (dx > 0 ? 40 : 0), { size: 18, weight: 600, fam: F.mono, align: dx > 0 ? 'left' : 'right', color: lc, track: 0.08 }); });
+        // line 1 was buoyed off at the surface (RESEARCH §7c), line 2 runs to the ship; labels sit along each line, inside the frame
+        [[t1, -190, P.ink, 'LINE 1 · BUOYED', true], [t2, 34, P.tealDeep, 'LINE 2', false]].forEach(([tl, dx, lc, lb, buoy]) => { const kl = E.outCubic(range(t, tl, tl + 0.6)); if (kl <= 0) return; const x0 = sx0 + dx, y0 = buoy ? S.ys + 2 : S.ys + 10, x1 = bx + (buoy ? -8 : 9), y1 = by - 12;
+          if (buoy) { g.save(); g.globalAlpha = clamp(kl * 3); g.fillStyle = P.white; g.strokeStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.ellipse(x0, S.ys - 2, 16, 11, 0, 0, TAU); g.fill(); g.stroke(); g.fillStyle = P.ink; g.fillRect(x0 - 2, S.ys - 30, 4, 20); g.restore(); }
+          g.save(); g.strokeStyle = lc; g.lineWidth = 3.5; g.beginPath(); g.moveTo(x0, y0); g.lineTo(lerp(x0, x1, kl), lerp(y0, y1, kl)); g.stroke(); g.restore();
+          if (kl >= 1) { const u = 0.3, lx = lerp(x0, x1, u), ly = lerp(y0, y1, u); const right = !buoy && lx < 1640; G.text(g, lb, lx + (right ? 18 : -18), ly + 9, { size: 26, weight: 800, align: right ? 'left' : 'right', color: lc }); } });
       } else if (st === 'refind') {
         [bx, by] = at(U.refind); ba = S.ang(U.refind); chute = 0.6; show = true;
       } else if (st === 'lift') {

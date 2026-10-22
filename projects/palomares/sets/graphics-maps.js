@@ -198,7 +198,7 @@ export default function makeMaps(H) {
       return ia < 0 || ib < 0 ? null : { ia, ib, t: G.cue(shot, w, Math.max(PT[ia], PT[ib]) + 0.5) };
     }).filter(Boolean);
     const hide = new Set([...(Pm.hide ?? []), ...pins.map(p => p.name)]); const hidden = (n) => hide.has(n);
-    const isRed = (pn) => pn.color === MP.red || (pn.color == null && (V.red ?? []).includes(pn.name));
+    const isRed = (pn) => pn.red === true || pn.color === MP.red || (pn.color == null && (V.red ?? []).includes(pn.name)); // pin.red: the red accent
     // coast cues
     const tW = G.cue(shot, Pm.wedgeAt, Math.min(D * 0.55, 4.4)), tF = G.cue(shot, Pm.findAt, t1);
     // the wedge pill's anchor (also used to keep isobath labels clear of it)
@@ -219,7 +219,7 @@ export default function makeMaps(H) {
             });
             // deeper water a touch darker: fill the sea beyond the 1,500-ft line softly (pure decoration, no claim)
             reliefLand(c, land, { ext: 6, seed: 29, relief: 0.4 });
-            if (relief) { c.save(); c.clip(land); c.globalAlpha = 0.3; c.globalCompositeOperation = 'multiply'; c.filter = `blur(${1.5 * G_S}px)`; const [w, s, e, n] = cj.relief.box; c.drawImage(relief, pr.X(w), pr.Y(n), pr.X(e) - pr.X(w), pr.Y(s) - pr.Y(n)); c.restore(); }
+            if (relief) { c.save(); c.clip(land); c.globalAlpha = Pm.reliefAlpha ?? 0.3; /* Pm.reliefAlpha: hill-shade strength */ c.globalCompositeOperation = 'multiply'; c.filter = `blur(${1.5 * G_S}px)`; const [w, s, e, n] = cj.relief.box; c.drawImage(relief, pr.X(w), pr.Y(n), pr.X(e) - pr.X(w), pr.Y(s) - pr.Y(n)); c.restore(); }
             c.save(); c.strokeStyle = MP.edge; c.lineWidth = 1.6; c.stroke(land); c.restore();
             // the dry Almanzora (approximate course)
             const rv = G.smooth(ALMANZORA.map(([lo, la]) => [pr.X(lo), pr.Y(la)]), 2);
@@ -266,8 +266,8 @@ export default function makeMaps(H) {
             const [ox, oy] = [pr.X(-1.775), pr.Y(37.242)], R = 12.97 / 111.2 * pr.sc, a0 = (95 - 90) * Math.PI / 180, a1 = a0 + (90 * Math.PI / 180) * kw;
             g.save(); g.beginPath(); g.moveTo(ox, oy); g.arc(ox, oy, R, a0, a1); g.closePath(); g.fillStyle = 'rgba(42,140,134,0.10)'; g.fill(); g.strokeStyle = 'rgba(29,106,102,0.7)'; g.lineWidth = 2.4; g.setLineDash([12, 8]); g.stroke(); g.restore();
             const ka = range(t, tW + 0.8, tW + 1.4), lx = ox + Math.cos(a0 + 0.25) * R - 30, ly = oy + Math.sin(a0 + 0.25) * R;
-            G.pill(g, 'FIRST SEA SEARCH AREA · 24 JAN · 51 SQ MI', lx, ly, { size: 17, k: ka, fam: F.mono, weight: 500, fill: P.white, color: P.tealDeep, dot: P.teal, lift: 0.5, align: 'right' });
-            G.text(g, 'AREA PER MORAN · SHAPE ILLUSTRATIVE', lx - 12, ly + 38, { size: 13, weight: 500, fam: F.mono, color: P.tealDeep, track: 0.08, align: 'right', alpha: E.outCubic(ka) });
+            G.pill(g, Pm.wedgeText ?? 'FIRST SEA SEARCH AREA · 24 JAN · 51 SQ MI', lx, ly, { size: 17, k: ka, fam: F.mono, weight: 500, fill: P.white, color: P.tealDeep, dot: P.teal, lift: 0.5, align: 'right' });
+            G.text(g, Pm.wedgeSub ?? 'AREA PER MORAN · SHAPE ILLUSTRATIVE', lx - 12, ly + 38, { size: 13, weight: 500, fam: F.mono, color: P.tealDeep, track: 0.08, align: 'right', alpha: E.outCubic(ka) });
           }
         }
         // bomb 4's find area: the canyon where 2,550-2,850 ft is first reached (37.165-37.185 N, 1.71-1.74 W; reconstruction)
@@ -280,7 +280,7 @@ export default function makeMaps(H) {
         const kt = (i) => range(t, 0.5 + i * 0.18, 1.0 + i * 0.18);
         if (!hidden('Palomares')) town(g, ...at(pinOf('Palomares')), kt(0), 'Palomares', { side: 'l', dy: -46, size: 34, sub: Pm.townSub === undefined ? 'POP. ABOUT 2,000 IN 1966' : Pm.townSub, dot: false });
         if (!hidden('Villaricos')) town(g, ...at(pinOf('Villaricos')), kt(1), 'Villaricos', { side: 'r', dy: -22 });
-        if (!hidden('Garrucha')) town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: 'PRESS BOATS' });
+        if (!hidden('Garrucha')) town(g, ...at(pinOf('Garrucha')), kt(2), 'Garrucha', { side: 'l', sub: Pm.garruchaSub ?? null }); // Pm.garruchaSub: e.g. 'PRESS BOATS' (none by default)
         if (!hidden('Camp Wilson beach')) town(g, ...at(pinOf('Camp Wilson beach')), kt(4), 'Camp Wilson beach', { side: 'r', dy: 20, size: 22, sub: 'THE 8 MAR SWIM (AFTERNOON)' });
         // Águilas, off the top edge: an arrow
         { const ka = hidden('Águilas') ? 0 : kt(5); if (ka > 0) { const x = 1860, y = 300; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
@@ -289,7 +289,9 @@ export default function makeMaps(H) {
         if (!hidden('bombs')) LAND_BOMBS.forEach((b, i) => {
           const kb = E.outBack(range(t, discAt + i * 0.3, discAt + 0.5 + i * 0.3)); if (kb <= 0) return; const x = pr.X(b.lon), y = pr.Y(b.lat);
           g.save(); g.translate(x, y); g.scale(kb, kb); G.shadow(g, 0.6); g.fillStyle = P.ink; g.beginPath(); g.arc(0, 0, 17, 0, TAU); g.fill(); G.noShadow(g);
+          const hot = (Pm.redBombs ?? []).includes(b.n); if (hot) { g.fillStyle = MP.red; g.beginPath(); g.arc(0, 0, 17, 0, TAU); g.fill(); }
           g.strokeStyle = P.white; g.lineWidth = 3; g.stroke(); G.text(g, String(b.n), 0, 8, { size: 22, weight: 800, align: 'center', color: P.white }); g.restore();
+          if (hot) for (let q = 0; q < 2; q++) { const ph = ((t - discAt - i * 0.3) * 0.7 + q * 0.5) % 1; if (ph < 0) continue; g.save(); g.strokeStyle = MP.red; g.globalAlpha = 0.8 * (1 - ph); g.lineWidth = 4; g.beginPath(); g.arc(x, y, 22 + ph * 70, 0, TAU); g.stroke(); g.restore(); } // Pm.redBombs: [n…] discs in the red accent with a burst ring
         });
         // legend card for 1-3 (bottom left)
         if (Pm.legend !== false) {
@@ -322,7 +324,9 @@ export default function makeMaps(H) {
       const hg = g.createLinearGradient(0, 0, 0, 260); hg.addColorStop(0, 'rgba(247,246,241,0.94)'); hg.addColorStop(0.7, 'rgba(247,246,241,0.6)'); hg.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = hg; g.fillRect(0, 0, 1920, 260);
       G.kicker(g, Pm.kicker ?? V.kicker, 90, 110, range(t, 0.05, 0.6));
       G.riseText(g, Pm.title ?? V.title, 90, 186, range(t, 0.12, 0.9), { size: 62, weight: 800 });
-      G.source(g, Pm.source ?? V.src, range(t, 0.6, 1.4), { y: 1046, size: mode === 'coast' ? 13 : 16 });
+      // the coast credit names only what is drawn (the bomb 4 site, the wedge)
+      const coastSrc = () => { const w = Pm.wedge !== false, f = Pm.find !== false; const recon = w && f ? 'BOMB 4 SITE AND SEARCH WEDGE: RECONSTRUCTION' : f ? 'BOMB 4 SITE: RECONSTRUCTION' : w ? (Pm.wedgeText ? 'ZONE SHAPE: ILLUSTRATIVE' : 'SEARCH WEDGE: RECONSTRUCTION') : null; return ['COAST: NATURAL EARTH', 'DEPTHS: EMODNET BATHYMETRY', recon, 'RESEARCH: CSN; DNA (1975); MORAN (2009)'].filter(Boolean).join(' · '); };
+      G.source(g, Pm.source ?? (mode === 'coast' ? coastSrc() : V.src), range(t, 0.6, 1.4), { y: 1046, size: mode === 'coast' ? 13 : 16 });
     }, { push: 0.045, dx: 20, dy: 8, fx: 960, fy: 560 });
   }
 

@@ -16,7 +16,7 @@
 //                                                                                   keys: title asap funds binding anytime once
 //     'court2026'      the Spanish lawsuit, status AS OF 21 OCT 2026 (press reports): witnesses refused; the State's brief
 //                      «Palomares nunca ha sido un accidente nuclear»; «pendiente de fallo»   keys: witnesses never competent pending
-//          other params: highlight (key or [keys]), at (cue or [cues] per highlight), zoom, tilt, label (false hides), source
+//          other params: highlight (key or [keys]), at (cue or [cues] per highlight), zoom, zoomK ([× per highlight]), tilt, label (false hides), source
 //   photo  a photo in a white border card on paper with an eased Ken Burns push, caption slab and credit line.
 //          params: file (in projects/palomares/assets/photos/, or an absolute /projects/... path), caption, credit, focus [x, y] 0..1, zoom, kicker, cutout
 //          Bundled (public domain, see assets/photos/CREDITS.md): petrel-bomb-curv-1966.jpg · petrel-bomb-officials-1966.jpg ·
@@ -134,7 +134,7 @@ const DOCS = {
   statement2015: {
     w: 612, h: 660, paper: '#fbfaf6', ink: INK, def: ['binding', 'once'], tilt: -0.6,
     blocks: [
-      ...head([[66, 'UNITED STATES · SPAIN', NARROW], [104, 'STATEMENT OF INTENT', { size: 26, weight: 800, track: 0.04, key: 'title' }], [128, 'Declaración de intenciones · Madrid, 19 October 2015', { size: 11.5, fam: F.serif, style: 'italic', color: '#55524b' }]], 146),
+      ...head([[66, 'UNITED STATES · SPAIN', NARROW], [104, 'STATEMENT OF INTENT', { size: 26, weight: 800, track: 0.04, key: 'title' }], [128, 'Declaración de intenciones · 19 October 2015', { size: 11.5, fam: F.serif, style: 'italic', color: '#55524b' }]], 146),
       ['t', 180, 'WHAT THE TEXT SAYS (AS REPORTED)', { x: 72, size: 10.5, fam: F.narrow, weight: 700, track: 0.12, color: '#55524b' }],
       ['row', 214, 'Negotiate a binding deal', '«tan pronto como sea posible»', { key: 'asap', size: 13, fam: F.serif }],
       ['row', 246, 'The soil goes to', 'a site in the United States', { size: 13, fam: F.serif }],
@@ -159,7 +159,7 @@ const DOCS = {
       ['row', 276, 'Oct 2026', 'is the court competent? Both sides: yes', { key: 'competent', size: 13.5, fam: F.serif }],
       ['t', 326, '[The State’s closing brief, 13 Apr 2026, as reported:]', { x: 72, size: 11, fam: F.serif, style: 'italic', color: '#55524b' }],
       ['p', 362, '«Palomares nunca ha sido un accidente nuclear»', { size: 23, lh: 30, fam: F.serif, marks: { never: '«Palomares nunca ha sido un accidente nuclear»' } }],
-      ['t', 400, '(“Palomares was never a nuclear accident”)', { x: 72, size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
+      ['t', 402, '(“Palomares was never a nuclear accident”)', { x: 72, size: 14.5, fam: F.serif, style: 'italic', color: '#55524b' }],
       ['box', 72, 432, 468, 64, { text: 'STATUS: «PENDIENTE DE FALLO»', size: 20, fam: F.sans, track: 0.04, key: 'pending' }],
       ['t', 520, '(awaiting judgment)', { align: 'c', size: 12, fam: F.serif, style: 'italic', color: '#55524b' }],
       ['rule', 560, {}],
@@ -246,14 +246,16 @@ export default function makeDocs(H) {
     const T = HL.map((_, i) => G.cue(shot, ats[i], T0 + i * step));
     const fit = Math.min(1640 / Dc.w, 900 / Dc.h), Z0 = Pm.fitPage ? Math.min(820 / Dc.h, 1640 / Dc.w) : fit * 0.96;
     // Pm.fitPage: keep the whole sheet in the window (top clear of the label pill) instead of zooming onto the highlights
-    const zOf = (h) => Pm.fitPage ? Math.min(820 / Dc.h, 1640 / Dc.w) : Math.min(Pm.zoom ?? fit * 1.4, 1700 / Dc.w);
+    const zOf0 = (h) => Pm.fitPage ? Math.min(820 / Dc.h, 1640 / Dc.w) : Math.min(Pm.zoom ?? fit * 1.4, 1700 / Dc.w);
+    // Pm.zoomK: [k per highlight] multiplies that highlight's zoom (e.g. fitPage, then push in ×1.8 on the second highlight)
+    const zOf = (h, i = HL.indexOf(h)) => zOf0(h) * (Pm.zoomK?.[i] ?? 1);
     const tilt = (Pm.tilt ?? Dc.tilt ?? 0) * Math.PI / 180;
     const start = [Dc.w / 2, Dc.h / 2];
     return set(ctx, shot, (g, t, p, k) => {
       // the camera on the page: focus point (pt) at screen centre, zoom Z; glides to each highlight in turn
       let f = start, Z = Z0;
       if (HL.length) {
-        const fo = (h) => [Dc.w / 2, clamp((h.u[1] + h.u[3]) / 2, Dc.h * 0.32, Dc.h * 0.68)];
+        const fo = (h) => [Pm.zoomK && (Pm.zoomK[HL.indexOf(h)] ?? 1) > 1 ? clamp((h.u[0] + h.u[2]) / 2, Dc.w * 0.3, Dc.w * 0.7) : Dc.w / 2, clamp((h.u[1] + h.u[3]) / 2, Dc.h * 0.32, Dc.h * 0.68)];
         const u0 = E.inOutCubic(range(t, 0.25, Math.max(1.0, T[0] - 0.1))); f = [lerp(start[0], fo(HL[0])[0], u0), lerp(start[1], fo(HL[0])[1], u0)]; Z = lerp(Z0, zOf(HL[0]), u0);
         for (let i = 1; i < HL.length; i++) { const u = E.inOutCubic(range(t, T[i] - 0.9, T[i] - 0.05)); f = [lerp(f[0], fo(HL[i])[0], u), lerp(f[1], fo(HL[i])[1], u)]; Z = lerp(Z, zOf(HL[i]), u); }
       }
@@ -276,16 +278,16 @@ export default function makeDocs(H) {
         h.rs.forEach((r, j) => {
           const kb = E.emphasized(range(t, T[i] + 0.15 + j * 0.25, T[i] + 0.7 + j * 0.25)); if (kb <= 0) return;
           g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(224,36,27,0.17)'; g.fillRect(r[0] - 3, r[1] - 2, (r[2] - r[0] + 6) * kb, r[3] - r[1] + 4); g.restore();
-          if (h.rs.length > 1 || r.para) { g.save(); g.strokeStyle = P.red; g.lineWidth = Math.max(1.6, (r[3] - r[1]) * 0.09); g.lineCap = 'round'; g.beginPath(); g.moveTo(r[0], r[3] + 3); g.lineTo(lerp(r[0], r[2], kb), r[3] + 3); g.stroke(); g.restore(); }
+          if ((h.rs.length > 1 || r.para) && !h.rs[0].box) { g.save(); g.strokeStyle = P.red; g.lineWidth = Math.max(1.6, (r[3] - r[1]) * 0.09); g.lineCap = 'round'; g.beginPath(); g.moveTo(r[0], r[3] + 3); g.lineTo(lerp(r[0], r[2], kb), r[3] + 3); g.stroke(); g.restore(); }
         });
-        if (h.rs[0].box) { const b = h.u, kb = E.inOutCubic(kk), per = 2 * (b[2] - b[0] + b[3] - b[1]); g.save(); g.strokeStyle = P.red; g.lineWidth = 5; g.lineJoin = 'round'; g.setLineDash([per * kb, per]); G.rr(g, b[0] - 6, b[1] - 6, b[2] - b[0] + 12, b[3] - b[1] + 12, 8); g.stroke(); g.restore(); }
+        if (h.rs[0].box) { const b = h.u, kb = E.inOutCubic(kk), per = 2 * (b[2] - b[0] + b[3] - b[1]); g.save(); g.strokeStyle = P.red; g.lineWidth = 5; g.lineJoin = 'round'; if (kb < 0.999) g.setLineDash([per * kb * 1.06, per * 2]); G.rr(g, b[0] - 6, b[1] - 6, b[2] - b[0] + 12, b[3] - b[1] + 12, 8); g.stroke(); g.restore(); } // one closed loop once drawn (no dash restart, no doubled start)
         else if (h.rs.length === 1 && !h.rs[0].para) { const b = h.u, hh = b[3] - b[1], pd = Math.min(hh * 0.42, 9); G.markerLoop(g, b[0], b[1], b[2] - b[0], hh, E.outCubic(kk), { width: clamp(hh * 0.12, 1.8, 3.2), seed: 5 + i * 3, padX: pd + 3, padY: pd }); }
       });
       g.restore();
       // labels float above the paper
       k.flat();
       // a soft desk-coloured header band so the label reads over the page
-      const hb = g.createLinearGradient(0, 0, 0, 160); hb.addColorStop(0, 'rgba(223,230,225,0.98)'); hb.addColorStop(0.72, 'rgba(223,230,225,0.95)'); hb.addColorStop(1, 'rgba(223,230,225,0)'); g.fillStyle = hb; g.fillRect(0, 0, 1920, 160);
+      const hb = g.createLinearGradient(0, 0, 0, 190); hb.addColorStop(0, 'rgba(223,230,225,1)'); hb.addColorStop(0.78, 'rgba(223,230,225,1)'); hb.addColorStop(1, 'rgba(223,230,225,0)'); g.fillStyle = hb; g.fillRect(0, 0, 1920, 190); // opaque behind the label pill: no half-faded masthead under it
       const fb = g.createLinearGradient(0, 990, 0, 1080); fb.addColorStop(0, 'rgba(223,230,225,0)'); fb.addColorStop(0.35, 'rgba(223,230,225,0.96)'); fb.addColorStop(1, 'rgba(223,230,225,0.98)'); g.fillStyle = fb; g.fillRect(0, 990, 1920, 90);
       if (Pm.label !== false) G.pill(g, Dc.label, 80, 84, { size: 21, k: range(t, 0.3, 0.8), fam: F.mono, weight: 500, fill: P.ink, color: P.white, dot: P.teal });
       if (Dc.asof) G.asOf(g, Dc.asof, 1840, 84, range(t, 0.5, 1.0), { align: 'right', size: 19 });
@@ -299,7 +301,7 @@ export default function makeDocs(H) {
     if (!file) throw new Error('photo: params.file is required (projects/palomares/assets/photos/<file> or an absolute /projects/... path)');
     const im = await G.image(file.startsWith('/') ? file : `/projects/palomares/assets/photos/${file}`);
     const iw = im.naturalWidth, ih = im.naturalHeight, ar = iw / ih;
-    const cutout = Pm.cutout ?? /\.png$/i.test(file), portrait = ar < 1.05;
+    const cutout = Pm.cutout ?? /\.png$/i.test(file), portrait = ar < 1.05 && !Pm.wide; // Pm.wide: show a portrait photo through a wide window (cover-crop on `focus`)
     const zoom = Pm.zoom ?? 1.14, focus = Pm.focus ?? [0.5, 0.45], maxScale = Pm.maxScale ?? 1.7;
     // the window (what shows of the photo) and its card
     let ww, wh;

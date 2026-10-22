@@ -43,7 +43,7 @@ export default function makeGraphics(H) {
       // the section across the lower frame
       k.view(0.45);
       const S = G.section([-60, 660, 2040, 280]);
-      G.drawSection(g, S, { t, alpha: E.outCubic(range(t, 0, 0.7)), dark: 0.35 });
+      G.drawSection(g, S, { t, alpha: E.outCubic(range(t, 0, 0.7)), dark: 0.35, village: Pm.village !== false }); // Pm.village: false drops the shore blocks
       // bomb 4's path, a pure function of t
       const L = 86, sx = S.X(U.touch);
       let x, y, a, chute = 0, ghost = false, alpha = 1, shipA = 0, line = 0, cut = 0, shipX = S.X(U.find) - 10;
@@ -79,11 +79,11 @@ export default function makeGraphics(H) {
       if (Pm.sub) G.text(g, Pm.sub, 960, y0 + (lines.length - 1) * size + 76, { size: 24, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.16, upper: true, alpha: E.outCubic(range(t, 1.4, 2.0)) });
       // the tape: the five states of bomb 4, each lighting as the motif reaches it
       k.view(0.8);
-      const ty = 1000, kt = range(t, 0.3, 0.8);
+      const ty = 950, kt = range(t, 0.3, 0.8); // the tape sits clear of the bottom title-safe margin
       if (kt > 0) {
         g.save(); g.globalAlpha = clamp(kt * 2); G.shadow(g, 0.8); g.fillStyle = P.ink; g.fillRect(-200, ty - 40, 2320, 80); G.noShadow(g);
         const items = [['17 JAN 1966', 'LOST', T.drop], ['15 MAR', 'FOUND · 2,550 FT', T.found], ['24 MAR', 'LOST AGAIN', T.snap], ['2 APR', 'FOUND · 2,800 FT', T.refound], ['7 APR', 'LIFTED', T.raise + 0.35]];
-        const wi = items.map(([d, v]) => G.measure(g, d, 19, 500, F.mono, 0.1) + 12 + G.measure(g, v, 26, 500, F.mono, 0.04) + 64);
+        const wi = items.map(([d, v]) => G.measure(g, d, 19, 500, F.mono, 0.1) + 28 + G.measure(g, v, 26, 500, F.mono, 0.04) + 64);
         const TW = wi.reduce((a, b) => a + b, 0) - 64, ts = Math.min(1, 1760 / TW);
         g.translate(960, ty); g.scale(ts, ts); g.translate(-960, -ty);
         let xx = 960 - TW / 2, cur = 0; items.forEach((it, i) => { if (t >= it[2]) cur = i; });
@@ -91,15 +91,15 @@ export default function makeGraphics(H) {
           const ki = range(t, at, at + 0.4), on = i === cur && t >= at;
           g.save(); g.globalAlpha *= ki > 0 ? 0.45 + 0.55 * ki : 0.22;
           G.text(g, d, xx, ty + 8, { size: 19, weight: 500, fam: F.mono, color: 'rgba(255,255,255,0.72)', track: 0.1 });
-          const vx = xx + G.measure(g, d, 19, 500, F.mono, 0.1) + 12, vw = G.measure(g, v, 26, 500, F.mono, 0.04);
-          if (on) { G.rr(g, vx - 10, ty - 22, vw + 20, 42, 8); g.fillStyle = P.teal; g.fill(); }
-          G.text(g, v, vx, ty + 9, { size: 26, weight: 500, fam: F.mono, color: P.white, track: 0.04 });
+          const vx = xx + G.measure(g, d, 19, 500, F.mono, 0.1) + 28, vw = G.measure(g, v, 26, 500, F.mono, 0.04);
+          if (on) { G.rr(g, vx - 10, ty - 22, vw + 20, 42, 8); g.fillStyle = P.white; g.fill(); } // the current state: white pill, ink text (the frame's one accent stays the red title)
+          G.text(g, v, vx, ty + 9, { size: 26, weight: 500, fam: F.mono, color: on ? P.ink : P.white, track: 0.04 });
           g.restore(); xx += wi[i];
         });
         g.restore();
       }
       k.flat();
-      G.text(g, Pm.source ?? 'DEPTHS: DNA PALOMARES SUMMARY REPORT (1975) · SECTION SCHEMATIC, NOT TO SCALE', 1880, 1068, { size: Pm.sourceSize ?? 13, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: 0.8 * E.outCubic(range(t, 1.6, 2.2)) });
+      G.text(g, Pm.source ?? 'DEPTHS: DNA PALOMARES SUMMARY REPORT (1975) · SECTION SCHEMATIC, NOT TO SCALE', 1880, 1024, { size: Math.min(16, Pm.sourceSize ?? 13), weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: 0.8 * E.outCubic(range(t, 1.6, 2.2)) });
     }, { push: 0.05, dx: 0 });
   }
 
@@ -492,7 +492,12 @@ export default function makeGraphics(H) {
       g.restore();
       const kl = range(t, t0 - 0.2, t0 + 0.5);
       G.riseText(g, labels[side], cx, cy - r1 - 46, kl, { size: 46, weight: 800, align: 'center', color: side ? P.red : P.ink });
-      G.text(g, subs[side], cx, cy + r1 + 70, { size: 21, weight: 500, fam: F.mono, align: 'center', color: P.inkSoft, track: 0.08, alpha: E.outCubic(range(t, t0 + 0.4, t0 + 1.0)), maxW: 760 });
+      { // the sub carries the beat: sans bold, phone-readable; the red accent on the words in Pm.subRed (default 'BLOWN APART')
+        const sz = Pm.subSize ?? 26, al = E.outCubic(range(t, t0 + 0.4, t0 + 1.0)), sub = subs[side], hot = Pm.subRed ?? 'BLOWN APART', y = cy + r1 + 74;
+        const i = sub.indexOf(hot);
+        if (i < 0) G.text(g, sub, cx, y, { size: sz, weight: 800, align: 'center', color: P.ink, alpha: al, maxW: 860 });
+        else { const a = sub.slice(0, i), c = sub.slice(i + hot.length), wa = G.measure(g, a, sz, 800), wh = G.measure(g, hot, sz, 800), wc = G.measure(g, c, sz, 800); let x0 = cx - (wa + wh + wc) / 2;
+          G.text(g, a, x0, y, { size: sz, weight: 800, align: 'left', color: P.ink, alpha: al }); G.text(g, hot, x0 + wa, y, { size: sz, weight: 800, align: 'left', color: P.red, alpha: al }); if (c) G.text(g, c, x0 + wa + wh, y, { size: sz, weight: 800, align: 'left', color: P.ink, alpha: al }); } }
       if (!side) G.text(g, 'CORE', cx, cy + 8, { size: 20, weight: 700, fam: F.mono, align: 'center', color: P.white, alpha: kIn * (1 - range(t, tA + 0.3, tA + 0.6)) });
     };
     return set(ctx, shot, (g, t, p, k) => {
