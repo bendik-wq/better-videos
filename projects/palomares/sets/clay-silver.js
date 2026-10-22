@@ -21,7 +21,7 @@ async function stage(H, ctx, shot, o = {}) {
   let fx = null;
   // sky: a floating white disc on the painted blue sky (Reconstructed look) instead of the studio cyc
   const skyTex = P0.sky ? (await import('./thumbs.js')).paintedSky(P0.seed ?? 5) : null;
-  if (skyTex) { const r = P0.skyDisc ?? 7; const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.02, 0.8, 128), S.clay(P0.beach != null ? '#ead9ae' : '#f4f2ee', { rough: P0.beach != null ? 0.85 : 0.6, coat: P0.beach != null ? 0 : 0.3 })); d.position.y = -0.4; d.receiveShadow = true; scene.add(d);
+  if (skyTex) { const r = P0.skyDisc ?? 7; const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.02, 0.8, 128), S.clay(P0.beach != null ? '#ead9ae' : (P0.discColor ?? '#f4f2ee'), { rough: P0.beach != null ? 0.85 : 0.6, coat: P0.beach != null ? 0 : 0.3 })); d.position.y = -0.4; d.receiveShadow = true; scene.add(d);
     // beach (figures, P0.beach = z of the waterline): the sea covers the disc behind the waterline and runs to the horizon
     if (P0.beach != null) { const zw = P0.beach; const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 300).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: '#2f9ad6', roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, transparent: true, opacity: 0.88, envMapIntensity: 1.3 }));
       water.position.set(0, 0.06, zw - 150); water.receiveShadow = true; scene.add(water);
@@ -358,7 +358,7 @@ export default function claySilver(H) {
       // f.lie: lying on his side on the floor (fainted), head toward -x, front to camera
       const people = figs.map((f, i) => { const m = PR.mannequin(f.w ?? 'suit', col(f.c), { hat: f.hat ?? null });
         if (f.lie) { const gL = new THREE.Group(); gL.position.set(f.x ?? 0, 0.16, f.z ?? 0); gL.rotation.y = f.ry ?? 0; m.root.rotation.z = Math.PI / 2; gL.add(m.root); scene.add(gL); }
-        else { m.root.position.set(f.x ?? 0, 0, f.z ?? 0); m.root.rotation.y = f.ry ?? 0; scene.add(m.root); }
+        else { m.root.position.set(f.x ?? 0, f.y ?? 0, f.z ?? 0); m.root.rotation.y = f.ry ?? 0; scene.add(m.root); }
         return { m, f }; });
       let crowd = [];
       if (props.has('crowd')) { const r = S.rng(7); for (let i = 0; i < (P0.crowdN ?? 14); i++) { const m = PR.mannequin(['casual_a', 'casual_b', 'office'][i % 3], PR.MQ.cyan, {}); m.root.position.set(-4 + (i % 7) * 1.2 + r() * 0.3, 0, -2.2 - Math.floor(i / 7) * 1.2 + r() * 0.3); m.root.rotation.y = (r() - 0.5) * 0.8; scene.add(m.root); crowd.push({ m, ph: r() * 5, clip: ['idle', 'idle_b', 'phone', 'look_around'][i % 4] }); } }
@@ -374,32 +374,50 @@ export default function claySilver(H) {
         const bb = S.instances(S.barGeometry(), S.barMaterial(), barStack(6, { cols: 1, rows: 2 })); bb.scale.setScalar(0.5); bb.position.y = -1.78; bal.userData.pans[1].add(bb); }
       let ph = null; if (props.has('phone')) { ph = PR.phone(); ph.scale.setScalar(0.11); ph.position.set(...(P0.phoneAt ?? [0.35, 0.76, 0.85])); ph.rotation.y = -0.4; scene.add(ph); }
       if (props.has('car')) { const car = new THREE.Group(); const body = S.glossy(P0.carColor ?? '#e9e6df', { rough: 0.25, coat: 0.9 });
-        const lower = new THREE.Mesh(S.roundBox(5.6, 0.75, 2.0, 0.25), body); lower.position.y = 0.28; car.add(lower); const cab = new THREE.Mesh(S.roundBox(2.8, 0.6, 1.8, 0.22), body); cab.position.set(-0.3, 1.0, 0); car.add(cab);
-        const glass = new THREE.Mesh(S.roundBox(2.6, 0.45, 1.82, 0.18), S.glossy('#22303f', { rough: 0.1, coat: 1 })); glass.position.set(-0.3, 1.06, 0); car.add(glass);
+        const lower = new THREE.Mesh(S.roundBox(5.6, 0.75, 2.0, 0.25), body); lower.position.y = 0.28; car.add(lower);
+        // carKind 'truck' (a small 1960s delivery truck): a tall cab at the front (-x) and an open rear deck with low side rails (deck top y = 1.03)
+        const truck = P0.carKind === 'truck';
+        const cab = new THREE.Mesh(truck ? S.roundBox(1.7, 1.0, 1.95, 0.2) : S.roundBox(2.8, 0.6, 1.8, 0.22), body); cab.position.set(truck ? -1.9 : -0.3, truck ? 1.0 : 1.0, 0); car.add(cab);
+        const glass = new THREE.Mesh(truck ? S.roundBox(1.2, 0.5, 1.97, 0.12) : S.roundBox(2.6, 0.45, 1.82, 0.18), S.glossy('#22303f', { rough: 0.1, coat: 1 })); glass.position.set(truck ? -2.0 : -0.3, truck ? 1.42 : 1.06, 0); car.add(glass);
+        if (truck) { const rail = S.wood({ coat: 0.3 }); for (const z of [-0.93]) { const r = new THREE.Mesh(S.roundBox(3.6, 0.32, 0.08, 0.03), rail); r.position.set(1.0, 1.0, z); car.add(r); } const tg = new THREE.Mesh(S.roundBox(0.08, 0.32, 1.9, 0.03), rail); tg.position.set(2.78, 1.0, 0); car.add(tg); }
         for (const x of [-1.8, 1.8]) for (const z of [-0.9, 0.9]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.28, 24).rotateX(Math.PI / 2), S.clay('#22262c')); wh.position.set(x, 0.36, z); car.add(wh); }
         car.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); car.position.set(...(P0.carAt ?? [-3.2, 0, -1.4])); car.rotation.y = P0.carRy ?? 0.25; scene.add(car); }
       // small props (Palomares): plate (bomb 4's round tail cover), calculator (a Friden on the desk), sketch (paper with a chute doodle),
       // scroll (a scroll and a medallion on a stand), crate (tomatoes). Positions: P0.<name>At. Named pill targets: plate, calculator, sketch, scroll, crate
       const propT = {}; const deskTop = [P0.deskX ?? 0, 0.78, P0.deskZ ?? 0.9];
-      if (props.has('plate')) { const pg = new THREE.Group(); const pm = S.glossy('#c9ced4', { rough: 0.35, coat: 0.6 }); const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.03, 48), pm); pg.add(disc);
-        for (const sx of [-0.12, 0.12]) { const flat = new THREE.Mesh(S.roundBox(0.05, 0.05, 0.16, 0.01), S.clay('#8d97a2')); flat.position.set(sx, 0.03, 0); pg.add(flat); }
+      if (props.has('plate')) { const pg = new THREE.Group(); const pm = S.glossy('#c9ced4', { rough: 0.35, coat: 0.6 }); // a round plate with two sides squared off (two flat chords at x = ±0.2)
+        const R = 0.26, cx = 0.2, ca = Math.acos(cx / R), shp = new THREE.Shape(); shp.moveTo(cx, -R * Math.sin(ca)); shp.lineTo(cx, R * Math.sin(ca)); shp.absarc(0, 0, R, ca, Math.PI - ca, false); shp.lineTo(-cx, -R * Math.sin(ca)); shp.absarc(0, 0, R, Math.PI + ca, 2 * Math.PI - ca, false);
+        const dg = new THREE.ExtrudeGeometry(shp, { depth: 0.03, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 2, curveSegments: 32 }); dg.translate(0, 0, -0.015); dg.rotateX(-Math.PI / 2);
+        const disc = new THREE.Mesh(dg, pm); pg.add(disc);
+        for (const sx of [-0.06, 0.06]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.02, 12), S.clay('#8d97a2')); bolt.position.set(sx, 0.025, 0.12); pg.add(bolt); }
         pg.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); pg.position.set(...(P0.plateAt ?? [0.55, 0.27, 0.35])); pg.rotation.set(1.25, -0.5, 0); scene.add(pg); propT.plate = [pg.position.x, pg.position.y + 0.42, pg.position.z]; }
       if (props.has('calculator')) { const cg = new THREE.Group(); const body = new THREE.Mesh(S.roundBox(0.36, 0.11, 0.32, 0.03), S.glossy('#d9d4c4', { rough: 0.4 })); cg.add(body);
         const top = new THREE.Mesh(S.roundBox(0.3, 0.02, 0.2, 0.008), S.clay('#4a4f57')); top.position.set(0, 0.065, 0.03); cg.add(top);
         const keys = []; for (let i = 0; i < 10; i++) for (let j = 0; j < 6; j++) keys.push({ p: [-0.135 + i * 0.03, 0.08, -0.04 + j * 0.026], sv: [0.022, 0.012, 0.02], c: j < 1 ? '#e0241b' : '#f4f2ee' });
         cg.add(S.instances(S.roundBox(1, 1, 1, 0.2, 1), S.clay('#ffffff'), keys, { cast: false })); const cr = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.08, 12).rotateZ(Math.PI / 2), S.clay('#2b2f38')); cr.position.set(0.21, 0.04, 0); cg.add(cr);
         cg.traverse(o => { if (o.isMesh) o.castShadow = true; }); cg.position.set(...(P0.calculatorAt ?? [deskTop[0] + 0.35, deskTop[1], deskTop[2]])); cg.rotation.y = -0.3; scene.add(cg); propT.calculator = [cg.position.x, cg.position.y + 0.35, cg.position.z]; }
-      if (props.has('sketch')) { const tex = S.canvasTex(512, 380, (g, w, h) => { g.fillStyle = '#fbfaf5'; g.fillRect(0, 0, w, h); g.strokeStyle = '#2b3a55'; g.lineWidth = 6; g.lineCap = 'round';
+      // sketchKind: 'chute' (default doodle) | 'contours' (a chart: grid, depth contours and a red hot spot) | 'note' (a handwritten note)
+      if (props.has('sketch')) { const kind = P0.sketchKind ?? 'chute'; const tex = S.canvasTex(512, 380, (g, w, h) => { g.fillStyle = '#fbfaf5'; g.fillRect(0, 0, w, h); g.strokeStyle = '#2b3a55'; g.lineWidth = 6; g.lineCap = 'round';
+          if (kind === 'contours') { g.lineWidth = 2; g.strokeStyle = '#9fb0c6'; for (let x = 32; x < w; x += 48) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); } for (let y = 30; y < h; y += 48) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+            g.strokeStyle = '#2b3a55'; g.lineWidth = 5; for (let k = 1; k <= 4; k++) { g.beginPath(); g.ellipse(w * 0.55, h * 0.5, 40 * k, 28 * k, -0.4, 0, 7); g.stroke(); }
+            g.fillStyle = 'rgba(224,36,27,0.85)'; g.beginPath(); g.ellipse(w * 0.55, h * 0.5, 30, 20, -0.4, 0, 7); g.fill(); return; }
+          if (kind === 'note') { g.lineWidth = 4; for (let k = 0; k < 6; k++) { g.beginPath(); g.moveTo(w * 0.1, h * (0.2 + k * 0.12)); for (let x = w * 0.1; x < w * (k === 5 ? 0.5 : 0.88); x += 14) g.lineTo(x, h * (0.2 + k * 0.12) + Math.sin(x * 0.3 + k) * 4); g.stroke(); } return; }
           g.beginPath(); g.arc(w * 0.42, h * 0.38, 90, Math.PI, 0); g.stroke(); for (const dx of [-90, -45, 0, 45, 90]) { g.beginPath(); g.moveTo(w * 0.42 + dx, h * 0.38); g.lineTo(w * 0.42, h * 0.72); g.stroke(); } g.fillStyle = '#2b3a55'; g.fillRect(w * 0.42 - 12, h * 0.72, 24, 46);
           g.beginPath(); g.moveTo(w * 0.05, h * 0.9); for (let x = 0; x < w; x += 20) g.lineTo(x, h * 0.9 + Math.sin(x * 0.05) * 6); g.stroke(); });
-        const sk = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.31).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 })); sk.position.set(...(P0.sketchAt ?? [deskTop[0] - 0.1, deskTop[1] + 0.005, deskTop[2] + 0.05])); sk.rotation.y = 0.15; sk.receiveShadow = true; scene.add(sk); propT.sketch = [sk.position.x, sk.position.y + 0.3, sk.position.z]; }
+        const sks = P0.sketchScale ?? 1; const sk = new THREE.Mesh(new THREE.PlaneGeometry(0.42 * sks, 0.31 * sks).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 })); sk.position.set(...(P0.sketchAt ?? [deskTop[0] - 0.1, deskTop[1] + 0.005, deskTop[2] + 0.05])); sk.rotation.y = 0.15; sk.receiveShadow = true; scene.add(sk); propT.sketch = [sk.position.x, sk.position.y + 0.3, sk.position.z]; }
       if (props.has('scroll')) { const sg = new THREE.Group(); const stand = new THREE.Mesh(S.roundBox(0.6, 0.95, 0.45, 0.04), S.wood({ coat: 0.5 })); stand.position.y = 0; sg.add(stand);
-        const scr = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.44, 24).rotateZ(Math.PI / 2), S.clay('#f6f1e1')); scr.position.set(0, 0.99, 0.06); sg.add(scr); const rib = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.04, 24).rotateZ(Math.PI / 2), S.clay('#2a5c9a')); rib.position.copy(scr.position); sg.add(rib);
-        const med = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.015, 32), S.glossy('#d2a845', { rough: 0.25, coat: 0.9 })); med.position.set(0.16, 0.965, -0.1); sg.add(med);
+        const scr = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.44, 24).rotateZ(Math.PI / 2), S.clay('#f6f1e1')); scr.position.set(-0.04, 0.99, -0.08); sg.add(scr); const rib = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.04, 24).rotateZ(Math.PI / 2), S.clay('#2a5c9a')); rib.position.copy(scr.position); sg.add(rib);
+        const med = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.015, 32), S.glossy('#d2a845', { rough: 0.25, coat: 0.9 })); med.position.set(0.17, 0.965, 0.13); sg.add(med);
         sg.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); sg.position.set(...(P0.scrollAt ?? [0.75, 0, 0.2])); scene.add(sg); propT.scroll = [sg.position.x, 1.35, sg.position.z]; }
       if (props.has('crate')) { const cg = new THREE.Group(); const box = new THREE.Mesh(S.roundBox(0.55, 0.28, 0.38, 0.02), S.wood({ coat: 0.3 })); cg.add(box); const r7 = S.rng(3); const tom = [];
         for (let i = 0; i < 24; i++) tom.push({ p: [-0.22 + (i % 6) * 0.088 + (r7() - 0.5) * 0.02, 0.3 + (r7()) * 0.03, -0.13 + Math.floor(i / 6) * 0.088], s: 0.045 }); cg.add(S.instances(new THREE.SphereGeometry(1, 14, 10), S.glossy('#e0241b', { rough: 0.3 }), tom));
-        cg.traverse(o => { if (o.isMesh) o.castShadow = true; }); cg.position.set(...(P0.crateAt ?? [0, 0, 0.9])); scene.add(cg); propT.crate = [cg.position.x, 0.75, cg.position.z]; }
+        cg.traverse(o => { if (o.isMesh) o.castShadow = true; }); cg.position.set(...(P0.crateAt ?? [0, 0, 0.9])); scene.add(cg); propT.crate = [cg.position.x, cg.position.y + 0.75, cg.position.z]; }
+      // propDY: { name: dy } nudges a prop's pill anchor up/down (m), e.g. { calculator: -0.2 }
+      if (P0.propDY) for (const [k, dy] of Object.entries(P0.propDY)) if (propT[k]) propT[k] = [propT[k][0], propT[k][1] + dy, propT[k][2]];
+      // seats: [[x, z], …] plain wooden stools (seat top 0.45 m) for the sit_* clips; dinner: two plates and glasses on the desk top
+      for (const [x, z] of P0.seats ?? []) { const st = new THREE.Mesh(S.roundBox(0.42, 0.45, 0.42, 0.04), S.wood({ coat: 0.4 })); st.position.set(x, 0, z); st.castShadow = st.receiveShadow = true; scene.add(st); }
+      if (props.has('dinner')) { const dm = S.glossy('#fbfbf8', { rough: 0.2, coat: 0.8 }); for (const dx of [-0.45, 0.45]) { const pl = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.1, 0.025, 32), dm); pl.position.set(deskTop[0] + dx, deskTop[1] + 0.012, deskTop[2] + 0.1); pl.castShadow = true; scene.add(pl);
+          const gl = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.03, 0.12, 16), new THREE.MeshPhysicalMaterial({ color: '#dfeef5', roughness: 0.05, transmission: 0.6, transparent: true, opacity: 0.6 })); gl.position.set(deskTop[0] + dx * 0.55, deskTop[1] + 0.06, deskTop[2] - 0.15); scene.add(gl); } }
       if (props.has('jet')) { const j = PR.jet({ scale: P0.jetScale ?? 1.5 }); j.position.set(...(P0.jetAt ?? [-2.6, 0, -2.6])); j.rotation.y = P0.jetRy ?? 0.35; j.traverse(o => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); scene.add(j); propT.jet = [j.position.x, 2.2, j.position.z]; }
       if (props.has('plinth')) { const pl = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.5, 0.12, 64), S.clay('#f4f2ee', { rough: 0.5, coat: 0.4 })); pl.position.y = -0.06; pl.receiveShadow = true; scene.add(pl); }
       // cash flow: bundles hop on arcs from `from` to `to` (who pays whom)
@@ -412,11 +430,12 @@ export default function claySilver(H) {
       // are cloned so the dimmer environment does not leak into other shots' shared mannequin materials
       if (P0.night) { scene.background = S.canvasTex(1024, 576, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#050b1f'); gr.addColorStop(0.65, '#0f2350'); gr.addColorStop(1, '#1c3566'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
           const rr = S.rng(9); for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(255,255,255,${0.25 + rr() * 0.6})`; g.beginPath(); g.arc(rr() * w, rr() * h * 0.6, 0.4 + rr(), 0, 7); g.fill(); } });
-        scene.fog = null; G.st.cyc.visible = false; G.st.key.intensity *= 0.28;
+        scene.fog = null; G.st.cyc.visible = false; G.st.key.intensity *= P0.nightKey ?? 0.28;
         const deck = new THREE.Mesh(new THREE.CylinderGeometry(6, 6.1, 0.3, 96), S.clay('#3c4656', { rough: 0.8 })); deck.position.y = -0.15; deck.receiveShadow = true; scene.add(deck);
         const lamp = new THREE.PointLight('#ffcf8a', 9, 14, 1.6); lamp.position.set(1.6, 3.4, 2.4); scene.add(lamp); const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 3.2, 2) })); bulb.position.copy(lamp.position); scene.add(bulb);
-        const rimL = new THREE.DirectionalLight('#8fb4ff', 1.6); rimL.position.set(-4, 3, -6); scene.add(rimL);
-        for (const { m } of [...people, ...crowd]) m.root.traverse(o => { if (o.isMesh && o.material && !o.material.userData?.night) { o.material = o.material.clone(); o.material.envMapIntensity = 0.22; o.material.userData = { night: true }; } }); }
+        const rimL = new THREE.DirectionalLight('#8fb4ff', P0.nightRim ?? 1.6); rimL.position.set(-4, 3, -6); scene.add(rimL);
+        if (P0.nightFill) { const fl = new THREE.DirectionalLight('#dfe8ff', P0.nightFill); fl.position.set(2, 2.5, 6); scene.add(fl); }
+        for (const { m } of [...people, ...crowd]) m.root.traverse(o => { if (o.isMesh && o.material && !o.material.userData?.night) { o.material = o.material.clone(); o.material.envMapIntensity = P0.nightEnv ?? 0.22; o.material.userData = { night: true }; } }); }
       G.finish();
       const D = G.dur, fz = people[P0.focusOn ?? 0]?.f ?? { x: 0, z: 0 };
       const cx = fz.x ?? 0, cz = fz.z ?? 0;
@@ -441,9 +460,9 @@ export default function claySilver(H) {
           if (hop.length) { const at = G.cue(flow.at, 0.6), period = flow.period ?? 0.45; hop.forEach((c, i) => {
             const t0 = at + i * period, u = S.range(t, t0, t0 + 0.9); const a = flow.from, b = flow.to;
             c.visible = t >= t0 - 0.05; c.position.set(S.lerp(a[0], b[0], S.inOut(u)), 0.9 + Math.sin(Math.PI * u) * 0.9 - (u >= 1 ? 0.9 - Math.floor(i / 2) * 0.03 - 0.0 : 0), S.lerp(a[1], b[1], S.inOut(u)) + (u >= 1 ? (i % 2) * 0.12 : 0)); c.rotation.y = u * 3; }); }
-          G.cam(keys, t);
+          G.cam(keys, t, P0.focus != null ? { focus: P0.focus } : {});
           for (const p of xPills) { const q = typeof p.target === 'string' ? propT[p.target] : p.target; if (!q) { p.el.at(0, 0, 0); continue; } const [x, y, v] = G.toPx(q); p.el.at(x, y, v ? S.range(t, p.t0, p.t0 + 0.35) : 0); }
-          people.forEach(({ m, f }, i) => { if (!labels[i]) return; m.root.updateMatrixWorld(true); const hp = m.worldPos('head'); const [x, y, v] = G.toPx([hp.x, hp.y + 0.42, hp.z]); labels[i].at(x, y, v ? S.range(t, G.cue(f.labelAt, 0.6), G.cue(f.labelAt, 0.6) + 0.35) : 0); });
+          people.forEach(({ m, f }, i) => { if (!labels[i]) return; (f.lie ? m.root.parent : m.root).updateMatrixWorld(true); const hp = m.worldPos('head'); const [x, y, v] = G.toPx([hp.x, hp.y + (f.labelY ?? 0.42), hp.z]); labels[i].at(x, y, v ? S.range(t, G.cue(f.labelAt, 0.6), G.cue(f.labelAt, 0.6) + 0.35) : 0); });
           G.frame(t);
         },
       };

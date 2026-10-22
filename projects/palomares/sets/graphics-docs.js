@@ -244,8 +244,9 @@ export default function makeDocs(H) {
     const HL = keys.map(k => { const rs = L.keys[k], u = [Math.min(...rs.map(r => r[0])), Math.min(...rs.map(r => r[1])), Math.max(...rs.map(r => r[2])), Math.max(...rs.map(r => r[3]))]; return { rs, u }; });
     const ats = [].concat(Pm.at ?? []), n = HL.length, T0 = Math.min(1.9, D * 0.28), step = n > 1 ? clamp((D - T0 - 1.6) / (n - 1), 0.9, 1.8) : 0;
     const T = HL.map((_, i) => G.cue(shot, ats[i], T0 + i * step));
-    const fit = Math.min(1640 / Dc.w, 900 / Dc.h), Z0 = fit * 0.96;
-    const zOf = (h) => Math.min(Pm.zoom ?? fit * 1.4, 1700 / Dc.w);
+    const fit = Math.min(1640 / Dc.w, 900 / Dc.h), Z0 = Pm.fitPage ? Math.min(820 / Dc.h, 1640 / Dc.w) : fit * 0.96;
+    // Pm.fitPage: keep the whole sheet in the window (top clear of the label pill) instead of zooming onto the highlights
+    const zOf = (h) => Pm.fitPage ? Math.min(820 / Dc.h, 1640 / Dc.w) : Math.min(Pm.zoom ?? fit * 1.4, 1700 / Dc.w);
     const tilt = (Pm.tilt ?? Dc.tilt ?? 0) * Math.PI / 180;
     const start = [Dc.w / 2, Dc.h / 2];
     return set(ctx, shot, (g, t, p, k) => {

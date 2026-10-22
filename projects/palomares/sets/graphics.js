@@ -35,7 +35,7 @@ export default function makeGraphics(H) {
   // is lifted to the ship. Depths: S01 p.94. The tape names the five states.
   async function title(ctx, shot) {
     const Pm = shot.params ?? {}, D = shot.duration ?? 7, lines = Pm.lines ?? ['AMERICA LOST', 'THE SAME', 'H-BOMB TWICE'];
-    const sp = clamp((D - 0.8) / 6.2, 0.55, 1.4);
+    const sp = clamp((D - 0.8) / 6.2, 0.55, 1.4) * (Pm.pace ?? 1); // Pm.pace < 1 plays the motif faster so the last state holds longer
     const T = { drop: 0.45, rim: 0.45 + 0.9 * sp, found: 0.45 + 1.35 * sp, lift: 0.45 + 2.0 * sp, snap: 0.45 + 2.75 * sp, settle: 0.45 + 3.45 * sp, refound: 0.45 + 3.95 * sp, raise: 0.45 + 4.45 * sp, out: 0.45 + 5.5 * sp };
     const U = G.UPOS;
     return set(ctx, shot, (g, t, p, k) => {
@@ -82,7 +82,7 @@ export default function makeGraphics(H) {
       const ty = 1000, kt = range(t, 0.3, 0.8);
       if (kt > 0) {
         g.save(); g.globalAlpha = clamp(kt * 2); G.shadow(g, 0.8); g.fillStyle = P.ink; g.fillRect(-200, ty - 40, 2320, 80); G.noShadow(g);
-        const items = [['17 JAN 1966', 'LOST', T.drop], ['15 MAR', 'FOUND · 2,550 FT', T.found], ['24 MAR', 'LOST AGAIN', T.snap], ['2 APR', 'FOUND · 2,800 FT', T.refound], ['7 APR', 'LIFTED', T.out - 0.3]];
+        const items = [['17 JAN 1966', 'LOST', T.drop], ['15 MAR', 'FOUND · 2,550 FT', T.found], ['24 MAR', 'LOST AGAIN', T.snap], ['2 APR', 'FOUND · 2,800 FT', T.refound], ['7 APR', 'LIFTED', T.raise + 0.35]];
         const wi = items.map(([d, v]) => G.measure(g, d, 19, 500, F.mono, 0.1) + 12 + G.measure(g, v, 26, 500, F.mono, 0.04) + 64);
         const TW = wi.reduce((a, b) => a + b, 0) - 64, ts = Math.min(1, 1760 / TW);
         g.translate(960, ty); g.scale(ts, ts); g.translate(-960, -ty);
@@ -99,7 +99,7 @@ export default function makeGraphics(H) {
         g.restore();
       }
       k.flat();
-      G.text(g, Pm.source ?? 'DEPTHS: DNA PALOMARES SUMMARY REPORT (1975) · SECTION SCHEMATIC, NOT TO SCALE', 1880, 1068, { size: 13, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: 0.8 * E.outCubic(range(t, 1.6, 2.2)) });
+      G.text(g, Pm.source ?? 'DEPTHS: DNA PALOMARES SUMMARY REPORT (1975) · SECTION SCHEMATIC, NOT TO SCALE', 1880, 1068, { size: Pm.sourceSize ?? 13, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: 0.8 * E.outCubic(range(t, 1.6, 2.2)) });
     }, { push: 0.05, dx: 0 });
   }
 
@@ -168,7 +168,7 @@ export default function makeGraphics(H) {
       g.restore();
       G.pulse(g, px, py, t, kp, { r: state === 'found' || state === 'lifted' ? 30 : state === 'today' ? 22 : 11, dot: state === 'lost' || state === 'lost-again' });
       // the card's small caption
-      G.text(g, 'BOMB 4 · SCHEMATIC SECTION · NOT TO SCALE', cx0 + 28, cy0 + 44, { size: 15, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12 });
+      G.text(g, state === 'today' ? 'PALOMARES · SCHEMATIC SECTION · NOT TO SCALE' : 'BOMB 4 · SCHEMATIC SECTION · NOT TO SCALE', cx0 + 28, cy0 + 44, { size: 15, weight: 500, fam: F.mono, color: P.inkSoft, track: 0.12 });
       g.restore();
       // the state, under the card
       const ks = range(t, tP + 0.1, tP + 0.7);
@@ -282,18 +282,16 @@ export default function makeGraphics(H) {
     const face = Pm.face ?? pre.face ?? steps.some(s => s.time);
     const T = G.cues(shot, steps, { from: 0.35, span: Math.max(1.6 * (steps.length - 1), D * 0.55) });
     const L = Math.max(...steps.map(s => s.text.length));
-    const align = Pm.align ?? pre.align ?? 'right';
-    const pad = (s) => (align === 'center' ? s.padStart(Math.floor((L + s.length) / 2), ' ').padEnd(L, ' ') : s.padStart(L, ' ')).split('');
+    // each step is laid out on its own and centred on the board: a space is always a thin gap (never a blank tile),
+    // and a shorter step is never padded with empty tiles. Digits roll only between steps of the same length.
     const narrow = (c) => /[:.,·]/.test(c);
-    const slots = Array.from({ length: L }, (_, i) => {
-      const cs = steps.map(s => pad(s.text)[i]);
-      if (cs.every(c => c === ' ')) return 'g';
-      return cs.every(c => narrow(c) || c === ' ') ? 'n' : 'w';
-    });
-    const unit = slots.reduce((a, s) => a + (s === 'n' ? 0.42 : s === 'g' ? 0.3 : 1), 0) + 0.06 * (L - 1);
+    const kind = (c) => (c === ' ' ? 'g' : narrow(c) ? 'n' : 'w');
+    const unitOf = (s) => s.text.split('').reduce((a, c) => a + ({ n: 0.42, g: 0.3, w: 1 })[kind(c)], 0) + 0.06 * (s.text.length - 1);
+    const unit = Math.max(...steps.map(unitOf));
     const BX = face ? 1330 : 960, BW = face ? 860 : 1600;
     const TW = Pm.tile ?? Math.min(face ? 150 : 196, BW / unit), TH = TW * 1.36, NW = TW * 0.42, GW = TW * 0.3, gap = TW * 0.06;
-    const boardW = slots.reduce((a, s) => a + (s === 'n' ? NW : s === 'g' ? GW : TW) + gap, -gap);
+    const widthOf = (s) => s.text.split('').reduce((a, c) => a + (kind(c) === 'n' ? NW : kind(c) === 'g' ? GW : TW) + gap, -gap);
+    const boardW = Math.max(...steps.map(widthOf));
     // flap timing fits the step's window: tiles land within ~0.35–0.85 s, leaving >= ~1.3 s settled before the next step / the cut.
     // Short clips (< 2.2 s, or settled: true) open already settled on their single step.
     const settled = Pm.settled ?? D < 2.2; if (settled) T[0] = Math.min(T[0], 0);
@@ -309,29 +307,35 @@ export default function makeGraphics(H) {
       k.view(1);
       let si = 0; for (let i = 0; i < steps.length; i++) if (t >= T[i]) si = i;
       const cur = steps[si], prev = steps[Math.max(0, si - 1)], tc = T[si];
-      const from = si === 0 ? pad('').map(() => ' ') : pad(prev.text), to = pad(cur.text);
-      const x0 = BX - boardW / 2, y0 = (face ? 400 : 380) + Math.max(0, (180 - TH) * 0.5);
-      G.card(g, x0 - TW * 0.22, y0 - TW * 0.22, boardW + TW * 0.44, TH + TW * 0.44, { r: 26, fill: P.ink, lift: 1.4, grainA: 0 });
+      const to = cur.text.split(''), pch = si === 0 ? null : prev.text.split(''), from = to.map((_, i) => (pch && pch.length === to.length ? pch[i] : ' '));
+      // the board hugs the current step (it eases to the new width as the flaps turn)
+      const bw = si === 0 ? widthOf(cur) : lerp(widthOf(prev), widthOf(cur), E.inOutCubic(range(t, tc, tc + 0.45)));
+      const x0 = BX - bw / 2, y0 = (face ? 400 : 380) + Math.max(0, (180 - TH) * 0.5);
+      G.card(g, x0 - TW * 0.22, y0 - TW * 0.22, bw + TW * 0.44, TH + TW * 0.44, { r: 26, fill: P.ink, lift: 1.4, grainA: 0 });
       const fdc = fd(si), tFlap = (i) => tFlapS(Math.min(i, L - 1), si);
       const redNow = cur.red && t > tc + fdc + 0.15;
-      const off = align === 'center' ? Math.floor((L + cur.text.length) / 2) - cur.text.length : L - cur.text.length;
-      const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? off + cur.text.lastIndexOf(cur.red)
-        : cur.text.includes('·') ? off + cur.text.lastIndexOf('·') + 1 : 0;
-      let x = x0;
-      for (let i = 0; i < L; i++) {
-        const sl = slots[i], w = sl === 'n' ? NW : sl === 'g' ? GW : TW, a = from[i], b = to[i], stopAt = tc + tFlap(i);
+      const redFrom = typeof cur.red === 'string' && cur.text.includes(cur.red) ? cur.text.lastIndexOf(cur.red)
+        : cur.text.includes('·') ? cur.text.lastIndexOf('·') + 1 : 0;
+      // a string `red` marks just that substring (e.g. red: '4' in '4 OF 11'); otherwise red runs to the end
+      const redTo = typeof cur.red === 'string' && cur.text.includes(cur.red) ? redFrom + cur.red.length : to.length;
+      let x = BX - widthOf(cur) / 2;
+      for (let i = 0; i < to.length; i++) {
+        const sl = kind(to[i]), w = sl === 'n' ? NW : sl === 'g' ? GW : TW, a = from[i], b = to[i], stopAt = tc + tFlap(i);
         if (sl === 'g') { x += w + gap; continue; }
-        const col = redNow && i >= redFrom ? P.red : P.ink;
+        const col = redNow && i >= redFrom && i < redTo ? P.red : P.ink;
         if (sl === 'n') {
           const c = t < tc && si === 0 ? ' ' : (t < stopAt - 0.1 ? a : b);
-          if (c.trim()) G.text(g, c, x + w / 2, y0 + TH * 0.74, { size: TW * 0.95, weight: 800, align: 'center', color: redNow && i > redFrom ? '#ff6a5c' : P.white });
+          if (c.trim()) G.text(g, c, x + w / 2, y0 + TH * 0.74, { size: TW * 0.95, weight: 800, align: 'center', color: redNow && i > redFrom && i < redTo ? '#ff6a5c' : P.white });
           x += w + gap; continue;
         }
         G.rr(g, x, y0, w, TH, TW * 0.06); const gr = g.createLinearGradient(0, y0, 0, y0 + TH); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, '#eef1ee'); g.fillStyle = gr; g.fill();
-        g.save(); G.rr(g, x, y0, w, TH, TW * 0.06); g.clip();
+        // a plain (rectangular, pixel-snapped) clip: rounded clip masks left hairline ghosts of earlier tiles on the software canvas
+        g.save(); g.beginPath(); g.rect(Math.round(x), Math.round(y0), Math.round(w), Math.round(TH)); g.clip();
         const digit = (c) => (c === ' ' ? 10 : /\d/.test(c) ? +c : null);
         const da = digit(a), db = digit(b), moving = t >= tc && t < stopAt && a !== b;
-        const fs = (c) => (c === '%' || c === '$' || c === '−' ? TW * 0.8 : /[A-Z]/.test(c) ? TW * (/[MW]/.test(c) ? 0.78 : 0.9) : TW * 1.0);
+        const fs = (c) => (c === '%' || c === '$' || c === '−' ? TW * 0.8 : /[A-Z]/.test(c) ? TW * 0.9 : TW * 1.0);
+        // wide capitals keep the full cap height and are squeezed horizontally to fit the tile (a smaller W read as a lower-case w)
+        const glyph = (c, cx, by, o) => { const sq = /W/.test(c) ? 0.74 : /M/.test(c) ? 0.84 : 1; if (sq === 1) return G.text(g, c, cx, by, o); g.save(); g.translate(cx, 0); g.scale(sq, 1); G.text(g, c, 0, by, o); g.restore(); };
         if (moving && da != null && db != null) {
           const dist = 22 + ((db - da) % 11 + 11) % 11, uu = E.outCubic(range(t, tc, stopAt)), pos = da + dist * uu;
           for (let j = -1; j <= 1; j++) { const d = ((Math.floor(pos) + j) % 11 + 11) % 11, o = (pos - Math.floor(pos) - j) * TH; if (d !== 10) G.text(g, String(d), x + w / 2, y0 + TH * 0.75 - o, { size: TW * 1.0, weight: 800, align: 'center', color: P.ink, alpha: uu < 0.8 ? 0.55 : 1 }); }
@@ -340,11 +344,11 @@ export default function makeGraphics(H) {
           const seq = Array.from({ length: n }, () => FLAP[Math.floor(r() * FLAP.length)]); seq.push(b);
           const c = idx >= n ? b : seq[idx], ph = (uu * n) % 1, sq = idx >= n ? 1 : Math.abs(Math.cos(ph * Math.PI));
           g.save(); g.translate(x + w / 2, y0 + TH / 2); g.scale(1, Math.max(0.08, sq)); g.translate(-(x + w / 2), -(y0 + TH / 2));
-          if (c.trim()) G.text(g, c, x + w / 2, y0 + TH * 0.75, { size: fs(c), weight: 800, align: 'center', color: P.ink, alpha: 0.85 });
+          if (c.trim()) glyph(c, x + w / 2, y0 + TH * 0.75, { size: fs(c), weight: 800, align: 'center', color: P.ink, alpha: 0.85 });
           g.restore();
         } else {
           const c = t < tc ? (si === 0 ? ' ' : b) : b;
-          if (c && c.trim()) G.text(g, c, x + w / 2, y0 + TH * 0.75, { size: fs(c), weight: 800, align: 'center', color: col });
+          if (c && c.trim()) glyph(c, x + w / 2, y0 + TH * 0.75, { size: fs(c), weight: 800, align: 'center', color: col });
         }
         g.restore();
         g.fillStyle = 'rgba(20,35,61,0.2)'; g.fillRect(x, y0 + TH / 2 - 1.5, w, 3);
@@ -415,7 +419,8 @@ export default function makeGraphics(H) {
       const y = 590, cx = camX(t), SX = (i) => 960 + X(i) - cx;
       // the axis, drawn on as events arrive
       const reach = Math.max(...ev.map((e, i) => (t >= T[i] - 0.4 ? SX(i) + sp * 0.6 * E.outCubic(range(t, T[i] - 0.4, T[i] + 0.2)) : -400)), SX(0));
-      g.save(); g.beginPath(); g.rect(-200, 0, reach + 200, 1080); g.clip();
+      // when every event fits, the axis is balanced: it starts as far left of the first event as it runs past the last
+      const ax0 = fits ? SX(0) - sp * 0.6 : -200; g.save(); g.beginPath(); g.rect(ax0, 0, reach - ax0, 1080); g.clip();
       g.fillStyle = P.ink; g.fillRect(-200, y - 3, 2320, 6);
       for (let x = (SX(0) % 24) - 240; x < 2120; x += 24) { g.fillStyle = P.rule; g.fillRect(x, y + 10, 2, 10); }
       g.restore();
@@ -444,7 +449,7 @@ export default function makeGraphics(H) {
       if (!fits) { k.flat(); const L0 = g.createLinearGradient(0, 0, 150, 0); L0.addColorStop(0, 'rgba(247,246,241,1)'); L0.addColorStop(1, 'rgba(247,246,241,0)'); g.fillStyle = L0; g.fillRect(0, 0, 150, 1080);
         const R0 = g.createLinearGradient(1770, 0, 1920, 0); R0.addColorStop(0, 'rgba(247,246,241,0)'); R0.addColorStop(1, 'rgba(247,246,241,1)'); g.fillStyle = R0; g.fillRect(1770, 0, 150, 1080); }
       // the running year, top right: the year of the latest event on screen
-      { let iy = 0; ev.forEach((e, i) => { if (t >= T[i] && (hasF ? i <= hi : true)) iy = i; }); if (hasF) iy = hi;
+      if (Pm.runningYear !== false) { let iy = 0; ev.forEach((e, i) => { if (t >= T[i] && (hasF ? i <= hi : true)) iy = i; }); if (hasF) iy = hi; // Pm.runningYear: false hides it
         let ic = iy; while (ic > 0 && String(ev[ic - 1].year) === String(ev[iy].year)) ic--;
         k.flat(); G.riseText(g, String(ev[iy].year), 1800, 128, range(t, T[ic] - 0.1, T[ic] + 0.5), { size: 72, weight: 500, fam: F.mono, align: 'right', color: P.tealDeep, track: -0.02 }); k.view(1); }
       k.flat(); G.kicker(g, Pm.title ?? 'BOMB 4 · 1966 – 2026', 120, 110, range(t, 0, 0.6));

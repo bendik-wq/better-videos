@@ -21,6 +21,8 @@ const STEP = {
   find: { date: '15 MAR 1966', head: 'Found: 2,550 ft down', sub: ['BY ALVIN · ON A “70 DEGREE SLOPE”', 'AT THE END OF A ~400-FT FURROW'], chip: ['2,550 FT', 'find'] },
   lost: { date: '24 MAR 1966 · ABOUT 9 PM', head: 'The line parts', sub: ['LIFTED ON ONE LINE · NO SOURCE SAYS HOW HIGH', 'TIME PER BARBARA MORAN'], red: true },
   refind: { date: '2 APR 1966', head: 'Found again: 2,800 ft', sub: ['120 YARDS DOWNSLOPE, ON A GENTLER PLAIN', 'NINE DAYS AFTER THE LINE PARTED'], chip: ['2,800 FT', 'refind'] },
+  // lines (4–5 Apr): CURV sets line one, then line two; each drags it a little deeper, to ~2,850 ft (RESEARCH §7)
+  lines: { date: '4–5 APR 1966', head: 'Dragged to ~2,850 ft', sub: ['LINE ONE, THEN LINE TWO', 'EACH ONE DRAGGED IT DEEPER'], chip: ['~2,850 FT', 'lift'] },
   lift: { date: '7 APR 1966', head: 'Lifted from ~2,850 ft', sub: ['“WEAPON ON DECK” 08:46 (PETREL LOG, VIA MORAN)', '80 DAYS AFTER THE CRASH'], chip: ['~2,850 FT', 'lift'] },
 };
 const ORDER = ['drop', 'find', 'lost', 'refind', 'lift'];
@@ -73,6 +75,15 @@ export default function makeData(H) {
         if (t < tCut) { bx = fx; by = fy - up; ba = S.ang(U.find); chute = 0.7; show = true; }
         else { const u = E.inOutCubic(range(t, tCut + 0.1, tGone)), uu = lerp(U.find, U.refind, u); [bx, by] = at(uu); ba = S.ang(uu) + Math.sin(u * Math.PI) * 0.9; chute = 0.6; show = true; ghost = t > tGone; cut = range(t, tCut, tCut + 0.5); }
         if (t >= tCut && t < tCut + 0.1) by = fy - up * (1 - range(t, tCut, tCut + 0.1));
+        if (t > tCut + 0.3) ghost = true; // from the break on it is a dashed ghost: nine days of not knowing where
+      } else if (st === 'lines') {
+        // two buoyed lines come down on their cues; the bomb is dragged from 2,800 ft to ~2,850 ft
+        const t1 = T.lines, t2 = G.cue(shot, Pm.twoAt, t1 + 1.3), t3 = G.cue(shot, Pm.deeperAt, t2 + 0.9), d = E.inOutCubic(range(t, t1 + 0.6, t1 + 1.4)) * 0.5 + E.inOutCubic(range(t, t3 - 0.2, t3 + 0.8)) * 0.5;
+        const uu = lerp(U.refind, U.lift, d); [bx, by] = at(uu); ba = S.ang(uu); chute = 0.6; show = true;
+        const sx0 = at(U.lift)[0]; G.ship(g, sx0 + 34, S.ys, 1.0, { alpha: range(t, 0.2, 0.6) });
+        // the two lines fan apart at the surface (bow and stern of the ship) and meet the bundle at two points; line 2 in teal
+        [[t1, -30, P.ink, 'LINE 1'], [t2, 34, P.tealDeep, 'LINE 2']].forEach(([tl, dx, lc, lb]) => { const kl = E.outCubic(range(t, tl, tl + 0.6)); if (kl <= 0) return; g.save(); g.strokeStyle = lc; g.lineWidth = 3.5; g.beginPath(); g.moveTo(sx0 + dx, S.ys + 10); g.lineTo(lerp(sx0 + dx, bx + dx * 0.25, kl), lerp(S.ys + 10, by - 12, kl)); g.stroke(); g.restore();
+          if (kl >= 1) G.text(g, lb, sx0 + dx + (dx > 0 ? 14 : -14), S.ys + 70 + (dx > 0 ? 40 : 0), { size: 18, weight: 600, fam: F.mono, align: dx > 0 ? 'left' : 'right', color: lc, track: 0.08 }); });
       } else if (st === 'refind') {
         [bx, by] = at(U.refind); ba = S.ang(U.refind); chute = 0.6; show = true;
       } else if (st === 'lift') {
@@ -90,13 +101,16 @@ export default function makeData(H) {
           if (cut <= 0) { g.strokeStyle = P.ink; g.lineWidth = 3.5; g.beginPath(); g.moveTo(x, y0); g.lineTo(x, yE); g.stroke(); }
           else { const gy = lerp(y0, lineTo, 0.75), upk = E.outCubic(cut) * (gy - y0) * 0.5; g.strokeStyle = P.ink; g.lineWidth = 3.5; g.beginPath(); g.moveTo(x, y0); g.lineTo(x + Math.sin(cut * 10) * 8 * (1 - cut), gy - upk); g.stroke();
             // the frayed end
-            g.lineWidth = 1.6; for (let q = -2; q <= 2; q++) { g.beginPath(); g.moveTo(x, gy - upk); g.lineTo(x + q * 4, gy - upk + 10); g.stroke(); } }
+            // the anchor on the ship's line, and the short frayed stump hanging below it (the break was below the anchor)
+            const ay = gy - upk; g.lineWidth = 3; g.beginPath(); g.moveTo(x, ay - 14); g.lineTo(x, ay); g.moveTo(x - 10, ay - 4); g.quadraticCurveTo(x, ay + 6, x + 10, ay - 4); g.moveTo(x - 6, ay - 12); g.lineTo(x + 6, ay - 12); g.stroke();
+            g.lineWidth = 2.6; g.beginPath(); g.moveTo(x, ay); g.lineTo(x + 2, ay + 22); g.stroke();
+            g.lineWidth = 1.6; for (let q = -2; q <= 2; q++) { g.beginPath(); g.moveTo(x + 2, ay + 22); g.lineTo(x + 2 + q * 4, ay + 32); g.stroke(); } }
           g.restore(); }
       }
       if (show) G.bomb(g, bx, by, ba, L, { chute, ghost, t });
       if (ghost) G.text(g, '?', bx + 54, by - 20, { size: 54, weight: 800, color: P.ink, alpha: 0.9 });
       // the red pulse where the line parted (the one red, during the loss)
-      if (st === 'lost') { const [fx, fy] = at(U.find); G.pulse(g, fx, lerp(S.ys + 10, fy - 10, 0.75), t, range(t, T.lost + 1.6, T.lost + 2.0) * (1 - range(t, T.lost + 3.6, T.lost + 4.2)), { r: 10 }); }
+      if (st === 'lost') { const [fx, fy] = at(U.find), gy0 = lerp(S.ys + 10, fy - 10, 0.75), cu = range(t, T.lost + 1.6, T.lost + 2.1); G.pulse(g, fx + 2, gy0 - E.outCubic(cu) * (gy0 - S.ys - 10) * 0.5 + 28, t, range(t, T.lost + 1.6, T.lost + 2.0) * (1 - range(t, T.lost + 3.6, T.lost + 4.2)), { r: 10 }); }
       // ---- depth chips on the axis (each step's depth), dashed guides across to the spot
       k.view(0.8);
       const chips = steps.filter(s => STEP[s].chip && t >= T[s] - (s === 'drop' ? 0 : 0.2));
@@ -105,7 +119,7 @@ export default function makeData(H) {
         if (s === 'refind' && has('lift') && t > T.lift + 0.4) return; // 2,800 and 2,850 sit 12 px apart: the lift chip replaces it
         const ft = G.DEPTH[key] ?? G.DEPTH.lift, y = S.Y(ft), cur = s === st || (st === 'lost' && s === 'find');
         const [px] = at(U[key] ?? U.lift);
-        g.save(); g.globalAlpha = kc * (cur ? 0.9 : 0.4); g.strokeStyle = P.ink; g.lineWidth = 1.6; g.setLineDash([3, 6]); g.beginPath(); g.moveTo(ax + 4, y); g.lineTo(px - 40, y); g.stroke(); g.restore();
+        g.save(); g.globalAlpha = kc * (cur ? 0.9 : 0.4); g.strokeStyle = P.ink; g.lineWidth = 1.6; g.setLineDash([3, 6]); g.beginPath(); g.moveTo(ax + 4, y); g.lineTo(px - 8, y); g.stroke(); g.restore();
         G.pill(g, lab, ax + 14, y, { size: 19, k: kc, fam: F.mono, weight: 500, fill: cur ? P.ink : P.white, color: cur ? P.white : P.ink, alpha: cur ? 1 : 0.85, lift: 0.4 });
       });
       // +250 FT DEEPER: a red bracket on the axis from 2,550 to 2,800 (S01; never "300 ft", §13)

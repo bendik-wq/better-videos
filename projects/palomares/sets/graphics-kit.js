@@ -76,6 +76,8 @@ export function canvasSet(Hh, ctx, shot, paint, cam = {}) {
   return {
     scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(), layer, canvas: cv, k,
     async update(t, p) {
+      // a full reset every frame (pixels, clip stack, state): leftover clip edges of the previous frame's flap tiles ghosted as hairlines
+      if (g.reset) g.reset(); else g.clearRect(0, 0, cv.width, cv.height);
       k.t = t; setS(S); g.setTransform(S, 0, 0, S, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none'; noShadow(g); g.letterSpacing = '0px'; g.setLineDash([]);
       // an opaque base every frame: the paper is drawn with a slow push and soft alphas, so without this the previous
       // shot's pixels (split-flap tile outlines, cards) ghost through the comp
@@ -334,9 +336,10 @@ export function drawSection(g, S, { t = 0, alpha = 1, dark = 0, village = true, 
   g.stroke(); g.restore();
   // a village on the shore (white blocks, navy hairlines)
   if (village) {
-    const r = rng(23); const vx0 = S.X(0.035), vx1 = S.X(0.115);
+    // inset from the frame edge, and each block sits on the lowest point of the ground under it (no floating corners)
+    const r = rng(23); const vx0 = Math.max(S.X(0.035), 48), vx1 = Math.max(S.X(0.115), vx0 + 150);
     for (let i = 0; i < 6; i++) {
-      const x = lerp(vx0, vx1, (i + r() * 0.4) / 6), u = (x - S.x0) / S.w, y = S.Y(bedFt(u)) + 4, bw = 18 + r() * 12, bh = 14 + r() * 16;
+      const x = lerp(vx0, vx1, (i + r() * 0.4) / 6), bw = 18 + r() * 12, bh = 14 + r() * 16, gy = (xx) => S.Y(bedFt((xx - S.x0) / S.w)), y = Math.max(gy(x), gy(x + bw)) + 4;
       g.fillStyle = P.white; g.strokeStyle = 'rgba(20,35,61,0.6)'; g.lineWidth = 1.4; g.fillRect(x, y - bh + 3, bw, bh); g.strokeRect(x, y - bh + 3, bw, bh);
     }
   }

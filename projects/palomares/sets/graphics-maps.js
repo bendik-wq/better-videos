@@ -201,6 +201,9 @@ export default function makeMaps(H) {
     const isRed = (pn) => pn.color === MP.red || (pn.color == null && (V.red ?? []).includes(pn.name));
     // coast cues
     const tW = G.cue(shot, Pm.wedgeAt, Math.min(D * 0.55, 4.4)), tF = G.cue(shot, Pm.findAt, t1);
+    // the wedge pill's anchor (also used to keep isobath labels clear of it)
+    const wedgeLabel = () => { const ox = pr.X(-1.775), oy = pr.Y(37.242), R = 12.97 / 111.2 * pr.sc, a0 = 5 * Math.PI / 180; return [ox + Math.cos(a0 + 0.25) * R - 30, oy + Math.sin(a0 + 0.25) * R]; };
+    const discAt = Pm.discAt ?? 1.1; // Pm.discAt: when the bomb 1-3 discs pop (short clips pass an earlier time)
     let base = null;
     return set(ctx, shot, (g, t, p, k) => {
       k.view(1);
@@ -223,14 +226,16 @@ export default function makeMaps(H) {
             c.save(); c.strokeStyle = 'rgba(120,150,170,0.55)'; c.lineWidth = 7; c.lineCap = 'round'; c.lineJoin = 'round'; c.setLineDash([2, 10]); c.beginPath(); rv.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.stroke(); c.restore();
             const ri = rv[Math.floor(rv.length * 0.6)], rj = rv[Math.floor(rv.length * 0.6) + 3];
             if (!hidden('river')) { c.save(); c.translate(ri[0], ri[1] - 16); c.rotate(Math.atan2(rj[1] - ri[1], rj[0] - ri[0])); G.text(c, 'Río Almanzora (dry bed, approx.)', 0, 0, { size: 22, weight: 400, fam: F.serif, style: 'italic', align: 'center', color: 'rgba(55,90,115,0.85)' }); c.restore(); }
-            // isobath labels: the vertex of each line nearest a reference point out at sea
-            Object.entries(cj.depth).forEach(([ft, lines]) => {
+            // isobath labels: the vertex of each line nearest a reference point out at sea (Pm.isoLabels: false hides them;
+            // labels that would sit under the search-wedge pill and its sub-label are skipped)
+            const wl = Pm.wedge !== false ? wedgeLabel() : null;
+            if (Pm.isoLabels !== false) Object.entries(cj.depth).forEach(([ft, lines]) => {
               let best = null; lines.forEach(r => { for (let i = 2; i < r.length - 2; i += 2) { const x = pr.X(r[i]), y = pr.Y(r[i + 1]), d = Math.hypot(x - 1500, y - 1010); if (x > 60 && x < 1860 && y > 300 && y < 1040 && (!best || d < best.d)) best = { d, x, y, a: Math.atan2(pr.Y(r[i + 3]) - pr.Y(r[i - 1]), pr.X(r[i + 2]) - pr.X(r[i - 2])) }; } });
-              if (!best) return; let a = best.a; if (a > Math.PI / 2) a -= Math.PI; if (a < -Math.PI / 2) a += Math.PI;
+              if (!best) return; if (wl && best.x > wl[0] - 520 && best.x < wl[0] + 40 && best.y > wl[1] - 40 && best.y < wl[1] + 60) return; let a = best.a; if (a > Math.PI / 2) a -= Math.PI; if (a < -Math.PI / 2) a += Math.PI;
               c.save(); c.translate(best.x, best.y); c.rotate(a); const s = `${G.fmt(+ft)} FT`, w = G.measure(c, s, 17, 500, F.mono, 0.08);
               G.rr(c, -w / 2 - 8, -13, w + 16, 26, 6); c.fillStyle = 'rgba(233,238,242,0.92)'; c.fill(); G.text(c, s, 0, 6, { size: 17, weight: 500, fam: F.mono, align: 'center', color: P.tealDeep, track: 0.08 }); c.restore();
             });
-            word(c, 'Mediterranean Sea', pr.X(-1.6), pr.Y(37.165), false, 0.9);
+            if (!hidden('Mediterranean Sea')) word(c, 'Mediterranean Sea', pr.X(-1.6), pr.Y(37.165), false, 0.9);
             word(c, 'ALMERÍA · SPAIN', pr.X(-1.9), pr.Y(37.18), true);
           } else {
             sea(c, pr);
@@ -281,8 +286,8 @@ export default function makeMaps(H) {
         { const ka = hidden('Águilas') ? 0 : kt(5); if (ka > 0) { const x = 1860, y = 300; g.save(); g.globalAlpha = clamp(ka * 2); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(x - 30, y + 30); g.lineTo(x, y); g.stroke(); g.beginPath(); g.moveTo(x + 4, y - 4); g.lineTo(x - 14, y - 2); g.lineTo(x - 2, y + 10); g.closePath(); g.fill(); g.restore();
           G.text(g, 'Águilas', x - 44, y + 44, { size: 26, weight: 800, align: 'right', color: P.ink, alpha: ka }); G.text(g, 'SIMÓ’S HOME PORT', x - 44, y + 68, { size: 15, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.08, alpha: ka }); } }
         // bombs 1-3: numbered discs
-        LAND_BOMBS.forEach((b, i) => {
-          const kb = E.outBack(range(t, 1.1 + i * 0.3, 1.6 + i * 0.3)); if (kb <= 0) return; const x = pr.X(b.lon), y = pr.Y(b.lat);
+        if (!hidden('bombs')) LAND_BOMBS.forEach((b, i) => {
+          const kb = E.outBack(range(t, discAt + i * 0.3, discAt + 0.5 + i * 0.3)); if (kb <= 0) return; const x = pr.X(b.lon), y = pr.Y(b.lat);
           g.save(); g.translate(x, y); g.scale(kb, kb); G.shadow(g, 0.6); g.fillStyle = P.ink; g.beginPath(); g.arc(0, 0, 17, 0, TAU); g.fill(); G.noShadow(g);
           g.strokeStyle = P.white; g.lineWidth = 3; g.stroke(); G.text(g, String(b.n), 0, 8, { size: 22, weight: 800, align: 'center', color: P.white }); g.restore();
         });
@@ -300,7 +305,7 @@ export default function makeMaps(H) {
       // routes (spain: tankers from Morón; world: the Chrome Dome loop)
       routes.forEach(r => route(g, at(pins[r.ia]), at(pins[r.ib]), t, range(t, r.t, r.t + 1.2), { bow: mode === 'spain' ? 0.12 : 0.28 }));
       if (mode === 'world' && !Pm.routes) {
-        const a = at(pinOf('Seymour Johnson AFB')), b = at(pinOf('Palomares')), east = [pr.X(21), pr.Y(35.4)], tr = PT[1] + 0.4;
+        const a = at(pinOf('Seymour Johnson AFB')), b = at(pinOf('Palomares')), east = [pr.X(21), pr.Y(35.4)], tr = Pm.routeAt != null ? G.cue(shot, Pm.routeAt, PT[1] + 0.4) : PT[1] + 0.4;
         route(g, a, b, t, range(t, tr, tr + 1.6), { bow: 0.16 });
         const e1 = route(g, b, east, t, range(t, tr + 1.6, tr + 2.6), { bow: 0.12, head: false, dash: [6, 10] });
         const ke = range(t, tr + 2.4, tr + 3.0); if (ke > 0) { G.text(g, 'TOWARD THE SOVIET FRONTIER …', 1860, east[1] + 90, { size: 18, weight: 500, fam: F.mono, align: 'right', color: P.inkSoft, track: 0.1, alpha: E.outCubic(ke) }); }
