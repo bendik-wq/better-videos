@@ -1,0 +1,295 @@
+{
+ "clips": {
+  "lf-a": {
+   "t": [
+    0.0,
+    335.01
+   ]
+  },
+  "lf-b": {
+   "t": [
+    388.76,
+    815.57
+   ]
+  },
+  "bank": {
+   "t": [
+    63.9,
+    113.71
+   ]
+  },
+  "upfront": {
+   "t": [
+    196.92,
+    253.8
+   ]
+  },
+  "industry": {
+   "t": [
+    289.39,
+    335.01
+   ]
+  },
+  "without-you": {
+   "t": [
+    407.2,
+    465.36
+   ]
+  },
+  "under-500k": {
+   "t": [
+    631.35,
+    669.6
+   ]
+  },
+  "jump": {
+   "t": [
+    583.99,
+    623.3
+   ]
+  },
+  "open": {
+   "t": [
+    0.9,
+    15.64
+   ]
+  },
+  "little-big": {
+   "t": [
+    388.76,
+    400.9
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Should you buy a business under $1M revenue? (Josh, 21 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 buying businesses",
+     "title": "Under <em>$1M</em> or over $1M?",
+     "poster": true,
+     "dur": 3.2
+    }
+   },
+   "chapters": {
+    "start": "The bank's view"
+   },
+   "chapterMarks": [
+    [
+     133.0,
+     "Less risk, more money"
+    ],
+    [
+     286.4,
+     "Industry bankers"
+    ],
+    [
+     407.2,
+     "Under a million?"
+    ],
+    [
+     583.9,
+     "Just jump"
+    ],
+    [
+     628.9,
+     "Under $500k"
+    ],
+    [
+     778.0,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    "lf-a",
+    "lf-b"
+   ],
+   "sequence": [
+    "lf-a",
+    "lf-b"
+   ]
+  },
+  "ig-1-bank": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "bank"
+   ],
+   "sequence": [
+    "bank~ig#1",
+    "bank~ig#2",
+    "bank~ig#3",
+    "bank~ig#4",
+    "bank~ig#5"
+   ]
+  },
+  "ig-2-upfront": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "upfront"
+   ],
+   "sequence": [
+    "upfront~ig#1",
+    "upfront~ig#2",
+    "upfront~ig#3"
+   ]
+  },
+  "ig-3-industry-banker": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "industry"
+   ],
+   "sequence": [
+    "industry~ig#1",
+    "industry~ig#2",
+    "industry~ig#3"
+   ]
+  },
+  "ig-4-without-you": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "without-you"
+   ],
+   "sequence": [
+    "without-you~ig#1",
+    "without-you~ig#2",
+    "without-you~ig#3",
+    "without-you~ig#4",
+    "without-you~ig#5",
+    "without-you~ig#6",
+    "without-you~ig#7"
+   ]
+  },
+  "ig-5-under-500k": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "under-500k"
+   ],
+   "sequence": [
+    "under-500k~ig#1",
+    "under-500k~ig#2",
+    "under-500k~ig#3",
+    "under-500k~ig#4"
+   ]
+  },
+  "ig-6-jump": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "jump"
+   ],
+   "sequence": [
+    "jump~ig#1",
+    "jump~ig#2",
+    "jump~ig#3"
+   ]
+  },
+  "ig-7-under-over": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "open",
+    "little-big"
+   ],
+   "sequence": [
+    "open~ig#1",
+    "open~ig#2",
+    "open~ig#3",
+    "little-big~ig#1",
+    "little-big~ig#2"
+   ]
+  }
+ }
+}

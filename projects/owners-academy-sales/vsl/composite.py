@@ -22,6 +22,11 @@ FACE_VF = (f"scale={W}:{H}:flags=lanczos,eq=contrast=1.05:brightness=-0.015:satu
            f"colorbalance=rs=-0.02:bs=0.035:rm=-0.01:bm=0.02,noise=alls={GRAIN}:allf=t+u,format=yuv420p")
 
 
+# AUDIO_NORM=final: normalise loudness once over the finished programme (no level steps at cuts)
+FINAL_NORM = os.environ.get("AUDIO_NORM") == "final"
+SEG_NORM = "" if FINAL_NORM else "loudnorm=I=-16:TP=-1.5:LRA=11,"
+
+
 def ff(*args):
     subprocess.run(["ffmpeg", "-v", "error", "-y", *args], check=True)
 
@@ -44,7 +49,7 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
                "-frames:v", str(nf), "-r", FPS_ARG, "-c:v", "libx264", "-preset", "medium", "-crf", "16", v)
             fade = 0.06
             ff("-ss", f"{s['in']:.3f}", "-t", f"{dur:.3f}", "-i", src, "-vn",
-               "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fade:.3f}:d={fade},loudnorm=I=-16:TP=-1.5:LRA=11,"
+               "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fade:.3f}:d={fade},{SEG_NORM}"
                       f"aresample=48000,apad=whole_dur={nf / FPS:.4f},atrim=end={nf / FPS:.4f}",
                "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", a)
         else:
@@ -62,6 +67,15 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
     audio = os.path.join(out_dir, "audio.wav")
     ff("-f", "concat", "-safe", "0", "-i", os.path.join(parts, "v.txt"), "-c", "copy", face)
     ff("-f", "concat", "-safe", "0", "-i", os.path.join(parts, "a.txt"), "-c", "copy", audio)
+    if FINAL_NORM:  # two-pass loudnorm over the whole programme
+        r = subprocess.run(["ffmpeg", "-hide_banner", "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json",
+                            "-f", "null", "-"], capture_output=True, text=True).stderr
+        m = json.loads(r[r.rindex("{"):r.rindex("}") + 1])
+        normed = audio[:-4] + "-norm.wav"
+        ff("-i", audio, "-af", f"loudnorm=I=-16:TP=-1.5:LRA=11:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
+           f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample=48000",
+           "-ac", "2", "-c:a", "pcm_s16le", normed)
+        os.replace(normed, audio)
 
     clips = [s for s in tl["segments"] if s["kind"] == "clip"]
     on = "+".join(f"between(t,{round(s['t0'] * FPS) / FPS:.3f},{(round(s['t1'] * FPS) - 1) / FPS:.3f})" for s in clips)
