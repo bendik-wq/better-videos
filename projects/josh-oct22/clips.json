@@ -1,0 +1,367 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.0,
+    92.69
+   ]
+  },
+  "lf-2": {
+   "t": [
+    156.59,
+    198.26
+   ]
+  },
+  "lf-3": {
+   "t": [
+    233.49,
+    255.08
+   ]
+  },
+  "lf-4": {
+   "t": [
+    261.96,
+    348.33
+   ]
+  },
+  "lf-5": {
+   "t": [
+    412.42,
+    449.92
+   ]
+  },
+  "lf-6": {
+   "t": [
+    463.92,
+    673.47
+   ]
+  },
+  "lf-7": {
+   "t": [
+    681.74,
+    732.34
+   ]
+  },
+  "lf-8": {
+   "t": [
+    1000.0,
+    1374.85
+   ]
+  },
+  "culture": {
+   "t": [
+    233.49,
+    277.7
+   ]
+  },
+  "not-like-you": {
+   "t": [
+    306.46,
+    348.33
+   ]
+  },
+  "expect-leave": {
+   "t": [
+    414.66,
+    466.54
+   ]
+  },
+  "new-boss": {
+   "t": [
+    472.24,
+    495.7
+   ]
+  },
+  "upfront": {
+   "t": [
+    587.73,
+    590.75
+   ]
+  },
+  "firing": {
+   "t": [
+    649.45,
+    698.62
+   ]
+  },
+  "make-money": {
+   "t": [
+    1167.13,
+    1204.71
+   ]
+  },
+  "please": {
+   "t": [
+    1248.05,
+    1261.35
+   ]
+  },
+  "glory": {
+   "t": [
+    1335.72,
+    1346.02
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Taking over a company: culture, firing and what to focus on (Josh, 22 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 after the acquisition",
+     "title": "You don't build culture. <em>You inherit it.</em>",
+     "poster": true,
+     "dur": 3.2
+    }
+   },
+   "chapters": {
+    "start": "The new clinic"
+   },
+   "chapterMarks": [
+    [
+     156.5,
+     "Leasing tip"
+    ],
+    [
+     233.4,
+     "You inherit culture"
+    ],
+    [
+     412.4,
+     "Expect people to leave"
+    ],
+    [
+     472.2,
+     "Rip off the band-aid"
+    ],
+    [
+     649.4,
+     "On firing"
+    ],
+    [
+     1000.0,
+     "Where that leaves you"
+    ],
+    [
+     1111.7,
+     "What to focus on"
+    ],
+    [
+     1248.0,
+     "You won't please everyone"
+    ]
+   ],
+   "base_sequence": [
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ],
+   "sequence": [
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ]
+  },
+  "ig-1-inherit-culture": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "culture"
+   ],
+   "sequence": [
+    "culture~ig#1",
+    "culture~ig#2",
+    "culture~ig#3",
+    "culture~ig#4",
+    "culture~ig#5",
+    "culture~ig#6",
+    "culture~ig#7"
+   ]
+  },
+  "ig-2-not-like-you": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "not-like-you"
+   ],
+   "sequence": [
+    "not-like-you~ig#1",
+    "not-like-you~ig#2",
+    "not-like-you~ig#3",
+    "not-like-you~ig#4",
+    "not-like-you~ig#5",
+    "not-like-you~ig#6",
+    "not-like-you~ig#7",
+    "not-like-you~ig#8"
+   ]
+  },
+  "ig-3-expect-leave": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "expect-leave"
+   ],
+   "sequence": [
+    "expect-leave~ig#1",
+    "expect-leave~ig#2",
+    "expect-leave~ig#3",
+    "expect-leave~ig#4",
+    "expect-leave~ig#5",
+    "expect-leave~ig#6",
+    "expect-leave~ig#7"
+   ]
+  },
+  "ig-4-new-boss": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "new-boss",
+    "upfront"
+   ],
+   "sequence": [
+    "new-boss~ig#1",
+    "new-boss~ig#2",
+    "upfront~ig#1"
+   ]
+  },
+  "ig-5-firing": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "firing"
+   ],
+   "sequence": [
+    "firing~ig#1",
+    "firing~ig#2",
+    "firing~ig#3",
+    "firing~ig#4"
+   ]
+  },
+  "ig-6-make-money": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "make-money"
+   ],
+   "sequence": [
+    "make-money~ig#1",
+    "make-money~ig#2",
+    "make-money~ig#3",
+    "make-money~ig#4",
+    "make-money~ig#5",
+    "make-money~ig#6"
+   ]
+  },
+  "ig-7-please-everyone": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "please",
+    "glory"
+   ],
+   "sequence": [
+    "please~ig#1",
+    "please~ig#2",
+    "please~ig#3",
+    "glory~ig#1"
+   ]
+  }
+ }
+}
