@@ -24,6 +24,8 @@ FACE_VF = (f"scale={W}:{H}:flags=lanczos,eq=contrast=1.05:brightness=-0.015:satu
 
 # AUDIO_NORM=final: normalise loudness once over the finished programme (no level steps at cuts)
 FINAL_NORM = os.environ.get("AUDIO_NORM") == "final"
+# VENC: encoder args for the finished programme (e.g. 4K masters: "-c:v libx265 -preset medium -crf 20 -tag:v hvc1")
+VENC = os.environ.get("VENC", "-c:v libx264 -preset slow -crf 19").split()
 SEG_NORM = "" if FINAL_NORM else "loudnorm=I=-16:TP=-1.5:LRA=11,"
 
 
@@ -91,7 +93,7 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
        "-loop", "1", "-i", os.path.join(out_dir, "face-mask.png"),
        "-loop", "1", "-i", os.path.join(out_dir, "face-frame.png"),
        "-i", audio, "-filter_complex", fc,
-       "-map", "[v]", "-map", "4:a", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-r", FPS_ARG,
+       "-map", "[v]", "-map", "4:a", *VENC, "-r", FPS_ARG,
        "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out)
     print("->", out)
 

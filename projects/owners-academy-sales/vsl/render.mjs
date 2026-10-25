@@ -5,7 +5,7 @@
 //   node vsl/render.mjs timeline.json out/chunks --chunks 3000      # resumable, 2-min chunks
 //   node vsl/render.mjs --overlay out/                             # face-panel frame + mask PNGs
 //   --bg-speed 0 freezes the silk background (much smaller files for the same face quality)
-//   add --vertical for the 1080x1920 Reels layout (stage-v.css); --overlay out/ --size 900x1060 --radius 26 for its panel
+//   --scale 2 renders at 2x pixels (4K); add --vertical for the 1080x1920 Reels layout (stage-v.css); --overlay out/ --size 900x1060 --radius 26 for its panel
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -23,7 +23,9 @@ const browser = await chromium.launch({
   args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--font-render-hinting=none'],
 });
 const V = args.includes('--vertical');
-const page = await browser.newPage({ viewport: V ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+// --scale 2: same layout rendered at 2x pixels (3840x2160 for the long-form 4K masters; also applies to --overlay)
+const SCALE = Number(opt('--scale') || 1);
+const page = await browser.newPage({ viewport: V ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, deviceScaleFactor: SCALE });
 
 if (args[0] === '--overlay') {
   // Static layers for the face panel: a rounded mask, and the frame with Josh's name card on top.
