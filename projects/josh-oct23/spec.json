@@ -1,0 +1,244 @@
+{
+ "clips": {
+  "whole": {
+   "t": [
+    0.02,
+    821.07
+   ]
+  },
+  "opm": {
+   "t": [
+    109.86,
+    159.42
+   ]
+  },
+  "bank": {
+   "t": [
+    194.5,
+    243.6
+   ]
+  },
+  "vendor-a": {
+   "t": [
+    250.78,
+    258.76
+   ]
+  },
+  "vendor-b": {
+   "t": [
+    299.52,
+    334.98
+   ]
+  },
+  "closed-a": {
+   "t": [
+    376.31,
+    406.55
+   ],
+   "rename": {
+    "0": "Because"
+   }
+  },
+  "closed-b": {
+   "t": [
+    449.65,
+    457.63
+   ]
+  },
+  "why-vf": {
+   "t": [
+    494.77,
+    510.35
+   ]
+  },
+  "three": {
+   "t": [
+    526.12,
+    537.94
+   ]
+  },
+  "board": {
+   "t": [
+    597.04,
+    645.1
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "How to buy a business with no money down (Josh, 23 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 buying businesses",
+     "title": "How to buy a business with <em>no money down</em>.",
+     "poster": true,
+     "dur": 3.2
+    }
+   },
+   "chapters": {
+    "start": "No money down"
+   },
+   "chapterMarks": [
+    [
+     109.8,
+     "Other people's money"
+    ],
+    [
+     129.6,
+     "Investors vs lenders"
+    ],
+    [
+     250.7,
+     "Vendor finance"
+    ],
+    [
+     369.5,
+     "The clinic that closed"
+    ],
+    [
+     494.7,
+     "Why vendor finance works"
+    ],
+    [
+     548.1,
+     "Can you run it?"
+    ],
+    [
+     591.8,
+     "Other people's expertise"
+    ],
+    [
+     667.0,
+     "Get creative"
+    ],
+    [
+     774.9,
+     "The principles"
+    ]
+   ],
+   "base_sequence": [
+    "whole"
+   ]
+  },
+  "ig-1-opm": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "opm"
+   ]
+  },
+  "ig-2-bank": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "bank"
+   ]
+  },
+  "ig-3-iou": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "vendor-a",
+    "vendor-b"
+   ]
+  },
+  "ig-4-closed": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "closed-a",
+    "closed-b"
+   ]
+  },
+  "ig-5-three-ways": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "why-vf",
+    "three"
+   ]
+  },
+  "ig-6-board": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "board"
+   ]
+  }
+ }
+}
