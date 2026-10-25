@@ -106,6 +106,17 @@ for name, cut in spec["cuts"].items():
     clips_json["cuts"][name] = cut
     used.update(x for x in seq if isinstance(x, str))
 
+# hand-set cut points where whisper's word timing was off (checked against the waveform):
+# spec["edge"] = [[lo, hi, out, in]]: a part ending inside lo..hi ends at `out`; one starting inside it starts at `in`
+for lo, hi, e_out, e_in in spec.get("edge", []):
+    for pid, p in out.items():
+        if lo < p["out"] < hi:
+            p["out"] = e_out
+        if lo < p["in"] < hi:
+            shift = e_in - p["in"]
+            p["in"] = e_in
+            p["words"] = [[w, round(max(0, a - shift), 3), round(b - shift, 3)] for w, a, b in p["words"]]
+
 os.makedirs(proj, exist_ok=True)
 json.dump(clips_json, open(os.path.join(proj, "clips.json"), "w"), indent=1)
 json.dump(out, open(os.path.join(proj, "snapped.json"), "w"), indent=1)

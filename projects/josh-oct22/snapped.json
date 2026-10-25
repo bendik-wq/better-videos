@@ -11582,7 +11582,7 @@
  },
  "make-money~ig#5": {
   "in": 1201.381,
-  "out": 1203.758,
+  "out": 1203.2,
   "snapped": true,
   "text": "How do you do that? You focus on the",
   "words": [
@@ -11634,25 +11634,25 @@
   ]
  },
  "make-money~ig#6": {
-  "in": 1203.925,
+  "in": 1203.92,
   "out": 1205.71,
   "snapped": true,
   "text": "service, the deliverable.",
   "words": [
    [
     "service,",
-    0.045,
-    0.465
+    0.05,
+    0.47
    ],
    [
     "the",
-    0.665,
-    0.785
+    0.67,
+    0.79
    ],
    [
     "deliverable.",
-    0.785,
-    1.485
+    0.79,
+    1.49
    ]
   ]
  },
