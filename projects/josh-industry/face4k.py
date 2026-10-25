@@ -75,7 +75,7 @@ def main():
         tmp = dst[:-4] + ".part" + dst[-4:]
         enc = None if sheet else subprocess.Popen(
             ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{PW}x{PH}", "-r", FPS_ARG,
-             "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "15", "-pix_fmt", "yuv420p", tmp],
+             "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", os.environ.get("CRF", "15"), "-pix_fmt", "yuv420p", tmp],
             stdin=subprocess.PIPE)
         thumbs = []
         for n, fr in enumerate(frames(src, c["in"], c["out"] - c["in"])):
