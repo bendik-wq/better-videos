@@ -9,7 +9,7 @@ josh-oct21|$S/oct21-0004/face-ig|$S/oct21-0004/audio48.wav|out
 josh-oct22|$S/oct22/face-ig|$S/oct22/audio48.wav|out
 josh-oct23|$S/oct23-0001/face-ig|$S/oct23-0001/audio48.wav|out"
 cd $R
-while IFS='|' read -r proj F A sub; do
+while IFS="|" read -r -u 3 proj F A sub; do
   P=$R/projects/$proj
   for tl in $P/timeline-ig-*.json; do
     name=$(basename $tl .json); name=${name#timeline-}; out=$P/$sub/$name
@@ -32,5 +32,5 @@ while IFS='|' read -r proj F A sub; do
     rm -rf $out/parts; touch $out/v2.done
     echo "done $proj/$name $(du -h $out/$name.mp4 | cut -f1)"
   done
-done <<< "$SETS"
+done 3<<< "$SETS"
 echo "worker finished"
