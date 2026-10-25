@@ -61,6 +61,7 @@ await page.goto('file://' + path.join(HERE, 'stage.html'));
 if (V) {
   await page.addStyleTag({ path: path.join(HERE, 'stage-v.css') });
   await page.evaluate(() => window.resizeSilk && window.resizeSilk(540, 960));
+  await page.evaluate(() => { window.cardFade = true; });
 }
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);

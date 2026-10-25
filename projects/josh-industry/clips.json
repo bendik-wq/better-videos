@@ -496,11 +496,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "One cold email. <em>100% vendor finance.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -525,11 +525,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Acquisitions aren't hard. They take <em>energy and passion</em>.",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -554,11 +554,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Wrong industry? <em>Pivot fast.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -592,11 +592,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Pick one. <em>Pivot if you must.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -609,9 +609,9 @@
     "pena~ig#3",
     "rejected~ig#1",
     "rejected~ig#2",
-    "rejected~ig#3",
-    "rejected~ig#4"
-   ]
+    "rejected~ig#3"
+   ],
+   "note": "ends on 'So same realm, different arena.' (rejected~ig#4 trailed off)"
   },
   "ig-5-who-you-are": {
    "title": "Instagram Reel: ig-5-who-you-are",
@@ -622,11 +622,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Stop overthinking. <em>Play to who you are.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [

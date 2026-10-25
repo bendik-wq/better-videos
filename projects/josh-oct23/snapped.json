@@ -10186,6 +10186,64 @@
    ]
   ]
  },
+ "opm-close~ig#1": {
+  "in": 189.89,
+  "out": 193.54,
+  "snapped": true,
+  "text": "So because of those two reasons, I avoid the investors.",
+  "words": [
+   [
+    "So",
+    0.15,
+    0.17
+   ],
+   [
+    "because",
+    0.17,
+    0.93
+   ],
+   [
+    "of",
+    0.93,
+    1.11
+   ],
+   [
+    "those",
+    1.11,
+    1.27
+   ],
+   [
+    "two",
+    1.27,
+    1.45
+   ],
+   [
+    "reasons,",
+    1.45,
+    1.73
+   ],
+   [
+    "I",
+    1.77,
+    2.13
+   ],
+   [
+    "avoid",
+    2.13,
+    2.63
+   ],
+   [
+    "the",
+    2.63,
+    2.87
+   ],
+   [
+    "investors.",
+    2.87,
+    3.35
+   ]
+  ]
+ },
  "bank~ig#1": {
   "in": 194.35,
   "out": 195.829,
@@ -10723,9 +10781,9 @@
  },
  "bank~ig#6": {
   "in": 232.375,
-  "out": 244.46,
+  "out": 247.04,
   "snapped": true,
-  "text": "right? So the bank's not gonna do that. The bank's not a manager. The bank is your debt owner, okay? So there's a big difference there. There's a lot less obligation on your end to satisfy",
+  "text": "right? So the bank's not gonna do that. The bank's not a manager. The bank is your debt owner, okay? So there's a big difference there. There's a lot less obligation on your end to satisfy the bank besides paying them back.",
   "words": [
    [
     "right?",
@@ -10906,6 +10964,36 @@
     "satisfy",
     11.225,
     11.785
+   ],
+   [
+    "the",
+    11.785,
+    12.245
+   ],
+   [
+    "bank",
+    12.245,
+    12.505
+   ],
+   [
+    "besides",
+    12.505,
+    13.025
+   ],
+   [
+    "paying",
+    13.025,
+    13.565
+   ],
+   [
+    "them",
+    13.565,
+    13.925
+   ],
+   [
+    "back.",
+    13.925,
+    14.365
    ]
   ]
  },

@@ -201,6 +201,8 @@
       cardKey = seg.t0;
     }
     const lt = t - seg.t0;
+    // window.cardFade (render.mjs --vertical): the card fades in instead of cutting, so Reels end gently
+    card.style.opacity = window.cardFade ? clamp(lt / 0.4) : 1;
     animate(cardin, lt);
     const r = cardin.querySelector('.rule');
     if (r) r.style.width = (ease((lt - 0.5) / 0.9) * 220) + 'px';

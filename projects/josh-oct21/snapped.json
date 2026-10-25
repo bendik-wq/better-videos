@@ -10075,6 +10075,109 @@
    ]
   ]
  },
+ "bank-remember~ig#1": {
+  "in": 116.59,
+  "out": 125.7,
+  "snapped": true,
+  "text": "So let's remember this, it's easier to borrow larger amounts of money than it is smaller amounts of money.",
+  "words": [
+   [
+    "So",
+    0.15,
+    0.17
+   ],
+   [
+    "let's",
+    0.17,
+    1.31
+   ],
+   [
+    "remember",
+    1.31,
+    1.73
+   ],
+   [
+    "this,",
+    1.73,
+    2.03
+   ],
+   [
+    "it's",
+    2.07,
+    2.33
+   ],
+   [
+    "easier",
+    2.33,
+    2.79
+   ],
+   [
+    "to",
+    2.79,
+    3.49
+   ],
+   [
+    "borrow",
+    3.49,
+    3.89
+   ],
+   [
+    "larger",
+    3.89,
+    4.95
+   ],
+   [
+    "amounts",
+    4.95,
+    5.41
+   ],
+   [
+    "of",
+    5.41,
+    5.65
+   ],
+   [
+    "money",
+    5.65,
+    5.87
+   ],
+   [
+    "than",
+    5.87,
+    6.19
+   ],
+   [
+    "it",
+    6.19,
+    6.33
+   ],
+   [
+    "is",
+    6.33,
+    6.63
+   ],
+   [
+    "smaller",
+    6.63,
+    7.57
+   ],
+   [
+    "amounts",
+    7.57,
+    8.17
+   ],
+   [
+    "of",
+    8.17,
+    8.55
+   ],
+   [
+    "money.",
+    8.55,
+    8.81
+   ]
+  ]
+ },
  "upfront~ig#1": {
   "in": 196.77,
   "out": 200.708,
@@ -12620,9 +12723,9 @@
  },
  "under-500k~ig#4": {
   "in": 654.823,
-  "out": 670.05,
+  "out": 671.07,
   "snapped": true,
-  "text": "And figure out a way where you can manage this business. Have it running without you being in there. Every single day. In fact, at all. If you can. If you can still run it and manage it without being there. Without your time and energy. So you can",
+  "text": "And figure out a way where you can manage this business. Have it running without you being in there. Every single day. In fact, at all. If you can. If you can still run it and manage it without being there. Without your time and energy. So you can focus on doing deals.",
   "words": [
    [
     "And",
@@ -12868,6 +12971,26 @@
     "can",
     14.747,
     14.927
+   ],
+   [
+    "focus",
+    14.927,
+    15.147
+   ],
+   [
+    "on",
+    15.147,
+    15.447
+   ],
+   [
+    "doing",
+    15.447,
+    15.607
+   ],
+   [
+    "deals.",
+    15.607,
+    15.947
    ]
   ]
  },
@@ -13329,9 +13452,9 @@
  },
  "jump~ig#3": {
   "in": 618.595,
-  "out": 623.57,
+  "out": 623.09,
   "snapped": true,
-  "text": "we just jump. We jump into the unknown and we just make it work. Okay?",
+  "text": "we just jump. We jump into the unknown and we just make it work.",
   "words": [
    [
     "we",
@@ -13402,11 +13525,6 @@
     "work.",
     3.915,
     4.195
-   ],
-   [
-    "Okay?",
-    4.655,
-    4.675
    ]
   ]
  },

@@ -15,7 +15,7 @@
   "bank": {
    "t": [
     194.5,
-    243.6
+    246.3
    ]
   },
   "vendor-a": {
@@ -64,6 +64,12 @@
    "t": [
     550.14,
     570.86
+   ]
+  },
+  "opm-close": {
+   "t": [
+    190.04,
+    192.76
    ]
   }
  },
@@ -137,15 +143,16 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Borrow the money. <em>Keep your equity.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
-    "opm"
+    "opm",
+    "opm-close"
    ],
    "sequence": [
     "opm~ig#1",
@@ -155,7 +162,8 @@
     "opm~ig#5",
     "opm~ig#6",
     "opm~ig#7",
-    "opm~ig#8"
+    "opm~ig#8",
+    "opm-close~ig#1"
    ]
   },
   "ig-2-bank": {
@@ -166,11 +174,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "A lender wants repayment. <em>Not control.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -193,11 +201,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Pay the seller over time. <em>Everyone wins.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -222,11 +230,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Something over time <em>beats nothing</em>.",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -250,11 +258,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "Investor, lender, vendor. <em>Then run it.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [
@@ -278,11 +286,11 @@
    "chapter": "Josh Li",
    "cards": {
     "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
+     "eyebrow": "Josh's takeaway",
+     "title": "No experience? <em>Borrow other people's.</em>",
      "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
     }
    },
    "base_sequence": [

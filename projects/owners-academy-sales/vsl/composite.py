@@ -48,8 +48,11 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
             ff("-i", os.path.join(face_dir, f"{s['id']}.mp4"), "-vf", f"{FACE_VF},tpad=stop_mode=clone:stop=50",
                "-frames:v", str(nf), "-r", FPS_ARG, "-c:v", "libx264", "-preset", "medium", "-crf", "16", v)
             fade = 0.06
+            # LAST_FADE: a longer fade on the programme's last clip so it doesn't stop dead (Reels)
+            last = s is [x for x in tl["segments"] if x["kind"] == "clip"][-1]
+            fo = float(os.environ.get("LAST_FADE", fade)) if last else fade
             ff("-ss", f"{s['in']:.3f}", "-t", f"{dur:.3f}", "-i", src, "-vn",
-               "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fade:.3f}:d={fade},{SEG_NORM}"
+               "-af", f"afade=t=in:d={fade},afade=t=out:st={dur - fo:.3f}:d={fo},{SEG_NORM}"
                       f"aresample=48000,apad=whole_dur={nf / FPS:.4f},atrim=end={nf / FPS:.4f}",
                "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", a)
         else:
