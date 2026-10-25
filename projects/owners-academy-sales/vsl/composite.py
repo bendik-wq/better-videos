@@ -81,7 +81,8 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
         os.replace(normed, audio)
 
     clips = [s for s in tl["segments"] if s["kind"] == "clip"]
-    on = "+".join(f"between(t,{round(s['t0'] * FPS) / FPS:.3f},{(round(s['t1'] * FPS) - 1) / FPS:.3f})" for s in clips)
+    # half-frame margins: a frame sitting exactly on a join must never fall between two windows (blank panel flash)
+    on = "+".join(f"between(t,{(round(s['t0'] * FPS) - 0.5) / FPS:.4f},{(round(s['t1'] * FPS) - 0.5) / FPS:.4f})" for s in clips)
     fc = (f"[2:v]format=gray[m];[1:v][m]alphamerge[f];"
           f"[0:v][f]overlay={X}:{Y}:enable='{on}'[a];"
           f"[a][3:v]overlay={X}:{Y}:enable='{on}',format=yuv420p[v]")
