@@ -19,10 +19,11 @@ crop() { # <src-dir> <parts.json> <out-dir> ids...
     echo "$out/$id frames $n"
   done
 }
+have() { local d=$1; shift; for i in "$@"; do [ -s $d/$i.mp4 ] || return 1; done; }
 # 21 Oct
-dl $S/oct21-0004 1FTqIHZ1pKfJgdOacaTtQRSC9gHT2BfnI 4738418613 && crop $S/oct21-0004 $S/parts4k-josh-oct21.json $S/oct21-0004/face-long-4k lf-a lf-b && rm $S/oct21-0004/rec.mp4 && echo "SRC4K DONE oct21"
+if ! have $S/oct21-0004/face-long-4k lf-a lf-b; then dl $S/oct21-0004 1FTqIHZ1pKfJgdOacaTtQRSC9gHT2BfnI 4738418613 && crop $S/oct21-0004 $S/parts4k-josh-oct21.json $S/oct21-0004/face-long-4k lf-a lf-b && rm $S/oct21-0004/rec.mp4 && echo "SRC4K DONE oct21"; fi
 # 23 Oct
-dl $S/oct23-0001 1ftQvsMJUJ6pAReTQQIgSDOnCkY2U47wh 3709325573 && crop $S/oct23-0001 $S/parts4k-josh-oct23.json $S/oct23-0001/face-long-4k whole && rm $S/oct23-0001/rec.mp4 && echo "SRC4K DONE oct23"
+if ! have $S/oct23-0001/face-long-4k whole; then dl $S/oct23-0001 1ftQvsMJUJ6pAReTQQIgSDOnCkY2U47wh 3709325573 && crop $S/oct23-0001 $S/parts4k-josh-oct23.json $S/oct23-0001/face-long-4k whole && rm $S/oct23-0001/rec.mp4 && echo "SRC4K DONE oct23"; fi
 # 22 Oct, first file (lf-8 is already done from the second file)
-dl $S/oct22-0005 1H5wFmme0OZSzPiSL9xVBaC6jDUKrzXAO 4299596262 && crop $S/oct22-0005 $S/parts4k-josh-oct22.json $S/oct22/face-long-4k lf-1 lf-2 lf-3 lf-4 lf-5 lf-6 lf-7 && rm $S/oct22-0005/rec.mp4 && echo "SRC4K DONE oct22"
+if ! have $S/oct22/face-long-4k lf-1 lf-2 lf-3 lf-4 lf-5 lf-6 lf-7; then dl $S/oct22-0005 1H5wFmme0OZSzPiSL9xVBaC6jDUKrzXAO 4299596262 && crop $S/oct22-0005 $S/parts4k-josh-oct22.json $S/oct22/face-long-4k lf-1 lf-2 lf-3 lf-4 lf-5 lf-6 lf-7 && rm $S/oct22-0005/rec.mp4 && echo "SRC4K DONE oct22"; fi
 echo "SRC4K FINISHED"
