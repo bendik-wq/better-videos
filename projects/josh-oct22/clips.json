@@ -175,34 +175,6 @@
     "lf-8"
    ]
   },
-  "ig-1-inherit-culture": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
-     "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
-    }
-   },
-   "base_sequence": [
-    "culture"
-   ],
-   "sequence": [
-    "culture~ig#1",
-    "culture~ig#2",
-    "culture~ig#3",
-    "culture~ig#4",
-    "culture~ig#5",
-    "culture~ig#6",
-    "culture~ig#7"
-   ]
-  },
   "ig-2-not-like-you": {
    "layout": "vertical",
    "ns": "~ig",
@@ -230,34 +202,6 @@
     "not-like-you~ig#6",
     "not-like-you~ig#7",
     "not-like-you~ig#8"
-   ]
-  },
-  "ig-3-expect-leave": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
-     "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
-    }
-   },
-   "base_sequence": [
-    "expect-leave"
-   ],
-   "sequence": [
-    "expect-leave~ig#1",
-    "expect-leave~ig#2",
-    "expect-leave~ig#3",
-    "expect-leave~ig#4",
-    "expect-leave~ig#5",
-    "expect-leave~ig#6",
-    "expect-leave~ig#7"
    ]
   },
   "ig-4-new-boss": {

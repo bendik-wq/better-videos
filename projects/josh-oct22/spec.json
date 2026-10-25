@@ -186,25 +186,6 @@
     "lf-8"
    ]
   },
-  "ig-1-inherit-culture": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
-     "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
-    }
-   },
-   "base_sequence": [
-    "culture"
-   ]
-  },
   "ig-2-not-like-you": {
    "layout": "vertical",
    "ns": "~ig",
@@ -222,25 +203,6 @@
    },
    "base_sequence": [
     "not-like-you"
-   ]
-  },
-  "ig-3-expect-leave": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
-     "title": "See if your business <em>qualifies</em>.",
-     "cta": true,
-     "dur": 3.0,
-     "fine": "Not financial advice. Every business and deal is different."
-    }
-   },
-   "base_sequence": [
-    "expect-leave"
    ]
   },
   "ig-4-new-boss": {
@@ -320,6 +282,48 @@
     "please",
     "glory"
    ]
+  }
+ },
+ "dropped_cuts": {
+  "ig-1-inherit-culture": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "culture"
+   ],
+   "why": "Josh smokes on camera (cigarette in mouth) through most of it"
+  },
+  "ig-3-expect-leave": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory \u00b7 link in bio",
+     "title": "See if your business <em>qualifies</em>.",
+     "cta": true,
+     "dur": 3.0,
+     "fine": "Not financial advice. Every business and deal is different."
+    }
+   },
+   "base_sequence": [
+    "expect-leave"
+   ],
+   "why": "Josh smokes on camera (cigarette in mouth) through most of it"
   }
  }
 }
