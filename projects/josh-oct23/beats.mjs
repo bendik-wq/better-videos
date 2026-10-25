@@ -55,6 +55,6 @@ Object.assign(beats, {
   'bank~ig#1': hook('A bank isn\'t your manager. <em>It\'s your lender.</em>'),
   'vendor-a~ig#1': hook('Vendor finance is just an <em>IOU to the seller</em>.'),
   'closed-a~ig#1': hook('He wouldn\'t take my offer. <em>Now his clinic is closed.</em>'),
-  'why-vf~ig#1': hook('Three ways to fund a deal: <em>investor, lender, vendor</em>.'),
+  'three~ig#1': hook('Three ways to fund a deal. Then: <em>can you run it?</em>'),
   'board~ig#1': hook('Never worked in healthcare. <em>Built a board that had.</em>'),
 });

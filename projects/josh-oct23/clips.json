@@ -59,6 +59,12 @@
     597.04,
     645.1
    ]
+  },
+  "run-it": {
+   "t": [
+    550.14,
+    570.86
+   ]
   }
  },
  "cuts": {
@@ -252,13 +258,16 @@
     }
    },
    "base_sequence": [
-    "why-vf",
-    "three"
+    "three",
+    "run-it"
    ],
    "sequence": [
-    "why-vf~ig#1",
     "three~ig#1",
-    "three~ig#2"
+    "three~ig#2",
+    "run-it~ig#1",
+    "run-it~ig#2",
+    "run-it~ig#3",
+    "run-it~ig#4"
    ]
   },
   "ig-6-board": {

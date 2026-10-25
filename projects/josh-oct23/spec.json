@@ -62,6 +62,21 @@
     597.04,
     645.1
    ]
+  },
+  "run-it": {
+   "t": [
+    550.14,
+    570.86
+   ],
+   "dropt": [
+    [
+     567.6,
+     568.02
+    ]
+   ],
+   "rename": {
+    "0": "Now"
+   }
   }
  },
  "cuts": {
@@ -217,8 +232,8 @@
     }
    },
    "base_sequence": [
-    "why-vf",
-    "three"
+    "three",
+    "run-it"
    ]
   },
   "ig-6-board": {
@@ -240,5 +255,8 @@
     "board"
    ]
   }
+ },
+ "notes": {
+  "ig-5": "why-vf section replaced: Josh rubs his eyes for ~13 s there"
  }
 }
