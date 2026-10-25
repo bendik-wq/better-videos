@@ -71,6 +71,36 @@
     190.04,
     192.76
    ]
+  },
+  "tz-1": {
+   "t": [
+    114.14,
+    119.0
+   ]
+  },
+  "tz-2": {
+   "t": [
+    234.54,
+    237.32
+   ]
+  },
+  "tz-3": {
+   "t": [
+    386.15,
+    388.79
+   ]
+  },
+  "tz-4": {
+   "t": [
+    455.67,
+    457.63
+   ]
+  },
+  "tz-5": {
+   "t": [
+    614.44,
+    622.38
+   ]
   }
  },
  "cuts": {
@@ -129,9 +159,38 @@
     ]
    ],
    "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "No money down"
+    },
     "whole"
    ],
+   "intro": false,
    "sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "No money down"
+    },
     "whole"
    ]
   },

@@ -5,7 +5,7 @@
 words.json is the full-file transcript from tx.py ([{words: [[w, start, end], ...]}, ...]).
 spec.json:
   {"clips": {"id": {"t": [first_word_start, last_word_start], "drop": ["fucking", ...], "dropt": [[t0, t1], ...],
-                    "rename": {"word index": "New"}}},
+                    "rename": {"word index": "New"}, "tight": true}},
    "cuts":  {"name": {..., "base_sequence": ["id", {"chapter": "..."}, {"card": "..."}],
                      "split": false | "gap": 0.9, "ns": "~ig"}}}
 
@@ -68,7 +68,7 @@ def part(ws, i0, i1, first, last):
     else:
         b = quietest(ws[i1][2] - 0.02, min(ws[i1 + 1][1] + 0.05, ws[i1][2] + 0.6))
     return {"in": round(a, 3), "out": round(b, 3), "snapped": True, "text": " ".join(x[0] for x in ws[i0:i1 + 1]),
-            "words": [[x[0], round(x[1] - a, 3), round(x[2] - a, 3)] for x in ws[i0:i1 + 1]]}
+            "words": [[x[0], round(max(0.0, x[1] - a), 3), round(x[2] - a, 3)] for x in ws[i0:i1 + 1]]}
 
 
 out = {}
@@ -85,7 +85,14 @@ for name, cut in spec["cuts"].items():
         if cut.get("split") is False:
             if not all(keep):
                 raise SystemExit(f"{item}: continuous clips can't drop words; split the clip instead")
-            out[item] = part(ws, 0, n - 1, True, True)
+            if spec["clips"][item].get("tight"):
+                # tight: both edges at the quietest point next to the neighbouring words (short excerpts,
+                # e.g. long-form teasers), so no sliver of the word before or after survives
+                i = next(j for j, x in enumerate(W) if abs(x[1] - ws[0][1]) < 1e-6)
+                ext = [list(W[max(0, i - 1)])] + ws + [list(W[min(len(W) - 1, i + n)])]
+                out[item] = part(ext, 1, n, False, False)
+            else:
+                out[item] = part(ws, 0, n - 1, True, True)
             seq.append(item)
             continue
         gap = cut.get("gap", 1.4)

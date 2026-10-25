@@ -92,6 +92,34 @@
     116.74,
     125.14
    ]
+  },
+  "tz-1": {
+   "t": [
+    63.9,
+    73.72
+   ],
+   "tight": true
+  },
+  "tz-2": {
+   "t": [
+    243.52,
+    253.24
+   ],
+   "tight": true
+  },
+  "tz-3": {
+   "t": [
+    426.32,
+    428.62
+   ],
+   "tight": true
+  },
+  "tz-4": {
+   "t": [
+    615.27,
+    622.51
+   ],
+   "tight": true
   }
  },
  "cuts": {
@@ -138,9 +166,23 @@
     ]
    ],
    "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "The bank's view"
+    },
     "lf-a",
     "lf-b"
-   ]
+   ],
+   "intro": false
   },
   "ig-1-bank": {
    "layout": "vertical",
@@ -277,5 +319,8 @@
     "little-big"
    ]
   }
+ },
+ "notes": {
+  "intro": "Long form opens with tz-* teaser moments (Coming up), the title card, then the talk with the credibility panel over its opening."
  }
 }

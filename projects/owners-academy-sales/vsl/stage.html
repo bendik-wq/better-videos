@@ -58,6 +58,11 @@ mark { color: inherit; background: linear-gradient(transparent 60%, var(--hl) 60
 .card .mid { font-size: 46px }
 .card { display: grid; gap: 10px; align-content: start }
 .kpi { display: grid; gap: 10px; align-content: start }
+.photos { display: flex; gap: 22px }
+.photos .ph { flex: 1 1 0; min-width: 0 }
+.photos .im { height: 300px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hair) }
+.photos img { display: block; width: 100%; height: 100%; object-fit: cover }
+.photos .cap { font: 500 18px/1.3 var(--sans); color: var(--muted); margin-top: 12px }
 .kpi .v { font: 500 72px/1 var(--serif); font-variant-numeric: tabular-nums; letter-spacing: -.02em }
 .kpi .l { font: 500 20px/1.35 var(--sans); color: var(--muted) }
 

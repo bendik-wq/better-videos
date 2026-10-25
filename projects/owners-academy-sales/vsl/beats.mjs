@@ -184,4 +184,16 @@ export const beats = {
 };
 
 // shared with faq-beats.mjs
-export { eb, big, small, kpi, count, bar, terms, list };
+// Credibility panel for long-form intros: Josh's numbers (as used in the B2B VSL) and two clinic photos
+// with a slow push-in. Photos live in vsl/img/.
+const cred = () => eb('<b>Josh Li</b> · Founder, JC Health Group') +
+  `<div class="row">${kpi('', 'in deals by age 21, in banking', 0.4, count(30, { pre: '$', suf: 'M+', d: 0.4 }))}` +
+  `${kpi('', 'in transactions advised and completed', 1.2, count(100, { pre: '$', suf: 'M+', d: 1.2 }))}` +
+  `${kpi('$0', 'of his own money in his first clinic', 2.0)}</div>` +
+  `<div class="photos"><div class="ph" data-d="2.8"><div class="im"><img src="img/melton-physio.jpg" data-kb style="object-position:50% 55%"></div>` +
+  `<div class="cap">Melton Physiotherapy &amp; Sports Medicine Clinic</div></div>` +
+  `<div class="ph" data-d="3.4"><div class="im"><img src="img/paramount-physio.jpg" data-kb style="object-position:50% 40%"></div>` +
+  `<div class="cap">Paramount Physio</div></div></div>`;
+// "Coming up" teaser headline at the top of a long form
+const teaser = (h) => [{ at: 0, html: eb('Coming up') + big(h, 0.1, 'mid') }];
+export { eb, big, small, kpi, count, bar, terms, list, cred, teaser };

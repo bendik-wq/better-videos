@@ -2,12 +2,13 @@
 // "Taking over a company: culture, firing and what to focus on".
 // Long-form beats are at combined SOURCE seconds and land on whichever clip plays that moment.
 import fs from 'node:fs';
-import { eb, big, small, list } from '../owners-academy-sales/vsl/beats.mjs';
+import { eb, big, small, list, cred, teaser } from '../owners-academy-sales/vsl/beats.mjs';
 
 const S = JSON.parse(fs.readFileSync(new URL('./snapped.json', import.meta.url)));
 
 const longBeats = [
-  [2.0, eb('Josh Li · JC Health Group') + big('Inside the <em>new clinic</em>.', 0.5)],
+  [0, cred()], // who's talking: numbers + clinic photos while Josh opens on his new clinic
+  [14.0, eb('Josh Li · JC Health Group') + big('Inside the <em>new clinic</em>.', 0.5)],
   [54.9, eb('The move') + big('Moved in a couple of weeks ago. Focus: <em>stay operational</em>.', 7.0, 'mid')],
   [70.8, eb('Today') + list([['Culture: how to build it', 0.3], ['What to expect when you buy a company', 4.5], ['What to focus on, and why', 9.5]])],
   [156.6, eb('Leasing tip') + big('Built to look pretty, <em>not optimised for use</em>.', 6.0, 'mid')],
@@ -61,6 +62,12 @@ for (const [t, html] of longBeats) {
 
 const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
 Object.assign(beats, {
+  // long-form intro: "Coming up" teaser moments
+  'tz-1': teaser('No one on your team will <em>think like you</em>.'),
+  'tz-2': teaser('Good news or bad news: <em>I\'m your new boss.</em>'),
+  'tz-3': teaser('Comfortable firing people? <em>Reconsider where you are.</em>'),
+  'tz-4': teaser('Priority one in any business: <em>make the money</em>.'),
+  'tz-5': teaser('You won\'t please everyone. <em>Follow your gut.</em>'),
   'culture~ig#1': hook('When you buy a business, you don\'t build culture. <em>You inherit it.</em>'),
   'not-like-you~ig#1': hook('No one on your team will <em>think like you</em>.'),
   'expect-leave~ig#1': hook('Taking over a company? <em>Expect people to leave.</em>'),

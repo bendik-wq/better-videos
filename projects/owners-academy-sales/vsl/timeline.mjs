@@ -90,7 +90,7 @@ captions.forEach((c, i) => {
 
 // cut.chapterMarks: [[source seconds, name], ...] put chapters inside one long clip (no cards, no cuts)
 for (const [src, name] of cut.chapterMarks || []) {
-  const seg = segments.find((x) => x.kind === 'clip' && src >= x.in && src < x.out);
+  const seg = segments.find((x) => x.kind === 'clip' && !x.id.startsWith('tz-') && src >= x.in && src < x.out);
   if (seg) chaps.push({ name, t0: seg.t0 + (src - seg.in) });
 }
 chaps.sort((a, b) => a.t0 - b.t0);

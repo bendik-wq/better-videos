@@ -3,12 +3,12 @@
 // that moment, so cutting the long form never moves a graphic off its words.
 // Reels: one hook headline per clip, on screen from the first frame.
 import fs from 'node:fs';
-import { eb, big, small, list } from '../owners-academy-sales/vsl/beats.mjs';
+import { eb, big, small, list, cred, teaser } from '../owners-academy-sales/vsl/beats.mjs';
 
 const S = JSON.parse(fs.readFileSync(new URL('./snapped.json', import.meta.url)));
 
 const longBeats = [
-  [0.9, eb('The rule of thumb') + big('Under <em>$1M</em> in revenue? Probably don\'t buy a business.', 0.2, 'mid')],
+  [0, cred()], // who's talking: numbers + clinic photos while Josh opens (the title card already names the topic)
   [9.2, eb('The rule of thumb') + big('Over $1M? It might be <em>the best thing you ever do</em>.', 0.2, 'mid')],
   [35.2, eb('Think like the bank') + big('What kind of business does a bank <em>want to finance</em>?', 0.3, 'mid')],
   [46.0, eb('What banks want') + list([['Not a bad business', 0.2], ['A profitable business', 1.0], ['A lot of profit, not $50k or $100k', 8.5]])],
@@ -55,6 +55,11 @@ for (const [t, html] of longBeats) {
 
 const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
 Object.assign(beats, {
+  // long-form intro: "Coming up" teaser moments
+  'tz-1': teaser('A bank would rather lend you <em>$100M</em> than $1M.'),
+  'tz-2': teaser('How most people ask a bank for money. <em>They laugh.</em>'),
+  'tz-3': teaser('Would your business <em>still make money</em> without you?'),
+  'tz-4': teaser('The people who make leaps <em>just jump</em>.'),
   'bank~ig#1': hook('A bank would rather lend you <em>$100M</em> than $1M.'),
   'upfront~ig#1': hook('How to make the bank ask: <em>how much more?</em>'),
   'industry~ig#1': hook('Don\'t pitch any banker. Find the <em>industry banker</em>.'),

@@ -153,6 +153,7 @@
       m.style.backgroundSize = (ease((lt - parseFloat(m.dataset.hd)) / 0.5) * 100) + '% 100%';
     });
     el.querySelectorAll('[data-lit]').forEach((e) => e.classList.toggle('lit', lt >= parseFloat(e.dataset.lit)));
+    el.querySelectorAll('img[data-kb]').forEach((e) => { e.style.transform = `scale(${1 + 0.08 * clamp(lt / 12)})`; });
   }
 
   /* ---------- captions ---------- */

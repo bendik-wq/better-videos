@@ -83,6 +83,41 @@
     190.04,
     192.76
    ]
+  },
+  "tz-1": {
+   "t": [
+    114.14,
+    119.0
+   ],
+   "tight": true
+  },
+  "tz-2": {
+   "t": [
+    234.54,
+    237.32
+   ],
+   "tight": true
+  },
+  "tz-3": {
+   "t": [
+    386.15,
+    388.79
+   ],
+   "tight": true
+  },
+  "tz-4": {
+   "t": [
+    455.67,
+    457.63
+   ],
+   "tight": true
+  },
+  "tz-5": {
+   "t": [
+    614.44,
+    622.38
+   ],
+   "tight": true
   }
  },
  "cuts": {
@@ -141,8 +176,23 @@
     ]
    ],
    "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "No money down"
+    },
     "whole"
-   ]
+   ],
+   "intro": false
   },
   "ig-1-opm": {
    "layout": "vertical",
@@ -264,6 +314,7 @@
   }
  },
  "notes": {
-  "ig-5": "why-vf section replaced: Josh rubs his eyes for ~13 s there"
+  "ig-5": "why-vf section replaced: Josh rubs his eyes for ~13 s there",
+  "intro": "Long form opens with tz-* teaser moments (Coming up), the title card, then the talk with the credibility panel over its opening."
  }
 }

@@ -65,6 +65,30 @@
     116.74,
     125.14
    ]
+  },
+  "tz-1": {
+   "t": [
+    63.9,
+    73.72
+   ]
+  },
+  "tz-2": {
+   "t": [
+    243.52,
+    253.24
+   ]
+  },
+  "tz-3": {
+   "t": [
+    426.32,
+    428.62
+   ]
+  },
+  "tz-4": {
+   "t": [
+    615.27,
+    622.51
+   ]
   }
  },
  "cuts": {
@@ -111,10 +135,37 @@
     ]
    ],
    "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "The bank's view"
+    },
     "lf-a",
     "lf-b"
    ],
+   "intro": false,
    "sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "The bank's view"
+    },
     "lf-a",
     "lf-b"
    ]
