@@ -1,0 +1,188 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.0,
+    442.32
+   ]
+  },
+  "lf-2": {
+   "t": [
+    448.84,
+    518.17
+   ]
+  },
+  "lf-3": {
+   "t": [
+    523.51,
+    567.17
+   ]
+  },
+  "lf-4": {
+   "t": [
+    572.28,
+    679.72
+   ]
+  },
+  "lf-5": {
+   "t": [
+    684.56,
+    1030.72
+   ]
+  },
+  "tz-1": {
+   "t": [
+    484.83,
+    490.63
+   ]
+  },
+  "tz-2": {
+   "t": [
+    545.17,
+    553.17
+   ]
+  },
+  "tz-3": {
+   "t": [
+    641.71,
+    646.69
+   ]
+  },
+  "tz-4": {
+   "t": [
+    869.41,
+    882.67
+   ]
+  },
+  "tz-5": {
+   "t": [
+    952.46,
+    960.3
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Why organic growth won't get you past $10M (Josh, 26 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "intro": false,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 buying businesses",
+     "title": "Why organic growth <em>won't get you past $10M</em>.",
+     "poster": true,
+     "dur": 3.2
+    }
+   },
+   "chapters": {
+    "start": "The organic trap"
+   },
+   "chapterMarks": [
+    [
+     39.2,
+     "How you got here"
+    ],
+    [
+     110.0,
+     "The healthcare example"
+    ],
+    [
+     231.3,
+     "The organic ceiling"
+    ],
+    [
+     404.2,
+     "Every service business"
+    ],
+    [
+     448.9,
+     "A new foundation"
+    ],
+    [
+     484.8,
+     "Buy your competitor"
+    ],
+    [
+     523.5,
+     "Why owners burn out"
+    ],
+    [
+     572.3,
+     "A bankable narrative"
+    ],
+    [
+     625.7,
+     "Josh's April acquisition"
+    ],
+    [
+     684.6,
+     "Owners don't see it"
+    ],
+    [
+     759.0,
+     "Past $10M"
+    ],
+    [
+     840.9,
+     "Skip the first 100 clients"
+    ],
+    [
+     886.6,
+     "Buy, optimise, zoom out"
+    ],
+    [
+     938.4,
+     "Buy and build"
+    ],
+    [
+     963.4,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "The organic trap"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5"
+   ],
+   "sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "chapter": "The organic trap"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5"
+   ]
+  }
+ }
+}

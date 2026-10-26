@@ -131,6 +131,54 @@
     1335.72,
     1346.02
    ]
+  },
+  "cult-a": {
+   "t": [
+    249.84,
+    252.72
+   ]
+  },
+  "cult-b": {
+   "t": [
+    288.26,
+    305.14
+   ]
+  },
+  "cult-c": {
+   "t": [
+    1010.88,
+    1037.96
+   ]
+  },
+  "why-care": {
+   "t": [
+    708.55,
+    732.34
+   ]
+  },
+  "first-imp": {
+   "t": [
+    506.66,
+    543.34
+   ]
+  },
+  "no-close": {
+   "t": [
+    1103.58,
+    1140.88
+   ]
+  },
+  "coffee": {
+   "t": [
+    1215.53,
+    1242.73
+   ]
+  },
+  "dots": {
+   "t": [
+    1295.18,
+    1314.82
+   ]
   }
  },
  "cuts": {
@@ -364,6 +412,156 @@
     "please~ig#2",
     "please~ig#3",
     "glory~ig#1"
+   ]
+  },
+  "ig-8-inherit-culture": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "You don't build culture. <em>You inherit it.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "cult-a",
+    "cult-b",
+    "cult-c"
+   ],
+   "sequence": [
+    "cult-a~ig#1",
+    "cult-b~ig#1",
+    "cult-b~ig#2",
+    "cult-b~ig#3",
+    "cult-c~ig#1",
+    "cult-c~ig#2"
+   ]
+  },
+  "ig-9-why-care": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Your team doesn't carry your risk. <em>Lead accordingly.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "why-care"
+   ],
+   "sequence": [
+    "why-care~ig#1",
+    "why-care~ig#2",
+    "why-care~ig#3",
+    "why-care~ig#4"
+   ]
+  },
+  "ig-10-first-impression": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "The team's first impression of you <em>starts before you arrive</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "first-imp"
+   ],
+   "sequence": [
+    "first-imp~ig#1",
+    "first-imp~ig#2",
+    "first-imp~ig#3",
+    "first-imp~ig#4",
+    "first-imp~ig#5"
+   ]
+  },
+  "ig-11-no-close": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Keep the doors open. <em>Fix the rest later.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "no-close"
+   ],
+   "sequence": [
+    "no-close~ig#1",
+    "no-close~ig#2"
+   ]
+  },
+  "ig-12-coffee-machine": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Focus on what <em>keeps the doors open</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "coffee"
+   ],
+   "sequence": [
+    "coffee~ig#1",
+    "coffee~ig#2",
+    "coffee~ig#3"
+   ]
+  },
+  "ig-13-creative-dots": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Connect every initiative <em>back to revenue</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "dots"
+   ],
+   "sequence": [
+    "dots~ig#1",
+    "dots~ig#2"
    ]
   }
  }

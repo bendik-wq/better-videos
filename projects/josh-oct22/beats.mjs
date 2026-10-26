@@ -74,5 +74,11 @@ Object.assign(beats, {
   'new-boss~ig#1': hook('Good news or bad news: <em>I\'m your new boss.</em>'),
   'firing~ig#1': hook('Comfortable firing people? <em>Reconsider where you are.</em>'),
   'make-money~ig#1': hook('Priority one in any business: <em>make the money</em>.'),
+  'cult-a~ig#1': hook('When you buy a business, you don\'t build culture. <em>You inherit it.</em>'),
+  'why-care~ig#1': hook('Why should your staff care <em>as much as you</em>?'),
+  'first-imp~ig#1': hook('Buying a business? <em>First impressions</em> start with how the team hears.'),
+  'no-close~ig#1': hook('We moved clinics without closing <em>a single day</em>.'),
+  'coffee~ig#1': hook('If I did everything clients asked for, <em>I\'d be broke</em>.'),
+  'dots~ig#1': hook('Your job as an entrepreneur: <em>connect the dots to revenue</em>.'),
   'please~ig#1': hook('You won\'t please everyone. <em>Follow your gut.</em>'),
 });
