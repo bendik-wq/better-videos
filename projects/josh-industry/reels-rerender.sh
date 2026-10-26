@@ -14,7 +14,7 @@ while IFS="|" read -r -u 3 proj F A sub; do
   for tl in $P/timeline-ig-*.json; do
     name=$(basename $tl .json); name=${name#timeline-}; out=$P/$sub/$name
     [ -f $out/v2.done ] && continue
-    mkdir $out/.v2claim 2>/dev/null || continue
+    mkdir -p $out; mkdir $out/.v2claim 2>/dev/null || continue
     rm -rf $out/parts; rm -f $out/graphics.part.mp4 $out/$name.mp4 $out/$name-master.mp4 $out/$name.tmp.mp4
     if [ ! -f $out/gfx.v2 ]; then
       rm -f $out/graphics.mp4
