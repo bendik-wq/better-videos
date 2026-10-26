@@ -7,6 +7,9 @@ P=$R/projects/$proj; out=$P/out/long4k; name=long4k
 ready() { [ -f $out/graphics.mp4 ] || return 1; for p in $PARENTS; do [ -f $F/$p.mp4 ] || return 1; done; }
 until ready; do sleep 60; done
 echo "inputs ready $proj"
+# one 4K assembly at a time (disk): wait for the shared lock
+until mkdir $S/.fin4k.lock 2>/dev/null; do sleep 60; done
+trap 'rmdir $S/.fin4k.lock' EXIT
 cd $R/projects
 python3 - "$proj" "$F" $PARENTS <<'PY'
 import json, subprocess, sys
@@ -21,7 +24,7 @@ for k in sorted(x for x in sn if x.startswith("tz-")):
 PY
 cp $R/projects/owners-academy-sales/out/b2b4k/face-mask.png $R/projects/owners-academy-sales/out/b2b4k/face-frame.png $out/
 rm -rf $out/parts
-(cd $P && PANEL=192,224,1152,1648 FACE_GRAIN=0 AUDIO_NORM=final VENC="-c:v libx265 -preset fast -crf 19 -tag:v hvc1" \
+(cd $P && CLEAN_PARTS=1 PANEL=192,224,1152,1648 FACE_GRAIN=0 AUDIO_NORM=final VENC="-c:v libx265 -preset fast -crf 19 -tag:v hvc1" \
   python3 $R/projects/owners-academy-sales/vsl/composite.py $A $P/timeline-long.json $F $out $name-master.mp4 > /dev/null) || { echo "FAIL composite $proj"; exit 1; }
 M=$out/$name-master.mp4
 echo "$proj $(du -h $M | cut -f1) $(ffprobe -v error -select_streams v -show_entries stream=width,height,duration -of csv=p=0 $M) a=$(ffprobe -v error -select_streams a -show_entries stream=duration -of csv=p=0 $M) n=$(ffprobe -v error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 $M)"

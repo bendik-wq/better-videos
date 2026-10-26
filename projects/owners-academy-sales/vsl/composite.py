@@ -72,6 +72,9 @@ def main(src, tl_path, face_dir, out_dir, out_name="vsl-b2b.mp4"):
     audio = os.path.join(out_dir, "audio.wav")
     ff("-f", "concat", "-safe", "0", "-i", os.path.join(parts, "v.txt"), "-c", "copy", face)
     ff("-f", "concat", "-safe", "0", "-i", os.path.join(parts, "a.txt"), "-c", "copy", audio)
+    if os.environ.get("CLEAN_PARTS"):  # big (4K) runs: drop the per-segment video parts once joined
+        for v in vlist:
+            os.remove(v)
     if FINAL_NORM:  # two-pass loudnorm over the whole programme
         r = subprocess.run(["ffmpeg", "-hide_banner", "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json",
                             "-f", "null", "-"], capture_output=True, text=True).stderr
