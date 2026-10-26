@@ -205,6 +205,126 @@
     1295.18,
     1314.82
    ]
+  },
+  "xl-nlu-a": {
+   "t": [
+    306.46,
+    348.33
+   ]
+  },
+  "xl-nlu-b": {
+   "t": [
+    708.55,
+    732.34
+   ]
+  },
+  "xl-boss-a": {
+   "t": [
+    412.42,
+    464.94
+   ]
+  },
+  "xl-boss-b": {
+   "t": [
+    472.24,
+    495.7
+   ]
+  },
+  "xl-boss-c": {
+   "t": [
+    587.73,
+    590.75
+   ]
+  },
+  "xl-fire": {
+   "t": [
+    611.84,
+    698.62
+   ],
+   "drop": [
+    "fucking"
+   ],
+   "dropt": [
+    [
+     673.4,
+     681.7
+    ]
+   ]
+  },
+  "xl-money-a": {
+   "t": [
+    1103.58,
+    1140.88
+   ]
+  },
+  "xl-money-b": {
+   "t": [
+    1167.13,
+    1204.71
+   ],
+   "drop": [
+    "fucking"
+   ]
+  },
+  "xl-glory-a": {
+   "t": [
+    1238.87,
+    1261.35
+   ]
+  },
+  "xl-glory-b": {
+   "t": [
+    1299.34,
+    1349.23
+   ]
+  },
+  "xl-cult-a": {
+   "t": [
+    249.84,
+    252.72
+   ]
+  },
+  "xl-cult-b": {
+   "t": [
+    266.66,
+    305.14
+   ]
+  },
+  "xl-cult-c": {
+   "t": [
+    1000.0,
+    1037.96
+   ]
+  },
+  "xl-first": {
+   "t": [
+    504.52,
+    590.75
+   ]
+  },
+  "xl-coffee-a": {
+   "t": [
+    1189.47,
+    1204.71
+   ],
+   "drop": [
+    "fucking"
+   ]
+  },
+  "xl-coffee-b": {
+   "t": [
+    1215.53,
+    1261.35
+   ]
+  },
+  "xl-coffee-c": {
+   "t": [
+    1286.85,
+    1297.16
+   ],
+   "drop": [
+    "shit"
+   ]
   }
  },
  "cuts": {
@@ -307,7 +427,8 @@
     }
    },
    "base_sequence": [
-    "not-like-you"
+    "xl-nlu-a",
+    "xl-nlu-b"
    ]
   },
   "ig-4-new-boss": {
@@ -326,8 +447,9 @@
     }
    },
    "base_sequence": [
-    "new-boss",
-    "upfront"
+    "xl-boss-a",
+    "xl-boss-b",
+    "xl-boss-c"
    ]
   },
   "ig-5-firing": {
@@ -346,7 +468,7 @@
     }
    },
    "base_sequence": [
-    "firing"
+    "xl-fire"
    ]
   },
   "ig-6-make-money": {
@@ -365,7 +487,8 @@
     }
    },
    "base_sequence": [
-    "make-money"
+    "xl-money-a",
+    "xl-money-b"
    ]
   },
   "ig-7-please-everyone": {
@@ -384,8 +507,8 @@
     }
    },
    "base_sequence": [
-    "please",
-    "glory"
+    "xl-glory-a",
+    "xl-glory-b"
    ]
   },
   "ig-8-inherit-culture": {
@@ -404,28 +527,9 @@
     }
    },
    "base_sequence": [
-    "cult-a",
-    "cult-b",
-    "cult-c"
-   ]
-  },
-  "ig-9-why-care": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Your team doesn't carry your risk. <em>Lead accordingly.</em>",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "why-care"
+    "xl-cult-a",
+    "xl-cult-b",
+    "xl-cult-c"
    ]
   },
   "ig-10-first-impression": {
@@ -444,26 +548,7 @@
     }
    },
    "base_sequence": [
-    "first-imp"
-   ]
-  },
-  "ig-11-no-close": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Keep the doors open. <em>Fix the rest later.</em>",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "no-close"
+    "xl-first"
    ]
   },
   "ig-12-coffee-machine": {
@@ -482,26 +567,9 @@
     }
    },
    "base_sequence": [
-    "coffee"
-   ]
-  },
-  "ig-13-creative-dots": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Connect every initiative <em>back to revenue</em>.",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "dots"
+    "xl-coffee-a",
+    "xl-coffee-b",
+    "xl-coffee-c"
    ]
   }
  },

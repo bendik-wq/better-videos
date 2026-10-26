@@ -87,3 +87,16 @@ Object.assign(beats, {
   'ceiling~ig#1': hook('Every service business has an <em>organic ceiling</em>.'),
   'past-10m~ig#1': hook('Stuck under $10M? <em>Organic won\'t get you there.</em>'),
 });
+
+// 60–90 s Reels (Oct 27 re-cut)
+Object.assign(beats, {
+  'xl-510-a~ig#1': hook('Stuck at $5M? Buying another $5M business <em>beats organic growth</em>.'),
+  'xl-bill~ig#1': hook('Why every clinic hits <em>a hard ceiling</em>.'),
+  'xl-rooms~ig#1': hook('Four rooms. Four practitioners. <em>No room to grow.</em>'),
+  'xl-fish~ig#1': hook('Half our clinic\'s radius is water. <em>We can\'t sell to fish.</em>'),
+  'xl-king~ig#1': hook('Skip your first 100 clients. <em>Buy the kingpin.</em>'),
+  'xl-stuck~ig#1': hook('Stuck in the single-digit millions? <em>Here\'s why.</em>'),
+  'xl-build~ig#1': hook('How the quiet wealth is built: <em>buy and build</em>.'),
+  'xl-ceil~ig#1': hook('Every service business has an <em>organic ceiling</em>.'),
+  'xl-p10~ig#1': hook('Stuck under $10M? <em>Organic won\'t get you there.</em>'),
+});

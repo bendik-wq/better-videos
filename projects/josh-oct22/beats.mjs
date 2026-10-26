@@ -81,3 +81,15 @@ Object.assign(beats, {
   'dots~ig#1': hook('Your job as an entrepreneur: <em>connect the dots to revenue</em>.'),
   'please~ig#1': hook('You won\'t please everyone. <em>Follow your gut.</em>'),
 });
+
+// 60–90 s Reels (Oct 27 re-cut)
+Object.assign(beats, {
+  'xl-nlu-a~ig#1': hook('No one on your team will <em>think like you</em>.'),
+  'xl-boss-a~ig#1': hook('Taking over a company? <em>Expect people to leave.</em>'),
+  'xl-fire~ig#1': hook('Comfortable firing people? <em>Reconsider where you are.</em>'),
+  'xl-money-a~ig#1': hook('We moved clinics without closing <em>a single day</em>.'),
+  'xl-glory-a~ig#1': hook('You won\'t please everyone. <em>Follow your gut.</em>'),
+  'xl-cult-a~ig#1': hook('When you buy a business, you don\'t build culture. <em>You inherit it.</em>'),
+  'xl-first~ig#1': hook('Buying a business? <em>First impressions</em> start with how the team hears.'),
+  'xl-coffee-a~ig#1': hook('If I did everything clients asked for, <em>I\'d be broke</em>.'),
+});

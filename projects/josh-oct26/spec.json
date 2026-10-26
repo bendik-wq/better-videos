@@ -121,6 +121,81 @@
     758.99,
     782.51
    ]
+  },
+  "xl-510-a": {
+   "t": [
+    469.13,
+    517.43
+   ]
+  },
+  "xl-510-b": {
+   "t": [
+    537.27,
+    565.43
+   ]
+  },
+  "xl-bill": {
+   "t": [
+    231.32,
+    303.28
+   ]
+  },
+  "xl-rooms": {
+   "t": [
+    611.15,
+    679.72
+   ]
+  },
+  "xl-fish": {
+   "t": [
+    314.99,
+    377.44
+   ],
+   "drop": [
+    "fucking"
+   ]
+  },
+  "xl-king": {
+   "t": [
+    840.93,
+    906.88
+   ],
+   "rename": {
+    "0": "Getting"
+   }
+  },
+  "xl-stuck": {
+   "t": [
+    1.88,
+    87.06
+   ],
+   "dropt": [
+    [
+     15.5,
+     16.35
+    ]
+   ]
+  },
+  "xl-build": {
+   "t": [
+    896.4,
+    960.3
+   ]
+  },
+  "xl-ceil": {
+   "t": [
+    404.22,
+    466.62
+   ]
+  },
+  "xl-p10": {
+   "t": [
+    758.99,
+    823.23
+   ],
+   "drop": [
+    "shit"
+   ]
   }
  },
  "cuts": {
@@ -248,26 +323,8 @@
     }
    },
    "base_sequence": [
-    "five-ten"
-   ]
-  },
-  "ig-2-burn-out": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Doing the same thing <em>won't break the ceiling</em>.",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "burn-out"
+    "xl-510-a",
+    "xl-510-b"
    ]
   },
   "ig-3-four-rooms": {
@@ -286,7 +343,7 @@
     }
    },
    "base_sequence": [
-    "four-rooms"
+    "xl-rooms"
    ]
   },
   "ig-4-fish": {
@@ -305,7 +362,7 @@
     }
    },
    "base_sequence": [
-    "fish"
+    "xl-fish"
    ]
   },
   "ig-5-kingpin": {
@@ -324,26 +381,7 @@
     }
    },
    "base_sequence": [
-    "kingpin"
-   ]
-  },
-  "ig-6-day-one": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Buy it, then <em>pick the low-hanging fruit</em>.",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "day-one"
+    "xl-king"
    ]
   },
   "ig-7-buy-build": {
@@ -362,7 +400,7 @@
     }
    },
    "base_sequence": [
-    "buy-build"
+    "xl-build"
    ]
   },
   "ig-8-ceiling": {
@@ -381,7 +419,7 @@
     }
    },
    "base_sequence": [
-    "ceiling"
+    "xl-ceil"
    ]
   },
   "ig-9-past-10m": {
@@ -400,7 +438,45 @@
     }
    },
    "base_sequence": [
-    "past-10m"
+    "xl-p10"
+   ]
+  },
+  "ig-2-billable-hours": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "People and hours <em>cap organic growth</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-bill"
+   ]
+  },
+  "ig-6-stuck": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Organic growth <em>won't get you to eight figures</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-stuck"
    ]
   }
  },

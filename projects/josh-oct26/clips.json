@@ -113,6 +113,66 @@
     758.99,
     782.51
    ]
+  },
+  "xl-510-a": {
+   "t": [
+    469.13,
+    517.43
+   ]
+  },
+  "xl-510-b": {
+   "t": [
+    537.27,
+    565.43
+   ]
+  },
+  "xl-bill": {
+   "t": [
+    231.32,
+    303.28
+   ]
+  },
+  "xl-rooms": {
+   "t": [
+    611.15,
+    679.72
+   ]
+  },
+  "xl-fish": {
+   "t": [
+    314.99,
+    377.44
+   ]
+  },
+  "xl-king": {
+   "t": [
+    840.93,
+    906.88
+   ]
+  },
+  "xl-stuck": {
+   "t": [
+    1.88,
+    87.06
+   ]
+  },
+  "xl-build": {
+   "t": [
+    896.4,
+    960.3
+   ]
+  },
+  "xl-ceil": {
+   "t": [
+    404.22,
+    466.62
+   ]
+  },
+  "xl-p10": {
+   "t": [
+    758.99,
+    823.23
+   ]
   }
  },
  "cuts": {
@@ -264,39 +324,20 @@
     }
    },
    "base_sequence": [
-    "five-ten"
+    "xl-510-a",
+    "xl-510-b"
    ],
    "sequence": [
-    "five-ten~ig#1",
-    "five-ten~ig#2",
-    "five-ten~ig#3",
-    "five-ten~ig#4",
-    "five-ten~ig#5",
-    "five-ten~ig#6"
-   ]
-  },
-  "ig-2-burn-out": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Doing the same thing <em>won't break the ceiling</em>.",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "burn-out"
-   ],
-   "sequence": [
-    "burn-out~ig#1",
-    "burn-out~ig#2",
-    "burn-out~ig#3"
+    "xl-510-a~ig#1",
+    "xl-510-a~ig#2",
+    "xl-510-a~ig#3",
+    "xl-510-a~ig#4",
+    "xl-510-a~ig#5",
+    "xl-510-a~ig#6",
+    "xl-510-a~ig#7",
+    "xl-510-b~ig#1",
+    "xl-510-b~ig#2",
+    "xl-510-b~ig#3"
    ]
   },
   "ig-3-four-rooms": {
@@ -315,12 +356,15 @@
     }
    },
    "base_sequence": [
-    "four-rooms"
+    "xl-rooms"
    ],
    "sequence": [
-    "four-rooms~ig#1",
-    "four-rooms~ig#2",
-    "four-rooms~ig#3"
+    "xl-rooms~ig#1",
+    "xl-rooms~ig#2",
+    "xl-rooms~ig#3",
+    "xl-rooms~ig#4",
+    "xl-rooms~ig#5",
+    "xl-rooms~ig#6"
    ]
   },
   "ig-4-fish": {
@@ -339,12 +383,17 @@
     }
    },
    "base_sequence": [
-    "fish"
+    "xl-fish"
    ],
    "sequence": [
-    "fish~ig#1",
-    "fish~ig#2",
-    "fish~ig#3"
+    "xl-fish~ig#1",
+    "xl-fish~ig#2",
+    "xl-fish~ig#3",
+    "xl-fish~ig#4",
+    "xl-fish~ig#5",
+    "xl-fish~ig#6",
+    "xl-fish~ig#7",
+    "xl-fish~ig#8"
    ]
   },
   "ig-5-kingpin": {
@@ -363,36 +412,15 @@
     }
    },
    "base_sequence": [
-    "kingpin"
+    "xl-king"
    ],
    "sequence": [
-    "kingpin~ig#1",
-    "kingpin~ig#2",
-    "kingpin~ig#3"
-   ]
-  },
-  "ig-6-day-one": {
-   "layout": "vertical",
-   "ns": "~ig",
-   "gap": 0.9,
-   "intro": false,
-   "chapter": "Josh Li",
-   "cards": {
-    "end": {
-     "eyebrow": "Josh's takeaway",
-     "title": "Buy it, then <em>pick the low-hanging fruit</em>.",
-     "cta": true,
-     "dur": 4.0,
-     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
-    }
-   },
-   "base_sequence": [
-    "day-one"
-   ],
-   "sequence": [
-    "day-one~ig#1",
-    "day-one~ig#2",
-    "day-one~ig#3"
+    "xl-king~ig#1",
+    "xl-king~ig#2",
+    "xl-king~ig#3",
+    "xl-king~ig#4",
+    "xl-king~ig#5",
+    "xl-king~ig#6"
    ]
   },
   "ig-7-buy-build": {
@@ -411,13 +439,14 @@
     }
    },
    "base_sequence": [
-    "buy-build"
+    "xl-build"
    ],
    "sequence": [
-    "buy-build~ig#1",
-    "buy-build~ig#2",
-    "buy-build~ig#3",
-    "buy-build~ig#4"
+    "xl-build~ig#1",
+    "xl-build~ig#2",
+    "xl-build~ig#3",
+    "xl-build~ig#4",
+    "xl-build~ig#5"
    ]
   },
   "ig-8-ceiling": {
@@ -436,11 +465,14 @@
     }
    },
    "base_sequence": [
-    "ceiling"
+    "xl-ceil"
    ],
    "sequence": [
-    "ceiling~ig#1",
-    "ceiling~ig#2"
+    "xl-ceil~ig#1",
+    "xl-ceil~ig#2",
+    "xl-ceil~ig#3",
+    "xl-ceil~ig#4",
+    "xl-ceil~ig#5"
    ]
   },
   "ig-9-past-10m": {
@@ -459,11 +491,67 @@
     }
    },
    "base_sequence": [
-    "past-10m"
+    "xl-p10"
    ],
    "sequence": [
-    "past-10m~ig#1",
-    "past-10m~ig#2"
+    "xl-p10~ig#1",
+    "xl-p10~ig#2",
+    "xl-p10~ig#3",
+    "xl-p10~ig#4"
+   ]
+  },
+  "ig-2-billable-hours": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "People and hours <em>cap organic growth</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-bill"
+   ],
+   "sequence": [
+    "xl-bill~ig#1",
+    "xl-bill~ig#2",
+    "xl-bill~ig#3",
+    "xl-bill~ig#4"
+   ]
+  },
+  "ig-6-stuck": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Organic growth <em>won't get you to eight figures</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-stuck"
+   ],
+   "sequence": [
+    "xl-stuck~ig#1",
+    "xl-stuck~ig#2",
+    "xl-stuck~ig#3",
+    "xl-stuck~ig#4",
+    "xl-stuck~ig#5",
+    "xl-stuck~ig#6",
+    "xl-stuck~ig#7",
+    "xl-stuck~ig#8"
    ]
   }
  }
