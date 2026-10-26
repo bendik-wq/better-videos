@@ -115,6 +115,10 @@
      "title": "How to buy a business with <em>no money down</em>.",
      "poster": true,
      "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
     }
    },
    "chapters": {
@@ -171,6 +175,9 @@
      "card": "intro"
     },
     {
+     "card": "cred"
+    },
+    {
      "chapter": "No money down"
     },
     "whole"
@@ -187,6 +194,9 @@
     "tz-5",
     {
      "card": "intro"
+    },
+    {
+     "card": "cred"
     },
     {
      "chapter": "No money down"

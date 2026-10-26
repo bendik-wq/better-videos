@@ -6,7 +6,7 @@ import { eb, big, small, list, kpi, cred, teaser } from '../owners-academy-sales
 const S = JSON.parse(fs.readFileSync(new URL('./snapped.json', import.meta.url)));
 
 const longBeats = [
-  [0, cred()], // who's talking: numbers + clinic photos while Josh opens (the title card already names the topic)
+  [1.9, eb('If your business is') + big('Stuck in the <em>single-digit millions</em>…', 0.3, 'mid')],
   [16.4, eb('Today') + big('Why organic growth is a <em>waste of time</em> for most of you.', 0.3, 'mid')],
   [25.4, eb('If you\'re in this position') + list([['Blow up your revenue', 3.9], ['Blow up your valuation', 5.6], ['Put more cash in your pocket', 7.9]])],
   [39.2, eb('How you got here') + big('<em>Organic growth.</em>', 7.6)],
@@ -68,11 +68,11 @@ for (const [t, html] of longBeats) {
 
 Object.assign(beats, {
   // long-form intro: "Coming up" teaser moments
-  'tz-1': teaser('From $5M to $10M? <em>Buy another $5M business.</em>'),
-  'tz-2': teaser('Most owners burn out and <em>sell or close down</em>.'),
-  'tz-3': teaser('Four rooms, four practitioners. <em>No room to grow.</em>'),
-  'tz-4': teaser('Google "near me". <em>One call can add millions.</em>'),
-  'tz-5': teaser('The quiet wealth is built on <em>buy and build</em>.'),
+  'tz-1': teaser('"Get to $10M from $5M by <em>buying another five-miller</em>."'),
+  'tz-2': teaser('"They burn out, and they have to <em>sell or close down</em>."'),
+  'tz-3': teaser('"Only four rooms… <em>we can\'t fit any more people in</em>."'),
+  'tz-4': teaser('"Google near me… <em>it takes one to add millions</em>."'),
+  'tz-5': teaser('"The low-key wealth was made via <em>buy and build</em>."'),
 });
 
 const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];

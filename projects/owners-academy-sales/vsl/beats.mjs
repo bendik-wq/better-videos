@@ -196,4 +196,14 @@ const cred = () => eb('<b>Josh Li</b> · Founder, JC Health Group') +
   `<div class="cap">Paramount Physio</div></div></div>`;
 // "Coming up" teaser headline at the top of a long form
 const teaser = (h) => [{ at: 0, html: eb('Coming up') + big(h, 0.1, 'mid') }];
-export { eb, big, small, kpi, count, bar, terms, list, cred, teaser };
+// Full-screen credibility card for long-form intros (its own silent card after the title, so no graphic sits over unrelated speech)
+const credCard = () => `<div class="num" data-d="0.05">Who's talking</div>` +
+  `<div class="ttl split" data-d="0.15" style="font-size:92px">Josh Li <em>· Founder, JC Health Group</em></div><div class="rule"></div>` +
+  `<div class="row" style="max-width:1560px;gap:40px">${kpi('', 'in deals by age 21, in banking', 0.5, count(30, { pre: '$', suf: 'M+', d: 0.5 }))}` +
+  `${kpi('', 'in transactions advised and completed', 0.9, count(100, { pre: '$', suf: 'M+', d: 0.9 }))}` +
+  `${kpi('Multiple', 'businesses acquired through JC Health Group', 1.3)}${kpi('$0', 'of his own money in his first clinic', 1.7)}</div>` +
+  `<div class="photos" style="max-width:1560px"><div class="ph" data-d="2.1"><div class="im"><img src="img/melton-physio.jpg" data-kb style="object-position:50% 55%"></div>` +
+  `<div class="cap">Melton Physiotherapy &amp; Sports Medicine Clinic</div></div>` +
+  `<div class="ph" data-d="2.5"><div class="im"><img src="img/paramount-physio.jpg" data-kb style="object-position:50% 40%"></div>` +
+  `<div class="cap">Paramount Physio</div></div></div>`;
+export { eb, big, small, kpi, count, bar, terms, list, cred, credCard, teaser };

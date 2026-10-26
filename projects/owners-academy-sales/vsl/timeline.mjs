@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { beats as vslBeats, cards, chapters } from './beats.mjs';
+import { beats as vslBeats, cards, chapters, credCard } from './beats.mjs';
 import { beats as faqBeats } from './faq-beats.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -17,7 +17,7 @@ const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'clips.json'), 'utf8'));
 const snapped = JSON.parse(fs.readFileSync(path.join(ROOT, 'snapped.json'), 'utf8'));
 const CARD = 2.6;
 
-const cardHtml = (c) => `<div class="num" data-d="0.05">${c.eyebrow}</div><div class="ttl split" data-d="0.2">${c.title}</div><div class="rule"></div>` +
+const cardHtml = (c) => c.kind === 'cred' ? credCard() : `<div class="num" data-d="0.05">${c.eyebrow}</div><div class="ttl split" data-d="0.2">${c.title}</div><div class="rule"></div>` +
   (c.poster ? '<div class="poster" data-d="1.2"><div class="av">JL</div><div><b>Josh Li</b>Founder, JC Health Group</div></div>' : '') +
   (c.cta ? '<div data-d="1.1" style="display:flex;align-items:center;gap:30px;margin-top:10px"><span class="btn">See if you qualify →</span><span class="url">apply.grosfjeld-li.com</span></div>' : '');
 

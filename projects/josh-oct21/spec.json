@@ -134,6 +134,10 @@
      "title": "Under <em>$1M</em> or over $1M?",
      "poster": true,
      "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
     }
    },
    "chapters": {
@@ -175,6 +179,9 @@
     "tz-4",
     {
      "card": "intro"
+    },
+    {
+     "card": "cred"
     },
     {
      "chapter": "The bank's view"

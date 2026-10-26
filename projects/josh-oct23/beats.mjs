@@ -6,7 +6,7 @@ import { eb, big, small, list, cred, teaser } from '../owners-academy-sales/vsl/
 const S = JSON.parse(fs.readFileSync(new URL('./snapped.json', import.meta.url)));
 
 const longBeats = [
-  [0, cred()], // who's talking: numbers + clinic photos while Josh opens (the title card already names the topic)
+  [2.8, eb('Today') + big('How to buy a business with <em>no money down</em>.', 2.5, 'mid')],
   [12.2, eb('It applies whether') + list([['It\'s your first business or your next', 0.3], ['You have money or you don\'t', 8.2]])],
   [23.5, eb('Josh, his clients, his network') + big('From the <em>$1M</em> business to the <em>$100M</em> business.', 13.5, 'mid')],
   [58.9, eb('First principles') + big('Buy something <em>without the thing</em> required to buy it.', 7.4, 'mid')],
@@ -52,10 +52,10 @@ export const beats = { whole: longBeats.map(([t, html]) => ({ at: +Math.max(0, t
 const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
 Object.assign(beats, {
   // long-form intro: "Coming up" teaser moments
-  'tz-1': teaser('No money? Use <em>other people\'s money</em>.'),
-  'tz-2': teaser('A bank isn\'t your manager. <em>It\'s your lender.</em>'),
-  'tz-3': teaser('He wouldn\'t take my offer. <em>Now his clinic is closed.</em>'),
-  'tz-5': teaser('Never worked in healthcare. <em>Built a board that had.</em>'),
+  'tz-1': teaser('"You\'re gonna use <em>other people\'s money</em>."'),
+  'tz-2': teaser('"The bank\'s not a manager. It\'s your <em>debt owner</em>."'),
+  'tz-3': teaser('"His clinic was dark." <em>He\'s had to liquidate.</em>'),
+  'tz-5': teaser('"I\'ve never been in healthcare. <em>Never made a dollar in it.</em>"'),
   'opm~ig#1': hook('No money to buy a business? Use <em>other people\'s money</em>.'),
   'bank~ig#1': hook('A bank isn\'t your manager. <em>It\'s your lender.</em>'),
   'vendor-a~ig#1': hook('Vendor finance is just an <em>IOU to the seller</em>.'),

@@ -128,6 +128,10 @@
      "title": "Why organic growth <em>won't get you past $10M</em>.",
      "poster": true,
      "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
     }
    },
    "chapters": {
@@ -208,6 +212,9 @@
      "card": "intro"
     },
     {
+     "card": "cred"
+    },
+    {
      "chapter": "The organic trap"
     },
     "lf-1",
@@ -227,6 +234,9 @@
     "tz-5",
     {
      "card": "intro"
+    },
+    {
+     "card": "cred"
     },
     {
      "chapter": "The organic trap"

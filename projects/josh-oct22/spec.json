@@ -219,6 +219,10 @@
      "title": "You don't build culture. <em>You inherit it.</em>",
      "poster": true,
      "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
     }
    },
    "chapters": {
@@ -269,6 +273,9 @@
     "tz-5",
     {
      "card": "intro"
+    },
+    {
+     "card": "cred"
     },
     {
      "chapter": "The new clinic"
