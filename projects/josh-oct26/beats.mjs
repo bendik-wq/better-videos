@@ -74,3 +74,16 @@ Object.assign(beats, {
   'tz-4': teaser('Google "near me". <em>One call can add millions.</em>'),
   'tz-5': teaser('The quiet wealth is built on <em>buy and build</em>.'),
 });
+
+const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
+Object.assign(beats, {
+  'five-ten~ig#1': hook('Stuck at $5M? Buying another $5M business <em>beats organic growth</em>.'),
+  'burn-out~ig#1': hook('80% of small businesses <em>never break their ceiling</em>.'),
+  'four-rooms~ig#1': hook('Four rooms. Four practitioners. <em>No room to grow.</em>'),
+  'fish~ig#1': hook('Half our clinic\'s radius is water. <em>We can\'t sell to fish.</em>'),
+  'kingpin~ig#1': hook('Google "near me". Call 100. <em>It takes one.</em>'),
+  'day-one~ig#1': hook('Buy a profitable business: <em>cash on day one</em>.'),
+  'buy-build~ig#1': hook('How the quiet wealth is built: <em>buy and build</em>.'),
+  'ceiling~ig#1': hook('Every service business has an <em>organic ceiling</em>.'),
+  'past-10m~ig#1': hook('Stuck under $10M? <em>Organic won\'t get you there.</em>'),
+});

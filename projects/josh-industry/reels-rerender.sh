@@ -7,7 +7,8 @@ R=/home/user/better-videos; OV=$R/projects/josh-industry/out/ig
 SETS="josh-industry|/tmp/claude-0/-home-user/8a93c893-78da-55f6-95ba-70a8b48271ee/scratchpad/oct16/face-ig|/tmp/claude-0/-home-user/8a93c893-78da-55f6-95ba-70a8b48271ee/scratchpad/src16/audio48-16oct.wav|out/ig
 josh-oct21|$S/oct21-0004/face-ig|$S/oct21-0004/audio48.wav|out
 josh-oct22|$S/oct22/face-ig|$S/oct22/audio48.wav|out
-josh-oct23|$S/oct23-0001/face-ig|$S/oct23-0001/audio48.wav|out"
+josh-oct23|$S/oct23-0001/face-ig|$S/oct23-0001/audio48.wav|out
+josh-oct26|$S/oct26-0013/face-ig|$S/oct26-0013/audio48.wav|out"
 cd $R
 while IFS="|" read -r -u 3 proj F A sub; do
   P=$R/projects/$proj

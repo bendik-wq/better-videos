@@ -59,6 +59,60 @@
     952.46,
     960.3
    ]
+  },
+  "five-ten": {
+   "t": [
+    469.13,
+    514.49
+   ]
+  },
+  "burn-out": {
+   "t": [
+    537.27,
+    566.33
+   ]
+  },
+  "four-rooms": {
+   "t": [
+    629.29,
+    653.89
+   ]
+  },
+  "fish": {
+   "t": [
+    314.99,
+    346.02
+   ]
+  },
+  "kingpin": {
+   "t": [
+    846.97,
+    883.23
+   ]
+  },
+  "day-one": {
+   "t": [
+    886.58,
+    923.78
+   ]
+  },
+  "buy-build": {
+   "t": [
+    924.84,
+    960.3
+   ]
+  },
+  "ceiling": {
+   "t": [
+    404.22,
+    442.32
+   ]
+  },
+  "past-10m": {
+   "t": [
+    758.99,
+    782.51
+   ]
   }
  },
  "cuts": {
@@ -182,6 +236,224 @@
     "lf-3",
     "lf-4",
     "lf-5"
+   ]
+  },
+  "ig-1-five-ten": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "From $5M to $10M: <em>buy, don't grind.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "five-ten"
+   ],
+   "sequence": [
+    "five-ten~ig#1",
+    "five-ten~ig#2",
+    "five-ten~ig#3",
+    "five-ten~ig#4",
+    "five-ten~ig#5",
+    "five-ten~ig#6"
+   ]
+  },
+  "ig-2-burn-out": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Doing the same thing <em>won't break the ceiling</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "burn-out"
+   ],
+   "sequence": [
+    "burn-out~ig#1",
+    "burn-out~ig#2",
+    "burn-out~ig#3"
+   ]
+  },
+  "ig-3-four-rooms": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Hit the ceiling? <em>Move the walls.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "four-rooms"
+   ],
+   "sequence": [
+    "four-rooms~ig#1",
+    "four-rooms~ig#2",
+    "four-rooms~ig#3"
+   ]
+  },
+  "ig-4-fish": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Location caps <em>organic growth</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "fish"
+   ],
+   "sequence": [
+    "fish~ig#1",
+    "fish~ig#2",
+    "fish~ig#3"
+   ]
+  },
+  "ig-5-kingpin": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Buy out <em>the kingpin</em> down the road.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "kingpin"
+   ],
+   "sequence": [
+    "kingpin~ig#1",
+    "kingpin~ig#2",
+    "kingpin~ig#3"
+   ]
+  },
+  "ig-6-day-one": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Buy it, then <em>pick the low-hanging fruit</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "day-one"
+   ],
+   "sequence": [
+    "day-one~ig#1",
+    "day-one~ig#2",
+    "day-one~ig#3"
+   ]
+  },
+  "ig-7-buy-build": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Buy. Optimise. <em>Zoom out.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "buy-build"
+   ],
+   "sequence": [
+    "buy-build~ig#1",
+    "buy-build~ig#2",
+    "buy-build~ig#3",
+    "buy-build~ig#4"
+   ]
+  },
+  "ig-8-ceiling": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Fix the foundation <em>before you build up</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "ceiling"
+   ],
+   "sequence": [
+    "ceiling~ig#1",
+    "ceiling~ig#2"
+   ]
+  },
+  "ig-9-past-10m": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "New location, or <em>buy a competitor</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "past-10m"
+   ],
+   "sequence": [
+    "past-10m~ig#1",
+    "past-10m~ig#2"
    ]
   }
  }
