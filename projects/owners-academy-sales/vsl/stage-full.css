@@ -1,0 +1,30 @@
+/* Full-screen layout (render.mjs --full): Josh's footage fills the frame (composited under a
+   transparent graphics layer); headlines sit on the left over a soft navy fade that only shows
+   while a beat is on screen; captions float low and centred. Cards stay full navy screens. */
+html, body { background: transparent !important; }
+#silk, #face { display: none !important; }
+#scrim { background: linear-gradient(180deg, rgba(11,18,32,.55) 0%, rgba(11,18,32,0) 14%, rgba(11,18,32,0) 72%, rgba(11,18,32,.62) 100%) !important; }
+#fscrim { position: absolute; inset: 0; opacity: 0;
+  background: linear-gradient(90deg, rgba(11,18,32,.94) 0%, rgba(11,18,32,.90) 26%, rgba(13,22,42,.62) 40%, rgba(13,22,42,.18) 52%, rgba(13,22,42,0) 60%); }
+
+header { top: 44px !important; }
+.wordmark { font-size: 28px !important; text-shadow: 0 1px 12px rgba(0,0,0,.35); }
+.chap { color: rgba(243,245,249,.82) !important; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
+.ticks i { background: rgba(255,255,255,.28) !important; }
+.ticks i.on { background: rgba(255,255,255,.75) !important; }
+.ticks i.now { background: var(--gold) !important; }
+
+#stage { left: 96px !important; right: auto !important; width: 680px !important; top: 150px !important; height: 690px !important; }
+.beat { gap: 24px !important; }
+.beat .eyebrow { color: var(--ice) !important; font-size: 21px !important; text-transform: uppercase; letter-spacing: .14em !important; font-weight: 600 !important; }
+.beat .big { font-size: 68px !important; }
+.beat .mid { font-size: 52px !important; }
+.beat .list .li { font-size: 36px !important; }
+.beat .kpi .v { font-size: 60px !important; }
+.beat .card { background: rgba(18,27,46,.66) !important; }
+
+/* captions: centred, low, white with a soft shadow (no box) */
+#cap { left: 240px !important; right: 240px !important; top: 930px !important; height: 70px !important; justify-content: center; }
+#cap .line { font: 600 38px/1.25 var(--sans) !important; color: rgba(243,245,249,.82) !important; text-shadow: 0 2px 16px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
+#cap .w.on { color: #fff !important; }
+#cap .w.past { color: #fff !important; }

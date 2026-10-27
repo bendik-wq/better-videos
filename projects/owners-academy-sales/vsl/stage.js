@@ -223,6 +223,11 @@
     const want = new Set();
     if (!onCard) TL.beats.forEach((b, i) => { if (t >= b.t0 && t < b.t1) want.add(i); });
     [...stage.children].forEach((c) => { if (!want.has(+c.dataset.i)) c.remove(); });
+    // full-screen layouts: the left navy fade follows whichever beat is on screen
+    const fsc = document.getElementById('fscrim');
+    let fo = 0;
+    want.forEach((i) => { const b = TL.beats[i]; fo = Math.max(fo, Math.min(ease((t - b.t0) / 0.5), clamp((b.t1 - t) / OUT))); });
+    if (fsc) fsc.style.opacity = fo;
     want.forEach((i) => {
       const b = TL.beats[i];
       const el = build(i);

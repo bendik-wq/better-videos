@@ -1,0 +1,13 @@
+/* Full-screen vertical Reels (render.mjs --vertical --full): Josh fills the 9:16 frame; the hook sits
+   at the top over a navy fade, captions low and centred, clear of Instagram's bottom bar. */
+html, body { background: transparent !important; }
+#silk, #face { display: none !important; }
+#scrim { background: linear-gradient(180deg, rgba(11,18,32,.88) 0%, rgba(11,18,32,.70) 14%, rgba(11,18,32,0) 30%, rgba(11,18,32,0) 50%, rgba(11,18,32,.58) 66%, rgba(11,18,32,.78) 80%, rgba(11,18,32,.85) 100%) !important; }
+#fscrim { display: none; }
+header { top: 120px !important; }
+.wordmark { color: rgba(243,245,249,.85) !important; font-size: 28px !important; }
+#stage { top: 170px !important; height: 300px !important; }
+.beat .eyebrow { color: var(--ice) !important; text-transform: uppercase; letter-spacing: .14em !important; font-size: 22px !important; font-weight: 600 !important; }
+.beat .big, .beat .mid { font-size: 64px !important; text-shadow: 0 2px 24px rgba(0,0,0,.35); }
+#cap { top: 1330px !important; }
+#cap .line { font-size: 58px !important; }

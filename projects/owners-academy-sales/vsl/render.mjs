@@ -65,6 +65,9 @@ if (V) {
   await page.evaluate(() => window.resizeSilk && window.resizeSilk(540, 960));
   await page.evaluate(() => { window.cardFade = true; });
 }
+// --full: Josh fills the frame; the graphics render with a transparent background (PNG frames, alpha .mov)
+const FULL = args.includes('--full');
+if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : 'stage-full.css') });
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 await page.evaluate(() => document.fonts.ready);
@@ -73,7 +76,7 @@ if (opt('--stills')) {
   fs.mkdirSync(outPath, { recursive: true });
   for (const s of opt('--stills').split(',').map(Number)) {
     await page.evaluate((t) => window.render(t), s);
-    await page.screenshot({ path: path.join(outPath, `t${String(s.toFixed(1)).padStart(6, '0')}.png`) });
+    await page.screenshot({ path: path.join(outPath, `t${String(s.toFixed(1)).padStart(6, '0')}.png`), omitBackground: FULL });
   }
   await browser.close();
   process.exit(0);
@@ -83,12 +86,13 @@ const fps = TL.fps;
 const fpsArg = Math.abs(fps - 24000 / 1001) < 1e-4 ? '24000/1001' : String(fps); // camera-native 23.976
 
 async function encode(from, n, file) {
-const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', fpsArg, '-c:v', 'mjpeg', '-i', '-',
-  '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', fpsArg, '-c:v', FULL ? 'png' : 'mjpeg', '-i', '-',
+  ...(FULL ? ['-c:v', 'qtrle', '-pix_fmt', 'argb', '-r', fpsArg, '-f', 'mov'] : ['-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4']), file],
+  { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
 for (let i = 0; i < n; i++) {
   await page.evaluate((t) => window.render(t), from + i / fps);
-  const buf = await page.screenshot({ type: 'jpeg', quality: 93 });
+  const buf = FULL ? await page.screenshot({ type: 'png', omitBackground: true }) : await page.screenshot({ type: 'jpeg', quality: 93 });
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
   if (i % 250 === 0) process.stderr.write(`frame ${i}/${n}  ${((i + 1) / ((Date.now() - t0) / 1000)).toFixed(1)} fps\n`);
 }
