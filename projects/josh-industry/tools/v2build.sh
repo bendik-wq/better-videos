@@ -13,10 +13,9 @@ if [ ! -f $o/graphics.mp4 ]; then
   echo "gfx joined $p"
 fi
 cp $P/out/long4k/face-mask.png $P/out/long4k/face-frame.png $o/
-rm -rf $o/parts
-(cd $P && CLEAN_PARTS=1 PANEL=192,224,1152,1648 FACE_GRAIN=0 AUDIO_NORM=final VENC="-c:v libx264 -preset medium -crf 18 -profile:v high -level:v 5.1 -pix_fmt yuv420p" \
+(cd $P && RESUME=1 FINAL_CHUNKS=60 CLEAN_PARTS=1 PANEL=192,224,1152,1648 FACE_GRAIN=0 AUDIO_NORM=final VENC="-c:v libx264 -preset medium -crf 18 -profile:v high -level:v 5.1 -pix_fmt yuv420p" \
   python3 $R/projects/owners-academy-sales/vsl/composite.py $A $P/timeline-long.json $F $o master.mp4 > /dev/null) || { echo "FAIL composite $p"; exit 1; }
-rm -rf $o/parts $o/face.mp4
+rm -rf $o/parts $o/face.mp4 $o/final-chunks $o/audio.wav $o/face.done
 M=$o/master.mp4
 echo "$p $(du -h $M | cut -f1) $(ffprobe -v error -select_streams v -show_entries stream=codec_name,width,height,duration -of csv=p=0 $M) a=$(ffprobe -v error -select_streams a -show_entries stream=duration -of csv=p=0 $M)"
 echo "V2 DONE $p"
