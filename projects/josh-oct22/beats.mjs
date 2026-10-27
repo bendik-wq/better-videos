@@ -85,7 +85,7 @@ Object.assign(beats, {
 // 60–90 s Reels (Oct 27 re-cut)
 Object.assign(beats, {
   'xl-nlu-a~ig#1': hook('No one on your team will <em>think like you</em>.'),
-  'xl-boss-a~ig#1': hook('Taking over a company? <em>Expect people to leave.</em>'),
+  'xl-boss-0~ig#1': hook('Good news or bad news: <em>I\'m your new boss.</em>'),
   'xl-fire~ig#1': hook('Comfortable firing people? <em>Reconsider where you are.</em>'),
   'xl-money-a~ig#1': hook('We moved clinics without closing <em>a single day</em>.'),
   'xl-glory-a~ig#1': hook('You won\'t please everyone. <em>Follow your gut.</em>'),

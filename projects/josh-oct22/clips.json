@@ -194,8 +194,8 @@
   },
   "xl-boss-a": {
    "t": [
-    412.42,
-    464.94
+    463.92,
+    466.54
    ]
   },
   "xl-boss-b": {
@@ -207,12 +207,12 @@
   "xl-boss-c": {
    "t": [
     587.73,
-    590.75
+    614.64
    ]
   },
   "xl-fire": {
    "t": [
-    611.84,
+    616.4,
     698.62
    ]
   },
@@ -248,7 +248,7 @@
   },
   "xl-cult-b": {
    "t": [
-    266.66,
+    282.92,
     305.14
    ]
   },
@@ -280,6 +280,12 @@
    "t": [
     1286.85,
     1297.16
+   ]
+  },
+  "xl-boss-0": {
+   "t": [
+    288.26,
+    305.14
    ]
   }
  },
@@ -444,22 +450,24 @@
     }
    },
    "base_sequence": [
+    "xl-boss-0",
     "xl-boss-a",
     "xl-boss-b",
     "xl-boss-c"
    ],
    "sequence": [
+    "xl-boss-0~ig#1",
+    "xl-boss-0~ig#2",
+    "xl-boss-0~ig#3",
     "xl-boss-a~ig#1",
-    "xl-boss-a~ig#2",
-    "xl-boss-a~ig#3",
-    "xl-boss-a~ig#4",
-    "xl-boss-a~ig#5",
-    "xl-boss-a~ig#6",
-    "xl-boss-a~ig#7",
-    "xl-boss-a~ig#8",
     "xl-boss-b~ig#1",
     "xl-boss-b~ig#2",
-    "xl-boss-c~ig#1"
+    "xl-boss-c~ig#1",
+    "xl-boss-c~ig#2",
+    "xl-boss-c~ig#3",
+    "xl-boss-c~ig#4",
+    "xl-boss-c~ig#5",
+    "xl-boss-c~ig#6"
    ]
   },
   "ig-5-firing": {
@@ -488,8 +496,7 @@
     "xl-fire~ig#5",
     "xl-fire~ig#6",
     "xl-fire~ig#7",
-    "xl-fire~ig#8",
-    "xl-fire~ig#9"
+    "xl-fire~ig#8"
    ]
   },
   "ig-6-make-money": {
@@ -581,9 +588,6 @@
     "xl-cult-b~ig#2",
     "xl-cult-b~ig#3",
     "xl-cult-b~ig#4",
-    "xl-cult-b~ig#5",
-    "xl-cult-b~ig#6",
-    "xl-cult-b~ig#7",
     "xl-cult-c~ig#1",
     "xl-cult-c~ig#2",
     "xl-cult-c~ig#3"
@@ -618,8 +622,7 @@
     "xl-first~ig#8",
     "xl-first~ig#9",
     "xl-first~ig#10",
-    "xl-first~ig#11",
-    "xl-first~ig#12"
+    "xl-first~ig#11"
    ]
   },
   "ig-12-coffee-machine": {
