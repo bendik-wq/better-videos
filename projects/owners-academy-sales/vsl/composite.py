@@ -103,7 +103,7 @@ def norm_audio(audio):
 
 
 def final(tl, out_dir, face, audio, out_name):
-    clips = [s for s in tl["segments"] if s["kind"] == "clip"]
+    clips = [s for s in tl["segments"] if s["kind"] == "clip" and not s.get("noface")]  # noface: audio under a card
     # half-frame margins: a frame sitting exactly on a join must never fall between two windows (blank panel flash)
     on = "+".join(f"between(t,{(round(s['t0'] * FPS) - 0.5) / FPS:.4f},{(round(s['t1'] * FPS) - 0.5) / FPS:.4f})" for s in clips)
     fc = (f"[2:v]format=gray[m];[1:v][m]alphamerge[f];"

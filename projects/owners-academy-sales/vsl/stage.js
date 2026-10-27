@@ -145,6 +145,11 @@
         return;
       }
       if (e.dataset.draw !== undefined) { e.style.strokeDashoffset = e.dataset.len * (1 - ease((lt - d) / 0.8)); return; }
+      if (e.dataset.fx === 'slam') { // word hits the screen: quick fade, scale down from 1.3
+        e.style.opacity = clamp((lt - d) / 0.07);
+        e.style.transform = `scale(${1 + 0.3 * (1 - ease((lt - d) / 0.22))})`;
+        return;
+      }
       const p = ease((lt - d) / IN);
       e.style.opacity = p;
       e.style.transform = `translateY(${(1 - p) * 22}px)`;
@@ -193,8 +198,10 @@
   const cardfine = document.getElementById('cardfine');
   let cardKey = null;
   function cards(seg, t) {
-    if (!seg || seg.kind === 'clip') { card.style.display = 'none'; cardKey = null; return false; }
+    // a clip with its own html (cold open) plays Josh's audio under a full-frame card
+    if (!seg || (seg.kind === 'clip' && !seg.html)) { card.style.display = 'none'; cardKey = null; return false; }
     card.style.display = 'block';
+    card.querySelector('.bgc').style.background = seg.bg || '';
     if (cardKey !== seg.t0) {
       cardin.innerHTML = seg.html;
       cardfine.innerHTML = seg.fine || '';
