@@ -39,6 +39,6 @@ PY
 }
 run josh-oct23 oct23-0001 1ftQvsMJUJ6pAReTQQIgSDOnCkY2U47wh 3709325573 whole
 # 21 Oct waits until the 23 Oct master has been uploaded and removed (disk)
-until [ ! -f $S/v2/josh-oct23/build/master.mp4 ] && [ $(df --output=avail -B1G / | tail -1) -ge 9 ]; do sleep 300; done
+until [ ! -f $S/v2/josh-oct23/build/master.mp4 ] && [ $(df --output=avail -B1G / | tail -1) -ge 8 ]; do sleep 300; done
 run josh-oct21 oct21-0004 1FTqIHZ1pKfJgdOacaTtQRSC9gHT2BfnI 4738418613 lf-a lf-b
 echo "CHAIN2123 FINISHED"
