@@ -11,6 +11,8 @@ run() { # <project> <dir> <drive-id> <size> <parents...>
   mkdir -p $F
   if ! have $F "$@"; then
     if [ ! -f $d/rec.mp4 ]; then
+      # never download while another 4K build runs, and only with room for the source + its face crops
+      until ! pgrep -f "^/bin/bash ./(noi26|v2build)" >/dev/null && [ $(df --output=avail -B1 / | tail -1) -ge $((size + 3000000000)) ]; do sleep 300; done
       until quota_ok "$U"; do echo "$(date -u +%H:%M) $p: Drive quota still exceeded"; sleep 1800; done
       echo "$p: downloading"
       for k in $(seq 1 40); do curl -sSL -C - -o $d/rec.part "$U" && [ "$(stat -c %s $d/rec.part)" = "$size" ] && break; head -c 15 $d/rec.part | grep -q DOCTYPE && rm -f $d/rec.part; sleep 60; done
