@@ -11,7 +11,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 // CUT_ROOT: another project's folder with its own clips.json, snapped.json and (optional) beats.mjs
 const ROOT = process.env.CUT_ROOT || path.join(HERE, '..');
 const own = path.resolve(ROOT) === path.resolve(HERE, '..');
-const beats = own ? { ...vslBeats, ...faqBeats } : (await import(path.resolve(ROOT, 'beats.mjs'))).beats;
+const ext = own ? null : await import(path.resolve(ROOT, 'beats.mjs'));
+const beats = own ? { ...vslBeats, ...faqBeats } : ext.beats;
+// covers[clipId] = { html, bg }: a full-frame card over that clip while its audio plays (e.g. to hide a bad shot)
+const covers = ext?.covers || {};
 const cutName = process.argv[2] || 'vsl-b2b';
 const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'clips.json'), 'utf8'));
 const snapped = JSON.parse(fs.readFileSync(path.join(ROOT, 'snapped.json'), 'utf8'));
@@ -55,7 +58,7 @@ for (const item of seq) {
   if (!s?.words) throw new Error(`clip ${item} has no word timings; re-run snap.py for it`);
   const dur = +(s.out - s.in).toFixed(3);
   if (!chaps.length) chaps.push({ name: cut.chapter || chapterNames.start, t0: t });
-  segments.push({ kind: 'clip', id: item, t0: t, t1: t + dur, in: s.in, out: s.out });
+  segments.push({ kind: 'clip', id: item, t0: t, t1: t + dur, in: s.in, out: s.out, ...(covers[item] || {}) });
   for (const b of beats[item] || []) allBeats.push({ t0: t + b.at, html: b.html, clip: item });
 
   // captions: short single lines, broken on pauses and sentence ends

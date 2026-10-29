@@ -36,6 +36,16 @@ for k, s in enumerate(tl["segments"]):
     else:
         ff("-f", "lavfi", "-i", f"color=c=black:s=1080x1920:r={FA}", "-frames:v", str(nf), "-c:v", "libx264", "-preset", "medium", "-crf", "15", "-pix_fmt", "yuv420p", v + ".tmp.mp4")
         ff("-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", f"{nf / fps:.4f}", "-c:a", "pcm_s16le", a + ".tmp.wav")
+    # FREEZE=[[src_t0, src_t1], ...]: hold the frame at t0 through t1 (audio carries on), e.g. to keep a cigarette out of shot
+    if s["kind"] == "clip":
+        for f0, f1 in json.loads(os.environ.get("FREEZE", "[]")):
+            a0, a1 = max(f0, s["in"]), min(f1, s["in"] + nf / fps)
+            if a1 <= a0: continue
+            i0, i1 = round((a0 - s["in"]) * fps), min(nf - 1, round((a1 - s["in"]) * fps))
+            rep = i0 - 1 if i0 > 0 else i1 + 1
+            ff("-i", v + ".tmp.mp4", "-i", v + ".tmp.mp4", "-filter_complex", f"[0:v][1:v]freezeframes=first={i0}:last={i1}:replace={rep}",
+               "-c:v", "libx264", "-preset", "medium", "-crf", "15", "-pix_fmt", "yuv420p", v + ".frz.mp4")
+            os.replace(v + ".frz.mp4", v + ".tmp.mp4"); print(f"froze {s['id']} frames {i0}-{i1}", flush=True)
     os.replace(v + ".tmp.mp4", v); os.replace(a + ".tmp.wav", a)
 for n, L in (("v", vl), ("a", al)):
     open(f"{tmp}/{n}.txt", "w").writelines(f"file '{x}'\n" for x in L)

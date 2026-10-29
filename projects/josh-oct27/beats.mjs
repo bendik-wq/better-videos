@@ -70,3 +70,11 @@ Object.assign(beats, {
   'rl3-a~ig#1': hook('Is your deal <em>bankable</em>?'),
   'rl4~ig#1': hook('What the bank wants to see <em>before it lends</em>.'),
 });
+
+// Reel 4: Josh turns away from the camera while listing what the bank checks, so that part plays under a card
+const rl4List = Object.keys(S).find((id) => id.startsWith('rl4~ig#') && S[id].in <= 259 && S[id].out > 260);
+// delay (s from the part's start) of a word in that part
+const at = (w) => S[rl4List].words.find(([x]) => x.toLowerCase().startsWith(w))[1];
+export const covers = rl4List ? {
+  [rl4List]: { html: eb('What the bank wants to see') + checks([['Revenue', 0.1], ['Profitability', at('profitability')], ['Super paid', at('superannuation')], ['Tax paid', at('tax')]]) },
+} : {};
