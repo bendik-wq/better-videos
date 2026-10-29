@@ -16,6 +16,8 @@
   const IN = 0.55, OUT = 0.32;
   const clamp = (x) => Math.max(0, Math.min(1, x));
   const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+  // ease-in-out for line drawings: starts gently, lands softly (the 'clean' look)
+  const easeIO = (x) => { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
   let TL = null;
 
   /* ---------- silk background: the landing page's hero shader, dark palette ---------- */
@@ -122,7 +124,11 @@
     el.className = 'beat';
     el.innerHTML = b.html;
     splitWords(el);
-    el.querySelectorAll('[data-draw]').forEach((p) => { const L = p.getTotalLength ? 1200 : 0; p.style.strokeDasharray = L; p.dataset.len = L; });
+    // real stroke length (padded so round caps stay hidden until drawn); data-dur sets the draw time (default 0.8 s)
+    el.querySelectorAll('[data-draw]').forEach((p) => {
+      let L = 1200; try { L = Math.ceil(p.getTotalLength()) + 8 || 1200; } catch (e) { /* not a geometry element */ }
+      p.style.strokeDasharray = L; p.dataset.len = L;
+    });
     built.set(i, el);
     return el;
   }
@@ -144,7 +150,7 @@
         e.style.opacity = clamp((lt - d) / 0.2);
         return;
       }
-      if (e.dataset.draw !== undefined) { e.style.strokeDashoffset = e.dataset.len * (1 - ease((lt - d) / 0.8)); return; }
+      if (e.dataset.draw !== undefined) { e.style.strokeDashoffset = e.dataset.len * (1 - easeIO((lt - d) / parseFloat(e.dataset.dur || 0.8))); return; }
       if (e.dataset.fx === 'slam') { // word hits the screen: quick fade, scale down from 1.3
         e.style.opacity = clamp((lt - d) / 0.07);
         e.style.transform = `scale(${1 + 0.3 * (1 - ease((lt - d) / 0.22))})`;

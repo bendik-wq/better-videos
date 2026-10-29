@@ -1,0 +1,121 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.38,
+    10.7
+   ]
+  },
+  "lf-2": {
+   "t": [
+    17.74,
+    45.89
+   ]
+  },
+  "lf-3": {
+   "t": [
+    54.03,
+    109.26
+   ]
+  },
+  "lf-4": {
+   "t": [
+    119.68,
+    174.17
+   ]
+  },
+  "lf-5": {
+   "t": [
+    183.32,
+    239.0
+   ]
+  },
+  "lf-6": {
+   "t": [
+    248.24,
+    327.08
+   ]
+  },
+  "lf-7": {
+   "t": [
+    332.14,
+    342.24
+   ]
+  },
+  "lf-8": {
+   "t": [
+    368.93,
+    383.29
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "No money isn't the obstacle (Josh, 27 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "intro": false,
+   "cards": {},
+   "chapters": {
+    "start": "Not the obstacle"
+   },
+   "chapterMarks": [
+    [
+     30.4,
+     "The right bankers"
+    ],
+    [
+     119.6,
+     "The real obstacle"
+    ],
+    [
+     160.1,
+     "Fund the asset, not you"
+    ],
+    [
+     209.1,
+     "Is it bankable?"
+    ],
+    [
+     248.2,
+     "What the bank wants"
+    ],
+    [
+     298.8,
+     "DSCR"
+    ],
+    [
+     368.9,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "Not the obstacle"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ],
+   "sequence": [
+    {
+     "chapter": "Not the obstacle"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ]
+  }
+ }
+}

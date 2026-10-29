@@ -1,0 +1,66 @@
+/* "Clean" full-screen layout (render.mjs --full --clean): Josh fills the frame; Apple-style type (heavy Inter,
+   tight tracking, white with a grey/gold contrast word) and thin white line drawings that draw on smoothly.
+   Headlines sit left over a soft dark fade that only shows while a beat is on screen. */
+@font-face { font-family: "InterV"; src: url(fonts/Inter-Var.woff2); font-weight: 300 800; }
+html, body { background: transparent !important; }
+#silk, #face { display: none !important; }
+#scrim { background: linear-gradient(180deg, rgba(5,8,15,.45) 0%, rgba(5,8,15,0) 13%, rgba(5,8,15,0) 70%, rgba(5,8,15,.55) 100%) !important; }
+#fscrim { position: absolute; inset: 0; opacity: 0;
+  background: linear-gradient(90deg, rgba(5,8,15,.86) 0%, rgba(5,8,15,.74) 28%, rgba(5,8,15,.30) 46%, rgba(5,8,15,0) 58%); }
+header { top: 46px !important; }
+.wordmark { font: 600 24px/1 "InterV" !important; letter-spacing: -.01em !important; color: rgba(255,255,255,.92); }
+.chap { font: 500 16px/1 "InterV" !important; color: rgba(255,255,255,.75) !important; }
+.ticks i { width: 22px !important; height: 2px !important; background: rgba(255,255,255,.25) !important; }
+.ticks i.on { background: rgba(255,255,255,.7) !important; }
+.ticks i.now { background: #fff !important; }
+
+#stage { left: 110px !important; right: auto !important; width: 780px !important; top: 150px !important; height: 690px !important; overflow: visible; }
+.beat { gap: 18px !important; overflow: visible; }
+.beat .eyebrow { font: 600 19px/1.2 "InterV" !important; letter-spacing: .14em !important; text-transform: uppercase; color: rgba(255,255,255,.6) !important; }
+.beat .big, .beat .mid { font-family: "InterV" !important; font-weight: 700 !important; letter-spacing: -.035em !important; color: #fff; text-wrap: balance; }
+.beat .big { font-size: 84px !important; line-height: 1.02 !important; }
+.beat .mid { font-size: 64px !important; line-height: 1.06 !important; }
+.beat em { font-style: normal; color: #fdd050; }
+.beat .small { font: 450 28px/1.45 "InterV" !important; color: rgba(255,255,255,.75) !important; }
+.beat .list .li { font: 600 34px/1.2 "InterV" !important; letter-spacing: -.02em; }
+.beat .list .li i { border-color: rgba(255,255,255,.7) !important; color: #fff !important; }
+.beat .kpi .v { font-family: "InterV" !important; font-weight: 700 !important; letter-spacing: -.04em !important; font-size: 64px !important; }
+.beat .kpi .l { font-family: "InterV" !important; color: rgba(255,255,255,.65) !important; }
+
+/* line drawings: one SVG over the whole frame (the stage sits at 110,150) */
+.ann { position: absolute; left: -110px; top: -150px; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+.ann path, .ann circle, .ann ellipse, .ann line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,.35)); }
+.ann .gold { stroke: #fdd050; }
+.ann text { fill: #fff; font: 600 30px "InterV"; letter-spacing: -.01em; filter: drop-shadow(0 1px 4px rgba(0,0,0,.45)); }
+.pill { position: absolute; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35);
+  backdrop-filter: blur(6px); font: 600 24px/1 "InterV"; color: #fff; letter-spacing: -.01em; white-space: nowrap; }
+
+#cap { left: 260px !important; right: 260px !important; top: 952px !important; height: 70px !important; justify-content: center; }
+#cap .line { font: 600 36px/1.25 "InterV" !important; letter-spacing: -.01em; color: rgba(255,255,255,.62) !important; text-shadow: 0 2px 14px rgba(0,0,0,.65); }
+#cap .w.on, #cap .w.past { color: #fff !important; background: none !important; }
+
+/* cards: near-black, big heavy type */
+#card .bgc { background: radial-gradient(1300px 800px at 50% 45%, #111a2e 0%, #05080f 70%) !important; }
+#card .ttl { font-family: "InterV" !important; font-weight: 800 !important; letter-spacing: -.045em !important; font-size: 112px !important; line-height: 1.0 !important; }
+#card .ttl em { font-style: normal; color: #fdd050; }
+#card .num { font: 600 18px/1 "InterV" !important; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.6) !important; }
+#card .rule { background: #fff !important; height: 3px !important; }
+
+/* inline line art inside beats (josh-oct27 helpers) */
+.beat svg.ln { overflow: visible; display: block; }
+.beat svg.ln path, .beat svg.ln line { fill: none; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+.beat svg.ln .g { stroke: #fdd050; }
+.beat .ring { position: relative; display: inline-block; }
+.beat .ring > svg { position: absolute; left: -12%; top: -18%; width: 124%; height: 136%; overflow: visible; }
+.beat .row2 { display: grid; grid-template-columns: 1fr 2px 1fr; gap: 34px; align-items: start; }
+.beat .row2 .h { font: 700 48px/1.1 "InterV"; letter-spacing: -.03em; color: #fff; }
+.beat .row2 .s { font: 500 22px/1.35 "InterV"; color: rgba(255,255,255,.65); margin-top: 10px; }
+.beat .chk { display: grid; gap: 16px; }
+  .beat .chk .r { display: grid; grid-template-columns: 40px 1fr; gap: 18px; align-items: center; font: 650 44px/1.15 "InterV"; letter-spacing: -.025em; color: #fff; }
+.beat .chk .r.no span { color: rgba(255,255,255,.5); }
+.beat .frac { display: flex; align-items: center; gap: 26px; font: 700 46px/1.1 "InterV"; letter-spacing: -.03em; }
+.beat .frac .f { display: grid; gap: 12px; justify-items: center; text-align: center; }
+.beat .frac .res { color: #fdd050; font-size: 56px; }
+.beat .quote { font: 600 42px/1.25 "InterV"; letter-spacing: -.02em; }

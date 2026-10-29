@@ -67,7 +67,7 @@ if (V) {
 }
 // --full: Josh fills the frame; the graphics render with a transparent background (PNG frames, alpha .mov)
 const FULL = args.includes('--full');
-if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : 'stage-full.css') });
+if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : args.includes('--clean') ? 'stage-clean.css' : 'stage-full.css') });
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 await page.evaluate(() => document.fonts.ready);
@@ -87,7 +87,11 @@ const fpsArg = Math.abs(fps - 24000 / 1001) < 1e-4 ? '24000/1001' : String(fps);
 
 async function encode(from, n, file) {
 const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', fpsArg, '-c:v', FULL ? 'png' : 'mjpeg', '-i', '-',
-  ...(FULL ? ['-c:v', 'qtrle', '-pix_fmt', 'argb', '-r', fpsArg, '-f', 'mov'] : ['-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4']), file],
+  ...(FULL && file.includes('.mov') ? ['-c:v', 'qtrle', '-pix_fmt', 'argb', '-r', fpsArg, '-f', 'mov', file]
+    // .mp4 with --full: colour layer + a separate greyscale alpha layer (<name>-alpha.mp4), far smaller than qtrle
+    : FULL ? ['-filter_complex', '[0:v]format=rgba,split[c][a];[a]alphaextract,format=yuv420p[m]', '-map', '[c]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16',
+        '-pix_fmt', 'yuv444p', '-r', fpsArg, '-f', 'mp4', file, '-map', '[m]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '14', '-r', fpsArg, '-f', 'mp4', file.replace(/\.mp4/, '-alpha.mp4')]
+    : ['-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4', file])],
   { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
 for (let i = 0; i < n; i++) {
