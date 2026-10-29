@@ -68,6 +68,7 @@ if (V) {
 // --full: Josh fills the frame; the graphics render with a transparent background (PNG frames, alpha .mov)
 const FULL = args.includes('--full');
 if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : args.includes('--clean') ? 'stage-clean.css' : 'stage-full.css') });
+if (FULL && V && args.includes('--clean')) await page.addStyleTag({ path: path.join(HERE, 'stage-vclean.css') });
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 await page.evaluate(() => document.fonts.ready);

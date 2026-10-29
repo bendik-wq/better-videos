@@ -47,6 +47,85 @@
     368.93,
     383.29
    ]
+  },
+  "rl1-a": {
+   "t": [
+    0.38,
+    10.7
+   ],
+   "dropt": [
+    [
+     9.4,
+     11.0
+    ]
+   ]
+  },
+  "rl1-b": {
+   "t": [
+    17.74,
+    45.89
+   ],
+   "dropt": [
+    [
+     28.4,
+     29.3
+    ]
+   ],
+   "end_by": 46.55
+  },
+  "rl1-c": {
+   "t": [
+    54.03,
+    61.11
+   ],
+   "dropt": [
+    [
+     60.3,
+     61.0
+    ]
+   ]
+  },
+  "rl1-d": {
+   "t": [
+    64.96,
+    83.36
+   ]
+  },
+  "rl2-a": {
+   "t": [
+    86.14,
+    109.26
+   ]
+  },
+  "rl2-b": {
+   "t": [
+    119.68,
+    166.35
+   ]
+  },
+  "rl3-a": {
+   "t": [
+    160.19,
+    174.17
+   ]
+  },
+  "rl3-b": {
+   "t": [
+    183.32,
+    235.16
+   ]
+  },
+  "rl4": {
+   "t": [
+    248.24,
+    327.08
+   ],
+   "dropt": [
+    [
+     275.3,
+     280.85
+    ]
+   ]
   }
  },
  "cuts": {
@@ -102,6 +181,87 @@
     "lf-6",
     "lf-7",
     "lf-8"
+   ]
+  },
+  "ig-1-not-the-obstacle": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Talk to bankers who <em>know your industry</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl1-a",
+    "rl1-b",
+    "rl1-c",
+    "rl1-d"
+   ]
+  },
+  "ig-2-fund-the-asset": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Present your deal as <em>an asset</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl2-a",
+    "rl2-b"
+   ]
+  },
+  "ig-3-bankable": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Bankable means <em>the cash covers the repayments</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl3-a",
+    "rl3-b"
+   ]
+  },
+  "ig-4-what-banks-want": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Revenue. Profit. Tax paid. <em>DSCR.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl4"
    ]
   }
  }

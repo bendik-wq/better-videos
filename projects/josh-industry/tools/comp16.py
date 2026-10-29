@@ -12,7 +12,7 @@ for k, s in enumerate(tl["segments"]):
     if os.path.exists(v) and os.path.exists(a): continue
     if s["kind"] == "clip":
         ff("-ss", f"{s['in']:.3f}", "-i", rec, "-vf", f"scale={W}:{H}:flags=lanczos,tpad=stop_mode=clone:stop=50,format=yuv420p", "-frames:v", str(nf),
-           "-an", "-r", FA, "-c:v", "libx264", "-preset", "medium", "-crf", "14", v + ".tmp.mp4")
+           "-an", "-r", FA, "-c:v", "libx264", "-preset", "medium", "-crf", "14" if H <= 1080 else "16", v + ".tmp.mp4")
         d = s["t1"] - s["t0"]
         ff("-ss", f"{s['in']:.3f}", "-t", f"{d:.3f}", "-i", A, "-af", f"afade=t=in:d=0.04,afade=t=out:st={max(0, d - 0.06):.3f}:d=0.06,apad=whole_dur={nf / fps:.4f},atrim=end={nf / fps:.4f}",
            "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", a + ".tmp.wav")
@@ -24,6 +24,7 @@ for n, L in (("v", vl), ("a", al)):
     open(f"{tmp}/{n}.txt", "w").writelines(f"file '{x}'\n" for x in L)
 ff("-f", "concat", "-safe", "0", "-i", f"{tmp}/v.txt", "-c", "copy", f"{tmp}/video.mp4")
 ff("-f", "concat", "-safe", "0", "-i", f"{tmp}/a.txt", "-c", "copy", f"{tmp}/audio.wav")
+for x in vl: os.remove(x)   # joined; free the disk before the final encode (4K parts are large)
 r = subprocess.run(["ffmpeg", "-hide_banner", "-i", f"{tmp}/audio.wav", "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True).stderr
 I = float(r.rsplit("I:", 1)[1].split("LUFS")[0]); pk = float(r.rsplit("Peak:", 1)[1].split("dBFS")[0]); g = min(-16 - I, -1 - pk)
 print(f"audio {I:.1f} LUFS, peak {pk:.1f} dBFS -> gain {g:+.1f} dB", flush=True)

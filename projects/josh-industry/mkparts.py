@@ -9,6 +9,7 @@ spec.json:
    "cuts":  {"name": {..., "base_sequence": ["id", {"chapter": "..."}, {"card": "..."}],
                      "split": false | "gap": 0.9, "ns": "~ig"}}}
 
+end_by: (Reels) the clip's last part ends by this source time, but never before its last word ends.
 drop: words removed wherever they occur in the clip (matched without punctuation, case-insensitive).
 dropt: source-time ranges removed. Every cut is placed at the quietest 10 ms in the gap between the
 kept and the dropped word (whisper's word edges are loose), so no fragment of a dropped word survives.
@@ -108,6 +109,10 @@ for name, cut in spec["cuts"].items():
         for k, r in enumerate(runs, 1):
             pid = f"{item}{cut.get('ns', '')}#{k}"
             out[pid] = part(ws, r[0], r[-1], r[0] == 0, r[-1] == n - 1)
+            # clip option end_by: the clip's last part ends no later than this source time (e.g. before a hand comes into shot)
+            eb = spec["clips"][item].get("end_by")
+            if eb is not None and k == len(runs) and out[pid]["out"] > eb:
+                out[pid]["out"] = round(max(eb, ws[r[-1]][2] + 0.02), 3)
             seq.append(pid)
     cut["sequence"] = seq
     clips_json["cuts"][name] = cut

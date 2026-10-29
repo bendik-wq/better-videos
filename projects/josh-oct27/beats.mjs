@@ -61,3 +61,12 @@ for (const [t, html] of longBeats) {
   const p = longParts.find((id) => S[id] && t >= S[id].in - 0.05 && t < S[id].out) ?? longParts.find((id) => S[id] && S[id].in > t);
   if (p) (beats[p] ||= []).push({ at: +Math.max(0, t - S[p].in).toFixed(2), html });
 }
+
+// Reels: one hook headline over the whole clip
+const hook = (h) => [{ at: 0, html: eb('Josh Li · Founder, JC Health Group', -1) + big(h, -1, 'mid') }];
+Object.assign(beats, {
+  'rl1-a~ig#1': hook('No money is <em>not</em> the obstacle.'),
+  'rl2-a~ig#1': hook('The bank funds the <em>asset</em>. Not you.'),
+  'rl3-a~ig#1': hook('Is your deal <em>bankable</em>?'),
+  'rl4~ig#1': hook('What the bank wants to see <em>before it lends</em>.'),
+});
