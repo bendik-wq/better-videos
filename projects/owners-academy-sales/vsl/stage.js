@@ -117,6 +117,13 @@
   }
 
   const built = new Map();
+  // real stroke length (padded so round caps stay hidden until drawn); data-dur sets the draw time (default 0.8 s)
+  function initDraw(el) {
+    el.querySelectorAll('[data-draw]').forEach((p) => {
+      let L = 1200; try { L = Math.ceil(p.getTotalLength()) + 8 || 1200; } catch (e) { /* not a geometry element */ }
+      p.style.strokeDasharray = L; p.dataset.len = L;
+    });
+  }
   function build(i) {
     if (built.has(i)) return built.get(i);
     const b = TL.beats[i];
@@ -125,10 +132,7 @@
     el.innerHTML = b.html;
     splitWords(el);
     // real stroke length (padded so round caps stay hidden until drawn); data-dur sets the draw time (default 0.8 s)
-    el.querySelectorAll('[data-draw]').forEach((p) => {
-      let L = 1200; try { L = Math.ceil(p.getTotalLength()) + 8 || 1200; } catch (e) { /* not a geometry element */ }
-      p.style.strokeDasharray = L; p.dataset.len = L;
-    });
+    initDraw(el);
     built.set(i, el);
     return el;
   }
@@ -212,6 +216,7 @@
       cardin.innerHTML = seg.html;
       cardfine.innerHTML = seg.fine || '';
       splitWords(cardin);
+      initDraw(cardin);
       cardKey = seg.t0;
     }
     const lt = t - seg.t0;

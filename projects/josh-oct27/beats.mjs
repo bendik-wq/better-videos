@@ -76,5 +76,5 @@ const rl4List = Object.keys(S).find((id) => id.startsWith('rl4~ig#') && S[id].in
 // delay (s from the part's start) of a word in that part
 const at = (w) => S[rl4List].words.find(([x]) => x.toLowerCase().startsWith(w))[1];
 export const covers = rl4List ? {
-  [rl4List]: { html: eb('What the bank wants to see') + checks([['Revenue', 0.1], ['Profitability', at('profitability')], ['Super paid', at('superannuation')], ['Tax paid', at('tax')]]) },
+  [rl4List]: { html: `<style>#cardin .chk{display:grid;gap:34px}#cardin .chk .r{display:grid;grid-template-columns:68px 1fr;gap:28px;align-items:center;font:700 80px/1.05 InterV;letter-spacing:-.035em;color:#fff}#cardin .chk svg{width:68px;height:68px;overflow:visible;display:block}#cardin svg.ln path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}#cardin svg.ln .g{stroke:#fdd050}#cardin .eyebrow{font:600 28px/1.2 InterV!important;letter-spacing:.14em!important;text-transform:uppercase;color:rgba(255,255,255,.6)!important;margin-bottom:30px}</style><div class="beat" style="position:relative;inset:auto">` + eb('What the bank wants to see') + checks([['Revenue', 0.1], ['Profitability', at('profitability')], ['Super paid', at('superannuation')], ['Tax paid', at('tax')]]) + '</div>' },
 } : {};
