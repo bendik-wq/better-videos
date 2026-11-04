@@ -1,0 +1,960 @@
+[
+ {
+  "t": 0.0,
+  "dur": 6.0,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-003"
+ },
+ {
+  "t": 6.0,
+  "dur": 2.8,
+  "job": "number",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-010"
+ },
+ {
+  "t": 8.8,
+  "dur": 6.0,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-017"
+ },
+ {
+  "t": 14.8,
+  "dur": 4.4,
+  "job": "person",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "CHR-002"
+ },
+ {
+  "t": 19.2,
+  "dur": 2.1,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "close",
+  "shot": "REV-012"
+ },
+ {
+  "t": 21.3,
+  "dur": 6.3,
+  "job": "tension",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "OBJ-010"
+ },
+ {
+  "t": 27.6,
+  "dur": 5.7,
+  "job": "object",
+  "energy": "mid",
+  "scale": "close",
+  "shot": "OBJ-014"
+ },
+ {
+  "t": 33.2,
+  "dur": 6.0,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "DAT-012"
+ },
+ {
+  "t": 39.2,
+  "dur": 3.0,
+  "job": "number",
+  "energy": "high",
+  "scale": "close",
+  "shot": "OBJ-008"
+ },
+ {
+  "t": 42.2,
+  "dur": 6.0,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "REV-008"
+ },
+ {
+  "t": 48.2,
+  "dur": 3.0,
+  "job": "tension",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "OBJ-018"
+ },
+ {
+  "t": 51.2,
+  "dur": 8.2,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-012"
+ },
+ {
+  "t": 59.4,
+  "dur": 4.4,
+  "job": "object",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "OBJ-002"
+ },
+ {
+  "t": 63.8,
+  "dur": 9.6,
+  "job": "time",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "DAT-011"
+ },
+ {
+  "t": 73.4,
+  "dur": 5.3,
+  "job": "tension",
+  "energy": "low",
+  "scale": "close",
+  "shot": "EST-012"
+ },
+ {
+  "t": 78.7,
+  "dur": 6.8,
+  "job": "chapter",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "TRN-003"
+ },
+ {
+  "t": 85.6,
+  "dur": 7.1,
+  "job": "place",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "EST-009"
+ },
+ {
+  "t": 92.7,
+  "dur": 5.5,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "REV-014"
+ },
+ {
+  "t": 98.2,
+  "dur": 5.6,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-007"
+ },
+ {
+  "t": 103.8,
+  "dur": 3.6,
+  "job": "object",
+  "energy": "mid",
+  "shot": "REV-016"
+ },
+ {
+  "t": 107.4,
+  "dur": 8.5,
+  "job": "tension",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "EST-021"
+ },
+ {
+  "t": 116.0,
+  "dur": 6.3,
+  "job": "time",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "TRN-017"
+ },
+ {
+  "t": 122.3,
+  "dur": 5.1,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-001"
+ },
+ {
+  "t": 127.4,
+  "dur": 7.9,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-020"
+ },
+ {
+  "t": 135.2,
+  "dur": 6.8,
+  "job": "object",
+  "energy": "high",
+  "scale": "close",
+  "shot": "OBJ-015"
+ },
+ {
+  "t": 142.0,
+  "dur": 6.4,
+  "job": "tension",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "CHR-003"
+ },
+ {
+  "t": 148.4,
+  "dur": 9.6,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "DAT-013"
+ },
+ {
+  "t": 158.0,
+  "dur": 5.0,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-019"
+ },
+ {
+  "t": 163.0,
+  "dur": 9.6,
+  "job": "tension",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-014"
+ },
+ {
+  "t": 172.6,
+  "dur": 5.0,
+  "job": "person",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "CHR-004"
+ },
+ {
+  "t": 177.6,
+  "dur": 6.0,
+  "job": "time",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "TRN-001"
+ },
+ {
+  "t": 183.6,
+  "dur": 4.8,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-004"
+ },
+ {
+  "t": 188.4,
+  "dur": 10.4,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-011"
+ },
+ {
+  "t": 198.7,
+  "dur": 2.9,
+  "job": "reveal",
+  "energy": "high",
+  "scale": "medium",
+  "shot": "TRN-010"
+ },
+ {
+  "t": 201.6,
+  "dur": 8.4,
+  "job": "person",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "CHR-014"
+ },
+ {
+  "t": 210.0,
+  "dur": 5.4,
+  "job": "person",
+  "energy": "mid",
+  "scale": "close",
+  "shot": "CHR-012"
+ },
+ {
+  "t": 215.4,
+  "dur": 10.0,
+  "job": "object",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "ONE-011"
+ },
+ {
+  "t": 225.4,
+  "dur": 4.3,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "OBJ-006"
+ },
+ {
+  "t": 229.7,
+  "dur": 6.7,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "EST-005"
+ },
+ {
+  "t": 236.4,
+  "dur": 6.4,
+  "job": "tension",
+  "energy": "low",
+  "scale": "close",
+  "shot": "CHR-005"
+ },
+ {
+  "t": 242.8,
+  "dur": 9.3,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-022"
+ },
+ {
+  "t": 252.1,
+  "dur": 4.2,
+  "job": "reveal",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "REV-010"
+ },
+ {
+  "t": 256.3,
+  "dur": 6.6,
+  "job": "reveal",
+  "energy": "low",
+  "shot": "REV-002"
+ },
+ {
+  "t": 262.9,
+  "dur": 3.5,
+  "job": "mechanism",
+  "energy": "low",
+  "scale": "close",
+  "shot": "DAT-008"
+ },
+ {
+  "t": 266.4,
+  "dur": 5.5,
+  "job": "mechanism",
+  "energy": "mid",
+  "shot": "ONE-028"
+ },
+ {
+  "t": 272.0,
+  "dur": 8.5,
+  "job": "memory",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "ONE-007"
+ },
+ {
+  "t": 280.5,
+  "dur": 5.5,
+  "job": "memory",
+  "energy": "mid",
+  "shot": "TRN-013"
+ },
+ {
+  "t": 286.0,
+  "dur": 7.3,
+  "job": "person",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "CHR-010"
+ },
+ {
+  "t": 293.3,
+  "dur": 4.7,
+  "job": "person",
+  "energy": "mid",
+  "shot": "CHR-009"
+ },
+ {
+  "t": 298.0,
+  "dur": 10.2,
+  "job": "tension",
+  "energy": "mid",
+  "scale": "close",
+  "shot": "ONE-017"
+ },
+ {
+  "t": 308.2,
+  "dur": 7.8,
+  "job": "mechanism",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "DAT-018"
+ },
+ {
+  "t": 316.0,
+  "dur": 8.8,
+  "job": "time",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "END-008"
+ },
+ {
+  "t": 324.8,
+  "dur": 4.2,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-005"
+ },
+ {
+  "t": 329.0,
+  "dur": 6.6,
+  "job": "object",
+  "energy": "mid",
+  "shot": "OBJ-021"
+ },
+ {
+  "t": 335.6,
+  "dur": 4.2,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "DAT-005"
+ },
+ {
+  "t": 339.8,
+  "dur": 6.6,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "TRN-011"
+ },
+ {
+  "t": 346.4,
+  "dur": 9.1,
+  "job": "reveal",
+  "energy": "high",
+  "scale": "close",
+  "shot": "REV-018"
+ },
+ {
+  "t": 355.5,
+  "dur": 4.4,
+  "job": "object",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "OBJ-013"
+ },
+ {
+  "t": 360.0,
+  "dur": 6.9,
+  "job": "object",
+  "energy": "mid",
+  "shot": "REV-001"
+ },
+ {
+  "t": 366.9,
+  "dur": 4.4,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-016"
+ },
+ {
+  "t": 371.4,
+  "dur": 6.9,
+  "job": "object",
+  "energy": "mid",
+  "shot": "EST-010"
+ },
+ {
+  "t": 378.0,
+  "dur": 8.3,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "TRN-018"
+ },
+ {
+  "t": 386.3,
+  "dur": 5.3,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "ONE-022"
+ },
+ {
+  "t": 391.6,
+  "dur": 7.1,
+  "job": "tension",
+  "energy": "low",
+  "shot": "REV-019"
+ },
+ {
+  "t": 398.7,
+  "dur": 4.5,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "ONE-025"
+ },
+ {
+  "t": 403.2,
+  "dur": 8.2,
+  "job": "place",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "EST-011"
+ },
+ {
+  "t": 411.4,
+  "dur": 5.2,
+  "job": "place",
+  "energy": "mid",
+  "shot": "DAT-001"
+ },
+ {
+  "t": 416.6,
+  "dur": 8.2,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-009"
+ },
+ {
+  "t": 424.8,
+  "dur": 5.2,
+  "job": "object",
+  "energy": "mid",
+  "shot": "END-010"
+ },
+ {
+  "t": 430.0,
+  "dur": 7.2,
+  "job": "number",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-004"
+ },
+ {
+  "t": 437.2,
+  "dur": 4.6,
+  "job": "number",
+  "energy": "low",
+  "shot": "DAT-006"
+ },
+ {
+  "t": 441.8,
+  "dur": 7.2,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "OBJ-020"
+ },
+ {
+  "t": 449.0,
+  "dur": 4.6,
+  "job": "object",
+  "energy": "mid",
+  "shot": "REV-011"
+ },
+ {
+  "t": 453.6,
+  "dur": 8.5,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "REV-022"
+ },
+ {
+  "t": 462.1,
+  "dur": 5.5,
+  "job": "reveal",
+  "energy": "mid",
+  "shot": "TRN-016"
+ },
+ {
+  "t": 467.6,
+  "dur": 6.4,
+  "job": "time",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "TRN-012"
+ },
+ {
+  "t": 474.0,
+  "dur": 5.1,
+  "job": "object",
+  "energy": "low",
+  "scale": "close",
+  "shot": "ONE-005"
+ },
+ {
+  "t": 479.2,
+  "dur": 8.0,
+  "job": "reveal",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "REV-017"
+ },
+ {
+  "t": 487.2,
+  "dur": 7.9,
+  "job": "mechanism",
+  "energy": "low",
+  "scale": "close",
+  "shot": "DAT-015"
+ },
+ {
+  "t": 495.1,
+  "dur": 5.1,
+  "job": "mechanism",
+  "energy": "mid",
+  "shot": "CHR-015"
+ },
+ {
+  "t": 500.2,
+  "dur": 7.9,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-002"
+ },
+ {
+  "t": 508.1,
+  "dur": 5.1,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "CHR-006"
+ },
+ {
+  "t": 513.2,
+  "dur": 6.0,
+  "job": "number",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "ONE-004"
+ },
+ {
+  "t": 519.2,
+  "dur": 3.8,
+  "job": "number",
+  "energy": "mid",
+  "shot": "DAT-007"
+ },
+ {
+  "t": 523.2,
+  "dur": 5.7,
+  "job": "reveal",
+  "energy": "high",
+  "scale": "close",
+  "shot": "REV-006"
+ },
+ {
+  "t": 528.9,
+  "dur": 4.8,
+  "job": "tension",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "CHR-016"
+ },
+ {
+  "t": 533.7,
+  "dur": 7.5,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "EST-022"
+ },
+ {
+  "t": 541.2,
+  "dur": 6.0,
+  "job": "mechanism",
+  "energy": "mid",
+  "scale": "medium",
+  "shot": "DAT-017"
+ },
+ {
+  "t": 547.2,
+  "dur": 9.4,
+  "job": "number",
+  "energy": "low",
+  "scale": "close",
+  "shot": "DAT-009"
+ },
+ {
+  "t": 556.6,
+  "dur": 3.7,
+  "job": "person",
+  "energy": "mid",
+  "scale": "wide",
+  "shot": "CHR-020"
+ },
+ {
+  "t": 560.3,
+  "dur": 5.7,
+  "job": "person",
+  "energy": "low",
+  "shot": "CHR-019"
+ },
+ {
+  "t": 566.0,
+  "dur": 5.6,
+  "job": "object",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "END-014"
+ },
+ {
+  "t": 571.6,
+  "dur": 3.6,
+  "job": "object",
+  "energy": "mid",
+  "shot": "EST-006"
+ },
+ {
+  "t": 575.1,
+  "dur": 8.9,
+  "job": "object",
+  "energy": "mid",
+  "scale": "close",
+  "shot": "ONE-008"
+ },
+ {
+  "t": 584.0,
+  "dur": 9.4,
+  "job": "time",
+  "energy": "mid",
+  "shot": "TRN-014"
+ },
+ {
+  "t": 593.4,
+  "dur": 4.5,
+  "job": "tension",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "DAT-019"
+ },
+ {
+  "t": 597.9,
+  "dur": 7.0,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "DAT-022"
+ },
+ {
+  "t": 604.9,
+  "dur": 3.7,
+  "job": "reveal",
+  "energy": "high",
+  "shot": "ONE-006"
+ },
+ {
+  "t": 608.6,
+  "dur": 5.9,
+  "job": "reveal",
+  "energy": "low",
+  "shot": "CHR-011"
+ },
+ {
+  "t": 614.5,
+  "dur": 4.5,
+  "job": "object",
+  "energy": "low",
+  "shot": "OBJ-003"
+ },
+ {
+  "t": 619.0,
+  "dur": 7.0,
+  "job": "object",
+  "energy": "mid",
+  "shot": "TRN-004"
+ },
+ {
+  "t": 626.0,
+  "dur": 7.4,
+  "job": "mechanism",
+  "energy": "mid",
+  "shot": "DAT-010"
+ },
+ {
+  "t": 633.4,
+  "dur": 4.8,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "OBJ-017"
+ },
+ {
+  "t": 638.2,
+  "dur": 7.4,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "DAT-012"
+ },
+ {
+  "t": 645.6,
+  "dur": 4.8,
+  "job": "object",
+  "energy": "low",
+  "shot": "OBJ-014"
+ },
+ {
+  "t": 650.4,
+  "dur": 7.4,
+  "job": "object",
+  "energy": "mid",
+  "shot": "OBJ-010"
+ },
+ {
+  "t": 657.8,
+  "dur": 4.8,
+  "job": "object",
+  "energy": "mid",
+  "shot": "OBJ-018"
+ },
+ {
+  "t": 662.8,
+  "dur": 7.9,
+  "job": "number",
+  "energy": "mid",
+  "shot": "TRN-005"
+ },
+ {
+  "t": 670.7,
+  "dur": 5.1,
+  "job": "number",
+  "energy": "low",
+  "shot": "OBJ-008"
+ },
+ {
+  "t": 675.8,
+  "dur": 9.1,
+  "job": "place",
+  "energy": "low",
+  "scale": "wide",
+  "shot": "DAT-003"
+ },
+ {
+  "t": 684.9,
+  "dur": 5.9,
+  "job": "place",
+  "energy": "mid",
+  "shot": "DAT-011"
+ },
+ {
+  "t": 690.8,
+  "dur": 7.9,
+  "job": "object",
+  "energy": "low",
+  "shot": "OBJ-002"
+ },
+ {
+  "t": 698.7,
+  "dur": 5.1,
+  "job": "object",
+  "energy": "mid",
+  "shot": "OBJ-012"
+ },
+ {
+  "t": 703.8,
+  "dur": 7.9,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "EST-012"
+ },
+ {
+  "t": 711.7,
+  "dur": 5.1,
+  "job": "tension",
+  "energy": "low",
+  "shot": "END-002"
+ },
+ {
+  "t": 716.4,
+  "dur": 8.9,
+  "job": "mechanism",
+  "energy": "mid",
+  "shot": "TRN-003"
+ },
+ {
+  "t": 725.3,
+  "dur": 5.7,
+  "job": "mechanism",
+  "energy": "low",
+  "shot": "REV-014"
+ },
+ {
+  "t": 731.0,
+  "dur": 7.3,
+  "job": "reveal",
+  "energy": "low",
+  "scale": "close",
+  "shot": "REV-012"
+ },
+ {
+  "t": 738.3,
+  "dur": 4.7,
+  "job": "reveal",
+  "energy": "mid",
+  "shot": "CHR-002"
+ },
+ {
+  "t": 743.0,
+  "dur": 7.8,
+  "job": "tension",
+  "energy": "low",
+  "scale": "medium",
+  "shot": "EST-021"
+ },
+ {
+  "t": 750.8,
+  "dur": 5.0,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "CHR-003"
+ },
+ {
+  "t": 755.8,
+  "dur": 7.8,
+  "job": "tension",
+  "energy": "mid",
+  "shot": "OBJ-007"
+ },
+ {
+  "t": 763.6,
+  "dur": 7.6,
+  "job": "object",
+  "energy": "mid",
+  "scale": "close",
+  "shot": "OBJ-019"
+ },
+ {
+  "t": 771.2,
+  "dur": 4.8,
+  "job": "object",
+  "energy": "low",
+  "shot": "OBJ-001"
+ },
+ {
+  "t": 776.0,
+  "dur": 9.0,
+  "job": "ending",
+  "energy": "low",
+  "shot": "CHR-007"
+ },
+ {
+  "t": 785.0,
+  "dur": 5.8,
+  "job": "ending",
+  "energy": "mid",
+  "shot": "FOL-020"
+ }
+]

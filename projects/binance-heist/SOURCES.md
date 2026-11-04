@@ -79,6 +79,9 @@ Not used (failed checks): tech-insider.org pages (unverifiable details; tier 7) 
 | S39 | Axie/Ronin 2022: fake job offer + PDF, per The Block's anonymous sources; Sky Mavis only said "advanced spear-phishing" | reported (anonymous) | R9 | Jul 2022 | Sky Mavis post-mortem ("spear-phishing") | — | `THE BLOCK, 2022 (UNCONFIRMED BY SKY MAVIS)` | ⚠ phrase as reported |
 | S40 | Binance co-CEO Richard Teng: the attacker "did not simply use one engineer's permissions" | quote | search extract | ~31 Oct | ⚑ | — | — | ⚠ verify or cut |
 | S41 | Bitcoin, Ether and BNB fell after disclosure | reported | R4 (Reuters/CoinGecko) | 3 Nov | — | — | — | ✅ (not used) |
+| S42 | Researchers have documented fake-recruiter / poisoned-coding-test campaigns against developers (Contagious Interview, 35 malicious npm packages per Socket, Jun 2025; Operation Dream Job) | reported research | R3 background (5) citing Socket (4) | 3 Nov 2026 | Socket report ⚑ open | — | `SOCKET 2025 · VIA BLEEPINGCOMPUTER` | ✅ (VO says "the same lure", not "the same group") |
+| S43 | US officials tied the 2022 Ronin/Axie theft to North Korea (FBI statement, Apr 2022, Lazarus Group/APT38) | official attribution | ⚑ FBI statement Apr 2022 not opened in this run; R9 extract says "the US government and investigators associated the theft with Lazarus Group and APT38" | 2022 | — | — | `FBI, APR 2022` | ⚠ open the FBI statement |
+| S44 | Axie/Ronin amount "more than half a billion dollars" | reported | R9 extract: figures range $540M–$625M | 2022 | Sky Mavis post-mortem ⚑ | lower bound of range → "more than half a billion" | `$540–625M · REPORTS VARY` | ✅ (range-safe wording) |
 
 ## C. Timeline (built from dated records; check every "then" in SCRIPT.md against it)
 
