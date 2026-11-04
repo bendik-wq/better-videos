@@ -7,6 +7,11 @@ Two things live here: code-rendered documentary videos, and Cold Block, a browse
 - Rules: `docs/style-bible.md`. Workflow: the `make-video` skill in `.claude/skills/`.
 - `node engine/render.mjs projects/<name> --stills | --draft | (master)`.
 
+## Studio (studio/): signal to ready-to-post, automatically
+- One command, the `/studio` skill: "make today's video" or "make a video about X". The loop rules and pass bars are in `studio/program.md`.
+- The chain: `signals/radar.py` → `idea-engine` → `packaging` → `retention-script` → `critic/script_critic.py` (looped) → `shot-design` → `make-video` stills, draft and master → `critic/video_qa.py` and the anti-AI review (looped) → `deliver.py` → the Google Drive folder "Studio — Ready to post".
+- Never upload to YouTube automatically. Every fact needs a source in the project's SOURCES.md.
+
 ## Cold Block (games/cold-block)
 - The whole game is one file, `games/cold-block/index.html` (Three.js r128 UMD). Assets sit next to it:
   `guns/`, `world/`, `sfx/`, `soldier.json`. Credits for every asset: `cloudflare/cold-block/README.md` (keep it updated; CC0 only).

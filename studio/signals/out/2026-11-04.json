@@ -1,0 +1,2627 @@
+{
+ "generated": "2026-11-04T16:55:10.748379+00:00",
+ "geo": "US",
+ "errors": [],
+ "items_seen": 412,
+ "topics": [
+  {
+   "headline": "AI data center stocks dip, renewables surge after Democrat sweep in US midterm elections",
+   "signal": 14.43,
+   "fit": 6,
+   "total": 20.43,
+   "pillars": [
+    "tech",
+    "ai",
+    "money",
+    "power"
+   ],
+   "age_h": 0.9,
+   "sources": [
+    "google-news",
+    "google-news-business",
+    "google-trends"
+   ],
+   "n": 3,
+   "search_traffic": 500,
+   "wiki_views": 0,
+   "keywords": [
+    "center",
+    "data",
+    "election",
+    "spacex",
+    "stocks",
+    "tesla",
+    "bonds",
+    "boom",
+    "candidates",
+    "coreweave",
+    "decline",
+    "democrat"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US",
+    "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQNUJMNUhfVmg3dHlfRHhVb0tham91N0NObjZjNXl0bWN0Yno0QVdFNFVueHlnNEo2eGJJbTUzajY3cVZ6cnR2TG9vN0VpVVBpcEttSm1sZVgwbmpnTE5JZ2EycUV3ZXY5WVk4VTRZaHpHTTNSVHMtZUl3d0l2UXI0LWZsWTR1dkpmcF9R?oc=5",
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxPbnhXWmVQQnp5YkttSS1vdl85VWh3akcwXzBsX1paMjZtVkxyN0pWR1ZTTnRFdkZVMWtrbi16ZHJNa1ktaE9LN2VEZnNySndUenBUQm9VRy0zSDE5c3Rob1dLdW9LODFWOHFuSVhXUjk5aWlTcE9icGdFdFhGRlJ2cGxYSVBRMWhSemc?oc=5"
+   ]
+  },
+  {
+   "headline": "\u2018The new frontier of finance is built in the United States of America\u2019",
+   "signal": 15.79,
+   "fit": 3.0,
+   "total": 18.79,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 26.0,
+   "sources": [
+    "google-news-business",
+    "wikipedia"
+   ],
+   "n": 11,
+   "search_traffic": 0,
+   "wiki_views": 455194,
+   "keywords": [
+    "election",
+    "senate",
+    "2024",
+    "2026",
+    "america",
+    "built",
+    "democratic",
+    "elections",
+    "finance",
+    "frontier",
+    "house",
+    "michigan"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/2026_United_States_elections",
+    "https://en.wikipedia.org/wiki/United_States_midterm_election",
+    "https://en.wikipedia.org/wiki/2026_United_States_Senate_elections",
+    "https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_elections",
+    "https://en.wikipedia.org/wiki/2026_United_States_Senate_election_in_Michigan",
+    "https://en.wikipedia.org/wiki/Democratic_Party_(United_States)"
+   ]
+  },
+  {
+   "headline": "2026 Formula One World Championship",
+   "signal": 17.91,
+   "fit": 0.0,
+   "total": 17.91,
+   "pillars": [],
+   "age_h": 0.4,
+   "sources": [
+    "google-trends",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 1000,
+   "wiki_views": 35585,
+   "keywords": [
+    "2026",
+    "attendance",
+    "championship",
+    "clutch",
+    "finals",
+    "formula",
+    "gabby",
+    "game",
+    "golden",
+    "inside",
+    "mvp",
+    "outrageously"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US",
+    "https://en.wikipedia.org/wiki/2026_Formula_One_World_Championship"
+   ]
+  },
+  {
+   "headline": "How malware and a bogus job interview let attackers nab $6.3B from Binance",
+   "signal": 12.1,
+   "fit": 4.5,
+   "total": 16.6,
+   "pillars": [
+    "money",
+    "tech",
+    "mystery"
+   ],
+   "age_h": 2.8,
+   "sources": [
+    "bbc-business",
+    "google-news-business",
+    "hackernews"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "crypto",
+    "hack",
+    "heist",
+    "3bn",
+    "attackers",
+    "binance",
+    "bogus",
+    "fake",
+    "interview",
+    "interviews",
+    "job",
+    "korean"
+   ],
+   "links": [
+    "https://www.theregister.com/security/2026/11/03/north-korean-fake-job-interview-led-to-63b-binance-heist/5307398",
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxPeGZOT1RKRGNKUm5FZ3dfY19yeWV0MGR4Y3RtdFJULUhHQVo4UG9fSF9PLVZkc3JMMzVIS1dOY1BwWUFEUEMxc3RmTWt0Rm83TEh0SGVYUUVFV2xfUWdrdXVBUEtvNEtVOFd4Q3l4OHBHUENNR0xmV0N6ZTg5Z0I3Vk9vUDYwWU1zb3pxSEE0UE15elRTajEzckJNZjBseDd2dEE3UENxSm96QTBmWlp4T05sd0hWdw?oc=5",
+    "https://www.bbc.co.uk/news/articles/ck5ynwz9gy67o?at_medium=RSS&at_campaign=rss"
+   ]
+  },
+  {
+   "headline": "James Talarico becomes first Democrat to win Texas Senate seat since 1988",
+   "signal": 13.7,
+   "fit": 1.5,
+   "total": 15.2,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 2.6,
+   "sources": [
+    "bbc-world",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 105766,
+   "keywords": [
+    "senate",
+    "1988",
+    "becomes",
+    "democrat",
+    "james",
+    "seat",
+    "since",
+    "talarico",
+    "texas",
+    "win"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/James_Talarico",
+    "https://www.bbc.co.uk/news/articles/c6n8dnn09jg7o?at_medium=RSS&at_campaign=rss"
+   ]
+  },
+  {
+   "headline": "Stock market today: Dow jumps over 1,000 points, S&P 500 and Nasdaq gain after Democrats win control of Congress",
+   "signal": 8.86,
+   "fit": 6,
+   "total": 14.86,
+   "pillars": [
+    "power",
+    "money"
+   ],
+   "age_h": 1.1,
+   "sources": [
+    "google-news",
+    "google-news-business"
+   ],
+   "n": 4,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "congress",
+    "market",
+    "senate",
+    "stock",
+    "000",
+    "500",
+    "amd",
+    "beat",
+    "big",
+    "control",
+    "democrats",
+    "dow"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQOVJpdWloYmdyVkpKX0E1LTQzNm5LMnlnYkQ3UktwbU5OUWJ2MEpEQUgxWEQ5bk1FQzhydGhaVmxsSG9hMGdFUjFiWTBGTzQzcHNnVWtZaE54YUlhTVZLc29yQnM4Mk9pVUJNaDl6eG9YNUhnamdjMmp4UFFEWUZUWEdUQlhndDdfa29KX2xJTlRJcGlnWG14TG9YeW5VZTFTdzM5Y19mclhEaWN5U3ZEZmprTG9wTjBr?oc=5",
+    "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQOVJpdWloYmdyVkpKX0E1LTQzNm5LMnlnYkQ3UktwbU5OUWJ2MEpEQUgxWEQ5bk1FQzhydGhaVmxsSG9hMGdFUjFiWTBGTzQzcHNnVWtZaE54YUlhTVZLc29yQnM4Mk9pVUJNaDl6eG9YNUhnamdjMmp4UFFEWUZUWEdUQlhndDdfa29KX2xJTlRJcGlnWG14TG9YeW5VZTFTdzM5Y19mclhEaWN5U3ZEZmprTG9wTjBr?oc=5",
+    "https://news.google.com/rss/articles/CBMidEFVX3lxTE9mcnlEQzhqWExyWFlMNDhsWkRvc2VrVmtkR2tqUXJzQWZBWGh2UzMySGZqUjhEN3dQcFhEWGpUczZnUHJ3WFB4cEJOUDhIMHlwaGxpRGI4YmlUclBaVkVBWHFoNmhBckFUU1ctUllKaF96bTB6?oc=5",
+    "https://news.google.com/rss/articles/CBMilwFBVV95cUxOZ0dlOUVqNVVZdVdVN1Jjc2lBejJfdkkwdFpxRzlGUEJfYXBteU9CUC14V3NWZS0zcGNORHZac1NLTDNWWEZ1UGdhLWRjS1pOUi1jeDNzSHJubXl1NEtyYXQyVHRnYXRTUDFBQWdyV01TU3J2T0xZajNwMzVuQTRrdE1RcUhaSHdxY1ZYUmh3T0VjdmtzSHlj?oc=5"
+   ]
+  },
+  {
+   "headline": "\u2018A big puzzle\u2019: Key evidence in Learjet crash investigation found up to 3.8 miles away, NTSB says",
+   "signal": 11.8,
+   "fit": 3.0,
+   "total": 14.8,
+   "pillars": [
+    "mystery",
+    "power"
+   ],
+   "age_h": 18.7,
+   "sources": [
+    "google-news",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 132447,
+   "keywords": [
+    "crash",
+    "investigation",
+    "2026",
+    "away",
+    "beach",
+    "big",
+    "county",
+    "evidence",
+    "found",
+    "key",
+    "learjet",
+    "miles"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/2026_Palm_Beach_County_Learjet_60_crash",
+    "https://news.google.com/rss/articles/CBMizwFBVV95cUxPN243LWNVNG4zV0lPQmtrdE9iMjRicWxkVzRVZjFzQXJaVnpuYXZoUENaS3NKMUpVR082Z2hrVEs1eENKNHp4aW5ZdmtvMHdaN18tXzJZbUtpUWFOdlhEdWlia1pHODBObFBpUDRKcGJvZFFvT0dxbmJwWk1GNFlRZVJkd205R0FXM0I2eW96LTRNTVNNQlU2cUZoM2RSRnYzNXFKU1BsNTBSbDA1X1FDSU1wb0JELTZlNzJOVGN1bUFObks1M2FPUlFLR2N6bzA?oc=5"
+   ]
+  },
+  {
+   "headline": "Night sky November 2026 \u2014 What to look for in the sky this month",
+   "signal": 12.43,
+   "fit": 1.5,
+   "total": 13.93,
+   "pillars": [
+    "money"
+   ],
+   "age_h": 0.6,
+   "sources": [
+    "google-news",
+    "google-trends"
+   ],
+   "n": 2,
+   "search_traffic": 1000,
+   "wiki_views": 0,
+   "keywords": [
+    "market",
+    "2026",
+    "alex",
+    "assche",
+    "garland",
+    "janice",
+    "joanna",
+    "kudermetova",
+    "look",
+    "lorenzo",
+    "luca",
+    "molcan"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxNOTg3eTJleEFTMm1vTkpzOHo5cHUxd3E2cno0YWZMTElLcFBweTItaU12TVFuVGVGSWxNdzZaUE0yWjBEVzR6QWNWZzROal9oR0I5bnJTY2dHM0dyX1FfbXdFakllNTN6Sm1sanVzV3J1dE1uaXo0c1M3NXZtVFVMbVln?oc=5"
+   ]
+  },
+  {
+   "headline": "Left-wing Democrat Abdul El-Sayed wins in Michigan to become first Muslim senator",
+   "signal": 13.66,
+   "fit": 0.0,
+   "total": 13.66,
+   "pillars": [],
+   "age_h": 6.9,
+   "sources": [
+    "bbc-world",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 271285,
+   "keywords": [
+    "abdul",
+    "become",
+    "democrat",
+    "el-sayed",
+    "left-wing",
+    "michigan",
+    "muslim",
+    "senator",
+    "wins"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Abdul_El-Sayed",
+    "https://www.bbc.co.uk/news/articles/c893z55pxrewo?at_medium=RSS&at_campaign=rss"
+   ]
+  },
+  {
+   "headline": "Israel's president to begin consultations with parties after election deadlock",
+   "signal": 10.42,
+   "fit": 3.0,
+   "total": 13.42,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 0.6,
+   "sources": [
+    "bbc-world",
+    "google-news",
+    "google-news-world"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "election",
+    "president",
+    "begin",
+    "begins",
+    "consultations",
+    "deadlock",
+    "israel's",
+    "parties"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE16VlJEM1d3V3hZVURESU85dmlFTTlValUxVG8xLUlaNi1hVy1sYmlPMG4zdWg2cW5EMUdLWEZHczFMWG9Qcy1DcnlNNmd4SlVXUGhYS2NZX1FBcjQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE16VlJEM1d3V3hZVURESU85dmlFTTlValUxVG8xLUlaNi1hVy1sYmlPMG4zdWg2cW5EMUdLWEZHczFMWG9Qcy1DcnlNNmd4SlVXUGhYS2NZX1FBcjQ?oc=5",
+    "https://www.bbc.co.uk/news/articles/c6z98z5z91ppo?at_medium=RSS&at_campaign=rss"
+   ]
+  },
+  {
+   "headline": "Bears QB Caleb Williams is red hot since his return, placing him among the NFL\u2019s best",
+   "signal": 12.83,
+   "fit": 0.0,
+   "total": 12.83,
+   "pillars": [],
+   "age_h": 5.7,
+   "sources": [
+    "google-news",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 41322,
+   "keywords": [
+    "among",
+    "bears",
+    "best",
+    "caleb",
+    "hot",
+    "nfl",
+    "placing",
+    "red",
+    "return",
+    "since",
+    "williams"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Caleb_Williams",
+    "https://news.google.com/rss/articles/CBMijAFBVV95cUxObS10SjA1OHpXSHctS09XQXhvS1FHSERLbHozUFE1SkQ0dHRfU0FCOHlHamwxUHE4YXpLazhIM2J3cVdJMUhBeU5Dc2ZUTlpUTGNoY0lPZU0yU3NjSFItNzJ6ZWlPZ1BDNnZkY0NpOGlBeXJXODJ2dktYTVEwdy1PU01PbHNTRTl4clV6aw?oc=5"
+   ]
+  },
+  {
+   "headline": "US midterm election results: Democrats flip House and Senate. Here's what else the data tell us",
+   "signal": 8.2,
+   "fit": 4.5,
+   "total": 12.7,
+   "pillars": [
+    "power",
+    "ai"
+   ],
+   "age_h": 2.4,
+   "sources": [
+    "google-news",
+    "google-news-world"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "data",
+    "election",
+    "senate",
+    "democrats",
+    "else",
+    "flip",
+    "here's",
+    "house",
+    "midterm",
+    "reacts",
+    "results",
+    "seismic"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOdUdNU0dkRXZSaHBid0M2UjVfaEVuaWR4VUNzNDVnSTZaRW83MFRCU0RubWZWN2dGMnA3NHYzbTg3Smd2YnBsb3Vxb3Q4NTlWMFUwMVlHbWpEQjJQYnNXLThpUWo4QXBwVVgyQXlhdjZ6eFFROVF3Y0h2WWJrMDUtWno0OGJzaVNJNTAxaG9VZXdIMDJKbVlYdFRyOU02SjBEdkNqdnR3Nmp5QkU4QVdrX1FDSUJfSnd6b1d0U0FLSlhJSWfSAcMBQVVfeXFMTjk3bVlmSUJoVDRQV3pLRHdaRjNyekhETlZaRGVOQ0hITldOUFNJemlHRW91MEZTUHF4cWN1UFFCZGROSXdWTW1vbkxuRmg3ZTVjS1FGcTNQYlZBX2p3azFzME9LX0pJZG84emxEWXU3RkxCUC1wTThKUm9jMzF5c1BrNFpQQnVvZ2FTdW9RV3FmX0xKeEVnNzM1OGl3NHhMV1hPaldFWmV6MDVWQmxZRFlKTDYxUDdpOFhXbHVtaGpLUE8w?oc=5",
+    "https://news.google.com/rss/articles/CBMinwFBVV95cUxQcmlQcUFmZnRoZzJhRmFYd0JkMXhYU3kyLWxqOV9uYnlUeEVkdGRCZDhXZEhMYkJ6eHI0TUs1T05rSXJEc01PbUJYU2dXczhsYW4zVGJSUlNqTF9ENEY0anRkcGlIMy1na3N2NlpSTHdreGNtaHM3NWRRZkd3UUJJQzVrX2pIQ0luMko4Rk9MWk5XQXlhWG1UeFJNRUVYNnPSAaQBQVVfeXFMUHdnaUVOZEx4S2F3ZTJnVTZLUmM5Z1RpRE9fSG9DWDNOZTEyNEdkU3NkZ3NIMGdLdEpFaXZRNWxTbDU1OEQ2WUpwbUx5WEsyb1lKcWRYcHU4T3k1N1huTWpCQWpPeThQVXE4LXZQU09mMTZFcE5pWnQ1TTR4TnRqNDBJZXBMTmFRNWJJYVJwNllheXZDSXBiUzQxMzhVcUZEVG1lS3M?oc=5",
+    "https://news.google.com/rss/articles/CBMinwFBVV95cUxQcmlQcUFmZnRoZzJhRmFYd0JkMXhYU3kyLWxqOV9uYnlUeEVkdGRCZDhXZEhMYkJ6eHI0TUs1T05rSXJEc01PbUJYU2dXczhsYW4zVGJSUlNqTF9ENEY0anRkcGlIMy1na3N2NlpSTHdreGNtaHM3NWRRZkd3UUJJQzVrX2pIQ0luMko4Rk9MWk5XQXlhWG1UeFJNRUVYNnPSAaQBQVVfeXFMUHdnaUVOZEx4S2F3ZTJnVTZLUmM5Z1RpRE9fSG9DWDNOZTEyNEdkU3NkZ3NIMGdLdEpFaXZRNWxTbDU1OEQ2WUpwbUx5WEsyb1lKcWRYcHU4T3k1N1huTWpCQWpPeThQVXE4LXZQU09mMTZFcE5pWnQ1TTR4TnRqNDBJZXBMTmFRNWJJYVJwNllheXZDSXBiUzQxMzhVcUZEVG1lS3M?oc=5"
+   ]
+  },
+  {
+   "headline": "Democrat Amy Acton wins Ohio governor's race, defeating Republican Vivek Ramaswamy",
+   "signal": 11.94,
+   "fit": 0.0,
+   "total": 11.94,
+   "pillars": [],
+   "age_h": 13.0,
+   "sources": [
+    "google-news",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 43590,
+   "keywords": [
+    "acton",
+    "amy",
+    "defeating",
+    "democrat",
+    "governor's",
+    "ohio",
+    "race",
+    "ramaswamy",
+    "republican",
+    "vivek",
+    "wins"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Vivek_Ramaswamy",
+    "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNc3c0WWlHakNEbDEta29iMUJHWmZpck56RmYzR0NTTXhLd0RFVWRmQklIS0NQNTQySnVhWEdyQ21RMDlJSXpvbmRFV3lzVjJKNFM5SWFjZDJRUDF2Y204a2Z5VWs1VzgwZ1FIZXhqb3pOSjZ2el9XU1VaVm9YU0lPYllNMTUtemtkWldz?oc=5"
+   ]
+  },
+  {
+   "headline": "kristaps porzingis",
+   "signal": 10.32,
+   "fit": 1.5,
+   "total": 11.82,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 1.1,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 2000,
+   "wiki_views": 0,
+   "keywords": [
+    "ruling",
+    "contemplates",
+    "delivering",
+    "future",
+    "kristaps",
+    "nba",
+    "payments",
+    "payments'",
+    "porzingis",
+    "rendering",
+    "reportedly",
+    "salary"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "the view",
+   "signal": 9.93,
+   "fit": 1.5,
+   "total": 11.43,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 0.6,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 1000,
+   "wiki_views": 0,
+   "keywords": [
+    "trump",
+    "ahead",
+    "clinton",
+    "control",
+    "hillary",
+    "loss",
+    "midterm",
+    "midterms",
+    "minority",
+    "optimistic'",
+    "predicts",
+    "view"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "Karl Bushby embraces his mother as he completes his 28-year walk around world",
+   "signal": 11.16,
+   "fit": 0.0,
+   "total": 11.16,
+   "pillars": [],
+   "age_h": 43.7,
+   "sources": [
+    "google-news-world",
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 135687,
+   "keywords": [
+    "28-year",
+    "around",
+    "bushby",
+    "completes",
+    "embraces",
+    "karl",
+    "mother",
+    "walk",
+    "world"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Karl_Bushby",
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxQSGlSVTJ5dDhqLWo4cTNwR3huT3NXUW9lS0Y5ak44SE1uUVpjc0J2R1I2cEsxcXl6REFjWVBaWndmRzF3SnNfaWw2SEp6bVNiLUg0cktFc2FKTVdtSEpMMi1iVVFRcktMX0tfZFd6bEd6ZVZ3UWlYeHhaMk90Zy1IeXpTeXlybF9IMUtFR0tnQVRaN2FSZEp3NG9sZmtlM1FKMkFCNFhfWmVfZzhhOU42OHBB0gG3AUFVX3lxTE5idGxndmlKTWVIMEx4bEdCTC1OS0p3UjZkNUdVdjNGRjk4TW1waFBlSEZCOTAxWmt0eHlxR2w2Z0FhZjBqRTVUZFJ3dXpzZlpIdjRZMTFfYjlLN1ZILUY0dVdHSFFzSmVyY1J5R1p3cG1NMVdleXJ0a2t6NXZwLXljRFFTZEhhNzltQmphWm1kYWlQSTdoZnFvOFdhRWNaZHFiQlNvbFNGUk5SWWV2emwwVlRWdWpaMA?oc=5"
+   ]
+  },
+  {
+   "headline": "Germany's Merz doubts Russia wants Ukraine ceasefire, says European leaders must help shape peace",
+   "signal": 6.51,
+   "fit": 4.5,
+   "total": 11.01,
+   "pillars": [
+    "geopolitics",
+    "tech"
+   ],
+   "age_h": 11.9,
+   "sources": [
+    "bbc-world",
+    "google-news-world"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "hack",
+    "russia",
+    "ukraine",
+    "alert",
+    "app",
+    "ceasefire",
+    "doubts",
+    "european",
+    "germany's",
+    "help",
+    "know",
+    "leaders"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxOZDRQM21EWEZQMHFRSG1fOUxCc0R4aUdMU2hsWjhOTWFHWU9wOEpjeGhtSF9DdFZ0R0ZOU1pfemFsX3UtQlFXR3JiM3BtUnl0XzZfREprSnprT05wcm9BOFFkWF9ZQ0ZBSmNCbTB3Q1JJZEtlZmFkYlN6WGJ6cWZTZVRERl9yek1GYVNKTEpVR0RwZ9IBkgFBVV95cUxNX05Vc2d1V2paNTRrZTRKRG5GV0dSalVPTTZiRmhBVS1uZXMzVFo4bUotMTVqUUNyTVJNZ0pBOHRqN0twS3RGaDJKWHZpWVdvazF2clIyaThlNXc1REt3enlYd2F6N3UwTGZLdlU1UnZUcENjMDhsbVhxdXNhT0ZGOS04ZzZ6bnc4S1ViZEVmTWQ0dw?oc=5",
+    "https://www.bbc.co.uk/news/videos/crq5n6204g20o?at_medium=RSS&at_campaign=rss"
+   ]
+  },
+  {
+   "headline": "amnesty",
+   "signal": 9.5,
+   "fit": 1.5,
+   "total": 11.0,
+   "pillars": [
+    "geopolitics"
+   ],
+   "age_h": 0.4,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 500,
+   "wiki_views": 0,
+   "keywords": [
+    "china",
+    "against",
+    "amnesty",
+    "back",
+    "deport",
+    "deporting",
+    "detainees",
+    "detention",
+    "held",
+    "holds",
+    "immigration",
+    "men"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "Jim Cramer Sees These 'Non-Magnificent' Tech Stocks Emerging as Market Leaders While Nvidia, Microsoft St",
+   "signal": 4.69,
+   "fit": 6,
+   "total": 10.69,
+   "pillars": [
+    "money",
+    "tech",
+    "ai"
+   ],
+   "age_h": 6.5,
+   "sources": [
+    "google-news-business"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "market",
+    "microsoft",
+    "nvidia",
+    "stocks",
+    "tech",
+    "cramer",
+    "emerging",
+    "jim",
+    "leaders",
+    "non-magnificent'",
+    "sees",
+    "while"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiogJBVV95cUxOOVNCaXlXS09ra2swNWJ4NmdUSWNEcURQalg1WFNlRkRxejNPamlvZW9sNl9JUnowMkJWcl9FS3FXbTR5WmNwanY1MFBIU2xQVDZBaVN6dkE1SGRyaXFuVUVZRG9uZkxnR0FYcHJKNXpQLTViNHFpR0Q1a0c0dGtrNzkzZ2NibkhQdlhxZ2tSb0czaWRoZWx4SElJRzRPNnZSc2YyMi1tQlFXajBRY1FTX1BCakNSZ05SR05CeFAyTE9acmkwNnlPR2ZPT3BBNS1pMUUwMDJnc2wwNUpJZHN5RXJ1WXBlVU8zM0VaTjl1VDdOcVp3eEx4Y2NwZm5nenktdWxEUWFoellUYzlkdng2azV3YkprYm5oc3ZLTURsNy1JUQ?oc=5"
+   ]
+  },
+  {
+   "headline": "angel reese caitlin clark",
+   "signal": 10.3,
+   "fit": 0.0,
+   "total": 10.3,
+   "pillars": [],
+   "age_h": 1.3,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 2000,
+   "wiki_views": 0,
+   "keywords": [
+    "angel",
+    "atlanta",
+    "attack",
+    "caitlin",
+    "canada",
+    "clark",
+    "dream's",
+    "fans",
+    "finals",
+    "game",
+    "heartless'",
+    "held"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "2026 Israeli legislative election",
+   "signal": 8.74,
+   "fit": 1.5,
+   "total": 10.24,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 60786,
+   "keywords": [
+    "election",
+    "2026",
+    "guam",
+    "gubernatorial",
+    "israeli",
+    "legislative"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/2026_Israeli_legislative_election",
+    "https://en.wikipedia.org/wiki/2026_Guam_gubernatorial_election"
+   ]
+  },
+  {
+   "headline": "jessica chastain",
+   "signal": 9.97,
+   "fit": 0.0,
+   "total": 9.97,
+   "pillars": [],
+   "age_h": 0.3,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 1000,
+   "wiki_views": 0,
+   "keywords": [
+    "acting",
+    "alongside",
+    "bluebird",
+    "cafe",
+    "carter",
+    "chastain",
+    "debut",
+    "faith",
+    "heartland",
+    "heartland'",
+    "jessica",
+    "makes"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "Jes\u00fas de Miguel",
+   "signal": 9.92,
+   "fit": 0.0,
+   "total": 9.92,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 585060,
+   "keywords": [
+    "jes",
+    "miguel",
+    "owono"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jes\u00fas_de_Miguel",
+    "https://en.wikipedia.org/wiki/Jes\u00fas_Owono"
+   ]
+  },
+  {
+   "headline": "Donald Trump",
+   "signal": 8.36,
+   "fit": 1.5,
+   "total": 9.86,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 75990,
+   "keywords": [
+    "trump",
+    "donald"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Donald_Trump"
+   ]
+  },
+  {
+   "headline": "yella beezy",
+   "signal": 9.52,
+   "fit": 0.0,
+   "total": 9.52,
+   "pillars": [],
+   "age_h": 0.3,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 500,
+   "wiki_views": 0,
+   "keywords": [
+    "beezy",
+    "beezy's",
+    "call",
+    "case",
+    "childhood",
+    "continues",
+    "enters",
+    "friend",
+    "lied",
+    "mo3",
+    "murder",
+    "prosecution"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "nintendo switch cartridge rom manufacturer leaves",
+   "signal": 9.39,
+   "fit": 0.0,
+   "total": 9.39,
+   "pillars": [],
+   "age_h": 1.3,
+   "sources": [
+    "google-trends"
+   ],
+   "n": 1,
+   "search_traffic": 500,
+   "wiki_views": 0,
+   "keywords": [
+    "became",
+    "business",
+    "card",
+    "cartridge",
+    "cartridges",
+    "dire",
+    "game",
+    "hands",
+    "have",
+    "leaves",
+    "main",
+    "manufacturer"
+   ],
+   "links": [
+    "https://trends.google.com/trending/rss?geo=US"
+   ]
+  },
+  {
+   "headline": "Iran Says Four Oil Tankers Destroyed by Mines Near Strait of Hormuz",
+   "signal": 4.67,
+   "fit": 4.5,
+   "total": 9.17,
+   "pillars": [
+    "geopolitics"
+   ],
+   "age_h": 6.7,
+   "sources": [
+    "google-news-world"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "iran",
+    "oil",
+    "strait",
+    "destroyed",
+    "four",
+    "hormuz",
+    "mines",
+    "near",
+    "tankers"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQY1R3S09LbGMzVzJzOUkwbjlhM2dtVU5yTjJ0WTdfV0pBOVk1elFMbFk5VUxnSHhKM3IwWHIwblg1VExwWEtqcjhfMGE0cnRxRGpheklmSkZoMWJWdjNqaDNlSXByWUVISW5SODF6dXh4R2dhTGswekJ5bXdQZVdoczhwUVVOMkRfWUJad0pkRGMtYmtybmRCR2FQNmFuOEZBWkpLZGNUdGs2eVM2WU1EaHBMc1RrQk5DRVBKam45VWfSAcYBQVVfeXFMTXg0QWluM1liWEwtOVhRNDVsMWJEX1J3V3BSMzRVRUttdVpxZGdQQ05kZ1ZKLXE2cmRMNDhTaGVCSWthWTNKMDdJOWEydjBNaFctcFh3NVRhN2Q2STktb3ZQTHliREdhVFJBZUdCeFRkS0lEMFFzcUpneUprUlE2VmRsMEdfa0lLQzhyeFl3c0w5YkdISmRCMnlKc0lRQ19kMUZad3JzbnU2NGk5LVhNMFZPaHpHMGpkVDItTmx6azhGMW13Szl3?oc=5"
+   ]
+  },
+  {
+   "headline": "Blood banks targeted in latest European fridge cyberattacks",
+   "signal": 7.63,
+   "fit": 1.5,
+   "total": 9.13,
+   "pillars": [
+    "money"
+   ],
+   "age_h": 2.9,
+   "sources": [
+    "google-news",
+    "google-news-world"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "banks",
+    "blood",
+    "cyberattacks",
+    "european",
+    "fridge",
+    "targeted"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMid0FVX3lxTE42WXhHNmRqY0xJTERfSEhVWnFLc2pXMDRFc0ZsZjlqaDdrVWhWNEVHTm41UkVYU3lla0NBU1p3SEtlY2pYbndEbG9PQUxzUkZKSHprVXQtMUd0blVGNDd4TkJZZTg3SmdFNjZ4OEhIaU9kZ3NXLXFZ0gF8QVVfeXFMT3RpdTdIMnU1eWRiNWJLWEVOQW1nMzFYQ2tHU3VEZkZkQkEtV1p0MjdJVmVtZVRaekdMb1JRVjU4U0x2LVNRcnZiM0xQNTlZNmxkSkVjMG5iNlg5N0ZuY1VibDVSeDZXUTVCbldtZUhlaFA0LUFHbkplT1E3aQ?oc=5",
+    "https://news.google.com/rss/articles/CBMid0FVX3lxTE42WXhHNmRqY0xJTERfSEhVWnFLc2pXMDRFc0ZsZjlqaDdrVWhWNEVHTm41UkVYU3lla0NBU1p3SEtlY2pYbndEbG9PQUxzUkZKSHprVXQtMUd0blVGNDd4TkJZZTg3SmdFNjZ4OEhIaU9kZ3NXLXFZ0gF8QVVfeXFMT3RpdTdIMnU1eWRiNWJLWEVOQW1nMzFYQ2tHU3VEZkZkQkEtV1p0MjdJVmVtZVRaekdMb1JRVjU4U0x2LVNRcnZiM0xQNTlZNmxkSkVjMG5iNlg5N0ZuY1VibDVSeDZXUTVCbldtZUhlaFA0LUFHbkplT1E3aQ?oc=5"
+   ]
+  },
+  {
+   "headline": "US voters roundly reject data centers in ballot measures",
+   "signal": 7.62,
+   "fit": 1.5,
+   "total": 9.12,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 3.0,
+   "sources": [
+    "google-news",
+    "google-news-business"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "data",
+    "ballot",
+    "centers",
+    "measures",
+    "reject",
+    "roundly",
+    "voters"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMioAFBVV95cUxPeHVZMU84Tng5SXpmdk9UQ1BJdFBEZkFNOW1Gbk1nY1RuSnBhS2M1bWwzaUVNckp1dW52MENueGtPTHRJNVNUdFFpVFdkVlhOTFctZm14cm1IQUlldmVzMW5meVdTUUN4aWMxMkM0TGVSVXR5NXlDNy02aS0yNjF6a08wMngxa3o5Rzk2XzY5ZjF4YXVtTE54WHptVFJpVjcy?oc=5",
+    "https://news.google.com/rss/articles/CBMioAFBVV95cUxPeHVZMU84Tng5SXpmdk9UQ1BJdFBEZkFNOW1Gbk1nY1RuSnBhS2M1bWwzaUVNckp1dW52MENueGtPTHRJNVNUdFFpVFdkVlhOTFctZm14cm1IQUlldmVzMW5meVdTUUN4aWMxMkM0TGVSVXR5NXlDNy02aS0yNjF6a08wMngxa3o5Rzk2XzY5ZjF4YXVtTE54WHptVFJpVjcy?oc=5"
+   ]
+  },
+  {
+   "headline": "ChatGPT has hit roughly 20% of Google Search volume, OpenAI says",
+   "signal": 6.04,
+   "fit": 3.0,
+   "total": 9.04,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 19.7,
+   "sources": [
+    "google-news",
+    "google-news-tech"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "google",
+    "openai",
+    "catching",
+    "chatgpt",
+    "chats",
+    "has",
+    "hit",
+    "messages",
+    "moving",
+    "pinned",
+    "redesigning",
+    "roughly"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMitAFBVV95cUxQNXNJQ0NxOENuN0dfdUhVS0p5NUN3YTc5TkpTQi1LMDJac2hGUWlGOF85RWFHaFU1cE05cmU4YmFUdVRaWlNVT05xVV9ia2JYMFJMUnB2Ti03UlpFNFlpUnM3U05zVGtCMjM0Ti1ZQ3lLdjdfb2VtN0xkX2xRR0hRS05yYUhtdzlFVGxWYTdyRlFiVnE2UjluZjlnTkgyRW42bkh5S25YRU9JZTBZNzVoall6NnU?oc=5",
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxNNzhGS05ITGtxVkQxV2s0d0JJSTBvcHUwbklkaGtuREdXaHlYZGdhUVctVzZ0dmRLUDBaV0tRcGc3bXg0S05LclFNaDgzVlpKOUFvcmxLaFZlR2tTTUdWNG41bHhTSG1NQVNkSzE1QVB1RkUzNXlZQ0Ztand4UHUtLXJGZS16OGtPMzB1RDJfM21xMmVNNy1uYkEyajhHQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMifEFVX3lxTFAxeHpqN3dHaXlXa3V4enV2cHRFS25Pcld6bzdfdTYzekQ1LUk2eVhVMDV5cmM4REIzME93MXBUbkVMM3BVZ2pvWURya2ZYZHk4bkEyT1RyU2VzcGlsLTZNV18tRGhNcFV0eDlnUWlwNER1alA4RmlHU1M4Tk8?oc=5"
+   ]
+  },
+  {
+   "headline": ".xxx",
+   "signal": 8.99,
+   "fit": 0.0,
+   "total": 8.99,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 255014,
+   "keywords": [
+    "xxx"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/.xxx"
+   ]
+  },
+  {
+   "headline": "Archive of Our Own",
+   "signal": 8.92,
+   "fit": 0.0,
+   "total": 8.92,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 85012,
+   "keywords": [
+    "anna's",
+    "archive",
+    "own"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Archive_of_Our_Own",
+    "https://en.wikipedia.org/wiki/Anna's_Archive"
+   ]
+  },
+  {
+   "headline": "Haley Stevens",
+   "signal": 8.88,
+   "fit": 0.0,
+   "total": 8.88,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 208194,
+   "keywords": [
+    "haley",
+    "stevens"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Haley_Stevens"
+   ]
+  },
+  {
+   "headline": "Deaths in 2026",
+   "signal": 8.68,
+   "fit": 0.0,
+   "total": 8.68,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 140654,
+   "keywords": [
+    "2026",
+    "deaths"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Deaths_in_2026"
+   ]
+  },
+  {
+   "headline": "Dancing with the Stars (American TV series) season 35",
+   "signal": 8.66,
+   "fit": 0.0,
+   "total": 8.66,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 135810,
+   "keywords": [
+    "american",
+    "dancing",
+    "season",
+    "series",
+    "stars"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Dancing_with_the_Stars_(American_TV_series)_season_35"
+   ]
+  },
+  {
+   "headline": "Learjet 60",
+   "signal": 8.6,
+   "fit": 0.0,
+   "total": 8.6,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 121648,
+   "keywords": [
+    "learjet"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Learjet_60"
+   ]
+  },
+  {
+   "headline": "AI is forcing us to pay off 40 years of technical debt",
+   "signal": 7.09,
+   "fit": 1.5,
+   "total": 8.59,
+   "pillars": [
+    "money"
+   ],
+   "age_h": 5.0,
+   "sources": [
+    "hackernews"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "debt",
+    "forcing",
+    "pay",
+    "technical"
+   ],
+   "links": [
+    "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability"
+   ]
+  },
+  {
+   "headline": "ChatGPT",
+   "signal": 8.58,
+   "fit": 0.0,
+   "total": 8.58,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 117118,
+   "keywords": [
+    "chatgpt"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/ChatGPT"
+   ]
+  },
+  {
+   "headline": "Jeffery Simmons",
+   "signal": 8.56,
+   "fit": 0.0,
+   "total": 8.56,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 111232,
+   "keywords": [
+    "jeffery",
+    "simmons"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jeffery_Simmons"
+   ]
+  },
+  {
+   "headline": "David Walliams",
+   "signal": 8.55,
+   "fit": 0.0,
+   "total": 8.55,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 110365,
+   "keywords": [
+    "david",
+    "walliams"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/David_Walliams"
+   ]
+  },
+  {
+   "headline": ".xyz",
+   "signal": 8.52,
+   "fit": 0.0,
+   "total": 8.52,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 104155,
+   "keywords": [
+    "xyz"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/.xyz"
+   ]
+  },
+  {
+   "headline": "Tesla, SpaceX shares slip amid Texas Senate race fallout (TSLA:NASDAQ)",
+   "signal": 4.01,
+   "fit": 4.5,
+   "total": 8.51,
+   "pillars": [
+    "tech",
+    "power"
+   ],
+   "age_h": 11.9,
+   "sources": [
+    "google-news-business"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "senate",
+    "spacex",
+    "tesla",
+    "fallout",
+    "nasdaq",
+    "race",
+    "shares",
+    "slip",
+    "texas",
+    "tsla"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiugFBVV95cUxNWWFsMzFmLWp5U1NtRkhucXEwOVFlVEtZQTlnb1gxSzY4Tmxtb1R6enI2cTgtbzBnQ3M2dHJwMFlJTm1kWWMtUDl5Sm9LOTF6NmFIWXB0UnU2NFZJaU9rd0k5VDFmNEtybm9PWFhCT0dXQXpTN1JqOG51NjgyUjR3OHJrYjhaS2ZJbm5jbmlsV3pPUGtnVGktaVdDMFZhWklPa3ZRR0taNW9XUmFXTFlYSGpOVm9lU25kdkE?oc=5"
+   ]
+  },
+  {
+   "headline": "Jailer 2",
+   "signal": 8.48,
+   "fit": 0.0,
+   "total": 8.48,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 96128,
+   "keywords": [
+    "jailer"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jailer_2"
+   ]
+  },
+  {
+   "headline": "XNXX",
+   "signal": 8.46,
+   "fit": 0.0,
+   "total": 8.46,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 92646,
+   "keywords": [
+    "xnxx"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/XNXX"
+   ]
+  },
+  {
+   "headline": "Ansel Adams",
+   "signal": 8.43,
+   "fit": 0.0,
+   "total": 8.43,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 87663,
+   "keywords": [
+    "adams",
+    "ansel"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Ansel_Adams"
+   ]
+  },
+  {
+   "headline": "Elizabeth Holmes",
+   "signal": 8.43,
+   "fit": 0.0,
+   "total": 8.43,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 87659,
+   "keywords": [
+    "elizabeth",
+    "holmes"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Elizabeth_Holmes"
+   ]
+  },
+  {
+   "headline": "Patrick Stewart",
+   "signal": 8.4,
+   "fit": 0.0,
+   "total": 8.4,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 82458,
+   "keywords": [
+    "patrick",
+    "stewart"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Patrick_Stewart"
+   ]
+  },
+  {
+   "headline": "Ramayana: Part 1",
+   "signal": 8.34,
+   "fit": 0.0,
+   "total": 8.34,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 72890,
+   "keywords": [
+    "part",
+    "ramayana"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Ramayana:_Part_1"
+   ]
+  },
+  {
+   "headline": "You Can See Everything",
+   "signal": 8.32,
+   "fit": 0.0,
+   "total": 8.32,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 70756,
+   "keywords": [
+    "everything",
+    "see"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/You_Can_See_Everything"
+   ]
+  },
+  {
+   "headline": "CD Tenerife",
+   "signal": 8.32,
+   "fit": 0.0,
+   "total": 8.32,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 70752,
+   "keywords": [
+    "tenerife"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/CD_Tenerife"
+   ]
+  },
+  {
+   "headline": "Callum Turner",
+   "signal": 8.31,
+   "fit": 0.0,
+   "total": 8.31,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 70043,
+   "keywords": [
+    "callum",
+    "turner"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Callum_Turner"
+   ]
+  },
+  {
+   "headline": "Scott Parker",
+   "signal": 8.28,
+   "fit": 0.0,
+   "total": 8.28,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 65446,
+   "keywords": [
+    "parker",
+    "scott"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Scott_Parker"
+   ]
+  },
+  {
+   "headline": "Jenna Dewan",
+   "signal": 8.27,
+   "fit": 0.0,
+   "total": 8.27,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 64103,
+   "keywords": [
+    "dewan",
+    "jenna"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jenna_Dewan"
+   ]
+  },
+  {
+   "headline": "Mike Santana",
+   "signal": 8.25,
+   "fit": 0.0,
+   "total": 8.25,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 61576,
+   "keywords": [
+    "mike",
+    "santana"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Mike_Santana"
+   ]
+  },
+  {
+   "headline": "Resident Evil (2026 film)",
+   "signal": 8.25,
+   "fit": 0.0,
+   "total": 8.25,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 61374,
+   "keywords": [
+    "2026",
+    "evil",
+    "film",
+    "resident"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Resident_Evil_(2026_film)"
+   ]
+  },
+  {
+   "headline": "Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)",
+   "signal": 6.75,
+   "fit": 1.5,
+   "total": 8.25,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 6.7,
+   "sources": [
+    "hackernews"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "gemini",
+    "accounts",
+    "chat",
+    "even",
+    "history",
+    "personal",
+    "subscribers",
+    "tell",
+    "trains"
+   ],
+   "links": [
+    "https://news.ycombinator.com/item?id=50363461"
+   ]
+  },
+  {
+   "headline": "Kimi Antonelli",
+   "signal": 8.23,
+   "fit": 0.0,
+   "total": 8.23,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 59325,
+   "keywords": [
+    "antonelli",
+    "kimi"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Kimi_Antonelli"
+   ]
+  },
+  {
+   "headline": "Matthew Perry",
+   "signal": 8.22,
+   "fit": 0.0,
+   "total": 8.22,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 58678,
+   "keywords": [
+    "matthew",
+    "perry"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Matthew_Perry"
+   ]
+  },
+  {
+   "headline": "Clayface (film)",
+   "signal": 8.21,
+   "fit": 0.0,
+   "total": 8.21,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 56783,
+   "keywords": [
+    "clayface",
+    "film"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Clayface_(film)"
+   ]
+  },
+  {
+   "headline": "Kimi K3.1 Pro model weights are out",
+   "signal": 6.71,
+   "fit": 1.5,
+   "total": 8.21,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 1.4,
+   "sources": [
+    "hackernews"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "model",
+    "kimi",
+    "pro",
+    "weights"
+   ],
+   "links": [
+    "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+   ]
+  },
+  {
+   "headline": "Wildwood (film)",
+   "signal": 8.2,
+   "fit": 0.0,
+   "total": 8.2,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 56175,
+   "keywords": [
+    "film",
+    "wildwood"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Wildwood_(film)"
+   ]
+  },
+  {
+   "headline": "Mike Rogers (Michigan politician)",
+   "signal": 8.19,
+   "fit": 0.0,
+   "total": 8.19,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 55411,
+   "keywords": [
+    "michigan",
+    "mike",
+    "politician",
+    "rogers"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Mike_Rogers_(Michigan_politician)"
+   ]
+  },
+  {
+   "headline": "VisionQuest",
+   "signal": 8.19,
+   "fit": 0.0,
+   "total": 8.19,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 55043,
+   "keywords": [
+    "visionquest"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/VisionQuest"
+   ]
+  },
+  {
+   "headline": "\u2018The Legend Of Zelda: Ocarina Of Time\u2019 Remake Metacritic Review Score Is Historic",
+   "signal": 8.19,
+   "fit": 0.0,
+   "total": 8.19,
+   "pillars": [],
+   "age_h": 2.4,
+   "sources": [
+    "google-news",
+    "google-news-tech"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "500",
+    "ahead",
+    "credit",
+    "free",
+    "gamers",
+    "historic",
+    "launch",
+    "legend",
+    "metacritic",
+    "ocarina",
+    "remake",
+    "review"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOeGtJT2NQdVBkWldwc01RdV9paENPYTFDYV9YRHhkaG5GQ25ISG9fQ2k0emhPSUFNYloxX05CUVpoZy1pVXZ6ckFiTGJlTC05b2dXcFMzVFlQc1YzcTZVeXpVZHZtUXZuUXN2VElfc29KSVNNRVFfVkNKa0FnSXhZUHJNVkhXVDEtOWlqZVFvTEstNEtfWFhCYXB1NjMxRmtIVFRLRFdlMllxaUM3RjFJS3FiVUZ4Q0NmT21QU0dsMjRDOFJlN3NHRg?oc=5",
+    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOeGtJT2NQdVBkWldwc01RdV9paENPYTFDYV9YRHhkaG5GQ25ISG9fQ2k0emhPSUFNYloxX05CUVpoZy1pVXZ6ckFiTGJlTC05b2dXcFMzVFlQc1YzcTZVeXpVZHZtUXZuUXN2VElfc29KSVNNRVFfVkNKa0FnSXhZUHJNVkhXVDEtOWlqZVFvTEstNEtfWFhCYXB1NjMxRmtIVFRLRFdlMllxaUM3RjFJS3FiVUZ4Q0NmT21QU0dsMjRDOFJlN3NHRg?oc=5",
+    "https://news.google.com/rss/articles/CBMivAFBVV95cUxNNUxUVGoydGlXdVJFODlNVVY5NHpnV1pwZk1TNThPVGhnSFVST0R4QlpIc0htNXZUX1d5OV9US3VjOWthTE5HSDR1bkYtcTBTcXVmWU1EUktrZng4WjJUYUZSMGtzQ3puWHJ0clFGLTFVQXZCcURnT3MyWkZVdUJFbGs1eHNZbDFHdmhKbUV0UnBKbnpZZld4WUdLQjVabExoT204d3M2SENxU0VWOUJTb1pzdEh1cldHaW5jSg?oc=5"
+   ]
+  },
+  {
+   "headline": "Jeff Bezos",
+   "signal": 8.18,
+   "fit": 0.0,
+   "total": 8.18,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 53845,
+   "keywords": [
+    "bezos",
+    "jeff"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jeff_Bezos"
+   ]
+  },
+  {
+   "headline": "Fed Wins Protection With Democrats Taking Control of the Senate",
+   "signal": 5.16,
+   "fit": 3.0,
+   "total": 8.16,
+   "pillars": [
+    "power",
+    "money"
+   ],
+   "age_h": 2.7,
+   "sources": [
+    "google-news-business"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "fed",
+    "senate",
+    "control",
+    "democrats",
+    "protection",
+    "taking",
+    "wins"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMitAFBVV95cUxNSDcxTEtxUkRBRDdnOHA4d09seWthb0dBYzNuYjctTmRWZ2ZhRHd6dTdrdmREbS1BV1NuWXU5LTNLcklFUEdQMTRBeHpEU3J5U29tODFPbXVsY0laT0VxUTZJS2s4bC1WcS1odDlyYXBvYTF5TGNvWExlVXJ5enFmbzF0NUlVNXdUdlRKbkVHczYxcF9ZVVpyNllRZXhGYkxEQ291dzl3ZmNzeENqdHNnSVZVblY?oc=5"
+   ]
+  },
+  {
+   "headline": "XXXX (beer)",
+   "signal": 8.15,
+   "fit": 0.0,
+   "total": 8.15,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 51094,
+   "keywords": [
+    "beer",
+    "xxxx"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/XXXX_(beer)"
+   ]
+  },
+  {
+   "headline": "Godzilla Minus Zero",
+   "signal": 8.12,
+   "fit": 0.0,
+   "total": 8.12,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 48349,
+   "keywords": [
+    "godzilla",
+    "minus",
+    "zero"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Godzilla_Minus_Zero"
+   ]
+  },
+  {
+   "headline": "Steve Kazee",
+   "signal": 8.11,
+   "fit": 0.0,
+   "total": 8.11,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 47235,
+   "keywords": [
+    "kazee",
+    "steve"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Steve_Kazee"
+   ]
+  },
+  {
+   "headline": "Oil Prices Fall as Investors Weigh U.S. Midterm Results, Iran Risks",
+   "signal": 5.11,
+   "fit": 3.0,
+   "total": 8.11,
+   "pillars": [
+    "geopolitics"
+   ],
+   "age_h": 3.2,
+   "sources": [
+    "google-news-business"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "iran",
+    "oil",
+    "fall",
+    "investors",
+    "midterm",
+    "prices",
+    "results",
+    "risks",
+    "weigh"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMitAFBVV95cUxPVGZJRGVaVkdJaDR5b1REaE5CdWQtY2ZlczBhUXFWT253Vi0tMkNoUVhSNUI0Rzlqbnc5UnVVS0lqN1kwVzZ3eTJ6ODByNlc5ck5HYmlkMEVyRzlrVDNFdk8zQ2JuRWdQLUdYc3ozNUVCc3hRSGhDc0tKNW9QY1A2ZVpMZC1PNGxqUU81QkQyZms0R1VxWUUzbTRLSmYyUTRvM0ZHVmVjdTRpZ2NxLUJkcFlQZzY?oc=5"
+   ]
+  },
+  {
+   "headline": "Jon Ossoff",
+   "signal": 8.1,
+   "fit": 0.0,
+   "total": 8.1,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 46502,
+   "keywords": [
+    "jon",
+    "ossoff"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jon_Ossoff"
+   ]
+  },
+  {
+   "headline": "XXX (2002 film)",
+   "signal": 8.08,
+   "fit": 0.0,
+   "total": 8.08,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 44596,
+   "keywords": [
+    "2002",
+    "film",
+    "xxx"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/XXX_(2002_film)"
+   ]
+  },
+  {
+   "headline": "Ciaron Maher",
+   "signal": 8.08,
+   "fit": 0.0,
+   "total": 8.08,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 44263,
+   "keywords": [
+    "ciaron",
+    "maher"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Ciaron_Maher"
+   ]
+  },
+  {
+   "headline": "Nvidia RTX Spark encrypted firmware slows inference speed to 35% on Linux",
+   "signal": 6.58,
+   "fit": 1.5,
+   "total": 8.08,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 8.1,
+   "sources": [
+    "hackernews"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "nvidia",
+    "encrypted",
+    "firmware",
+    "inference",
+    "linux",
+    "rtx",
+    "slows",
+    "spark",
+    "speed"
+   ],
+   "links": [
+    "https://www.mindstudio.ai/blog/linux-nvidia-rtx-spark-laptop"
+   ]
+  },
+  {
+   "headline": "YouTube",
+   "signal": 8.04,
+   "fit": 0.0,
+   "total": 8.04,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 41192,
+   "keywords": [
+    "youtube"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/YouTube"
+   ]
+  },
+  {
+   "headline": "Pierre Computer is being acquired by OpenAI",
+   "signal": 6.54,
+   "fit": 1.5,
+   "total": 8.04,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 1.6,
+   "sources": [
+    "hackernews"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "openai",
+    "acquired",
+    "being",
+    "computer",
+    "pierre"
+   ],
+   "links": [
+    "https://twitter.com/pierrecomputer/status/2117999036175188183"
+   ]
+  },
+  {
+   "headline": "Ken Paxton",
+   "signal": 8.02,
+   "fit": 0.0,
+   "total": 8.02,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 39794,
+   "keywords": [
+    "ken",
+    "paxton"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Ken_Paxton"
+   ]
+  },
+  {
+   "headline": "Jaxon Smith-Njigba",
+   "signal": 8.01,
+   "fit": 0.0,
+   "total": 8.01,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 39429,
+   "keywords": [
+    "jaxon",
+    "smith-njigba"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jaxon_Smith-Njigba"
+   ]
+  },
+  {
+   "headline": "Rhabdomyolysis",
+   "signal": 8.01,
+   "fit": 0.0,
+   "total": 8.01,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 39128,
+   "keywords": [
+    "rhabdomyolysis"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Rhabdomyolysis"
+   ]
+  },
+  {
+   "headline": "Wicker (film)",
+   "signal": 8.01,
+   "fit": 0.0,
+   "total": 8.01,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 38913,
+   "keywords": [
+    "film",
+    "wicker"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Wicker_(film)"
+   ]
+  },
+  {
+   "headline": "Mckenna Grace",
+   "signal": 8.01,
+   "fit": 0.0,
+   "total": 8.01,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 38738,
+   "keywords": [
+    "grace",
+    "mckenna"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Mckenna_Grace"
+   ]
+  },
+  {
+   "headline": "FC Andorra",
+   "signal": 8.0,
+   "fit": 0.0,
+   "total": 8.0,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 38451,
+   "keywords": [
+    "andorra"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/FC_Andorra"
+   ]
+  },
+  {
+   "headline": "Primetime (film)",
+   "signal": 8.0,
+   "fit": 0.0,
+   "total": 8.0,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 38197,
+   "keywords": [
+    "film",
+    "primetime"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Primetime_(film)"
+   ]
+  },
+  {
+   "headline": "Obsession (2025 film)",
+   "signal": 7.99,
+   "fit": 0.0,
+   "total": 7.99,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 37467,
+   "keywords": [
+    "2025",
+    "film",
+    "obsession"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Obsession_(2025_film)"
+   ]
+  },
+  {
+   "headline": "Jack Campbell (American football)",
+   "signal": 7.98,
+   "fit": 0.0,
+   "total": 7.98,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 37186,
+   "keywords": [
+    "american",
+    "campbell",
+    "football",
+    "jack"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Jack_Campbell_(American_football)"
+   ]
+  },
+  {
+   "headline": "Julia Stiles",
+   "signal": 7.98,
+   "fit": 0.0,
+   "total": 7.98,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 36657,
+   "keywords": [
+    "julia",
+    "stiles"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Julia_Stiles"
+   ]
+  },
+  {
+   "headline": "Verity (film)",
+   "signal": 7.97,
+   "fit": 0.0,
+   "total": 7.97,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 36047,
+   "keywords": [
+    "film",
+    "verity"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Verity_(film)"
+   ]
+  },
+  {
+   "headline": "Learjet",
+   "signal": 7.96,
+   "fit": 0.0,
+   "total": 7.96,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 35692,
+   "keywords": [
+    "learjet"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Learjet"
+   ]
+  },
+  {
+   "headline": "Cynthia Erivo",
+   "signal": 7.96,
+   "fit": 0.0,
+   "total": 7.96,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 35442,
+   "keywords": [
+    "cynthia",
+    "erivo"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Cynthia_Erivo"
+   ]
+  },
+  {
+   "headline": "Inde Navarrette",
+   "signal": 7.96,
+   "fit": 0.0,
+   "total": 7.96,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 35429,
+   "keywords": [
+    "inde",
+    "navarrette"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Inde_Navarrette"
+   ]
+  },
+  {
+   "headline": "Red states and blue states",
+   "signal": 7.94,
+   "fit": 0.0,
+   "total": 7.94,
+   "pillars": [],
+   "age_h": 24,
+   "sources": [
+    "wikipedia"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 34471,
+   "keywords": [
+    "blue",
+    "red",
+    "states"
+   ],
+   "links": [
+    "https://en.wikipedia.org/wiki/Red_states_and_blue_states"
+   ]
+  },
+  {
+   "headline": "Rigged! Candidates worldwide follow Trump in alleging election fraud.",
+   "signal": 3.3,
+   "fit": 4.5,
+   "total": 7.8,
+   "pillars": [
+    "power",
+    "mystery"
+   ],
+   "age_h": 17.6,
+   "sources": [
+    "google-news-world"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "election",
+    "fraud",
+    "trump",
+    "alleging",
+    "candidates",
+    "follow",
+    "rigged",
+    "worldwide"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMiswFBVV95cUxQQTdXajQzMm1waFMwZ0E5c0l0cjdUWF8xcWh5V1ZNS0FfT2hIb0RjSkxDb2FZYndleXpFVkRQZERkU1JObC1YT2oyT29mVE9mQndkbEdOWktUSTFISXhWM2tTYm1BQUI0WU1xVTB4SG1oMDhXNG51cDN5RDllOWp0Z21wSFB2MXA1RVR1N2ljVWNaaGUxYkpzbHYzOXNQOEkycXJUUjZFQ0QxRDhPUTZGYkVMSQ?oc=5"
+   ]
+  },
+  {
+   "headline": "U.K. Supreme Court Hears Challenge to Ban on Palestine Action: What to Know",
+   "signal": 4.71,
+   "fit": 3.0,
+   "total": 7.71,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 6.3,
+   "sources": [
+    "google-news-world"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "court",
+    "supreme",
+    "action",
+    "ban",
+    "challenge",
+    "hears",
+    "know",
+    "palestine"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxOUVN2S1JYa2o0QjVhM3pKMUhVOGFpbWZtZlg4ZFhPY0RVVl9PRnJMb3EtTE90SVFNWmpScThYbnB5dXVDMzZBYXBnLUNrc1Y2dUwwZVdERWxYT3pyRkpVVTlWZGZCVkx1TFhCbUVrQS0wRnBMN3Fub1ZxRE1DbWZrNUxNNmk5TkRmNGc5U3dYWXA4S29U?oc=5"
+   ]
+  },
+  {
+   "headline": "Best Early Black Friday Mac Deals: Save Hundreds on MacBook Air, Mac Mini, and More",
+   "signal": 6.2,
+   "fit": 1.5,
+   "total": 7.7,
+   "pillars": [
+    "ai"
+   ],
+   "age_h": 18.4,
+   "sources": [
+    "google-news-business",
+    "google-news-tech"
+   ],
+   "n": 3,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "google",
+    "air",
+    "best",
+    "black",
+    "deals",
+    "early",
+    "friday",
+    "here",
+    "hundreds",
+    "mac",
+    "macbook",
+    "menswear"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMicEFVX3lxTE5HZm0wWTItaGxsUjFac3ZaSGktSW9BLVJaZFRVV19BOWNDUGxzZUdQT3RpelRBX0RXRWp3NUVFT1FhalNjQlEyNERwb3RQSFM1MGhiekdRSUI1OVlqTkNmOTBJZGJMU2Q0SjUzVHhyTlQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPRlNqWHoyVEFVWVl6Y2xMV2pySkpleHpzVDQ1aEI5QmtnTWpIb0JfLV90SUswa3h0Y1BVaVhnSF82V28wakFRaThEa1ZkZTlJZTRJVXh2c3huVVY3X3V3WkcyTVlQLWpmTGVpTFZsZm5CYXRMempEdWQyTFp3SEZLWXdFeEtBV29kSnFHQU9uUkdIN1hxVUthUHFJeHpzWnkyV0lNd0lzaFN5cWVnSVFzWVFXRmM5czdPbjF1RVlERG8?oc=5",
+    "https://news.google.com/rss/articles/CBMiekFVX3lxTE5aNFV4RFBGN2txcnhtX2gzZWtjc09QTHEtSUR0eHhmR3QzMjgzb2hTUkJ4Mk1zbmtYLVM4Tm5kTDJObUluVjVvUzMzU2VKLUZZRnByejNuV2V1d1F0U3VRblM4ZFY5dTJkVGVDLWxRQVRHYnhuNmpPQkNn?oc=5"
+   ]
+  },
+  {
+   "headline": "Apple's first touchscreen MacBook comes at a price",
+   "signal": 7.49,
+   "fit": 0.0,
+   "total": 7.49,
+   "pillars": [],
+   "age_h": 4.1,
+   "sources": [
+    "google-news",
+    "google-news-tech"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "apple's",
+    "comes",
+    "macbook",
+    "price",
+    "touchscreen"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE9aQXJtSFBrdEJhVlZhVjl2NXpSbzVqSjlFNkxlbVRfeE44cjRGS1phTV90VEpKTnF4WG9EcWZxaGtlSTVkOGNtem1LLUdOS3JTUmU5c243aVJFczJUS0VVWjRRalFmb3dYUUYtQ3RsZVp0UU9Zd1ZKQjJmczVUQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE9aQXJtSFBrdEJhVlZhVjl2NXpSbzVqSjlFNkxlbVRfeE44cjRGS1phTV90VEpKTnF4WG9EcWZxaGtlSTVkOGNtem1LLUdOS3JTUmU5c243aVJFczJUS0VVWjRRalFmb3dYUUYtQ3RsZVp0UU9Zd1ZKQjJmczVUQQ?oc=5"
+   ]
+  },
+  {
+   "headline": "Gold, silver and precious metals prices jump, dollar dips as Democrats take control of Congress",
+   "signal": 4.35,
+   "fit": 3.0,
+   "total": 7.35,
+   "pillars": [
+    "money",
+    "power"
+   ],
+   "age_h": 9.2,
+   "sources": [
+    "google-news-business"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "congress",
+    "dollar",
+    "control",
+    "democrats",
+    "dips",
+    "gold",
+    "jump",
+    "metals",
+    "precious",
+    "prices",
+    "silver",
+    "take"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1vZWlTQ2F2aWtGb012RVY2UHM5WlgtMDhpWU5FVFRtQTQ0Yld1NURka05Zd054LWFveWFJV3JwSThqNzg5NTR5Z0RhTUVDWkhQOXFNNVNJb29vSHFLMmZNUnB4TF9rVldRRG9VQ2MzTEJNRUdrcHZyN014aFNaZ9IBgwFBVV95cUxNUExBejVyMG8zamR1cjA4VXpSbkc1UE41dXMwd1JKLTVpSTRVNDJFUDRFWWc3U1FuT2tPV05qMUlMMDRUNnJwRlBxYXRHLVBLTW44RTc2Vzcta1BHZ19BWnNPY0kzcEp2LW5iMzN3ZUJKM19vRE8wZjVlUEgtb3ZaSENiNA?oc=5"
+   ]
+  },
+  {
+   "headline": "CVS falls 14% on plans to split off drugstore business in major breakup of healthcare giant",
+   "signal": 7.33,
+   "fit": 0.0,
+   "total": 7.33,
+   "pillars": [],
+   "age_h": 5.3,
+   "sources": [
+    "google-news",
+    "google-news-business"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "breakup",
+    "business",
+    "cvs",
+    "drugstore",
+    "falls",
+    "giant",
+    "healthcare",
+    "major",
+    "plans",
+    "split"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMifEFVX3lxTE02NmJqOUVDcHlJclhoTFUyNkM5eVhOWHNQT2tpenJRbWwzLW1OUkhTNFM5SUl2QlUtNnFzLVpfY2dqUmYwRkR0WnBLRXhWT21NMkdicTZJUjBSYXMwN3ZncHh1M2thNGJXSFBPQi1OUnVXYk1JZU1GUkRlR0LSAYIBQVVfeXFMT2x6SmliYjNvdnFVUEowWUdXejdaTmRnWHZoaWx3bzZqSGhqdUVtVlpQMEdKRTlpdFMzRHBCclpjWGU0bEVXeHRsRDdzVVkxXzJuVFN6bUdZdGtLV0o5d0U3NmZweFBCcDhFbDhsMGtabFVjQmlDUWd5UE9PbVFSODZzdw?oc=5",
+    "https://news.google.com/rss/articles/CBMifEFVX3lxTE02NmJqOUVDcHlJclhoTFUyNkM5eVhOWHNQT2tpenJRbWwzLW1OUkhTNFM5SUl2QlUtNnFzLVpfY2dqUmYwRkR0WnBLRXhWT21NMkdicTZJUjBSYXMwN3ZncHh1M2thNGJXSFBPQi1OUnVXYk1JZU1GUkRlR0LSAYIBQVVfeXFMT2x6SmliYjNvdnFVUEowWUdXejdaTmRnWHZoaWx3bzZqSGhqdUVtVlpQMEdKRTlpdFMzRHBCclpjWGU0bEVXeHRsRDdzVVkxXzJuVFN6bUdZdGtLV0o5d0U3NmZweFBCcDhFbDhsMGtabFVjQmlDUWd5UE9PbVFSODZzdw?oc=5"
+   ]
+  },
+  {
+   "headline": "Iran says US reply to Hormuz plan \u2018unconvincing\u2019; Trump confirms strikes",
+   "signal": 4.33,
+   "fit": 3.0,
+   "total": 7.33,
+   "pillars": [
+    "power",
+    "geopolitics"
+   ],
+   "age_h": 9.3,
+   "sources": [
+    "google-news-world"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "iran",
+    "trump",
+    "confirms",
+    "hormuz",
+    "plan",
+    "reply",
+    "strikes",
+    "unconvincing"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMirwFBVV95cUxON1ZqTGJfa3lWVVdvUzRRRUc3TlVVYUNFMHhkWlREdDZsYUFzSmdJVjBhcU9PaEptVWRxRm9QMnRGcmpkYkNHVXgydHhJYTd6X0d5dF9JMG1vc1dVOWtBWWxBUTB3VjhkZlAyUEt4cGhPUlJIRzR2cFhkdFVoOEc4SkRkM1FRQ0FpblBPZHh5S3JKMl9zbUhjeUlVazhmdkJ5QjRaUXJ6eV8taGNpV3lv0gG0AUFVX3lxTE1qMndoTmRKR0xGNDZnMVJYWmdselZrTXdiXzFKVjgwQW9OZ242eHJDWFlMa2x5MU1mbGVGdFIwV2V5Q2V2OVpfYmtfd0RLUnhmN01vTjZMdHgzVnVaMlZfelBSajJHOWVJOXZ0UTlQZEMwR0RsalU2bThPekFSRDExWG9KUUVMdFlVSFRPNTgteTdyNGxZMmhCMU9aUjU1SnNaTWJETmdSTlFyeHUwQmRUOGpRMw?oc=5"
+   ]
+  },
+  {
+   "headline": "5 key insights from the NBC News Exit Poll about the blue tsunami",
+   "signal": 5.76,
+   "fit": 1.5,
+   "total": 7.26,
+   "pillars": [
+    "power"
+   ],
+   "age_h": 1.9,
+   "sources": [
+    "google-news"
+   ],
+   "n": 2,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "election",
+    "blue",
+    "exit",
+    "insights",
+    "jimmy",
+    "key",
+    "kimmel",
+    "nbc",
+    "poll",
+    "rides",
+    "tsunami"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxQS1BDSGFQdXEzLVhiVVZsd0MtVEVvSTRZSUxvM3BGc3lxQ3p6RThGd1BlTC1kUlMxVVdqUUFFa2xrNTFkc3FSM1Jkc0hLS0tVelEtajQxTHRBNmJqOGVBUVJaa24xdWlTNEUxN2RDR2lnaHFiS19vQzhpQl9aMzFxc18xWjZ3R1QwdXM3S1RFdXhzZ0JmNUdEQjZUclc0VTdGQ3dBWk5ocjVZZkVl?oc=5",
+    "https://news.google.com/rss/articles/CBMimwFBVV95cUxPaUFRb0VTSkZJVXZWMUFPbTl1YW10M0hMRzZ2SGNFOF9UdlBXcTUzLXhuUFdsVlYxRmVVaHhKX196c3BMZVF2TDNBbXRBZERtN1Fnam1DN2Y5ZnhhRE9CZFhCTDBReDFYTy1tWjYyQnU3THN5dUZHSG9wU25vQlQxQWRsaUhrQ00tdTd0WEpland4X2NnZk9nSG1iNA?oc=5"
+   ]
+  },
+  {
+   "headline": "Despite calling Trump a \u201cman of peace,\u201d Africa\u2019s most powerful leader issues chilling warning to the U.S. and Iran over what may come next",
+   "signal": 4.01,
+   "fit": 3.0,
+   "total": 7.01,
+   "pillars": [
+    "power",
+    "geopolitics"
+   ],
+   "age_h": 11.9,
+   "sources": [
+    "google-news-world"
+   ],
+   "n": 1,
+   "search_traffic": 0,
+   "wiki_views": 0,
+   "keywords": [
+    "iran",
+    "trump",
+    "africa",
+    "calling",
+    "chilling",
+    "come",
+    "despite",
+    "issues",
+    "leader",
+    "man",
+    "next",
+    "peace"
+   ],
+   "links": [
+    "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPeUpUb2Z3UVdqSWQzaGVlTTRXQnF0ZVNXYjlicERvSFhEYWxwMWtRSTdicmlCSkk4a3d3X1lBOUtGb2F3Y2x3X3hvZDZXek9vZW05NDQ3c004aDVwRnUtNlJOQ0laMTlQNDhteG1QbGU2dHFmUDBQZ1U5cWhTbFFKY2hnLXhKVnhzMHJoSjE5c180WUZ6V2daRkgtR2Fwbmh0ZHJfb01TYV9JeG5JTVhaeTNiUlZPTmJqT3pDMUJ2dkNJUF92QTJSZnpHY1JuQzlUSXl4VQ?oc=5"
+   ]
+  }
+ ]
+}
