@@ -1,0 +1,32 @@
+{
+ "id": "weather-helene-iss",
+ "title": "Additional Views of Hurricane Helene from the International Space Station",
+ "source": "nasa",
+ "sourceId": "jsc2024m000168-Additional_Views_of_Hurricane_Helene_from_the_International_Space_Station",
+ "page": "https://images.nasa.gov/details/jsc2024m000168-Additional_Views_of_Hurricane_Helene_from_the_International_Space_Station",
+ "download": "https://images-assets.nasa.gov/video/jsc2024m000168-Additional_Views_of_Hurricane_Helene_from_the_International_Space_Station/jsc2024m000168-Additional_Views_of_Hurricane_Helene_from_the_International_Space_Station~large.mp4",
+ "date": "2024-09-26",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "weather",
+  "hurricane",
+  "earth-orbit"
+ ],
+ "trim": [
+  108,
+  166
+ ],
+ "file": "assets/footage/clips/weather-helene-iss.mp4",
+ "bytes": 18908479,
+ "sha1": "4e5152f9b191ba11936787c90be1666cb3f00a97",
+ "duration": 58,
+ "width": 1920,
+ "height": 1080,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

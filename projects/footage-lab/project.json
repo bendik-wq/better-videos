@@ -1,0 +1,433 @@
+{
+ "title": "Footage lab: real footage, real ground",
+ "fps": 30,
+ "width": 1920,
+ "height": 1080,
+ "voice": {
+  "engine": "kokoro",
+  "name": "bm_george"
+ },
+ "finish": {
+  "grain": 9,
+  "halation": 18,
+  "halationAmount": 0.5,
+  "bloom": 0.16,
+  "vignette": 0.55
+ },
+ "settings": {
+  "aa": "fxaa",
+  "fps": 30
+ },
+ "timing": {
+  "padIn": 0.45,
+  "padOut": 0.5
+ },
+ "shots": [
+  {
+   "id": "night",
+   "set": "footage",
+   "min": 6.2,
+   "padIn": 1.0,
+   "vo": "From four hundred kilometres up, you can see exactly where people live.",
+   "params": {
+    "file": "orbit-night-cities-exp67b",
+    "in": 21,
+    "out": 34,
+    "grade": "orbit",
+    "fadeIn": 1.0,
+    "reframe": {
+     "from": [
+      0.5,
+      0.42,
+      1.1
+     ],
+     "to": [
+      0.52,
+      0.4,
+      1.24
+     ]
+    },
+    "caption": {
+     "text": "Earth at night",
+     "sub": "International Space Station · Expedition 67",
+     "at": 1.4
+    },
+    "source": "NASA / JSC · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "sage",
+   "set": "footage",
+   "min": 4.6,
+   "vo": "In the nineteen fifties, America built a computer to watch its own sky.",
+   "params": {
+    "file": "command-sage-consoles-1956",
+    "in": 16,
+    "out": 30,
+    "grade": "archive",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.0
+     ],
+     "to": [
+      0.52,
+      0.46,
+      1.12
+     ],
+     "drift": 0.003
+    },
+    "caption": {
+     "text": "SAGE",
+     "sub": "Air defence direction centre · 1956",
+     "at": 0.7
+    },
+    "source": "FILM: ON GUARD! THE STORY OF SAGE (1956) · PRELINGER ARCHIVES · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "scope",
+   "set": "footage",
+   "min": 2.6,
+   "params": {
+    "file": "command-sage-consoles-1956",
+    "in": 50.0,
+    "out": 53.8,
+    "grade": "archive",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.05
+     ],
+     "to": [
+      0.55,
+      0.45,
+      1.3
+     ]
+    },
+    "source": "PRELINGER ARCHIVES · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "x59",
+   "set": "footage",
+   "min": 4.4,
+   "params": {
+    "file": "aircraft-x59-takeoff",
+    "in": 30.6,
+    "out": 42,
+    "grade": "house",
+    "speed": [
+     [
+      0,
+      1
+     ],
+     [
+      1.4,
+      1
+     ],
+     [
+      2.6,
+      0.35
+     ],
+     [
+      4.4,
+      0.35
+     ]
+    ],
+    "reframe": {
+     "from": [
+      0.5,
+      0.55,
+      1.1
+     ],
+     "to": [
+      0.55,
+      0.45,
+      1.22
+     ]
+    },
+    "caption": {
+     "text": "NASA X-59 · EDWARDS, CALIFORNIA",
+     "kind": "mono",
+     "corner": "br",
+     "at": 0.6
+    },
+    "source": "NASA ARMSTRONG · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "machine",
+   "set": "footage",
+   "min": 3.4,
+   "padIn": 0.2,
+   "vo": "The machine filled a building.",
+   "params": {
+    "file": "computing-sage-1956",
+    "in": 48.95,
+    "out": 51.2,
+    "grade": "archive",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.02
+     ],
+     "to": [
+      0.5,
+      0.44,
+      1.16
+     ]
+    },
+    "caption": {
+     "text": "IBM AN/FSQ-7",
+     "kind": "mono",
+     "corner": "tr",
+     "at": 0.5
+    },
+    "source": "PRELINGER ARCHIVES · PUBLIC DOMAIN",
+    "speed": 0.68
+   }
+  },
+  {
+   "id": "keys",
+   "set": "footage",
+   "min": 3.4,
+   "padIn": 0.2,
+   "vo": "People fed it, by hand.",
+   "params": {
+    "file": "computing-sage-1956",
+    "in": 66.0,
+    "out": 69.6,
+    "grade": "archive",
+    "reframe": {
+     "from": [
+      0.5,
+      0.55,
+      1.1
+     ],
+     "to": [
+      0.46,
+      0.62,
+      1.32
+     ]
+    },
+    "source": "PRELINGER ARCHIVES · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "mcc",
+   "set": "footage",
+   "min": 4.8,
+   "vo": "A decade later, rooms like this one flew men to the Moon.",
+   "params": {
+    "file": "command-apollo-mcc-1969",
+    "in": 6,
+    "out": 18,
+    "grade": "archive",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.0
+     ],
+     "to": [
+      0.52,
+      0.48,
+      1.12
+     ]
+    },
+    "caption": {
+     "text": "Mission Control",
+     "sub": "Houston · Apollo era",
+     "at": 0.8,
+     "corner": "bl"
+    },
+    "source": "NASA / JSC · PUBLIC DOMAIN",
+    "crop": [
+     160,
+     0,
+     960,
+     720
+    ]
+   }
+  },
+  {
+   "id": "pentagon",
+   "set": "aerial",
+   "min": 8.5,
+   "vo": "Today, the watching never stops.",
+   "params": {
+    "place": "pentagon",
+    "caption": "The Pentagon",
+    "sub": "ARLINGTON, VIRGINIA · 38.871° N 77.056° W",
+    "trans": "dissolve",
+    "transDur": 0.6
+   }
+  },
+  {
+   "id": "server",
+   "set": "footage",
+   "min": 5.0,
+   "vo": "The computing lives in rooms like these, that almost nobody visits.",
+   "params": {
+    "file": "server-nasa-ames-modular",
+    "in": 9.8,
+    "out": 16.5,
+    "grade": "house",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.0
+     ],
+     "to": [
+      0.6,
+      0.47,
+      1.22
+     ]
+    },
+    "caption": {
+     "text": "Aitken supercomputer",
+     "sub": "NASA Ames · Mountain View, California",
+     "at": 0.8,
+     "corner": "tr"
+    },
+    "source": "NASA AMES RESEARCH CENTER · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "storm",
+   "set": "footage",
+   "min": 5.0,
+   "vo": "And from orbit, every storm is tracked days before it lands.",
+   "params": {
+    "file": "weather-helene-iss",
+    "in": 8,
+    "out": 22,
+    "grade": "orbit",
+    "reframe": {
+     "from": [
+      0.5,
+      0.5,
+      1.04
+     ],
+     "to": [
+      0.47,
+      0.5,
+      1.16
+     ]
+    },
+    "caption": {
+     "text": "Hurricane Helene",
+     "sub": "Gulf of Mexico · September 2024",
+     "at": 0.8
+    },
+    "source": "NASA / JSC · PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "end",
+   "set": "aerial",
+   "min": 8.5,
+   "params": {
+    "place": "hoover",
+    "title": "Real footage. Real ground.",
+    "titleAt": 1.6,
+    "credits": "FOOTAGE  NASA · PRELINGER ARCHIVES · PUBLIC DOMAIN\nTERRAIN  USDA NAIP IMAGERY · USGS 3DEP ELEVATION\nHOOVER DAM, BLACK CANYON · RENDERED, HEIGHT ×1",
+    "trans": "dip",
+    "transDur": 0.8
+   }
+  }
+ ],
+ "score": {
+  "key": "D",
+  "drone": 0.12,
+  "cues": [
+   {
+    "type": "sfx",
+    "name": "room.tone",
+    "shot": "night",
+    "at": 0,
+    "gain": 0.25,
+    "params": {
+     "dur": 6.5
+    }
+   },
+   {
+    "type": "sfx",
+    "name": "impact.soft",
+    "shot": "sage",
+    "at": 0,
+    "gain": 0.45
+   },
+   {
+    "type": "sfx",
+    "name": "ui.scan",
+    "shot": "scope",
+    "at": 0.2,
+    "gain": 0.35
+   },
+   {
+    "type": "sfx",
+    "name": "whoosh.m",
+    "shot": "x59",
+    "at": 1.6,
+    "gain": 0.4
+   },
+   {
+    "type": "sfx",
+    "name": "impact.soft",
+    "shot": "machine",
+    "at": 0,
+    "gain": 0.4
+   },
+   {
+    "type": "sfx",
+    "name": "type.run",
+    "shot": "keys",
+    "at": 0.1,
+    "gain": 0.35
+   },
+   {
+    "type": "sfx",
+    "name": "wind.amb",
+    "shot": "pentagon",
+    "at": 0,
+    "gain": 0.3,
+    "params": {
+     "dur": 6.5
+    }
+   },
+   {
+    "type": "sfx",
+    "name": "room.tone",
+    "shot": "server",
+    "at": 0,
+    "gain": 0.4,
+    "params": {
+     "dur": 6.5
+    }
+   },
+   {
+    "type": "sfx",
+    "name": "wind.amb",
+    "shot": "end",
+    "at": 0,
+    "gain": 0.25,
+    "params": {
+     "dur": 8.5
+    }
+   },
+   {
+    "type": "sfx",
+    "name": "stinger",
+    "shot": "end",
+    "at": 1.6,
+    "gain": 0.4
+   }
+  ]
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "id": "orbit-night-cities-exp67b",
+ "title": "Earth in 4K – Space Station Expedition 67-68 Edition",
+ "source": "nasa",
+ "sourceId": "jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition",
+ "page": "https://images.nasa.gov/details/jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition",
+ "download": "https://images-assets.nasa.gov/video/jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition/jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition~large.mp4",
+ "date": "2023-04-21",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "iss-night",
+  "cities-at-night",
+  "earth-orbit"
+ ],
+ "trim": [
+  2836,
+  2876
+ ],
+ "file": "assets/footage/clips/orbit-night-cities-exp67b.mp4",
+ "bytes": 21700793,
+ "sha1": "949ba15522d8143a1167a455cce21ad04d8bbc7a",
+ "duration": 40,
+ "width": 1620,
+ "height": 1080,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

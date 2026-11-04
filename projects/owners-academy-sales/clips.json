@@ -1,0 +1,752 @@
+{
+  "_source": "GMT20260305-205623_Recording_1920x1080 (1).mp4 \u2014 Josh Li, 'An M&A Masterclass', 5 Mar 2026 (Drive id 1r1DIDJ4Pvq_Z66q3sxaLfpiY8BuKoUJT)",
+  "_how": "Each clip is an approximate window [from, to] in the recording plus the first words (start) and last words (end) to cut on. snap.py re-transcribes each window with word timestamps and snaps the cut to those words.",
+  "clips": {
+    "first-deal-hook": {
+      "from": "0:21:31",
+      "to": "0:22:08",
+      "start": "this is how i closed",
+      "end": "off the first deal"
+    },
+    "promise": {
+      "from": "0:09:10",
+      "to": "0:09:22",
+      "start": "today is all about how",
+      "end": "model"
+    },
+    "creds-a": {
+      "from": "0:22:57",
+      "to": "0:23:17",
+      "start": "my name is josh",
+      "end": "all around the world"
+    },
+    "creds-b": {
+      "from": "0:23:22",
+      "to": "0:23:43",
+      "start": "involved advised and facilitated",
+      "end": "deal in healthcare"
+    },
+    "proof-wall": {
+      "from": "0:29:24",
+      "to": "0:30:03",
+      "start": "for example arthur",
+      "end": "to join his company"
+    },
+    "arbitrage": {
+      "from": "1:12:51",
+      "to": "1:13:33",
+      "start": "if we're buying companies at three",
+      "end": "tripling of your money"
+    },
+    "three-cs": {
+      "from": "0:31:18",
+      "to": "0:31:30",
+      "start": "here are the three",
+      "end": "capital and closing"
+    },
+    "credibility": {
+      "from": "0:32:39",
+      "to": "0:33:27",
+      "start": "in a nutshell",
+      "end": "take me seriously unfortunately"
+    },
+    "steal-credibility": {
+      "from": "0:35:19",
+      "to": "0:35:48",
+      "start": "so what can we do",
+      "end": "or a billionaire"
+    },
+    "board-equity": {
+      "from": "0:36:33",
+      "to": "0:38:27",
+      "start": "these are people ive found",
+      "end": "to see it through"
+    },
+    "jy-a": {
+      "from": "0:47:03",
+      "to": "0:47:36",
+      "start": "here's an example of one of my guys",
+      "end": "experience in finance"
+    },
+    "jy-b": {
+      "from": "0:48:30",
+      "to": "0:49:37",
+      "start": "had to do was just tell himself",
+      "end": "off on his first deal"
+    },
+    "vendor-finance-a": {
+      "from": "0:51:12",
+      "to": "0:51:42",
+      "start": "what's vendor financing",
+      "end": "pay you a million dollars"
+    },
+    "vendor-finance-b": {
+      "from": "0:51:44",
+      "to": "0:52:33",
+      "start": "i'll give you a million dollars",
+      "end": "within two to four weeks"
+    },
+    "elliot": {
+      "from": "0:52:41",
+      "to": "0:54:28",
+      "start": "this is from a friend of mine",
+      "end": "control of the asset"
+    },
+    "why-sellers": {
+      "from": "0:54:26",
+      "to": "0:54:43",
+      "start": "you're probably asking why would a seller",
+      "end": "the burden of ownership"
+    },
+    "retiring-owners": {
+      "from": "0:55:11",
+      "to": "0:55:52",
+      "start": "the reason why we're in such a powerful time",
+      "end": "whole essence of this model"
+    },
+    "seller-pitch": {
+      "from": "1:35:57",
+      "to": "1:36:55",
+      "start": "so this is the pitch to the seller",
+      "end": "with a bank"
+    },
+    "saul": {
+      "from": "1:09:30",
+      "to": "1:10:22",
+      "start": "here's an example of saul",
+      "end": "went direct to vendor"
+    },
+    "cam": {
+      "from": "1:56:05",
+      "to": "1:57:16",
+      "start": "he closed two deals in",
+      "end": "done very quickly"
+    },
+    "failed-deals": {
+      "from": "2:12:07",
+      "to": "2:12:30",
+      "start": "there was four failed deals",
+      "end": "for different reasons"
+    },
+    "first-deal-terms": {
+      "from": "2:13:05",
+      "to": "2:14:06",
+      "start": "i figured out what the seller wanted",
+      "end": "no money no experience"
+    },
+    "christian-a": {
+      "from": "2:17:09",
+      "to": "2:17:31",
+      "start": "christian dawes",
+      "end": "he was unemployed"
+    },
+    "christian-b": {
+      "from": "2:17:36",
+      "to": "2:18:17",
+      "start": "no higher education",
+      "end": "the winning factor is action"
+    },
+    "decide-at-60": {
+      "from": "2:10:14",
+      "to": "2:10:46",
+      "start": "passive versus active risk",
+      "end": "to make a hard decision"
+    },
+    "is-it-for-you": {
+      "from": "0:25:58",
+      "to": "0:26:24",
+      "start": "so first thing is time",
+      "end": "can do that right now"
+    },
+    "how-serious": {
+      "from": "0:27:10",
+      "to": "0:27:46",
+      "start": "how serious are you guys about your own success",
+      "end": "it's possible"
+    },
+    "energy": {
+      "from": "2:15:21",
+      "to": "2:16:27",
+      "start": "so i want you to think about this",
+      "end": "through your energy"
+    },
+    "academy": {
+      "from": "2:25:06",
+      "to": "2:25:18",
+      "start": "the owners academy is my private community",
+      "end": "all my scripts"
+    },
+    "community": {
+      "from": "2:25:55",
+      "to": "2:26:30",
+      "start": "we are pretty engaged as a group",
+      "end": "you are in the owners academy"
+    },
+    "right-people": {
+      "from": "2:32:50",
+      "to": "2:33:22",
+      "start": "we want like minded people",
+      "end": "big dreams big ambitions"
+    },
+    "book-call": {
+      "from": "2:30:54",
+      "to": "2:31:22",
+      "start": "this is to book a call directly with me",
+      "end": "more information about yourself"
+    },
+    "get-to-know": {
+      "from": "2:32:18",
+      "to": "2:32:41",
+      "start": "for us to get to know each other",
+      "end": "and our community"
+    },
+    "owner-a": {
+      "from": "0:28:14",
+      "to": "0:28:39",
+      "start": "and then the last three things",
+      "end": "so much easier for you"
+    },
+    "owner-b": {
+      "from": "0:28:45",
+      "to": "0:28:57",
+      "start": "if you have these three things",
+      "end": "deals done so easily"
+    },
+    "mechanisms": {
+      "from": "0:50:44",
+      "to": "0:51:14",
+      "start": "the two core financing mechanisms",
+      "end": "equity to investors"
+    },
+    "rollover": {
+      "from": "0:56:03",
+      "to": "0:57:56",
+      "start": "what is a vendor rollover",
+      "end": "very powerful tool"
+    },
+    "commercial": {
+      "from": "0:57:54",
+      "to": "0:59:08",
+      "start": "commercial lending this is getting money",
+      "end": "just get the deal done"
+    },
+    "dscr": {
+      "from": "0:59:24",
+      "to": "0:59:40",
+      "start": "free cashflow must cover debt service",
+      "end": "or more"
+    },
+    "sixty-forty": {
+      "from": "1:48:24",
+      "to": "1:49:10",
+      "start": "our offer we're going to buy",
+      "end": "putting that up himself"
+    },
+    "jason-first": {
+      "from": "1:49:24",
+      "to": "1:50:05",
+      "start": "this is how jason nagy closed his first deal",
+      "end": "assets were worth money"
+    },
+    "seller-vision": {
+      "from": "1:52:19",
+      "to": "1:53:08",
+      "start": "you're telling the seller hey",
+      "end": "is now 4 million"
+    },
+    "rollup-run": {
+      "from": "2:07:22",
+      "to": "2:08:16",
+      "start": "now this is essentially a speed run",
+      "end": "how fast you could build wealth"
+    },
+    "jason-exit": {
+      "from": "2:09:13",
+      "to": "2:09:45",
+      "start": "this is jason nagy's company",
+      "end": "200 mil in radiology"
+    },
+    "serious": {
+      "from": "2:31:31",
+      "to": "2:32:00",
+      "start": "if you actually want to do anything serious",
+      "end": "people in my network"
+    },
+    "faq-board-or-deal": {
+      "from": "2:37:22",
+      "to": "2:39:38",
+      "start": "if you're starting how can you start with a board",
+      "end": "this one deal in particular"
+    },
+    "faq-board-equity-a": {
+      "from": "0:40:33",
+      "to": "0:41:46",
+      "start": "so carl's asking what's the typical percentage",
+      "end": "as you're building your board"
+    },
+    "faq-board-equity-b": {
+      "from": "0:41:46",
+      "to": "0:43:14",
+      "start": "you're gonna find that some of these board members",
+      "end": "maintain majority shareholder that's the key thing"
+    },
+    "faq-board-seat": {
+      "from": "2:35:42",
+      "to": "2:36:33",
+      "start": "if someone wanted to",
+      "end": "to be a director of a company"
+    },
+    "faq-us-financing": {
+      "from": "2:36:32",
+      "to": "2:37:22",
+      "start": "how do you work with people in usa regarding financing",
+      "end": "open the doors to get the money"
+    },
+    "faq-seller-buyout-a": {
+      "from": "2:48:58",
+      "to": "2:50:10",
+      "start": "do you include language to buy out sellers",
+      "end": "when we exit you exit"
+    },
+    "faq-seller-buyout-b": {
+      "from": "2:50:12",
+      "to": "2:51:34",
+      "start": "these people are going to be business partners",
+      "end": "buyouts and minority shareholders"
+    },
+    "faq-hostile-a": {
+      "from": "2:43:11",
+      "to": "2:44:08",
+      "start": "what's that term to include to stop hostile takeovers",
+      "end": "try to legally decimate"
+    },
+    "faq-hostile-b": {
+      "from": "2:44:05",
+      "to": "2:44:36",
+      "start": "and then there's two legally",
+      "end": "try to take over companies"
+    },
+    "faq-negotiation": {
+      "from": "2:20:58",
+      "to": "2:22:06",
+      "start": "best deal negotiation tactic actually is to walk away",
+      "end": "no more offer see you later"
+    },
+    "faq-mistakes-a": {
+      "from": "2:40:19",
+      "to": "2:41:18",
+      "start": "what were biggest mistakes you made early on",
+      "end": "the quicker you'll get there"
+    },
+    "faq-mistakes-b": {
+      "from": "2:41:28",
+      "to": "2:43:15",
+      "start": "another thing even even even till now",
+      "end": "making decisions at 60"
+    },
+    "faq-equity-advisory-a": {
+      "from": "2:34:29",
+      "to": "2:35:13",
+      "start": "would you take equity for advisory",
+      "end": "seriously get it done"
+    },
+    "faq-equity-advisory-b": {
+      "from": "2:35:13",
+      "to": "2:35:38",
+      "start": "i don't rely on this for my income",
+      "end": "commitment on both ends"
+    },
+    "faq-training": {
+      "from": "2:47:54",
+      "to": "2:48:10",
+      "start": "did i receive training from",
+      "end": "qla trained and self-taught"
+    },
+    "faq-work-with": {
+      "from": "2:33:28",
+      "to": "2:33:44",
+      "start": "how do we work with you",
+      "end": "what we can do for you"
+    },
+    "faq-pg": {
+      "from": "1:50:42",
+      "to": "1:51:41",
+      "start": "jason and the 40% owner",
+      "end": "position was in the assets"
+    }
+  },
+  "cuts": {
+    "vsl": {
+      "title": "VSL \u2014 Buy a Business With No Money Down (cut from the masterclass)",
+      "sequence": [
+        "first-deal-hook",
+        "promise",
+        "creds-a",
+        "creds-b",
+        "proof-wall",
+        "arbitrage",
+        {
+          "card": "C1 \u00b7 CREDIBILITY"
+        },
+        "three-cs",
+        "credibility",
+        "steal-credibility",
+        "board-equity",
+        "jy-a",
+        "jy-b",
+        {
+          "card": "C2 \u00b7 CAPITAL"
+        },
+        "vendor-finance-a",
+        "vendor-finance-b",
+        "elliot",
+        "why-sellers",
+        "retiring-owners",
+        {
+          "card": "C3 \u00b7 CLOSING"
+        },
+        "saul",
+        "failed-deals",
+        "first-deal-terms",
+        "christian-a",
+        "christian-b",
+        "decide-at-60",
+        {
+          "card": "IS THIS FOR YOU?"
+        },
+        "is-it-for-you",
+        "academy",
+        "community",
+        "right-people",
+        "book-call",
+        "get-to-know"
+      ]
+    },
+    "precall-1-meet-josh": {
+      "title": "Pre-call 1 \u2014 Meet Josh: unemployed to CEO with no money down",
+      "sequence": [
+        "creds-a",
+        "creds-b",
+        "first-deal-hook",
+        "failed-deals",
+        "first-deal-terms"
+      ]
+    },
+    "precall-2-how-the-money-works": {
+      "title": "Pre-call 2 \u2014 How the money works: vendor finance in 5 minutes",
+      "sequence": [
+        "vendor-finance-a",
+        "vendor-finance-b",
+        "elliot",
+        "why-sellers",
+        "retiring-owners",
+        "seller-pitch"
+      ]
+    },
+    "precall-3-people-like-you": {
+      "title": "Pre-call 3 \u2014 People like you: student and network results",
+      "sequence": [
+        "proof-wall",
+        "jy-a",
+        "jy-b",
+        "saul",
+        "cam",
+        "christian-a",
+        "christian-b"
+      ]
+    },
+    "precall-4-is-this-for-you": {
+      "title": "Pre-call 4 \u2014 Is this for you? Watch before your call",
+      "sequence": [
+        "is-it-for-you",
+        "how-serious",
+        "energy",
+        "decide-at-60",
+        "right-people",
+        "get-to-know"
+      ]
+    },
+    "vsl-b2b": {
+      "title": "B2B VSL \u2014 Grow by acquisition with vendor finance, rollover and commercial debt",
+      "layout": "split",
+      "sequence": [
+        "arbitrage",
+        "owner-a",
+        "owner-b",
+        "creds-a",
+        "creds-b",
+        {
+          "card": "Why owners are selling"
+        },
+        "why-sellers",
+        "retiring-owners",
+        {
+          "card": "Three ways to fund a deal"
+        },
+        "mechanisms",
+        {
+          "card": "1 \u00b7 Vendor finance"
+        },
+        "vendor-finance-a",
+        "vendor-finance-b",
+        "seller-pitch",
+        "first-deal-terms",
+        {
+          "card": "2 \u00b7 Vendor rollover"
+        },
+        "rollover",
+        {
+          "card": "3 \u00b7 Commercial debt"
+        },
+        "commercial",
+        "dscr",
+        {
+          "card": "Stacking all three"
+        },
+        "sixty-forty",
+        "jason-first",
+        "seller-vision",
+        "christian-a",
+        "cam",
+        {
+          "card": "The roll-up"
+        },
+        "rollup-run",
+        "jason-exit",
+        {
+          "card": "Work with us"
+        },
+        "serious",
+        "book-call",
+        "get-to-know"
+      ]
+    },
+    "faq-1-board-or-deal": {
+      "title": "FAQ 1 \u2014 Board first, or deal first?",
+      "layout": "split",
+      "chapter": "FAQ 1 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Board first, or <em>deal first</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-or-deal"
+      ]
+    },
+    "faq-2-board-equity": {
+      "title": "FAQ 2 \u2014 How much equity do board members get?",
+      "layout": "split",
+      "chapter": "FAQ 2 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How much equity do board members <em>get</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-equity-a",
+        "faq-board-equity-b"
+      ]
+    },
+    "faq-3-board-seat": {
+      "title": "FAQ 3 \u2014 Can Josh sit on my board?",
+      "layout": "split",
+      "chapter": "FAQ 3 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Can Josh sit on <em>my board</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-board-seat"
+      ]
+    },
+    "faq-4-us-financing": {
+      "title": "FAQ 4 \u2014 How do you help with financing in the US?",
+      "layout": "split",
+      "chapter": "FAQ 4 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do you help with financing <em>in the US</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-us-financing"
+      ]
+    },
+    "faq-5-seller-buyout": {
+      "title": "FAQ 5 \u2014 Can I buy out a seller who keeps a stake?",
+      "layout": "split",
+      "chapter": "FAQ 5 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Can I buy out a seller who <em>keeps a stake</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-seller-buyout-a",
+        "faq-seller-buyout-b"
+      ]
+    },
+    "faq-6-control": {
+      "title": "FAQ 6 \u2014 How do I stop minority shareholders taking control?",
+      "layout": "split",
+      "chapter": "FAQ 6 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do I stop minority shareholders <em>taking control</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-hostile-a",
+        "faq-hostile-b"
+      ]
+    },
+    "faq-7-negotiation": {
+      "title": "FAQ 7 \u2014 What's the best negotiation tactic?",
+      "layout": "split",
+      "chapter": "FAQ 7 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "What's the best <em>negotiation tactic</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-negotiation"
+      ]
+    },
+    "faq-8-mistakes": {
+      "title": "FAQ 8 \u2014 What mistakes cost the most time?",
+      "layout": "split",
+      "chapter": "FAQ 8 of 8",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "What mistakes <em>cost the most time</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-mistakes-a",
+        "faq-mistakes-b"
+      ]
+    },
+    "faq-9-work-with-josh": {
+      "title": "faq-9-work-with-josh",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Next step",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "How do I <em>work with Josh</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-work-with",
+        "book-call",
+        "get-to-know"
+      ]
+    },
+    "faq-10-equity-advisory": {
+      "title": "faq-10-equity-advisory",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Internal",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Would you take <em>equity</em> for advisory?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-equity-advisory-a",
+        "faq-equity-advisory-b"
+      ]
+    },
+    "faq-12-personal-guarantee": {
+      "title": "faq-12-personal-guarantee",
+      "layout": "split",
+      "chapter": "FAQ \u00b7 Financing",
+      "cards": {
+        "intro": {
+          "eyebrow": "Pre-call FAQ \u00b7 Josh answers",
+          "title": "Do I have to sign a <em>personal guarantee</em>?",
+          "dur": 2.8
+        },
+        "end": {
+          "eyebrow": "Pre-call FAQ",
+          "title": "Bring your questions <em>to the call</em>.",
+          "dur": 3
+        }
+      },
+      "sequence": [
+        "faq-pg"
+      ]
+    }
+  }
+}

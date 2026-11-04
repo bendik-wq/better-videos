@@ -1,0 +1,5302 @@
+{
+ "version": 1,
+ "generated": "node docs/shots/build-catalog.mjs",
+ "about": "Named camera moves for engine/camera.js. recipe is a JS expression in scope { M: camera.js module, W: world handles } returning a Move; duration is the usable range (stretch with M.retime). See docs/shots/catalog.md.",
+ "handles": "W.hero W.object W.doc W.tower W.towerTop W.towerBox W.office W.window W.screen W.gap W.ridge W.weave W.road W.plaza W.planet W.globe W.car W.carAt(t) W.figure W.figureAt(t) W.figureHead(t) (projects/shot-lab/world-handles.mjs)",
+ "cost": {
+  "T1": "<= 300 ms/frame at 1080p llvmpipe",
+  "T2": "300-450 ms/frame",
+  "T3": "> 450 ms/frame: budget against T1 neighbours"
+ },
+ "categories": {
+  "EST": {
+   "name": "Establishing and scale",
+   "about": "Where are we, and how big is it. Open chapters and sections; reset geography after a run of closes.",
+   "count": 24
+  },
+  "REV": {
+   "name": "Reveal",
+   "about": "Withhold, then show. The move itself delivers the information: a payoff, a twist, the answer to an open loop.",
+   "count": 24
+  },
+  "FOL": {
+   "name": "Follow and tracking",
+   "about": "The camera is locked to a moving subject (Fincher): the audience rides with intent, momentum and chase.",
+   "count": 24
+  },
+  "ONE": {
+   "name": "Oner and bridge",
+   "about": "Continuous moves that link two scenes or two scales without a cut (Cuarón/Lubezki \"elastic\" shots, Powers of Ten).",
+   "count": 28
+  },
+  "CHR": {
+   "name": "Character and silhouette",
+   "about": "A person as a shape against light: intimacy, isolation, the stoic operator. No CG faces, ever.",
+   "count": 22
+  },
+  "OBJ": {
+   "name": "Object and macro",
+   "about": "Evidence. One object in a void or on a surface, read by a slow, close, motivated camera.",
+   "count": 22
+  },
+  "DAT": {
+   "name": "Data and map",
+   "about": "Numbers, places and systems: maps that the camera flies to, globes, god's-eye patterns, diagrams.",
+   "count": 22
+  },
+  "TRN": {
+   "name": "Transition camera",
+   "about": "Moves designed to cut on: whips, push-ins into darkness, match moves, velocity hand-offs between shots.",
+   "count": 18
+  },
+  "END": {
+   "name": "Ending",
+   "about": "Let it land. Pull-outs, holds, rises and fades that close a chapter or the film and leave a question.",
+   "count": 16
+  }
+ },
+ "shots": [
+  {
+   "id": "EST-001",
+   "category": "EST",
+   "name": "Skyline IMAX push",
+   "use": "Awe and scale at the top of a chapter; the city as a character (Nolan/van Hoytema large-format wides held long).",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.dollyIn({ target: W.tower, dist: 300, push: 0.1, az: 25, el: 2, mm: 50, dur: 9, ease: 'gentle' })",
+   "lens": "50mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "city",
+    "skyline",
+    "port"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-002",
+   "category": "EST",
+   "name": "Crane-up establishing rise",
+   "use": "The classic opener: from the street to the skyline. Context after a close.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.craneReveal({ target: W.tower, dist: 120, az: 30, rise: 26, mm: 24, dur: 8 })",
+   "lens": "24mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "city",
+    "street",
+    "compound"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-003",
+   "category": "EST",
+   "name": "Tiny figure, huge world",
+   "use": "Villeneuve/Fraser scale: a lone figure low in frame under architecture; isolation, insignificance.",
+   "purpose": [
+    "place",
+    "person"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: M.vec.add(W.figureAt(9), [0, 9, 0]), dist: 70, az: 168, el: 9, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "city",
+    "desert",
+    "industrial"
+   ],
+   "lab": "world",
+   "t0": 6
+  },
+  {
+   "id": "EST-004",
+   "category": "EST",
+   "name": "Aerial hover pan",
+   "use": "A calm survey of a place; a breath between dense beats (drone hover pan).",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pan({ pos: [60, 70, 140], from: W.tower, to: W.office, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "city",
+    "coast",
+    "farmland"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-005",
+   "category": "EST",
+   "name": "God's-eye slow rotate",
+   "use": "Pattern and order seen from above; surveillance; a system rather than a place.",
+   "purpose": [
+    "place",
+    "mechanism"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: W.plaza, h0: 160, h1: 140, spin: 20, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "city grid",
+    "port",
+    "parking lot",
+    "farmland"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-006",
+   "category": "EST",
+   "name": "Helix rise off the tower",
+   "use": "Scale grows as the camera climbs and circles; ambition, empire.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.helixRise({ target: W.tower, r0: 34, r1: 80, h0: -30, h1: 44, arc: 150, mm: 24, dur: 9 })",
+   "lens": "24mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "tower",
+    "monument",
+    "lighthouse"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-007",
+   "category": "EST",
+   "name": "Ridge-line reveal",
+   "use": "Drone rises over a ridge and tilts down onto the place: arrival, discovery.",
+   "purpose": [
+    "place",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.droneRidgeReveal({ crest: W.ridge.crest, dir: W.ridge.dir, vista: W.plaza, back: 30, low: 8, clear: 18, ahead: 40, mm: 24, dur: 9 })",
+   "lens": "24mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "valley",
+    "city from hills",
+    "mine",
+    "border"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-008",
+   "category": "EST",
+   "name": "Descend into the city",
+   "use": "From sky to street level: we are entering this world now.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.descendFromSky({ ground: W.plaza, h0: 1200, h1: 25, heading: [0, 0, -1], lookEnd: W.tower, landAt: 0.55, mm: 28, dur: 9 })",
+   "lens": "28mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "city",
+    "campus",
+    "base"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-009",
+   "category": "EST",
+   "name": "Low-angle wide hold",
+   "use": "Monumental and stable: the building as power. Hold while VO sets up.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: M.vec.add(W.tower, [0, 6, 0]), dist: 95, az: 20, el: -14, mm: 24, dur: 7 })",
+   "lens": "24mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "HQ",
+    "courthouse",
+    "tower"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-010",
+   "category": "EST",
+   "name": "Orbit the landmark",
+   "use": "The strongest single image of a place; we circle it to understand its shape.",
+   "purpose": [
+    "place",
+    "object"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: W.tower, dist: 150, az: -40, arc: 60, el: 14, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "landmark",
+    "factory",
+    "monument"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-011",
+   "category": "EST",
+   "name": "Pedestal up the facade",
+   "use": "Height and grandeur read floor by floor; the institution looms.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.pedestal({ target: M.vec.add(W.tower, [0, -30, 0]), dist: 45, az: 10, rise: 40, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "tower",
+    "HQ",
+    "dam"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-012",
+   "category": "EST",
+   "name": "Tilt-up to the top",
+   "use": "Looking up a structure from its foot: the scale of what we are up against.",
+   "purpose": [
+    "place",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: [-30, 1.6, 2], from: M.vec.add(W.tower, [0, -34, 7]), to: W.towerTop, mm: 24, dur: 7 })",
+   "lens": "24mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "tower",
+    "rocket",
+    "tree",
+    "statue"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-013",
+   "category": "EST",
+   "name": "Street-level truck",
+   "use": "Lateral move along a street: we are here, at human scale, among things.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: [0, 3, 20], dist: 26, az: 0, el: 2, track: 26, mm: 32, dur: 7 })",
+   "lens": "32mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "street",
+    "market",
+    "corridor"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-014",
+   "category": "EST",
+   "name": "Horizon low pass",
+   "use": "Skimming low toward the city: momentum into a new chapter.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.trackPath({ points: [[0, 3, 260], [0, 3.5, 170], [-5, 4.5, 90], [-10, 7, 40]], target: W.tower, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "desert",
+    "sea",
+    "runway",
+    "city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-015",
+   "category": "EST",
+   "name": "Flyover of the square",
+   "use": "Skim, then rise over the subject and leave it below: energy and geography at once.",
+   "purpose": [
+    "place",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.flyover({ target: W.plaza, dir: [0, 0, -1], h0: 6, h1: 26, reach: 70, mm: 24, dur: 8 })",
+   "lens": "24mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "square",
+    "stadium",
+    "crash site"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-016",
+   "category": "EST",
+   "name": "Map-to-street zoom",
+   "use": "Johnny Harris style: the map becomes the place. Orientation before detail.",
+   "purpose": [
+    "place",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.mapFlyTo({ from: { at: [0, 0], width: 3000 }, to: { at: [W.plaza[0], W.plaza[2]], width: 120 }, tilt: 20, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "map",
+    "city",
+    "region"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-017",
+   "category": "EST",
+   "name": "Planet to city",
+   "use": "Where on Earth: start from orbit, fall to the city. The opening of an episode.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.descendFromSky({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 380000, h1: 300, heading: [0, 0, -1], mm: 35, dur: 10 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T3",
+   "sets": [
+    "globe+city",
+    "any location intro"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-018",
+   "category": "EST",
+   "name": "Jib arc down to the plaza",
+   "use": "Arrive in a space from above with grace; the set is introduced like a stage.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.jibArc({ target: W.hero, dist: 34, az: -30, swing: 25, el0: 42, el1: 8, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "plaza",
+    "lobby",
+    "factory floor"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-019",
+   "category": "EST",
+   "name": "Twin-tower gap glide",
+   "use": "Gliding between two buildings: canyon of power, corporate scale.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.flyThrough({ gap: W.gap.point, dir: W.gap.dir, before: 50, after: 45, rise: 5, mm: 24, dur: 8 })",
+   "lens": "24mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "financial district",
+    "canyon",
+    "ship hull"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-020",
+   "category": "EST",
+   "name": "Silent wide lock-off",
+   "use": "Deakins: tension by holding. A wide where nothing moves but the world.",
+   "purpose": [
+    "place",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: [-20, 2, 12], dist: 60, az: 70, el: 4, mm: 40, dur: 8, drift: 0.006 })",
+   "lens": "40mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "any exterior",
+    "night street"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "EST-021",
+   "category": "EST",
+   "name": "Slow zoom-in survey",
+   "use": "Documentary long-lens zoom: observational, the watcher's eye. Use sparingly.",
+   "purpose": [
+    "place",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.zoomCreep({ target: W.office, dist: 160, az: 15, el: 6, mm: 65, mm1: 100, dur: 9 })",
+   "lens": "65→100mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "surveillance",
+    "border",
+    "compound"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-022",
+   "category": "EST",
+   "name": "Parallax past foreground",
+   "use": "A foreground element slides past the lens to give the wide depth and presence.",
+   "purpose": [
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.parallaxSlide({ target: W.tower, dist: 90, az: 30, el: 3, track: 30, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "through trees",
+    "past fence",
+    "past pillars"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-023",
+   "category": "EST",
+   "name": "Spiral descent to the hero",
+   "use": "Funnel the viewer onto the subject of the chapter from the sky.",
+   "purpose": [
+    "place",
+    "object"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.spiralDescent({ target: W.hero, h0: 90, h1: 4, r0: 70, r1: 14, arc: 220, mm: 28, dur: 10 })",
+   "lens": "28mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "plaza",
+    "crash site",
+    "monument"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "EST-024",
+   "category": "EST",
+   "name": "Night-to-orbit establishing",
+   "use": "Where we are on the planet, at the end of the intro: the terminator line, the city a point.",
+   "purpose": [
+    "place",
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pullBackToPlanet({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 400, h1: 420000, heading: [0, 0, -1], spin: 15, mm: 35, dur: 10 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T3",
+   "sets": [
+    "globe+city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-001",
+   "category": "REV",
+   "name": "Half-orbit reveal",
+   "use": "Circle a subject to show the side we could not see: the hidden truth, the other face.",
+   "purpose": [
+    "reveal",
+    "object"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.halfOrbitReveal({ target: W.hero, dist: 16, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "container",
+    "statue",
+    "vehicle"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-002",
+   "category": "REV",
+   "name": "Pull-back reveal",
+   "use": "The detail was part of something bigger: context lands as the frame widens.",
+   "purpose": [
+    "reveal",
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pullBackReveal({ target: W.object, dist: 1.6, pull: 14, rise: 16, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-003",
+   "category": "REV",
+   "name": "Boom-down past the occluder",
+   "use": "Descend from behind an object to reveal what was waiting below.",
+   "purpose": [
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.craneDown({ target: W.hero, dist: 18, az: 160, el: 3, rise: 14, back: 0.25, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "behind wall",
+    "over car roof",
+    "treeline"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-004",
+   "category": "REV",
+   "name": "Foreground wipe reveal",
+   "use": "A dark foreground crosses frame, and the subject is there when it clears.",
+   "purpose": [
+    "reveal",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.wipeReveal({ target: W.hero, dist: 20, az: 200, mm: 32, dur: 6 })",
+   "lens": "32mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "pillars",
+    "crowd",
+    "shelves"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-005",
+   "category": "REV",
+   "name": "Tilt-down from sky",
+   "use": "Start on sky or ceiling, tilt down to the subject: the world arrives.",
+   "purpose": [
+    "reveal",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: [10, 2, 34], from: [-10, 40, -60], to: W.hero, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "any exterior",
+    "cathedral"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-006",
+   "category": "REV",
+   "name": "Ridge rise to the vista",
+   "use": "The drone clears the ridge and the place is suddenly all there: release of tension.",
+   "purpose": [
+    "reveal",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.droneRidgeReveal({ crest: W.ridge.crest, dir: W.ridge.dir, vista: W.tower, back: 18, low: 5, clear: 6, ahead: 26, mm: 20, dur: 7 })",
+   "lens": "20mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "valley",
+    "quarry",
+    "city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-007",
+   "category": "REV",
+   "name": "Dolly-zoom realisation",
+   "use": "Hitchcock/Spielberg vertigo: the ground shifts under the subject. Once per episode.",
+   "purpose": [
+    "reveal",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.dollyZoom({ target: W.figureHead(9), dist: 9, az: -30, el: 0, ratio: 0.45, mm: 50, dur: 4 })",
+   "lens": "50→23mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "corridor",
+    "object"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "REV-008",
+   "category": "REV",
+   "name": "Rack to the background",
+   "use": "Focus moves from foreground to what is behind it: the real subject was there all along.",
+   "purpose": [
+    "reveal",
+    "object"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.rackHold({ target: W.hero, dist: 14, az: 30, el: 4, near: 2, far: 14, at: 0.4, over: 0.25, mm: 65, dur: 6 })",
+   "lens": "65mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T3",
+   "sets": [
+    "desk",
+    "window",
+    "aisle"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "Needs post.js DOF to read (T3). Pass { fx } to M.apply."
+  },
+  {
+   "id": "REV-009",
+   "category": "REV",
+   "name": "Push past the subject",
+   "use": "We move past the figure or object into what it is looking at.",
+   "purpose": [
+    "reveal",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.pushPast({ target: W.hero, dist: 14, side: 2.6, reach: 1.2, az: 200, el: 6, mm: 32, dur: 6 })",
+   "lens": "32mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure at window",
+    "guard",
+    "car"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-010",
+   "category": "REV",
+   "name": "Window push-in",
+   "use": "From the dark street into the one lit window: the private room behind the public facade.",
+   "purpose": [
+    "reveal",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.pushThrough({ through: W.window.point, normal: W.window.normal, before: 22, after: 4, target: W.window.inside, mm: 35, mm1: 28, dur: 7 })",
+   "lens": "35→28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "office",
+    "apartment",
+    "embassy"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-011",
+   "category": "REV",
+   "name": "Reverse-angle orbit to the face",
+   "use": "Start behind a subject, arc around to its front: who it is, now.",
+   "purpose": [
+    "reveal",
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: M.vec.add(W.figureAt(9), [0, 1.3, 0]), dist: 5, az: -100, arc: 150, el: 3, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "statue",
+    "vehicle"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "REV-012",
+   "category": "REV",
+   "name": "Snap zoom on the detail",
+   "use": "Eased crash zoom onto the thing that matters: a jolt of attention, on a word.",
+   "purpose": [
+    "reveal",
+    "object"
+   ],
+   "scale": "close",
+   "energy": "high",
+   "recipe": "M.snapZoom({ target: W.object, dist: 6, az: 30, el: 12, mm: 28, mm1: 135, dur: 0.8 })",
+   "lens": "28→135mm",
+   "duration": [
+    0.6,
+    1
+   ],
+   "dur": 0.8,
+   "cost": "T2",
+   "sets": [
+    "any detail",
+    "number",
+    "face"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-013",
+   "category": "REV",
+   "name": "Overhead to eye level",
+   "use": "Map view turns into presence: we drop into the place at human height.",
+   "purpose": [
+    "reveal",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.overheadToEye({ target: W.hero, dist: 22, az: 20, h0: 40, eye: 1.7, mm: 28, dur: 8 })",
+   "lens": "28mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "plaza",
+    "battlefield",
+    "crime scene"
+   ],
+   "lab": "world",
+   "t0": 12
+  },
+  {
+   "id": "REV-014",
+   "category": "REV",
+   "name": "Look-at shift to the second subject",
+   "use": "The frame turns from A to B as the VO links them: cause and effect, owner and owned.",
+   "purpose": [
+    "reveal",
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lookAtShift({ pos: [10, 1.7, 22], from: W.hero, to: W.office, mm: 40, dur: 5 })",
+   "lens": "40mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "two objects",
+    "two buildings",
+    "two people"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-015",
+   "category": "REV",
+   "name": "Pedestal reveal over the edge",
+   "use": "Rise straight up from behind a wall or car roof: the subject appears over the edge.",
+   "purpose": [
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.pedestal({ target: M.vec.add(W.hero, [0, -1.1, 0]), dist: 12, az: 180, rise: 3.2, mm: 35, dur: 5 })",
+   "lens": "35mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "wall",
+    "car",
+    "desk"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-016",
+   "category": "REV",
+   "name": "Arc-push hero landing",
+   "use": "A short arc that settles on the hero angle: the definitive image of the subject.",
+   "purpose": [
+    "reveal",
+    "object"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.arcPush({ target: W.hero, dist: 15, az: 30, mm: 50, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "product",
+    "weapon",
+    "building"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-017",
+   "category": "REV",
+   "name": "Through-the-screen reveal",
+   "use": "Push into a screen and out into the world it shows: the data becomes real.",
+   "purpose": [
+    "reveal",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.pushThrough({ through: W.screen.point, normal: W.screen.normal, before: 9, after: 2, mm: 35, mm1: 24, dur: 5 })",
+   "lens": "35→24mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "monitor",
+    "phone",
+    "billboard"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-018",
+   "category": "REV",
+   "name": "Climb and tilt reveal",
+   "use": "Pedestal up while the aim lifts from ground to horizon: the scope of the problem.",
+   "purpose": [
+    "reveal",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.craneReveal({ target: W.office, dist: 70, az: -20, rise: 18, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "field",
+    "yard",
+    "harbour"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-019",
+   "category": "REV",
+   "name": "Slow push to the door",
+   "use": "Approach the threshold while VO withholds: what is inside?",
+   "purpose": [
+    "reveal",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.dollyIn({ target: M.vec.add(W.hero, [5, 0, 1.8]), dist: 12, az: 70, el: 2, push: 0.45, mm: 40, dur: 7, ease: 'gentle' })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "door",
+    "vault",
+    "container doors"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-020",
+   "category": "REV",
+   "name": "Top-down push to the pattern",
+   "use": "From above, closing on a detail inside a pattern: the one that is different.",
+   "purpose": [
+    "reveal",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.topDownPush({ target: W.hero, h0: 110, h1: 14, yaw: 20, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "parking lot",
+    "graves",
+    "containers",
+    "crowd"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-021",
+   "category": "REV",
+   "name": "Dutch drift into unease",
+   "use": "The horizon tips slowly as the VO turns: something is wrong here.",
+   "purpose": [
+    "reveal",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.dutchDrift({ target: W.office, dist: 40, az: -10, el: 6, roll: 8, push: 0.12, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "corridor",
+    "office",
+    "street"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "REV-022",
+   "category": "REV",
+   "name": "Rise behind the figure",
+   "use": "Over-the-shoulder rise: we see what the person sees, and it is big.",
+   "purpose": [
+    "reveal",
+    "person"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.lookAt(M.layer(M.hold({ pos: M.vec.add(W.figureAt(9), [-2.6, 1.7, 1.5]), look: W.tower, mm: 28 }, 7), M.pedestal({ target: [0, 0, 0], dist: 1, rise: 9, dur: 7 })), W.tower, { lead: 0 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "figure at edge",
+    "operator at desk"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "REV-023",
+   "category": "REV",
+   "name": "God's-eye drop to the subject",
+   "use": "From pure pattern to one subject: the abstraction becomes a person or a thing.",
+   "purpose": [
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.godRotate({ target: W.figureAt(8), h0: 140, h1: 9, spin: 35, mm: 35, dur: 8, ease: 'settle' })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "crowd",
+    "city grid",
+    "battlefield"
+   ],
+   "lab": "world",
+   "t0": 4
+  },
+  {
+   "id": "REV-024",
+   "category": "REV",
+   "name": "Spin-out from the object",
+   "use": "Leave the object with a rising orbit until its surroundings make sense of it.",
+   "purpose": [
+    "reveal",
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.helixRise({ target: W.object, r0: 1.2, r1: 16, h0: 0.4, h1: 18, arc: 170, mm: 28, dur: 8 })",
+   "lens": "28mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "object on table",
+    "car",
+    "body"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "FOL-001",
+   "category": "FOL",
+   "name": "Chase cam behind the car",
+   "use": "Momentum, pursuit, destination unknown. The car leads the story.",
+   "purpose": [
+    "person",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.followChase({ subject: W.car, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "truck",
+    "boat"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-002",
+   "category": "FOL",
+   "name": "Side tracking at speed",
+   "use": "Parallel track in profile: urgency with geography sliding behind.",
+   "purpose": [
+    "person",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.followSide({ subject: W.car, offset: [-9, 1.3, 0], mm: 50, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "runner",
+    "train"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "FOL-003",
+   "category": "FOL",
+   "name": "Lead shot, backing away",
+   "use": "The camera retreats in front of the subject: it is coming toward us, determined.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.followLead({ subject: W.car, offset: [0.6, 1.5, -13], mm: 40, dur: 6 })",
+   "lens": "40mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "walker",
+    "convoy"
+   ],
+   "lab": "world",
+   "t0": 4
+  },
+  {
+   "id": "FOL-004",
+   "category": "FOL",
+   "name": "Overhead tracking",
+   "use": "God's-eye follow: the route and the maze; the subject as a dot in a system.",
+   "purpose": [
+    "mechanism",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.followTop({ subject: W.car, offset: [0, 45, 0.001], mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "convoy",
+    "ship"
+   ],
+   "lab": "world",
+   "t0": 6
+  },
+  {
+   "id": "FOL-005",
+   "category": "FOL",
+   "name": "Fincher locked follow",
+   "use": "The frame is glued to the walker: no float, no lag, exact. The audience is surveilling.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.follow({ subject: W.figure, offset: [1.2, 1.55, 3.6], lag: 0.08, lookahead: 0.1, lookHeight: 1.45, mm: 40, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "operator",
+    "suspect"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-006",
+   "category": "FOL",
+   "name": "Operator follow with breath",
+   "use": "A human operator behind the walker: present, slightly late, alive.",
+   "purpose": [
+    "person",
+    "memory"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.follow({ subject: W.figure, offset: [0.5, 1.6, 4.2], lag: 0.45, lookahead: 0.3, lookHeight: 1.3, mm: 35, float: 0.03, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "crowd"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "FOL-007",
+   "category": "FOL",
+   "name": "Profile walk, long lens",
+   "use": "Long-lens side track of a walker: compressed background, introspection.",
+   "purpose": [
+    "person",
+    "memory"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.follow({ subject: W.figure, offset: [-9, 1.4, 0], lag: 0.2, lookahead: 0.2, lookHeight: 1.1, mm: 85, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "commuter"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-008",
+   "category": "FOL",
+   "name": "Track-in on the walker's back",
+   "use": "Close behind, gaining: we are about to learn where they are going.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.blend(M.follow({ subject: W.figure, offset: [0.3, 1.6, 5.5], lag: 0.3, lookHeight: 1.4, mm: 40, dur: 7 }), M.follow({ subject: W.figure, offset: [0.25, 1.62, 1.8], lag: 0.3, lookHeight: 1.45, mm: 40, dur: 7 }), [0.5, 6.5])",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "guard"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-009",
+   "category": "FOL",
+   "name": "Car arrives at destination",
+   "use": "Follow the car as it brakes and settle into a hold as it stops: arrival.",
+   "purpose": [
+    "place",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.followChase({ subject: W.car, offset: [-2.5, 2.2, 9], lookahead: 0.6, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "ship docking",
+    "plane landing"
+   ],
+   "lab": "world",
+   "t0": 15
+  },
+  {
+   "id": "FOL-010",
+   "category": "FOL",
+   "name": "Orbiting follow",
+   "use": "Circle the moving subject while travelling with it: dynamic hero beat.",
+   "purpose": [
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.orbit({ target: W.car, dist: 11, az: -60, arc: 120, el: 8, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "boat",
+    "runner"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "FOL-011",
+   "category": "FOL",
+   "name": "Drone follow and rise",
+   "use": "Follow the car, then climb away from it: the journey becomes geography.",
+   "purpose": [
+    "place",
+    "time"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.layer(M.followChase({ subject: W.car, offset: [0, 4, 12], dur: 8 }), M.pedestal({ target: [0, 0, 0], dist: 1, rise: 30, dur: 8, ease: 'in' }))",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "convoy",
+    "hiker"
+   ],
+   "lab": "world",
+   "t0": 4
+  },
+  {
+   "id": "FOL-012",
+   "category": "FOL",
+   "name": "FPV chase through the streets",
+   "use": "Low, banked and fast through the gaps: adrenaline, speed, reckless pursuit.",
+   "purpose": [
+    "tension",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.fpvWeave({ points: W.weave, mm: 16, dur: 10 })",
+   "lens": "16mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "streets",
+    "canyon",
+    "forest"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "FOL-013",
+   "category": "FOL",
+   "name": "Track along the road",
+   "use": "The road itself is the subject: a route, a supply line, a migration.",
+   "purpose": [
+    "mechanism",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.trackPath({ points: W.road.slice(1, 6).map(p => M.vec.add(p, [0, 16, 18])), lookY: -10, mm: 28, dur: 10 })",
+   "lens": "28mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "road",
+    "pipeline",
+    "border wall",
+    "river"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "FOL-014",
+   "category": "FOL",
+   "name": "Wheel-level tracking",
+   "use": "Low on the ground beside the wheel: weight, machinery, power.",
+   "purpose": [
+    "object",
+    "tension"
+   ],
+   "scale": "close",
+   "energy": "high",
+   "recipe": "M.follow({ subject: W.car, offset: [2.2, -0.35, 1.2], lag: 0.05, lookahead: 0.15, lookHeight: -0.3, mm: 24, dur: 5 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "train",
+    "tank"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "FOL-015",
+   "category": "FOL",
+   "name": "Lead-room pan",
+   "use": "A fixed camera pans with the subject passing; leaves space ahead of it.",
+   "purpose": [
+    "person",
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.lookAt(M.lockOff({ target: W.carAt(6), dist: 22, az: 160, el: 3, mm: 40, dur: 6 }), W.car, { lead: 0.6, height: -0.2 })",
+   "lens": "40mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car passing",
+    "walker passing"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "FOL-016",
+   "category": "FOL",
+   "name": "Converging follow",
+   "use": "Two subjects about to meet; the camera tracks one and finds the other.",
+   "purpose": [
+    "tension",
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.lookAt(M.follow({ subject: W.figure, offset: [-1.5, 1.7, 5], lag: 0.3, lookHeight: 1.3, mm: 32, dur: 7 }), W.car, { lead: 0.3, weight: [3, 5.5] })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car + walker",
+    "two ships"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-017",
+   "category": "FOL",
+   "name": "Top-down chase into turn",
+   "use": "Overhead, rotating with the car into a bend: precision, planning, a heist.",
+   "purpose": [
+    "mechanism",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.followTop({ subject: W.car, offset: [0, 26, 0.001], lag: 0.2, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "convoy"
+   ],
+   "lab": "world",
+   "t0": 10
+  },
+  {
+   "id": "FOL-018",
+   "category": "FOL",
+   "name": "Slow-motion beat in the chase",
+   "use": "Speed-ramp a follow: the world slows at the decisive moment, then snaps back.",
+   "purpose": [
+    "tension",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.speedRamp(M.followChase({ subject: W.car, offset: [1.5, 1.4, 6], dur: 8 }), [[0, 1], [0.35, 1], [0.5, 0.2], [0.65, 0.2], [0.8, 1], [1, 1]])",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "runner",
+    "falling object"
+   ],
+   "lab": "world",
+   "t0": 2,
+   "note": "Apply move.warp(t) to the world clock too, so the subject slows with the camera."
+  },
+  {
+   "id": "FOL-019",
+   "category": "FOL",
+   "name": "Pedestrian POV drift",
+   "use": "Eye height, walking pace, a little breath: the viewer is the walker.",
+   "purpose": [
+    "memory",
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.follow({ subject: W.figure, offset: [0, 1.65, 0.1], lag: 0.4, lookahead: 1.4, lookHeight: 1.55, mm: 28, float: 0.035, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "street",
+    "corridor",
+    "market"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-020",
+   "category": "FOL",
+   "name": "Track and let go",
+   "use": "Follow the subject, then stop and let it leave frame: abandonment, departure.",
+   "purpose": [
+    "ending",
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.followSide({ subject: W.car, offset: [-8, 1.3, 0], dur: 4 }), (prev) => M.lookAt(M.hold(prev, 4), W.car, { lead: 0.2, weight: 0.35, height: -0.3 })], { overlap: 1.2 })",
+   "lens": "50mm",
+   "duration": [
+    5.4,
+    8.8
+   ],
+   "dur": 6.8,
+   "cost": "T2",
+   "sets": [
+    "car leaving",
+    "walker leaving"
+   ],
+   "lab": "world",
+   "t0": 4
+  },
+  {
+   "id": "FOL-021",
+   "category": "FOL",
+   "name": "Crane-down onto the arrival",
+   "use": "Fall from height to meet the car as it stops: the arrival lands.",
+   "purpose": [
+    "place",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.craneDown({ target: W.carAt(21), dist: 14, az: -120, el: 4, rise: 22, mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "car arrival",
+    "ship",
+    "convoy"
+   ],
+   "lab": "world",
+   "t0": 15
+  },
+  {
+   "id": "FOL-022",
+   "category": "FOL",
+   "name": "Dolly with the walker's gaze",
+   "use": "Tracking beside a figure while the aim drifts toward what they look at.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lookAt(M.follow({ subject: W.figure, offset: [2.5, 1.5, 0.5], lag: 0.25, lookHeight: 1.4, mm: 35, dur: 7 }), W.tower, { lead: 0, weight: [2.5, 6] })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "guard",
+    "tourist"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "FOL-023",
+   "category": "FOL",
+   "name": "High chase, long lens",
+   "use": "Long-lens aerial on the car: surveillance footage, being watched.",
+   "purpose": [
+    "tension",
+    "mechanism"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.follow({ subject: W.car, offset: [-35, 40, 45], frame: 'local', lag: 0.5, lookahead: 0.4, lookHeight: 0, mm: 135, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "convoy",
+    "boat"
+   ],
+   "lab": "world",
+   "t0": 5
+  },
+  {
+   "id": "FOL-024",
+   "category": "FOL",
+   "name": "Spiral follow down to the car",
+   "use": "Descend around the moving car: the target is acquired.",
+   "purpose": [
+    "tension",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.spiralDescent({ target: W.car, h0: 70, h1: 3.5, r0: 50, r1: 12, arc: 200, mm: 28, dur: 8 })",
+   "lens": "28mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "ship",
+    "suspect"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "ONE-001",
+   "category": "ONE",
+   "name": "Sky-to-car",
+   "use": "From the clouds down to a car on a road, then ride with it: the story finds its subject.",
+   "purpose": [
+    "place",
+    "person",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.descendFromSky({ ground: W.carAt(4.5), h0: 900, h1: 22, heading: [1, 0, 0], ease: 'in', dur: 5 }), M.followChase({ subject: W.car, offset: [0, 3, 10], dur: 7 })], { overlap: 1.6 })",
+   "lens": "35mm",
+   "duration": [
+    8.3,
+    13.5
+   ],
+   "dur": 10.4,
+   "cost": "T3",
+   "sets": [
+    "car",
+    "convoy",
+    "runner"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-002",
+   "category": "ONE",
+   "name": "Car-to-destination",
+   "use": "Ride with the car, rise and push ahead to show where it is going, land as it stops.",
+   "purpose": [
+    "place",
+    "time",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.followChase({ subject: W.car, dur: 5 }), M.craneUp({ target: W.carAt(21), dist: 26, az: -150, el: 10, rise: 12, dur: 6, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "35→30mm",
+   "duration": [
+    7.6,
+    12.3
+   ],
+   "dur": 9.5,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "ship",
+    "train"
+   ],
+   "lab": "world",
+   "t0": 11
+  },
+  {
+   "id": "ONE-003",
+   "category": "ONE",
+   "name": "Street-to-map",
+   "use": "From street level up into a top-down map: the event becomes a pattern.",
+   "purpose": [
+    "place",
+    "number",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.craneUp({ target: W.hero, dist: 14, az: 20, el: 4, rise: 10, dur: 4, ease: 'in' }), M.pullBackToPlanet({ ground: W.plaza, h0: 30, h1: 2500, heading: [0, 0, -1], dur: 6, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "30→35mm",
+   "duration": [
+    6.8,
+    11.1
+   ],
+   "dur": 8.5,
+   "cost": "T2",
+   "sets": [
+    "street",
+    "city map"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-004",
+   "category": "ONE",
+   "name": "Map-to-globe",
+   "use": "Keep pulling out until the map curves into a planet: local becomes global.",
+   "purpose": [
+    "place",
+    "number",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.pullBackToPlanet({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 1500, h1: 420000, heading: [0, 0, -1], spin: 20, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T3",
+   "sets": [
+    "map",
+    "globe"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-005",
+   "category": "ONE",
+   "name": "Globe-to-orbit",
+   "use": "From a globe to a satellite's view: the watcher's perspective.",
+   "purpose": [
+    "place",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.seq([M.globeFly({ center: W.globe.center, radius: W.globe.radius, from: { lat: 51.5, lon: 0, alt: 6 }, to: { lat: 40.7, lon: -74, alt: 8 }, ease: 'in', dur: 6 }), (p) => M.dollyOut({ target: W.globe.center, dist: M.vec.len(p.pos), az: -60, el: 30, pull: 2.4, mm: 35, dur: 5, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "35mm",
+   "duration": [
+    7.6,
+    12.3
+   ],
+   "dur": 9.5,
+   "cost": "T1",
+   "sets": [
+    "globe",
+    "satellite"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "ONE-006",
+   "category": "ONE",
+   "name": "Screen-push-into-world",
+   "use": "Push into a screen; the pixels become the place. Data to reality.",
+   "purpose": [
+    "transition",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.pushThrough({ through: W.screen.point, normal: W.screen.normal, before: 7, after: 0.5, mm: 35, dur: 4, ease: 'in' }), M.flyThrough({ gap: [-13, 4, -60], dir: [0, 0, -1], before: 52, after: 60, rise: 4, mm: 24, dur: 6, ease: 'out' })], { overlap: 1.2 })",
+   "lens": "35→24mm",
+   "duration": [
+    7,
+    11.4
+   ],
+   "dur": 8.8,
+   "cost": "T2",
+   "sets": [
+    "monitor",
+    "phone",
+    "control room"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "In an episode, cut to the destination set at the frame the lens fills with the screen (luminance match)."
+  },
+  {
+   "id": "ONE-007",
+   "category": "ONE",
+   "name": "Eye-to-world",
+   "use": "Push into a face until the eye fills frame, emerge in what it sees: memory, obsession.",
+   "purpose": [
+    "memory",
+    "transition"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.seq([M.dollyIn({ target: W.figureHead(9), dist: 3.4, az: 90, el: 0, push: 0.92, mm: 50, dur: 4, ease: 'in' }), M.pullBackReveal({ target: W.tower, dist: 30, az: 100, pull: 3, rise: 10, mm: 35, dur: 6, ease: 'out' })], { overlap: 1.0 })",
+   "lens": "50→35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "portrait photo"
+   ],
+   "lab": "world",
+   "t0": 9,
+   "note": "Cut or flash on the darkest frame inside the eye; the seq keeps the speed continuous across it."
+  },
+  {
+   "id": "ONE-008",
+   "category": "ONE",
+   "name": "Document-zoom-into-scene",
+   "use": "Close on a page, push into a line of it, and arrive in the scene it describes.",
+   "purpose": [
+    "object",
+    "transition",
+    "memory"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.cut([M.topDownPush({ target: W.doc.center, h0: 1.4, h1: 0.1, yaw: 0, mm: 50, dur: 4, ease: 'in' }), M.descendFromSky({ ground: W.hero, h0: 140, h1: 12, heading: [0, 0, -1], lookEnd: W.hero, dur: 6, ease: 'out' })])",
+   "lens": "50→35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "document",
+    "photo",
+    "letter",
+    "map print"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "A hidden cut inside the white of the page (M.cut): both halves move straight down at full speed across the join. Dissolve the page plate over the first 0.3 s of the scene."
+  },
+  {
+   "id": "ONE-009",
+   "category": "ONE",
+   "name": "Planet-to-plaza",
+   "use": "Powers of Ten inward: orbit to the one place that matters, landing at eye level.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.descendFromSky({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 400000, h1: 60, heading: [0, 0, -1], dur: 9, ease: 'in' }), M.overheadToEye({ target: W.hero, dist: 24, az: 0, h0: 50, eye: 1.8, dur: 6, ease: 'out' })], { overlap: 2 })",
+   "lens": "35→30mm",
+   "duration": [
+    10.4,
+    16.9
+   ],
+   "dur": 13,
+   "cost": "T3",
+   "sets": [
+    "globe+city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-010",
+   "category": "ONE",
+   "name": "Street-to-orbit",
+   "use": "One continuous pull from a person on the street to the planet: one life in the system.",
+   "purpose": [
+    "ending",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.seq([M.dollyOut({ target: M.vec.add(W.figureAt(9), [0, 1.2, 0]), dist: 4, az: 50, el: 16, pull: 3, dur: 4, ease: 'in' }), M.pullBackToPlanet({ ground: W.figureAt(9), center: W.planet.center, radius: W.planet.radius, h0: 20, h1: 420000, heading: [0, 0, -1], dur: 9, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "40→35mm",
+   "duration": [
+    9.2,
+    15
+   ],
+   "dur": 11.5,
+   "cost": "T3",
+   "sets": [
+    "figure + globe"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "ONE-011",
+   "category": "ONE",
+   "name": "Window-to-desk",
+   "use": "From the street into the lit window and down onto the desk inside: the private decision.",
+   "purpose": [
+    "reveal",
+    "object",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.pushThrough({ through: W.window.point, normal: W.window.normal, before: 24, after: 2, target: W.window.inside, mm: 32, dur: 5, ease: 'in' }), M.dollyIn({ target: W.window.inside, dist: 4.2, az: 10, el: 28, push: 0.35, mm: 40, dur: 4, ease: 'out' })], { overlap: 1.2 })",
+   "lens": "32→40mm",
+   "duration": [
+    6.2,
+    10.1
+   ],
+   "dur": 7.8,
+   "cost": "T2",
+   "sets": [
+    "office",
+    "apartment",
+    "study"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-012",
+   "category": "ONE",
+   "name": "Hero-to-skyline",
+   "use": "From the object to the city that made it: the evidence and its context, unbroken.",
+   "purpose": [
+    "object",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.orbit({ target: W.hero, dist: 12, az: 10, arc: 40, el: 6, dur: 4, ease: 'in' }), M.helixRise({ target: W.hero, r0: 13, r1: 70, h0: 3, h1: 60, az: 50, arc: 90, lookY: 25, dur: 7, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "40→28mm",
+   "duration": [
+    7.6,
+    12.3
+   ],
+   "dur": 9.5,
+   "cost": "T2",
+   "sets": [
+    "object + city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-013",
+   "category": "ONE",
+   "name": "Car-to-map",
+   "use": "Ride with the car, then climb vertically until its route is a line on a map.",
+   "purpose": [
+    "mechanism",
+    "number",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.followTop({ subject: W.car, offset: [0, 20, 0.001], dur: 4 }), M.pullBackToPlanet({ ground: W.carAt(7.5), h0: 20, h1: 1800, heading: [1, 0, 0], dur: 6, ease: 'out' })], { overlap: 1.5 })",
+   "lens": "35mm",
+   "duration": [
+    6.8,
+    11.1
+   ],
+   "dur": 8.5,
+   "cost": "T2",
+   "sets": [
+    "car route",
+    "supply chain",
+    "migration"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "ONE-014",
+   "category": "ONE",
+   "name": "Tower climb to rooftop view",
+   "use": "Rise up the facade and over the roof edge to the view beyond: ascent, power.",
+   "purpose": [
+    "place",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.pedestal({ target: M.vec.add(W.tower, [0, -28, 7]), dist: 14, az: 0, rise: 56, ease: 'in', dur: 6 }), (p) => M.trackPath({ points: [p.pos, M.vec.add(W.towerTop, [0, 10, -2]), M.vec.add(W.towerTop, [0, 16, -40])], target: [-120, 0, -200], ease: 'out', dur: 6 })], { overlap: 1.2 })",
+   "lens": "35→30mm",
+   "duration": [
+    8.6,
+    14
+   ],
+   "dur": 10.8,
+   "cost": "T2",
+   "sets": [
+    "tower",
+    "cliff",
+    "ship side"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-015",
+   "category": "ONE",
+   "name": "Map-to-street drop",
+   "use": "Start on a map, fall into it and land in the street: the abstraction becomes real.",
+   "purpose": [
+    "place",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.mapFlyTo({ from: { at: [-600, 400], width: 3000 }, to: { at: [W.plaza[0], W.plaza[2]], width: 260 }, ease: 'in', dur: 6 }), M.overheadToEye({ target: W.hero, dist: 26, az: 0, h0: 55, eye: 2, ease: 'out', dur: 6 })], { overlap: 1.8 })",
+   "lens": "35→30mm",
+   "duration": [
+    8.2,
+    13.3
+   ],
+   "dur": 10.2,
+   "cost": "T2",
+   "sets": [
+    "map + street"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-016",
+   "category": "ONE",
+   "name": "Figure-to-car hand-off",
+   "use": "Follow the walker until the car passes, then hand the camera to the car.",
+   "purpose": [
+    "person",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.follow({ subject: W.figure, offset: [1, 1.6, 4], lag: 0.3, lookHeight: 1.3, dur: 4 }), M.followSide({ subject: W.car, offset: [-7, 1.6, 1], dur: 6 })], { overlap: 1.8 })",
+   "lens": "35→50mm",
+   "duration": [
+    8.2,
+    13.3
+   ],
+   "dur": 10.2,
+   "cost": "T2",
+   "sets": [
+    "two subjects crossing"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "ONE-017",
+   "category": "ONE",
+   "name": "Dive from the roof",
+   "use": "FPV off a rooftop edge, down the facade and out across the street.",
+   "purpose": [
+    "tension",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.fpvDive({ edge: W.towerTop, dir: [0, 0, 1], height: 72, mm: 16, dur: 7 })",
+   "lens": "16mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "tower",
+    "cliff",
+    "dam"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-018",
+   "category": "ONE",
+   "name": "Globe-to-city",
+   "use": "Fly to the place on the globe, keep descending through the haze into the street.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.descendFromSky({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 300000, h1: 400, heading: [0, 0, -1], ease: 'in', dur: 8 }), M.descendFromSky({ ground: W.hero, h0: 400, h1: 18, lookEnd: W.tower, landAt: 0.5, heading: [0, 0, -1], ease: 'out', dur: 6 })], { overlap: 2 })",
+   "lens": "35mm",
+   "duration": [
+    9.6,
+    15.6
+   ],
+   "dur": 12,
+   "cost": "T3",
+   "sets": [
+    "globe + city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-019",
+   "category": "ONE",
+   "name": "Room-to-street exit",
+   "use": "From the desk, back out through the window and down into the street: the decision leaves the room.",
+   "purpose": [
+    "transition",
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.reverse(M.seq([M.pushThrough({ through: W.window.point, normal: W.window.normal, before: 24, after: 2, target: W.window.inside, mm: 32, dur: 5, ease: 'in' }), M.dollyIn({ target: W.window.inside, dist: 4.2, az: 10, el: 28, push: 0.35, mm: 40, dur: 4, ease: 'out' })], { overlap: 1.2 }))",
+   "lens": "40→32mm",
+   "duration": [
+    6.2,
+    10.1
+   ],
+   "dur": 7.8,
+   "cost": "T2",
+   "sets": [
+    "office",
+    "apartment"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-020",
+   "category": "ONE",
+   "name": "Flyover to the next set",
+   "use": "Skim over a subject and keep flying to the next location: geographic bridge.",
+   "purpose": [
+    "transition",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.seq([M.flyover({ target: W.hero, dir: [1, 0, -0.5], h0: 4, h1: 18, reach: 30, ease: 'in', dur: 5 }), M.arcPush({ target: W.office, dist: 44, az: -20, ease: 'out', dur: 6 })], { overlap: 1.6 })",
+   "lens": "28→50mm",
+   "duration": [
+    7.5,
+    12.2
+   ],
+   "dur": 9.4,
+   "cost": "T2",
+   "sets": [
+    "two locations in one city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-021",
+   "category": "ONE",
+   "name": "Ridge-to-car",
+   "use": "Rise over the ridge, find the car on the road, and settle on it.",
+   "purpose": [
+    "place",
+    "person"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.droneRidgeReveal({ crest: W.ridge.crest, dir: W.ridge.dir, vista: W.plaza, back: 25, clear: 8, ahead: 30, ease: 'in', dur: 6 }), M.followChase({ subject: W.car, offset: [0, 18, 26], lookahead: 0.5, dur: 6 })], { overlap: 2 })",
+   "lens": "24→35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "landscape + vehicle"
+   ],
+   "lab": "world",
+   "t0": 1
+  },
+  {
+   "id": "ONE-022",
+   "category": "ONE",
+   "name": "Hero-to-detail macro",
+   "use": "From the whole object down onto one detail without a cut: the clue in context.",
+   "purpose": [
+    "object",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.seq([M.arcPush({ target: W.object, dist: 3, az: -10, mm: 50, ease: 'in', dur: 4 }), M.macroSlide({ target: M.vec.add(W.object, [0, 0.05, 0]), dist: 0.55, az: 20, el: 40, mm: 85, ease: 'out', dur: 5 })], { overlap: 1.2 })",
+   "lens": "50→85mm",
+   "duration": [
+    6.2,
+    10.1
+   ],
+   "dur": 7.8,
+   "cost": "T2",
+   "sets": [
+    "object",
+    "document",
+    "device"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-023",
+   "category": "ONE",
+   "name": "Orbit-to-follow",
+   "use": "Circle a waiting subject; as it moves off, the orbit becomes a follow.",
+   "purpose": [
+    "person",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.orbit({ target: W.car, dist: 9, az: 60, arc: 70, el: 6, ease: 'in', dur: 4 }), M.followChase({ subject: W.car, offset: [2, 1.8, 8], dur: 5 })], { overlap: 1.6 })",
+   "lens": "40→35mm",
+   "duration": [
+    5.9,
+    9.6
+   ],
+   "dur": 7.4,
+   "cost": "T2",
+   "sets": [
+    "car pulling away",
+    "walker starting"
+   ],
+   "lab": "world",
+   "t0": 1
+  },
+  {
+   "id": "ONE-024",
+   "category": "ONE",
+   "name": "Plaza-to-tower-top",
+   "use": "From ground level beside the hero to the tower top: the chain of command.",
+   "purpose": [
+    "mechanism",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.heroRise({ target: W.plaza, height: 2.6, az: 220, dur: 4, ease: 'in' }), (p) => M.trackPath({ points: [p.pos, [-18, 30, -6], M.vec.add(W.towerTop, [6, 14, 18])], target: W.towerTop, ease: 'out', dur: 7 })], { overlap: 1.3 })",
+   "lens": "24→30mm",
+   "duration": [
+    7.8,
+    12.6
+   ],
+   "dur": 9.7,
+   "cost": "T2",
+   "sets": [
+    "street + HQ"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "ONE-025",
+   "category": "ONE",
+   "name": "Satellite-to-target",
+   "use": "Satellite view locks on, then falls straight down on the target: surveillance becomes action.",
+   "purpose": [
+    "tension",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.seq([M.descendFromSky({ ground: W.carAt(8), center: W.planet.center, radius: W.planet.radius, h0: 200000, h1: 200, heading: [1, 0, 0], ease: 'in', dur: 7 }), M.followTop({ subject: W.car, offset: [0, 30, 0.001], dur: 5 })], { overlap: 2 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T3",
+   "sets": [
+    "satellite + site"
+   ],
+   "lab": "world",
+   "t0": 3
+  },
+  {
+   "id": "ONE-026",
+   "category": "ONE",
+   "name": "Speed-ramped oner",
+   "use": "A long continuous move with a slow-motion beat in the middle: the moment of impact.",
+   "purpose": [
+    "tension",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.speedRamp(M.seq([M.followSide({ subject: W.car, offset: [-8, 1.5, 0], dur: 4 }), M.orbit({ target: W.carAt(8), dist: 12, az: -90, arc: 90, el: 6, dur: 5, ease: 'out' })], { overlap: 1.4 }), [[0, 1], [0.35, 1], [0.5, 0.25], [0.7, 0.25], [0.85, 1], [1, 1]])",
+   "lens": "50→40mm",
+   "duration": [
+    6.1,
+    9.9
+   ],
+   "dur": 7.6,
+   "cost": "T2",
+   "sets": [
+    "street",
+    "chase",
+    "explosion"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "ONE-027",
+   "category": "ONE",
+   "name": "Descend-and-follow-the-walker",
+   "use": "From above the city down onto one person and walk with them: from statistics to a life.",
+   "purpose": [
+    "person",
+    "number",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.descendFromSky({ ground: W.figureAt(9), h0: 260, h1: 8, heading: [1, 0, 0], ease: 'in', dur: 6 }), M.follow({ subject: W.figure, offset: [-1, 1.8, 4.5], lag: 0.4, lookHeight: 1.2, dur: 6 })], { overlap: 2 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "crowd",
+    "city + figure"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "ONE-028",
+   "category": "ONE",
+   "name": "Globe hop",
+   "use": "Fly from one city to another across the globe: connection, distance, a network.",
+   "purpose": [
+    "number",
+    "place",
+    "mechanism"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.globeFly({ center: W.globe.center, radius: W.globe.radius, from: { lat: 40.7, lon: -74, alt: 7 }, to: { lat: 51.5, lon: 0, alt: 6 }, tilt: 25, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "globe",
+    "map"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "CHR-001",
+   "category": "CHR",
+   "name": "Silhouette against the sky",
+   "use": "A lone dark figure against the lit sky: the stoic operator, calm inside chaos.",
+   "purpose": [
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: M.vec.add(W.figureAt(9), [0, 1.5, 0]), dist: 9, az: 180, el: -8, mm: 50, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "ridge",
+    "rooftop"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-002",
+   "category": "CHR",
+   "name": "Low-angle hero rise",
+   "use": "Rising from the ground to a low angle on the figure: resolve, power, the turn.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.heroRise({ target: W.figureAt(9), az: 75, mm: 24, dur: 6 })",
+   "lens": "24mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "statue"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-003",
+   "category": "CHR",
+   "name": "Slow push on the back",
+   "use": "Behind the figure, creeping in while they look out: decision, interior thought.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.creep({ target: M.vec.add(W.figureAt(9), [0, 1.4, 0]), dist: 5, az: -100, el: 2, push: 0.18, mm: 50, dur: 8 })",
+   "lens": "50mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure at window",
+    "figure at edge"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-004",
+   "category": "CHR",
+   "name": "Profile hold, long lens",
+   "use": "A long-lens profile, nothing moving but breath: the person, compressed against the world.",
+   "purpose": [
+    "person",
+    "memory"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.handheld({ target: W.figureHead(9), dist: 7, az: 180, el: 1, mm: 85, float: 0.01, dur: 6 })",
+   "lens": "85mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "operator"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-005",
+   "category": "CHR",
+   "name": "Orbit the still figure",
+   "use": "Circle a figure who does not move: the world turns around their decision.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: M.vec.add(W.figureAt(9), [0, 1.2, 0]), dist: 5.5, az: 120, arc: 70, el: 4, mm: 40, dur: 8 })",
+   "lens": "40mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "suspect"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-006",
+   "category": "CHR",
+   "name": "Over-the-shoulder reveal",
+   "use": "Over the figure's shoulder onto what they face: shared point of view.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lookAtShift({ pos: M.vec.add(W.figureAt(9), [-1.6, 1.75, 1.2]), from: W.figureHead(9), to: W.office, mm: 35, dur: 5 })",
+   "lens": "35mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "figure + building",
+    "figure + screen"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-007",
+   "category": "CHR",
+   "name": "Isolation pull-out",
+   "use": "Pull straight up and away from a figure: alone, small, exposed (StudioBinder: pull-out isolates).",
+   "purpose": [
+    "person",
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pullBackToPlanet({ ground: W.figureAt(9), h0: 3, h1: 120, heading: [1, 0, 0], spin: 25, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "empty square"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-008",
+   "category": "CHR",
+   "name": "Walk-and-talk lead",
+   "use": "The camera backs away ahead of the walker: they carry the argument forward.",
+   "purpose": [
+    "person"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.followLead({ subject: W.figure, offset: [0.4, 1.55, -3.4], lookHeight: 1.45, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "walker"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "CHR-009",
+   "category": "CHR",
+   "name": "Dutch on the figure",
+   "use": "A tilted frame on a person: instability, guilt, intoxication. Ration it.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.dutchDrift({ target: M.vec.add(W.figureAt(9), [0, 1.3, 0]), dist: 4.5, az: 140, el: -4, roll0: 4, roll: 12, push: 0.15, mm: 35, dur: 6 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-010",
+   "category": "CHR",
+   "name": "Feet-to-face tilt",
+   "use": "Tilt from the shoes to the head: introduce someone by their walk, then their face.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: M.vec.add(W.figureAt(9), [0.5, 0.9, 3]), from: M.vec.add(W.figureAt(9), [0, 0.1, 0]), to: W.figureHead(9), mm: 50, dur: 5 })",
+   "lens": "50mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "figure"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-011",
+   "category": "CHR",
+   "name": "Figure enters the light",
+   "use": "Locked frame on a pool of light; the figure walks into it. The key light is the event.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: [-4, 1.2, 6.5], dist: 13, az: 25, el: 6, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "lamp pool",
+    "doorway",
+    "window light"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "CHR-012",
+   "category": "CHR",
+   "name": "Arc to the eyes",
+   "use": "A short arc from three-quarter back to three-quarter front: the moment we see them think.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.arcPush({ target: W.figureHead(9), dist: 2.8, az: 50, mm: 65, dur: 6 })",
+   "lens": "65mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "bust"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-013",
+   "category": "CHR",
+   "name": "High-angle diminish",
+   "use": "Looking down at a figure from height: vulnerability, being watched.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.craneUp({ target: W.figureAt(9), dist: 6, az: 150, el: 40, rise: 12, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "prisoner",
+    "crowd"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-014",
+   "category": "CHR",
+   "name": "Two-shot drift",
+   "use": "A slow lateral drift past two subjects: relationship, comparison, distance between.",
+   "purpose": [
+    "person",
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.parallaxSlide({ target: M.vec.lerp3(W.figureAt(9), W.hero, 0.5), dist: 16, az: 160, el: 3, track: 6, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "two figures",
+    "figure + object"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-015",
+   "category": "CHR",
+   "name": "Handheld observer",
+   "use": "A nervous observer's handheld on the figure: documentary truth, risk.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.lookAt(M.handheld({ target: M.vec.add(W.figureAt(9), [0, 1.2, 0]), dist: 7, az: 210, mm: 50, float: 0.06, dur: 6 }), W.figure, { lead: 0.2, height: 1.3, lag: 0.3 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "protest",
+    "raid"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-016",
+   "category": "CHR",
+   "name": "Shadow on the wall",
+   "use": "Frame the shadow before the person: menace, rumour, the idea of someone.",
+   "purpose": [
+    "person",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lookAtShift({ pos: M.vec.add(W.figureAt(9), [5, 1.2, 6]), from: M.vec.add(W.figureAt(9), [-3, 0.2, -1]), to: W.figureHead(9), mm: 40, dur: 6 })",
+   "lens": "40mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "wall + key light"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-017",
+   "category": "CHR",
+   "name": "Walking away, held",
+   "use": "The camera stops and the figure walks away into the haze: farewell, the end of a chapter.",
+   "purpose": [
+    "person",
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lookAt(M.lockOff({ target: M.vec.add(W.figureAt(9), [0, 1.2, 0]), dist: 6, az: -90, el: 2, mm: 40, dur: 8 }), W.figure, { lead: 0.5, height: 1.2, lag: 0.6, weight: 0.6 })",
+   "lens": "40mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "road"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-018",
+   "category": "CHR",
+   "name": "Rack between figure and city",
+   "use": "Focus pulls from the figure to the skyline behind: the person and the system.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.rackHold({ target: W.figureHead(9), dist: 3, az: 150, el: 0, near: 3, far: 80, at: 0.45, over: 0.25, mm: 65, dur: 6 })",
+   "lens": "65mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T3",
+   "sets": [
+    "figure + skyline"
+   ],
+   "lab": "world",
+   "t0": 9,
+   "note": "Needs DOF to read."
+  },
+  {
+   "id": "CHR-019",
+   "category": "CHR",
+   "name": "Circling crane on the figure",
+   "use": "Rise while circling the still figure: the moment of decision becomes historic.",
+   "purpose": [
+    "person",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.helixRise({ target: W.figureAt(9), r0: 4, r1: 14, h0: 1.4, h1: 16, arc: 140, lookY: 1, mm: 28, dur: 8 })",
+   "lens": "28mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "leader on stage"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-020",
+   "category": "CHR",
+   "name": "Silhouette push into the light",
+   "use": "Behind a figure, push toward the light source they face: hope, revelation, the reveal to come.",
+   "purpose": [
+    "person",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.dollyIn({ target: M.vec.add(W.figureAt(9), [-3, 2, -14]), dist: 22, az: 15, el: 2, push: 0.4, mm: 35, dur: 7, ease: 'gentle' })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "figure at window",
+    "tunnel exit"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "CHR-021",
+   "category": "CHR",
+   "name": "Figure in the crowd, top-down",
+   "use": "From above, the one figure that moves differently: the individual against the mass.",
+   "purpose": [
+    "person",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.followTop({ subject: W.figure, offset: [0, 18, 0.001], lag: 0.4, mm: 50, dur: 7 })",
+   "lens": "50mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "crowd",
+    "commuters"
+   ],
+   "lab": "world",
+   "t0": 2
+  },
+  {
+   "id": "CHR-022",
+   "category": "CHR",
+   "name": "Ground-level figure pass",
+   "use": "Lens on the floor as the figure walks through frame: weight, steps, the street.",
+   "purpose": [
+    "person",
+    "place"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.lookAt(M.lockOff({ target: [-6, 0.4, 6.5], dist: 5, az: 20, el: -1, mm: 24, dur: 7 }), W.figure, { lead: 0.4, height: 0.9, lag: 0.5, weight: 0.5 })",
+   "lens": "24mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "walker",
+    "soldiers",
+    "crowd"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-001",
+   "category": "OBJ",
+   "name": "Hero orbit in the void",
+   "use": "Fern's workhorse: one object, one key light, a slow orbit. Evidence presented.",
+   "purpose": [
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.orbit({ target: W.object, dist: 1.4, az: -30, arc: 50, el: 18, mm: 50, dur: 8 })",
+   "lens": "50mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "any object",
+    "product",
+    "weapon"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-002",
+   "category": "OBJ",
+   "name": "Macro slide across the surface",
+   "use": "A long lens skimming the object's surface: texture, craft, the detail that matters.",
+   "purpose": [
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.macroSlide({ target: M.vec.add(W.object, [0, 0.05, 0]), dist: 0.6, az: 30, el: 30, mm: 100, dur: 7 })",
+   "lens": "100mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "device",
+    "document",
+    "coin",
+    "chip"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-003",
+   "category": "OBJ",
+   "name": "Slow push to the detail",
+   "use": "The VO names a detail and the camera moves toward it: information.",
+   "purpose": [
+    "object",
+    "tension"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.dollyIn({ target: W.object, dist: 2.2, az: 15, el: 14, push: 0.4, mm: 65, dur: 6 })",
+   "lens": "65mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "object",
+    "photo",
+    "screen"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-004",
+   "category": "OBJ",
+   "name": "Top-down object rotate",
+   "use": "Straight down on an object on a surface, turning slowly: inspection, a specimen.",
+   "purpose": [
+    "object",
+    "mechanism"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: W.doc.center, h0: 0.9, h1: 0.7, spin: 30, mm: 50, dur: 7 })",
+   "lens": "50mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "document",
+    "map",
+    "evidence table"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-005",
+   "category": "OBJ",
+   "name": "Locked-off evidence hold",
+   "use": "Nothing moves. The object, lit. Deadpan: let the VO land the fact.",
+   "purpose": [
+    "object",
+    "number"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: W.object, dist: 1.5, az: 20, el: 16, mm: 65, drift: 0.008, dur: 5 })",
+   "lens": "65mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T1",
+   "sets": [
+    "any object"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-006",
+   "category": "OBJ",
+   "name": "Rack across the table",
+   "use": "Focus moves from one object to another on the same surface: connection.",
+   "purpose": [
+    "object",
+    "mechanism"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.lookAtShift({ pos: M.vec.add(W.doc.center, [1.4, 0.45, 1.5]), from: W.doc.center, to: W.object, mm: 65, dur: 5 })",
+   "lens": "65mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T3",
+   "sets": [
+    "desk",
+    "evidence table"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "With DOF the focus channel pulls between the two."
+  },
+  {
+   "id": "OBJ-007",
+   "category": "OBJ",
+   "name": "Push-through the page",
+   "use": "Down onto a document until the paper fills frame, then through: into its story.",
+   "purpose": [
+    "object",
+    "transition"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.pushThrough({ through: W.doc.center, normal: [0, 1, 0], before: 1.1, after: 0.6, target: M.vec.add(W.doc.center, [0.001, -5, 0]), mm: 40, dur: 4 })",
+   "lens": "40mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T1",
+   "sets": [
+    "document",
+    "photo",
+    "newspaper"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-008",
+   "category": "OBJ",
+   "name": "Snap-zoom to the number",
+   "use": "Eased crash zoom onto a label or digit: the shock figure, on its word.",
+   "purpose": [
+    "number",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "high",
+   "recipe": "M.snapZoom({ target: W.doc.center, dist: 2.2, az: 0, el: 60, mm: 35, mm1: 135, dur: 0.8 })",
+   "lens": "35→135mm",
+   "duration": [
+    0.6,
+    1
+   ],
+   "dur": 0.8,
+   "cost": "T1",
+   "sets": [
+    "label",
+    "screen",
+    "document"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-009",
+   "category": "OBJ",
+   "name": "Product arc on the pedestal",
+   "use": "A 30-degree arc with a push, landing on the object's best side: the reveal of a thing.",
+   "purpose": [
+    "object",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.arcPush({ target: W.object, dist: 1.2, az: -20, mm: 65, dur: 5 })",
+   "lens": "65mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T1",
+   "sets": [
+    "pedestal object"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-010",
+   "category": "OBJ",
+   "name": "Container door approach",
+   "use": "Approach a big object's opening: what is inside? (hold before the doors open).",
+   "purpose": [
+    "object",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.creep({ target: M.vec.add(W.hero, [5.0, 0, 1.75]), dist: 8, az: 75, el: 3, push: 0.15, mm: 40, dur: 8 })",
+   "lens": "40mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "container",
+    "vault",
+    "truck"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-011",
+   "category": "OBJ",
+   "name": "Object pull-back to scale",
+   "use": "Start tight on the object, pull back until a person or room gives it size.",
+   "purpose": [
+    "object",
+    "number"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.dollyOut({ target: W.object, dist: 0.9, az: 40, el: 10, pull: 9, rise: 12, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "object + room",
+    "object + figure"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-012",
+   "category": "OBJ",
+   "name": "Orbit low, under the object",
+   "use": "Low orbit looking up at an object: monumental, threatening, a weapon.",
+   "purpose": [
+    "object",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: M.vec.add(W.hero, [0, 1, 0]), dist: 9, az: 160, arc: 50, el0: -10, el1: -4, mm: 24, dur: 7 })",
+   "lens": "24mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "container",
+    "missile",
+    "statue"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-013",
+   "category": "OBJ",
+   "name": "Pedestal along the object",
+   "use": "Vertical move along a tall object reads it like a document: top to bottom.",
+   "purpose": [
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.pedestal({ target: M.vec.add(W.hero, [0, 1.2, 0]), dist: 4, az: 200, rise: -2.4, mm: 50, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "stack",
+    "server rack",
+    "column"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-014",
+   "category": "OBJ",
+   "name": "Spin-around macro",
+   "use": "A tight 120-degree orbit at macro distance: tactile, almost a turntable.",
+   "purpose": [
+    "object"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: W.object, dist: 0.7, az: 0, arc: 120, el: 24, mm: 85, dur: 8 })",
+   "lens": "85mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "small object",
+    "chip",
+    "ring"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-015",
+   "category": "OBJ",
+   "name": "Dolly-zoom on the object",
+   "use": "Vertigo on a thing: the object stays, the world warps. The shock of what it means.",
+   "purpose": [
+    "object",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "high",
+   "recipe": "M.dollyZoom({ target: W.object, dist: 2.4, az: 30, el: 10, ratio: 0.4, mm: 65, dur: 4 })",
+   "lens": "65→26mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T1",
+   "sets": [
+    "object",
+    "document"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-016",
+   "category": "OBJ",
+   "name": "Document scan",
+   "use": "Lateral read across a page close-up: the line that matters slides into frame.",
+   "purpose": [
+    "object",
+    "number"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.truck({ target: W.doc.center, dist: 0.5, az: 0, el: 55, track: 0.3, mm: 65, dur: 6, ease: 'gentle' })",
+   "lens": "65mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "document",
+    "ledger",
+    "map print"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-017",
+   "category": "OBJ",
+   "name": "Look down into the object",
+   "use": "Overhead, tilting into an open object: the contents, the inside story.",
+   "purpose": [
+    "object",
+    "reveal"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.overheadToEye({ target: W.object, dist: 1.4, az: 30, h0: 1.4, eye: W.object[1] + 0.25, ground: 0, mm: 50, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "box",
+    "case",
+    "drawer"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-018",
+   "category": "OBJ",
+   "name": "Tension creep on the device",
+   "use": "A barely moving push over 10 s on the object: dread, a countdown.",
+   "purpose": [
+    "tension",
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.creep({ target: W.object, dist: 1.6, az: -10, el: 12, push: 0.1, mm: 65, dur: 10 })",
+   "lens": "65mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T1",
+   "sets": [
+    "device",
+    "phone",
+    "bomb",
+    "letter"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-019",
+   "category": "OBJ",
+   "name": "Hand-off orbit to rise",
+   "use": "Orbit an object then lift away from it: the object leaves the story with weight.",
+   "purpose": [
+    "object",
+    "ending"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.orbit({ target: W.object, dist: 1.5, az: -40, arc: 40, el: 14, ease: 'in', dur: 4 }), M.craneUp({ target: W.object, dist: 1.6, az: 0, el: 14, rise: 4, back: 0.6, ease: 'out', dur: 5 })], { overlap: 1.3 })",
+   "lens": "40→30mm",
+   "duration": [
+    6.2,
+    10
+   ],
+   "dur": 7.7,
+   "cost": "T1",
+   "sets": [
+    "object"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-020",
+   "category": "OBJ",
+   "name": "Screen close, push and drift",
+   "use": "Close on a screen, slow push with a lateral drift: reading data over someone's shoulder.",
+   "purpose": [
+    "number",
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.dollyIn({ target: W.screen.point, dist: 6, az: 25, el: 2, push: 0.3, drift: -12, mm: 50, dur: 7 })",
+   "lens": "50mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "monitor",
+    "phone",
+    "dashboard"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-021",
+   "category": "OBJ",
+   "name": "Whip to the object",
+   "use": "Fast eased whip from a wide to the object: a sudden connection.",
+   "purpose": [
+    "object",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.whipPan({ pos: M.vec.add(W.object, [2.2, 0.5, 2.4]), from: W.tower, to: W.object, mm: 40, dur: 0.6 })",
+   "lens": "40mm",
+   "duration": [
+    0.5,
+    0.8
+   ],
+   "dur": 0.6,
+   "cost": "T1",
+   "sets": [
+    "any two subjects"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "OBJ-022",
+   "category": "OBJ",
+   "name": "Two-object parallax",
+   "use": "Slide so a near object passes a far one: comparison in one move.",
+   "purpose": [
+    "object",
+    "mechanism"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.parallaxSlide({ target: W.object, dist: 3, az: 120, el: 6, track: 1.8, mm: 50, dur: 7 })",
+   "lens": "50mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "two objects",
+    "scale comparison"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-001",
+   "category": "DAT",
+   "name": "Map fly-to",
+   "use": "Optimal zoom-out, pan, zoom-in between two places (van Wijk): geography explained.",
+   "purpose": [
+    "place",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.mapFlyTo({ from: { at: [-150, 60], width: 300 }, to: { at: [130, -50], width: 250 }, tilt: 0, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "map",
+    "satellite map"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-002",
+   "category": "DAT",
+   "name": "Tilted map fly-to",
+   "use": "The fly-to with a 30-degree tilt: the map feels like terrain, travel feels physical.",
+   "purpose": [
+    "place",
+    "mechanism"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.mapFlyTo({ from: { at: [-200, 50], width: 260 }, to: { at: [40, -40], width: 180 }, tilt: 35, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "3D map",
+    "terrain"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-003",
+   "category": "DAT",
+   "name": "Globe spin to the country",
+   "use": "Turn the globe to the place: where this happens, in one move.",
+   "purpose": [
+    "place",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.globeFly({ center: W.globe.center, radius: W.globe.radius, from: { lat: 10, lon: 60, alt: 22 }, to: { lat: 48, lon: 8, alt: 10 }, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "globe"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "DAT-004",
+   "category": "DAT",
+   "name": "Globe orbit with markers",
+   "use": "Slow orbit of the globe while markers draw on: a global network.",
+   "purpose": [
+    "number",
+    "mechanism"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.orbit({ target: W.globe.center, dist: 34, az: -20, arc: 40, el: 25, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T1",
+   "sets": [
+    "globe"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "DAT-005",
+   "category": "DAT",
+   "name": "City-to-route top-down",
+   "use": "Overhead, the route the car took drawn as a line: the plan revealed.",
+   "purpose": [
+    "mechanism",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: [0, 0, -20], h0: 520, h1: 470, spin: 12, yaw: 30, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "map + route line"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-006",
+   "category": "DAT",
+   "name": "Bar-chart dolly",
+   "use": "A low dolly along a row of bars (or buildings as bars): magnitude by passing it.",
+   "purpose": [
+    "number"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: [0, 8, -60], dist: 50, az: 0, el: 6, track: 60, parallel: 0.8, mm: 28, dur: 8 })",
+   "lens": "28mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "3D bar chart",
+    "buildings as data"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-007",
+   "category": "DAT",
+   "name": "Rising chart crane",
+   "use": "Crane up as a line chart climbs: growth, a bubble, the record close.",
+   "purpose": [
+    "number",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.jibArc({ target: W.tower, dist: 120, az: -40, swing: 30, el0: 2, el1: 30, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "3D line chart",
+    "stock chart"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-008",
+   "category": "DAT",
+   "name": "Diagram orbit with labels",
+   "use": "A slow 40-degree orbit of a diorama while labels animate on words: mechanism.",
+   "purpose": [
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.orbit({ target: W.hero, dist: 22, az: 30, arc: 40, el0: 28, el1: 22, mm: 40, dur: 9, ease: 'gentle' })",
+   "lens": "40mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T1",
+   "sets": [
+    "diorama",
+    "exploded diagram",
+    "org chart"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-009",
+   "category": "DAT",
+   "name": "God's-eye pattern count",
+   "use": "High overhead hold over many units: counting, a statistic made visible.",
+   "purpose": [
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: W.plaza, h0: 240, h1: 225, spin: 6, mm: 50, dur: 7 })",
+   "lens": "50mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "containers",
+    "graves",
+    "parking",
+    "crowd"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-010",
+   "category": "DAT",
+   "name": "Map zoom-out to region",
+   "use": "From the point to the region: how far the effect spreads.",
+   "purpose": [
+    "number",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.mapFlyTo({ from: { at: [0, 0], width: 120 }, to: { at: [0, 0], width: 4000 }, mm: 35, dur: 6 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T2",
+   "sets": [
+    "map"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-011",
+   "category": "DAT",
+   "name": "Lateral timeline track",
+   "use": "Truck along a timeline laid on the ground: history as distance.",
+   "purpose": [
+    "time",
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: [0, 1, 12], dist: 18, az: 0, el: 25, track: 40, mm: 35, dur: 9 })",
+   "lens": "35mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T1",
+   "sets": [
+    "3D timeline",
+    "documents in a row"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-012",
+   "category": "DAT",
+   "name": "Push-through the layers",
+   "use": "Push through stacked layers (org levels, strata, firewalls): one level deeper each beat.",
+   "purpose": [
+    "mechanism",
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.pushThrough({ through: [0, 12, 0], normal: [0, 1, 0], before: 40, after: 9, target: [0.01, -30, 0], mm: 35, dur: 6 })",
+   "lens": "35mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "stacked planes",
+    "network layers"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-013",
+   "category": "DAT",
+   "name": "Globe pull to show both cities",
+   "use": "Pull back from one city until a second one enters: the connection between them.",
+   "purpose": [
+    "number",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.globeFly({ center: W.globe.center, radius: W.globe.radius, from: { lat: 51.5, lon: 0, alt: 1.5 }, to: { lat: 46, lon: -37, alt: 16 }, mm: 35, dur: 7 })",
+   "lens": "35mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "globe",
+    "map"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "DAT-014",
+   "category": "DAT",
+   "name": "Satellite descent on coordinates",
+   "use": "From orbit down onto a coordinate: surveillance, targeting, precision.",
+   "purpose": [
+    "place",
+    "tension"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.descendFromSky({ ground: W.office, center: W.planet.center, radius: W.planet.radius, h0: 120000, h1: 220, heading: [0, 0, -1], mm: 50, dur: 8 })",
+   "lens": "50mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T3",
+   "sets": [
+    "satellite map",
+    "globe + site"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-015",
+   "category": "DAT",
+   "name": "Isometric drift",
+   "use": "A high three-quarter drift over a model: the whole system at once, calm.",
+   "purpose": [
+    "mechanism",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.truck({ target: W.plaza, dist: 260, az: 45, el: 35, track: 50, parallel: 1, mm: 85, dur: 9 })",
+   "lens": "85mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "city model",
+    "factory model",
+    "network"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-016",
+   "category": "DAT",
+   "name": "Map dive to the street",
+   "use": "Fly the map, then dive into the street at the destination: the data lands in a life.",
+   "purpose": [
+    "place",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.seq([M.mapFlyTo({ from: { at: [-300, 200], width: 1200 }, to: { at: [26, -26], width: 180 }, ease: 'in', dur: 6 }), M.descendFromSky({ ground: W.office, h0: 150, h1: 20, heading: [0.2, 0, -1], lookEnd: W.window.point, ease: 'out', dur: 5 })], { overlap: 1.5 })",
+   "lens": "35mm",
+   "duration": [
+    7.6,
+    12.3
+   ],
+   "dur": 9.5,
+   "cost": "T2",
+   "sets": [
+    "map + street"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-017",
+   "category": "DAT",
+   "name": "Orbiting data monolith",
+   "use": "Orbit a single tall data object (a bar, a stack of cash): one big number.",
+   "purpose": [
+    "number"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.orbit({ target: W.tower, dist: 110, az: 60, arc: 50, el0: -4, el1: 8, lookY: 10, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "bar",
+    "cash stack",
+    "column"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-018",
+   "category": "DAT",
+   "name": "Flow-line follow",
+   "use": "Ride along a line of flow (money, data, goods) from source to sink.",
+   "purpose": [
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.trackPath({ points: [[-60, 6, 30], [-20, 9, 14], [20, 10, 6], [50, 12, -30], [60, 14, -70]], ahead: 0.08, mm: 28, dur: 9 })",
+   "lens": "28mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T1",
+   "sets": [
+    "flow line",
+    "pipeline",
+    "cable"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-019",
+   "category": "DAT",
+   "name": "Pie-down top shot",
+   "use": "Top-down onto a circular diagram while it spins: share, division, the cut.",
+   "purpose": [
+    "number"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: W.plaza, h0: 45, h1: 38, yaw: 0, spin: 45, mm: 40, dur: 7 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T1",
+   "sets": [
+    "pie chart",
+    "round table"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-020",
+   "category": "DAT",
+   "name": "Exploded view push",
+   "use": "Push into the gap between separated parts: how it works inside.",
+   "purpose": [
+    "mechanism",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.flyThrough({ gap: [64, 6, -58], dir: [0, 0, -1], before: 30, after: 18, rise: 4, mm: 28, dur: 6 })",
+   "lens": "28mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "exploded diagram",
+    "device"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-021",
+   "category": "DAT",
+   "name": "Counter hold with drift",
+   "use": "A near-static hold for a counter or a number card: lets the number tick on its word.",
+   "purpose": [
+    "number"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: W.screen.point, dist: 9, az: 0, el: 1, mm: 50, drift: 0.01, dur: 6 })",
+   "lens": "50mm",
+   "duration": [
+    4.8,
+    7.8
+   ],
+   "dur": 6,
+   "cost": "T1",
+   "sets": [
+    "counter",
+    "number card",
+    "type"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "DAT-022",
+   "category": "DAT",
+   "name": "Globe-to-map unwrap",
+   "use": "Fly low over the globe until it reads as a flat map: zoom from world to country.",
+   "purpose": [
+    "place",
+    "transition"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.globeFly({ center: W.globe.center, radius: W.globe.radius, from: { lat: 20, lon: -20, alt: 26 }, to: { lat: 45, lon: 10, alt: 0.8 }, tilt: 15, mm: 35, dur: 8 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "globe",
+    "map"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "TRN-001",
+   "category": "TRN",
+   "name": "Whip pan out",
+   "use": "Exit a shot with an eased whip; the next shot enters with the same direction (Edgar Wright).",
+   "purpose": [
+    "transition",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.whipPan({ pos: [12, 1.7, 22], from: W.hero, yaw0: 0, yaw1: -120, to: null, mm: 35, dur: 0.6 })",
+   "lens": "35mm",
+   "duration": [
+    0.5,
+    0.8
+   ],
+   "dur": 0.6,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-002",
+   "category": "TRN",
+   "name": "Whip pan in",
+   "use": "Enter a shot at the end of a whip and settle on the subject.",
+   "purpose": [
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.whipPan({ pos: [12, 1.7, 22], from: W.tower, to: W.hero, mm: 35, dur: 0.7, ease: 'snap' })",
+   "lens": "35mm",
+   "duration": [
+    0.6,
+    0.9
+   ],
+   "dur": 0.7,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-003",
+   "category": "TRN",
+   "name": "Push into black",
+   "use": "Push into a dark surface until the frame is black: a hidden cut (Hitchcock's Rope).",
+   "purpose": [
+    "transition",
+    "chapter"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.dollyIn({ target: M.vec.add(W.hero, [0, 0, 0]), dist: 6, az: 200, el: 0, push: 0.85, mm: 35, dur: 4, ease: 'in' })",
+   "lens": "35mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T1",
+   "sets": [
+    "container side",
+    "coat",
+    "wall"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-004",
+   "category": "TRN",
+   "name": "Pull out of black",
+   "use": "The incoming half of a hidden cut: start black on a surface and pull away.",
+   "purpose": [
+    "transition",
+    "chapter"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.dollyOut({ target: W.hero, dist: 1.2, az: 200, el: 0, pull: 6, mm: 35, dur: 4, ease: 'out' })",
+   "lens": "35mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T1",
+   "sets": [
+    "any surface"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-005",
+   "category": "TRN",
+   "name": "Match-move exit",
+   "use": "Leave moving (velocity carried out) so the next shot can enter at the same speed.",
+   "purpose": [
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: W.hero, dist: 16, az: 20, track: 12, mm: 35, dur: 4, ease: 'in' })",
+   "lens": "35mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "Pair with a shot built with ease: 'out' moving the same screen direction; the cut feels like one move."
+  },
+  {
+   "id": "TRN-006",
+   "category": "TRN",
+   "name": "Match-move entry",
+   "use": "Enter at speed and settle: the second half of a velocity match cut.",
+   "purpose": [
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: W.office, dist: 40, az: -10, track: 20, mm: 35, dur: 4, ease: 'out' })",
+   "lens": "35mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-007",
+   "category": "TRN",
+   "name": "Rise-out to the sky",
+   "use": "Tilt up and away into the sky: the scene releases; time passes.",
+   "purpose": [
+    "transition",
+    "time"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: [14, 3, 30], from: W.hero, to: [-60, 120, -260], mm: 28, dur: 5 })",
+   "lens": "28mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "any exterior"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-008",
+   "category": "TRN",
+   "name": "Descend-in from the sky",
+   "use": "Tilt down from the sky into the next scene: we have arrived somewhere new.",
+   "purpose": [
+    "transition",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: [40, 4, 40], from: [-60, 120, -260], to: W.office, mm: 28, dur: 5 })",
+   "lens": "28mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "any exterior"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-009",
+   "category": "TRN",
+   "name": "Foreground wipe pass",
+   "use": "A dark object crosses lens: a natural wipe to hide a cut (1917, Birdman).",
+   "purpose": [
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.truck({ target: M.vec.add(W.hero, [0, 0, 0]), dist: 9, az: 230, el: 2, track: 14, parallel: 0.2, mm: 28, dur: 3 })",
+   "lens": "28mm",
+   "duration": [
+    2.4,
+    3.9
+   ],
+   "dur": 3,
+   "cost": "T2",
+   "sets": [
+    "pillar",
+    "tree",
+    "passing car"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-010",
+   "category": "TRN",
+   "name": "Snap zoom out",
+   "use": "An eased crash zoom out: comic or brutal context, the joke or the scale.",
+   "purpose": [
+    "transition",
+    "reveal"
+   ],
+   "scale": "wide",
+   "energy": "high",
+   "recipe": "M.snapZoom({ target: W.hero, dist: 30, az: 20, el: 5, mm: 135, mm1: 24, dur: 0.9 })",
+   "lens": "135→24mm",
+   "duration": [
+    0.7,
+    1.2
+   ],
+   "dur": 0.9,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-011",
+   "category": "TRN",
+   "name": "Graphic-match orbit landing",
+   "use": "Orbit to land the subject at a planned screen point and size, to match-cut to a twin.",
+   "purpose": [
+    "transition",
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.orbit({ target: W.hero, dist: 15, az: -30, arc: 40, el: 6, dur: 4, ease: 'in' }), M.hold(M.frameSubject({ center: W.hero, size: [6, 2.6, 2.4] }, { thirds: 'center', lens: 50, az: 10, el: 6, fill: 0.3 }).state, 2)], { overlap: 1.2 })",
+   "lens": "40→50mm",
+   "duration": [
+    3.8,
+    6.2
+   ],
+   "dur": 4.8,
+   "cost": "T2",
+   "sets": [
+    "two similar shapes"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "frameSubject puts the hero at an exact screen position; frame the next shot's subject with the same opts."
+  },
+  {
+   "id": "TRN-012",
+   "category": "TRN",
+   "name": "Push-in to the lens flare",
+   "use": "Push toward the key light until it blooms: a light-dissolve into the next scene.",
+   "purpose": [
+    "transition",
+    "memory"
+   ],
+   "scale": "close",
+   "energy": "mid",
+   "recipe": "M.dollyIn({ target: M.vec.add(W.carAt(7.2), [2.3, 0, 0.65]), dist: 9, az: 85, el: 1, push: 0.8, mm: 40, dur: 4, ease: 'in' })",
+   "lens": "40mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "lamp",
+    "window",
+    "headlight"
+   ],
+   "lab": "world",
+   "t0": 6
+  },
+  {
+   "id": "TRN-013",
+   "category": "TRN",
+   "name": "Roll-through",
+   "use": "A 90-degree roll as the camera pushes: disorientation into a dream, memory or a twist.",
+   "purpose": [
+    "transition",
+    "memory"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.dutchDrift({ target: W.hero, dist: 14, az: 30, el: 3, roll0: 0, roll: 90, push: 0.4, mm: 28, dur: 3, ease: 'whip' })",
+   "lens": "28mm",
+   "duration": [
+    2.4,
+    3.9
+   ],
+   "dur": 3,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-014",
+   "category": "TRN",
+   "name": "Time-lapse lock-off",
+   "use": "Locked frame for a time jump while the world moves (light, traffic): time passes.",
+   "purpose": [
+    "time"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: [10, 2, 12], dist: 50, az: 50, el: 8, mm: 35, drift: 0, dur: 5 })",
+   "lens": "35mm",
+   "duration": [
+    4,
+    6.5
+   ],
+   "dur": 5,
+   "cost": "T2",
+   "sets": [
+    "street",
+    "office",
+    "sky"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "Run the world clock fast (scene.update(t * 20)) while the camera stays locked."
+  },
+  {
+   "id": "TRN-015",
+   "category": "TRN",
+   "name": "Look-away pan",
+   "use": "The camera looks away from the subject at the end of a scene; the next scene starts on what it found.",
+   "purpose": [
+    "transition"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.pan({ pos: [6, 1.7, 14], from: W.hero, to: W.screen.point, mm: 35, dur: 4 })",
+   "lens": "35mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-016",
+   "category": "TRN",
+   "name": "Flash-cut hold",
+   "use": "A 1 s locked frame designed to sit between two flash frames: the hard tonal shift.",
+   "purpose": [
+    "transition",
+    "reveal"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.lockOff({ target: W.hero, dist: 10, az: -25, el: 5, mm: 40, drift: 0.004, dur: 1.2 })",
+   "lens": "40mm",
+   "duration": [
+    1,
+    1.6
+   ],
+   "dur": 1.2,
+   "cost": "T1",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-017",
+   "category": "TRN",
+   "name": "Speed-ramp exit",
+   "use": "A move that accelerates out of the shot: sling into the next scene.",
+   "purpose": [
+    "transition",
+    "time"
+   ],
+   "scale": "medium",
+   "energy": "high",
+   "recipe": "M.speedRamp(M.dollyIn({ target: W.hero, dist: 18, az: 10, push: 0.5, dur: 4, ease: 'linear' }), [[0, 0], [0.4, 0.4], [1, 2.2]])",
+   "lens": "40mm",
+   "duration": [
+    3.2,
+    5.2
+   ],
+   "dur": 4,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "TRN-018",
+   "category": "TRN",
+   "name": "Orbit hand-off between subjects",
+   "use": "Orbit one subject until a second lines up behind it; the orbit continues around the second.",
+   "purpose": [
+    "transition",
+    "mechanism"
+   ],
+   "scale": "medium",
+   "energy": "mid",
+   "recipe": "M.seq([M.orbit({ target: W.hero, dist: 14, az: 90, arc: 60, el: 6, dur: 4, ease: 'in' }), M.orbit({ target: W.office, dist: 46, az: 160, arc: 40, el: 8, dur: 5, ease: 'out' })], { overlap: 2 })",
+   "lens": "40mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "two related subjects"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-001",
+   "category": "END",
+   "name": "Final pull to orbit",
+   "use": "One person, one city, one planet: the last image of the film.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pullBackToPlanet({ ground: W.plaza, center: W.planet.center, radius: W.planet.radius, h0: 8, h1: 420000, heading: [0, 0, -1], spin: 30, mm: 35, dur: 12 })",
+   "lens": "35mm",
+   "duration": [
+    9.6,
+    15.6
+   ],
+   "dur": 12,
+   "cost": "T3",
+   "sets": [
+    "globe + city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-002",
+   "category": "END",
+   "name": "Long hold, slow creep",
+   "use": "Let the last line land on a near-static frame (Deakins: holding builds tension).",
+   "purpose": [
+    "ending",
+    "tension"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.creep({ target: W.hero, dist: 14, az: -25, el: 4, push: 0.06, mm: 50, dur: 10 })",
+   "lens": "50mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T1",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-003",
+   "category": "END",
+   "name": "Rise and leave",
+   "use": "Crane up and away from the subject: the story releases it.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.craneUp({ target: W.hero, dist: 18, az: 30, el: 6, rise: 40, back: 0.5, mm: 28, dur: 9 })",
+   "lens": "28mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "any"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-004",
+   "category": "END",
+   "name": "Walk-off hold",
+   "use": "The figure walks out of a held frame and leaves it empty: absence.",
+   "purpose": [
+    "ending",
+    "person"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: [-2, 1.4, 6.5], dist: 16, az: -10, el: 3, mm: 40, drift: 0.008, dur: 8 })",
+   "lens": "40mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "figure",
+    "car"
+   ],
+   "lab": "world",
+   "t0": 8
+  },
+  {
+   "id": "END-005",
+   "category": "END",
+   "name": "Window light-out",
+   "use": "Hold on the lit window until the light goes out: the last decision, the end of an era.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.creep({ target: W.window.point, dist: 30, az: 5, el: -8, push: 0.05, mm: 65, dur: 9 })",
+   "lens": "65mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "office",
+    "house",
+    "ship"
+   ],
+   "lab": "world",
+   "t0": 0,
+   "note": "Animate the window light off on the last word."
+  },
+  {
+   "id": "END-006",
+   "category": "END",
+   "name": "Pull-back into the dark",
+   "use": "Pull back until the subject is a small lit island in black: isolation, the cost.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.pullBackReveal({ target: W.hero, dist: 10, pull: 6, rise: 25, mm: 35, dur: 10 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "any lit subject"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-007",
+   "category": "END",
+   "name": "Car drives into the distance",
+   "use": "The car leaves along the road while the camera rises: the journey continues without us.",
+   "purpose": [
+    "ending",
+    "time"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.lookAt(M.craneUp({ target: W.carAt(6), dist: 10, az: -100, el: 4, rise: 14, back: 0.3, mm: 35, dur: 8 }), W.car, { lead: 0.3, lag: 0.8, weight: 0.7 })",
+   "lens": "35mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "car",
+    "road"
+   ],
+   "lab": "world",
+   "t0": 6
+  },
+  {
+   "id": "END-008",
+   "category": "END",
+   "name": "Globe turn into night",
+   "use": "Orbit the globe until the place turns into the night side: time, consequence.",
+   "purpose": [
+    "ending",
+    "time"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.orbit({ target: W.globe.center, dist: 38, az: -120, arc: 70, el: 18, mm: 35, dur: 10 })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T1",
+   "sets": [
+    "globe"
+   ],
+   "lab": "globe",
+   "t0": 0
+  },
+  {
+   "id": "END-009",
+   "category": "END",
+   "name": "Closing tilt-up to the sky",
+   "use": "End on the sky: open, unresolved, the question left hanging.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.tiltUp({ pos: [10, 1.6, 26], from: W.hero, to: [-20, 90, -200], mm: 28, dur: 7 })",
+   "lens": "28mm",
+   "duration": [
+    5.6,
+    9.1
+   ],
+   "dur": 7,
+   "cost": "T2",
+   "sets": [
+    "any exterior"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-010",
+   "category": "END",
+   "name": "Circle and settle",
+   "use": "A last slow orbit that comes to rest on the hero angle: the definitive image.",
+   "purpose": [
+    "ending",
+    "object"
+   ],
+   "scale": "medium",
+   "energy": "low",
+   "recipe": "M.orbit({ target: W.hero, dist: 16, az: -50, arc: 70, el0: 12, el1: 4, mm: 40, dur: 10, ease: 'settle' })",
+   "lens": "40mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T1",
+   "sets": [
+    "hero object"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-011",
+   "category": "END",
+   "name": "Top-down rise to pattern",
+   "use": "Lift away overhead until the subject dissolves into the pattern of everything.",
+   "purpose": [
+    "ending",
+    "number"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.godRotate({ target: W.hero, h0: 12, h1: 320, spin: 30, mm: 35, dur: 10, ease: 'settle' })",
+   "lens": "35mm",
+   "duration": [
+    8,
+    13
+   ],
+   "dur": 10,
+   "cost": "T2",
+   "sets": [
+    "crowd",
+    "city",
+    "graves"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-012",
+   "category": "END",
+   "name": "Dolly back from the figure",
+   "use": "Leave the figure where they stand, pulling back down the street: we go, they stay.",
+   "purpose": [
+    "ending",
+    "person"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.dollyOut({ target: M.vec.add(W.figureAt(9), [0, 1.3, 0]), dist: 4, az: -95, el: 3, pull: 6, mm: 40, dur: 9 })",
+   "lens": "40mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "figure"
+   ],
+   "lab": "world",
+   "t0": 9
+  },
+  {
+   "id": "END-013",
+   "category": "END",
+   "name": "Return to the opening frame",
+   "use": "Bookend: end on the frame the film opened with, now changed.",
+   "purpose": [
+    "ending",
+    "chapter"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.reverse(M.craneReveal({ target: W.tower, dist: 120, az: 30, rise: 26, mm: 24, dur: 8 }))",
+   "lens": "24mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T2",
+   "sets": [
+    "any; match the cold open"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-014",
+   "category": "END",
+   "name": "Fade-hold on the object",
+   "use": "Locked close on the object while the light falls: the evidence remains.",
+   "purpose": [
+    "ending",
+    "object"
+   ],
+   "scale": "close",
+   "energy": "low",
+   "recipe": "M.lockOff({ target: W.object, dist: 1.3, az: 35, el: 10, mm: 85, drift: 0.01, dur: 8 })",
+   "lens": "85mm",
+   "duration": [
+    6.4,
+    10.4
+   ],
+   "dur": 8,
+   "cost": "T1",
+   "sets": [
+    "object"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-015",
+   "category": "END",
+   "name": "Ridge-line departure",
+   "use": "Fly back over the ridge, leaving the place behind it: exit the world of the story.",
+   "purpose": [
+    "ending",
+    "place"
+   ],
+   "scale": "wide",
+   "energy": "mid",
+   "recipe": "M.reverse(M.droneRidgeReveal({ crest: W.ridge.crest, dir: W.ridge.dir, vista: W.plaza, back: 30, low: 8, clear: 10, ahead: 40, mm: 24, dur: 9 }))",
+   "lens": "24mm",
+   "duration": [
+    7.2,
+    11.7
+   ],
+   "dur": 9,
+   "cost": "T2",
+   "sets": [
+    "valley",
+    "city"
+   ],
+   "lab": "world",
+   "t0": 0
+  },
+  {
+   "id": "END-016",
+   "category": "END",
+   "name": "Credits drift",
+   "use": "A slow lateral drift over the world under end cards: calm, cheap, unhurried.",
+   "purpose": [
+    "ending"
+   ],
+   "scale": "wide",
+   "energy": "low",
+   "recipe": "M.truck({ target: W.plaza, dist: 180, az: 40, el: 12, track: 40, mm: 50, dur: 14, ease: 'gentle' })",
+   "lens": "50mm",
+   "duration": [
+    11.2,
+    18.2
+   ],
+   "dur": 14,
+   "cost": "T2",
+   "sets": [
+    "any wide"
+   ],
+   "lab": "world",
+   "t0": 0
+  }
+ ]
+}

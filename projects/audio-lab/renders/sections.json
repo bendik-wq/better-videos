@@ -1,0 +1,262 @@
+{
+ "sections": [
+  {
+   "id": "open",
+   "start": 0.0,
+   "dur": 10.88,
+   "mix_lufs": -15.1,
+   "mix_lra": 8.9,
+   "music_lufs": -23.0,
+   "vo_lufs": -19.5,
+   "music_centroid_hz": 427,
+   "music_side_db": -5.5,
+   "arrangement": {
+    "mood": "wonder",
+    "key": "D lydian",
+    "bpm": 110.3,
+    "bars": 5,
+    "chords": [
+     "D",
+     "Asus",
+     "Bm",
+     "E",
+     "D"
+    ],
+    "layers": [
+     "bass",
+     "keys",
+     "ostinato",
+     "strings"
+    ],
+    "breakdown_bar": null,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "depth",
+   "start": 10.88,
+   "dur": 6.82,
+   "mix_lufs": -14.9,
+   "mix_lra": 7.4,
+   "music_lufs": -26.9,
+   "vo_lufs": -19.3,
+   "music_centroid_hz": 631,
+   "music_side_db": -3.0,
+   "arrangement": {
+    "mood": "mystery",
+    "key": "C harmonic",
+    "bpm": 71.84,
+    "bars": 3,
+    "chords": [
+     "Cm",
+     "Ddim"
+    ],
+    "layers": [
+     "bass",
+     "keys",
+     "ostinato"
+    ],
+    "breakdown_bar": null,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "ch1",
+   "start": 17.7,
+   "dur": 3.2,
+   "mix_lufs": -28.2,
+   "mix_lra": 8.5,
+   "music_lufs": -38.3,
+   "vo_lufs": null,
+   "music_centroid_hz": 423,
+   "music_side_db": -0.7,
+   "arrangement": {
+    "mood": "mystery",
+    "key": "C harmonic",
+    "bpm": 71.84,
+    "bars": 3,
+    "chords": [
+     "Cm",
+     "Ddim"
+    ],
+    "layers": [
+     "bass",
+     "keys",
+     "ostinato"
+    ],
+    "breakdown_bar": null,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "clock",
+   "start": 20.9,
+   "dur": 16.38,
+   "mix_lufs": -13.8,
+   "mix_lra": 3.5,
+   "music_lufs": -20.1,
+   "vo_lufs": -19.5,
+   "music_centroid_hz": 361,
+   "music_side_db": -5.1,
+   "arrangement": {
+    "mood": "tension",
+    "key": "D phrygian",
+    "bpm": 102.55,
+    "bars": 7,
+    "chords": [
+     "Dm",
+     "Bb",
+     "Gm",
+     "Adim"
+    ],
+    "layers": [
+     "bass",
+     "clock",
+     "ostinato",
+     "perc",
+     "strings"
+    ],
+    "breakdown_bar": 4,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "war",
+   "start": 37.28,
+   "dur": 8.59,
+   "mix_lufs": -13.0,
+   "mix_lra": 2.2,
+   "music_lufs": -17.5,
+   "vo_lufs": -19.1,
+   "music_centroid_hz": 317,
+   "music_side_db": -4.9,
+   "arrangement": {
+    "mood": "urgency",
+    "key": "E minor",
+    "bpm": 139.74,
+    "bars": 5,
+    "chords": [
+     "Em",
+     "C",
+     "D",
+     "Bm",
+     "Em"
+    ],
+    "layers": [
+     "bass",
+     "braaam",
+     "clock",
+     "ostinato",
+     "perc",
+     "strings"
+    ],
+    "breakdown_bar": null,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "loss",
+   "start": 45.87,
+   "dur": 7.77,
+   "mix_lufs": -15.2,
+   "mix_lra": 4.5,
+   "music_lufs": -25.4,
+   "vo_lufs": -19.3,
+   "music_centroid_hz": 1019,
+   "music_side_db": -3.5,
+   "arrangement": {
+    "mood": "melancholy",
+    "key": "A aeolian",
+    "bpm": 61.76,
+    "bars": 2,
+    "chords": [
+     "Am"
+    ],
+    "layers": [
+     "bass",
+     "keys",
+     "strings"
+    ],
+    "breakdown_bar": null,
+    "ending": "flow"
+   }
+  },
+  {
+   "id": "archive",
+   "start": 53.64,
+   "dur": 7.93,
+   "mix_lufs": -13.6,
+   "mix_lra": 3.3,
+   "music_lufs": -30.8,
+   "vo_lufs": -19.4,
+   "music_centroid_hz": 633,
+   "music_side_db": -4.1,
+   "arrangement": null
+  },
+  {
+   "id": "moving",
+   "start": 61.57,
+   "dur": 11.32,
+   "mix_lufs": -13.8,
+   "mix_lra": 1.9,
+   "music_lufs": -18.5,
+   "vo_lufs": -19.4,
+   "music_centroid_hz": 309,
+   "music_side_db": -5.1,
+   "arrangement": {
+    "mood": "triumph",
+    "key": "D major",
+    "bpm": 84.78,
+    "bars": 4,
+    "chords": [
+     "G",
+     "D",
+     "Asus",
+     "D"
+    ],
+    "layers": [
+     "bass",
+     "keys",
+     "ostinato",
+     "perc",
+     "strings"
+    ],
+    "breakdown_bar": null,
+    "ending": "resolve"
+   }
+  }
+ ],
+ "harmony": {
+  "bass": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  },
+  "keys": {
+   "chord_tone": 0.915,
+   "scale_only": 0.085,
+   "outside": 0.0
+  },
+  "ostinato": {
+   "chord_tone": 0.97,
+   "scale_only": 0.03,
+   "outside": -0.0
+  },
+  "pad": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  },
+  "strings": {
+   "chord_tone": 1.0,
+   "scale_only": 0.0,
+   "outside": 0.0
+  }
+ },
+ "drops": [
+  [
+   17.7013,
+   20.9013
+  ]
+ ]
+}

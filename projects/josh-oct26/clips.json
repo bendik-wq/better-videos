@@ -1,0 +1,530 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.0,
+    442.32
+   ]
+  },
+  "lf-2": {
+   "t": [
+    448.84,
+    518.17
+   ]
+  },
+  "lf-3": {
+   "t": [
+    523.51,
+    567.17
+   ]
+  },
+  "lf-4": {
+   "t": [
+    572.28,
+    679.72
+   ]
+  },
+  "lf-5": {
+   "t": [
+    684.56,
+    1030.72
+   ]
+  },
+  "tz-1": {
+   "t": [
+    484.83,
+    490.63
+   ]
+  },
+  "tz-2": {
+   "t": [
+    545.17,
+    553.17
+   ]
+  },
+  "tz-3": {
+   "t": [
+    641.71,
+    646.69
+   ]
+  },
+  "tz-4": {
+   "t": [
+    869.41,
+    882.67
+   ]
+  },
+  "tz-5": {
+   "t": [
+    952.46,
+    960.3
+   ]
+  },
+  "five-ten": {
+   "t": [
+    469.13,
+    514.49
+   ]
+  },
+  "burn-out": {
+   "t": [
+    537.27,
+    566.33
+   ]
+  },
+  "four-rooms": {
+   "t": [
+    629.29,
+    653.89
+   ]
+  },
+  "fish": {
+   "t": [
+    314.99,
+    346.02
+   ]
+  },
+  "kingpin": {
+   "t": [
+    846.97,
+    883.23
+   ]
+  },
+  "day-one": {
+   "t": [
+    886.58,
+    923.78
+   ]
+  },
+  "buy-build": {
+   "t": [
+    924.84,
+    960.3
+   ]
+  },
+  "ceiling": {
+   "t": [
+    404.22,
+    442.32
+   ]
+  },
+  "past-10m": {
+   "t": [
+    758.99,
+    782.51
+   ]
+  },
+  "xl-510-a": {
+   "t": [
+    469.13,
+    517.43
+   ]
+  },
+  "xl-510-b": {
+   "t": [
+    537.27,
+    565.43
+   ]
+  },
+  "xl-bill": {
+   "t": [
+    231.32,
+    303.28
+   ]
+  },
+  "xl-rooms": {
+   "t": [
+    611.15,
+    679.72
+   ]
+  },
+  "xl-fish": {
+   "t": [
+    314.99,
+    377.44
+   ]
+  },
+  "xl-king": {
+   "t": [
+    840.93,
+    906.88
+   ]
+  },
+  "xl-stuck": {
+   "t": [
+    1.88,
+    87.06
+   ]
+  },
+  "xl-build": {
+   "t": [
+    896.4,
+    960.3
+   ]
+  },
+  "xl-ceil": {
+   "t": [
+    404.22,
+    466.62
+   ]
+  },
+  "xl-p10": {
+   "t": [
+    758.99,
+    823.23
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Why organic growth won't get you past $10M (Josh, 26 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "intro": false,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 buying businesses",
+     "title": "Why organic growth <em>won't get you past $10M</em>.",
+     "poster": true,
+     "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
+    }
+   },
+   "chapters": {
+    "start": "The organic trap"
+   },
+   "chapterMarks": [
+    [
+     39.2,
+     "How you got here"
+    ],
+    [
+     110.0,
+     "The healthcare example"
+    ],
+    [
+     231.3,
+     "The organic ceiling"
+    ],
+    [
+     404.2,
+     "Every service business"
+    ],
+    [
+     448.9,
+     "A new foundation"
+    ],
+    [
+     484.8,
+     "Buy your competitor"
+    ],
+    [
+     523.5,
+     "Why owners burn out"
+    ],
+    [
+     572.3,
+     "A bankable narrative"
+    ],
+    [
+     625.7,
+     "Josh's April acquisition"
+    ],
+    [
+     684.6,
+     "Owners don't see it"
+    ],
+    [
+     759.0,
+     "Past $10M"
+    ],
+    [
+     840.9,
+     "Skip the first 100 clients"
+    ],
+    [
+     886.6,
+     "Buy, optimise, zoom out"
+    ],
+    [
+     938.4,
+     "Buy and build"
+    ],
+    [
+     963.4,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "The organic trap"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5"
+   ],
+   "sequence": [
+    {
+     "chapter": "The organic trap"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5"
+   ]
+  },
+  "ig-1-five-ten": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "From $5M to $10M: <em>buy, don't grind.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-510-a",
+    "xl-510-b"
+   ],
+   "sequence": [
+    "xl-510-a~ig#1",
+    "xl-510-a~ig#2",
+    "xl-510-a~ig#3",
+    "xl-510-a~ig#4",
+    "xl-510-a~ig#5",
+    "xl-510-a~ig#6",
+    "xl-510-a~ig#7",
+    "xl-510-b~ig#1",
+    "xl-510-b~ig#2",
+    "xl-510-b~ig#3"
+   ]
+  },
+  "ig-3-four-rooms": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Hit the ceiling? <em>Move the walls.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-rooms"
+   ],
+   "sequence": [
+    "xl-rooms~ig#1",
+    "xl-rooms~ig#2",
+    "xl-rooms~ig#3",
+    "xl-rooms~ig#4",
+    "xl-rooms~ig#5",
+    "xl-rooms~ig#6"
+   ]
+  },
+  "ig-4-fish": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Location caps <em>organic growth</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-fish"
+   ],
+   "sequence": [
+    "xl-fish~ig#1",
+    "xl-fish~ig#2",
+    "xl-fish~ig#3",
+    "xl-fish~ig#4",
+    "xl-fish~ig#5",
+    "xl-fish~ig#6",
+    "xl-fish~ig#7",
+    "xl-fish~ig#8"
+   ]
+  },
+  "ig-5-kingpin": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Buy out <em>the kingpin</em> down the road.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-king"
+   ],
+   "sequence": [
+    "xl-king~ig#1",
+    "xl-king~ig#2",
+    "xl-king~ig#3",
+    "xl-king~ig#4",
+    "xl-king~ig#5",
+    "xl-king~ig#6"
+   ]
+  },
+  "ig-7-buy-build": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Buy. Optimise. <em>Zoom out.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-build"
+   ],
+   "sequence": [
+    "xl-build~ig#1",
+    "xl-build~ig#2",
+    "xl-build~ig#3",
+    "xl-build~ig#4",
+    "xl-build~ig#5"
+   ]
+  },
+  "ig-8-ceiling": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Fix the foundation <em>before you build up</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-ceil"
+   ],
+   "sequence": [
+    "xl-ceil~ig#1",
+    "xl-ceil~ig#2",
+    "xl-ceil~ig#3",
+    "xl-ceil~ig#4",
+    "xl-ceil~ig#5"
+   ]
+  },
+  "ig-9-past-10m": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "New location, or <em>buy a competitor</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-p10"
+   ],
+   "sequence": [
+    "xl-p10~ig#1",
+    "xl-p10~ig#2",
+    "xl-p10~ig#3",
+    "xl-p10~ig#4"
+   ]
+  },
+  "ig-2-billable-hours": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "People and hours <em>cap organic growth</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-bill"
+   ],
+   "sequence": [
+    "xl-bill~ig#1",
+    "xl-bill~ig#2",
+    "xl-bill~ig#3",
+    "xl-bill~ig#4"
+   ]
+  },
+  "ig-6-stuck": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Organic growth <em>won't get you to eight figures</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-stuck"
+   ],
+   "sequence": [
+    "xl-stuck~ig#1",
+    "xl-stuck~ig#2",
+    "xl-stuck~ig#3",
+    "xl-stuck~ig#4",
+    "xl-stuck~ig#5",
+    "xl-stuck~ig#6",
+    "xl-stuck~ig#7",
+    "xl-stuck~ig#8"
+   ]
+  }
+ }
+}

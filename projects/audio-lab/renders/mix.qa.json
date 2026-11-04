@@ -1,0 +1,64 @@
+{
+ "file": "mix.wav",
+ "duration_s": 72.9,
+ "integrated_lufs": -14.07,
+ "lra_lu": 9.19,
+ "max_short_term_lufs": -11.93,
+ "max_momentary_lufs": -9.87,
+ "true_peak_dbtp": -1.0,
+ "sample_peak_dbfs": -1.01,
+ "clipped_runs": 0,
+ "clicks": {
+  "count": 0,
+  "at_s": []
+ },
+ "dc_offset": [
+  -1e-05,
+  -1e-05
+ ],
+ "octave_bands_rel_1k": {
+  "31.5": -7.9,
+  "63": 2.5,
+  "125": 0.9,
+  "250": 3.7,
+  "500": 1.9,
+  "1000": 0.0,
+  "2000": -4.0,
+  "4000": -6.0,
+  "8000": -5.8,
+  "16000": -17.5
+ },
+ "tilt_db_per_oct": -1.62,
+ "harsh_bands": [],
+ "narrow_resonances": [
+  {
+   "hz": 1758,
+   "db": 7.8
+  },
+  {
+   "hz": 2637,
+   "db": 6.7
+  }
+ ],
+ "stereo": {
+  "correlation": 0.683,
+  "min_correlation": -0.256,
+  "balance_db": 0.48,
+  "side_to_mid_db": -9.1,
+  "min_correlation_at_s": 18.8
+ },
+ "vo_over_music_lu": {
+  "median": 15.0,
+  "p10": 5.9
+ },
+ "speech_fraction": 0.437,
+ "checks": {
+  "loudness_-14_+-1": true,
+  "true_peak_<=-1": true,
+  "no_clipping": true,
+  "mono_compatible": true,
+  "balanced_lr": true,
+  "no_harsh_buildup": true
+ },
+ "pass": true
+}

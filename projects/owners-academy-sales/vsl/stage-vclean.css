@@ -1,0 +1,16 @@
+/* Clean full-screen vertical Reels (render.mjs --vertical --full --clean), loaded on top of stage-vfull.css:
+   heavy Inter hook at the top, minimal white captions, near-black end card. */
+@font-face { font-family: "InterV"; src: url(fonts/Inter-Var.woff2); font-weight: 300 800; }
+#scrim { background: linear-gradient(180deg, rgba(5,8,15,.82) 0%, rgba(5,8,15,.62) 15%, rgba(5,8,15,0) 30%, rgba(5,8,15,0) 52%, rgba(5,8,15,.55) 68%, rgba(5,8,15,.78) 84%, rgba(5,8,15,.85) 100%) !important; }
+.wordmark { font: 600 26px/1 "InterV" !important; letter-spacing: -.01em !important; color: rgba(255,255,255,.9) !important; }
+.beat .eyebrow { font: 600 20px/1.2 "InterV" !important; letter-spacing: .14em !important; text-transform: uppercase; color: rgba(255,255,255,.62) !important; }
+.beat .big, .beat .mid { font-family: "InterV" !important; font-weight: 700 !important; letter-spacing: -.035em !important; font-size: 70px !important; line-height: 1.04 !important; color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.3); }
+.beat em { font-style: normal; color: #fdd050; }
+#cap .line { font: 650 56px/1.2 "InterV" !important; letter-spacing: -.02em; color: rgba(255,255,255,.62) !important; }
+#cap .w.on, #cap .w.past { color: #fff !important; background: none !important; }
+#card .bgc { background: radial-gradient(900px 1200px at 50% 42%, #111a2e 0%, #05080f 72%) !important; }
+#card .ttl { font-family: "InterV" !important; font-weight: 800 !important; letter-spacing: -.045em !important; font-size: 96px !important; line-height: 1.0 !important; }
+#card .ttl em { font-style: normal; color: #fdd050; }
+#card .num { font: 600 20px/1 "InterV" !important; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.6) !important; }
+#card .rule { background: #fff !important; height: 3px !important; }
+#card .btn { font-family: "InterV" !important; }

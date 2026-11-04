@@ -1,0 +1,14 @@
+[
+ {
+  "licence": "PDM-1.0",
+  "licence_url": "http://creativecommons.org/publicdomain/mark/1.0/",
+  "title": "F. Chopin - Waltz in A flat major, Op. 69 No. 1 (first 24 s)",
+  "author": "Frederic Chopin (composition, public domain); performed by Luke Faulkner for Musopen (recording released to the public domain)",
+  "source": "https://archive.org/details/MusopenChopinWaltzOp69no1",
+  "note": "Excerpt re-encoded to Ogg Vorbis q6 with a 2 s fade-out; original file 'F. Chopin - Waltz in A flat major, Op. 69 no. 1 (Luke Faulkner).ogg'",
+  "file": "projects/audio-lab/assets/chopin-op69-1-excerpt.ogg",
+  "used_from": 0,
+  "used_dur": 7.93,
+  "at": 53.643
+ }
+]

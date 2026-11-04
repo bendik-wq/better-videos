@@ -1,0 +1,33 @@
+{
+ "id": "office-treasury-1969",
+ "title": "THE TREASURY STORY",
+ "source": "archive",
+ "sourceId": "gov.archives.arc.11865",
+ "page": "https://archive.org/details/gov.archives.arc.11865",
+ "download": "https://archive.org/download/gov.archives.arc.11865/gov.archives.arc.11865.mpeg",
+ "date": "1969",
+ "licence": "Public domain (http://creativecommons.org/licenses/publicdomain/zero/1.0/)",
+ "licenceEvidence": "http://creativecommons.org/licenses/publicdomain/zero/1.0/",
+ "credit": "Internet Archive / National Archives and Records Administration",
+ "tags": [
+  "office",
+  "money",
+  "archive",
+  "1960s"
+ ],
+ "trim": [
+  248,
+  300
+ ],
+ "file": "assets/footage/clips/office-treasury-1969.mp4",
+ "bytes": 19349921,
+ "sha1": "7a9522c57651707a86c13956bba15932bf3625ac",
+ "duration": 52.018633,
+ "width": 720,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

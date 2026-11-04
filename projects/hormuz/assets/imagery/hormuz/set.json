@@ -1,0 +1,304 @@
+{
+ "format": "bv-imagery/1",
+ "name": "hormuz",
+ "center": {
+  "lat": 26.56,
+  "lon": 56.45,
+  "elev": 0.0
+ },
+ "crs": "EPSG:4326 (equal-angle pixels, north up)",
+ "tile": 1024,
+ "demEncoding": "(elev_m + 500) * 10 = R*256 + G",
+ "levels": [
+  {
+   "id": 0,
+   "bbox": [
+    56.369646065397056,
+    26.48813510600072,
+    56.53035393460295,
+    26.63186489399928
+   ],
+   "size": [
+    1789,
+    1600
+   ],
+   "mpp": 10,
+   "degPerPx": 8.983111749910169e-05,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L0/{row}_{col}.jpg",
+   "dem": {
+    "file": "L0/dem.png",
+    "size": [
+     596,
+     533
+    ],
+    "mpp": 26.849006240916264,
+    "min": -15.9,
+    "max": 114.6,
+    "terrariumZoom": 12
+   }
+  },
+  {
+   "id": 1,
+   "bbox": [
+    56.128584261588216,
+    26.272540424002873,
+    56.77141573841179,
+    26.847459575997124
+   ],
+   "size": [
+    1789,
+    1600
+   ],
+   "mpp": 40,
+   "degPerPx": 0.00035932446999640676,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L1/{row}_{col}.jpg",
+   "dem": {
+    "file": "L1/dem.png",
+    "size": [
+     596,
+     533
+    ],
+    "mpp": 107.39602496366506,
+    "min": -215.7,
+    "max": 614.4,
+    "terrariumZoom": 10
+   },
+   "colorMatch": {
+    "gain": [
+     1.0354,
+     1.0103,
+     0.9697
+    ],
+    "offset": [
+     -3.57,
+     -2.41,
+     -2.44
+    ]
+   }
+  },
+  {
+   "id": 2,
+   "bbox": [
+    55.16433704635286,
+    25.410161696011496,
+    57.73566295364714,
+    27.7098383039885
+   ],
+   "size": [
+    1789,
+    1600
+   ],
+   "mpp": 160,
+   "degPerPx": 0.001437297879985627,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L2/{row}_{col}.jpg",
+   "dem": {
+    "file": "L2/dem.png",
+    "size": [
+     596,
+     533
+    ],
+    "mpp": 429.5840998546579,
+    "min": -2008.6,
+    "max": 2547.6,
+    "terrariumZoom": 8
+   },
+   "colorMatch": {
+    "gain": [
+     1.0934,
+     1.0688,
+     1.0146
+    ],
+    "offset": [
+     -13.8,
+     -11.86,
+     -9.5
+    ]
+   }
+  },
+  {
+   "id": 3,
+   "bbox": [
+    51.30734818541143,
+    21.96064678404599,
+    61.59265181458858,
+    31.159353215954006
+   ],
+   "size": [
+    1789,
+    1600
+   ],
+   "mpp": 640,
+   "degPerPx": 0.005749191519942508,
+   "tiles": [
+    2,
+    2
+   ],
+   "image": "L3/{row}_{col}.jpg",
+   "dem": {
+    "file": "L3/dem.png",
+    "size": [
+     596,
+     533
+    ],
+    "mpp": 1718.3363994186366,
+    "min": -3548.9,
+    "max": 4075.3,
+    "terrariumZoom": 6
+   },
+   "source": "NASA Blue Marble Next Generation (GIBS)",
+   "colorMatch": {
+    "gain": [
+     1.4178,
+     1.3938,
+     1.2893
+    ],
+    "offset": [
+     -1.79,
+     0.67,
+     12.06
+    ]
+   }
+  }
+ ],
+ "sources": {
+  "imagery": {
+   "name": "Copernicus Sentinel-2 L2A true colour (TCI), AWS Open Data / Element 84 Earth Search",
+   "licence": "Copernicus Sentinel data licence: free, full and open; attribution required",
+   "credit": "Contains modified Copernicus Sentinel data 2024, 2025",
+   "url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+   "scenes": [
+    {
+     "id": "S2C_40RDQ_20250221_0_L2A",
+     "date": "2025-02-21",
+     "cloud": 0.029665
+    },
+    {
+     "id": "S2C_40RDQ_20250221_0_L2A",
+     "date": "2025-02-21",
+     "cloud": 0.029665
+    },
+    {
+     "id": "S2B_40RCR_20241111_0_L2A",
+     "date": "2024-11-11",
+     "cloud": 0.000151
+    },
+    {
+     "id": "S2B_40RCR_20241211_0_L2A",
+     "date": "2024-12-11",
+     "cloud": 0.000395
+    },
+    {
+     "id": "S2B_40RCR_20250318_0_L2A",
+     "date": "2025-03-18",
+     "cloud": 0.001142
+    },
+    {
+     "id": "S2C_40RDR_20241103_1_L2A",
+     "date": "2024-11-03",
+     "cloud": 0.00146
+    },
+    {
+     "id": "S2A_40RER_20241223_0_L2A",
+     "date": "2024-12-23",
+     "cloud": 0.000188
+    },
+    {
+     "id": "S2A_40RCQ_20241106_0_L2A",
+     "date": "2024-11-06",
+     "cloud": 0.008659
+    },
+    {
+     "id": "S2B_40RCQ_20250110_0_L2A",
+     "date": "2025-01-10",
+     "cloud": 0.009432
+    },
+    {
+     "id": "S2B_40RCQ_20250127_0_L2A",
+     "date": "2025-01-27",
+     "cloud": 0.013613
+    },
+    {
+     "id": "S2C_40RDQ_20250221_0_L2A",
+     "date": "2025-02-21",
+     "cloud": 0.029665
+    },
+    {
+     "id": "S2B_40REQ_20241108_0_L2A",
+     "date": "2024-11-08",
+     "cloud": 0.00017
+    },
+    {
+     "id": "S2A_40REQ_20241103_0_L2A",
+     "date": "2024-11-03",
+     "cloud": 0.000183
+    },
+    {
+     "id": "S2B_40RCP_20241101_0_L2A",
+     "date": "2024-11-01",
+     "cloud": 0.000227
+    },
+    {
+     "id": "S2A_40RCP_20250318_1_L2A",
+     "date": "2025-03-18",
+     "cloud": 0.001894
+    },
+    {
+     "id": "S2C_40RCP_20250221_0_L2A",
+     "date": "2025-02-21",
+     "cloud": 0.009962
+    },
+    {
+     "id": "S2B_40RDP_20250318_0_L2A",
+     "date": "2025-03-18",
+     "cloud": 0.006052
+    },
+    {
+     "id": "S2B_40RCP_20250127_0_L2A",
+     "date": "2025-01-27",
+     "cloud": 0.022634
+    },
+    {
+     "id": "S2B_40REP_20250318_0_L2A",
+     "date": "2025-03-18",
+     "cloud": 0.002168
+    },
+    {
+     "id": "S2A_40REP_20241113_0_L2A",
+     "date": "2024-11-13",
+     "cloud": 0.002264
+    },
+    {
+     "id": "S2B_40REP_20241105_0_L2A",
+     "date": "2024-11-05",
+     "cloud": 0.002293
+    }
+   ]
+  },
+  "imageryOuter": {
+   "name": "NASA Blue Marble Next Generation via NASA GIBS",
+   "licence": "Public domain (NASA)",
+   "credit": "NASA Earth Observatory / GIBS",
+   "url": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi"
+  },
+  "elevation": {
+   "name": "AWS Terrain Tiles (Mapzen terrarium)",
+   "licence": "Free to use with attribution of the underlying sources (SRTM and GMTED2010 public domain, ETOPO1 public domain, EU-DEM, etc.)",
+   "credit": "Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)",
+   "url": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md"
+  }
+ },
+ "baked": "2026-10-12",
+ "attribution": "Contains modified Copernicus Sentinel data 2024, 2025. Blue Marble: NASA. Elevation: Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1 and others)."
+}

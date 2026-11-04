@@ -1,0 +1,317 @@
+{
+ "size": 1024,
+ "layers": [
+  {
+   "name": "asphalt",
+   "index": 0,
+   "source": "ph",
+   "id": "asphalt_02",
+   "tile": [
+    3.0,
+    3.0
+   ],
+   "avg": [
+    0.3057999908924103,
+    0.3037000000476837,
+    0.28600001335144043
+   ],
+   "url": "https://polyhaven.com/a/asphalt_02"
+  },
+  {
+   "name": "asphalt_wet",
+   "index": 1,
+   "source": "acg",
+   "id": "Asphalt025C",
+   "tile": [
+    2.5,
+    2.5
+   ],
+   "avg": [
+    0.16249999403953552,
+    0.16110000014305115,
+    0.15139999985694885
+   ],
+   "url": "https://ambientcg.com/view?id=Asphalt025C"
+  },
+  {
+   "name": "pavers",
+   "index": 2,
+   "source": "ph",
+   "id": "concrete_pavement",
+   "tile": [
+    1.8,
+    1.8
+   ],
+   "avg": [
+    0.4537999927997589,
+    0.4146000146865845,
+    0.36500000953674316
+   ],
+   "url": "https://polyhaven.com/a/concrete_pavement"
+  },
+  {
+   "name": "concrete",
+   "index": 3,
+   "source": "ph",
+   "id": "concrete_wall_008",
+   "tile": [
+    2.71,
+    2.71
+   ],
+   "avg": [
+    0.5444999933242798,
+    0.515500009059906,
+    0.43140000104904175
+   ],
+   "url": "https://polyhaven.com/a/concrete_wall_008"
+  },
+  {
+   "name": "brick",
+   "index": 4,
+   "source": "ph",
+   "id": "brick_wall_006",
+   "tile": [
+    3.0,
+    3.0
+   ],
+   "avg": [
+    0.6226999759674072,
+    0.41769999265670776,
+    0.29829999804496765
+   ],
+   "url": "https://polyhaven.com/a/brick_wall_006"
+  },
+  {
+   "name": "stone",
+   "index": 5,
+   "source": "ph",
+   "id": "large_sandstone_blocks",
+   "tile": [
+    3.0,
+    3.0
+   ],
+   "avg": [
+    0.32829999923706055,
+    0.31859999895095825,
+    0.28630000352859497
+   ],
+   "url": "https://polyhaven.com/a/large_sandstone_blocks"
+  },
+  {
+   "name": "curtain",
+   "index": 6,
+   "source": "acg",
+   "id": "Facade001",
+   "tile": null,
+   "avg": [
+    0.27469998598098755,
+    0.3010999858379364,
+    0.326200008392334
+   ],
+   "grid": [
+    16,
+    10
+   ],
+   "url": "https://ambientcg.com/view?id=Facade001"
+  },
+  {
+   "name": "ribbon",
+   "index": 7,
+   "source": "acg",
+   "id": "Facade006",
+   "tile": null,
+   "avg": [
+    0.45829999446868896,
+    0.4964999854564667,
+    0.4970000088214874
+   ],
+   "grid": [
+    14,
+    8
+   ],
+   "url": "https://ambientcg.com/view?id=Facade006"
+  },
+  {
+   "name": "brickwin",
+   "index": 8,
+   "source": "acg",
+   "id": "Facade018A",
+   "tile": null,
+   "avg": [
+    0.39469999074935913,
+    0.3691999912261963,
+    0.3659999966621399
+   ],
+   "grid": [
+    6,
+    6
+   ],
+   "url": "https://ambientcg.com/view?id=Facade018A"
+  },
+  {
+   "name": "piers",
+   "index": 9,
+   "source": "acg",
+   "id": "Facade020A",
+   "tile": null,
+   "avg": [
+    0.3402000069618225,
+    0.32519999146461487,
+    0.3285999894142151
+   ],
+   "grid": [
+    6,
+    6
+   ],
+   "url": "https://ambientcg.com/view?id=Facade020A"
+  },
+  {
+   "name": "gravel",
+   "index": 10,
+   "source": "acg",
+   "id": "Gravel043",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "avg": [
+    0.3937999904155731,
+    0.3970000147819519,
+    0.3824000060558319
+   ],
+   "url": "https://ambientcg.com/view?id=Gravel043"
+  },
+  {
+   "name": "grass",
+   "index": 11,
+   "source": "acg",
+   "id": "Grass004",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "avg": [
+    0.3431999981403351,
+    0.3862999975681305,
+    0.17239999771118164
+   ],
+   "url": "https://ambientcg.com/view?id=Grass004"
+  },
+  {
+   "name": "dirt",
+   "index": 12,
+   "source": "ph",
+   "id": "dirt",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "avg": [
+    0.3684000074863434,
+    0.3057999908924103,
+    0.2312999963760376
+   ],
+   "url": "https://polyhaven.com/a/dirt"
+  },
+  {
+   "name": "metal",
+   "index": 13,
+   "source": "acg",
+   "id": "CorrugatedSteel009",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "avg": [
+    0.4887000024318695,
+    0.4878000020980835,
+    0.4869000017642975
+   ],
+   "url": "https://ambientcg.com/view?id=CorrugatedSteel009"
+  },
+  {
+   "name": "chrome",
+   "index": 14,
+   "source": "acg",
+   "id": "Metal049A",
+   "tile": [
+    1.0,
+    1.0
+   ],
+   "avg": [
+    0.9937000274658203,
+    0.9901000261306763,
+    0.9577999711036682
+   ],
+   "url": "https://ambientcg.com/view?id=Metal049A"
+  },
+  {
+   "name": "rubber",
+   "index": 15,
+   "source": "acg",
+   "id": "Rubber004",
+   "tile": [
+    1.0,
+    1.0
+   ],
+   "avg": [
+    0.16439999639987946,
+    0.17090000212192535,
+    0.1949000060558319
+   ],
+   "url": "https://ambientcg.com/view?id=Rubber004"
+  },
+  {
+   "name": "markings",
+   "index": 16,
+   "source": "acg",
+   "id": "Road007",
+   "tile": [
+    8.2,
+    8.2
+   ],
+   "avg": [
+    0.31029999256134033,
+    0.3095000088214874,
+    0.3012000024318695
+   ],
+   "line": [
+    0.0732,
+    0.0105
+   ],
+   "url": "https://ambientcg.com/view?id=Road007"
+  },
+  {
+   "name": "sheet",
+   "index": 17,
+   "source": "ph",
+   "id": "box_profile_metal_sheet",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "avg": [
+    0.3896999955177307,
+    0.1378999948501587,
+    0.08410000056028366
+   ],
+   "url": "https://polyhaven.com/a/box_profile_metal_sheet"
+  }
+ ],
+ "hdri": {
+  "modern_buildings": {
+   "file": "hdri/modern_buildings_1k.hdr",
+   "url": "https://polyhaven.com/a/modern_buildings"
+  },
+  "modern_buildings_night": {
+   "file": "hdri/modern_buildings_night_1k.hdr",
+   "url": "https://polyhaven.com/a/modern_buildings_night"
+  }
+ },
+ "trees": {
+  "file": "trees.png",
+  "variants": 4,
+  "source": "LeafSet010",
+  "url": "https://ambientcg.com/view?id=LeafSet010"
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "id": "weather-milton-hurricane-hunter",
+ "title": "Hurricane Milton on a NOAA WP-3D Orion",
+ "source": "commons",
+ "sourceId": "Hurricane Milton on a NOAA WP-3D Orion.webm",
+ "page": "https://commons.wikimedia.org/wiki/File:Hurricane_Milton_on_a_NOAA_WP-3D_Orion.webm",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Hurricane_Milton_on_a_NOAA_WP-3D_Orion.webm/Hurricane_Milton_on_a_NOAA_WP-3D_Orion.webm.720p.vp9.webm",
+ "date": "2024-10-08",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:Hurricane_Milton_on_a_NOAA_WP-3D_Orion.webm",
+ "credit": "The NOAA Hurricane Hunters",
+ "tags": [
+  "weather",
+  "hurricane",
+  "aircraft"
+ ],
+ "trim": [
+  0,
+  40
+ ],
+ "file": "assets/footage/clips/weather-milton-hurricane-hunter.mp4",
+ "bytes": 22524217,
+ "sha1": "feec050a64e0b9587a1c2b944d842c0d8f9fc29a",
+ "duration": 40.01602,
+ "width": 1280,
+ "height": 720,
+ "fps": 29.963,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

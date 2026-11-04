@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: process.env.CHROME || '/opt/pw-browsers/chromium' });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('https://apply.grosfjeld-li.com/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: process.argv[2] + '/lp-top.png' });
+await p.screenshot({ path: process.argv[2] + '/lp-full.png', fullPage: true });
+const t = await p.evaluate(() => [...document.querySelectorAll('h1,h2,h3,p,li,.eyebrow,button,a')].map(e => e.tagName + ': ' + e.innerText.trim()).filter(s => s.length > 4).slice(0, 80).join('\n'));
+console.log(t);
+await b.close();

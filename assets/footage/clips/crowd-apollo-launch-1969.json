@@ -1,0 +1,32 @@
+{
+ "id": "crowd-apollo-launch-1969",
+ "title": "Apollo Mission Control Media B-roll_ jsc2019m000563",
+ "source": "nasa",
+ "sourceId": "jsc2019m000563_Apollo_MissionControl_Media_B_roll",
+ "page": "https://images.nasa.gov/details/jsc2019m000563_Apollo_MissionControl_Media_B_roll",
+ "download": "https://images-assets.nasa.gov/video/jsc2019m000563_Apollo_MissionControl_Media_B_roll/jsc2019m000563_Apollo_MissionControl_Media_B_roll~large.mp4",
+ "date": "2019-06-27",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "crowds",
+  "archive",
+  "1960s"
+ ],
+ "trim": [
+  172,
+  206
+ ],
+ "file": "assets/footage/clips/crowd-apollo-launch-1969.mp4",
+ "bytes": 21067534,
+ "sha1": "c9db4676350815f21d31c2853d0ba4203d7941e0",
+ "duration": 34.000633,
+ "width": 1280,
+ "height": 720,
+ "fps": 59.940059669107676,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

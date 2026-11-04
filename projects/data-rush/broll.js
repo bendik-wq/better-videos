@@ -106,7 +106,9 @@ export function makeBroll(H) {
         const k = K.inOut(p);
         mat.emissiveIntensity = P0.mode === 'lightsoff' ? K.lerp(1.3, 0.05, K.range(p, 0.1, 0.9)) : P0.mode === 'lightson' ? K.lerp(0.05, 1.3, K.range(p, 0.05, 0.6)) : 1.2;
         if (P0.mode === 'street') { camera.position.set(0.5, 1.6, K.lerp(8, -10, k)); camera.lookAt(0, 6, -60); }
-        else { const a = K.lerp(-0.6, -0.2, k); camera.position.set(Math.sin(a) * 70, K.lerp(36, 26, k), Math.cos(a) * 70); camera.lookAt(0, 4, -20); }
+        else { // drone run down the avenue between the towers, banking as it goes
+          const z = K.lerp(30, -40, k), x = Math.sin(t * 0.35 + (P0.seed ?? 0)) * 3.5, bank = Math.cos(t * 0.35 + (P0.seed ?? 0)) * 0.12;
+          camera.position.set(x, K.lerp(26, 9, k), z); camera.lookAt(x * 0.4, K.lerp(4, 6, k), z - 30); camera.rotation.z += bank; }
         if (lbl) lbl.style.opacity = K.range(t, 0.6, 1.4);
       } };
     },
@@ -128,7 +130,12 @@ export function makeBroll(H) {
         beltTex.offset.x = -t * 0.35;
         items.forEach(it => { const x = ((it.off + t * 1.4) % 29) - 16; it.f.position.set(x, 1.36, 0); it.f.rotation.y = it.rot; it.f.visible = x < 9.4; });
         pl.intensity = 140 + Math.sin(t * 6) * 30;
-        camOrbit(camera, { r: 13, a0: P0.flip ? 0.9 : 0.5, a1: P0.flip ? 0.6 : 0.2, y0: 4.5, y1: 3.2, target: [3, 1.8, 0], p, t });
+        // follow-through: lock onto one folder, travel with it, and push into the slot behind it
+        const hero = -12 + K.inOut(p) * 21.2, side = P0.flip ? -1 : 1, k2 = K.smooth(K.range(p, 0.55, 1));
+        const h = K.handheld(t, 0.03, 4);
+        camera.position.set(hero - K.lerp(3.2, 1.2, k2) + h.x, K.lerp(2.6, 1.9, k2) + h.y, side * K.lerp(3.4, 0.6, k2));
+        camera.lookAt(hero + K.lerp(2, 6, k2), K.lerp(1.4, 2.0, k2), 0);
+        items[0].f.position.set(Math.min(hero, 9.3), 1.36, 0); items[0].f.visible = hero < 9.3;
       } };
     },
 
@@ -200,9 +207,10 @@ export function makeBroll(H) {
         roadTex.offset.y = d / 10; wheels.forEach(w => { w.rotation.x = d * 2; });
         truck.position.y = Math.sin(t * 9) * 0.015;
         const k = K.inOut(p);
-        if (P0.view === 'front') { camera.position.set(K.lerp(-3, -1, k), 1.2, 16); camera.lookAt(-1.6, 1.8, 0); }
-        else if (P0.view === 'aerial') { camera.position.set(14, K.lerp(26, 18, k), K.lerp(14, 6, k)); camera.lookAt(-1.6, 0, -6); }
-        else { camera.position.set(K.lerp(9, 7, k), 2.2, K.lerp(-2, -6, k)); camera.lookAt(-1.6, 1.8, -5); }
+        const h = K.handheld(t, 0.05, 7);
+        if (P0.view === 'front') { const a = K.lerp(0.5, -0.4, k); camera.position.set(-1.6 + Math.sin(a) * 9, K.lerp(0.5, 1.4, k) + h.y, 4 + Math.cos(a) * 9); camera.lookAt(-1.6, 1.6, 0); }
+        else if (P0.view === 'aerial') { const a = K.lerp(-0.8, 0.9, k); camera.position.set(-1.6 + Math.sin(a) * 16, K.lerp(22, 9, k), -6 + Math.cos(a) * 16); camera.lookAt(-1.6, 1, -6); }
+        else { const a = K.lerp(Math.PI * 0.95, Math.PI * 0.45, k); camera.position.set(-1.6 + Math.sin(a) * 11 + h.x, K.lerp(1.2, 2.6, k) + h.y, -6 + Math.cos(a) * 11); camera.lookAt(-1.6, 1.8, -4); }
       } };
     },
 
@@ -430,7 +438,9 @@ export function makeBroll(H) {
       return { ...b, update(t, p) {
         ds.forEach((g, i) => { const ti = t0 + i * 0.11; g.children[0].rotation.z = 0; g.rotation.z = 0; g.children[0].position.set(0, 0.7, 0);
           const k = K.range(t, ti, ti + 0.18); const ang = -1.25 * K.smooth(k); g.children[0].rotation.z = ang; g.children[0].position.set(Math.sin(-ang) * 0.7, Math.cos(ang) * 0.7, 0); });
-        camOrbit(camera, { r: 14, a0: 0.6, a1: 0.3, y0: 5, y1: 3.5, target: [0, 0.6, 0], p, t });
+        const front = K.clamp((t - t0) / 0.11, 0, 25); const fi = Math.floor(front); const g0 = ds[fi].position, g1 = ds[Math.min(25, fi + 1)].position;
+        const fx = K.lerp(g0.x, g1.x, front - fi), fz = K.lerp(g0.z, g1.z, front - fi);
+        const h = K.handheld(t, 0.03, 2); camera.position.set(fx - 2.5 + h.x, 0.5 + h.y, fz + 3.2); camera.lookAt(fx + 2, 0.6, fz);
       } };
     },
 

@@ -1,0 +1,33 @@
+{
+ "id": "money-treasury-press-1969",
+ "title": "THE TREASURY STORY",
+ "source": "archive",
+ "sourceId": "gov.archives.arc.11865",
+ "page": "https://archive.org/details/gov.archives.arc.11865",
+ "download": "https://archive.org/download/gov.archives.arc.11865/gov.archives.arc.11865.mpeg",
+ "date": "1969",
+ "licence": "Public domain (http://creativecommons.org/licenses/publicdomain/zero/1.0/)",
+ "licenceEvidence": "http://creativecommons.org/licenses/publicdomain/zero/1.0/",
+ "credit": "Internet Archive / National Archives and Records Administration",
+ "tags": [
+  "money",
+  "money-printing",
+  "archive",
+  "1960s"
+ ],
+ "trim": [
+  1160,
+  1250
+ ],
+ "file": "assets/footage/clips/money-treasury-press-1969.mp4",
+ "bytes": 35155842,
+ "sha1": "3a1c40d9f412db8c8b5eca5f1a908828e26f768d",
+ "duration": 90.023267,
+ "width": 720,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

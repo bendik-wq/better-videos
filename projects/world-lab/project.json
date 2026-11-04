@@ -1,0 +1,54 @@
+{
+  "title": "World lab: world kit + oner sequencer tests",
+  "fps": 60,
+  "width": 1920,
+  "height": 1080,
+  "voice": {
+    "engine": "kokoro",
+    "name": "bm_george"
+  },
+  "finish": {
+    "grain": 9,
+    "halation": 18,
+    "halationAmount": 0.5,
+    "bloom": 0.16,
+    "vignette": 0.55
+  },
+  "settings": {
+    "aa": "fxaa",
+    "fps": 60
+  },
+  "shots": [
+    {
+      "id": "hero",
+      "set": "hero",
+      "params": {},
+      "min": 29.5,
+      "vo": "Every road in this city leads here.",
+      "padIn": 20.6
+    },
+    {
+      "id": "dive",
+      "set": "dive",
+      "params": {},
+      "min": 13.0
+    },
+    {
+      "id": "pin",
+      "set": "pin",
+      "params": {},
+      "min": 9.5
+    },
+    {
+      "id": "truck",
+      "set": "truck",
+      "params": {},
+      "min": 8
+    }
+  ],
+  "score": {
+    "key": "D",
+    "drone": 0.1,
+    "cues": []
+  }
+}

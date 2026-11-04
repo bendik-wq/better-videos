@@ -126,21 +126,29 @@ const shots = [
   S('numbers', 'Even at the bottom of micro1’s stated range, that’s a hundred thousand dollars. For files that are already sitting on a server.', { header: 'ILLUSTRATIVE · LOW END OF STATED RANGE', items: [{ value: 100, prefix: '$', suffix: 'K', dec: 0, word: 'hundred', sub: 'for files you already have' }], source: 'ILLUSTRATIVE EXAMPLE · ACTUAL OFFERS VARY' }),
   S('hero', 'Read the agreement. Bring your lawyer. Make sure it fits your existing contracts. But be clear about what’s on the table.', { prop: 'folder', cam: 'top' }),
   S('quote', 'Real money, for an asset that until very recently wasn’t worth anything to anyone outside your building.', { text: 'Money for an asset that wasn’t worth anything outside your building.', by: '' }),
-  S('endcard', 'If you own a company, or you advise one, the link to micro1’s Data Partnerships program is in the description. It goes straight to their team, and it’s how they know we sent you.', { url: 'micro1.ai/data-partnerships', note: 'LINK IN DESCRIPTION · AFFILIATE' }),
+  S('endcard', 'If you own a company, or you advise one, the link to micro1’s Data Partnerships program is in the description. It goes straight to their team, and it’s how they know we sent you.', { url: 'Link in the description', note: 'micro1 DATA PARTNERSHIPS · AFFILIATE' }),
   S('window', 'Find out what your data is worth while the buyers are still competing for it.', { close: [0.72, 0.82] }),
 
   // ---------------- OUTRO ----------------
   S('plane', 'Spirit Airlines never got that chance. Its data was sold only after the company was already gone.', { mode: 'lightsOff' }),
   S('orb', 'Twenty years ago, Peter Thiel bet that data was the real asset. The biggest companies on earth are now proving him right.', { mode: 'reveal' }),
   S('quote', 'The only question left is whether you sell yours while it’s still a secret.', { text: 'Sell it while it’s still a secret.', by: '', red: true }, { padOut: 1.4 }),
-  { id: 'end', set: 'title', params: { title: 'The Data Rush', sub: 'micro1.ai/data-partnerships · LINK IN DESCRIPTION', end: true }, min: 9 },
+  { id: 'end', set: 'title', params: { title: 'The Data Rush', sub: 'LINK IN THE DESCRIPTION', end: true }, min: 9 },
 ];
 
 // ---------------------------------------------------------------------------
 // RE-CUT: more clips, no repeats. LOOK swaps a shot's opening visual; BEATS cut to
 // new visuals on spoken words. The renderer refuses to output any visual twice.
 const LOOK = {
-  s003: ['court', {}],
+  s001: ['tarmac', { phase: 'wide', caption: 'SPIRIT AIRLINES · CEASED OPERATIONS · MAY 2026' }],
+  s002: ['tarmac', { phase: 'door' }],
+  s003: ['court2', { word: 'bidding' }],
+  s004: ['cabin', {}],
+  s020: ['monolith', { caption: 'PALANTIR TECHNOLOGIES · FOUNDED 2003' }],
+  s034: ['wallwalk', {}],
+  s054: ['archivewalk', {}],
+  s067: ['windowfig', {}],
+  s078: ['skydive', {}],
   s009: ['balance', { from: 0.2, to: -0.12 }],
   s010: ['vault', { open: [0, 0.5] }],
   s012: ['terminal', {}],
@@ -165,13 +173,14 @@ const LOOK = {
   s089: ['cash', { pallets: 9, flip: true }],
   s091: ['truck', { view: 'aerial', color: 0x1d4f7a }],
   s093: ['contract', { title: 'MASTER SERVICES AGREEMENT' }],
-  s097: ['plane', { mode: 'top' }],
+  s097: ['tarmac', { phase: 'night' }],
   s098: ['vault', { open: [0.2, 1] }],
   s040: ['merge', {}],
 };
 const BEATS = {
-  s002: [['gates', 'city', { mode: 'lightsoff', seed: 5 }]],
-  s003: [['powerful', 'auction', { bids: [{ label: 'PADDLE', amount: '07' }, { label: 'PADDLE', amount: '12' }, { label: 'PADDLE', amount: '31' }] }], ['planes', 'plane', { mode: 'tail' }]],
+  s002: [['company', 'city', { mode: 'lightsoff', seed: 5 }]],
+  s004: [['hundred', '@orig']],
+  s003: [['planes', 'tarmac', { phase: 'tail' }]],
   s010: [['one', 'chess', { close: true }]],
   s012: [['first', 'city', { mode: 'lightson', seed: 9, caption: 'FACEBOOK · FIRST OUTSIDE INVESTOR · 2004' }], ['man', 'orb', { mode: 'reveal', word: 'crystal' }]],
   s013: [['maybe', 'boardroom', {}], ['limited', 'hourglass', { fill: [0.5, 0.7] }]],
@@ -197,7 +206,6 @@ const BEATS = {
   s082: [['package', 'conveyor', { color: 0xffffff, flip: true }]],
   s086: [['identifying', 'lock', { word: 'stripped', close: true }]],
   s088: [['approved', 'stamp', { word: 'approved', text: 'APPROVED' }]],
-  s020: [['objects', 'magnifier', { pos: 'palantir' }]],
   s040: [['meta', '@orig']],
   s059: [['which', 'dominoes', { word: 'outcome' }]],
   s091: [['help', 'archive', { cam: 'desk' }], ['lab', 'corridor', { color: 'green', speed: 0.6 }]],
@@ -214,7 +222,7 @@ export default {
   fps: 30,
   width: 1920,
   height: 1080,
-  voice: { engine: 'kokoro', name: 'af_heart', speed: 0.96, say: { micro1: 'micro one', SOPs: 'S.O.P.s', CRM: 'C.R.M.', QA: 'Q.A.', 'In-Q-Tel': 'In Q Tel' } },
+  voice: { engine: 'kokoro', name: 'af_heart', speed: 0.96, say: { micro1: 'micro one', SOPs: 'ess oh pees', CRM: 'C.R.M.', QA: 'Q.A.', 'In-Q-Tel': 'In Q Tel' } },
   // tight, conversational pacing: short breaths between lines, longer only where marked
   timing: { padIn: 0.15, padOut: 0.42 },
   // smooth cuts: short dissolve between shots in the same chapter

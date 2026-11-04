@@ -1,0 +1,124 @@
+{
+ "title": "Hormuz lab: the bright sea",
+ "fps": 30,
+ "width": 1920,
+ "height": 1080,
+ "voice": {
+  "engine": "kokoro",
+  "name": "bm_george"
+ },
+ "finish": {
+  "grain": 5,
+  "halation": 10,
+  "halationAmount": 0.2,
+  "bloom": 0.09,
+  "vignette": 0.26
+ },
+ "settings": {
+  "aa": "fxaa",
+  "fps": 30,
+  "look": "bright-day"
+ },
+ "shots": [
+  {
+   "id": "dive",
+   "set": "globe-dive",
+   "min": 7.0,
+   "params": {}
+  },
+  {
+   "id": "aerial",
+   "set": "strait-aerial",
+   "min": 5.5,
+   "params": {
+    "trans": "dissolve"
+   }
+  },
+  {
+   "id": "map",
+   "set": "chokepoint-map",
+   "min": 6.0,
+   "params": {
+    "trans": "dissolve"
+   }
+  },
+  {
+   "id": "hero",
+   "set": "tanker-hero",
+   "min": 5.0,
+   "params": {}
+  },
+  {
+   "id": "bridge",
+   "set": "bridge",
+   "min": 4.5,
+   "params": {}
+  },
+  {
+   "id": "real",
+   "set": "footage",
+   "min": 4.0,
+   "params": {
+    "file": "commons-iranian-irgc-speedboat-approaching-uss-sirocco-a",
+    "in": 5.3,
+    "out": 9.8,
+    "grade": "house",
+    "reframe": {
+     "from": [
+      0.52,
+      0.5,
+      1.12
+     ],
+     "to": [
+      0.5,
+      0.5,
+      1.2
+     ]
+    },
+    "caption": {
+     "text": "Strait of Hormuz, June 2022",
+     "sub": "IRGC Navy fast boat \u00b7 USS Sirocco",
+     "kind": "mono",
+     "at": 0.4
+    },
+    "source": "U.S. NAVY / NAVCENT \u00b7 PUBLIC DOMAIN"
+   }
+  },
+  {
+   "id": "boats",
+   "set": "fast-boats",
+   "min": 4.5,
+   "params": {}
+  },
+  {
+   "id": "escort",
+   "set": "navy-escort",
+   "min": 4.5,
+   "params": {
+    "trans": "dissolve"
+   }
+  },
+  {
+   "id": "terminal",
+   "set": "gulf-terminal",
+   "min": 4.5,
+   "params": {}
+  },
+  {
+   "id": "pipes",
+   "set": "pipeline-bypass",
+   "min": 5.5,
+   "params": {
+    "trans": "dissolve"
+   }
+  },
+  {
+   "id": "price",
+   "set": "price-shock",
+   "min": 6.0,
+   "params": {
+    "trans": "dissolve"
+   }
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "id": "ships-comfort-underway",
+ "title": "Comfort Gets Underway for Continuing Promise-15",
+ "source": "commons",
+ "sourceId": "Comfort Gets Underway for Continuing Promise-15.ogv",
+ "page": "https://commons.wikimedia.org/wiki/File:Comfort_Gets_Underway_for_Continuing_Promise-15.ogv",
+ "download": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/55/Comfort_Gets_Underway_for_Continuing_Promise-15.ogv/Comfort_Gets_Underway_for_Continuing_Promise-15.ogv.720p.vp9.webm",
+ "date": "2015-04-01",
+ "licence": "Public domain",
+ "licenceEvidence": "https://commons.wikimedia.org/wiki/File:Comfort_Gets_Underway_for_Continuing_Promise-15.ogv",
+ "credit": "Justin Wolpert",
+ "tags": [
+  "ships",
+  "military"
+ ],
+ "trim": [
+  0,
+  60
+ ],
+ "file": "assets/footage/clips/ships-comfort-underway.mp4",
+ "bytes": 19941669,
+ "sha1": "9c409a5ce836a9ca6c107ab06b044177fc22c096",
+ "duration": 60.026633,
+ "width": 1280,
+ "height": 720,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

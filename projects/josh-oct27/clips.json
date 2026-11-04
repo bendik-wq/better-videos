@@ -1,0 +1,301 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.38,
+    10.7
+   ]
+  },
+  "lf-2": {
+   "t": [
+    17.74,
+    45.89
+   ]
+  },
+  "lf-3": {
+   "t": [
+    54.03,
+    109.26
+   ]
+  },
+  "lf-4": {
+   "t": [
+    119.68,
+    174.17
+   ]
+  },
+  "lf-5": {
+   "t": [
+    183.32,
+    239.0
+   ]
+  },
+  "lf-6": {
+   "t": [
+    248.24,
+    327.08
+   ]
+  },
+  "lf-7": {
+   "t": [
+    332.14,
+    342.24
+   ]
+  },
+  "lf-8": {
+   "t": [
+    368.93,
+    383.29
+   ]
+  },
+  "rl1-a": {
+   "t": [
+    0.38,
+    10.7
+   ]
+  },
+  "rl1-b": {
+   "t": [
+    17.74,
+    45.89
+   ]
+  },
+  "rl1-c": {
+   "t": [
+    54.03,
+    61.11
+   ]
+  },
+  "rl1-d": {
+   "t": [
+    64.96,
+    83.36
+   ]
+  },
+  "rl2-a": {
+   "t": [
+    86.14,
+    109.26
+   ]
+  },
+  "rl2-b": {
+   "t": [
+    119.68,
+    166.35
+   ]
+  },
+  "rl3-a": {
+   "t": [
+    160.19,
+    174.17
+   ]
+  },
+  "rl3-b": {
+   "t": [
+    183.32,
+    235.16
+   ]
+  },
+  "rl4": {
+   "t": [
+    248.24,
+    327.08
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "No money isn't the obstacle (Josh, 27 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "intro": false,
+   "cards": {},
+   "chapters": {
+    "start": "Not the obstacle"
+   },
+   "chapterMarks": [
+    [
+     30.4,
+     "The right bankers"
+    ],
+    [
+     119.6,
+     "The real obstacle"
+    ],
+    [
+     160.1,
+     "Fund the asset, not you"
+    ],
+    [
+     209.1,
+     "Is it bankable?"
+    ],
+    [
+     248.2,
+     "What the bank wants"
+    ],
+    [
+     298.8,
+     "DSCR"
+    ],
+    [
+     368.9,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "Not the obstacle"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ],
+   "sequence": [
+    {
+     "chapter": "Not the obstacle"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ]
+  },
+  "ig-1-not-the-obstacle": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Talk to bankers who <em>know your industry</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl1-a",
+    "rl1-b",
+    "rl1-c",
+    "rl1-d"
+   ],
+   "sequence": [
+    "rl1-a~ig#1",
+    "rl1-b~ig#1",
+    "rl1-b~ig#2",
+    "rl1-b~ig#3",
+    "rl1-b~ig#4",
+    "rl1-c~ig#1",
+    "rl1-c~ig#2",
+    "rl1-d~ig#1",
+    "rl1-d~ig#2"
+   ]
+  },
+  "ig-2-fund-the-asset": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Present your deal as <em>an asset</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl2-a",
+    "rl2-b"
+   ],
+   "sequence": [
+    "rl2-a~ig#1",
+    "rl2-a~ig#2",
+    "rl2-a~ig#3",
+    "rl2-a~ig#4",
+    "rl2-b~ig#1",
+    "rl2-b~ig#2",
+    "rl2-b~ig#3",
+    "rl2-b~ig#4",
+    "rl2-b~ig#5",
+    "rl2-b~ig#6",
+    "rl2-b~ig#7"
+   ]
+  },
+  "ig-3-bankable": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Bankable means <em>the cash covers the repayments</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl3-a",
+    "rl3-b"
+   ],
+   "sequence": [
+    "rl3-a~ig#1",
+    "rl3-a~ig#2",
+    "rl3-a~ig#3",
+    "rl3-b~ig#1",
+    "rl3-b~ig#2",
+    "rl3-b~ig#3",
+    "rl3-b~ig#4",
+    "rl3-b~ig#5",
+    "rl3-b~ig#6"
+   ]
+  },
+  "ig-4-what-banks-want": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Revenue. Profit. Tax paid. <em>DSCR.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "rl4"
+   ],
+   "sequence": [
+    "rl4~ig#1",
+    "rl4~ig#2",
+    "rl4~ig#3",
+    "rl4~ig#4",
+    "rl4~ig#5",
+    "rl4~ig#6",
+    "rl4~ig#7",
+    "rl4~ig#8"
+   ]
+  }
+ }
+}

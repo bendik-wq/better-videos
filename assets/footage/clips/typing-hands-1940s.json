@@ -1,0 +1,32 @@
+{
+ "id": "typing-hands-1940s",
+ "title": "Basic Typing, Part I: Methods  (Part I)",
+ "source": "archive",
+ "sourceId": "basic_typing_1",
+ "page": "https://archive.org/details/basic_typing_1",
+ "download": "https://archive.org/download/basic_typing_1/basic_typing_1.mp4",
+ "date": "1944",
+ "licence": "Public domain (http://creativecommons.org/licenses/publicdomain/)",
+ "licenceEvidence": "http://creativecommons.org/licenses/publicdomain/",
+ "credit": "Prelinger Archives / Internet Archive",
+ "tags": [
+  "typing-hands",
+  "archive",
+  "office"
+ ],
+ "trim": [
+  424,
+  492
+ ],
+ "file": "assets/footage/clips/typing-hands-1940s.mp4",
+ "bytes": 12183959,
+ "sha1": "a48152445b60bfe7aa6fed4951c841fcba5207f0",
+ "duration": 68.001267,
+ "width": 640,
+ "height": 480,
+ "fps": 29.97002997002997,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

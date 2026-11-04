@@ -1,0 +1,558 @@
+{
+ "body": "MakeHuman base mesh hm08 + macro targets, skins, eyes, brows, lashes, hair: makehuman_system_assets (CC0)",
+ "rig": "MPFB2 game_engine (UE4-style names)",
+ "wardrobe": {
+  "suit": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.6,
+    "muscle": 0.55,
+    "weight": 0.52,
+    "height": 0.55,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "short02",
+   "skin": "middleage_caucasian_male",
+   "garments": [
+    {
+     "asset": "male_elegantsuit01",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": null
+  },
+  "suit_b": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.75,
+    "muscle": 0.45,
+    "weight": 0.68,
+    "height": 0.5,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.5,
+     "african": 0.25,
+     "asian": 0.25
+    }
+   },
+   "hair": "short04",
+   "skin": "old_caucasian_male",
+   "garments": [
+    {
+     "asset": "toigo_male_suit_3",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "suits01"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": null
+  },
+  "suit_f": {
+   "phenotype": {
+    "gender": 0.0,
+    "age": 0.55,
+    "muscle": 0.5,
+    "weight": 0.45,
+    "height": 0.5,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.1,
+     "african": 0.05,
+     "asian": 0.85
+    }
+   },
+   "hair": "bob02",
+   "skin": "young_asian_female",
+   "garments": [
+    {
+     "asset": "female_elegantsuit01",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    },
+    {
+     "asset": "toigo_flats",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "shoes01"
+    }
+   ],
+   "attribution": null
+  },
+  "overcoat": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.65,
+    "muscle": 0.5,
+    "weight": 0.55,
+    "height": 0.62,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "short02",
+   "skin": "middleage_caucasian_male",
+   "garments": [
+    {
+     "asset": "male_elegantsuit01",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    },
+    {
+     "asset": "punkduck_winter_coat",
+     "author": "punkduck",
+     "license": "CC BY 3.0",
+     "pack": "dress03"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": "3D clothing: punkduck_winter_coat by punkduck (CC BY 3.0), MakeHuman community asset repository"
+  },
+  "military": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.5,
+    "muscle": 0.7,
+    "weight": 0.5,
+    "height": 0.6,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.5,
+     "african": 0.25,
+     "asian": 0.25
+    }
+   },
+   "hair": "short04",
+   "skin": "young_african_male",
+   "garments": [
+    {
+     "asset": "elvs_male_coveralls_1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "suits03"
+    },
+    {
+     "asset": "mindfront_tactical_vest_male",
+     "author": "Mindfront",
+     "license": "CC BY 4.0",
+     "pack": "equipment03"
+    },
+    {
+     "asset": "mindfront_patrol_cap",
+     "author": "Mindfront",
+     "license": "CC BY 4.0",
+     "pack": "hats03"
+    },
+    {
+     "asset": "culturalibre_male_boots",
+     "author": "culturalibre",
+     "license": "CC0",
+     "pack": "shoes01"
+    }
+   ],
+   "attribution": "3D clothing: elvs_male_coveralls_1 by Elvaerwyn (CC BY), mindfront_patrol_cap by Mindfront (CC BY 4.0), mindfront_tactical_vest_male by Mindfront (CC BY 4.0), MakeHuman community asset repository"
+  },
+  "hoodie": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.42,
+    "muscle": 0.5,
+    "weight": 0.45,
+    "height": 0.58,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "short01",
+   "skin": "young_caucasian_male",
+   "garments": [
+    {
+     "asset": "elvs_hooded_sweat_jacket1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "shirts02"
+    },
+    {
+     "asset": "punkduck_male_classic_jeans",
+     "author": "punkduck",
+     "license": "CC BY 4.0",
+     "pack": "pants02"
+    },
+    {
+     "asset": "culturalibre_sneakers",
+     "author": "culturalibre",
+     "license": "CC BY",
+     "pack": "shoes02"
+    }
+   ],
+   "attribution": "3D clothing: culturalibre_sneakers by culturalibre (CC BY), elvs_hooded_sweat_jacket1 by Elvaerwyn (CC BY), punkduck_male_classic_jeans by punkduck (CC BY 4.0), MakeHuman community asset repository"
+  },
+  "office": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.55,
+    "muscle": 0.45,
+    "weight": 0.6,
+    "height": 0.55,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.1,
+     "african": 0.05,
+     "asian": 0.85
+    }
+   },
+   "hair": "short02",
+   "skin": "middleage_asian_male",
+   "garments": [
+    {
+     "asset": "elvs_male_shirt_tie_tucked1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "shirts02"
+    },
+    {
+     "asset": "elvs_male_trouser",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "pants02"
+    },
+    {
+     "asset": "mindfront_shoes_oxford_male",
+     "author": "Mindfront",
+     "license": "CC BY 4.0",
+     "pack": "shoes02"
+    }
+   ],
+   "attribution": "3D clothing: elvs_male_shirt_tie_tucked1 by Elvaerwyn (CC BY), elvs_male_trouser by Elvaerwyn (CC BY), mindfront_shoes_oxford_male by Mindfront (CC BY 4.0), MakeHuman community asset repository"
+  },
+  "office_f": {
+   "phenotype": {
+    "gender": 0.0,
+    "age": 0.5,
+    "muscle": 0.5,
+    "weight": 0.5,
+    "height": 0.48,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.1,
+     "african": 0.85,
+     "asian": 0.05
+    }
+   },
+   "hair": "ponytail01",
+   "skin": "young_african_female",
+   "garments": [
+    {
+     "asset": "toigo_female_suit",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "suits01"
+    },
+    {
+     "asset": "toigo_flats",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "shoes01"
+    }
+   ],
+   "attribution": null
+  },
+  "analyst": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.48,
+    "muscle": 0.4,
+    "weight": 0.5,
+    "height": 0.55,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "short02",
+   "skin": "young_caucasian_male2",
+   "garments": [
+    {
+     "asset": "toigo_fisherman_sweater",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "shirts01"
+    },
+    {
+     "asset": "elvs_male_trouser",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "pants02"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": "3D clothing: elvs_male_trouser by Elvaerwyn (CC BY), MakeHuman community asset repository"
+  },
+  "casual_a": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.45,
+    "muscle": 0.5,
+    "weight": 0.55,
+    "height": 0.6,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.1,
+     "african": 0.85,
+     "asian": 0.05
+    }
+   },
+   "hair": "short01",
+   "skin": "young_african_male",
+   "garments": [
+    {
+     "asset": "male_casualsuit01",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    },
+    {
+     "asset": "shoes04",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": null
+  },
+  "casual_b": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.6,
+    "muscle": 0.5,
+    "weight": 0.62,
+    "height": 0.52,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "short03",
+   "skin": "middleage_caucasian_male",
+   "garments": [
+    {
+     "asset": "male_casualsuit05",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    },
+    {
+     "asset": "shoes04",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": null
+  },
+  "casual_f": {
+   "phenotype": {
+    "gender": 0.0,
+    "age": 0.45,
+    "muscle": 0.5,
+    "weight": 0.48,
+    "height": 0.5,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "long01",
+   "skin": "young_caucasian_female",
+   "garments": [
+    {
+     "asset": "toigo_fisherman_sweater",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "shirts01"
+    },
+    {
+     "asset": "elvs_jeans_straight_leg",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "pants02"
+    },
+    {
+     "asset": "toigo_ankle_boots_female",
+     "author": "Margaret Toigo",
+     "license": "CC0",
+     "pack": "shoes01"
+    }
+   ],
+   "attribution": "3D clothing: elvs_jeans_straight_leg by Elvaerwyn (CC BY), MakeHuman community asset repository"
+  },
+  "protestor": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.4,
+    "muscle": 0.5,
+    "weight": 0.47,
+    "height": 0.56,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.5,
+     "african": 0.25,
+     "asian": 0.25
+    }
+   },
+   "hair": "short01",
+   "skin": "young_african_male",
+   "garments": [
+    {
+     "asset": "elvs_hooded_sweat_jacket1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "shirts02"
+    },
+    {
+     "asset": "elvs_jeans_straight_leg",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "pants02"
+    },
+    {
+     "asset": "elvs_slouchy_beanie1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "hats03"
+    },
+    {
+     "asset": "punkduck_running_shoes_01",
+     "author": "punkduck",
+     "license": "CC BY 3.0",
+     "pack": "shoes02"
+    }
+   ],
+   "attribution": "3D clothing: elvs_hooded_sweat_jacket1 by Elvaerwyn (CC BY), elvs_jeans_straight_leg by Elvaerwyn (CC BY), elvs_slouchy_beanie1 by Elvaerwyn (CC BY), punkduck_running_shoes_01 by punkduck (CC BY 3.0), MakeHuman community asset repository"
+  },
+  "labcoat": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.6,
+    "muscle": 0.5,
+    "weight": 0.5,
+    "height": 0.55,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.1,
+     "african": 0.05,
+     "asian": 0.85
+    }
+   },
+   "hair": "short02",
+   "skin": "middleage_asian_male",
+   "garments": [
+    {
+     "asset": "elvs_male_shirt_tie_tucked1",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "shirts02"
+    },
+    {
+     "asset": "elvs_male_trouser",
+     "author": "Elvaerwyn",
+     "license": "CC BY",
+     "pack": "pants02"
+    },
+    {
+     "asset": "punkduck_winter_coat",
+     "author": "punkduck",
+     "license": "CC BY 3.0",
+     "pack": "dress03"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": "3D clothing: elvs_male_shirt_tie_tucked1 by Elvaerwyn (CC BY), elvs_male_trouser by Elvaerwyn (CC BY), punkduck_winter_coat by punkduck (CC BY 3.0), MakeHuman community asset repository"
+  },
+  "robe": {
+   "phenotype": {
+    "gender": 1.0,
+    "age": 0.6,
+    "muscle": 0.5,
+    "weight": 0.5,
+    "height": 0.62,
+    "proportions": 0.7,
+    "race": {
+     "caucasian": 0.9,
+     "african": 0.05,
+     "asian": 0.05
+    }
+   },
+   "hair": "",
+   "skin": "middleage_caucasian_male",
+   "garments": [
+    {
+     "asset": "donitz_monk_robe",
+     "author": "Donitz",
+     "license": "CC0",
+     "pack": "suits02"
+    },
+    {
+     "asset": "donitz_monk_robe_hood",
+     "author": "Donitz",
+     "license": "CC0",
+     "pack": "suits02"
+    },
+    {
+     "asset": "shoes02",
+     "author": "MakeHuman team",
+     "license": "CC0",
+     "pack": "makehuman_system_assets"
+    }
+   ],
+   "attribution": null
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "video": "projects/world-lab/out/world-lab.mp4",
+ "fps": 60.0,
+ "frames": 3600,
+ "mad": {
+  "mean": 4.92,
+  "p50": 3.93,
+  "p99": 16.64,
+  "max": 36.14,
+  "argmaxT": 42.5
+ },
+ "madStepMax": 35.46,
+ "spikes": [
+  {
+   "frame": 1770,
+   "t": 29.5,
+   "mad": 29.47,
+   "localMedian": 3.16
+  },
+  {
+   "frame": 2550,
+   "t": 42.5,
+   "mad": 36.14,
+   "localMedian": 2.58
+  },
+  {
+   "frame": 3120,
+   "t": 52.0,
+   "mad": 30.97,
+   "localMedian": 0.97
+  }
+ ]
+}

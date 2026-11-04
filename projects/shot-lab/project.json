@@ -1,0 +1,291 @@
+{
+  "title": "Shot lab: engine/camera.js and the shot catalog",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "voice": {
+    "engine": "kokoro",
+    "name": "bm_george"
+  },
+  "finish": {
+    "grain": 9,
+    "halation": 18,
+    "halationAmount": 0.5,
+    "bloom": 0.16,
+    "vignette": 0.55
+  },
+  "settings": {
+    "aa": "fxaa"
+  },
+  "shots": [
+    {
+      "id": "ONE-001",
+      "set": "world",
+      "params": {
+        "shot": "ONE-001",
+        "t0": 0
+      },
+      "min": 10.4,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-009",
+      "set": "world",
+      "params": {
+        "shot": "ONE-009",
+        "t0": 0
+      },
+      "min": 13,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-011",
+      "set": "world",
+      "params": {
+        "shot": "ONE-011",
+        "t0": 0
+      },
+      "min": 7.8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "EST-006",
+      "set": "world",
+      "params": {
+        "shot": "EST-006",
+        "t0": 0
+      },
+      "min": 9,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "FOL-012",
+      "set": "world",
+      "params": {
+        "shot": "FOL-012",
+        "t0": 0
+      },
+      "min": 10,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-004",
+      "set": "world",
+      "params": {
+        "shot": "ONE-004",
+        "t0": 0
+      },
+      "min": 9,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-002",
+      "set": "world",
+      "params": {
+        "shot": "ONE-002",
+        "t0": 11
+      },
+      "min": 9.5,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-010",
+      "set": "world",
+      "params": {
+        "shot": "ONE-010",
+        "t0": 9
+      },
+      "min": 11.5,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-006",
+      "set": "world",
+      "params": {
+        "shot": "ONE-006",
+        "t0": 0
+      },
+      "min": 8.8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-017",
+      "set": "world",
+      "params": {
+        "shot": "ONE-017",
+        "t0": 0
+      },
+      "min": 7,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "ONE-028",
+      "set": "globe",
+      "params": {
+        "shot": "ONE-028",
+        "t0": 0
+      },
+      "min": 8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "EST-007",
+      "set": "world",
+      "params": {
+        "shot": "EST-007",
+        "t0": 0
+      },
+      "min": 9,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "EST-005",
+      "set": "world",
+      "params": {
+        "shot": "EST-005",
+        "t0": 0
+      },
+      "min": 9,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "EST-019",
+      "set": "world",
+      "params": {
+        "shot": "EST-019",
+        "t0": 0
+      },
+      "min": 8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "REV-001",
+      "set": "world",
+      "params": {
+        "shot": "REV-001",
+        "t0": 0
+      },
+      "min": 9,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "REV-007",
+      "set": "world",
+      "params": {
+        "shot": "REV-007",
+        "t0": 9
+      },
+      "min": 4,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "REV-013",
+      "set": "world",
+      "params": {
+        "shot": "REV-013",
+        "t0": 12
+      },
+      "min": 8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "FOL-001",
+      "set": "world",
+      "params": {
+        "shot": "FOL-001",
+        "t0": 2
+      },
+      "min": 7,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "FOL-003",
+      "set": "world",
+      "params": {
+        "shot": "FOL-003",
+        "t0": 4
+      },
+      "min": 6,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "FOL-004",
+      "set": "world",
+      "params": {
+        "shot": "FOL-004",
+        "t0": 6
+      },
+      "min": 8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "CHR-002",
+      "set": "world",
+      "params": {
+        "shot": "CHR-002",
+        "t0": 9
+      },
+      "min": 6,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "OBJ-001",
+      "set": "world",
+      "params": {
+        "shot": "OBJ-001",
+        "t0": 0
+      },
+      "min": 8,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "DAT-001",
+      "set": "world",
+      "params": {
+        "shot": "DAT-001",
+        "t0": 0
+      },
+      "min": 7,
+      "padIn": 0,
+      "padOut": 0
+    },
+    {
+      "id": "DAT-003",
+      "set": "globe",
+      "params": {
+        "shot": "DAT-003",
+        "t0": 0
+      },
+      "min": 7,
+      "padIn": 0,
+      "padOut": 0
+    }
+  ],
+  "score": {
+    "key": "D",
+    "drone": 0.08,
+    "cues": []
+  }
+}

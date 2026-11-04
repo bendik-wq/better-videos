@@ -1,0 +1,32 @@
+{
+ "id": "server-nasa-ames-modular",
+ "title": "Ames Research Center Unveils New Modular Supercomputing Facility",
+ "source": "nasa",
+ "sourceId": "ARC-20190821-AAV3214-ModularSupercomputer-BRollResource-NASAWeb",
+ "page": "https://images.nasa.gov/details/ARC-20190821-AAV3214-ModularSupercomputer-BRollResource-NASAWeb",
+ "download": "https://images-assets.nasa.gov/video/ARC-20190821-AAV3214-ModularSupercomputer-BRollResource-NASAWeb/ARC-20190821-AAV3214-ModularSupercomputer-BRollResource-NASAWeb~large.mp4",
+ "date": "2019-08-21",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / ARC",
+ "tags": [
+  "server-room",
+  "computing",
+  "modern"
+ ],
+ "trim": [
+  58,
+  128
+ ],
+ "file": "assets/footage/clips/server-nasa-ames-modular.mp4",
+ "bytes": 33782331,
+ "sha1": "ba44ae6f3ad5975b624eba27e3a23911d4d8f5ef",
+ "duration": 70.003267,
+ "width": 1280,
+ "height": 720,
+ "fps": 59.940059669107676,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}

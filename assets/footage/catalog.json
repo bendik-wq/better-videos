@@ -1,0 +1,118 @@
+{
+  "about": "Real-world video and photo sources for documentary b-roll, with search APIs and licence notes. Human-readable version: docs/assets/footage-library.md. Downloader: node engine/footage.js fetch <query> --source <id>. 'auth' none = works from this box without any account. Licence notes verified 2026-10-12 against the pages in 'evidence'.",
+  "policy": "Ship only public domain, CC0, or US Government works (and Pexels/Pixabay under their own licences, never redistributed as-is). Never CC BY-NC / ND. Check every item: agency pages can carry third-party copyrighted material, and archive.org PD marks set by arbitrary uploaders are not evidence.",
+  "sources": [
+    {
+      "id": "nasa", "name": "NASA Image and Video Library", "kind": ["video", "photo", "audio"],
+      "url": "https://images.nasa.gov",
+      "api": { "search": "https://images-api.nasa.gov/search?q={q}&media_type=video", "asset": "https://images-api.nasa.gov/asset/{nasa_id}", "metadata": "https://images-api.nasa.gov/metadata/{nasa_id}", "auth": "none", "docs": "https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf" },
+      "files": "~orig (master, often 4K ProRes/H.264, up to several GB), ~large (1080p/4K H.264), ~medium, ~small, ~mobile",
+      "licence": "Public domain in the US (NASA media is generally not subject to copyright).",
+      "restrictions": "NASA insignia/logotype are not PD; no implied endorsement; identifiable people need permission for commercial use; third-party material is marked and needs its owner's permission; no NFTs; no NASA attribution of AI-generated output.",
+      "credit": "NASA (centre, e.g. NASA/JSC) as the source",
+      "evidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "downloader": "--source nasa", "strengths": ["earth from orbit (Earth in 4K compilations)", "ISS night passes, cities at night, aurora", "aircraft b-roll (Armstrong)", "mission control, Apollo archive", "supercomputers (Ames)", "launches, crowds"]
+    },
+    {
+      "id": "svs", "name": "NASA Goddard Scientific Visualization Studio", "kind": ["video", "visualisation"],
+      "url": "https://svs.gsfc.nasa.gov",
+      "api": { "search": "https://svs.gsfc.nasa.gov/api/search/?search={q}", "item": "https://svs.gsfc.nasa.gov/api/{id}", "auth": "none" },
+      "licence": "Public domain (NASA); each page lists credits, and some data layers (e.g. commercial imagery) carry their own terms.",
+      "credit": "NASA's Scientific Visualization Studio (+ page credits)", "evidence": "https://svs.gsfc.nasa.gov/help/#copyright",
+      "downloader": "--source svs", "strengths": ["hurricanes, weather, GOES composites", "global data visualisations", "4K / 8K frame sequences"]
+    },
+    {
+      "id": "noaa", "name": "NOAA (NESDIS, Hurricane Hunters, Photo Library, NWS)", "kind": ["video", "photo"],
+      "url": "https://www.nesdis.noaa.gov/imagery ; https://photolib.noaa.gov",
+      "api": { "search": "No unified video API. NESDIS and Hurricane Hunter videos are mirrored on Wikimedia Commons (search '<topic> NESDIS' / 'NOAA'); GOES imagery via NASA SVS; photos via the NOAA Photo Library site.", "auth": "none" },
+      "licence": "Public domain (US Government work) unless marked otherwise.",
+      "credit": "NOAA (office, e.g. NOAA NESDIS / NOAA AOC)", "evidence": "https://www.noaa.gov/disclaimer",
+      "downloader": "--source noaa (Commons search with 'NOAA' appended) or --source commons", "strengths": ["GOES hurricane loops with 'NO TEXT' versions", "inside-the-hurricane aircraft footage", "ships and ocean"]
+    },
+    {
+      "id": "dvids", "name": "DVIDS (Defense Visual Information Distribution Service)", "kind": ["video", "photo"],
+      "url": "https://www.dvidshub.net",
+      "api": { "search": "https://api.dvidshub.net/search?api_key={key}&q={q}&type[]=video", "asset": "https://api.dvidshub.net/asset?api_key={key}&id={id}", "auth": "free API key (registration) in DVIDS_API_KEY", "docs": "https://api.dvidshub.net/docs" },
+      "licence": "US DoW visual information is generally public domain (works of government employees); some items are owned by non-DoW parties.",
+      "restrictions": "Display the disclaimer 'The appearance of U.S. Department of War (DoW) visual information does not imply or constitute DoW endorsement.'; no implied endorsement; military names, insignia and seals need permission for commercial use (commercial users are asked to obscure distinctive markings); privacy/publicity rights of people shown remain.",
+      "credit": "DVIDS / unit name, photographer or videographer", "evidence": "https://www.dvidshub.net/about/copyright",
+      "downloader": "--source dvids (with DVIDS_API_KEY). Without a key: thousands of DVIDS videos are mirrored on Commons as PD-USGov-Military; use --source commons and a DVIDS-style query.", "strengths": ["command and operations centres", "ships underway (aerial)", "aircraft, flight decks", "exercises"]
+    },
+    {
+      "id": "nara", "name": "US National Archives (NARA) Catalog", "kind": ["video", "photo", "documents"],
+      "url": "https://catalog.archives.gov",
+      "api": { "search": "https://catalog.archives.gov/api/v2/records/search?q={q}&typeOfMaterials=Moving%20Images&availableOnline=true", "auth": "x-api-key header (request from Catalog_API@nara.gov; 10,000 queries/month)", "docs": "https://www.archives.gov/research/catalog/help/api" },
+      "licence": "Most federal records are public domain; check each record's 'useRestriction' (some donated films are copyrighted).",
+      "restrictions": "API terms: display 'This product uses the National Archives Catalog API'; do not cache/store API responses; no NARA logos.",
+      "credit": "National Archives and Records Administration (record NAID)", "evidence": "https://www.archives.gov/research/catalog/help/api",
+      "downloader": "--source nara (with NARA_API_KEY). Without a key: NARA's own uploads to archive.org (identifiers gov.archives.*) via --source archive.", "strengths": ["government films 1930s-1990s", "newsreels", "Treasury, defence, civil defence"]
+    },
+    {
+      "id": "loc", "name": "Library of Congress", "kind": ["video", "photo", "audio"],
+      "url": "https://www.loc.gov",
+      "api": { "search": "https://www.loc.gov/search/?q={q}&fa=online-format:video&fo=json", "item": "https://www.loc.gov/item/{id}/?fo=json", "auth": "none (rate limited; no deep paging past 100k)" , "docs": "https://www.loc.gov/apis/json-and-yaml/" },
+      "licence": "Varies per item: use only items whose rights advisory says 'No known restrictions on publication' or public domain.",
+      "credit": "Library of Congress, <collection>", "evidence": "https://www.loc.gov/legal/understanding-copyright/",
+      "downloader": "--source loc (licence read from the item's rights_advisory)", "strengths": ["early films 1890s-1920s (Edison, Paper Print collection)", "street scenes, crowds, cities"]
+    },
+    {
+      "id": "prelinger", "name": "Prelinger Archives (on archive.org)", "kind": ["video"],
+      "url": "https://archive.org/details/prelinger",
+      "api": { "search": "https://archive.org/advancedsearch.php?q=({q}) AND collection:prelinger AND mediatype:movies&fl[]=identifier&fl[]=licenseurl&output=json", "item": "https://archive.org/metadata/{identifier}", "auth": "none" },
+      "licence": "Per film. Many downloads carry the Creative Commons Public Domain Dedication (licenseurl .../publicdomain/), which does not expire; Prelinger states plainly that 'while some Prelinger films are in the public domain, many are not'. Use only items whose licenseurl is a PD dedication/mark; otherwise ask Prelinger or license via Getty Images.",
+      "restrictions": "PD films can contain copyrighted elements (music, inserted footage). Transfers 2000-2022 are compressed NTSC (SD); 2023+ are better. Credit is not required but welcome.",
+      "credit": "Prelinger Archives (courtesy Internet Archive)", "evidence": "https://www.panix.com/~footage/prelarch.html",
+      "downloader": "--source prelinger (keeps only PD-marked items in the prelinger collection)", "strengths": ["1940s-60s office, typing, industry", "early computing (SAGE, IBM)", "highways, cars, suburbia", "civil defence, crowds"]
+    },
+    {
+      "id": "fedflix", "name": "FedFlix and agency uploads on archive.org", "kind": ["video"],
+      "url": "https://archive.org/details/FedFlix",
+      "api": { "search": "https://archive.org/advancedsearch.php?q=({q}) AND collection:FedFlix AND mediatype:movies&output=json", "auth": "none" },
+      "licence": "US Government works (public domain); items with identifiers gov.* come from NARA/NTIS/agencies.",
+      "credit": "US Government film (agency), via Internet Archive / Public.Resource.Org", "evidence": "https://archive.org/details/FedFlix",
+      "downloader": "--source fedflix, or --source archive (gov.* identifiers are trusted)", "strengths": ["training and safety films", "Treasury, military, NASA films", "1960s-90s institutional footage"]
+    },
+    {
+      "id": "commons", "name": "Wikimedia Commons (video)", "kind": ["video", "photo"],
+      "url": "https://commons.wikimedia.org",
+      "api": { "search": "https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch={q} filetype:video&prop=imageinfo&iiprop=url|size|extmetadata&format=json", "auth": "none; send a descriptive User-Agent (generic agents get HTTP 429)", "docs": "https://www.mediawiki.org/wiki/API:Imageinfo" },
+      "licence": "Per file (extmetadata LicenseShortName). Keep only Public domain / PD-USGov-* / CC0. CC BY and CC BY-SA need attribution (and share-alike) and are skipped unless --allow-by.",
+      "restrictions": "Upload servers rate-limit range reads; the downloader fetches the VP9 transcode whole and trims locally.",
+      "credit": "Author per file page + 'via Wikimedia Commons'", "evidence": "https://commons.wikimedia.org/wiki/Commons:Licensing",
+      "downloader": "--source commons [--allow-by]", "strengths": ["DVIDS mirrors (PD-USGov-Military)", "NOAA NESDIS 'NO TEXT' versions", "CC0 time-lapses and dashcams"]
+    },
+    {
+      "id": "usgov-broll", "name": "US Government agency b-roll (direct)", "kind": ["video", "photo"],
+      "url": "e.g. https://www.energy.gov/media-library , https://www.usgs.gov/media , https://www.nps.gov/subjects/digital/ , https://www.fema.gov/multimedia-library , https://www.bep.gov (Bureau of Engraving and Printing) , https://www.army.mil , https://www.af.mil , https://www.navy.mil",
+      "api": { "search": "No common API; most agencies post to DVIDS, YouTube (not downloadable here), Flickr (PD or 'United States Government Work' mark) and Commons.", "auth": "varies" },
+      "licence": "Works of federal employees are public domain (17 U.S.C. 105). Contractor-made material (national labs run by contractors, e.g. LLNL, LANL) and agency pages with third-party content can be copyrighted: check the page.",
+      "credit": "Agency name", "evidence": "https://www.usa.gov/government-copyright",
+      "downloader": "manual: save the file + write a provenance JSON with the same fields as engine/footage.js produces", "strengths": ["money printing (BEP)", "dams, power plants, labs", "national parks", "disaster response"]
+    },
+    {
+      "id": "pexels", "name": "Pexels Videos", "kind": ["video", "photo"],
+      "url": "https://www.pexels.com/videos/",
+      "api": { "search": "https://api.pexels.com/videos/search?query={q}", "auth": "free API key in PEXELS_API_KEY (Authorization header)", "docs": "https://www.pexels.com/api/documentation/" },
+      "licence": "Pexels licence: free for commercial use, modification allowed, attribution optional.",
+      "restrictions": "Do not sell unaltered copies; do not redistribute on stock/wallpaper platforms; no endorsement implied by identifiable people/brands; no use in trademarks. => Use inside edited films only; never commit or share the raw files (assets/footage/clips is git-ignored).",
+      "credit": "optional: '<author> / Pexels'", "evidence": "https://www.pexels.com/license/",
+      "downloader": "--source pexels", "strengths": ["modern stock: typing hands, server rooms, drones, city timelapses, crowds"]
+    },
+    {
+      "id": "pixabay", "name": "Pixabay Videos", "kind": ["video", "photo"],
+      "url": "https://pixabay.com/videos/",
+      "api": { "search": "https://pixabay.com/api/videos/?key={key}&q={q}", "auth": "free API key in PIXABAY_API_KEY", "docs": "https://pixabay.com/api/docs/" },
+      "licence": "Pixabay Content License: free use, modification allowed, no attribution required.",
+      "restrictions": "No sale or distribution of the content on a standalone basis (substantially unaltered); no commercial use of content with recognisable trademarks on goods; no misleading use of recognisable people; check third-party rights. => edited films only, never redistribute raw files.",
+      "credit": "optional: '<user> / Pixabay'", "evidence": "https://pixabay.com/service/license-summary/",
+      "downloader": "--source pixabay", "strengths": ["modern stock b-roll, aerials, abstracts"]
+    }
+  ],
+  "imagery": [
+    { "id": "naip", "name": "USDA NAIP orthoimagery via USGS The National Map", "endpoint": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage", "auth": "none", "coverage": "contiguous US (0.3-1 m)", "licence": "Public domain (US Government)", "credit": "USDA FPAC / NAIP via USGS The National Map", "tool": "engine/imagery/bake.py --source naip" },
+    { "id": "3dep", "name": "USGS 3D Elevation Program (bare earth)", "endpoint": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage", "auth": "none", "coverage": "US, 1 m lidar where available, else 1/3 arc-second", "licence": "Public domain (US Government)", "credit": "USGS 3D Elevation Program", "tool": "engine/imagery/bake.py --dem 3dep" },
+    { "id": "sentinel2", "name": "Copernicus Sentinel-2 L2A true colour (COG, AWS Open Data / Earth Search STAC)", "endpoint": "https://earth-search.aws.element84.com/v1/search (collection sentinel-2-l2a, asset 'visual')", "auth": "none", "coverage": "global land, 10 m, every ~5 days", "licence": "Copernicus Sentinel data: free, full and open, any use incl. commercial; attribution required", "credit": "Contains modified Copernicus Sentinel data <year>", "tool": "engine/imagery/bake.py --source s2", "not": "EOX Sentinel-2 cloudless is CC BY-NC-SA: never use" },
+    { "id": "terrarium", "name": "AWS Terrain Tiles (Mapzen terrarium)", "endpoint": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png", "auth": "none", "coverage": "global (SRTM 30 m, GMTED2010, ETOPO1, NED/3DEP in the US, EU-DEM, ...)", "licence": "Free; attribution of the underlying sources required", "credit": "Mapzen Terrain Tiles (SRTM, GMTED2010, ETOPO1, ...)", "tool": "engine/imagery/bake.py --dem terrarium" },
+    { "id": "nasa-earth", "name": "NASA Blue Marble NG / Black Marble / cloud composites", "endpoint": "https://eoimages.gsfc.nasa.gov/images/imagerecords/", "auth": "none", "licence": "Public domain (NASA)", "credit": "NASA Earth Observatory", "tool": "engine/world/bake.py earth" }
+  ]
+}

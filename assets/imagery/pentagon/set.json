@@ -1,0 +1,186 @@
+{
+ "format": "bv-imagery/1",
+ "name": "pentagon",
+ "center": {
+  "lat": 38.871,
+  "lon": -77.0559,
+  "elev": 11.0
+ },
+ "crs": "EPSG:4326 (equal-angle pixels, north up)",
+ "tile": 1024,
+ "demEncoding": "(elev_m + 500) * 10 = R*256 + G",
+ "levels": [
+  {
+   "id": 0,
+   "bbox": [
+    -77.06974656845131,
+    38.86021757096658,
+    -77.04205343154868,
+    38.88178242903342
+   ],
+   "size": [
+    5138,
+    4001
+   ],
+   "mpp": 0.6,
+   "degPerPx": 5.389867049946101e-06,
+   "tiles": [
+    6,
+    4
+   ],
+   "image": "L0/{row}_{col}.jpg",
+   "dem": {
+    "file": "L0/dem.png",
+    "size": [
+     1713,
+     1334
+    ],
+    "mpp": 1.401136900247405,
+    "min": -0.5,
+    "max": 52.6
+   }
+  },
+  {
+   "id": 1,
+   "bbox": [
+    -77.11128627380523,
+    38.82787028386633,
+    -77.00051372619475,
+    38.91412971613367
+   ],
+   "size": [
+    5138,
+    4001
+   ],
+   "mpp": 2.4,
+   "degPerPx": 2.1559468199784405e-05,
+   "tiles": [
+    6,
+    4
+   ],
+   "image": "L1/{row}_{col}.jpg",
+   "dem": {
+    "file": "L1/dem.png",
+    "size": [
+     1713,
+     1334
+    ],
+    "mpp": 5.604547600988181,
+    "min": 0.0,
+    "max": 109.5
+   },
+   "colorMatch": {
+    "gain": [
+     1.0111,
+     0.9926,
+     0.9861
+    ],
+    "offset": [
+     -1.08,
+     1.65,
+     2.5
+    ]
+   }
+  },
+  {
+   "id": 2,
+   "bbox": [
+    -77.27744509522098,
+    38.69848113546533,
+    -76.834354904779,
+    39.043518864534676
+   ],
+   "size": [
+    5138,
+    4001
+   ],
+   "mpp": 9.6,
+   "degPerPx": 8.623787279913762e-05,
+   "tiles": [
+    6,
+    4
+   ],
+   "image": "L2/{row}_{col}.jpg",
+   "dem": {
+    "file": "L2/dem.png",
+    "size": [
+     1713,
+     1334
+    ],
+    "mpp": 22.4181904039556,
+    "min": -57.0,
+    "max": 157.7
+   },
+   "colorMatch": {
+    "gain": [
+     1.0194,
+     0.9758,
+     0.9413
+    ],
+    "offset": [
+     -2.12,
+     3.6,
+     7.74
+    ]
+   }
+  },
+  {
+   "id": 3,
+   "bbox": [
+    -77.94208038088394,
+    38.1809245418613,
+    -76.16971961911605,
+    39.5610754581387
+   ],
+   "size": [
+    5138,
+    4001
+   ],
+   "mpp": 38.4,
+   "degPerPx": 0.00034495149119655047,
+   "tiles": [
+    6,
+    4
+   ],
+   "image": "L3/{row}_{col}.jpg",
+   "dem": {
+    "file": "L3/dem.png",
+    "size": [
+     1713,
+     1334
+    ],
+    "mpp": 89.67276161582097,
+    "min": -61.9,
+    "max": 582.4
+   },
+   "colorMatch": {
+    "gain": [
+     1.0271,
+     0.9717,
+     0.9212
+    ],
+    "offset": [
+     -2.96,
+     3.89,
+     9.63
+    ]
+   }
+  }
+ ],
+ "sources": {
+  "imagery": {
+   "name": "USDA NAIP orthoimagery via USGS The National Map",
+   "licence": "Public domain (US Government work)",
+   "credit": "Imagery: USDA Farm Production and Conservation, NAIP, via USGS The National Map",
+   "url": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer"
+  },
+  "elevation": {
+   "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
+   "licence": "Public domain (US Government work)",
+   "credit": "Elevation: USGS 3D Elevation Program",
+   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
+  }
+ },
+ "baked": "2026-10-12",
+ "attribution": "Imagery: USDA Farm Production and Conservation, NAIP, via USGS The National Map. Elevation: USGS 3D Elevation Program."
+}

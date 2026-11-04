@@ -1,0 +1,666 @@
+{
+ "clips": {
+  "lf-1": {
+   "t": [
+    0.0,
+    92.69
+   ]
+  },
+  "lf-2": {
+   "t": [
+    156.59,
+    198.26
+   ]
+  },
+  "lf-3": {
+   "t": [
+    233.49,
+    255.08
+   ]
+  },
+  "lf-4": {
+   "t": [
+    261.96,
+    348.33
+   ]
+  },
+  "lf-5": {
+   "t": [
+    412.42,
+    449.92
+   ]
+  },
+  "lf-6": {
+   "t": [
+    463.92,
+    673.47
+   ]
+  },
+  "lf-7": {
+   "t": [
+    681.74,
+    732.34
+   ]
+  },
+  "lf-8": {
+   "t": [
+    1000.0,
+    1374.85
+   ]
+  },
+  "culture": {
+   "t": [
+    233.49,
+    277.7
+   ]
+  },
+  "not-like-you": {
+   "t": [
+    306.46,
+    348.33
+   ]
+  },
+  "expect-leave": {
+   "t": [
+    414.66,
+    466.54
+   ]
+  },
+  "new-boss": {
+   "t": [
+    472.24,
+    495.7
+   ]
+  },
+  "upfront": {
+   "t": [
+    587.73,
+    590.75
+   ]
+  },
+  "firing": {
+   "t": [
+    649.45,
+    698.62
+   ]
+  },
+  "make-money": {
+   "t": [
+    1167.13,
+    1204.71
+   ]
+  },
+  "please": {
+   "t": [
+    1248.05,
+    1261.35
+   ]
+  },
+  "glory": {
+   "t": [
+    1335.72,
+    1346.02
+   ]
+  },
+  "tz-1": {
+   "t": [
+    309.36,
+    316.82
+   ]
+  },
+  "tz-2": {
+   "t": [
+    491.22,
+    495.7
+   ]
+  },
+  "tz-3": {
+   "t": [
+    665.39,
+    673.15
+   ]
+  },
+  "tz-4": {
+   "t": [
+    1189.47,
+    1193.43
+   ]
+  },
+  "tz-5": {
+   "t": [
+    1335.72,
+    1346.02
+   ]
+  },
+  "cult-a": {
+   "t": [
+    249.84,
+    252.72
+   ]
+  },
+  "cult-b": {
+   "t": [
+    288.26,
+    305.14
+   ]
+  },
+  "cult-c": {
+   "t": [
+    1010.88,
+    1037.96
+   ]
+  },
+  "why-care": {
+   "t": [
+    708.55,
+    732.34
+   ]
+  },
+  "first-imp": {
+   "t": [
+    506.66,
+    543.34
+   ]
+  },
+  "no-close": {
+   "t": [
+    1103.58,
+    1140.88
+   ]
+  },
+  "coffee": {
+   "t": [
+    1215.53,
+    1242.73
+   ]
+  },
+  "dots": {
+   "t": [
+    1295.18,
+    1314.82
+   ]
+  },
+  "xl-nlu-a": {
+   "t": [
+    306.46,
+    348.33
+   ]
+  },
+  "xl-nlu-b": {
+   "t": [
+    708.55,
+    732.34
+   ]
+  },
+  "xl-boss-a": {
+   "t": [
+    463.92,
+    466.54
+   ]
+  },
+  "xl-boss-b": {
+   "t": [
+    472.24,
+    495.7
+   ]
+  },
+  "xl-boss-c": {
+   "t": [
+    587.73,
+    614.64
+   ]
+  },
+  "xl-fire": {
+   "t": [
+    616.4,
+    698.62
+   ]
+  },
+  "xl-money-a": {
+   "t": [
+    1103.58,
+    1140.88
+   ]
+  },
+  "xl-money-b": {
+   "t": [
+    1167.13,
+    1204.71
+   ]
+  },
+  "xl-glory-a": {
+   "t": [
+    1238.87,
+    1261.35
+   ]
+  },
+  "xl-glory-b": {
+   "t": [
+    1299.34,
+    1349.23
+   ]
+  },
+  "xl-cult-a": {
+   "t": [
+    249.84,
+    252.72
+   ]
+  },
+  "xl-cult-b": {
+   "t": [
+    282.92,
+    305.14
+   ]
+  },
+  "xl-cult-c": {
+   "t": [
+    1004.96,
+    1037.96
+   ]
+  },
+  "xl-first": {
+   "t": [
+    504.52,
+    590.75
+   ]
+  },
+  "xl-coffee-a": {
+   "t": [
+    1189.47,
+    1204.71
+   ]
+  },
+  "xl-coffee-b": {
+   "t": [
+    1215.53,
+    1261.35
+   ]
+  },
+  "xl-coffee-c": {
+   "t": [
+    1286.85,
+    1297.16
+   ]
+  },
+  "xl-boss-0": {
+   "t": [
+    288.26,
+    305.14
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Taking over a company: culture, firing and what to focus on (Josh, 22 Oct)",
+   "layout": "split",
+   "split": false,
+   "fps": 23.976,
+   "cards": {
+    "intro": {
+     "eyebrow": "Josh Li \u00b7 after the acquisition",
+     "title": "You don't build culture. <em>You inherit it.</em>",
+     "poster": true,
+     "dur": 3.2
+    },
+    "cred": {
+     "kind": "cred",
+     "dur": 5.005
+    }
+   },
+   "chapters": {
+    "start": "The new clinic"
+   },
+   "chapterMarks": [
+    [
+     156.5,
+     "Leasing tip"
+    ],
+    [
+     233.4,
+     "You inherit culture"
+    ],
+    [
+     412.4,
+     "Expect people to leave"
+    ],
+    [
+     472.2,
+     "Rip off the band-aid"
+    ],
+    [
+     649.4,
+     "On firing"
+    ],
+    [
+     1000.0,
+     "Where that leaves you"
+    ],
+    [
+     1111.7,
+     "What to focus on"
+    ],
+    [
+     1248.0,
+     "You won't please everyone"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "card": "cred"
+    },
+    {
+     "chapter": "The new clinic"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ],
+   "intro": false,
+   "sequence": [
+    {
+     "chapter": "Coming up"
+    },
+    "tz-1",
+    "tz-2",
+    "tz-3",
+    "tz-4",
+    "tz-5",
+    {
+     "card": "intro"
+    },
+    {
+     "card": "cred"
+    },
+    {
+     "chapter": "The new clinic"
+    },
+    "lf-1",
+    "lf-2",
+    "lf-3",
+    "lf-4",
+    "lf-5",
+    "lf-6",
+    "lf-7",
+    "lf-8"
+   ]
+  },
+  "ig-2-not-like-you": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Lead people who <em>aren't like you</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-nlu-a",
+    "xl-nlu-b"
+   ],
+   "sequence": [
+    "xl-nlu-a~ig#1",
+    "xl-nlu-a~ig#2",
+    "xl-nlu-a~ig#3",
+    "xl-nlu-a~ig#4",
+    "xl-nlu-a~ig#5",
+    "xl-nlu-a~ig#6",
+    "xl-nlu-a~ig#7",
+    "xl-nlu-a~ig#8",
+    "xl-nlu-b~ig#1",
+    "xl-nlu-b~ig#2",
+    "xl-nlu-b~ig#3",
+    "xl-nlu-b~ig#4"
+   ]
+  },
+  "ig-4-new-boss": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Don't delay it. <em>Change things upfront.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-boss-0",
+    "xl-boss-a",
+    "xl-boss-b",
+    "xl-boss-c"
+   ],
+   "sequence": [
+    "xl-boss-0~ig#1",
+    "xl-boss-0~ig#2",
+    "xl-boss-0~ig#3",
+    "xl-boss-a~ig#1",
+    "xl-boss-b~ig#1",
+    "xl-boss-b~ig#2",
+    "xl-boss-c~ig#1",
+    "xl-boss-c~ig#2",
+    "xl-boss-c~ig#3",
+    "xl-boss-c~ig#4",
+    "xl-boss-c~ig#5",
+    "xl-boss-c~ig#6"
+   ]
+  },
+  "ig-5-firing": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Firing is never easy. <em>It's their livelihood.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-fire"
+   ],
+   "sequence": [
+    "xl-fire~ig#1",
+    "xl-fire~ig#2",
+    "xl-fire~ig#3",
+    "xl-fire~ig#4",
+    "xl-fire~ig#5",
+    "xl-fire~ig#6",
+    "xl-fire~ig#7",
+    "xl-fire~ig#8"
+   ]
+  },
+  "ig-6-make-money": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "First keep the doors open. <em>Make the money.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-money-a",
+    "xl-money-b"
+   ],
+   "sequence": [
+    "xl-money-a~ig#1",
+    "xl-money-a~ig#2",
+    "xl-money-b~ig#1",
+    "xl-money-b~ig#2",
+    "xl-money-b~ig#3",
+    "xl-money-b~ig#4",
+    "xl-money-b~ig#5",
+    "xl-money-b~ig#6"
+   ]
+  },
+  "ig-7-please-everyone": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "You won't please everyone. <em>Trust your gut.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-glory-a",
+    "xl-glory-b"
+   ],
+   "sequence": [
+    "xl-glory-a~ig#1",
+    "xl-glory-a~ig#2",
+    "xl-glory-a~ig#3",
+    "xl-glory-a~ig#4",
+    "xl-glory-a~ig#5",
+    "xl-glory-b~ig#1",
+    "xl-glory-b~ig#2",
+    "xl-glory-b~ig#3",
+    "xl-glory-b~ig#4",
+    "xl-glory-b~ig#5",
+    "xl-glory-b~ig#6"
+   ]
+  },
+  "ig-8-inherit-culture": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "You don't build culture. <em>You inherit it.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-cult-a",
+    "xl-cult-b",
+    "xl-cult-c"
+   ],
+   "sequence": [
+    "xl-cult-a~ig#1",
+    "xl-cult-b~ig#1",
+    "xl-cult-b~ig#2",
+    "xl-cult-b~ig#3",
+    "xl-cult-b~ig#4",
+    "xl-cult-c~ig#1",
+    "xl-cult-c~ig#2",
+    "xl-cult-c~ig#3"
+   ]
+  },
+  "ig-10-first-impression": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "The team's first impression of you <em>starts before you arrive</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-first"
+   ],
+   "sequence": [
+    "xl-first~ig#1",
+    "xl-first~ig#2",
+    "xl-first~ig#3",
+    "xl-first~ig#4",
+    "xl-first~ig#5",
+    "xl-first~ig#6",
+    "xl-first~ig#7",
+    "xl-first~ig#8",
+    "xl-first~ig#9",
+    "xl-first~ig#10",
+    "xl-first~ig#11"
+   ]
+  },
+  "ig-12-coffee-machine": {
+   "layout": "vertical",
+   "ns": "~ig",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Focus on what <em>keeps the doors open</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "xl-coffee-a",
+    "xl-coffee-b",
+    "xl-coffee-c"
+   ],
+   "sequence": [
+    "xl-coffee-a~ig#1",
+    "xl-coffee-a~ig#2",
+    "xl-coffee-a~ig#3",
+    "xl-coffee-a~ig#4",
+    "xl-coffee-b~ig#1",
+    "xl-coffee-b~ig#2",
+    "xl-coffee-b~ig#3",
+    "xl-coffee-b~ig#4",
+    "xl-coffee-b~ig#5",
+    "xl-coffee-b~ig#6",
+    "xl-coffee-c~ig#1",
+    "xl-coffee-c~ig#2",
+    "xl-coffee-c~ig#3",
+    "xl-coffee-c~ig#4"
+   ]
+  }
+ }
+}

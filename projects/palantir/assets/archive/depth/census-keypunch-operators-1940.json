@@ -1,0 +1,11 @@
+{
+ "src": "edc7851e017894ca05d01e26b683d0521786e53a",
+ "size": 756,
+ "model": "depth-anything-v2-small",
+ "version": 2,
+ "width": 1280,
+ "height": 1008,
+ "aspect": 1.269001982815598,
+ "seconds": 21.2,
+ "license": "Depth Anything V2 Small, Apache-2.0"
+}

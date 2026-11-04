@@ -2,3 +2,12 @@ node_modules/
 .cache/
 projects/*/out/
 refs/
+__pycache__/
+projects/*/*.log
+projects/micro1/batch.log
+projects/micro1/out/
+projects/micro1/deliver.log
+projects/micro1/batch2.log
+projects/*/gfpgan/
+projects/*/face.log
+projects/*/render-faqs.log

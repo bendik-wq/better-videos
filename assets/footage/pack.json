@@ -1,0 +1,401 @@
+{
+ "about": "Starter pack of public-domain / CC0 documentary b-roll. Re-download with: node engine/footage.js pack [--only tag]. Each clip is trimmed at the source (HTTP range reads), re-encoded H.264 CRF 18 <=1080p, and gets a provenance JSON next to it in assets/footage/clips/. The video files are git-ignored; the JSON is committed.",
+ "clips": [
+  {
+   "id": "server-nasa-ames-modular",
+   "source": "nasa",
+   "sourceId": "ARC-20190821-AAV3214-ModularSupercomputer-BRollResource-NASAWeb",
+   "trim": [
+    58,
+    128
+   ],
+   "tags": [
+    "server-room",
+    "computing",
+    "modern"
+   ],
+   "note": "Aitken supercomputer racks, cabling, engineers; NASA Ames 2019"
+  },
+  {
+   "id": "orbit-earth-limb-exp65",
+   "source": "nasa",
+   "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+   "trim": [
+    78,
+    112
+   ],
+   "tags": [
+    "earth-orbit",
+    "iss"
+   ],
+   "note": "Earth limb, station truss in frame, 4K master"
+  },
+  {
+   "id": "orbit-clouds-exp65",
+   "source": "nasa",
+   "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+   "trim": [
+    640,
+    672
+   ],
+   "tags": [
+    "earth-orbit",
+    "iss"
+   ],
+   "note": "Earth below; a cargo craft on the station arm (the compilation cuts at ~656 s)"
+  },
+  {
+   "id": "orbit-aurora-exp65",
+   "source": "nasa",
+   "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+   "trim": [
+    1578,
+    1610
+   ],
+   "tags": [
+    "earth-orbit",
+    "iss",
+    "night",
+    "aurora"
+   ]
+  },
+  {
+   "id": "orbit-night-coast-exp65b",
+   "source": "nasa",
+   "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+   "trim": [
+    2516,
+    2550
+   ],
+   "tags": [
+    "iss-night",
+    "cities-at-night",
+    "earth-orbit"
+   ]
+  },
+  {
+   "id": "orbit-night-cities-exp67b",
+   "source": "nasa",
+   "sourceId": "jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition",
+   "trim": [
+    2836,
+    2876
+   ],
+   "tags": [
+    "iss-night",
+    "cities-at-night",
+    "earth-orbit"
+   ]
+  },
+  {
+   "id": "orbit-night-start-exp67",
+   "source": "nasa",
+   "sourceId": "jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition",
+   "trim": [
+    78,
+    118
+   ],
+   "tags": [
+    "iss-night",
+    "cities-at-night",
+    "earth-orbit"
+   ]
+  },
+  {
+   "id": "orbit-cupola-fisheye-exp67",
+   "source": "nasa",
+   "sourceId": "jsc2023m000111_Earth_in_4K_Space_Station_Expedition_67_68_Edition",
+   "trim": [
+    2640,
+    2676
+   ],
+   "tags": [
+    "earth-orbit",
+    "iss",
+    "cupola"
+   ]
+  },
+  {
+   "id": "weather-helene-iss",
+   "source": "nasa",
+   "sourceId": "jsc2024m000168-Additional_Views_of_Hurricane_Helene_from_the_International_Space_Station",
+   "trim": [
+    108,
+    166
+   ],
+   "tags": [
+    "weather",
+    "hurricane",
+    "earth-orbit"
+   ]
+  },
+  {
+   "id": "weather-erin-goes",
+   "source": "commons",
+   "sourceId": "Category 5 Erin is the First Atlantic Hurricane of 2025 (NESDIS 2025-08-22 2025 08 21 HurricaneErin NO TEXT).webm",
+   "trim": [
+    0,
+    40
+   ],
+   "tags": [
+    "weather",
+    "hurricane",
+    "satellite"
+   ]
+  },
+  {
+   "id": "weather-milton-hurricane-hunter",
+   "source": "commons",
+   "sourceId": "Hurricane Milton on a NOAA WP-3D Orion.webm",
+   "trim": [
+    0,
+    40
+   ],
+   "tags": [
+    "weather",
+    "hurricane",
+    "aircraft"
+   ]
+  },
+  {
+   "id": "aircraft-x59-takeoff",
+   "source": "nasa",
+   "sourceId": "AFRC-2026-14579-X-59_Flight2_B-Roll_V2_3-20-26",
+   "trim": [
+    96,
+    162
+   ],
+   "tags": [
+    "aircraft",
+    "modern"
+   ]
+  },
+  {
+   "id": "ships-lcs-formation",
+   "source": "commons",
+   "sourceId": "LCS Formation Displays One of Navy's Newest Platforms.ogv",
+   "trim": [
+    0,
+    61
+   ],
+   "tags": [
+    "ships",
+    "military",
+    "aerial"
+   ]
+  },
+  {
+   "id": "ships-comfort-underway",
+   "source": "commons",
+   "sourceId": "Comfort Gets Underway for Continuing Promise-15.ogv",
+   "trim": [
+    0,
+    60
+   ],
+   "tags": [
+    "ships",
+    "military"
+   ]
+  },
+  {
+   "id": "crowd-apollo-launch-1969",
+   "source": "nasa",
+   "sourceId": "jsc2019m000563_Apollo_MissionControl_Media_B_roll",
+   "trim": [
+    172,
+    206
+   ],
+   "tags": [
+    "crowds",
+    "archive",
+    "1960s"
+   ]
+  },
+  {
+   "id": "crowd-causeway-bay-timelapse",
+   "source": "commons",
+   "sourceId": "Causeway Bay Time-lapse videos (afternoon).ogv",
+   "trim": [
+    0,
+    26
+   ],
+   "tags": [
+    "crowds",
+    "city",
+    "traffic",
+    "timelapse"
+   ]
+  },
+  {
+   "id": "typing-hands-1940s",
+   "source": "prelinger",
+   "sourceId": "basic_typing_1",
+   "trim": [
+    424,
+    492
+   ],
+   "tags": [
+    "typing-hands",
+    "archive",
+    "office"
+   ]
+  },
+  {
+   "id": "computing-sage-1956",
+   "source": "prelinger",
+   "sourceId": "OnGuard1956",
+   "trim": [
+    96,
+    178
+   ],
+   "tags": [
+    "computing",
+    "archive",
+    "1950s",
+    "office"
+   ]
+  },
+  {
+   "id": "command-sage-consoles-1956",
+   "source": "prelinger",
+   "sourceId": "OnGuard1956",
+   "trim": [
+    276,
+    352
+   ],
+   "tags": [
+    "command-centre",
+    "military",
+    "archive",
+    "1950s"
+   ]
+  },
+  {
+   "id": "computing-sage-panels-1956",
+   "source": "prelinger",
+   "sourceId": "OnGuard1956",
+   "trim": [
+    540,
+    604
+   ],
+   "tags": [
+    "computing",
+    "archive",
+    "1950s"
+   ]
+  },
+  {
+   "id": "command-apollo-mcc-1969",
+   "source": "nasa",
+   "sourceId": "jsc2019m000563_Apollo_MissionControl_Media_B_roll",
+   "trim": [
+    0,
+    62
+   ],
+   "tags": [
+    "command-centre",
+    "archive",
+    "1960s"
+   ]
+  },
+  {
+   "id": "command-artemis-flight-control",
+   "source": "nasa",
+   "sourceId": "jsc2021m000184__Artemis-1_Flight-Control-Room_Simulation_B-roll_211101",
+   "trim": [
+    34,
+    104
+   ],
+   "tags": [
+    "command-centre",
+    "modern"
+   ]
+  },
+  {
+   "id": "command-space-ops-center-dod",
+   "source": "commons",
+   "sourceId": "Space Operations Center, DoD Support of NASA's Artemis I Launch (855622).webm",
+   "trim": [
+    0,
+    60
+   ],
+   "tags": [
+    "command-centre",
+    "military",
+    "dvids"
+   ]
+  },
+  {
+   "id": "office-treasury-1969",
+   "source": "archive",
+   "sourceId": "gov.archives.arc.11865",
+   "trim": [
+    248,
+    300
+   ],
+   "tags": [
+    "office",
+    "money",
+    "archive",
+    "1960s"
+   ]
+  },
+  {
+   "id": "money-treasury-press-1969",
+   "source": "archive",
+   "sourceId": "gov.archives.arc.11865",
+   "trim": [
+    1160,
+    1250
+   ],
+   "tags": [
+    "money",
+    "money-printing",
+    "archive",
+    "1960s"
+   ]
+  },
+  {
+   "id": "oil-rig-drilling",
+   "source": "commons",
+   "sourceId": "Move It Rig Move Safety for Roughnecks.webm",
+   "trim": [
+    590,
+    650
+   ],
+   "tags": [
+    "oil-rigs",
+    "industry"
+   ]
+  },
+  {
+   "id": "highway-tullamarine",
+   "source": "commons",
+   "sourceId": "Tullamarine Freeway northbound near Calder Freeway.ogv",
+   "trim": [
+    0,
+    50
+   ],
+   "tags": [
+    "highways",
+    "traffic",
+    "modern"
+   ]
+  },
+  {
+   "id": "highway-green-light-1954",
+   "source": "prelinger",
+   "sourceId": "GiveYour1954",
+   "trim": [
+    0,
+    60
+   ],
+   "tags": [
+    "highways",
+    "traffic",
+    "archive",
+    "1950s"
+   ]
+  }
+ ]
+}

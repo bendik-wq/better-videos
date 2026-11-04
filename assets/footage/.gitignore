@@ -1,0 +1,3 @@
+# Video files are fetched with `node engine/footage.js pack` (public domain, but large); provenance JSON is committed.
+clips/*
+!clips/*.json

@@ -1,0 +1,31 @@
+{
+ "id": "orbit-clouds-exp65",
+ "title": "Earth from Space in 4K – Expedition 65 Edition",
+ "source": "nasa",
+ "sourceId": "jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "page": "https://images.nasa.gov/details/jsc2022m000172_Earth_in_4K_Expedition_65_Edition",
+ "download": "https://images-assets.nasa.gov/video/jsc2022m000172_Earth_in_4K_Expedition_65_Edition/jsc2022m000172_Earth_in_4K_Expedition_65_Edition~large.mp4",
+ "date": "2022-08-05",
+ "licence": "Public domain (NASA media; not subject to US copyright)",
+ "licenceEvidence": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+ "credit": "NASA / JSC",
+ "tags": [
+  "earth-orbit",
+  "iss"
+ ],
+ "trim": [
+  640,
+  672
+ ],
+ "file": "assets/footage/clips/orbit-clouds-exp65.mp4",
+ "bytes": 30740986,
+ "sha1": "e5430314f4312ad2f0eb4fd400d4bb4b7008a4f1",
+ "duration": 32,
+ "width": 1920,
+ "height": 1012,
+ "fps": 30,
+ "codec": "h264",
+ "field": "progressive",
+ "audio": true,
+ "fetched": "2026-10-12"
+}
