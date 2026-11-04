@@ -153,3 +153,4 @@ Input: `review/round4/BLIND-REVIEW.md` (verdict **revise**: blind critic 90/100,
 | v2 | 93 | 52/100 | revise | yes (rose) |
 | v3 | 95 | 54/100 | revise | yes (rose, within noise) |
 | v4 | 90 | 66/100 | revise | yes (checklist +12; critic -5 within noise) |
+| v5 | 93 | 66/100 | revise | yes (best: ties v4 on checklist, higher critic) — loop limit reached |
