@@ -54,3 +54,10 @@ Input: `review/BLIND-REVIEW.md` (verdict **revise**: blind critic 86/100, emotio
 **Peaks planned (line times at 150 wpm, VO only):** ~2:15 "You can't change who works for you" (reversal, 4) · ~3:30 "the company didn't exist" (surprise, 4) · ~4:30 "The laptop now answered to someone else" (dread, 4) · ~6:20 "B wasn't the target. B was the door." (reversal, 4) · ~7:25 stair-step + F.B.I. name + "Fifty-seven stopped. This one wasn't." (unease, 4) · ~9:15 "The vault signed for them" (shock, 5) · ~11:15 "about half the money, still sitting there" (indignation, 4) · ~11:50 "A take-home test is a permission slip" (payoff, 5) · ~12:35 button. The biggest gap between peaks is about 1:50.
 
 **Open risks for the blind judge:** the two 5s are about 2:35 apart, which breaks the house "one 5 per 4 min" rule (the 12-min peak plan puts them closer, so the rules conflict at this length). The permission-slip payoff is labelled as our interpretation, and the judge may rate it 4 rather than 5. *Not detected* (dread 4) may still read as expected, because the hook says the interview was the start. The Socket figure (S42) and the Axie attribution (S43) still need their primary documents opened ⚑.
+
+## Blind scores (the only scores that count)
+
+| Round | Blind critic | Emotional checklist | Verdict | Kept |
+|---|---|---|---|---|
+| v1 | 82 | 13/94 | revise | baseline |
+| v2 | 93 | 52/100 | revise | yes (rose) |
