@@ -49,7 +49,7 @@ def parse(md):
             if cur["lines"]: beats.append(cur)
             cur = {"name": line[3:].strip(), "emotion": None, "intensity": None, "open": [], "close": [], "lines": []}
             continue
-        if not line or line.startswith(("#", "|", "<!--", "---", "- ")) or re.match(r"^\[.*\]$", line) or re.match(r"^\*\([^)]*\)\*$", line) or re.match(r"^\*\*[^*]{1,30}:\*\*", line):
+        if not line or line.startswith(("#", "|", "<!--", "---", "- ")) or re.match(r"^\[.*\]$", line) or re.match(r"^\*\([^)]*\)\*$", line) or re.match(r"^\*\*[^*]{1,30}:\*\*", line) or re.match(r"^\*\*[A-Z][A-Z ]{2,20}:", line) or re.match(r"^\(?(tie rule|note|todo|sponsor slot)\b", line, re.I):
             continue
         line = re.sub(r"^\d+\.\s*", "", line).lstrip("> ").strip()
         for kind, L in re.findall(r"\((opens|closes)(?: the)? (L\d+)", line):
@@ -111,9 +111,12 @@ def analyse(md, wpm):
         for L, t0 in opened.items():
             if L not in closed: issues.append(f"loop {L} opened at {fmt(t0)} is never closed"); lp -= 20
             elif closed[L] - t0 > 360 and L != "L1": issues.append(f"loop {L} stays open {int((closed[L] - t0) / 60)} min (> 6)"); lp -= 8
+        for L, t0 in opened.items():
+            if L in closed and 0 <= closed[L] - t0 < 10: issues.append(f"loop {L} closes {closed[L] - t0:.0f} s after it opens — that's a beat, not a loop"); lp -= 5
         for b in beats:
-            live = [L for L, t0 in opened.items() if t0 <= b["t0"] < closed.get(L, 1e9)]
+            live = [L for L, t0 in opened.items() if t0 <= b["t0"] < closed.get(L, 1e9) and closed.get(L, 1e9) - t0 >= 10]
             if not live and b["t1"] < dur * 0.92: issues.append(f"{fmt(b['t0'])} nothing is left open (beat '{b['name']}') — open the next question before closing the last"); lp -= 10
+            elif len(live) < 2 and dur * 0.2 <= b["t0"] <= dur * 0.85: issues.append(f"{fmt(b['t0'])} only {len(live)} loop open in the middle (beat '{b['name']}') — keep 2–4 open"); lp -= 4
     else:
         lp = 50; issues.append("no open/close loop annotations: add <!-- beat: … | open: L1 | close: … --> so loops can be checked")
     scores["loops"] = max(0, lp)

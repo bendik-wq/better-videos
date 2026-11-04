@@ -10,7 +10,7 @@ Videos that a person can't stop watching. Each one is a single connected story w
 |---|---|---|
 | Idea | `studio/signals/radar.py` + the `idea-engine` score (out of 25) | ≥ 18/25 and a signal in the channel picks, or an evergreen topic-bank idea |
 | Packaging | `packaging` skill score + a blind second reviewer | title and thumbnail ≥ the skill's bar; the reviewer picks it from 3 |
-| Script | `studio/critic/script_critic.py` (needs beat annotations) + reviewer with `docs/research/emotional-engine.md` | critic ≥ 85, hook ≥ 80, no "never closed" loop, no flat stretch > 90 s |
+| Script | **Blind** reviewer agent: re-annotates every beat's emotion as a cold viewer, without the writer's ratings, LOOP.md or SCORECARD.md. Then `studio/critic/script_critic.py` runs on the blind copy, plus the emotional-engine checklist. | blind critic ≥ 85, hook ≥ 80, checklist ≥ 80 with all gates, no unclosed loop, no flat stretch > 90 s |
 | Shots | `shot-design` rules (no repeat, cut-rate targets) | no rule violations |
 | Look | contact sheets of stills reviewed with `docs/research/anti-ai-look.md` + `docs/style-bible.md` | 0 fails on the anti-AI checklist |
 | Video | `studio/critic/video_qa.py` + a visual review of its contact sheets | QA ≥ 90; 0 anti-AI fails; loudness -14 ±1 LUFS |
@@ -32,6 +32,9 @@ Videos that a person can't stop watching. Each one is a single connected story w
   - Where a judge disagreed with reality (it scored high but retention was low), adjust that judge's weights.
   - Record the change and its reason in `studio/judge-changes.md`.
   - This is how the critics learn what actually holds attention.
+
+## The writer never judges itself
+A score only counts when it comes from a separate agent that didn't write the work and hasn't seen the writer's self-scores. The pilot proved why: the writer's own emotion tags gave 100/100, while the blind reviewer gave 86/100 and 13/94 on the checklist.
 
 ## Never
 - Upload to YouTube automatically. Delivery stops at the Drive folder.

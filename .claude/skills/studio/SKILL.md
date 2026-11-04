@@ -33,12 +33,17 @@ The existing skills do the craft; this one chains them and runs the judges.
   The emotion words and intensities come from `docs/research/emotional-engine.md`.
 - Make it **one story**: each beat ends on the question the next beat answers ("but / therefore", never "and then").
 - Plan one emotional peak at least every 3 minutes, with the biggest in the last third.
-- Run the loop:
-  1. `python3 studio/critic/script_critic.py projects/<slug>/SCRIPT.md`
-  2. Fix the top issue, then run it again.
-  3. Keep a change only if the score rises.
-  4. Stop at the bar in `studio/program.md` or after 5 attempts.
-- Then a reviewer agent reads the script cold against `emotional-engine.md` and the copy rules in the brain. Use `copy-principles` and the legends; Schwartz's awareness levels decide the hook. Fold in its top 3 notes.
+- Run the loop. The writer never scores itself:
+  1. A **separate blind reviewer agent** copies the script to `review/SCRIPT.blind.md`.
+     - It re-rates every beat's emotion as a cold viewer and fixes any loop tags the narration doesn't support.
+     - It must not see LOOP.md, SCORECARD.md or the writer's ratings.
+     - It runs `python3 studio/critic/script_critic.py` on the blind copy and scores the `emotional-engine.md` checklist.
+     - It writes `review/BLIND-REVIEW.md` with the click-away moments and the top 5 changes.
+  2. The writer applies the top changes.
+  3. A fresh blind reviewer scores the new version.
+  4. Keep the revision only if the blind score rose.
+  5. Stop at the bar in `studio/program.md` or after 5 rounds. Log each round in `LOOP.md`.
+- Fold in the copy rules from the brain where they fit: `copy-principles`, the legends, and Schwartz's awareness levels for the hook.
 
 ## 4. Shots and look
 - Run the `shot-design` skill to make the shot plan and the params for `project.mjs`.
