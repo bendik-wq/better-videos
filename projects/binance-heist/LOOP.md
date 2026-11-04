@@ -94,3 +94,4 @@ Input: `review/round2/BLIND-REVIEW.md` (verdict **revise**: blind critic 93/100,
 |---|---|---|---|---|
 | v1 | 82 | 13/94 | revise | baseline |
 | v2 | 93 | 52/100 | revise | yes (rose) |
+| v3 | 95 | 54/100 | revise | yes (rose, within noise) |
