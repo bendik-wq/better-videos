@@ -5,6 +5,11 @@ script structure, pacing, chapters, mid-rolls and the affiliate read. The look l
 `docs/style-bible.md` and the reference channel in `docs/fern-breakdown.md`; this file doesn't
 repeat them.
 
+**See also:** `emotional-engine.md` (emotional beats, curiosity and anticipation science, peak
+pacing, the beat annotation format), `anti-ai-look.md` (what reads as AI or cheap, YouTube's
+inauthentic-content and disclosure rules, the reviewer checklist) and `motion-repos.md`
+(open-source motion-graphics and editing tools to adopt or avoid).
+
 Researched October 2026. Every claim links to its source. How much to trust each source:
 
 - **[official]**: YouTube Help or FTC. Treat as fact.

@@ -9,7 +9,7 @@ Without annotations the critic falls back to text heuristics.
 Checks (each 0-100, weighted into a total):
   hook       first 15 s: concrete number/name, stakes, a question or contradiction, no throat-clearing
   rehooks    a curiosity device (question, "but", "until", reveal words, open loop) at least every 40 s
-  loops      every opened loop is closed, none stays open > 6 min, something is always open until the end
+  loops      every opened loop is closed, none stays open > 6 min (except L1, the spine question that runs the whole video), something is always open until the end
   emotion    a peak (intensity >= 4) at least every 3 min, no flat stretch > 90 s, the biggest peak in the last third
   rhythm     spoken pace 140-165 wpm, sentence length varies, few sentences > 25 words (TTS-safe)
   specifics  numbers, names, places and dates per minute
@@ -110,7 +110,7 @@ def analyse(md, wpm):
     if opened:
         for L, t0 in opened.items():
             if L not in closed: issues.append(f"loop {L} opened at {fmt(t0)} is never closed"); lp -= 20
-            elif closed[L] - t0 > 360: issues.append(f"loop {L} stays open {int((closed[L] - t0) / 60)} min (> 6)"); lp -= 8
+            elif closed[L] - t0 > 360 and L != "L1": issues.append(f"loop {L} stays open {int((closed[L] - t0) / 60)} min (> 6)"); lp -= 8
         for b in beats:
             live = [L for L, t0 in opened.items() if t0 <= b["t0"] < closed.get(L, 1e9)]
             if not live and b["t1"] < dur * 0.92: issues.append(f"{fmt(b['t0'])} nothing is left open (beat '{b['name']}') — open the next question before closing the last"); lp -= 10

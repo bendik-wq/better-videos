@@ -3,7 +3,8 @@
 Researched 2026-10-10. This builds on `asset-sources.md`, which already covers Poly Haven,
 ambientCG, Kenney and Quaternius models, Mixamo, Sketchfab, Smithsonian, Natural Earth, OSM,
 Freesound, Sonniss and fonts, and on `visual-craft.md`, which covers the shot and motion
-vocabulary. Neither topic is repeated here.
+vocabulary. Neither topic is repeated here. Whole engines and tools beside ours (HyperFrames,
+Remotion, Motion Canvas, Manim, gl-transitions…) are compared in `motion-repos.md` (2026-11-04).
 
 **Our constraints, the filter for every row**
 

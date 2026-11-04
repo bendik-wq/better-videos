@@ -2,7 +2,8 @@
 
 How to build a 12–18 min faceless documentary script that holds viewers. Read with:
 `hooks.md` (cold opens, re-hooks, buttons), `retention-playbook.md` (evidence),
-`channel-breakdowns.md` (who does what) and `editing-library.md` (how the picture carries it).
+`channel-breakdowns.md` (who does what), `editing-library.md` (how the picture carries it) and
+`emotional-engine.md` (emotional beats, peak pacing and the beat annotation format).
 `retention-script` follows this file step by step.
 
 Trust labels as in the playbook. **[test]** marks something we measured on our own engine.
