@@ -23,6 +23,7 @@ Read once per session, in this order:
    rhythm patterns P1–P16, the TTS number table and 50 before/after rewrites.
 7. `docs/library/fact-check-playbook.md` (source tiers, the source table) and
    `docs/library/sound-and-music.md` (the cue grammar for the beat sheet's sound column).
+8. When the `brain` repo is attached: `wiki/engine/copy/bencivenga-100-checklist.md` (the Bencivenga 100). Write the hook, the promise line and the affiliate segment to it: no claim bigger than its proof, proof in the hook, why you / why true / why now in the sponsor read. Score them against its sections A, B, D, F and J in the self-check.
 
 Visual and sound rules are in `docs/style-bible.md`. This skill produces the outline and the
 narration draft; `shot-design` and `make-video` turn them into shots.

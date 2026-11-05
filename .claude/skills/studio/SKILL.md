@@ -44,7 +44,7 @@ The existing skills do the craft; this one chains them and runs the judges.
   4. Keep the revision only if the blind score rose.
   5. Stop at the bar in `studio/program.md` or after 5 rounds. Log each round in `LOOP.md`.
 - When the `brain` repo is attached, also run its language pass (`wiki/engine/persuasion/nlp/nlp-copy-checklist.md`) on the script. Use only evidence-graded A/B techniques. Never pressure, never fake urgency, and never claim hypnotic effects.
-- Fold in the copy rules from the brain where they fit: `copy-principles`, the legends, and Schwartz's awareness levels for the hook.
+- Fold in the copy rules from the brain where they fit: `copy-principles`, the legends, and Schwartz's awareness levels for the hook. The blind reviewer also scores the hook, the promise line and the sponsor read against the Bencivenga 100 (`wiki/engine/copy/bencivenga-100-checklist.md`, sections A, B, D, F and J; any red-flag NO is fixed before render).
 
 ## 4. Shots and look
 - Run the `shot-design` skill to make the shot plan and the params for `project.mjs`.
