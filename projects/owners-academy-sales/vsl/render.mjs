@@ -75,6 +75,7 @@ if (FULL && args.includes('--min')) await page.addStyleTag({ path: path.join(HER
 if (FULL && V && args.includes('--min')) await page.addStyleTag({ path: path.join(HERE, 'stage-vmin.css') });
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
+if (FULL) await page.evaluate(() => { window.__full = true; });
 await page.evaluate(() => document.fonts.ready);
 
 if (opt('--stills')) {
@@ -94,19 +95,26 @@ async function encode(from, n, file) {
 const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', fpsArg, '-c:v', FULL ? 'png' : 'mjpeg', '-i', '-',
   ...(FULL && file.includes('.mov') ? ['-c:v', 'qtrle', '-pix_fmt', 'argb', '-r', fpsArg, '-f', 'mov', file]
     // .mp4 with --full: colour layer + a separate greyscale alpha layer (<name>-alpha.mp4), far smaller than qtrle
-    : FULL ? ['-filter_complex', '[0:v]format=rgba,split[c][a];[a]alphaextract,format=yuv420p[m]', '-map', '[c]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16',
-        '-pix_fmt', 'yuv444p', '-r', fpsArg, '-f', 'mp4', file, '-map', '[m]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '14', '-r', fpsArg, '-f', 'mp4', file.replace(/\.mp4/, '-alpha.mp4')]
+    : FULL ? ['-filter_complex', '[0:v]format=rgba,split[c][a];[a]alphaextract,format=yuv420p[m]', '-map', '[c]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16',
+        '-pix_fmt', 'yuv444p', '-r', fpsArg, '-f', 'mp4', file, '-map', '[m]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '14', '-r', fpsArg, '-f', 'mp4', file.replace(/\.mp4/, '-alpha.mp4')]
     : ['-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', fpsArg, '-f', 'mp4', file])],
   { stdio: ['pipe', 'inherit', 'inherit'] });
 const t0 = Date.now();
+// full-screen layers: every visual change is an inline style or class in the DOM (no CSS transitions, the silk
+// canvas is hidden), so a frame whose DOM hashes the same as the last one reuses that screenshot
+let prevSig = null, prevBuf = null, reused = 0;
 for (let i = 0; i < n; i++) {
-  await page.evaluate((t) => window.render(t), from + i / fps);
-  const buf = FULL ? await page.screenshot({ type: 'png', omitBackground: true }) : await page.screenshot({ type: 'jpeg', quality: 93 });
+  const sig = await page.evaluate((t) => { window.render(t); if (!window.__full) return null;
+    const s = document.body.innerHTML; let h = 2166136261; for (let k = 0; k < s.length; k++) { h ^= s.charCodeAt(k); h = Math.imul(h, 16777619); } return s.length + ':' + (h >>> 0); }, from + i / fps);
+  let buf;
+  if (sig && sig === prevSig) { buf = prevBuf; reused++; }
+  else { buf = FULL ? await page.screenshot({ type: 'png', omitBackground: true }) : await page.screenshot({ type: 'jpeg', quality: 93 }); prevSig = sig; prevBuf = buf; }
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
   if (i % 250 === 0) process.stderr.write(`frame ${i}/${n}  ${((i + 1) / ((Date.now() - t0) / 1000)).toFixed(1)} fps\n`);
 }
 ff.stdin.end();
 await new Promise((r) => ff.on('close', r));
+process.stderr.write(`reused ${reused} unchanged frames\n`);
 process.stderr.write(`done: ${n} frames in ${((Date.now() - t0) / 60000).toFixed(1)} min -> ${file}\n`);
 }
 
