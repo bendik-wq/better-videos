@@ -4,5 +4,9 @@
 .beat .h1 { font-size: 84px; max-width: 900px; }
 .beat .h2 { font-size: 62px; max-width: 900px; }
 .beat .note { font-size: 52px; }
-#cap { top: auto !important; }
 #cap .line { font: 650 54px/1.2 "InterV" !important; color: rgba(255,255,255,.6) !important; }
+/* the vertical stack doesn't load stage-clean.css, so the line-art basics live here too */
+.beat svg.ln { overflow: visible; display: block; }
+.beat svg.ln path, .beat svg.ln line { fill: none; stroke: #fff; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+.beat svg.ln .g { stroke: #fdd050; }
