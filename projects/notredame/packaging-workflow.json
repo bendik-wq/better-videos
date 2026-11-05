@@ -1,0 +1,761 @@
+{
+ "decision": {
+  "winner": "Notre-Dame fire, 15 April 2019: \"Two half-hours\". About 30 minutes passed between the first alarm and the brigade call, because the alarm's zone included the adjoining sacristy attic. Hours in, after the spire fell, a second 15–30 minute clock ran on the burning bell frame in the north tower. All critic fixes are applied. Written to /home/user/better-videos/projects/ep10/packaging.md.",
+  "title": "Notre-Dame Was 30 Minutes From Collapse",
+  "ab_title": "Notre-Dame Came Down to 8 Bells and 30 Minutes (test C: \"Notre-Dame's Alarm Worked. They Went to the Wrong Attic\")",
+  "thumbs": [
+   "LEAD 'IF THEY FALL': a folded-card Notre-Dame twin-tower façade fills the right 60%, with an orange paper glow and a gap where the spire stood. The north tower is opened like a paper toy to show the wooden bell frame, its beam charred, and one RED bell (the only red) slipping off its pin. The south tower leans for the domino stake. Kraft ground inside a 14 px teal-shade border; switch to full teal-shade if check.py measures ΔL below 0.25.",
+   "'WRONG ATTIC': a punched-card alarm ticket printed ATTIC NAVE SACRISTY with SACRISTY circled in red. A pen line runs from it into the wrong card attic, the empty one with an 'OK' tick, while the other attic sprouts brass flames. Never pair it with the wrong-attic title.",
+   "'+30 MIN': two counter wheels (18:18 with a FEU flap) joined by a stretched paper mainspring carrying a '+30' tag, above a small card cathedral with a bent spire. This replaces 'NOBODY CALLED', which is false because the guard did phone his superior."
+  ],
+  "why": "Ranked by EXPECTED VIEWS × FULL-WATCH RETENTION, Notre-Dame wins. It is the biggest household image in the set, demand for this exact door is proven (Spanish architect video 5.33M, Le Monde 614K), and the English animated lane is empty (best English explainer 370K; a 2026-11-05 yt-dlp check found only news clips under 12K). D-Day's weather door has never passed about 250K, and three of its G1 problems are open. Polio has weak name pull, its iron-lung search now collides with the 2026 Markiplier film, and its hero number rests on a single report. Every Notre-Dame fatal flag is fixable by wording: the title changes from 'Had 30 Minutes Left' to 'Was 30 Minutes From Collapse', paid by a mandatory 0:25 Nuñez quote card that shows the 15–30 min range; 'hours later' becomes 'after the spire fell'; the danger is the burning frame, not the bells; the thumbnail now reads as Notre-Dame; 'NOBODY CALLED' is killed. The paperwork peaks were demoted and replaced with physical ones, giving 11 PHYSICAL PEAKS: (1) the 18:43 alarm, when the guard climbs ~300 steps and finds the oak 'forest' already burning; (2) the first crews driven back by heat and molten lead; (3) water: hydrant pressure too low, lines pumped from the Seine; (4) the 96 m spire falls through the vault at ~19:50 on live TV; (5) the other side: why not water-bomb it from the air? The Sécurité civile refused because the drop could collapse it; (6) a NEW CLOCK: fire reaches the north-tower bell frame, eight bells of 780 kg–4 t set up a domino chain to the south tower, and Gallet gives up the roof saying '20 min/half an hour'; (7) about 20 firefighters climb back into the burning tower at bell height; (8) the Colossus robot goes into the nave where people can't stand; (9) 'She is saved' at ~21:45; (10) the stone vault holds and catches the burning roof; (11) the days after: the gable and vault are shored up, the rooster is found in the rubble, the Crown of Thorns was already out, no deaths. Coda: the cause is still undetermined (re-checked Nov 2026, no one charged), and the bells were rehung in Sept 2024 and rang for the reopening on 7 Dec 2024. A 30-minute clock resets at the midpoint, which holds retention where explainers usually sag. The animation fit is ideal: a folded-card cathedral, a matchstick roof frame, a brass bell-frame hero, counter wheels and the mainspring.",
+  "runners_up": [
+   "D-Day 1944 weather forecast (critic 71). Repackage as 'D-Day's Backup Date Had the Worst Weather in 20 Years' with the 'ONE GAP' drowned-flap thumbnail. Fixes: replace the hook proof with RMetS 'first alerted the Allies'; drop the blank-Atlantic/BLIND SPOT claim (Persson 2020); add the University of Reading 2026 AI re-forecast peg; never say Germany 'sent its generals home'.",
+   "Copenhagen 1952 polio / first ICU (critic 72). Repackage as 'How a Rubber Bag Beat the Iron Lung' with the matchup thumbnail and '70 AT ONCE'. Fixes: hook slot 3 (the hospital WAS short of machines); keep 165,000 h off the thumbnail until confirmed; add physical crises after 8:15; make the thumbnail read as medicine, not the Markiplier horror film.",
+   "Reserve: Pearl Harbor radar and the late warnings (topic 82). Hold the Gunpowder Plot for 5 Nov 2027."
+  ],
+  "must_verify": [
+   "The exact wording and attribution of the Nuñez quote ('15 to 30 minutes' from collapse or complete destruction). This is the title's footing.",
+   "The panel wording 'ATTIC NAVE SACRISTY' and the code ZDA-110-3-15-1, against the NYT original or the operator/brigade report. Until then, say 'named the zone'.",
+   "Time conflicts: first alarm 18:18 vs 18:20; brigade call 18:48 (NYT) vs 18:51 (AFP); first crews before 19:00 vs 19:05. Narrate 'about half an hour' and never '33 minutes'.",
+   "The ~20 firefighters' route (south-tower stairs into the north tower) and whether to name an officer. Use BSPP or the NYT original only.",
+   "Water supply: low hydrant pressure and pumping from the Seine (BSPP / CTIF).",
+   "The wording and date of the Sécurité civile's air-drop refusal, which answered Trump's 15 Apr tweet.",
+   "The Colossus robot's timing and role inside the nave (Shark Robotics / BSPP).",
+   "Post-fire shoring of the north transept gable and the vault, and their dates (Établissement public / Villeneuve).",
+   "An engineering or official source for 'the vault caught most of the roof'; otherwise soften the line.",
+   "The lead tonnage (210 t vs 400–460 t), so say 'hundreds of tonnes'; '1,300 oaks' as 'about'; a diocese or ministry source for the rooster relics being recovered.",
+   "Gallet's quote, '20 minutes' (NYT) vs 'half an hour' (AFP): show both versions.",
+   "The thumbnail edge must measure ΔL ≥ 0.25 in both feeds with projects/paper-lab/check.py (kraft + teal border, or fall back to full teal-shade)."
+  ]
+ },
+ "ranking": [
+  {
+   "name": "Notre-Dame fire, 15 April 2019",
+   "score": 88,
+   "why": "Strongest household image of the set: billions watched the spire fall live. The door is narrow and shown by documents: the alarm read FEU, the guard went to the sacristy attic, and the brigade was called ~30 min late. Confirmed via Britannica (from NYT) and Wikipedia; alarm time differs between 18:18 and 18:20, so quote one source. It has 11 physical peaks with a second clock: the north-tower bell frame, the domino chain of bells, tower and second tower, and the officials' '15–30 minutes' window (verify the attribution; it may be Nuñez, not Gallet). The payoff is the vault catching the debris; the sting is the bells returning in 2024. Animation fit is ideal: a folded-card cathedral, a matchstick 'forest', a bell-frame hero. Saturation spot-check: English explainers top out around 370K (Engineering The Impossible) and the only animation is a countryball video at 890K. One flag: the Spanish architect video '¿Por qué no se cayó Notre-Dame?' has 5.3M on the same door, which proves demand, so our version must lead with the wrong attic plus the bell clock. Keep the cause undetermined. On the Bencivenga equation, proof is the exact times, the zone label and the bell frame on screen."
+  },
+  {
+   "name": "D-Day, 6 June 1944: the weather forecast",
+   "score": 86,
+   "why": "Biggest name of all, through a door almost nobody knows. Sweeney's 3 June reading, the 24-hour postponement and Stagg are confirmed (RMetS, Boston Globe/AP, Stars and Stripes), though some sources say her data was one input among several, so frame it with care. It has the best other-side reversal of the set: Germany's forecast, made without Atlantic stations, says no invasion is possible, so Rommel goes home for a birthday. The sting is that the next window walks into the 19–22 June storm that wrecked Mulberry A. That is 10 peaks with a real clock: the tide, moon and weather lock. Animation fit is superb: a three-dial combination lock, a brass barometer hero, and Germany's machine missing its Atlantic gear. Saturation check: the weather door tops out at The Operations Room 177K; the big D-Day videos (Extra History 8M, Simple History 4.45M) don't use it. Titles like 'Germany's Forecast Said No Invasion' put proof in the title. Still to verify: DD tank losses and the Mulberry damage."
+  },
+  {
+   "name": "Pearl Harbor, 7 Dec 1941: the warnings that arrived late",
+   "score": 82,
+   "why": "'Infamy'-level name, with the cleanest clock spine of the set: periscope at 3:42, USS Ward at 6:45, the 7:02 blip, a telegram delivered by motorcycle, and the embassy's note typed too slowly (the other side). It has 11 peaks and an excellent radar-scope hero. Saturation check: the radar door is empty (max 3.4K) while general Pearl Harbor videos reach 10M, so demand is proven and the door is open. Ranked below the top two because it is the same WWII lane as D-Day, timings vary between sources, and it attracts 'FDR knew' conspiracy comments. A strong reserve if D-Day falls."
+  },
+  {
+   "name": "Copenhagen 1952: the polio summer that invented intensive care",
+   "score": 78,
+   "why": "Body/health is the study's best category (1.18×). It has 11 peaks, a dual counter (165,000 hours squeezed against a falling mortality dial), a misread blood number as the twist, and a rubber-bag hero that animates beautifully as paper bellows. Saturation check: wide open (max 3.6K on the door). Weaker household-name pull than the WWII and Notre-Dame options ('polio' and 'ICU' are known; Ibsen is not). The Lancet 1953 numbers need pulling. Chosen as the third finalist for lane diversity."
+  },
+  {
+   "name": "Gunpowder Plot, 5 Nov 1605: the watch in Fawkes's pocket",
+   "score": 76,
+   "why": "Strong 'why it didn't happen' story: two searches, 36 barrels, and their own powder exploding at Holbeche. Today's anniversary can't be hit with a 12–16 min animation, and global pull is UK-weighted. The tunnel and one-bullet beats are legend and must be flagged. Worth holding for 5 Nov 2027."
+  },
+  {
+   "name": "Japan's M9.9 earthquake alarm that never came (16 Oct 2026)",
+   "score": 74,
+   "why": "Fresh, and the alarm race is a gorgeous mechanism. Core facts are confirmed: 12:40, M9.9 against the real M6.9 near Kamchatka, max intensity 1 in Hakodate, retracted after 8 min, the first-ever cancellation. The JMA's preliminary finding that the magnitude and shaking forecasts used different hypocentres is confirmed. But the root cause is still officially undetermined (no final report as of 5 Nov), so the central 'how it fooled itself' payoff is unproven. Several peaks are constructed, and the news peg decays. It doesn't beat the best historic options: proof is not yet ≥ claim."
+  },
+  {
+   "name": "Pompeii, AD 79: the rescue fleet that sailed into Vesuvius",
+   "score": 74,
+   "why": "Huge name and a single primary source (Letter 6.16). TED-Ed's 3M 'sail' framing sits close, the hero object (Rectina's note) is weak, and the peaks are less physical-mechanical."
+  },
+  {
+   "name": "Vostok 1, 12 April 1961: Gagarin's 108 minutes",
+   "score": 73,
+   "why": "Good spinning-cable mechanism and the record lie. But Yarnhub already did this exact angle (354K) and Russian accounts conflict on several peaks."
+  },
+  {
+   "name": "Kokura, 9 August 1945: the city saved by clouds",
+   "score": 72,
+   "why": "Brilliant door and strong peaks, but tonally hard to animate in paper-and-clockwork. Ad limits are likely, the haze cause is disputed, and The Operations Room's 3.9M video brushes the door."
+  },
+  {
+   "name": "The Eiffel Tower's expiry date (1909) and the antenna that saved it",
+   "score": 72,
+   "why": "Most famous object and an open door with a lovely countdown. But the second half (Marne, Lustig, 1944) is folklore-grade, so the later peaks are weak."
+  },
+  {
+   "name": "Leonid Rogozov, Antarctica 1961: the surgeon who was also the patient",
+   "score": 70,
+   "why": "Pure clock and BMJ primary source, but heavily covered in Shorts and mid-size videos. The mirror beat is thin as a hero, and a single location limits visual variety."
+  },
+  {
+   "name": "The first implanted pacemaker, Stockholm 1958 (Arne Larsson)",
+   "score": 70,
+   "why": "Wide open, and the heart-as-escapement metaphor fits the channel. Low name pull, and the climaxes fade after the second implant."
+  },
+  {
+   "name": "The 1929 Wall Street Crash: the ticker that ran late",
+   "score": 70,
+   "why": "Perfect MAINSPRING mechanism (two clocks), but money titles run at 0.83×, and the lag figures and rate need primary sourcing."
+  },
+  {
+   "name": "Voyager 1 becomes the first human object one light-day from Earth (18 Nov 2026)",
+   "score": 68,
+   "why": "Great clock, but the broad Voyager space is saturated (Vsauce 28M, Primal Space 6.7M on a near-identical angle) and the 18 Nov peg is too close for full animation."
+  },
+  {
+   "name": "Werner Forssmann, 1929: the doctor who threaded a tube into his own heart",
+   "score": 68,
+   "why": "Strong body hook, but the colourful beats rest on his own memoir, the Nazi coda is tonally tricky, and the climaxes cluster in one afternoon."
+  },
+  {
+   "name": "Lake Nyos 1986 → Lake Kivu: the lake that breathed out, and the bigger one being defused",
+   "score": 62,
+   "why": "Bizarre mechanism, but the most saturated of the novel picks (Nick Crowley 3.7M, RealLifeLore Kivu 2.1M)."
+  },
+  {
+   "name": "Hera reaches the asteroid NASA crashed into (DART crime scene, Nov 2026)",
+   "score": 58,
+   "why": "The 73 s → 32 min number is strong, but arrival is unconfirmed and the payoff depends on images that don't exist yet."
+  },
+  {
+   "name": "The world's oldest shipwreck, from the Great Pyramid's age (Kekova, Turkey, 14 Oct 2026)",
+   "score": 55,
+   "why": "Typology-only dating, few natural reversals, and the hero object is static."
+  },
+  {
+   "name": "2026 ED138: Rubin's first dwarf-planet candidate beyond Pluto (27 Oct 2026)",
+   "score": 50,
+   "why": "Already covered by space YouTube (NOVA 2.8M). The size is uncertain, the verdict is pending, and there is little physical drama."
+  },
+  {
+   "name": "First prime edit inside a living person (Prime Medicine, Wilson disease, Oct 2026). WEAK",
+   "score": 35,
+   "why": "No outcome yet, so no climax, and the 'first in body' framing is false."
+  }
+ ],
+ "finalists": [
+  {
+   "pkg": {
+    "name": "Notre-Dame fire, 15 April 2019: \"Two half-hours\" (the 30 minutes lost at the alarm, the 30 minutes left at the north tower)",
+    "promise": "On 15 April 2019 Notre-Dame's alarm read FEU and gave the right zone, but the zone label included the word \"Sacristy\". About 30 minutes went by before the fire brigade was called. Hours later the cathedral came within 15–30 minutes (officials' estimate) of losing both towers, because of eight bells hanging on a burning wooden frame. This is how it was lost, almost lost completely, and saved, told as a chain of paper mechanisms you can watch run.",
+    "titles": [
+     {
+      "t": "Notre-Dame Had 30 Minutes Left",
+      "score": 9
+     },
+     {
+      "t": "Notre-Dame Came Down to 8 Bells and 30 Minutes",
+      "score": 9.5
+     },
+     {
+      "t": "The Spire Fell. The Bells Were Worse.",
+      "score": 8.5
+     },
+     {
+      "t": "Notre-Dame's Fire Alarm Had Two Attics in It",
+      "score": 8.5
+     },
+     {
+      "t": "Notre-Dame's Alarm Worked. They Went to the Wrong Attic",
+      "score": 8
+     },
+     {
+      "t": "Notre-Dame Nearly Fell Because of Its Bells",
+      "score": 8
+     },
+     {
+      "t": "The 8 Bells That Almost Brought Down Notre-Dame",
+      "score": 8
+     },
+     {
+      "t": "Notre-Dame's North Tower Had 30 Minutes",
+      "score": 8
+     },
+     {
+      "t": "The Alarm Sent Them to the Wrong Attic",
+      "score": 7.5
+     },
+     {
+      "t": "Notre-Dame's Real Danger Wasn't the Roof",
+      "score": 7.5
+     },
+     {
+      "t": "The Night Notre-Dame Almost Lost Both Towers",
+      "score": 7.5
+     },
+     {
+      "t": "The Fire Alarm That Pointed to the Wrong Attic",
+      "score": 7.5
+     },
+     {
+      "t": "Why Notre-Dame Didn't Fall",
+      "score": 7
+     },
+     {
+      "t": "The 30 Minutes That Saved Notre-Dame",
+      "score": 7
+     },
+     {
+      "t": "The Tower That Almost Took Notre-Dame Down",
+      "score": 7
+     },
+     {
+      "t": "What Saved Notre-Dame After the Spire Fell",
+      "score": 7
+     },
+     {
+      "t": "How Close Notre-Dame Came to Falling",
+      "score": 6.5
+     },
+     {
+      "t": "Notre-Dame Lost Its Roof. It Nearly Lost Everything",
+      "score": 6.5
+     },
+     {
+      "t": "The Word on Notre-Dame's Alarm Screen",
+      "score": 6
+     },
+     {
+      "t": "30 Minutes Lost, 30 Minutes Left: Notre-Dame",
+      "score": 6
+     },
+     {
+      "t": "Notre-Dame Was Saved by 20 Firefighters in a Tower",
+      "score": 5.5
+     },
+     {
+      "t": "Notre-Dame: The Alarm Worked. That Was the Problem",
+      "score": 5
+     },
+     {
+      "t": "Notre-Dame Burned 30 Minutes Before Anyone Called",
+      "score": 4
+     },
+     {
+      "t": "The Wrong Attic That Cost Notre-Dame Its Roof",
+      "score": 3
+     },
+     {
+      "t": "Notre-Dame's Alarm Said FEU. Nobody Came for 30 Min",
+      "score": 2
+     }
+    ],
+    "thumbs": [
+     {
+      "concept": "A — THE BELL (lead). Kraft card ground #dcd7c8 inside a 14 px teal-shade #1d6662 border. The border is what makes the edge pass the feed test in both modes: kraft alone is only about ΔL 0.16 in light mode, and an ink border melts into dark mode. Right 58%: a wooden bell frame drawn as a paper toy, a brass/kraft lattice standing on the top of a folded-card north-tower silhouette. Its lower beam is charred black and cracked at a notch. One RED bell has slipped off its pin and hangs tilted, mid-fall. Paper-cut brass flames lick the beam. A small card façade of the second (south) tower sits behind it, leaning, for the domino stake. The bell is the only red and the brightest chroma cluster, with a dashed ring for shape-coding. Words in Inter 900, ink, in the left 40% with a ≥4% gap. No cutaway of the real building: the frame is a separate toy object, not a sectioned tower. Coil badge top-left.",
+      "score": 9,
+      "text": "IF THEY FALL"
+     },
+     {
+      "concept": "B — THE ALARM CARD. Same kraft card in a teal-shade border. Hero: one large paper alarm ticket, like a punched card, angled on the right. Its printed line reads 'ATTIC NAVE SACRISTY' in Plex Mono, and the word SACRISTY is circled in RED pen with a marker loop. Two small card-model attics sit beneath it like slots on a sorting board: a dark empty one on the left (sacristy, with a tiny ink 'OK' tick) and a right one already sprouting brass paper flames. A thin ink pen line runs from the card into the wrong slot. Readable at 168 px as 'card → wrong box → fire'. Pairs with title 4 or 5; the words must never repeat the title.",
+      "score": 8.5,
+      "text": "WRONG ATTIC"
+     },
+     {
+      "concept": "C — THE TWO CLOCKS. Kraft card in a teal-shade border. Two big counter wheels side by side like a desk tally clock. The left wheel shows 18:18 in ink with a small 'FEU' flap. The right shows the brigade call time in RED, with a paper mainspring stretched and unwound between the two wheels. The spring is the visual of lost time and the channel's signature. Below, a tiny folded-card cathedral silhouette has its roof line replaced by brass paper flames and the spire bent. Our own counter wheels are allowed; there are no two-panel timestamps and no faces. Use 18:51 or 18:48 only after resolving the source conflict, or show the delta as '+30' on the spring tag. Pairs with 'Notre-Dame Had 30 Minutes Left' only if the text stays off '30'.",
+      "score": 7.5,
+      "text": "NOBODY CALLED"
+     }
+    ],
+    "lead_pair": "TITLE: \"Notre-Dame Had 30 Minutes Left\" (30 chars: famous name plus a verdict clock, the whole title survives any mobile cut; browse title). THUMB: concept A, the red bell slipping off a burning beam on a paper bell frame, text \"IF THEY FALL\". The title gives the clock and the thumbnail gives the mechanism and the stake, so together they ask \"what had 30 minutes, and what falls?\". Both are paid by 0:30 with an on-screen quote card (\"it all came down to 15–30 minutes\", Deputy Interior Minister Laurent Nuñez, 16 Apr 2019) and settled at the 21:45 tower beat. Test & Compare, title-only variable with the same thumb A: A = \"Notre-Dame Had 30 Minutes Left\", B = \"Notre-Dame Came Down to 8 Bells and 30 Minutes\" (highest P+B, two proof cues), C = \"The Spire Fell. The Bells Were Worse.\" Thumbnail ground test (bible H1) runs separately: A on kraft plus a teal border vs A on full teal-shade.",
+    "hook": "SLOT 1 Confirm (0:00–0:05) [card: 15 APR 2019 · 18:18 · PARIS] \"Monday, 6:18 p.m. On a screen inside Notre-Dame, a red light flashes one word: FEU. Fire.\" SLOT 2 Proof object (0:05–0:12) [the panel line redrawn: 'ATTIC NAVE SACRISTY · ZDA-110-3-15-1'; source card: NYT reconstruction, 16 Jul 2019] \"The alarm worked. It even printed the address.\" SLOT 3 Objection (0:12–0:18) \"So why did the fire brigade get the call about half an hour later? Because that address had two attics in it.\" SLOT 4 Twist (0:18–0:25) \"And that's not the strangest part. The roof was already lost. What nearly brought down the rest, hours later, was a set of bells.\" SLOT 5 Contract (0:25–0:32) [quote card: Nuñez, 'it all came down to 15–30 minutes'] \"Officials said it came down to fifteen to thirty minutes. So who found the fire, who climbed into the tower, and why is Notre-Dame still standing?\" (~95 words with the card text, ~78 spoken; numbers to remember: 'half an hour' and '15–30 minutes', which are one ladder. Fallback if the zone string can't be confirmed from the NYT original: 'It even named the zone.' Pending scoring: Bencivenga §3 ~9/10 (A2 B3 C1 D2 E1; F needs a trim to ≤80 spoken words).)",
+    "peaks": [
+     "0:00–0:32 HOOK: FEU on the screen, the address with two attics, the bells, '15–30 minutes'",
+     "1:00 PEAK 1: the machine works. 18:18 the panel flashes FEU and names its zone and detector code. The person at the console is three days into the job, on the second leg of a double shift (NYT). The counter wheel starts ticking.",
+     "2:00 PEAK 2 / REVERSAL: the label 'Attic Nave Sacristy' slides into the wrong slot. A guard goes to the sacristy attic next door, finds nothing, and the alarm reads as all clear. The system was not built to call the brigade by itself.",
+     "3:15 PEAK 3: the 18:43 second alarm (Paris prosecutor). The guard climbs about 300 steps into 'the forest', the 13th-century oak roof frame, and it is already burning. The counter wheel shows ~25 minutes gone.",
+     "4:30 PEAK 4: the brigade is called (18:48 per NYT, 18:51 per AFP/Wikipedia), about 30 minutes after the first signal. First crews arrive ~19:00/19:05 after Paris traffic. The spring tag reads +30.",
+     "5:45 PEAK 5: the attic fight. Crews reach the roof and are driven back. Molten lead drips from a roof holding hundreds of tonnes of it, and hoses from below can't reach the frame. The relief beat turns into a worse one.",
+     "7:00 PEAK 6: ~19:50, the 96 m spire falls through the vault on live TV. At 19:44 Macron's televised speech is shelved and the world assumes the cathedral is gone. (Sponsor return line here: 'The spire was not the thing that almost brought it down.')",
+     "8:15 PEAK 7 / NEW CLOCK: fire reaches the wooden bell frame of the north tower. Eight bells, 780 kg to 4 t each, form a domino chain: beam, then bells, then north tower, then south tower (with the 13 t Emmanuel). Gallet gives up the roof (~20:30) and tells officials he'll know within 20 minutes / half an hour. A new spring winds down.",
+     "9:30 PEAK 8: about 20 firefighters go back inside, up the south tower's stairs and across into the burning north tower, to the height of the bells, and fight it at close range. The counter freezes in a held silence (guess beat).",
+     "10:45 PEAK 9: by ~21:45 the north tower flames are under control. 'She is saved.' Officials later put the margin at 15–30 minutes.",
+     "11:30 PEAK 10 / REVERSAL: the stone vault, though holed where the spire and parts of the frame fell, caught most of the burning roof. The 'sieve' holds the embers above the nave.",
+     "12:30 PEAK 11: the next morning, the dented copper rooster from the spire is found in the rubble. Its three relics are recovered. The Crown of Thorns had been carried out by a human chain with the brigade chaplain. No deaths.",
+     "13:30 PEAK 12 / CODA: the cause is still undetermined (electrical fault or a cigarette, never proved). The eight bells come down in 2023, are restored, blessed and rehung in the north tower in Sept 2024, and the cathedral reopens on 7 Dec 2024. End line: the bells that nearly brought it down are the ones that rang it open."
+    ],
+    "proof_beats": [
+     "0:05 Redrawn panel line 'ATTIC NAVE SACRISTY · ZDA-110-3-15-1' with a 'FEU' flap. Source card: NYT, 'Notre-Dame Came Far Closer to Collapsing Than People Knew', 16 Jul 2019",
+     "0:25 Quote card: Laurent Nuñez, deputy interior minister, 16 Apr 2019: 'it all came down to 15–30 minutes'",
+     "1:00 Counter wheel 18:18, then the second-alarm flap 18:43 with a Paris prosecutor Rémy Heitz quote card (alarms at 18:20 and 18:43). On-screen candor: 'sources give 18:18 or 18:20'",
+     "4:30 Spring tag ledger: first signal 18:18 → brigade call 18:48 (NYT) / 18:51 (AFP), shown as 'about 30 minutes', with both sources named",
+     "7:00 Scale shot: the 96 m spire beside a stack of tally blocks; the shelved-speech card at 19:44 (AFP)",
+     "8:15 Bell-weight tally: eight paper bells labelled 780 kg … 4 t, and Emmanuel at 13 t in the south tower (AFP). Domino diagram in four steps",
+     "8:30 Quote card: Gallet via Paris 4th-arrondissement mayor Ariel Weil, 'In 20 minutes, I'll know if we've lost it' (NYT) / 'half an hour' (AFP), both shown honestly",
+     "9:30 Count card: about 20 firefighters into the north tower, out of ~600 mobilised overnight (AFP; 400+ engaged per Wikipedia)",
+     "12:30 The rooster: a redrawn photo-reference of the dented copper rooster (Fédération Française du Bâtiment, 16 Apr 2019) and a relic tag of three items (Friends of Notre-Dame)",
+     "13:30 Candor card: 'Cause: undetermined. Accident favoured. Electrical fault or cigarette: never proved' (Paris prosecutor, 26 Jun 2019; still open in 2024 per AFP). Date flaps for bells blessed Sept 2024 and reopening 7 Dec 2024"
+    ],
+    "verified_facts": [
+     "First alarm signal 18:18 on 15 Apr 2019. The panel showed 'Feu' and the zone 'Attic Nave Sacristy', code ZDA-110-3-15-1. The employee was three days into the job, on a double shift. Sources: NYT reconstruction via NZ Herald (nzherald.co.nz/world/notre-dame-came-far-closer-to-collapsing-than-anybody-knew/GZ2UTR2QICGDZ2YFHI2VHC3ILQ); AFP via artdaily.com/news/117501 (18:18 guard sees warning)",
+     "A guard was sent to the wrong place, the attic of the adjoining sacristy, and found nothing. Sources: NYT/NZ Herald; Britannica (britannica.com/event/Notre-Dame-fire); Wikipedia, Notre-Dame fire",
+     "The prosecutor gives alarms at 18:20 and 18:43; the second one detected the fire. Source: Paris prosecutor Rémy Heitz, quoted by Yahoo/Telegraph ('First fire alarm sounded 23 minutes before second alarm'; armenpress.am/eng/news/971579)",
+     "The brigade was called 18:48 (NYT: 'about 30 minutes after the first signal') or 18:51 (AFP, Wikipedia); the alarm system did not notify the brigade automatically. First crews arrived a few minutes before 19:00 (NYT) or at 19:05 (AFP). Sources: NYT/NZ Herald; AFP/artdaily; Wikipedia",
+     "The spire collapsed at ~19:50 and was about 96 m tall. Sources: Wikipedia (19:50); AFP/artdaily (96 m); NYT (blast heard ~7:50 p.m.)",
+     "Macron's 20:00 speech was shelved at 19:44. Source: AFP/artdaily",
+     "Gallet abandoned the roof frame to save the towers, starting with the burning north one. He told officials (via Ariel Weil) 'In 20 minutes, I'll know if we've lost it' (NYT), or 'half an hour' (AFP). Sources: NYT/NZ Herald; AFP/artdaily",
+     "About 20 firefighters went back inside toward the north tower, and ~600 firefighters were mobilised overnight. Sources: AFP/artdaily; OSV/Catholic Review (600)",
+     "The north tower holds eight bells of 780 kg to 4 t each; the south tower holds Emmanuel at ~13 t. The chain-collapse risk (bells fall, north tower falls, south tower follows) was reported in the NYT and the French press. Sources: AFP/artdaily; NYT/NZ Herald; Wikipedia (eight bells in the north tower's wooden frame)",
+     "The north tower fire was under control by ~21:45. Sources: NYT ('by 9:45 p.m.'); Wikipedia (21:45). The fire was declared fully under control shortly before 03:30 (AFP)",
+     "Margin: Deputy Interior Minister Laurent Nuñez said 'it all came down to 15–30 minutes'; the fire chief said it had been within 30 minutes of collapse. Sources: Guardian/Church Times ('Notre-Dame was 30 minutes away from disaster', churchtimes.co.uk 18 Apr 2019); Newser; Yahoo",
+     "No deaths and 3 injured (one firefighter, two police). Sources: Wikipedia; Britannica",
+     "The Crown of Thorns and other relics survived. Brigade chaplain Fr Jean-Marc Fournier helped take the Crown to safety and retrieved the Blessed Sacrament; ~100 government workers formed a human chain for objects. Sources: OSV/Catholic Review (catholicreview.org); Wikipedia",
+     "The copper rooster from the spire was found damaged but intact in the rubble on 16 Apr. It holds three relics (a fragment of the Crown of Thorns, St Denis, St Geneviève), reported recovered. Sources: Catholic News Agency/Catholic World Report 17 Apr 2019; Friends of Notre-Dame de Paris",
+     "Cause undetermined. In June 2019 the prosecutor found no evidence of a criminal act; the leading hypotheses are an electrical fault or a cigarette; the investigation was still open with no one charged as of Nov 2024 (AFP). No 2026 update found. Sources: Wikipedia; tendanceouest/AFP; Blick",
+     "The eight north-tower bells were removed in July 2023 to restore the wooden frame, then blessed and reinstalled in September 2024. The cathedral reopened on 7 Dec 2024. Sources: The Local / AFP 12 Sep 2024; Connexion France; Wikipedia",
+     "Roof frame known as 'la forêt': 13th-century oak, widely cited as about 1,300 oaks. Sources: The Art Newspaper (2 Dec 2024); Fortune 16 Apr 2019 — tier 2, see risks"
+    ],
+    "open_risks": [
+     "Time conflicts: alarm 18:18 vs 18:20; brigade call 18:48 (NYT) vs 18:51 (AFP/Wikipedia); first arrival before 19:00 vs 19:05. Never say '33 minutes'. Say 'about half an hour' and show both sources. The thumbnail must not print 18:51 until this is settled.",
+     "'30 minutes left' is an officials' estimate, not a measurement: Nuñez said '15–30 min', the fire chief 'within 30 min', and Gallet '20 min' (NYT) or 'half an hour' (AFP, via Weil). The title is keepable only if the 0:25 quote card names Nuñez and gives the range. Don't put the words in Gallet's mouth.",
+     "Privacy and blame (G6): don't name the console operator (a contractor employee) or the guard. Frame the fault as system design: an ambiguous zone label, no automatic brigade call, a new employee on a double shift, as the NYT did.",
+     "Lemaire's route (south tower stairs into the north tower) comes from a search snippet, probably the NYT. Confirm it against the NYT original or a BSPP account before naming him.",
+     "Vault 'sieve' beat: the vault was holed at the crossing and in parts of the nave and transept. 'Caught most of the burning roof' needs an engineering or official source (e.g. the chief architect, or the Établissement public). Otherwise soften to 'the stone vault held almost everywhere'.",
+     "Lead tonnage conflicts: 210 t roof (AFP) vs 400–460 t (Wikipedia, likely including the spire). Say 'hundreds of tonnes' or pick one with its source. 1,300 oaks is tier 2 only, so mark it 'about' or find a DRAC/Établissement public source. Some outlets call the original frame beech, which is wrong.",
+     "Rooster relics: early reports were unsure. 'Recovered' rests on Friends of Notre-Dame (tier 2/3). Find a diocese or Culture Ministry statement.",
+     "'Feu' and the zone string come via the NYT republished by NZ Herald. Fetch the NYT original or the operator's report to confirm the exact panel wording before redrawing it.",
+     "Saturation: the Spanish video '¿Por qué no se cayó Notre-Dame? Arquitecta lo EXPLICA' (Ter, 5.33M) proves demand but collides with 'Why Notre-Dame Didn't Fall' in search, so keep that title out of the lead. The Pathé film 'Notre-Dame brûle' (Annaud, 2022) dramatises the wrong attic and the tower climb; our door is the mechanism and numbers, so avoid its scenes and imagery. The NYT 2019 multimedia piece covers the same door in text. The countryball animation has 890K views. No English animated explainer over 1M was found.",
+     "Style-bible conflict: the brief asks for a 'light paper ground', but STYLE-BIBLE §15.3 bans paper or white grounds for a lead thumbnail and requires edge ΔL ≥ 0.25 in both feeds; kraft alone is only ≈0.16. The proposed fix, kraft card inside a 14 px teal-shade border, must be measured with projects/paper-lab/check.py before upload. Also keep the bell frame a separate paper toy, never a sectioned view of the real tower (Jared Owen ban, README §6.4).",
+     "Thumb C text 'NOBODY CALLED' is G1-borderline: the guard phoned his superior, an 18-minute call per AFP. Swap it for '+30 MIN' on the spring tag, or for 'ALL CLEAR'.",
+     "The Notre-Dame name collides with Notre Dame football/university results (seen in the yt-dlp search). Keep 'fire', 'spire' or 'bells' words in the description's line 1 for search."
+    ]
+   },
+   "crit": {
+    "score": 77,
+    "fatal": [
+     "No title-level fact is false, but the hook overstates one point. The script says 'The roof was already lost. What nearly brought down the rest, HOURS later, was a set of bells.' The spire fell at about 19:50 and the bell-frame fire was the live threat from roughly 19:50 to 21:45, so it ran alongside the roof's loss, not hours after it. It was only 'hours later' measured from the 18:18 alarm. Say 'after the spire fell'. Also, the bells were not what caused the danger: the burning oak frame under them was. Write it as 'eight bells hanging on a burning frame', never 'the bells nearly brought it down', or a commenter will fact-check it.",
+     "The '30 minutes' clock is an officials' estimate, and the sources disagree: Nuñez said 15–30 min (Guardian/BBC), the NYT has Gallet saying 'in 20 minutes', AFP has 'half an hour'. The lead title survives only if the on-screen card at 0:25 names Nuñez and shows the range. The 21:45 payoff must not present 30 minutes as a measured count. If the card is cut, the title is fatal.",
+     "The peaks list includes paperwork as climaxes, so the count is padded. P1 (panel works), P4 (phone call), P11 (relics, rooster), P12 (cause undetermined, bells rehung) are events or admin, not physical reversals. P3 and P5 are half-physical. That leaves about 7 real physical peaks: guard finds the forest burning, the lead/attic fight driven back, the spire falling through the vault, fire reaching the bell frame, 20 firefighters going into the tower, north tower saved at 21:45, the vault holding. The brief's 8+ is not met cleanly yet. Fix below.",
+     "At 168 px, thumbnail A could be any church or bell. A paper bell frame on a generic tower silhouette does not say 'Notre-Dame', and the famous name is half the click. The twin-tower façade, with an orange glow where the spire used to be, has to be the readable silhouette."
+    ],
+    "fixes": [
+     "Add real physical reversals to reach 9 or more. (a) Water: hydrant pressure is not enough and lines have to be pumped from the Seine. The Paris Fire Brigade's own videos, reported by CTIF, mention water shortages and traffic. (b) The other-side beat: 'why not drop water from the air?' (Trump's tweet, 15 Apr). The brigade said tonnes of water dropped from aircraft could have collapsed the vault and the towers, and that refusal is itself a climax. (c) The Colossus robot sent into the nave where humans could not go. (d) The days after: the north transept gable and the vault were still at risk of collapsing and had to be braced. Then demote P1, P4, P11 and P12 to connective beats.",
+     "Lead title: change 'Notre-Dame Had 30 Minutes Left' to 'Notre-Dame Was 30 Minutes From Collapse'. The original fails the 'yeah, sure… left before what?' test. The new one names the stake and is backed by the Guardian/Nuñez line '15 to 30 minutes away from complete destruction'. Keep 'Notre-Dame Came Down to 8 Bells and 30 Minutes' as test B. Drop 'The Spire Fell. The Bells Were Worse.' (it suggests the bells did damage) and use 'Notre-Dame's Alarm Worked. They Went to the Wrong Attic' as test C, the mechanism door.",
+     "Thumbnail A: make the folded-card Notre-Dame twin-tower façade the main silhouette, with paper flames and a gap where the spire stood. Put the cut-open bell frame in the north tower, with the red bell slipping off its burning beam. Keep 'IF THEY FALL' as the text, or test '8 BELLS' if the A/B test allows two thumbnails. Before upload, measure the kraft-plus-teal-border edge with projects/paper-lab/check.py; if it fails ΔL 0.25, go to full teal-shade ground.",
+     "Hook: cut the spoken part to 80 words or fewer. Swap 'hours later' for 'after the spire fell'. Keep 'two attics' as the key objection line. Confirm 'ATTIC NAVE SACRISTY' against the NYT original or the Notre-Dame spokesman quote before redrawing the panel. It is corroborated through Britannica and the syndicated NYT copy, but the zone code ZDA-110-3-15-1 is single-source, so show it as 'zone code' unless it is confirmed.",
+     "Saturation: no English animated explainer over 1M views exists, so the lane is open. But the Le Monde French video 'Comment l'effondrement total de Notre-Dame a été évité' (614K) covers the same door, and 'Why Notre-Dame Needed to Burn' (Engineering The Impossible, 370K) owns the 'why' framing. Lead with the clock and the bells, not the architecture. Avoid 'Why Notre-Dame Didn't Fall': that search returns college football.",
+     "Thumbnail C: 'NOBODY CALLED' is false, because the guard did phone his superior. Change it to '+30 MIN' or 'ALL CLEAR'. Do not pair thumbnail B's 'WRONG ATTIC' with any title that says 'wrong attic'."
+    ],
+    "best_title": "Notre-Dame Was 30 Minutes From Collapse",
+    "best_thumb": "The folded-card Notre-Dame twin-tower façade fills the right 60% on a teal-shade ground, with an orange paper glow where the spire is missing. The north tower is cut open like a paper toy to show its wooden bell frame. The lower beam is charred and cracked, and one RED bell is slipping off its pin mid-fall; it is the only red on the card. The south tower leans slightly, to set up the domino stake. Text in Inter 900 on the left 40%: 'IF THEY FALL'."
+   }
+  },
+  {
+   "pkg": {
+    "name": "D-Day, 6 June 1944: the forecast between two storms (EP10, Paper & Spring)",
+    "promise": "D-Day landed in a 24-hour gap between two storms. A barometer in the far west of Ireland caught the first storm, a ship 600 miles out found the gap, and Germany, reading a chart with an empty Atlantic, sent its generals home. The next possible date ran into the worst Channel weather in 20 years.",
+    "titles": [
+     {
+      "t": "D-Day Was Timed by an Irish Barometer",
+      "score": 9
+     },
+     {
+      "t": "The Irish Barometer That Moved D-Day 24 Hours",
+      "score": 8.5
+     },
+     {
+      "t": "D-Day Had 3 Possible Days. A Storm Took One.",
+      "score": 8.5
+     },
+     {
+      "t": "D-Day's Backup Date Was the Worst Storm in 20 Years",
+      "score": 8.5
+     },
+     {
+      "t": "D-Day Waited 24 Hours. The Backup Day Was Worse.",
+      "score": 8
+     },
+     {
+      "t": "D-Day Was Timed Between Two Storms",
+      "score": 8
+     },
+     {
+      "t": "A 21-Year-Old's Barometer Reading Moved D-Day",
+      "score": 8
+     },
+     {
+      "t": "Germany's D-Day Weather Map Had a Hole in It",
+      "score": 7
+     },
+     {
+      "t": "Why D-Day Happened on June 6, Not June 5",
+      "score": 7
+     },
+     {
+      "t": "If D-Day Had Waited, It Hit the Storm",
+      "score": 7
+     },
+     {
+      "t": "One Lighthouse, One Ship, and the Date of D-Day",
+      "score": 7
+     },
+     {
+      "t": "Why Germany Thought June 6 Was Impossible",
+      "score": 7
+     },
+     {
+      "t": "Germany's Forecast Said D-Day Couldn't Come",
+      "score": 6.5
+     },
+     {
+      "t": "Rommel Spent D-Day at His Wife's Birthday",
+      "score": 6
+     },
+     {
+      "t": "Eisenhower Bet D-Day on a Gap in a Storm",
+      "score": 6
+     },
+     {
+      "t": "Germany Lost D-Day's Weather War",
+      "score": 6
+     },
+     {
+      "t": "D-Day's Real Deadline Was a Barometer",
+      "score": 6
+     },
+     {
+      "t": "The Forecast That Moved D-Day by a Day",
+      "score": 6
+     },
+     {
+      "t": "D-Day Was Right for the Wrong Reason",
+      "score": 5
+     },
+     {
+      "t": "D-Day Was Decided by a Weather Forecast",
+      "score": 5
+     },
+     {
+      "t": "The Storm That Almost Cancelled D-Day",
+      "score": 5
+     },
+     {
+      "t": "How a Weather Gap Won D-Day",
+      "score": 5
+     },
+     {
+      "t": "The 24 Hours That Decided D-Day",
+      "score": 3
+     },
+     {
+      "t": "D-Day: The Forecast That Changed Everything",
+      "score": 2
+     },
+     {
+      "t": "The Weather Report That Fooled Germany on D-Day",
+      "score": 0
+     }
+    ],
+    "thumbs": [
+     {
+      "concept": "LEAD, 'The falling needle' (object in the void). A paper-and-brass card barometer fills the right 58% of the frame: a cream card face printed STORM / RAIN / CHANGE / FAIR, a brass bezel, a navy off-register pen line at 6 px, and halftone shade. The one red thing is the needle, swung hard toward STORM, with a dashed red ghost needle showing where it was a moment ago, so the motion reads at 168 px. A thin card strip of the Mayo coastline with a small lighthouse sits under the dial. Ground is teal-shade #1d6662: the bible's §15.3 rule and the only ground with feed edge ΔL of 0.25 or more in both light and dark mode. The cream dial is the 'paper'. Text in the left 40%, paper-coloured Inter 900 / Archivo Narrow 700: '24 HRS'. Coil badge top-left. Plants the question 'what did a barometer do to D-Day?'; the title names the object and the thumbnail gives the stake. Appears at 0:00 (slot 1).",
+      "score": 9,
+      "text": "24 HRS"
+     },
+     {
+      "concept": "'Two storms, one gap' (stair-step triptych). Three paper date flaps stand in a row on a kraft table under one light: 5 JUNE buried under paper rain strokes and a bent card wave, 6 JUNE clear card, and 19 JUNE swallowed by tall teal paper waves with a toppled card pier section (Mulberry) in them. The one red thing is a marker loop around the narrow 6 JUNE flap. Kraft #dcd7c8 ground with a 12 px ink frame (bible hypothesis variant; the paper look the brief asked for) or teal-shade if the feed test fails. Words in the left corner: 'ONE GAP'. Pairs with 'D-Day Was Timed by an Irish Barometer' (why that day?) and 'D-Day Had 3 Possible Days. A Storm Took One.'. Appears at the 1:00 lock and the 12:30 ghost-flap reversal.",
+      "score": 8,
+      "text": "ONE GAP"
+     },
+     {
+      "concept": "'The blind map' (the absence drawn plus the other side). A paper German weather chart pinned on card: dense isobars and station dots over France and Germany, and the Atlantic and British half left as blank card with a red dashed outline where the missing observations should be. In the lower right, a small cut-out card Figure silhouette in a peaked cap walks off the edge of the chart holding a tiny ribboned shoebox: Rommel as a Cameo, not a caricature, at 15–18% of frame height. Night #14233d ground, used only as the B or C variant, with a paper chart inset so it still separates in dark mode. Words: 'NO STORM?' is off-brand; use 'BLIND SPOT'. Pairs with 'D-Day Was Timed by an Irish Barometer' as the other side of the same machine, and with 'Why Germany Thought June 6 Was Impossible'. Appears at the 7:45 and 9:00 peaks.",
+      "score": 7.5,
+      "text": "BLIND SPOT"
+     }
+    ],
+    "lead_pair": "TITLE 'D-Day Was Timed by an Irish Barometer' (37 chars; 30-char stub 'D-Day Was Timed by an Irish Ba…' still carries the famous name, the verdict and the odd object; P 9, B 9: A2 B2 C2 D2 E1) + THUMB 'The falling needle' (paper and brass barometer, red needle on STORM, teal-shade ground, '24 HRS'). Why: famous name first, a verdict, one narrow door (a physical object), and the thumbnail adds the second proof cue (the number) without repeating the title. Test & Compare (titles only, thumbnail fixed): A 'D-Day Was Timed by an Irish Barometer' (object verdict) vs B 'D-Day's Backup Date Was the Worst Storm in 20 Years' (stake and counterfactual) vs C 'D-Day Had 3 Possible Days. A Storm Took One.' (counter spine). Decide on watch-time share. Run H1 (ground: teal vs kraft vs night) as the thumbnail test on ep11 or after the title test ends, never both at once. Description line 1 must carry the search nouns 'D-Day weather forecast', 'James Stagg' and 'Blacksod'; 'Pressure (2026) true story' goes in line 2 and the tags only, never in the title. End line calls back the thumbnail: the needle climbing back from STORM.",
+    "hook": "SLOT 1, confirm the click (0:00–0:06): [card: 3 JUNE 1944 · 01:00 · BLACKSOD POINT, IRELAND; the paper barometer, red needle dropping] \"One a.m., the third of June, 1944. The far west coast of Ireland. On her twenty-first birthday, a young post-office assistant reads the barometer. It's falling.\" | SLOT 2, proof object (0:06–0:12): [source card: Royal Meteorological Society; Met Office synoptic chart, June 1944, with the Blacksod dot circled in red] \"Her report goes to the Allied forecasters. D-Day is set for the fifth.\" | SLOT 3, objection (0:12–0:18): [facsimile: Met Office briefing of 21 June 1944, Eisenhower's handwriting] \"A birthday reading moving D-Day sounds like a legend. Here's Eisenhower's own note: 'thank the Gods of war we went when we did.'\" | SLOT 4, twist (0:18–0:25): [mirror machine: a German chart with the empty Atlantic; a Cameo car driving east] \"But Germany read the same sky and decided nothing could cross. Rommel drove home.\" | SLOT 5, contract (0:25–0:32): [date flap 5 → 6; a ghost flap with waves] \"So how did one falling needle move the biggest invasion in history by twenty-four hours? And what was waiting on the backup date?\" (≈80 words; two numbers to remember (24 hours, 21st birthday); dates don't count. Checklist §3 self-score 9/10: A2 B3 C1 D2 E1 F0→1 once trimmed to ≤80 words. Fallback if 01:00 isn't confirmed: \"Before dawn, the third of June…\")",
+    "peaks": [
+     "0:00 PEAK 1, the needle falls: a birthday barometer reading at Blacksod, 3 June 1944, catches the storm",
+     "1:00 PEAK 2, the lock: three paper dials (moon 99% lit; low water 05:23 just before 05:57 sunrise; weather). 'Only on three days in each lunar month' do they line up: 5, 6 and 7 June. The notches click on 5 June, then the weather dial jams",
+     "2:30 PEAK 3, the reading travels: Blacksod's numbers go down the wire to England, and Stagg's team, already split between British and American forecasters, gets its warning",
+     "3:45 PEAK 4, reversal: 4:15 a.m., 4 June, Southwick House. Stagg says postpone and Eisenhower delays 24 hours. The machine runs backwards and convoys already at sea turn round",
+     "5:00 PEAK 5, the gap: one ship about 600 miles west of Ireland reports rising pressure. Stagg sees a break coming on 6 June",
+     "6:15 PEAK 6, the bet: rain beats on the windows at the evening meeting on 4 June. At the second meeting, around 04:15–04:30 on 5 June, 'OK, let's go' (the exact words vary; say so). Convoys sail in force-5 winds for a 17-hour crossing",
+     "7:45 PEAK 7, the mirror machine: Germany's chart is drawn from far fewer observations, with the Atlantic blank, while the Allies read German weather through Enigma. The German forecast holds that conditions stay unsuitable",
+     "9:00 PEAK 8, the empty chairs: Rommel drives home to Herrlingen with Paris shoes for Lucie's 50th birthday on 6 June, and Seventh Army commanders head for a map exercise at Rennes set for 10:00 on 6 June. Two birthdays bookend the story (Maureen's 21st on 3 June, Lucie's 50th on 6 June)",
+     "10:15 PEAK 9, the gap was barely enough: cloud scatters the paratroopers. Off Omaha, 29 DD tanks are launched and 27 sink. 'Marginal, but sufficient' had a price",
+     "11:30 PEAK 10, the twist on the heroes: a 2020 study in the Bulletin of the American Meteorological Society (Persson) finds the storm didn't do what the forecasters thought. They were right for the wrong reason",
+     "12:30 PEAK 11, the ghost flap: the next suitable tides (around 19 June) bring the worst Channel weather in 20 years. By 22 June, Mulberry A off Omaha is wrecked beyond repair",
+     "13:30 CODA: Eisenhower's note on the 21 June briefing, 'thank the Gods of war we went when we did'. Maureen Sweeney is honoured by the US House of Representatives at 98 and dies at 100 in December 2023. Last image: the red needle climbing back toward FAIR"
+    ],
+    "proof_beats": [
+     "0:06 The Met Office June 1944 synoptic chart, redrawn as paper, with the Blacksod station dot looped in red. Source card: Met Office National Meteorological Archive + RMetS",
+     "0:12 and 13:30 A facsimile of Eisenhower's handwritten 'Gods of War' note on the 21 June 1944 weather briefing (Met Office Stagg papers). Credit the original and show the scan as a card inset",
+     "1:00 The lock dials: moonrise 20:30 on 5 June at 99% lit, low water 05:23, sunrise 05:57, an 18 ft tidal range (Sky & Telescope, from US Naval Observatory-style tables), plus Churchill's 'three days in each lunar month' quote card",
+     "3:45 A timestamp card, 04:15 4 JUNE, SOUTHWICK HOUSE, with the date flap rolling 5 → 6. Source: History.com / IWM",
+     "5:00 RMetS card: one ship about 600 miles west of Ireland reports rising pressure. A gear engages on the Atlantic map",
+     "7:45 A computed comparison: station dots on the Allied chart against the German chart for the same hour (Met Office holds both). Count the dots on screen, so the blank Atlantic isn't an assertion but a tally",
+     "9:00 Cameo card: Rommel's diary or the trip home, with the shoes and the date; plus the Seventh Army war-game order card (Rennes, 06.06, 10:00)",
+     "10:15 Tally blocks: 29 DD tanks launched, 27 drop out of the frame, 2 reach the sand (3 more landed straight from an LCT). Source card: US Army / 741st Tank Battalion records",
+     "11:30 A quote card from Persson (2020) in BAMS, 'right for the wrong reason'. Candor beat: say what the standard story gets wrong",
+     "12:30 Met Office quote card: 'the troops would have met the worst Channel weather for 20 years', plus a paper Mulberry A section folding under waves (19–22 June)",
+     "Description: list every source, with the Met Office archive first"
+    ],
+    "verified_facts": [
+     "Maureen Sweeney (née Flavin), assistant at Blacksod Post Office, Co. Mayo, took the key reading on 3 June 1944, the morning of her 21st birthday, and it showed falling pressure. She died aged 100 in December 2023. Sources: RMetS news (rmets.org/news/21-year-old-post-office-worker-who-helped-d-day-landings); RTÉ 17 Dec 2023; Irish Times ('pressure was dropping rapidly')",
+     "The invasion needed a near-full moon and a low tide near dawn. These coincided on 5, 6 and 7 June, and D-Day was set for 5 June. Sources: RMetS resource 'How a weather forecast made history'; Sky & Telescope 'Astronomy of D-Day' (Churchill: 'Only on three days in each lunar month…'; Eisenhower: 'We wanted a moon for our airborne assaults'); History.com",
+     "On 6 June 1944 (BDST) the moon rose at 20:30 on 5 June at 99% lit, low water was at 05:23, sunrise at 05:57, and the tidal range was about 18 ft. Source: Sky & Telescope",
+     "A ship about 600 miles west of Ireland reported rising pressure on 4 June, and Stagg concluded a break could come on 6 June. The decision to invade came at about 04:30 on 5 June after a second meeting. Convoys crossed in force-5 winds, about 17 hours. Cloud scattered the paratroopers. Source: RMetS resource page; corroborated by History.com and the Met Office",
+     "At 04:15 on 4 June, at Southwick House, Stagg urged a delay and Eisenhower postponed 24 hours. Stagg sided with the British forecasters over the American ones. Sources: History.com (Klein); IWM 'How D-Day was delayed by a weather forecast' (seen in search, page blocked to fetch); Met Office",
+     "The Met Office says Stagg advised that 6 June would be 'marginal, but sufficient'. German charts were 'drawn using much fewer observations'. 'German forces continued to forecast that the weather conditions would remain unsuitable'. Had the invasion waited for the next suitable tides, 'the troops would have met the worst Channel weather for 20 years'. Eisenhower's reply: 'Thanks, and thank the Gods of war we went when we did.' Sources: Met Office 'D-Day weather forecast' history page; Met Office archive 'Stagg's papers' (note annotated on the 21 June 1944 briefing); History.com",
+     "The Luftwaffe's chief meteorologist forecast that rough seas and gales were unlikely to ease until mid-June. Many commanders left for war games, and Rommel went home with Paris shoes for his wife's birthday. Sources: History.com; Literary Review / LRB (shoes bought 3 June, delivered 6 June); Lucie Rommel's 50th birthday on 6 June (several sources)",
+     "The Seventh Army map exercise at Rennes was set for 10:00 on 6 June, and many division commanders were away from their troops on the night of 5/6 June. Sources: USMA 'War in Western Europe' (1952, ibiblio hyperwar); Dollmann biographies",
+     "Off Omaha, 741st Tank Battalion: 29 DD tanks launched, 27 sank, 2 swam ashore and 3 were landed directly from an LCT (32 in all). Sources: 741st Tank Battalion records via Wikipedia; dday-overlord.com; French Ministry of Culture underwater-wreck archaeology site",
+     "The storm began on 19 June, and by 22 June Mulberry A off Omaha was damaged beyond repair, while Mulberry B at Arromanches survived and was used for months. Contemporary press called it the worst June gale in 40 years; the Met Office says the worst Channel weather in 20 years, so use the Met Office figure. Sources: Mulberry harbour histories; Met Office",
+     "Persson (2020, Bulletin of the American Meteorological Society), 'Right for the Wrong Reason? A New Look at the D-Day Forecast', uses transcripts of the forecasters' phone calls and archived German analyses. He finds the storm weakened and slid southeast rather than moving as forecast. Sources: AMS blog/headlines 27 Mar 2020; Météo-France library record",
+     "Peg: 'Pressure' (2026, Focus Features; Andrew Scott as Stagg, Brendan Fraser as Eisenhower) opened in US cinemas in late May 2026, is on digital, and lists an Italian release on 19 Nov 2026. A HistoryExtra 'true story' video sits at about 112K views, which shows search demand. Sources: ComingSoon; Box Office Mojo; cinefilos.it",
+     "Saturation (yt-dlp, 2026-11-05): the top weather-angle videos are The Operations Room 177K, HistoryExtra 112K, BBC Archive 83K, War Stories 38K and History Chap 36K. Maureen Sweeney's best video is Sky News at 28K. The Rommel birthday angle has only tiny channels (all under 12K). No animated explainer covers the weather door. General D-Day animation is crowded (Twin Tales 43M, JuiceGlass 11M, Simple History 4.4M, Yarnhub 3.9M)"
+    ],
+    "open_risks": [
+     "Time of Sweeney's reading: RMetS says 01:00 on 3 June; IrishCentral says 1 p.m. The hook's 'One a.m.' needs a primary source (Met Éireann archive or the original telegram) before it ships. Fallback: 'Before dawn, the third of June'",
+     "Post office or lighthouse: Maureen worked at Blacksod Post Office, but the weather station's location (lighthouse or post office) varies by period. Titles say 'Irish barometer' and never 'post office barometer'; the finalist's title 'D-Day Was Timed by a Post Office Barometer' is a G1 risk. Don't say her single reading alone moved D-Day: it was one of the key Irish observations that warned of the storm. Narration: 'one of the first warnings'",
+     "The German side is contested. The Met Office says German charts used far fewer observations and Germany couldn't crack Allied codes; Cliff Mass's summary of Persson (2020) says the Germans had decoded some Allied weather messages and had fairly good maps. Read the full Persson BAMS paper before scripting peak 7. Keep the wording to 'far fewer observations' and 'forecast unsuitable conditions', and never 'no data' or 'Germany was blind'. Thumbnail 3 is called BLIND SPOT, not NO DATA, for that reason",
+     "The 'chief German meteorologist Major Lettau' story is a known error (Heinz Lettau's own 1995 letter disputes it). Don't name a German forecaster unless a primary source does (possibly Walter Stöbe, Luftwaffe Paris, unverified)",
+     "The date of Rommel's departure varies between 4 and 5 June across sources. Say 'in the days before' or pick a dated primary source (Rommel Papers or Speidel). Don't title 'Rommel Spent D-Day at His Wife's Birthday': he drove back on 6 June",
+     "The backup date 'around 19 June' comes from secondary sources (Ramsay's or Stagg's later accounts). The Met Office only says 'next suitable tides'. Verify 19/20 June in Stagg's 'Forecast for Overlord' (1971) before putting a date on screen. The storm itself (19–22 June) and Mulberry A's loss are solid",
+     "'OK, let's go' is reported in several versions ('OK, we'll go', 'Let's go'). Use a candor line and don't put any version in quotation marks as verbatim",
+     "DD tanks: say '29 launched, 27 sank'. The popular '27 of 32' mixes the launched tanks with the 3 landed by LCT",
+     "Thumbnail ground conflict: the brief asks for a light paper ground, but STYLE-BIBLE §15.3 bans a paper or white ground for a lead thumbnail (edge ΔL 0.04 in the light feed). Resolution: a teal-shade ground with the paper and card hero as the lead, and kraft plus a 12 px ink frame as a test variant. Run check.py feed mocks and confirm ΔL ≥ 0.25 in both modes",
+     "Brand-safety and G5: there's a 2026 film called 'Pressure' about the same forecast. Don't use its title, stills or poster look, and don't reuse The History Chap's '24 Hours That Saved D-Day' wording (title #23 failed the shape test). Mustn't look like Yarnhub's photoreal D-Day or Twin Tales' clay; paper metaphor mechanisms only, with no CGI cutaways of landing craft",
+     "Tone: D-Day had heavy casualties. The Omaha tank-loss beat and the coda must not be played for levity, and humour stays limited to props (the shoebox, the birthday cards)",
+     "Persuasion Equation 100/100 only once the 01:00 time and the German-side wording are verified. Until then, Proof scores 0 (75 total). The fix is to read Persson 2020 and the Met Éireann or Stagg primary record"
+    ]
+   },
+   "crit": {
+    "score": 71,
+    "fatal": [
+     "HOOK PROOF MISMATCH (G1/proof ≥ claim): Slot 3 answers 'a birthday reading moving D-Day sounds like a legend' with Eisenhower's 'Gods of war' note. That note answers Stagg's memo about the 19–22 June storm and the backup date. It says nothing about Blacksod or the barometer, so the proof doesn't back the claim it's offered for, and a sharp commenter will spot it. Replace it with the RMetS line that her readings 'first alerted the Allies to the approaching storm that delayed D-Day', and keep the Eisenhower note for the 12:30/13:30 ghost-flap payoff, where it belongs.",
+     "LEAD TITLE OVERSTATES CAUSATION: 'D-Day Was Timed by an Irish Barometer' says one instrument set the date. The window (5–7 June) was fixed by moon and tide, and the 24-hour shift came from Stagg's synthesis of many stations, including the ship about 600 miles out. Blacksod was one of the first warnings (RMetS: 'first alerted'), not the timer, and Persson 2020 says the forecasters were right for the wrong reason, which undercuts 'timed' even more. This fails the 'yeah, sure' test with WWII-literate viewers. Use 'delayed' or 'warned', which RMetS wording supports.",
+     "GERMAN-SIDE PEAK 7 AND THUMB 3 ARE CONTRADICTED BY THE PACKAGE'S OWN STAR SOURCE: Persson 2020, via Cliff Mass's summary, says the Germans had decoded Allied weather messages and had 'relatively decent' maps. A blank Atlantic, a 'BLIND SPOT' thumbnail and 'Germany read the same sky and decided nothing could cross' all risk a public correction. Either reframe it as 'their forecast said unsuitable until mid-June', with no blankness claim, or read the full paper first. Thumb 3 can't ship as drawn.",
+     "Promise line 'Germany… sent its generals home' is false as worded. Rommel went home on his own initiative for Lucie's birthday, and the others were called to the Rennes war game; nobody 'sent them home'. Keep it out of every title and description."
+    ],
+    "fixes": [
+     "Core facts that hold up, checked again on 2026-11-05: RMetS confirms the reading at 01:00 on 3 June, at the weather station in Blacksod Post Office, and that it 'first alerted the Allies to the approaching storm that delayed D-Day'. So 'One a.m.' can ship, and the RMetS article names no lighthouse, so drop the lighthouse from title #11 and from the thumbnail strip, or label it 'Blacksod'. The Met Office and National Archives confirm 'worst Channel weather in 20 years' and 'Thanks, and thank the Gods of war we went when we did'. Persson (BAMS 101, 2020, E993–E1006) confirms the break was forecast correctly but the storm 'weakened rapidly and slid southeastward' instead of moving northeast as predicted.",
+     "NEW NEWS PEG FOUND: University of Reading, 2026, Charlton-Perez et al. in Weather ran 50 AI-model forecasts of the D-Day storm, and the press release headline is 'AI D-Day weather forecast falters under pressure'. That's a fresh tier-1 hook and a modern other-side beat. Put it in as PEAK 10b or the coda: today's AI models re-forecast the storm and stumble too. Verify the result before scripting. It's stronger and newer than the six-month-old 'Pressure' film peg.",
+     "SATURATION: no dominant video exists. The weather-door ceiling is History Hit 'Final 72 Hours' at 236K and The Operations Room at 177K (both have more than the package listed). After those come BBC Archive at 83K and History Chap '24 Hours That Saved D-Day' at 36K, then a swarm of under-100-view AI-slop channels using 'The 24 Hours That Decided D-Day' and 'The Weatherman Who Decided D-Day'. Kill titles #23 and #24 and anything containing 'Weatherman Saved', which is now a commodity shape. The open lane is the animated version plus the Irish object plus the backup-date counterfactual. The ceiling question remains: no weather-angle video has passed about 250K, so 5–20M depends on the D-Day name carrying the click. Lean on the counterfactual and the stake, not meteorology.",
+     "TITLE RANKING (gates first): 1) 'D-Day's Backup Date Was the Worst Storm in 20 Years'. It's fully defensible from the Met Office line if 'storm' becomes 'weather', so use 'D-Day's Backup Date Had the Worst Weather in 20 Years' or 'If D-Day Had Waited 2 Weeks, It Hit the Worst Storm in 20 Years'. It has a famous name, a counterfactual, an exact number and a verdict, and it passes 'yeah, sure' with proof on screen. 2) 'The Irish Barometer That Delayed D-Day', which is supported by RMetS ('delayed') and keeps the odd object. 3) 'D-Day Had 3 Possible Days. A Storm Took One.', which is accurate and gives a counter spine. Demote 'Timed by an Irish Barometer' to a test arm only, and only if the wording becomes 'Delayed by'.",
+     "THUMBNAIL: at 168 px the lead barometer has no D-Day cue (no beach, no landing craft, no date), and '24 HRS' is abstract. Rewrite it as the needle on STORM plus a paper date flap reading '5 JUNE' crossed out in red and flipping to '6', with the text 'JUNE 5 → 6' or 'NOT JUNE 5'. Or pair the backup-date title with Thumb 2, recut so the 19 JUNE flap is huge and drowned under a toppled Mulberry and the 6 JUNE flap is narrow and clear, with text 'ONE GAP'. Add a tiny card landing-craft silhouette so the D-Day frame reads without the title.",
+     "CLIMAX AUDIT: real physical reversals or peaks are 1 (needle falls), 4 (convoys at sea turn round), 5 (the ship's pressure rises), 6 (sailing in force-5 winds), 8 (Rommel driving away, commanders at Rennes), 9 (27 of 29 DD tanks sink), 11 (Mulberry A wrecked) and the coda (needle back to FAIR). That's 8 and passes, just. Peaks 2, 3, 7 and 10 are paperwork or map beats. Make them physical: in 3, the telegram wire runs under the Irish Sea as a moving paper strip; in 7, a German weather ship or a Luftwaffe weather flight turning back; in 10, the storm card physically sliding southeast against the forecast arrow; in 10b, the AI models' 50 paper tracks fanning out wrong.",
+     "HOOK TRIM: cut Slot 3's Eisenhower note and replace it with an RMetS source card, 'first alerted the Allies to the approaching storm'. Change Slot 4 to 'Germany's forecasters said the bad weather would hold until mid-June. Rommel drove home with a pair of shoes.' This drops 'read the same sky' and 'nothing could cross'. Keep the Slot 5 contract and its backup-date tease, which is the strongest loop.",
+     "On screen, say 'next suitable tides, about two weeks later' unless 18–20 June is verified in Stagg's 'Forecast for Overlord'. Note that a mid-June window would have lacked the moon, so say 'the next tide window', not 'the backup date with moon'."
+    ],
+    "best_title": "D-Day's Backup Date Had the Worst Weather in 20 Years",
+    "best_thumb": "The drowned flap: a kraft or teal-shade ground with two paper date flaps. The narrow '6 JUNE' is clean card with a red marker loop and a tiny card landing craft beside it. The huge '19 JUNE' is swallowed by tall teal paper waves and a toppled card Mulberry pier. A small card barometer in the corner has its red needle on STORM. Text: 'ONE GAP'. The thumbnail shows the stake and the title gives the number, so they don't repeat each other."
+   }
+  },
+  {
+   "pkg": {
+    "name": "Copenhagen 1952: the polio summer that invented intensive care (working title: \"The Students Who Replaced the Iron Lung\")",
+    "promise": "In August 1952 Copenhagen's fever hospital had one iron lung while bulbar polio patients died at nearly 9 in 10. One anaesthetist read a blood number differently, saved a 12-year-old girl with a rubber bag, and then about 1,500 students squeezed bags by hand for 165,000 hours. The death dial fell to about 1 in 10, and the room they built became the ICU in every hospital today.",
+    "titles": [
+     {
+      "t": "The Students Who Replaced the Iron Lung",
+      "score": 9
+     },
+     {
+      "t": "How a Rubber Bag Beat the Iron Lung",
+      "score": 9
+     },
+     {
+      "t": "The Iron Lung Couldn't Save Them. Students Did.",
+      "score": 8.5
+     },
+     {
+      "t": "One Iron Lung. Fifty New Patients a Day.",
+      "score": 8.5
+     },
+     {
+      "t": "165,000 Hours of Squeezing a Rubber Bag",
+      "score": 8.5
+     },
+     {
+      "t": "They Kept 70 People Breathing by Hand",
+      "score": 8.5
+     },
+     {
+      "t": "1,500 Students Breathed for a City",
+      "score": 8.5
+     },
+     {
+      "t": "The Ventilator Was 1,500 Students",
+      "score": 8
+     },
+     {
+      "t": "The Summer 1,500 Students Breathed for a City",
+      "score": 8
+     },
+     {
+      "t": "The Iron Lung Was the Wrong Machine",
+      "score": 8
+     },
+     {
+      "t": "The City That Breathed by Hand",
+      "score": 8
+     },
+     {
+      "t": "The Polio Ward That Breathed by Hand",
+      "score": 7.5
+     },
+     {
+      "t": "The Rubber Bag Behind Every ICU",
+      "score": 7.5
+     },
+     {
+      "t": "200 Million Breaths, Squeezed by Hand",
+      "score": 7.5
+     },
+     {
+      "t": "The Doctor Who Read One Number Differently",
+      "score": 7.5
+     },
+     {
+      "t": "A 12-Year-Old, a Rubber Bag and 165,000 Hours",
+      "score": 7.5
+     },
+     {
+      "t": "Before Ventilators, There Were 1,500 Students",
+      "score": 7
+     },
+     {
+      "t": "The Polio Summer That Invented the ICU",
+      "score": 7
+     },
+     {
+      "t": "The Classroom That Became the First ICU",
+      "score": 7
+     },
+     {
+      "t": "The Night Shift That Lasted Six Months",
+      "score": 6.5
+     },
+     {
+      "t": "Why Medical Students Squeezed Bags for Months",
+      "score": 6.5
+     },
+     {
+      "t": "The Girl Who Started Intensive Care",
+      "score": 6
+     },
+     {
+      "t": "Why Every Hospital Has an ICU",
+      "score": 5.5
+     },
+     {
+      "t": "It Wasn't Polio Killing Them. It Was CO2.",
+      "score": 5
+     },
+     {
+      "t": "Polio Killed 9 in 10. Then Students Took Over.",
+      "score": 3
+     }
+    ],
+    "thumbs": [
+     {
+      "concept": "A, LEAD. 'The hands' (object in the void, made human). Two large ink-70 paper hands fill the right 58% of the frame and squeeze a RED rubber bag, the one red thing, cut with a notch and a marker ring for colour-blind viewers. A short brass tracheostomy tube leads down to the corner of a small paper bed with a hollow child silhouette (no face). A brass counter wheel sits on the left edge. Ground: kraft #dcd7c8 with a 12 px ink frame (style bible §15.3: a pure paper ground melts into the light feed at ΔL 0.04). Pen line 6 px. The question it plants: why would a human hand be the machine? Pairs with T1 (students + iron lung) and T2 (rubber bag), and the words never repeat the title. It is the hero object from the 0:00 frame. Gates: 2 tokens; hero is about 55% of the frame height; one red.",
+      "score": 9,
+      "text": "165,000 HRS"
+     },
+     {
+      "concept": "B. 'The matchup' (tiny vs huge). A huge ink paper iron lung (a plain cylinder with portholes and a collar, a flat silhouette, NOT a cutaway) looms across the back two-thirds. In front, a tiny RED rubber bag sits on a brass balance scale that has tipped hard toward it. The scale itself is our mechanism motif. Same kraft ground and ink frame, words in the left 40% in paper on an ink band. The question: how can that little thing outweigh the famous machine? Pairs best with T2 'How a Rubber Bag Beat the Iron Lung', which A/B tests the matchup idea against concept A's human idea. Both objects appear by 0:40. Gates: 2 words, two high-contrast silhouettes, one red. This is a scale gag, not Kurzgesagt's glowing hero or a Jared Owen cutaway.",
+      "score": 8.5,
+      "text": "IT WON"
+     },
+     {
+      "concept": "C. 'The tally wall' (absurd quantity, MAINSPRING tally grammar). Rows of pill-shaped tally figures, each with a hand on a hollow bag, recede in hand-drawn perspective across a kraft ground. In the nearest row one bag is RED, beside the edge of a bed. There is no machine anywhere, and that absence is the point. Words in ink-on-paper on the left. The question: where are the machines? Pairs with T1 and with 'They Kept 70 People Breathing by Hand'. It is the 8:15 tally-wall shot. Gates: 2 words; the near row fills more than a third of the frame height; one red. Risk: the busiest of the three, so it must pass the 168x94 greyscale squint, or the rows get cut to 3.",
+      "score": 8,
+      "text": "NO MACHINES"
+     }
+    ],
+    "lead_pair": "TITLE: \"The Students Who Replaced the Iron Lung\" (39 chars; the first ~30 characters keep 'Students' and 'Iron Lung'; a browse title with a famous object front-loaded). P 9: gap 3, noun 2, length 2, accurate 2, but clarity loses a little. B 9: A2 B2 C2 D2 E1; C stays at 2 because the title holds one proof cue and the thumbnail number holds the other. + THUMB A: paper hands squeezing a RED rubber bag over a child's bed, '165,000 HRS' on a brass counter wheel. The title asks who and how, and the thumb shows the proof and the scale; no word is shared. Test & Compare, thumbnails only: A (hands, 165,000 HRS) vs B (iron lung vs red bag, IT WON) vs C (tally wall, NO MACHINES). Test title T2 'How a Rubber Bag Beat the Iron Lung' on its own afterwards. End the video on the thumbnail's words: '165,000 hours. Then the machines took the night shift.' Prediction (house, uncalibrated): CTR 5–8% in browse, 7-day views 150K–600K, and an outlier path only if iron-lung suggested traffic connects (neighbours: KC Star 25.8M, Gizmodo 43.4M).",
+    "hook": "SLOT 1, CONFIRM (0:00–0:05). [Card: 27 AUG 1952 · BLEGDAM HOSPITAL, COPENHAGEN. A paper iron lung; beside it a bed with a small figure.] \"August 1952, Copenhagen. A twelve-year-old girl is suffocating, and the hospital's only iron lung can't save her.\"\nSLOT 2, PROOF OBJECT (0:05–0:12). [A ledger page stamps in, with tally marks crossed out. Source card: West, J Appl Physiol 2005.] \"In the first three weeks, twenty-seven of thirty-one patients like her died.\"\nSLOT 3, OBJECTION (0:12–0:18). \"It sounds like a hospital that had simply run out of machines. It hadn't. It had misread a number.\"\nSLOT 4, TWIST (0:18–0:25). [A RED rubber bag drops into frame. A counter wheel starts spinning.] \"The fix wasn't a machine. It was a rubber bag, and the city's students squeezing it by hand for 165,000 hours.\"\nSLOT 5, CONTRACT (0:25–0:32). \"What did one doctor see in that number? Why did the girl turn blue before she turned pink? And how did a bag become the room every hospital now calls the ICU?\"\nAbout 85 words; trim slot 3 to \"It hadn't run out of machines. It had misread a number\" to reach ≤80. Statistics to remember: 27 of 31 and 165,000 hours. The date doesn't count. Fallback if 165,000 is challenged: \"for more than a hundred thousand hours\". Scores: checklist §3 = A2 B3 C1 D2 E1 F1 = 10, or F0 → 9 if not trimmed. retention-script §3 not yet run.",
+    "peaks": [
+     "0:00–0:32 HOOK: Vivi suffocating beside the one iron lung; 27 of 31 dead; 'it had misread a number'; the red bag; the 165,000-hour counter starts.",
+     "1 · ~0:45 THE FLOOD: Blegdam, the city's fever hospital (Copenhagen ~1.2M people), takes up to 50 new polio patients a day. It owns one Emerson tank respirator and six cuirass shells. Paper bellows show the iron lung PULLING air in from outside (negative pressure).",
+     "2 · ~2:00 REVERSAL DOWN, THE FAMOUS MACHINE FAILS: bulbar polio paralyses the throat. Patients can't swallow, saliva floods the airway, and the bellows rhythm keeps going over a blocked pipe. 27 of 31 die in three weeks, 19 within 3 days of admission. The death dial starts near 9 in 10.",
+     "3 · ~3:15 THE MISREAD NUMBER: a glass tube shows ink rising, the blood's 'total CO2' running high. The ward reads it as a mysterious 'alkalosis'. Anaesthetist Bjørn Ibsen, an outsider who trained in Boston and knew a 1950 Los Angeles report on positive pressure, reads the same ink as trapped carbon dioxide: they aren't alkalotic, they're suffocating.",
+     "4 · ~4:30 THE DARE: chief physician H.C.A. Lassen, sceptical, lets the soldier try on the case nobody expects to live. Vivi Ebert, 12. Tracheotomy at 11:15 a.m., 27 August 1952: a cuffed tube seals the airway, and the bag PUSHES air in from inside.",
+     "5 · ~5:30 REVERSAL DOWN, THE ROOM EMPTIES: she fights the tube, her airways clamp in bronchospasm, and she turns blue. The watching doctors leave one by one ('Well, it didn't work').",
+     "6 · ~6:15 REVERSAL UP, PINK: the team gives a large dose of thiopental, so she stops fighting. Suction, then one squeeze at a time. Blue becomes pink, and the ink in the CO2 tube falls. She lives. The colleagues come back.",
+     "7 · ~7:15 THE NEW PROBLEM, A HAND IS A MACHINE NOW: one bag needs one human hand, 20–30 squeezes a minute, 24 hours a day. At the peak, 70 patients need it at once, with 250 ten-litre gas cylinders a day and no machines to buy. The counter of hands needed outruns the hospital.",
+     "8 · ~8:15 THE CITY ANSWERS (sponsor return line here): medical and dental students in 6–8-hour shifts, some 18 years old and trained in minutes (Anne Holten Jensen, 20, was on a patient that same evening). The tally wall fills to about 1,500, and the counter spins toward 165,000 hours. None of them caught polio on duty.",
+     "9 · ~9:45 THE DIAL FALLS IN STAGES: 87% → about 50% within a week → 36% by November → 11% by March 1953 (Wunsch's count). Candor card: other tallies end at 15–25%, and every count falls from roughly 9 in 10.",
+     "10 · ~10:45 THE COMPUTED COST: 165,000 hours at 20 squeezes a minute is about 200 million hand-squeezed breaths (our sum, shown on screen), and 5–6 million kroner. Bodies don't heal on a schedule: 20 still needed ventilation in October 1953, and 13 were still dependent in 1956. Vivi was ventilated until January 1953, and every night for the rest of her life.",
+     "11 · ~11:45 HANDS → MACHINES → A ROOM: the bags give way to mechanical ventilators. In December 1953 Ibsen gathers the breathing patients in one converted student-nurse classroom at Kommunehospitalet, which is widely called the first ICU. Then the credit fight: Lassen's 'generals, not soldiers, win wars.'",
+     "12 · ~12:45 OTHER SIDE / CODA: the vaccine (Salk, licensed 1955) empties the polio wards, but the room the epidemic left behind stays. In 2020 the world ran short of the same thing Copenhagen did: a way to breathe for someone. Vivi died in 1971, aged 31. End line on the thumbnail: '165,000 hours. Then the machines took the night shift.'"
+    ],
+    "proof_beats": [
+     "0:00 date and place card: 27 AUG 1952 · BLEGDAM HOSPITAL, COPENHAGEN (Smithsonian/Wunsch)",
+     "0:08 ledger page 27 of 31 dead in 3 weeks, 19 within 3 days, with source card West, J Appl Physiol 2005;99:424",
+     "0:45 inventory stamp: 1 tank respirator + 6 cuirass shells (West 2005)",
+     "1:00 admissions counter: up to 50 a day (Smithsonian/Wunsch)",
+     "3:15 redrawn lab slip showing high 'total CO2' labelled 'alkalosis?', then struck through in red pencil and relabelled CO2 RETAINED (West 2005; Ibsen, Proc R Soc Med 1954;47:72)",
+     "3:45 citation card: Bower & Bennett, Los Angeles County Hospital, 1950, severe polio mortality 79% → 17%, the idea Ibsen carried in (Smithsonian/Wunsch)",
+     "4:40 Cameo card: 'B. IBSEN · 1915–2007', anaesthetist, with a timestamp tag 11:15 A.M. 27 AUG",
+     "5:45 witness quote card: colleagues: 'Well, it didn't work' (Ibsen 2006 interview via Reisner-Sénélar / WHYY)",
+     "6:15 demonstration: the CO2 ink tube falls as the bag squeezes, a mechanism shown, not a real reading",
+     "7:15 rate card: 20–30 squeezes/min; 70 patients at once; 250 gas cylinders/day (WHYY, West, Smithsonian)",
+     "8:15 tally wall with key '1 GROUP (5 TALLIES) = 50 STUDENTS' filling to about 1,500, plus the 165,000 h counter (West 2005; BMJ obituary 2007). Candor tag: 'some counts: 1,200' (Wunsch via AJMC)",
+     "8:40 witness quote card: Anne Holten Jensen, 20, 2nd-year medical student (WHYY/Wunsch)",
+     "9:45 the death dial in four stamped stages 87 / 50 / 36 / 11 % with dates, plus a candor card: 'other counts: 90 → 25 % (West), 80 → 25 % (BMJ)'",
+     "10:45 computed comparison on screen: 165,000 h × 60 × 20 ≈ 198,000,000 squeezes [our sum]",
+     "11:00 follow-up ledger: 20 still ventilated Oct 1953 · 13 still dependent 1956 (Smithsonian/Wunsch)",
+     "11:45 survey-sheet floor plan of the classroom ICU at Kommunehospitalet, Dec 1953 (Berthelsen & Cronqvist, Acta Anaesth Scand 2003;47:1190)",
+     "12:45 date stamp SALK VACCINE LICENSED · APR 1955, then a 2020 ventilator-shortage card"
+    ],
+    "verified_facts": [
+     "About 3,000 polio patients were admitted, mainly to Blegdam, Aug–Dec 1952; about 1,250 were paralysed; 345 were bulbar (West 2005, J Appl Physiol 99:424, PMC1351016). Wikipedia/Lancet obituary give 2,722 cases and 316 with respiratory paralysis, so use 'about 3,000' or 'thousands'.",
+     "At the outbreak Blegdam had 1 Emerson tank respirator and 6 cuirass respirators (West 2005; Smithsonian 2020, adapting Wunsch: 'one modern iron lung and a few older, mostly ineffective devices').",
+     "In the first 3 weeks 27 of 31 bulbar patients died, 19 within 3 days of admission (West 2005; also cited in Berthelsen & Cronqvist 2003).",
+     "High blood total CO2 was read as a mysterious 'alkalosis'; Ibsen recognised it as CO2 retention, a respiratory acidosis (West 2005; Ibsen, Proc R Soc Med 1954;47(1):72–74).",
+     "Ibsen trained at Massachusetts General (1949–50) and drew on Bower & Bennett's 1950 Los Angeles report (severe polio mortality 79% → 17%) (Smithsonian/Wunsch).",
+     "Vivi Ebert, 12, bulbar polio: tracheostomy at 11:15 a.m. on 27 August 1952 (Smithsonian/Wunsch; WHYY 2023; Wikipedia citing WHYY). 27 August is marked as 'Bjørn Ibsen Day' (WHYY).",
+     "She resisted, went into bronchospasm and turned blue; colleagues left saying 'Well, it didn't work'; after sedation and suction she was hand-ventilated and turned pink (WHYY 2023 quoting Wunsch and Reisner-Sénélar's 2006 Ibsen interview; Smithsonian: 'large dose of sodium thiopental', given by the team).",
+     "At the peak, 70 patients were hand-ventilated round the clock (West 2005; Smithsonian). The hospital used 250 ten-litre gas cylinders a day (Smithsonian).",
+     "About 1,500 medical and dental students took part, for a total of about 165,000 hours (West 2005 citing one report; BMJ obituary of Ibsen 2007). Wunsch, quoted in AJMC, says 1,200. Shifts were 6–8 h; bags were squeezed 20–30 times a minute; some students were trained in minutes (WHYY; West). None caught polio on duty (Smithsonian).",
+     "Bulbar mortality went 87% → about 50% within a week → 36% by Nov 1952 → 11% by Mar 1953 (Smithsonian adapting Wunsch, The Autumn Ghost 2023; DO book review p.215: '87% to 11%'). Other tallies: about 90% → about 25% (West 2005), 80% → 25% (BMJ obituary), 90% → 15–20% (New Statesman 2020; RSM summary).",
+     "Cost was 5–6 million kroner up to April 1953 (West 2005). Of 318 patients treated this way, 20 still needed ventilation in Oct 1953 and 13 remained dependent in 1956 (Smithsonian/Wunsch).",
+     "Vivi was ventilated continuously until Jan 1953, left Blegdam in 1959, slept on a ventilator nightly, painted and typed with tools held in her mouth, and died in 1971 aged 31 of pneumonia and sepsis (Smithsonian/Wunsch). WHYY confirms she never became fully free of the ventilator.",
+     "Lassen told Ibsen that 'generals, not soldiers, win wars' (WHYY, via Reisner-Sénélar). His preliminary report: Lassen HCA, Lancet 1953 Jan 3;1(6749):37–41.",
+     "The first ICU was opened by Ibsen in December 1953 in a converted student-nurse classroom at Kommunehospitalet, NOT Blegdam (Berthelsen & Cronqvist, Acta Anaesthesiol Scand 2003;47:1190, PMID 14616314; Wikipedia; WHYY).",
+     "The Salk vaccine arrived in 1955 (licensed April 1955 after the 1954 field trials) and the Sabin oral vaccine in 1961 (Smithsonian). This corrects the finalist's '1954'.",
+     "Saturation, checked 2026-11-05 with yt-dlp: Copenhagen/Ibsen/first-ICU searches top out at CBS 264K (general polio), then 6.9K and under 2K. Adjacent demand: Gizmodo 'Last of the Iron Lungs' 43.4M, KC Star 25.8M, Peekaboo Kidz 9.2M, OPENPediatrics 516K."
+    ],
+    "open_risks": [
+     "Student count conflict: 1,500 (West 2005, BMJ 2007) vs 1,200 (Wunsch via AJMC). The lead title avoids the number, and narration should say 'about fifteen hundred' with a candor tag. Titles with '1,500' need the Wunsch book checked before shipping.",
+     "165,000 hours traces to 'one report' cited in West and the BMJ obituary, which are tier-1 secondaries, but the primary source isn't found yet. Pull Lassen's Lancet 1953 paper, his 1956 monograph, or Wunsch's book before it goes on the thumbnail. The fallback thumbnail is 'NO MACHINES'.",
+     "Mortality figures vary (87→11, 90→25, 80→25, 90→15/20). The dial must show Wunsch's staged series with a visible 'other counts' candor card. Never put '11%' or '9 in 10' in a title; 'Polio Killed 9 in 10' fails G1 because it means all polio, not bulbar cases.",
+     "Accounts differ on who gave the sedative: Smithsonian says a junior anaesthetist gave thiopental, while WHYY says only 'more anaesthetic'. Narrate it as 'the team', and don't say Ibsen did it.",
+     "'First ICU' is contested (ANZCA 2019; LA County and Baltimore had units in the same era), and its date is given as Dec 1953 (Acta Anaesth Scand) or 1 Aug 1953 (BMJ). Say 'what's widely called the first ICU'. The finalist's 'ICU at Blegdam' is wrong: it was Kommunehospitalet.",
+     "Don't claim the epidemic 'invented the ventilator'. Positive-pressure ventilation (Bower & Bennett, LA 1950) came before it, and that's useful as an other-side beat. 'Invented intensive care' is safe only with the 'widely called' framing.",
+     "Primary papers aren't read yet: the Lassen Lancet 1953 full text and the Ibsen PRSM 1954 PDF (PMC1918820). The CBC and full New Statesman pages were blocked or truncated. Wunsch's 'The Autumn Ghost' (2023) is the main narrative source and should be bought or read.",
+     "Sensitivity: Vivi is a real child patient who died in 1971. Use a hollow, faceless figure, no suffering played for spectacle, and the details only as published by Wunsch and Smithsonian. Ibsen's 1974 euthanasia controversy (Smithsonian) is optional: it is powerful as an 'other side' of the ICU, but it needs careful G6 handling or it should be cut.",
+     "Thumbnail ground conflict: the brief asks for a light paper ground, but STYLE-BIBLE §15.3 bans a paper or white ground for the lead thumbnail (light-feed ΔL 0.04). All three concepts use kraft #dcd7c8 with a 12 px ink frame, which is untested. Run the feed mock (both modes ΔL ≥ 0.25) and keep teal-shade as a fallback.",
+     "Distinctiveness: small existing videos use 'His Colleagues Walked Out. He Kept Her Breathing by Hand' and 'The Machine That Was Killing Them: Copenhagen, 1952'. Avoid both wordings. The iron lung must be drawn as a flat paper silhouette, never a Jared Owen or Animagraffs cutaway.",
+     "Breadth risk: 'rubber bag' isn't a famous name, so packaging leans on 'Iron Lung' to pull the 25–43M-view neighbours. If CTR lags, test 'ICU' or 'ventilator' in the title (T3/T13)."
+    ]
+   },
+   "crit": {
+    "score": 72,
+    "fatal": [
+     "HOOK SLOT 3 fails G1: 'It hadn't run out of machines. It had misread a number' is false. Blegdam really did have far too few machines, with 1 Emerson tank and 6 cuirass shells against up to 50 admissions a day (West 2005; Smithsonian). The misread CO2 number explains why patients died. It does not mean there was no machine shortage. Correct version: 'It was short of machines. But it was also misreading a number, and that was the deadlier mistake.'",
+     "Title 'One Iron Lung. Fifty New Patients a Day.' fails G1 on two counts. Smithsonian says 'UP TO 50' a day, not 50 every day. The hospital also had 6 cuirass respirators as well as its one Emerson tank. Kill it, or change it to 'One Iron Lung. Up to 50 Patients a Day.' (and that still leaves out the cuirass shells).",
+     "Lead thumbnail text '165,000 HRS' has only single-report support. West 2005 says verbatim 'One report states that 1,500 students... with a total of 165,000 h'. Smithsonian, which adapts Wunsch, gives NO hours figure. The number on the most-seen asset therefore rests on an unnamed source that the secondaries themselves hedge. Under proof ≥ claim it can't be the hero token until Lassen's 1956 monograph or Wunsch's book confirms it.",
+     "The '1,500' titles ('1,500 Students Breathed for a City', 'The Ventilator Was 1,500 Students', 'The Summer 1,500 Students…', 'Before Ventilators, There Were 1,500 Students') are not shippable as written. West again says 'one report', Wunsch gives 1,200 in AJMC, and West says a roster of about 200 students worked in relays at any one time. The number is soft, and 'breathed for a city' also inflates the claim: about 318 patients were ventilated, not a city.",
+     "Saturation and breadth trap, new in 2026: on YouTube 'Iron Lung' now resolves mostly to the 2026 Markiplier horror film and the game lore (penguinz0 4.4M, MrHunteru, Channel Awesome, and others in the ytsearch results). The plan to ride iron-lung suggested traffic (Gizmodo 43M, KC Star 25.8M) now competes with a film franchise. That isn't fatal to the title, but the predicted outlier path is weaker than the package assumes, and the thumbnail must read as history and medicine at a glance."
+    ],
+    "fixes": [
+     "Verified independently and OK: 1 Emerson tank + 6 cuirass; 27 of 31 dead in 3 weeks, 19 within 3 days; 'mysterious alkalosis' misread; up to 70 hand-ventilated at once; 250 ten-litre cylinders a day; 87 → about 50 → 36 → 11% (Smithsonian/Wunsch) against West's ~90 → ~25%; 5–6M kroner; no bag-squeezer caught polio; Vivi survived 27 Aug, left Blegdam in 1959 and died in 1971 aged 31; Salk 1955. Smithsonian says the JUNIOR anaesthetist gave the thiopental, so keep 'the team' or name it correctly. Smithsonian also names three cradles of the ICU (Copenhagen, LA County, Baltimore), so keep 'widely called the first ICU'.",
+     "Saturation is clear. The best direct competitor is CBS at 264K (general polio). On-angle videos are under 4K: Rotary 3.6K, DYJ 1.6K, Medscape 282, and two tiny ones whose wording ('His Colleagues Walked Out…', 'The Machine That Was Killing Them') you already avoid. The lane is open.",
+     "Thumbnail text: swap '165,000 HRS' for '70 AT ONCE' (verified, and it shows the impossible demand) or 'NO MACHINE'. Move 165,000 to a mid-video counter with a 'one report' candor tag. It can come back to the thumbnail if Wunsch or Lassen 1956 confirms it.",
+     "Hook slot 1: change 'the hospital's only iron lung can't save her' to 'and the iron lung can't help her'. Sources don't say she was ever in the tank; the point is that negative pressure fails bulbar patients. Slot 4: change '165,000 hours' to 'for months', or add the 'one report' tag on screen.",
+     "Climax count is inflated. Of the 12 peaks, only about 6 are physical reversals: the machine fails (2), the tracheotomy (4), blue (5), pink (6), 70 at once with no hands to spare (7), and the students flood in (8). Peaks 3 (reading a number), 9 (a stat dial), 10 (a cost sum) and 11 (a room and a credit fight) are paperwork. The emotional peak lands at about 6:15, and the second half is ledger. To reach 8+ real reversals, add verified physical crises after 8:15. Candidates to pull from Wunsch: gas-cylinder or oxygen-supply strain; a student falling asleep or a bag disconnecting and a patient dying (only if sourced); suction and secretions crises at night; patients who could only communicate by blinking at their squeezer; and the Stockholm/Engström machine arriving in 1953 as the 'machines take the night shift' turn. Promote the 1974 Ibsen euthanasia controversy only with careful G6 handling.",
+     "Move Bower & Bennett (LA 1950, 79 → 17%) earlier as the 'why didn't anyone do this before? They had, in LA' other-side beat. It defuses the 'invented ventilation' objection and becomes its own reversal.",
+     "Promise line: cut 'became the ICU in every hospital today' to 'the room that became the model for the ICU' (causal overstatement).",
+     "Title scoring (P/B): 'How a Rubber Bag Beat the Iron Lung' A2 B2 C1 D2 E1 = 8. The matchup is concrete and passes the 'yeah, sure' test because the bag + tracheostomy (positive pressure) really did outperform the tank for bulbar cases. Add the date cue on the thumbnail to lift C. 'The Students Who Replaced the Iron Lung' A2 B2 C1 D1 E1 = 7.5: 'replaced' slightly overstates, since the bag method replaced it and the students powered it. 'The Iron Lung Couldn't Save Them. Students Did.' is 8 but more than 45 characters. 'They Kept 70 People Breathing by Hand' is 8, verified number, and the strongest safe-number title.",
+     "A 10M-view team would ship the matchup (tiny red bag vs giant iron lung) rather than the hands, because it reads in 0.3 s at 168x94 and survives the Markiplier confusion when the bed and child are in frame. A/B test B against A, with A carrying '70 AT ONCE'."
+    ],
+    "best_title": "How a Rubber Bag Beat the Iron Lung",
+    "best_thumb": "Concept B, modified: a huge flat ink-paper iron lung looms in the back two-thirds, and a tiny RED rubber bag on a brass balance scale tips it hard. A hollow, faceless child on a small paper bed sits at the scale's base, so the frame reads as medicine and history and not the horror film. A small stamped date tag reads '1952'. Text: '27 OF 31 DIED' is too grim and hard to read, so use 'IT WON' only if the date tag is present; otherwise use '70 AT ONCE'. Kraft ground, 12 px ink frame, one red. A/B test against Concept A (hands squeezing a red bag) with the text '70 AT ONCE' in place of the unverified '165,000 HRS'."
+   }
+  }
+ ]
+}
