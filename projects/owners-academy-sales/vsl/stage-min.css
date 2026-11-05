@@ -1,0 +1,41 @@
+/* "Min" full-screen style (render.mjs --full --min, loaded on top of stage-clean.css / stage-vclean.css):
+   one idea per beat in a few crisp words, lots of empty frame, thin white marker scribbles that draw on,
+   a small handwritten note now and then, gold for one key word only. */
+@font-face { font-family: "InterV"; src: url(fonts/Inter-Var.woff2); font-weight: 300 800; }
+@font-face { font-family: "Hand"; src: url(fonts/Caveat-Bold.woff2); font-weight: 700; }
+
+/* lighter chrome: no chapter ticks, a soft vignette only */
+.ticks, .chap { display: none !important; }
+#scrim { background: radial-gradient(1500px 900px at 50% 55%, rgba(5,8,15,0) 55%, rgba(5,8,15,.35) 100%) !important; }
+#fscrim { background: radial-gradient(1100px 760px at 22% 48%, rgba(5,8,15,.62) 0%, rgba(5,8,15,.38) 45%, rgba(5,8,15,0) 75%) !important; }
+.wordmark { font: 600 20px/1 "InterV" !important; color: rgba(255,255,255,.7) !important; }
+
+/* headline: medium weight, very tight, big; the one gold word is .k */
+.beat { gap: 14px !important; }
+.beat .h1 { font: 650 96px/0.98 "InterV"; letter-spacing: -.05em; color: #fff; text-wrap: balance; max-width: 640px;
+  text-shadow: 0 2px 30px rgba(0,0,0,.28); }
+.beat .h2 { font: 600 68px/1.02 "InterV"; letter-spacing: -.045em; color: #fff; text-wrap: balance; max-width: 640px;
+  text-shadow: 0 2px 30px rgba(0,0,0,.28); }
+.beat .h1 .k, .beat .h2 .k { color: #fdd050; }
+.beat .h1 .dim, .beat .h2 .dim { color: rgba(255,255,255,.45); }
+.beat .tag { font: 600 17px/1 "InterV"; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.62); }
+/* handwritten side note */
+.beat .note { font: 700 60px/1.05 "Hand"; color: #fff; transform: rotate(-3deg); transform-origin: left center; margin-top: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,.4); }
+.beat .note.g { color: #fdd050; }
+
+/* marker scribbles: slightly heavier, rough ends */
+.beat svg.ln path { stroke-width: 4.5 !important; }
+.beat .mk { position: relative; display: inline-block; white-space: nowrap; }
+.beat .mk > svg { position: absolute; overflow: visible; pointer-events: none; }
+.beat .mk.u > svg { left: -2%; width: 104%; bottom: -0.16em; height: 0.28em; }
+.beat .mk.o > svg { left: -10%; width: 120%; top: -14%; height: 128%; }
+.beat .mk.x > svg { left: -4%; width: 108%; top: 30%; height: 40%; }
+.beat .mk.b > svg { left: -6%; width: 112%; top: -6%; height: 112%; }
+
+/* captions: quieter, one line, low */
+#cap { top: 966px !important; }
+#cap .line { font: 550 32px/1.25 "InterV" !important; letter-spacing: -.01em; color: rgba(255,255,255,.55) !important; }
+
+/* cards */
+#card .ttl { font-weight: 700 !important; letter-spacing: -.055em !important; }

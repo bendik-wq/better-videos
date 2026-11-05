@@ -1,0 +1,8 @@
+/* "Min" vertical clips (render.mjs --vertical --full --min): loaded after stage-vfull.css, stage-vclean.css, stage-min.css. */
+#fscrim { display: none !important; }
+#scrim { background: linear-gradient(180deg, rgba(5,8,15,.7) 0%, rgba(5,8,15,.4) 14%, rgba(5,8,15,0) 28%, rgba(5,8,15,0) 58%, rgba(5,8,15,.5) 74%, rgba(5,8,15,.78) 100%) !important; }
+.beat .h1 { font-size: 84px; max-width: 900px; }
+.beat .h2 { font-size: 62px; max-width: 900px; }
+.beat .note { font-size: 52px; }
+#cap { top: auto !important; }
+#cap .line { font: 650 54px/1.2 "InterV" !important; color: rgba(255,255,255,.6) !important; }
