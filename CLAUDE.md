@@ -6,6 +6,7 @@ Two things live here: code-rendered documentary videos, and Cold Block, a browse
 - Engine in `engine/` (render.mjs, voice.py, score.py), one folder per film in `projects/`, delivered cuts in `renders/`.
 - Rules: `docs/style-bible.md`. Workflow: the `make-video` skill in `.claude/skills/`.
 - `node engine/render.mjs projects/<name> --stills | --draft | (master)`.
+- HyperFrames skills (HeyGen, Apache 2.0) in `.claude/skills/`: `hyperframes`, `hyperframes-cli`, `reverse-any-video` (rebuilds a video as an editable HTML project and diffs it frame by frame). Reverse needs a HyperFrames Pro plan and Bendik's HeyGen sign-in (`npx hyperframes auth login --device`); only reverse videos we have the rights to. Update with `npx skills update`.
 
 ## Studio (studio/): signal to ready-to-post, automatically
 - One command, the `/studio` skill: "make today's video" or "make a video about X". The loop rules and pass bars are in `studio/program.md`.
