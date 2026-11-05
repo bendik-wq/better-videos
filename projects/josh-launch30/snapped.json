@@ -1,0 +1,1278 @@
+{
+ "hook~ln#1": {
+  "in": 480.77,
+  "out": 483.961,
+  "snapped": true,
+  "text": "most people who teach you how to buy businesses",
+  "words": [
+   [
+    "most",
+    0.15,
+    0.41
+   ],
+   [
+    "people",
+    0.41,
+    0.85
+   ],
+   [
+    "who",
+    0.85,
+    1.25
+   ],
+   [
+    "teach",
+    1.25,
+    2.03
+   ],
+   [
+    "you",
+    2.03,
+    2.25
+   ],
+   [
+    "how",
+    2.25,
+    2.39
+   ],
+   [
+    "to",
+    2.39,
+    2.51
+   ],
+   [
+    "buy",
+    2.51,
+    2.67
+   ],
+   [
+    "businesses",
+    2.67,
+    3.17
+   ]
+  ]
+ },
+ "hook~ln#2": {
+  "in": 486.233,
+  "out": 489.165,
+  "snapped": true,
+  "text": "they will say 100 % vendor finance.",
+  "words": [
+   [
+    "they",
+    0.367,
+    0.967
+   ],
+   [
+    "will",
+    0.967,
+    1.127
+   ],
+   [
+    "say",
+    1.127,
+    1.327
+   ],
+   [
+    "100",
+    1.327,
+    1.627
+   ],
+   [
+    "%",
+    1.627,
+    1.887
+   ],
+   [
+    "vendor",
+    1.887,
+    2.067
+   ],
+   [
+    "finance.",
+    2.067,
+    2.627
+   ]
+  ]
+ },
+ "hook~ln#3": {
+  "in": 489.165,
+  "out": 491.034,
+  "snapped": true,
+  "text": "It is impossible,",
+  "words": [
+   [
+    "It",
+    0.455,
+    0.815
+   ],
+   [
+    "is",
+    0.815,
+    0.975
+   ],
+   [
+    "impossible,",
+    0.975,
+    1.495
+   ]
+  ]
+ },
+ "hook~ln#4": {
+  "in": 491.034,
+  "out": 492.58,
+  "snapped": true,
+  "text": "impossible. It's a scam.",
+  "words": [
+   [
+    "impossible.",
+    0.366,
+    0.446
+   ],
+   [
+    "It's",
+    0.746,
+    0.846
+   ],
+   [
+    "a",
+    0.846,
+    0.926
+   ],
+   [
+    "scam.",
+    0.926,
+    1.246
+   ]
+  ]
+ },
+ "done~ln#1": {
+  "in": 505.9,
+  "out": 509.63,
+  "snapped": true,
+  "text": "I'm saying this as someone who's literally done the deals,",
+  "words": [
+   [
+    "I'm",
+    0.15,
+    0.69
+   ],
+   [
+    "saying",
+    0.69,
+    0.91
+   ],
+   [
+    "this",
+    0.91,
+    1.15
+   ],
+   [
+    "as",
+    1.15,
+    1.31
+   ],
+   [
+    "someone",
+    1.31,
+    1.59
+   ],
+   [
+    "who's",
+    1.59,
+    1.81
+   ],
+   [
+    "literally",
+    1.81,
+    2.21
+   ],
+   [
+    "done",
+    2.21,
+    2.59
+   ],
+   [
+    "the",
+    2.59,
+    3.19
+   ],
+   [
+    "deals,",
+    3.19,
+    3.43
+   ]
+  ]
+ },
+ "type~ln#1": {
+  "in": 2.47,
+  "out": 12.9,
+  "snapped": true,
+  "text": "The type of person that you're going to buy a company from when you have no capital to put into the deal is going to be a motivated seller,",
+  "words": [
+   [
+    "The",
+    0.15,
+    0.77
+   ],
+   [
+    "type",
+    0.77,
+    1.05
+   ],
+   [
+    "of",
+    1.05,
+    1.37
+   ],
+   [
+    "person",
+    1.37,
+    1.77
+   ],
+   [
+    "that",
+    1.77,
+    2.15
+   ],
+   [
+    "you're",
+    2.15,
+    2.39
+   ],
+   [
+    "going",
+    2.39,
+    2.39
+   ],
+   [
+    "to",
+    2.39,
+    2.53
+   ],
+   [
+    "buy",
+    2.53,
+    2.89
+   ],
+   [
+    "a",
+    2.89,
+    3.19
+   ],
+   [
+    "company",
+    3.19,
+    3.45
+   ],
+   [
+    "from",
+    3.45,
+    3.85
+   ],
+   [
+    "when",
+    3.85,
+    4.37
+   ],
+   [
+    "you",
+    4.37,
+    4.57
+   ],
+   [
+    "have",
+    4.57,
+    4.89
+   ],
+   [
+    "no",
+    4.89,
+    5.19
+   ],
+   [
+    "capital",
+    5.19,
+    5.73
+   ],
+   [
+    "to",
+    5.73,
+    6.29
+   ],
+   [
+    "put",
+    6.29,
+    6.49
+   ],
+   [
+    "into",
+    6.49,
+    6.81
+   ],
+   [
+    "the",
+    6.81,
+    6.97
+   ],
+   [
+    "deal",
+    6.97,
+    7.25
+   ],
+   [
+    "is",
+    7.25,
+    8.05
+   ],
+   [
+    "going",
+    8.05,
+    8.31
+   ],
+   [
+    "to",
+    8.31,
+    8.55
+   ],
+   [
+    "be",
+    8.55,
+    8.79
+   ],
+   [
+    "a",
+    8.79,
+    9.05
+   ],
+   [
+    "motivated",
+    9.05,
+    9.67
+   ],
+   [
+    "seller,",
+    9.67,
+    10.13
+   ]
+  ]
+ },
+ "nine~ln#1": {
+  "in": 55.61,
+  "out": 59.9,
+  "snapped": true,
+  "text": "Nine out of ten owners you're not going to do a deal with.",
+  "words": [
+   [
+    "Nine",
+    0.15,
+    0.55
+   ],
+   [
+    "out",
+    0.55,
+    0.75
+   ],
+   [
+    "of",
+    0.75,
+    0.89
+   ],
+   [
+    "ten",
+    0.89,
+    1.13
+   ],
+   [
+    "owners",
+    1.13,
+    1.69
+   ],
+   [
+    "you're",
+    1.69,
+    2.45
+   ],
+   [
+    "not",
+    2.45,
+    2.55
+   ],
+   [
+    "going",
+    2.55,
+    2.75
+   ],
+   [
+    "to",
+    2.75,
+    2.95
+   ],
+   [
+    "do",
+    2.95,
+    3.51
+   ],
+   [
+    "a",
+    3.51,
+    3.57
+   ],
+   [
+    "deal",
+    3.57,
+    3.73
+   ],
+   [
+    "with.",
+    3.73,
+    3.99
+   ]
+  ]
+ },
+ "one~ln#1": {
+  "in": 61.89,
+  "out": 66.98,
+  "snapped": true,
+  "text": "That one out of ten, the one guy who literally says I need to sell.",
+  "words": [
+   [
+    "That",
+    0.15,
+    0.29
+   ],
+   [
+    "one",
+    0.29,
+    0.59
+   ],
+   [
+    "out",
+    0.59,
+    0.75
+   ],
+   [
+    "of",
+    0.75,
+    0.87
+   ],
+   [
+    "ten,",
+    0.87,
+    1.07
+   ],
+   [
+    "the",
+    1.29,
+    1.51
+   ],
+   [
+    "one",
+    1.51,
+    1.75
+   ],
+   [
+    "guy",
+    1.75,
+    2.05
+   ],
+   [
+    "who",
+    2.05,
+    2.31
+   ],
+   [
+    "literally",
+    2.31,
+    2.65
+   ],
+   [
+    "says",
+    2.65,
+    3.11
+   ],
+   [
+    "I",
+    3.11,
+    3.89
+   ],
+   [
+    "need",
+    3.89,
+    4.19
+   ],
+   [
+    "to",
+    4.19,
+    4.51
+   ],
+   [
+    "sell.",
+    4.51,
+    4.79
+   ]
+  ]
+ },
+ "fire~ln#1": {
+  "in": 117.36,
+  "out": 119.57,
+  "snapped": true,
+  "text": "I'm not looking for a fire sale.",
+  "words": [
+   [
+    "I'm",
+    0.15,
+    0.19
+   ],
+   [
+    "not",
+    0.19,
+    0.37
+   ],
+   [
+    "looking",
+    0.37,
+    0.65
+   ],
+   [
+    "for",
+    0.65,
+    0.87
+   ],
+   [
+    "a",
+    0.87,
+    1.21
+   ],
+   [
+    "fire",
+    1.21,
+    1.51
+   ],
+   [
+    "sale.",
+    1.51,
+    1.91
+   ]
+  ]
+ },
+ "tsunami~ln#1": {
+  "in": 139.3,
+  "out": 143.848,
+  "snapped": true,
+  "text": "I'm talking about right now, the opportunity,",
+  "words": [
+   [
+    "I'm",
+    0.15,
+    0.37
+   ],
+   [
+    "talking",
+    0.37,
+    0.55
+   ],
+   [
+    "about",
+    0.55,
+    0.95
+   ],
+   [
+    "right",
+    0.95,
+    3.05
+   ],
+   [
+    "now,",
+    3.05,
+    3.35
+   ],
+   [
+    "the",
+    3.41,
+    3.53
+   ],
+   [
+    "opportunity,",
+    3.53,
+    4.11
+   ]
+  ]
+ },
+ "tsunami~ln#2": {
+  "in": 144.201,
+  "out": 145.51,
+  "snapped": true,
+  "text": "the silver tsunami.",
+  "words": [
+   [
+    "the",
+    0.0,
+    0.169
+   ],
+   [
+    "silver",
+    0.169,
+    0.529
+   ],
+   [
+    "tsunami.",
+    0.529,
+    1.009
+   ]
+  ]
+ },
+ "retire~ln#1": {
+  "in": 155.58,
+  "out": 159.31,
+  "snapped": true,
+  "text": "There's a lot of owners that are ready to retire,",
+  "words": [
+   [
+    "There's",
+    0.15,
+    0.69
+   ],
+   [
+    "a",
+    0.69,
+    0.77
+   ],
+   [
+    "lot",
+    0.77,
+    0.89
+   ],
+   [
+    "of",
+    0.89,
+    1.23
+   ],
+   [
+    "owners",
+    1.23,
+    1.81
+   ],
+   [
+    "that",
+    1.81,
+    2.19
+   ],
+   [
+    "are",
+    2.19,
+    2.35
+   ],
+   [
+    "ready",
+    2.35,
+    2.53
+   ],
+   [
+    "to",
+    2.53,
+    2.81
+   ],
+   [
+    "retire,",
+    2.81,
+    3.43
+   ]
+  ]
+ },
+ "great~ln#1": {
+  "in": 161.8,
+  "out": 165.13,
+  "snapped": true,
+  "text": "but their businesses are great, they're fine.",
+  "words": [
+   [
+    "but",
+    0.15,
+    0.31
+   ],
+   [
+    "their",
+    0.31,
+    0.49
+   ],
+   [
+    "businesses",
+    0.49,
+    0.89
+   ],
+   [
+    "are",
+    0.89,
+    1.57
+   ],
+   [
+    "great,",
+    1.57,
+    2.49
+   ],
+   [
+    "they're",
+    2.65,
+    2.81
+   ],
+   [
+    "fine.",
+    2.81,
+    3.03
+   ]
+  ]
+ },
+ "only~ln#1": {
+  "in": 248.83,
+  "out": 253.22,
+  "snapped": true,
+  "text": "And only these types of people will accept no money down deals.",
+  "words": [
+   [
+    "And",
+    0.15,
+    0.49
+   ],
+   [
+    "only",
+    0.49,
+    1.51
+   ],
+   [
+    "these",
+    1.51,
+    1.97
+   ],
+   [
+    "types",
+    1.97,
+    2.17
+   ],
+   [
+    "of",
+    2.17,
+    2.31
+   ],
+   [
+    "people",
+    2.31,
+    2.51
+   ],
+   [
+    "will",
+    2.51,
+    2.73
+   ],
+   [
+    "accept",
+    2.73,
+    3.07
+   ],
+   [
+    "no",
+    3.07,
+    3.35
+   ],
+   [
+    "money",
+    3.35,
+    3.61
+   ],
+   [
+    "down",
+    3.61,
+    3.83
+   ],
+   [
+    "deals.",
+    3.83,
+    4.09
+   ]
+  ]
+ },
+ "999~ln#1": {
+  "in": 253.41,
+  "out": 258.98,
+  "snapped": true,
+  "text": "It's not only 99 .9 % of the time, it's these people.",
+  "words": [
+   [
+    "It's",
+    0.15,
+    0.29
+   ],
+   [
+    "not",
+    0.29,
+    1.15
+   ],
+   [
+    "only",
+    1.15,
+    1.61
+   ],
+   [
+    "99",
+    1.61,
+    2.19
+   ],
+   [
+    ".9",
+    2.19,
+    2.73
+   ],
+   [
+    "%",
+    2.73,
+    2.89
+   ],
+   [
+    "of",
+    2.89,
+    3.69
+   ],
+   [
+    "the",
+    3.69,
+    3.83
+   ],
+   [
+    "time,",
+    3.83,
+    4.15
+   ],
+   [
+    "it's",
+    4.15,
+    4.83
+   ],
+   [
+    "these",
+    4.83,
+    4.95
+   ],
+   [
+    "people.",
+    4.95,
+    5.27
+   ]
+  ]
+ },
+ "reality~ln#1": {
+  "in": 496.64,
+  "out": 499.49,
+  "snapped": true,
+  "text": "And yeah, you create your own reality.",
+  "words": [
+   [
+    "And",
+    0.15,
+    0.59
+   ],
+   [
+    "yeah,",
+    0.59,
+    1.03
+   ],
+   [
+    "you",
+    1.21,
+    1.55
+   ],
+   [
+    "create",
+    1.55,
+    1.77
+   ],
+   [
+    "your",
+    1.77,
+    1.95
+   ],
+   [
+    "own",
+    1.95,
+    2.15
+   ],
+   [
+    "reality.",
+    2.15,
+    2.55
+   ]
+  ]
+ },
+ "mentor~ln#1": {
+  "in": 514.32,
+  "out": 516.97,
+  "snapped": true,
+  "text": "when I showed it to my billionaire mentor,",
+  "words": [
+   [
+    "when",
+    0.15,
+    0.21
+   ],
+   [
+    "I",
+    0.21,
+    0.37
+   ],
+   [
+    "showed",
+    0.37,
+    1.11
+   ],
+   [
+    "it",
+    1.11,
+    1.27
+   ],
+   [
+    "to",
+    1.27,
+    1.41
+   ],
+   [
+    "my",
+    1.41,
+    1.57
+   ],
+   [
+    "billionaire",
+    1.57,
+    1.89
+   ],
+   [
+    "mentor,",
+    1.89,
+    2.35
+   ]
+  ]
+ },
+ "first~ln#1": {
+  "in": 519.22,
+  "out": 520.921,
+  "snapped": true,
+  "text": "my first ever deal,",
+  "words": [
+   [
+    "my",
+    0.15,
+    0.27
+   ],
+   [
+    "first",
+    0.27,
+    0.63
+   ],
+   [
+    "ever",
+    0.63,
+    0.81
+   ],
+   [
+    "deal,",
+    0.81,
+    1.21
+   ]
+  ]
+ },
+ "first~ln#2": {
+  "in": 520.921,
+  "out": 523.404,
+  "snapped": true,
+  "text": "100 % vendor finance,",
+  "words": [
+   [
+    "100",
+    0.289,
+    0.809
+   ],
+   [
+    "%",
+    0.809,
+    1.109
+   ],
+   [
+    "vendor",
+    1.109,
+    1.349
+   ],
+   [
+    "finance,",
+    1.349,
+    2.009
+   ]
+  ]
+ },
+ "first~ln#3": {
+  "in": 523.404,
+  "out": 525.904,
+  "snapped": true,
+  "text": "pulled out six figures cash straight away",
+  "words": [
+   [
+    "pulled",
+    0.126,
+    0.766
+   ],
+   [
+    "out",
+    0.766,
+    0.986
+   ],
+   [
+    "six",
+    0.986,
+    1.226
+   ],
+   [
+    "figures",
+    1.226,
+    1.586
+   ],
+   [
+    "cash",
+    1.586,
+    1.886
+   ],
+   [
+    "straight",
+    1.886,
+    2.206
+   ],
+   [
+    "away",
+    2.206,
+    2.466
+   ]
+  ]
+ },
+ "first~ln#4": {
+  "in": 526.082,
+  "out": 527.09,
+  "snapped": true,
+  "text": "for myself.",
+  "words": [
+   [
+    "for",
+    0.0,
+    0.308
+   ],
+   [
+    "myself.",
+    0.308,
+    0.708
+   ]
+  ]
+ },
+ "amazing~ln#1": {
+  "in": 528.18,
+  "out": 528.987,
+  "snapped": true,
+  "text": "amazing.",
+  "words": [
+   [
+    "amazing.",
+    0.15,
+    0.39
+   ]
+  ]
+ },
+ "amazing~ln#2": {
+  "in": 529.504,
+  "out": 532.41,
+  "snapped": true,
+  "text": "Fantastic. I've never seen something like this before.",
+  "words": [
+   [
+    "Fantastic.",
+    0.186,
+    0.626
+   ],
+   [
+    "I've",
+    0.886,
+    1.006
+   ],
+   [
+    "never",
+    1.006,
+    1.206
+   ],
+   [
+    "seen",
+    1.206,
+    1.546
+   ],
+   [
+    "something",
+    1.546,
+    1.866
+   ],
+   [
+    "like",
+    1.866,
+    2.106
+   ],
+   [
+    "this",
+    2.106,
+    2.286
+   ],
+   [
+    "before.",
+    2.286,
+    2.606
+   ]
+  ]
+ },
+ "career~ln#1": {
+  "in": 533.54,
+  "out": 537.39,
+  "snapped": true,
+  "text": "this is a guy that has a 30, 40 year career in corporate finance.",
+  "words": [
+   [
+    "this",
+    0.15,
+    0.29
+   ],
+   [
+    "is",
+    0.29,
+    0.41
+   ],
+   [
+    "a",
+    0.41,
+    0.53
+   ],
+   [
+    "guy",
+    0.53,
+    0.69
+   ],
+   [
+    "that",
+    0.69,
+    0.85
+   ],
+   [
+    "has",
+    0.85,
+    1.07
+   ],
+   [
+    "a",
+    1.07,
+    1.27
+   ],
+   [
+    "30,",
+    1.27,
+    1.65
+   ],
+   [
+    "40",
+    1.69,
+    1.91
+   ],
+   [
+    "year",
+    1.91,
+    2.15
+   ],
+   [
+    "career",
+    2.15,
+    2.53
+   ],
+   [
+    "in",
+    2.53,
+    2.81
+   ],
+   [
+    "corporate",
+    2.81,
+    3.07
+   ],
+   [
+    "finance.",
+    3.07,
+    3.55
+   ]
+  ]
+ },
+ "button~ln#1": {
+  "in": 562.39,
+  "out": 563.859,
+  "snapped": true,
+  "text": "Motivated seller.",
+  "words": [
+   [
+    "Motivated",
+    0.15,
+    0.59
+   ],
+   [
+    "seller.",
+    0.59,
+    1.03
+   ]
+  ]
+ },
+ "button~ln#2": {
+  "in": 563.859,
+  "out": 565.262,
+  "snapped": true,
+  "text": "That's the primary thing.",
+  "words": [
+   [
+    "That's",
+    0.041,
+    0.241
+   ],
+   [
+    "the",
+    0.241,
+    0.381
+   ],
+   [
+    "primary",
+    0.381,
+    0.721
+   ],
+   [
+    "thing.",
+    0.721,
+    1.101
+   ]
+  ]
+ },
+ "button~ln#3": {
+  "in": 565.939,
+  "out": 566.86,
+  "snapped": true,
+  "text": "Onwards and upwards.",
+  "words": [
+   [
+    "Onwards",
+    0.161,
+    0.321
+   ],
+   [
+    "and",
+    0.321,
+    0.441
+   ],
+   [
+    "upwards.",
+    0.441,
+    0.621
+   ]
+  ]
+ }
+}

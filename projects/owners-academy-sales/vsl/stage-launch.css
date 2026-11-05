@@ -1,0 +1,75 @@
+/* "Launch" full-screen style (render.mjs --full --launch, on top of stage-clean.css), after 2026 startup launch videos:
+   kinetic type typed in on the spoken words (each new letter flashes gold, then white), white label tabs, thin outline
+   boxes and corner brackets, full-screen light inserts for one idea at a time. Everything is placed in frame pixels. */
+@font-face { font-family: "InterV"; src: url(fonts/Inter-Var.woff2); font-weight: 300 800; }
+:root { --acc: #fdd050; --ink-d: #0e0f12; --paper: #f3f2ee; }
+header, #fscrim { display: none !important; }
+#scrim { background: linear-gradient(180deg, rgba(0,0,0,0) 78%, rgba(0,0,0,.35) 100%) !important; }
+#stage { left: 0 !important; top: 0 !important; width: 1920px !important; height: 1080px !important; right: auto !important; }
+.beat { position: absolute !important; inset: 0 !important; display: block !important; }
+.beat > * { position: absolute; }
+
+/* typed headline */
+.ty { font: 560 96px/0.98 "InterV"; letter-spacing: -.05em; color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.35); }
+.ty .wd { display: inline-block; white-space: nowrap; }
+.ty i { font-style: normal; }
+.ty i.hot { color: var(--acc); }
+.ty .k { color: var(--acc); }
+.ty.dark { color: var(--ink-d); text-shadow: none; }
+
+/* white label tab (dark text), optional gold */
+.tab { font: 600 30px/1 "InterV"; letter-spacing: -.01em; color: var(--ink-d); background: #fff; padding: 12px 16px 13px; border-radius: 6px; white-space: nowrap;
+  box-shadow: 0 6px 30px rgba(0,0,0,.18); }
+.tab.g { background: var(--acc); }
+.tab.ghost { background: rgba(10,12,16,.55); color: #fff; box-shadow: none; backdrop-filter: blur(8px); }
+.tab small { font: 600 15px/1 "InterV"; letter-spacing: .14em; text-transform: uppercase; opacity: .55; margin-right: 12px; }
+.mono { font: 600 22px/1.2 ui-monospace, "DejaVu Sans Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.92); text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+.dark .mono, .mono.dark { color: rgba(14,15,18,.6); text-shadow: none; }
+
+/* thin outline box around a word; corner brackets */
+.obox { padding: 6px 16px 10px; }
+.obox { position: relative; }
+.obox .ob { position: absolute; inset: 0; border: 2.5px solid #fff; }
+.obox.dark .ob { border-color: var(--ink-d); }
+.obox .ob.g { border-color: var(--acc); }
+.brk { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.beat svg.ln path { stroke-width: 2.5 !important; filter: none !important; }
+.brk path { stroke-width: 4 !important; }
+.dark svg.ln path, svg.ln.dark path { stroke: var(--ink-d) !important; }
+
+/* big number */
+.stat { font: 640 220px/0.9 "InterV"; letter-spacing: -.06em; color: #fff; text-shadow: 0 2px 40px rgba(0,0,0,.3); }
+.stat .k { color: var(--acc); }
+
+/* full-screen insert */
+.panel { inset: 0; background: var(--paper); overflow: hidden; }
+.panel.black { background: #050505; }
+.panel.grid { background-image: linear-gradient(rgba(14,15,18,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14,15,18,.05) 1px, transparent 1px);
+  background-size: 64px 64px; }
+.panel > * { position: absolute; }
+.bar { height: 46px; background: rgba(14,15,18,.12); border-radius: 4px; }
+.bar.us { background: var(--acc); }
+
+/* lower third */
+.lower { display: flex; flex-direction: column; gap: 8px; }
+.lower .nm { font: 650 34px/1 "InterV"; letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.4); }
+.lower .tt { font: 500 19px/1 "InterV"; letter-spacing: .02em; color: rgba(255,255,255,.75); }
+
+/* captions: small and low, secondary */
+#cap { top: 985px !important; height: 50px !important; }
+#cap .line { font: 520 28px/1.25 "InterV" !important; color: rgba(255,255,255,.9) !important; text-shadow: 0 1px 10px rgba(0,0,0,.7); }
+#cap .w { color: rgba(255,255,255,.9) !important; }
+
+/* end card */
+#card .bgc { background: #050505 !important; }
+#card .ttl { font-weight: 600 !important; letter-spacing: -.05em !important; font-size: 104px !important; }
+#card .ttl em { color: var(--acc) !important; }
+#card .rule { background: var(--acc) !important; }
+
+/* soft side shade so white type reads over a bright window */
+.shade { inset: 0; pointer-events: none; }
+.shade.l { background: linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.28) 26%, rgba(0,0,0,0) 44%); }
+.shade.r { background: linear-gradient(270deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.28) 26%, rgba(0,0,0,0) 44%); }
+
+/* on a light insert the captions turn dark */
+#cap.onpaper .line, #cap.onpaper .w { color: rgba(14,15,18,.85) !important; text-shadow: none !important; }

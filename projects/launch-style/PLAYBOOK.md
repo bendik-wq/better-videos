@@ -108,3 +108,18 @@ Josh's footage is one locked seated camera, unscripted, about 9 minutes. To get 
   - "100% vendor finance"
   - "Six figures out on day one"
 - **X-native CTA + button:** "Comment DEAL and I'll send you the breakdown", then a human beat from the footage.
+
+## Built: the "launch" style
+
+The renderer flag is `render.mjs --full --launch`. Pieces:
+- **`stage-launch.css`** and **`launch-kit.mjs`**: typed text, tabs, mono labels, outline boxes, corner brackets, connector lines, a count-up stat, a lower third, full-screen inserts and bars.
+- **`complaunch.py`**: cuts each part as a wide or a tight framing of the 4K source, alternating, with the tight frame centred on the face track.
+
+**Timings** were measured on the references with HyperFrames' free local `measure cuts` and `measure frames`:
+- A TypeSafe letter shows in the accent colour for about 2 frames (0.1 s) before turning white.
+- Letters keep pace with the word being spoken (~35 ms per letter).
+- Pine's tabs wipe in over ~0.3 s.
+
+The first cut using the style is `projects/josh-launch30` (30 Oct, 1:27).
+
+HyperFrames' `reverse-any-video` skill (a full frame-for-frame rebuild) is a paid HyperFrames Pro feature. It needs a HeyGen sign-in and re-shoots the people in the video as HeyGen avatars, so it wasn't run on the third-party reference videos.

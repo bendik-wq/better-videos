@@ -155,6 +155,18 @@
         return;
       }
       if (e.dataset.draw !== undefined) { e.style.strokeDashoffset = e.dataset.len * (1 - easeIO((lt - d) / parseFloat(e.dataset.dur || 0.8))); return; }
+      if (e.dataset.fx === 'type') { // launch style: a letter appears on its frame, flashes the accent colour, then turns white
+        e.style.opacity = lt >= d ? 1 : 0;
+        e.classList.toggle('hot', lt >= d && lt - d < 0.1);
+        return;
+      }
+      if (e.dataset.fx === 'wipe') { // launch style: revealed left to right (tabs, boxes, bars)
+        const p = ease((lt - d) / parseFloat(e.dataset.dur || 0.32));
+        e.style.clipPath = `inset(-20% ${((1 - p) * 100).toFixed(2)}% -20% 0)`;
+        e.style.opacity = lt >= d ? 1 : 0;
+        return;
+      }
+      if (e.dataset.fx === 'cut') { e.style.opacity = lt >= d ? 1 : 0; return; } // hard switch (full-screen inserts)
       if (e.dataset.fx === 'slam') { // word hits the screen: quick fade, scale down from 1.3
         e.style.opacity = clamp((lt - d) / 0.07);
         e.style.transform = `scale(${1 + 0.3 * (1 - ease((lt - d) / 0.22))})`;
@@ -246,15 +258,17 @@
     let fo = 0;
     want.forEach((i) => { const b = TL.beats[i]; fo = Math.max(fo, Math.min(ease((t - b.t0) / 0.5), clamp((b.t1 - t) / OUT))); });
     if (fsc) fsc.style.opacity = fo;
+    document.getElementById('cap').classList.toggle('onpaper', [...want].some((i) => { const p = build(i).querySelector('.panel'); return p && !p.classList.contains('black') && t - TL.beats[i].t0 >= parseFloat(p.dataset.d || 0); }));
     want.forEach((i) => {
       const b = TL.beats[i];
       const el = build(i);
       el.dataset.i = i;
       if (el.parentNode !== stage) stage.appendChild(el);
       animate(el, t - b.t0);
-      const o = clamp((b.t1 - t) / OUT);
+      // window.hardOut (render.mjs --launch): beats leave on a cut, like the launch videos' type
+      const o = window.hardOut ? 1 : clamp((b.t1 - t) / OUT);
       el.style.opacity = o;
-      el.style.transform = `translateY(${-(1 - o) * 16}px)`;
+      el.style.transform = window.hardOut ? '' : `translateY(${-(1 - o) * 16}px)`;
     });
   };
 })();

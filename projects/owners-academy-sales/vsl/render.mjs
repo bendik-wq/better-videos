@@ -67,12 +67,14 @@ if (V) {
 }
 // --full: Josh fills the frame; the graphics render with a transparent background (PNG frames, alpha .mov)
 const FULL = args.includes('--full');
-if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : (args.includes('--clean') || args.includes('--min')) ? 'stage-clean.css' : 'stage-full.css') });
+if (FULL) await page.addStyleTag({ path: path.join(HERE, V ? 'stage-vfull.css' : (args.includes('--clean') || args.includes('--min') || args.includes('--launch')) ? 'stage-clean.css' : 'stage-full.css') });
 // --min implies --clean, plus the minimal scribble layer on top
 const CLEAN = args.includes('--clean') || args.includes('--min');
 if (FULL && V && CLEAN) await page.addStyleTag({ path: path.join(HERE, 'stage-vclean.css') });
 if (FULL && args.includes('--min')) await page.addStyleTag({ path: path.join(HERE, 'stage-min.css') });
 if (FULL && V && args.includes('--min')) await page.addStyleTag({ path: path.join(HERE, 'stage-vmin.css') });
+// --launch: startup-launch-video style (typed kinetic type, tabs, outline boxes, full-screen inserts); beats cut out
+if (FULL && args.includes('--launch')) { await page.addStyleTag({ path: path.join(HERE, 'stage-launch.css') }); await page.evaluate(() => { window.hardOut = true; }); }
 if (opt('--bg-speed')) await page.evaluate((v) => { window.silkSpeed = v; }, Number(opt('--bg-speed')));
 await page.evaluate((tl) => window.loadTimeline(tl), TL);
 if (FULL) await page.evaluate(() => { window.__full = true; });

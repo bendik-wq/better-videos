@@ -1,0 +1,173 @@
+{
+ "clips": {
+  "hook": {
+   "t": [
+    480.92,
+    491.96
+   ]
+  },
+  "done": {
+   "t": [
+    506.05,
+    509.09
+   ]
+  },
+  "type": {
+   "t": [
+    2.62,
+    12.14
+   ]
+  },
+  "nine": {
+   "t": [
+    55.76,
+    59.34
+   ]
+  },
+  "one": {
+   "t": [
+    62.04,
+    66.4
+   ]
+  },
+  "fire": {
+   "t": [
+    117.51,
+    118.87
+   ]
+  },
+  "tsunami": {
+   "t": [
+    139.45,
+    144.73
+   ]
+  },
+  "retire": {
+   "t": [
+    155.73,
+    158.39
+   ]
+  },
+  "great": {
+   "t": [
+    161.95,
+    164.61
+   ]
+  },
+  "only": {
+   "t": [
+    248.98,
+    252.66
+   ]
+  },
+  "999": {
+   "t": [
+    253.56,
+    258.36
+   ]
+  },
+  "reality": {
+   "t": [
+    496.79,
+    498.79
+   ]
+  },
+  "mentor": {
+   "t": [
+    514.47,
+    516.21
+   ]
+  },
+  "first": {
+   "t": [
+    519.37,
+    526.39
+   ]
+  },
+  "amazing": {
+   "t": [
+    528.33,
+    531.79
+   ]
+  },
+  "career": {
+   "t": [
+    533.69,
+    536.61
+   ]
+  },
+  "button": {
+   "t": [
+    562.54,
+    566.38
+   ]
+  }
+ },
+ "cuts": {
+  "launch": {
+   "title": "Buy from a motivated seller (launch cut)",
+   "layout": "split",
+   "ns": "~ln",
+   "gap": 0.45,
+   "fps": 23.976,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "G&amp;L M&amp;A Advisory",
+     "title": "Comment <em>DEAL</em> for the breakdown.",
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "hook",
+    "done",
+    "type",
+    "nine",
+    "one",
+    "fire",
+    "tsunami",
+    "retire",
+    "great",
+    "only",
+    "999",
+    "reality",
+    "mentor",
+    "first",
+    "amazing",
+    "career",
+    "button"
+   ],
+   "sequence": [
+    "hook~ln#1",
+    "hook~ln#2",
+    "hook~ln#3",
+    "hook~ln#4",
+    "done~ln#1",
+    "type~ln#1",
+    "nine~ln#1",
+    "one~ln#1",
+    "fire~ln#1",
+    "tsunami~ln#1",
+    "tsunami~ln#2",
+    "retire~ln#1",
+    "great~ln#1",
+    "only~ln#1",
+    "999~ln#1",
+    "reality~ln#1",
+    "mentor~ln#1",
+    "first~ln#1",
+    "first~ln#2",
+    "first~ln#3",
+    "first~ln#4",
+    "amazing~ln#1",
+    "amazing~ln#2",
+    "career~ln#1",
+    "button~ln#1",
+    "button~ln#2",
+    "button~ln#3"
+   ]
+  }
+ }
+}
