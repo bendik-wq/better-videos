@@ -1,0 +1,101 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[
+    {"id":"color-paper","type":"color","label":"Paper","default":"#f7f6f1"},
+    {"id":"color-ink","type":"color","label":"Ink","default":"#14233d"},
+    {"id":"color-teal","type":"color","label":"Teal","default":"#2a8c86"},
+    {"id":"color-red","type":"color","label":"Red (one per frame)","default":"#e0241b"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- GSAP vendored locally: no network at render time -->
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      /* MAINSPRING "Paper & Spring" (docs/library/animation-study/STYLE-BIBLE.md) */
+      :root {
+        --color-paper: #f7f6f1;
+        --color-ink: #14233d;
+        --color-teal: #2a8c86;
+        --color-red: #e0241b;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-paper);
+      }
+      #root { position: relative; width: 100%; height: 100%; }
+      #paper-ground { position: absolute; inset: 0; background: var(--color-paper); z-index: 0; }
+      #fibre { position: absolute; inset: 0; z-index: 50; pointer-events: none; mix-blend-mode: multiply; opacity: 0.05; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-fps="60"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="paper-ground"></div>
+
+      <div
+        id="ladder"
+        data-composition-id="ladder"
+        data-composition-src="compositions/ladder.html"
+        data-start="0"
+        data-duration="8.2"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+        style="z-index: 2"
+      ></div>
+
+      <div
+        id="count"
+        data-composition-id="count"
+        data-composition-src="compositions/count.html"
+        data-start="8.1"
+        data-duration="3.9"
+        data-track-index="2"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+        style="z-index: 3"
+      ></div>
+
+      <!-- static paper fibre (seeded turbulence), 5% multiply over everything -->
+      <svg id="fibre" width="1920" height="1080" viewBox="0 0 1920 1080" data-layout-ignore>
+        <filter id="fibre-f" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9 0.35" numOctaves="2" seed="7" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="1920" height="1080" filter="url(#fibre-f)" />
+      </svg>
+
+      <!-- VO: CC0 LibriVox reference read (assets/voices/stuart_bell.wav), stand-in for our ElevenLabs line -->
+      <audio
+        id="vo"
+        class="clip"
+        src="assets/vo.wav"
+        data-start="0.3"
+        data-duration="8.45"
+        data-track-index="5"
+        data-volume="1"
+      ></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

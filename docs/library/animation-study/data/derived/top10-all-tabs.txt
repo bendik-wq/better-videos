@@ -1,0 +1,636 @@
+
+## AlternateHistoryHub.videos.csv n=285 median=1.2M
+| 11.0M | 16:20 | History of the Fallout World (Lore) |
+| 7.9M | 8:13 | What if Germany Won WWI? (Part 1) |
+| 7.4M | 65:05 | The Alternate Timeline Iceberg Explained (Part 1) |
+| 7.1M | 15:26 | The Dystopian World of 1984 Explained |
+| 6.9M | 23:20 | The History of the World According to 'Ancient Aliens' |
+| 5.6M | 5:58 | What if the Purge Was Real? |
+| 5.5M | 29:02 | What If There Was A Continent In the Pacific? |
+| 5.2M | 24:12 | What if Napoleon Never Rose To Power? |
+| 5.2M | 14:11 | What if Germany Won World War II? (Part 1) |
+| 5.0M | 17:13 | National Anthems of the World: The Beautiful, Boring and Bonkers |
+
+## Animagraffs.videos.csv n=37 median=2.6M
+| 19.0M | 25:56 | How a Jet Airliner Works |
+| 19.0M | 7:55 | How a Car Engine Works |
+| 15.0M | 25:27 | How an 18th Century Sailing Warship Works (HMS Victory) |
+| 11.0M | 55:30 | How the Lockheed SR-71 Blackbird Works |
+| 10.0M | 36:24 | How a Steam Locomotive Works (Union Pacific "Big Boy") |
+| 10.0M | 18:37 | How a P-51 Mustang Works |
+| 10.0M | 23:13 | How a Formula 1 Race Car Works |
+| 9.2M | 30:52 | How a World War Two Submarine Works |
+| 7.8M | 25:13 | How a Diesel-Electric Locomotive Works |
+| 7.4M | 10:23 | How a Manual Transmission and Clutch Works |
+
+## AsapSCIENCE.videos.csv n=451 median=2.3M
+| 68.0M | 2:59 | Do You Hear "Yanny" or "Laurel"? (SOLVED with SCIENCE) |
+| 65.0M | 3:05 | The Periodic Table Song (2018 Update!) | SCIENCE SONGS |
+| 44.0M | 1:15 | The Pi Song  (Memorize 100 Digits Of π) | SCIENCE SONGS |
+| 37.0M | 2:54 | The Periodic Table Song | SCIENCE SONGS |
+| 32.0M | 7:50 | How To Fall Asleep In 2 Minutes |
+| 29.0M | 2:06 | What Colour Is This Dress? (SOLVED with SCIENCE) |
+| 27.0M | 3:09 | This Is 200 Calories |
+| 24.0M | 3:00 | Is Masturbation Good For You? |
+| 24.0M | 1:38 | How Old Are Your Ears? (Hearing Test) |
+| 23.0M | 3:29 | What Happens When You Stop Smoking? |
+
+## CGPGrey.videos.csv n=149 median=6.7M
+| 44.0M | 4:30 | Traffic Has a Perfect Solution. Humans Are the Problem. |
+| 37.0M | 8:28 | The Fastest Way to Board a Plane Feels Like the Slowest |
+| 37.0M | 4:42 | The US-Canada Border Is 5,500 Miles of Pure Nonsense |
+| 34.0M | 5:09 | You Can Never Become Pope |
+| 26.0M | 18:13 | Try to Rule Fairly and You'll Be Overthrown |
+| 26.0M | 6:23 | The Secret Reason Horses Let Us Ride Them |
+| 25.0M | 5:15 | The UK Is a Country Made of Countries |
+| 22.0M | 9:27 | Pentagons Are Terrible at One Thing |
+| 21.0M | 8:38 | The Royal Family Runs on Rules You've Never Heard Of |
+| 21.0M | 4:30 | Watching This Video Disqualifies You From Jury Duty for Life |
+
+## EpicHistoryTV.videos.csv n=151 median=1.1M
+| 29.0M | 53:13 | The Greatest General in History? Alexander the Great (All Parts) |
+| 23.0M | 64:50 | World War 1 (All Parts, 4k) |
+| 17.0M | 47:00 | History of Russia - Rurik to Revolution |
+| 16.0M | 204:11 | Napoleonic Wars: Downfall 1809 - 14 |
+| 16.0M | 64:50 | World War One (All Parts) (age-restricted) |
+| 16.0M | 7:39 | The Greatest Speech in History? Alexander the Great and the Opis Mutiny |
+| 14.0M | 95:03 | Napoleonic Wars: March of the Eagles 1805 - 09 |
+| 9.5M | 134:47 | The Last Great Roman General? Belisarius and the Wars of Justinian (All Parts) |
+| 8.5M | 53:04 | 3D Guide to an 18th century Ship-of-the-Line |
+| 7.3M | 62:56 | Napoleonic Wars: The Invasion of Russia (All Parts) |
+
+## HistoryMatters.videos.csv n=396 median=1.7M
+| 10.0M | 3:24 | What Happened When Kamikaze Pilots Failed or Wimped Out? (Short Animated Documentary) |
+| 6.9M | 4:00 | Why does Russia Own Kaliningrad/ Königsberg? (Short Animated Documentary) |
+| 6.7M | 3:31 | Why didn't Mao Conquer Taiwan? (Short Animated Documentary) |
+| 6.6M | 3:04 | Why did France Leave NATO? (Short Animated Documentary) |
+| 6.5M | 3:55 | Why don't Countries Formally Declare War Anymore? (Short Animated Documentary) |
+| 6.0M | 3:14 | Why did Russia sell Alaska to America? (Short Animated Documentary) |
+| 5.9M | 3:44 | Why didn't the USSR Annex Finland (Short Animated Documentary) |
+| 5.2M | 10:00 | Ten Minute History - World War One and International Relations (Short Documentary) |
+| 5.1M | 10:00 | Ten Minute History - The Late British Empire (Short Documentary) |
+| 4.9M | 2:57 | How did the USSR React to JFK's Assassination? (Short Animated Documentary) |
+
+## JaredOwen.videos.csv n=88 median=3.0M
+| 64.0M | 9:49 | How does a Tank work? (M1A2 Abrams) |
+| 28.0M | 1:44 | How big is the Solar System? |
+| 25.0M | 9:01 | How does an Electric Motor work?  (DC Motor) |
+| 22.0M | 21:31 | What's inside the Titanic? |
+| 21.0M | 12:41 | How did the Orbiter Vehicle work? (Space Shuttle) |
+| 19.0M | 4:59 | How does an Escalator work? |
+| 17.0M | 16:59 | How does a Military Helicopter work?  (Pave Hawk) |
+| 16.0M | 14:04 | How did the Space Shuttle launch work? |
+| 14.0M | 19:26 | How did the Enigma Machine work? |
+| 14.0M | 10:50 | What's inside the Statue of Liberty? |
+
+## JohnnyHarris.videos.csv n=212 median=3.1M
+| 17.0M | 28:17 | Why People Think The Government Killed JFK |
+| 14.0M | 30:52 | The “Deep State” Explained |
+| 14.0M | 18:43 | Why People Think the World is Flat |
+| 13.0M | 29:46 | The REAL Reason McDonalds Ice Cream Machines Are Always Broken |
+| 11.0M | 14:15 | The Worst War You Never Learned About, Mapped |
+| 11.0M | 21:34 | What happens if China invades Taiwan? |
+| 10.0M | 22:12 | Why Putin Feared Navalny |
+| 9.6M | 27:35 | Putin Will Lose, Here's Why |
+| 9.6M | 22:01 | The REAL Reason Putin is Invading Ukraine |
+| 9.5M | 29:23 | Why Switzerland Has 374,142 Bunkers (and likely more) |
+
+## KingsandGenerals.videos.csv n=1304 median=414K
+| 20.0M | 125:29 | How Rome Conquered Greece - Roman History DOCUMENTARY |
+| 13.0M | 68:18 | Mongols Season 1 Full - from Genghis to Kublai |
+| 12.0M | 15:59 | Six-Day War (1967) - Third Arab–Israeli War DOCUMENTARY |
+| 10.0M | 84:13 | Caesar in Gaul - Roman History DOCUMENTARY |
+| 9.8M | 135:19 | Caesar against Pompey - Great Roman Civil War DOCUMENTARY |
+| 9.3M | 167:55 | How Caesar Won the Great Roman Civil War - Animated DOCUMENTARY |
+| 8.5M | 113:12 | Early Muslim Expansion - Khalid, Yarmouk, al-Qadisiyyah DOCUMENTARY |
+| 6.8M | 214:00 | Hundred Years' War - Full Story, Every Battle - Animated Medieval History |
+| 6.6M | 77:36 | Thomas Cochrane: Craziest Sea Captain in History |
+| 6.2M | 17:53 | Muslim Schism: How Islam Split into the Sunni and Shia Branches |
+
+## MinuteEarth.videos.csv n=412 median=851K
+| 19.0M | 2:28 | Why It Sucks to Be a Male Hyena |
+| 17.0M | 2:25 | Why Do Animals Eat Their Babies? |
+| 10.0M | 2:25 | Why Can't Mules Have Babies? |
+| 9.4M | 2:39 | Why Do Rivers Curve? |
+| 9.4M | 2:34 | Why Do We Have More Boys Than Girls? |
+| 8.3M | 2:33 | Where Did Earth's Water Come From? |
+| 7.9M | 2:47 | Why is it Hot Underground? |
+| 7.5M | 3:04 | Why Do Bats Carry So Many Diseases? (like Coronavirus) |
+| 7.2M | 4:22 | Why There Are No King Bees |
+| 6.7M | 2:27 | Screens are NOT the reason kids need glasses 👀 |
+
+## NotJustBikes.videos.csv n=125 median=1.0M
+| 8.2M | 18:14 | Stroads are Ugly, Expensive, and Dangerous (and they're everywhere) [ST05] |
+| 7.2M | 35:07 | These Stupid Trucks are Literally Killing Us |
+| 7.2M | 17:03 | Why This Channel Exists (and why I hate Houston) |
+| 7.1M | 10:37 | Why Dutch Bikes are Better (and why you should want one) |
+| 5.2M | 12:14 | Why We Won't Raise Our Kids in Suburbia |
+| 3.8M | 9:39 | Why American Cities Are Broke - The Growth Ponzi Scheme [ST03] |
+| 3.2M | 15:14 | Why Canadians Can't Bike in the Winter (but Finnish people can) |
+| 3.1M | 13:00 | The Dumbest Excuse for Bad Cities |
+| 3.0M | 3:38 | We Have No Garbage Day in Amsterdam! |
+| 2.8M | 8:10 | The Houses that Can't be Built in America - The Missing Middle |
+
+## OverSimplified.videos.csv n=33 median=40.0M
+| 105.0M | 13:46 | WW2 - OverSimplified (Part 1) |
+| 75.0M | 16:04 | The Cold War - OverSimplified (Part 1) |
+| 72.0M | 29:53 | The American Civil War - OverSimplified (Part 1) |
+| 69.0M | 29:42 | The Napoleonic Wars  - OverSimplified (Part 1) |
+| 68.0M | 15:35 | WW2 - OverSimplified (Part 2) |
+| 64.0M | 15:08 | The American Revolution  - OverSimplified (Part 1) |
+| 58.0M | 33:43 | Prohibition - OverSimplified |
+| 57.0M | 6:24 | WW1 - Oversimplified (Part 1) |
+| 51.0M | 26:47 | Henry VIII - OverSimplified |
+| 51.0M | 17:54 | The French Revolution - OverSimplified (Part 1) |
+
+## PrimerBlobs.videos.csv n=23 median=1.8M
+| 24.0M | 13:17 | Simulating the Evolution of Aggression |
+| 15.0M | 10:00 | Simulating Natural Selection |
+| 6.6M | 22:38 | How To Catch A Cheater With Math |
+| 6.5M | 20:49 | Simulating the Evolution of Sacrificing for Family |
+| 6.1M | 12:50 | Epidemic, Endemic, and Eradication Simulations |
+| 4.8M | 12:22 | Simulating Supply and Demand |
+| 4.6M | 15:00 | Simulating the Evolution of Rock, Paper, Scissors |
+| 4.5M | 13:23 | Simulating Green Beard Altruism |
+| 4.4M | 14:03 | Simulating alternate voting systems |
+| 4.4M | 10:22 | Simulating Foraging Decisions |
+
+## Ridddle.videos.csv n=329 median=135K
+| 1.7M | 23:28 | Заборонена церквою книга Еноха розкриває приголомшливі таємниці нашої історії! |
+| 1.6M | 19:27 | Нове відкриття всередині Великої піраміди! Що знайшли там вчені? |
+| 1.3M | 22:45 | Брудні таємниці Ватикану, які приховували від нас тисячі років |
+| 1.1M | 22:50 | Секрети Антарктиди: що приховує найзагадковіший континент? |
+| 1.1M | 24:26 | 2000-річна Біблія розкрила загублений  розділ з моторошними подробицями про минуле людства |
+| 1.1M | 19:41 | Під кригою Антарктиди знайдено піраміди! |
+| 897K | 21:09 | Що NASA насправді виявила на Місяці після „Аполлона-11“ |
+| 871K | 27:14 | 12 неймовірних знахідок у Єгипті, які змінюють хід історії! |
+| 863K | 10:14 | Що, якби змія Титанобоа не вимерла? |
+| 859K | 10:19 | Що буде, якщо ми детонуємо кобальтову бомбу? Найпотужніша руйнівна сила людства! |
+
+## SamONellaAcademy.videos.csv n=68 median=11.0M
+| 23.0M | 5:45 | Historical Misconceptions For You to Bring Up during Family Dinner |
+| 20.0M | 7:49 | Tarrare, the Hungriest Man in History |
+| 19.0M | 11:59 | The Presidential Assassination Nobody Talks About |
+| 19.0M | 6:56 | Obscure Obsolete Inventions |
+| 19.0M | 5:02 | Why It Sucked to Be a Pirate |
+| 17.0M | 8:06 | Top 10 Worst Animal Skeletons |
+| 17.0M | 7:33 | Why Produce Used to Suck |
+| 17.0M | 7:46 | Pre-Industrial Surgeries |
+| 17.0M | 4:15 | Dog Breed Deformities |
+| 16.0M | 9:07 | Timothy Dexter: The Dumbest Rags-to-Riches Story |
+
+## SciencephiletheAI.videos.csv n=157 median=465K
+| 7.0M | 8:11 | What if we replace the Sun with Extreme Space Objects? |
+| 4.2M | 4:59 | The 11 Dimensions EXPLAINED |
+| 2.6M | 8:04 | What if we replace the Moon with other Space Objects? |
+| 2.4M | 8:47 | The Universe doesn't look like THIS |
+| 2.3M | 5:36 | Physics in 6 minutes |
+| 2.2M | 9:31 | All of Biology in 9 minutes |
+| 2.1M | 13:48 | Iceberg of Existential Horror Theories |
+| 2.0M | 8:05 | The Crazy Future If Protons Don't Decay |
+| 2.0M | 9:20 | The Unbelievable Size of the Universe |
+| 2.0M | 5:04 | Quantum Suicide - Why you might be immortal |
+
+## SimpleHistory.videos.csv n=967 median=987K
+| 23.0M | 3:51 | Sniper Decoys: Dummy Heads |
+| 16.0M | 3:28 | Schwerer Gustav  - Rail Super Gun (Behemoth) |
+| 14.0M | 15:33 | The Medic Who fought a War without a Weapon |
+| 11.0M | 6:49 | How Long did a Person Stay Alive after being Guillotined? |
+| 10.0M | 10:23 | Punishments in the Congo Free State under Leopold II |
+| 10.0M | 10:27 | The Green Beret who went on a one man Rampage to save his Comrades |
+| 10.0M | 4:31 | The Korean War (1950–53) |
+| 10.0M | 2:08 | Drip Rifle (Weird Weapons) |
+| 9.9M | 6:15 | Rasputin, the man who wouldn't die (Strange Stories) |
+| 9.9M | 3:25 | Attack of the Dead Men (Strange Stories) |
+
+## TEDEd.videos.csv n=2371 median=858K
+| 37.0M | 4:35 | Can you solve the prisoner hat riddle? - Alex Gendler |
+| 29.0M | 12:08 | Questions No One Knows the Answers to (Full Version) |
+| 27.0M | 4:59 | How do solar panels work? - Richard Komp |
+| 26.0M | 4:29 | What is depression? - Helen M. Farrell |
+| 25.0M | 6:00 | The Infinite Hotel Paradox - Jeff Dekofsky |
+| 24.0M | 3:50 | Can you solve the bridge riddle? - Alex Gendler |
+| 23.0M | 4:52 | What would happen if you didn’t drink water? - Mia Nacamulli |
+| 23.0M | 4:20 | What makes muscles grow? - Jeffrey Siegel |
+| 23.0M | 4:05 | What are those floaty things in your eye? - Michael Mauser |
+| 22.0M | 5:42 | The language of lying — Noah Zandan |
+
+## TheArmchairHistorian.videos.csv n=289 median=1.0M
+| 8.4M | 10:52 | D-Day From the German Perspective | Animated History (REMASTER IN DESCRIPTION) |
+| 7.7M | 14:45 | Life in German-Occupied France | Animated History |
+| 7.1M | 24:48 | D-Day From the German Perspective | Animated History |
+| 6.1M | 19:36 | Vietnam War from the North Vietnamese Perspective | Animated History |
+| 5.7M | 19:33 | 2001 Invasion of Afghanistan | Animated History (REMASTER IN DESCRIPTION) |
+| 5.5M | 41:40 | The North African Campaign | Animated History |
+| 5.4M | 10:51 | Evolution of German Army Uniforms | Animated History (REMASTER IN DESCRIPTION) |
+| 4.8M | 90:29 | WW2 From the German Perspective (Full Documentary) | Animated History |
+| 4.4M | 27:56 | How Prussia Ended The French Empire: Franco-Prussian War | Animated History |
+| 4.3M | 27:01 | Deadliest Battle in History: Stalingrad | Animated History |
+
+## TheInfographicsShow.videos.csv n=5775 median=567K
+| 27.0M | 7:04 | What Happens When You Die? |
+| 22.0M | 12:26 | Russian Sleep Experiment - EXPLAINED |
+| 20.0M | 17:57 | How SEAL Team Took Down Osama bin Laden (Minute by Minute) |
+| 19.0M | 7:54 | What Happens to Your Body While You Are Having Sex? |
+| 17.0M | 13:49 | How They Caught Serial Killer Ted Bundy |
+| 15.0M | 201:20 | The Most Watched Infographics Show Stories of 2019 |
+| 15.0M | 8:00 | Insane Way El Chapo Escaped Prison |
+| 14.0M | 8:33 | What Does it Actually Feel Like to be Shot |
+| 14.0M | 10:30 | What The Last 24 Hours of Death Row Prisoner Look Like |
+| 13.0M | 15:29 | What If North Korea Launched a Nuclear Bomb (Minute by Minute) |
+
+## WhatIfScienceShow.videos.csv n=959 median=495K
+| 25.0M | 7:48 | What Happens If You Get Covid-19 and Every Breath Starts to Hurt? |
+| 17.0M | 4:19 | What If We Dumped Our Trash into Volcanoes Full of 1,100°C Lava? |
+| 16.0M | 4:43 | What If You Were Swallowed by a Whale and Spent 24 Hours Inside? |
+| 15.0M | 3:12 | What If the World Lost Oxygen for 5 Seconds? |
+| 13.0M | 6:17 | What If You Jumped Into Lake Natron? |
+| 13.0M | 4:55 | What If You Fell Into a Black Hole and Time FROZE? |
+| 12.0M | 4:23 | What If You Fell Into Jupiter and Sank Into Metallic Hydrogen? |
+| 11.0M | 5:13 | What If the Sun Exploded Tomorrow? |
+| 11.0M | 5:12 | What If Megalodon Sharks Never Went Extinct and Ate 2,400 Pounds a Day? |
+| 10.0M | 8:47 | What If You Traveled One Billion Years Into the Future? |
+
+## discovery_GoodEnough.videos.csv n=33 median=2.1M
+| 16.0M | 18:01 | The Worst Punishments in Human History |
+| 7.4M | 19:13 | The Deadliest Man Eaters to Ever Exist |
+| 7.0M | 11:34 | The 5 Times the World Ended |
+| 6.5M | 19:34 | The Most Terrifying Cults to Ever Exist |
+| 6.4M | 10:37 | Top 10 Animals That Love Being High |
+| 6.1M | 12:56 | The Most Terrifying Things in Our Universe |
+| 5.2M | 13:29 | The Unfair Matches of the Roman Colosseum |
+| 5.0M | 17:56 | The Most Painful Venoms in The World |
+| 4.8M | 15:56 | The Most Terrifying Planets Ever Discovered |
+| 4.7M | 11:46 | The Deadliest Foods in the World |
+
+## discovery_Historically.videos.csv n=23 median=2.3M
+| 10.0M | 38:30 | The ENTIRE History of ROME [No AI] |
+| 8.5M | 32:02 | The ENTIRE History of CHINA [No AI] |
+| 6.2M | 73:30 | WW2's BEST Soldiers... |
+| 4.2M | 14:57 | The Jesus Problem [No AI] |
+| 4.2M | 25:48 | What happened to the Ancient World Wonders? |
+| 4.1M | 18:57 | How WW2 Began [No AI] |
+| 4.1M | 19:50 | The Philosopher Everyone Hates... |
+| 3.7M | 21:06 | This Country Disappeared 8 TIMES.... [No AI] |
+| 3.5M | 11:26 | The Shortest War EVER |
+| 3.0M | 24:08 | The Longest War EVER [No AI] |
+
+## discovery_IMPERIAL.videos.csv n=30 median=744K
+| 5.2M | 17:53 | The Most Famous Killing in History |
+| 4.5M | 21:56 | Europe's North Korea |
+| 2.7M | 18:36 | The Greatest Escape in History |
+| 2.5M | 25:16 | How Terrorists Stole an Italian Cruise Ship |
+| 2.3M | 23:12 | The Evil Genius of Fascist Design |
+| 2.0M | 18:12 | The Largest Megaproject in History |
+| 1.8M | 24:59 | How War Made the Cigarette |
+| 1.5M | 29:15 | The IRA's War on London |
+| 1.5M | 33:26 | The Longest Hijacking in History |
+| 1.0M | 13:26 | Why Soviet Bus Stops Look Weird |
+
+## discovery_Ifverse.videos.csv n=16 median=138K
+| 4.6M | 7:13 | What If Your Reaction Time Was 10x Faster? |
+| 1.4M | 8:56 | What If You Had 500 IQ? |
+| 689K | 6:47 | What If One Second Felt Like Ten? |
+| 551K | 8:36 | What If You Used 500 IQ to Disappear? |
+| 417K | 5:48 | What If You Woke Up in Kindergarten With All Your Memories? |
+| 386K | 9:05 | What If One Second Felt Like Forever? |
+| 246K | 11:40 | What If You Used 500 IQ to Save Your Sister? |
+| 173K | 8:15 | What If You Were Trapped in a Time Loop? |
+| 104K | 10:06 | Everyone Has a Power Level. Mine Is 1. |
+| 93K | 8:21 | What If You Were a Mentalist? |
+
+## discovery_InkExplainer.videos.csv n=20 median=300K
+| 18.0M | 11:13 | What Did Ancient Humans Actually Do All Day? |
+| 1.9M | 11:37 | What Did Ancient Humans Do When It Rained All Week? |
+| 1.7M | 8:06 | Why Are We the Only Human Species Left? What happened to others... |
+| 1.4M | 11:31 | The Disturbing Ways Ancient Humans Survived Winter |
+| 942K | 6:04 | When Did Ancient Humans Start Drinking Alcohol? |
+| 902K | 9:23 | How Did Ancient Humans Travel the World? |
+| 750K | 8:24 | When Did Ancient Humans Start Smoking Weed? |
+| 465K | 9:07 | Why Ancient Humans Were The Most TERRIFYING Animal Alive |
+| 393K | 6:44 | The Real Reason Humans Started Wearing Clothes |
+| 313K | 8:08 | Do Animals Know When Another Animal is a Baby? |
+
+## discovery_SeriousHistory.videos.csv n=60 median=1.1M
+| 7.6M | 29:02 | Extreme Vigilante Justice in History |
+| 6.5M | 18:27 | Most Epic Deaths in History |
+| 4.1M | 12:33 | Your Life as Miyamoto Musashi |
+| 3.9M | 21:32 | More Nice People Who Snapped in History |
+| 3.6M | 16:33 | When Nice People Snapped in History |
+| 3.2M | 20:01 | The Greatest Last Stands in History |
+| 3.2M | 17:34 | Craziest 1v1 Fights in History |
+| 2.9M | 21:48 | Most Epic Revenge Stories in History |
+| 2.7M | 23:07 | Real Life Anti-Heroes in History |
+| 2.7M | 17:29 | Extreme Stories of Revenge from History |
+
+## discovery_SimplePaint.videos.csv n=138 median=426K
+| 6.1M | 16:26 | The Worst Deaths in Every Sport |
+| 6.0M | 18:24 | The Worst Astronaut Deaths Ever |
+| 6.0M | 11:14 | The Most AVOIDABLE Cave Deaths Ever |
+| 3.9M | 12:08 | The Worst Gamer Deaths Ever |
+| 3.8M | 16:36 | The Worst Mistakes Humans Ever Made |
+| 3.5M | 15:58 | The Worst Mount Everest Deaths in Human History |
+| 3.4M | 14:52 | The Worst Roller Coaster Deaths Ever |
+| 3.3M | 13:56 | The Dumbest Ways People Have Died |
+| 3.1M | 15:47 | The Most Horrifying Ways People Got Trapped |
+| 2.9M | 12:57 | The Worst Olympic Games Deaths Ever |
+
+## discovery_Stargaze.videos.csv n=148 median=203K
+| 10.0M | 5:04 | Falling Into Jupiter (Simulation) |
+| 7.6M | 5:38 | Falling Into Uranus (Simulation) |
+| 7.3M | 2:01 | Milky Way and Andromeda Collision - Time Lapse |
+| 5.6M | 6:44 | Sunrise from other planets and moons (Our Solar System) [Remake] |
+| 4.7M | 10:07 | What If a Black Hole Entered Our Solar System? (Simulation) |
+| 4.1M | 5:06 | Falling Into Saturn (Simulation) |
+| 3.8M | 6:45 | Falling Into Saturn (Simulation) [Remake] |
+| 2.4M | 1:41 | Replacing the Moon With Planets of our Solar System (Visualization) |
+| 2.2M | 5:14 | Falling Into Earth (Simulation) |
+| 2.0M | 5:19 | Falling Into a Wormhole (Simulation) |
+
+## discovery_TheLastDay.videos.csv n=23 median=140K
+| 5.1M | 19:19 | Nepal's 2026 Disaster Explained: The Glacier That Wiped Out a Valley |
+| 1.9M | 20:57 | What would happen If the Moon Crashed Into Earth? |
+| 1.6M | 20:03 | What Would Happen If an Asteroid Hit the Ocean? |
+| 1.5M | 12:32 | The Wave That Was Taller Than a Skyscraper |
+| 952K | 19:19 | What Happens to Earth If Humans Disappear Tomorrow? |
+| 777K | 21:24 | What Would Happen If The Sun Disappeared For One Week? |
+| 502K | 23:11 | The Most Terrifying Dinosaur Was Not the T Rex |
+| 404K | 19:32 | What Would Happen If It Rained on Earth for an Entire Year? |
+| 333K | 23:42 | What Earth Actually Looked Like When Dinosaurs Ruled It | 4k Documentary |
+| 260K | 14:28 | The Last Day of the Dinosaurs: What Happened in the 24 Hours Before Extinction |
+
+## discovery_TheScribbleScholar.videos.csv n=112 median=56K
+| 10.0M | 13:53 | How Every Infamous Dictator Died |
+| 1.3M | 15:57 | How Every Legendary Martial Artist Died |
+| 1.2M | 14:49 | How Every Scientist Involved in the Manhattan Project Died |
+| 1.2M | 16:02 | The Worst Pop Star Deaths Ever |
+| 1.1M | 19:33 | How Every Iconic Gangster Died |
+| 850K | 14:38 | How Every Legendary Samurai Died |
+| 710K | 15:39 | How Every Legendary Roman Emperor Died |
+| 632K | 15:31 | How Every Ancient Egyptian Pharaoh Died |
+| 585K | 16:43 | How Every Legendary Gladiator Died |
+| 498K | 17:38 | How Every Legendary Explorer Died |
+
+## discovery_Yarnhub.videos.csv n=241 median=2.2M
+| 34.0M | 12:06 | How a Nighthawk Was Shot Down |
+| 32.0M | 12:02 | When F-16 Falcons Ate Hawks for Breakfast |
+| 22.0M | 14:08 | When a B-17 Tail Fell With a Gunner Inside |
+| 20.0M | 13:45 | When MiG-29s Ambushed F-15 Eagles |
+| 18.0M | 17:41 | Midway From The Japanese Perspective |
+| 16.0M | 17:27 | Wake Island: The Last Stand That Stunned Japan |
+| 16.0M | 12:28 | When A-4 Skyhawks Sank the British |
+| 16.0M | 9:56 | When Cockroaches Hunted Panzers |
+| 15.0M | 5:57 | When a Bf-109 spared a stricken B-17 |
+| 13.0M | 11:18 | How the Mighty Scharnhorst Was Sunk |
+
+## discovery_Zenn.videos.csv n=39 median=31K
+| 8.1M | 8:32 | What Did Ancient Humans Do at Night? |
+| 5.2M | 8:33 | The Calhoun Effect |
+| 1.8M | 6:54 | Why You Can't Remember Being a Baby |
+| 907K | 8:04 | What Did Ancient Humans Actually Eat? |
+| 832K | 10:32 | What If WE Are The Aliens? |
+| 761K | 10:23 | Why Hasn't Anyone Raised the Titanic? |
+| 586K | 8:16 | What Happens After We Die? |
+| 457K | 8:49 | What Did Ancient Humans Do All Day? |
+| 373K | 11:36 | The Slotow Effect |
+| 155K | 8:01 | The Minnesota Effect |
+
+## kurzgesagt.videos.csv n=255 median=11.0M
+| 89.0M | 8:35 | The Coronavirus Explained & What You Should Do |
+| 54.0M | 7:49 | The Immune System Explained I – Bacteria Infection |
+| 36.0M | 8:06 | The Egg - A Short Story |
+| 36.0M | 6:03 | What If You Detonated a Nuclear Bomb In The Marianas Trench? (Science not Fantasy) |
+| 35.0M | 11:59 | The Largest Star in the Universe – Size Comparison |
+| 35.0M | 7:09 | The Deadliest Being on Planet Earth – The Bacteriophage |
+| 35.0M | 6:21 | The Fermi Paradox — Where Are All The Aliens? (1/2) |
+| 33.0M | 13:44 | The Largest Black Hole in the Universe - Size Comparison |
+| 32.0M | 7:06 | What If We Detonated All Nuclear Bombs at Once? |
+| 32.0M | 10:13 | Why Black Holes Could Delete The Universe – The Information Paradox |
+
+## melodysheep.videos.csv n=123 median=1.0M
+| 113.0M | 29:21 | TIMELAPSE OF THE FUTURE: A Journey to the End of Time (4K) |
+| 20.0M | 38:00 | LIFE BEYOND II: The Museum of Alien Life (4K) |
+| 16.0M | 10:50 | TIMELAPSE OF THE ENTIRE UNIVERSE |
+| 16.0M | 2:14 | Lucky Charms remix - 'Magically Delicious' |
+| 16.0M | 1:37 | Our Story in 1 Minute |
+| 14.0M | 30:26 | LIFE BEYOND:  Chapter 1. Alien life, deep time, and our place in cosmic history (4K) |
+| 13.0M | 3:35 | Carl Sagan - 'A Glorious Dawn'  ft Stephen Hawking (Symphony of Science) |
+| 12.0M | 3:29 | Symphony of Science - the Quantum World! |
+| 10.0M | 42:40 | LIFE BEYOND 3:  In Search of Giants.  The Hunt for Intelligent Alien Life (4K) |
+| 9.1M | 4:12 | Symphony of Science - 'We Are All Connected' (ft. Sagan, Feynman, deGrasse Tyson & Bill Nye) |
+
+## minutephysics.videos.csv n=304 median=1.3M
+| 21.0M | 2:02 | Is it Better to Walk or Run in the Rain? |
+| 14.0M | 4:05 | Passing A Portal Through Itself |
+| 13.0M | 3:35 | Immovable Object vs. Unstoppable Force - Which Wins? |
+| 11.0M | 8:05 | Time Travel in Fiction Rundown |
+| 10.0M | 2:34 | How to See Without Glasses |
+| 10.0M | 4:56 | The True Science of Parallel Universes |
+| 10.0M | 3:59 | What if the Earth were Hollow? |
+| 9.4M | 3:12 | Why is the Solar System Flat? |
+| 8.1M | 2:48 | Solution to the Grandfather Paradox |
+| 8.0M | 17:35 | Bell's Theorem: The Quantum Venn Diagram Paradox |
+
+## zackdfilms.videos.csv n=12 median=5.3M
+| 20.0M | 5:26 | Ohio's 1986 Balloon Disaster |
+| 12.0M | 5:24 | The Pepsi Contest That Killed 5 People |
+| 11.0M | 12:13 | 13 Unreleased Videos I Thought Would Go Viral |
+| 10.0M | 6:33 | Toyota's $2,300,000,000 Mistake |
+| 7.6M | 6:08 | The 10-Second Time Machine |
+| 5.9M | 11:59 | 5 Unreleased Videos I Thought Would Go Viral |
+| 4.7M | 3:51 | The Disturbing Story Behind The Starbucks Logo |
+| 4.2M | 10:51 | The Flamin' Hot Lie (explained) |
+| 3.0M | 27:22 | 19 of My Creepiest Fiction Stories (Compilation) |
+| 2.8M | 3:06 | The Full Story of Norman (the animatronic puppet) |
+
+## Animagraffs.shorts.csv n=11 median=98K
+| 1.2M | 0:00 | How an airliner APU (auxiliary power unit) works |
+| 1.2M | 0:00 | How airliner brakes work |
+| 745K | 0:00 | How airplane "air brakes" (thrust reversers) work |
+| 311K | 0:00 | How airplane landing gear works |
+| 264K | 0:00 | How airplane flaps work |
+| 98K | 0:00 | How airplane doors work |
+| 96K | 0:00 | How airplane flight control surfaces work |
+| 64K | 0:00 | How airliner windows work |
+| 60K | 0:00 | Airplane static dischargers |
+| 47K | 0:00 | How planes control pitch (front to back angle) |
+
+## AsapSCIENCE.shorts.csv n=115 median=167K
+| 13.0M | 0:00 | 5 signs you’re smarter than average #shorts |
+| 8.6M | 0:00 | Your dumb kid in 2053 #shorts |
+| 8.4M | 0:00 | Why you hate the sound of your own voice #shorts |
+| 8.2M | 0:00 | Why you get “morning wood” |
+| 7.3M | 0:00 | 15% of people don't have this muscle in their body #shorts |
+| 7.2M | 0:00 | Are zebras black with white stripes or white with black stripes? #shorts |
+| 4.0M | 0:00 | How Disneyworld kills all their mosquitoes! #shorts |
+| 3.9M | 0:00 | Would you save 100 dogs or 1 human? #shorts |
+| 3.4M | 0:00 | The most satisfying math you'll ever see (and hear) #shorts |
+| 2.9M | 0:00 | Which way do you perceive time? #shorts |
+
+## EpicHistoryTV.shorts.csv n=237 median=48K
+| 5.4M | 0:00 | Napoleon’s Greatest Crime? |
+| 4.5M | 0:00 | Eastern Roman or Byzantine Empire? |
+| 3.3M | 0:00 | All Napoleon's battles in 60 seconds |
+| 2.7M | 0:00 | Rome's last great commander? |
+| 2.5M | 0:00 | How big was the British Empire? |
+| 2.4M | 0:00 | The Bravest Man in Napoleon's Army? |
+| 2.4M | 0:00 | Who were the Abbasids? |
+| 1.8M | 0:00 | Who was Napoleon's Iron Marshal? |
+| 1.7M | 0:00 | Marshal Ney “Bravest of the Brave" |
+| 1.6M | 0:00 | Murat's daring charge at Aboukir |
+
+## JaredOwen.shorts.csv n=33 median=81K
+| 2.3M | 0:00 | Inside of Big Ben #bigben |
+| 2.2M | 0:00 | A Typical Space Shuttle Mission | #nasa |
+| 1.3M | 0:00 | Titanic - The World's Most Famous Ship |
+| 1.3M | 0:00 | The Reason USA joined World War II #USSArizona |
+| 846K | 0:00 | SpaceX Crew Dragon - Getting to the Launch Pad |
+| 765K | 0:00 | Inside the White House |
+| 762K | 0:00 | Retractable Roof on the Mercedes-Benz Stadium |
+| 408K | 0:00 | The Space Shuttle assembled the ISS |
+| 239K | 0:00 | Journey to the Space Station (Crew Dragon) |
+| 195K | 0:00 | Entry Descent and Landing on Mars! #nasa #space |
+
+## JohnnyHarris.shorts.csv n=311 median=636K
+| 13.0M | 0:00 | The U.S. Just Got Bigger |
+| 13.0M | 0:00 | The Problem with USB-C |
+| 12.0M | 0:00 | Russia is weaponizing immigrants |
+| 10.0M | 0:00 | China just violated Japan’s airspace (NOT GOOD) |
+| 10.0M | 0:00 | BTS joining the military may cost South Korea billions |
+| 8.5M | 0:00 | How a nuclear bomb really works |
+| 7.9M | 0:00 | Why People are Siding with Palestine |
+| 7.8M | 0:00 | I went to Greenland, here's why the US wants it |
+| 7.6M | 0:00 | Russia’s nuclear threats |
+| 7.4M | 0:00 | Why Julian Assange Lived in An Embassy for 7 Years | Part 2 |
+
+## KingsandGenerals.shorts.csv n=528 median=123K
+| 7.3M | 0:00 | Iron Dome #shorts #documentary #military #tactical #irondome #israel #gaza #fypシ #fyp #war #history |
+| 6.3M | 0:00 | How to Use the False Gap to Win Battles - Ancient Tactics #shorts |
+| 5.1M | 0:00 | Chechen Anti Tank Tactics #military #tactical #documentary #fypシ #fyp #history #russia #chechen #war |
+| 4.2M | 0:00 | Ancient Tactics: Oblique Order - Kings and Generals #shorts |
+| 3.7M | 0:00 | Cobra Maneuver #shorts #documentary #cobra #military #tactical #modernwarfare #aerial #fypシ #fyp |
+| 3.7M | 0:00 | How to Destroy Aircraft Carrier #shorts #documentary #fypシ #fyp #military #tactical #war #history |
+| 3.0M | 0:00 | Tercio Formation #medieval #warfare #tactical #military #shorts #fypシ #fyp #tercio #tercioformation |
+| 3.0M | 0:00 | How to Use Crescent Formation to Win Battles - Ancient Tactics #shorts |
+| 2.9M | 0:00 | How to Defend Against Mongols - Medieval History #shorts |
+| 2.8M | 0:00 | English Longbowman Tactic #shorts #fyp #tactical #documentary #military #war #medieval #history |
+
+## MinuteEarth.shorts.csv n=114 median=150K
+| 23.0M | 0:00 | The World's Largest Nuclear Weapon (ft. Stephen Fry) #shorts |
+| 2.8M | 0:00 | Grolar Bears #Shorts |
+| 2.5M | 0:00 | 1 year old puppy = 30 year old human #shorts |
+| 2.4M | 0:00 | How worms wormed their way into American soil! |
+| 2.1M | 0:00 | Adult Cats Only Meow At Humans #shorts |
+| 1.8M | 0:00 | You are not genetically related to all your ancestors. |
+| 1.5M | 0:00 | The Coyote Paradox |
+| 1.5M | 0:00 | Opossum vs Possum #shorts |
+| 1.3M | 0:00 | How are Rip Currents formed? |
+| 1.1M | 0:00 | Bee genetics are Bee-zarre! |
+
+## SimpleHistory.shorts.csv n=453 median=85K
+| 23.0M | 0:00 | Ways to Trick a Sniper: Life-size Fake Soldiers #Shorts |
+| 9.7M | 0:00 | Drip Rifle - a SELF FIRING GUN that tricked the enemy in WW1 |
+| 7.3M | 0:00 | Ways to Trick a Sniper: Dummy Heads #Shorts |
+| 6.2M | 0:00 | MREs in WW2  - the  5 Main Rations of a soldier |
+| 5.3M | 0:00 | This American Sniper had to do this to Save his Comrades |
+| 4.6M | 0:00 | Horrors of the Real Battle Royale in 1933 #Shorts |
+| 4.5M | 0:00 | Maverick 41 - Harrison Realized His Colleagues Were Being Pinned Down |
+| 4.1M | 0:00 | Ways to Trick Enemy Soldiers: Fake Trees #Shorts |
+| 3.8M | 0:00 | When the Americans brought Shotguns to WWI.. |
+| 3.2M | 0:00 | Inouye Charges To The Machine Gun Nest |
+
+## TEDEd.shorts.csv n=24 median=128K
+| 558K | 0:00 | Would you take the road less traveled? #shorts |
+| 377K | 0:00 | 3 things you may not know about the Declaration of Independence #shorts |
+| 282K | 0:00 | Do you ever feel isolated amongst your peers? #shorts |
+| 235K | 0:00 | What is Juneteenth, and why is it important? #shorts #juneteenth |
+| 232K | 0:00 | TED-Ed's top 10 animations of 2022! #shorts |
+| 198K | 0:00 | Why isn't Hisako Koyama more famous? #shorts |
+| 195K | 0:00 | Are we all just players in the game of life? #shorts |
+| 178K | 0:00 | Changing the future, one student voice at a time #shorts |
+| 165K | 0:00 | 3 ways to choose a sunscreen #shorts |
+| 151K | 0:00 | Trust the process #shorts |
+
+## TheArmchairHistorian.shorts.csv n=36 median=212K
+| 2.8M | 0:00 | Why did Soldiers Fight in Lines? | Animated Short |
+| 2.6M | 0:00 | Germany's Wonder-Weapons | Animated Short |
+| 2.3M | 0:00 | Evolution of German Uniforms | Animated Short |
+| 1.9M | 0:00 | Why Germans Fled to South America | Animated Short |
+| 1.5M | 0:00 | The 5 Beaches of D-DAY | Animated Short |
+| 937K | 0:00 | The Mỹ Lai Massacre | Animated Short |
+| 820K | 0:00 | The Battle of Verdun | Animated Short |
+| 741K | 0:00 | The Malmedy Massacre | Animated Short |
+| 455K | 0:00 | Ukraine War 2022 | Animated Short |
+| 423K | 0:00 | The Iran-Iraq War | Animated Short |
+
+## TheInfographicsShow.shorts.csv n=598 median=373K
+| 11.0M | 0:00 | China vs India - Who Would Win? |
+| 8.9M | 0:00 | What Happened to Hitler's Body |
+| 8.9M | 0:00 | Dumb Ways To Die |
+| 6.6M | 0:00 | How Russians Are Avoiding the Draft #russia |
+| 6.2M | 0:00 | USA vs The World - Who Would Win |
+| 6.1M | 0:00 | Zodiac Killer Identity Finally Revealed? |
+| 6.0M | 0:00 | Weird WW2 Weapons You Never Heard Of |
+| 5.7M | 0:00 | What It's Actually Like to be a Russian POW #warinukraine |
+| 5.5M | 0:00 | Weird Russian Military Devices Found By Ukrainian Soldiers |
+| 5.5M | 0:00 | Why World Economy No Longer Needs Russia #russia |
+
+## WhatIfScienceShow.shorts.csv n=604 median=70K
+| 51.0M | 0:00 | What If Earth Was Shaped Like a Donut? #Shorts |
+| 29.0M | 0:00 | I Swam in a Pool of Liquid Mecury #Shorts |
+| 19.0M | 0:00 | What If We Dug Tunnels Between Continents? #Shorts |
+| 18.0M | 0:00 | Don't Do This if There Is a Spider Inside You #Shorts |
+| 18.0M | 0:00 | How Would Jupiter Swallow Every Planet? #Shorts |
+| 17.0M | 0:00 | What If a Marshmallow Hit the Earth at the Speed of Light? #Shorts |
+| 17.0M | 0:00 | What If We Killed All Mosquitoes? #Shorts |
+| 17.0M | 0:00 | What If Your Skin was Bulletproof? #Shorts |
+| 16.0M | 0:00 | What If We Nuked Mars? #Shorts |
+| 12.0M | 0:00 | What If Earth Was the Size of Jupiter? #Shorts |
+
+## kurzgesagt.shorts.csv n=142 median=2.8M
+| 20.0M | 0:00 | The Deadly Power of a Coin-Sized Black Hole |
+| 19.0M | 0:00 | How to Cut a Sandwich Perfectly – With Science |
+| 14.0M | 0:00 | How You Can Live Forever... Maybe. |
+| 14.0M | 0:00 | Something in Your Kitchen Emits Antimatter |
+| 13.0M | 0:00 | Earth as a Cube – What Would It Look Like? |
+| 13.0M | 0:00 | How Tiny Can a Black Hole Be? |
+| 12.0M | 0:00 | How Many Moons Could Earth Handle? |
+| 12.0M | 0:00 | Let's Make Earth Twice as Large! |
+| 12.0M | 0:00 | How do Lasers Work? |
+| 11.0M | 0:00 | Fentanyl Explained |
+
+## melodysheep.shorts.csv n=15 median=144K
+| 6.4M | 0:00 | Lord of the Rings: This Insane Planet Puts Saturn's Rings to Shame |
+| 4.6M | 0:00 | Zombie Planets: The freakiest worlds in the universe |
+| 3.2M | 0:00 | Space Habitats are Sick |
+| 2.4M | 0:00 | Has A.I. Discovered Alien Life? |
+| 1.9M | 0:00 | Reviving mankind from extinction |
+| 1.3M | 0:00 | Water Worlds: They're really out there |
+| 149K | 0:00 | Engineering Earth -- Final Teaser |
+| 144K | 0:00 | The Oldest Galaxy Ever Discovered #shorts |
+| 131K | 0:00 | Let's go asteroid mining together. |
+| 119K | 0:00 | Let's hope this never happens. |
+
+## minutephysics.shorts.csv n=14 median=208K
+| 991K | 0:00 | When 2 + 2 = 3.999999999… |
+| 877K | 0:00 | What if you try to sandwich a cube between two portals? |
+| 479K | 0:00 | Why Driving Backwards Is So Hard |
+| 365K | 0:00 | There Is No 4th Dimension |
+| 311K | 0:00 | What is the farthest on earth you can get from ANYTHING |
+| 229K | 0:00 | Breaking the speed of light from your backyard |
+| 210K | 0:00 | Not a rainbow! |
+| 205K | 0:00 | Schrödinger’s Cat (from the cat's perspective) |
+| 201K | 0:00 | How long is a day on the sun? |
+| 183K | 0:00 | What’s the source of gravity? (a common physics misconception) |
+
+## zackdfilms.shorts.csv n=4035 median=14.0M
+| 255.0M | 0:00 | How Stitches Work 😯 |
+| 216.0M | 0:00 | How Splinters Get Unstuck 😲 |
+| 167.0M | 0:00 | The Reason The McFlurry Spoon Looks Weird 😮 |
+| 157.0M | 0:00 | Could Ancient Armor Stop Bullets? 🤔 |
+| 157.0M | 0:00 | How Long Are Your Blood Vessels? 🤔 |
+| 140.0M | 0:00 | An Island Of Toenail Clippings? 🤮 |
+| 139.0M | 0:00 | Why One Shooter Gets A Blank Round 😧 |
+| 138.0M | 0:00 | Blown Veins 😟 (explained) |
+| 129.0M | 0:00 | This Magic Trick EXPLAINED 😱 (America's Got Talent) |
+| 124.0M | 0:00 | Tootsie Rolls Used In War? 🤨 |

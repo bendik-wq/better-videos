@@ -23,6 +23,10 @@ Read once per session, in this order:
    rhythm patterns P1–P16, the TTS number table and 50 before/after rewrites.
 7. `docs/library/fact-check-playbook.md` (source tiers, the source table) and
    `docs/library/sound-and-music.md` (the cue grammar for the beat sheet's sound column).
+8. `.claude/skills/bencivenga-copy/SKILL.md` and its `references/checklist.md`: the five-slot
+   30-second hook, cliffhanger shapes, proof placement and the critic rubric. For an animated
+   explainer, also `references/body-copy.md` (mechanism steps, plain-then-twist, the governing
+   metaphor, levity beats).
 
 Visual and sound rules are in `docs/style-bible.md`. This skill produces the outline and the
 narration draft; `shot-design` and `make-video` turn them into shots.
@@ -108,9 +112,12 @@ countdown, duel, mystery box, or explainer-with-twist. Write:
    - **0:30–1:00, stakes and payoff tease**: why it matters (money, power, the viewer's life),
      plus a glimpse of the best back-half moment ("front-loading"). Opens **L2–L3**.
    - **~1:00, title card**: the drone drops out and the title hits. No ad slot here.
-3. **Score all three** with the hook score (`hooks.md` §0, out of 25, plus the fact-safety gate).
-   Show the table.
-4. **Keep the winner only if it scores ≥20/25.** If none does, rewrite the best one and rescore.
+3. **Score all three** with the hook score (`hooks.md` §0, out of 25, plus the fact-safety gate)
+   **and** with `bencivenga-copy/references/checklist.md` §3 (/10: proof on screen by 0:12,
+   pre-empted objection, twist, contract). Show both in one table.
+4. **Keep the winner only if it scores ≥20/25 and ≥8/10 on the Bencivenga hook rubric.** If none
+   does, rewrite the best one and rescore. Rank by the 25-point score; the Bencivenga score is a
+   pass/fail believability check (`checklist.md` §0).
    On a tie within 2 points, keep the one with fewer words before the turn. Render the top two
    with the project voice if time allows, and listen.
 5. Record the losing two in the outline (they're re-hook and trailer material).
@@ -190,6 +197,8 @@ Rules (`script-patterns.md` §2.1):
 - The description list starts at **00:00**, with at least 3 entries, in ascending order.
 - Names are curiosity, not labels. Each chapter **ends on a cliffhanger** (a question or a
   reversal), never a summary, because the card is also a mid-roll slot.
+  Write each cliffhanger with a `bencivenga-copy` shape (SKILL.md Workflow C) and score it with
+  `checklist.md` §4 (≥ 7; the sponsor return line ≥ 9).
 - On screen: Archivo Narrow Bold red numeral plus an Instrument Serif title in a corner. The
   drone drops out and the card hits. Never a centred lower third.
 - Write the description chapter list into the outline:
@@ -290,6 +299,7 @@ a declared structure and a fact-safety gate.**
 | 17 | 4–6 chapters with curiosity names, each ending on a cliffhanger; the 00:00 list is valid | 2 |
 | 18 | Every number has a source line; no unsourced claims | 4 (gate) |
 | 19 | Fact-safety pass (`script-patterns.md` §4.5): status phrasing, responses, no mind-reading, packaging checked | 4 (gate) |
+| 19b | Persuasion Equation audit (`bencivenga-copy` `checklist.md` §6): all four parts as strong as they can be (100/100) | gate |
 | 20 | TTS-ready: numbers spelled out, no abbreviations or stage directions, sentences ≤25 words (avg 10–14), pauses via lines/`padOut`; no banned cliché from `narration-style.md` §2 (−1 each) | 3 |
 | 21 | Word count within ±10% of the budget; reads aloud cleanly | 2 |
 | 22 | Cut pass done: at least 10% of the first draft removed | — (note it) |
@@ -299,7 +309,7 @@ Thresholds:
 - **≥90**: ship to `shot-design` / `make-video`.
 - **80–89**: fix the listed items, rescore.
 - **<80**: re-outline.
-- **Gates (16, 18, 19):** if any scores 0, the script can't ship whatever the total.
+- **Gates (16, 18, 19, 19b):** if any scores 0, the script can't ship whatever the total.
 
 ## Handing off
 

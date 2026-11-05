@@ -17,3 +17,8 @@ renders/mortgage/graphics/*-95.jpg
 renders/mortgage/graphics/draft-*.mp4
 projects/*/lab/out/
 renders/mortgage/*-[0-9]*.jpg
+projects/*/.hyperframes/
+projects/*/renders/
+projects/hf-scale/compositions/
+projects/hf-scale/index.html
+projects/hf-scale/timing.json

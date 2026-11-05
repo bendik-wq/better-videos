@@ -1,0 +1,459 @@
+<template>
+  <style>
+    @font-face { font-family: "Archivo Narrow"; src: url("assets/fonts/ArchivoNarrow.woff2"); font-weight: 400 700; }
+    @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-500.woff2"); font-weight: 500; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif.woff2"); font-weight: 400; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #lad-svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    /* off-register pen: the line pass keeps strokes only, the fill pass keeps fills only */
+    #lad-lines * { fill: none !important; vector-effect: non-scaling-stroke; }
+    #lad-lines .shade, #lad-lines .noline { display: none; }
+    /* Chrome drops non-scaling strokes under the planet's x1296 nesting: plain strokes there, sized for z 3-4 */
+    #lad-lines .r-planet * { vector-effect: none; stroke-width: 2.5px; }
+    #lad-fills * { stroke: none !important; }
+    /* the planet's pen lines live in the fill pass (see the Chrome note below) */
+    #lad-fills .keepstroke, #lad-fills .keepstroke * { stroke: #1d6662 !important; }
+    #lad-fills .keepstroke.ink { stroke: #14233d !important; }
+    #lad-title {
+      position: absolute; left: 0; right: 0; top: 120px; text-align: center;
+      font-family: "Instrument Serif", serif; font-weight: 400; font-size: 104px; letter-spacing: 0;
+      color: #14233d;
+    }
+    #lad-title span { display: inline-block; margin: 0 0.12em; }
+    #lad-tag {
+      position: absolute; left: 150px; top: 250px;
+      font-family: "IBM Plex Mono"; font-weight: 500; font-size: 30px; letter-spacing: 0.16em;
+      color: #14233d; background: #f7f6f1; padding: 14px 22px; border: 2px solid #14233d;
+    }
+    #lad-readout {
+      position: absolute; left: 110px; bottom: 90px;
+      font-family: "IBM Plex Mono"; font-weight: 500; font-size: 30px; letter-spacing: 0.12em;
+      color: #3d4a60;
+    }
+    #lad-readout-in { background: #f7f6f1; border: 2px solid #14233d; padding: 14px 26px 6px; }
+    #lad-readout .big { font-family: "Archivo Narrow", sans-serif; font-weight: 700; font-size: 84px; letter-spacing: 0; color: #14233d; font-variant-numeric: tabular-nums; }
+    #lad-jump { font-size: 28px; letter-spacing: 0.16em; color: #3d4a60; padding-bottom: 8px; }
+    #lad-readout sup { font-size: 46px; vertical-align: 34px; }
+  </style>
+
+  <div id="root" data-composition-id="ladder" data-width="1920" data-height="1080">
+    <svg id="lad-svg" viewBox="0 0 1920 1080" data-layout-allow-overflow>
+      <defs>
+        <pattern id="hd-sage" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <circle cx="5.5" cy="5.5" r="3.4" fill="#6f9a7a" />
+        </pattern>
+        <pattern id="hd-teal" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <circle cx="5.5" cy="5.5" r="3.6" fill="#1d6662" />
+        </pattern>
+        <pattern id="hd-ink" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <circle cx="5.5" cy="5.5" r="2.6" fill="#14233d" />
+        </pattern>
+        <pattern id="hd-kraft" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <circle cx="5.5" cy="5.5" r="3.2" fill="#dcd7c8" />
+        </pattern>
+        <!-- crescent masks: lit from the lamp at top-left, shade from 4 to 8 o'clock -->
+        <mask id="m-cell" maskUnits="userSpaceOnUse" x="-400" y="-400" width="800" height="800">
+          <circle r="300" fill="#fff" /><circle cx="-80" cy="-80" r="300" fill="#000" />
+        </mask>
+        <mask id="m-body" maskUnits="userSpaceOnUse" x="-200" y="-500" width="400" height="500">
+          <rect x="-110" y="-470" width="220" height="374" rx="110" fill="#fff" />
+          <rect x="-160" y="-500" width="220" height="374" rx="110" fill="#000" />
+        </mask>
+        <mask id="m-head" maskUnits="userSpaceOnUse" x="-100" y="-640" width="200" height="200">
+          <circle cy="-545" r="68" fill="#fff" /><circle cx="-24" cy="-569" r="68" fill="#000" />
+        </mask>
+        <mask id="m-planet" maskUnits="userSpaceOnUse" x="-420" y="-40" width="840" height="840">
+          <circle cy="380" r="380" fill="#fff" /><circle cx="-110" cy="270" r="390" fill="#000" />
+        </mask>
+        <clipPath id="c-planet"><circle cy="380" r="380" /></clipPath>
+        <clipPath id="c-city"><path clip-rule="evenodd" d="M -3000 -2000 H 3000 V 6000 H -3000 Z M 0 0 A 2280 2280 0 1 0 0 4560 A 2280 2280 0 1 0 0 0 Z" /></clipPath>
+        <clipPath id="c-nobody"><path clip-rule="evenodd" d="M -400 -700 H 400 V 100 H -400 Z M -110 -360 A 110 110 0 0 1 110 -360 V -206 A 110 110 0 0 1 -110 -206 Z" /></clipPath>
+        <clipPath id="c-loupe"><circle r="1300" /></clipPath>
+      </defs>
+
+      <!-- fill pass (offset 4,3 px on screen) and line pass share one art tree; the line pass is cloned at load -->
+      <g id="lad-fills">
+        <g class="art">
+          <!-- CITY (rung 3): local ground y 0, the Winder's spot at x 0 -->
+          <g class="r-city" transform="scale(216) translate(-16.667 46.667)" clip-path="url(#c-city)">
+            <g stroke="#14233d" stroke-width="3">
+              <rect x="-860" y="-210" width="120" height="614" fill="#a9c5ae" />
+              <rect x="-720" y="-330" width="90" height="734" fill="#2a8c86" />
+              <rect x="-610" y="-160" width="150" height="564" fill="#dcd7c8" />
+              <rect x="-440" y="-420" width="110" height="824" fill="#14233d" />
+              <rect x="-310" y="-250" width="130" height="654" fill="#8cc5bf" />
+              <rect x="-160" y="-140" width="100" height="544" fill="#b98a3e" />
+              <rect x="70" y="-190" width="120" height="594" fill="#dcd7c8" />
+              <rect x="210" y="-380" width="100" height="784" fill="#2a8c86" />
+              <rect x="330" y="-230" width="160" height="634" fill="#a9c5ae" />
+              <rect x="510" y="-300" width="90" height="704" fill="#1d6662" />
+              <rect x="620" y="-170" width="130" height="574" fill="#dcd7c8" />
+              <rect x="770" y="-260" width="100" height="664" fill="#14233d" />
+            </g>
+            <g class="shade" opacity="0.5">
+              <rect x="-776" y="-210" width="36" height="614" fill="url(#hd-ink)" />
+              <rect x="-657" y="-330" width="27" height="734" fill="url(#hd-ink)" />
+              <rect x="-505" y="-160" width="45" height="564" fill="url(#hd-ink)" />
+              <rect x="-363" y="-420" width="33" height="824" fill="url(#hd-ink)" />
+              <rect x="-219" y="-250" width="39" height="654" fill="url(#hd-ink)" />
+              <rect x="-90" y="-140" width="30" height="544" fill="url(#hd-ink)" />
+              <rect x="154" y="-190" width="36" height="594" fill="url(#hd-ink)" />
+              <rect x="280" y="-380" width="30" height="784" fill="url(#hd-ink)" />
+              <rect x="442" y="-230" width="48" height="634" fill="url(#hd-ink)" />
+              <rect x="573" y="-300" width="27" height="704" fill="url(#hd-ink)" />
+              <rect x="711" y="-170" width="39" height="574" fill="url(#hd-ink)" />
+              <rect x="840" y="-260" width="30" height="664" fill="url(#hd-ink)" />
+            </g>
+            <!-- windows -->
+            <g class="noline">
+              <rect x="-842" y="-180" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-776" y="-180" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-842" y="-120" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-776" y="-120" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-842" y="-60" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-776" y="-60" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-702" y="-300" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-666" y="-300" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-702" y="-240" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-666" y="-240" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-702" y="-180" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-666" y="-180" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-702" y="-120" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-666" y="-120" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-702" y="-60" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-666" y="-60" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-592" y="-130" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-544" y="-130" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-496" y="-130" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-592" y="-70" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-544" y="-70" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-496" y="-70" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-422" y="-390" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-390" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-330" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-330" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-270" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-270" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-210" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-210" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-150" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-150" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-90" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-90" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-422" y="-30" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-366" y="-30" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="-292" y="-220" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-216" y="-220" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-292" y="-160" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-216" y="-160" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-292" y="-100" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-216" y="-100" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-292" y="-40" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-216" y="-40" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-142" y="-110" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-96" y="-110" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-142" y="-50" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="-96" y="-50" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="88" y="-160" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="154" y="-160" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="88" y="-100" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="154" y="-100" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="88" y="-40" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="154" y="-40" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="228" y="-350" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-350" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="228" y="-290" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-290" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="228" y="-230" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-230" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="228" y="-170" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-170" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="228" y="-110" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-110" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="228" y="-50" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="274" y="-50" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="348" y="-200" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="401" y="-200" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="454" y="-200" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="348" y="-140" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="401" y="-140" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="454" y="-140" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="348" y="-80" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="401" y="-80" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="454" y="-80" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="528" y="-270" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="564" y="-270" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="528" y="-210" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="564" y="-210" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="528" y="-150" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="564" y="-150" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="528" y="-90" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="564" y="-90" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="528" y="-30" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="564" y="-30" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="638" y="-140" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="714" y="-140" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="638" y="-80" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="714" y="-80" width="18" height="26" fill="#14233d" opacity="0.85" />
+              <rect x="788" y="-230" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="834" y="-230" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="788" y="-170" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="834" y="-170" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="788" y="-110" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="834" y="-110" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="788" y="-50" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+              <rect x="834" y="-50" width="18" height="26" fill="#f7f6f1" opacity="0.85" />
+            </g>
+</g>
+          </g>
+
+          <!-- PLANET (rung 4): local centre (0,380), r 380; the city stands at its top (0,0) -->
+          <g class="r-planet" transform="scale(1296) translate(-2.7778 7.7778)">
+            <circle cy="380" r="380" fill="#8cc5bf" stroke="#14233d" stroke-width="3" />
+            <g clip-path="url(#c-planet)">
+              <path d="M -150 40 C -70 -20 90 -20 170 40 C 250 110 170 210 70 200 C -40 190 -210 130 -150 40 Z" fill="#a9c5ae" stroke="#14233d" stroke-width="2" />
+              <path d="M -360 330 C -300 230 -170 250 -150 340 C -130 430 -230 520 -330 500 C -400 480 -400 400 -360 330 Z" fill="#a9c5ae" stroke="#14233d" stroke-width="2" />
+              <path d="M 120 420 C 200 360 330 380 350 470 C 365 560 260 640 170 600 C 90 560 60 470 120 420 Z" fill="#a9c5ae" stroke="#14233d" stroke-width="2" />
+              <path d="M -120 640 C -60 600 40 610 60 680 C 70 740 -40 770 -110 740 Z" fill="#d3e2d5" stroke="#14233d" stroke-width="2" />
+              <g class="keepstroke" fill="none" stroke="#1d6662" stroke-width="2" stroke-dasharray="8 7">
+                <ellipse cy="380" rx="380" ry="90" /><ellipse cy="200" rx="330" ry="70" /><ellipse cy="560" rx="330" ry="70" />
+                <ellipse cy="380" rx="130" ry="380" /><ellipse cy="380" rx="270" ry="380" />
+              </g>
+            </g>
+            <circle class="shade" cy="380" r="380" fill="url(#hd-teal)" opacity="0.55" mask="url(#m-planet)" />
+            <circle class="keepstroke ink" cy="380" r="380" fill="none" stroke="#14233d" stroke-width="3" />
+          </g>
+
+          <!-- THE WINDER (rung 2): faceless paper figure with a brass key; feet at local (0,0) -->
+          <g class="r-winder" transform="scale(36) translate(-100 280)">
+            <ellipse class="shade w-shadow" cx="0" cy="2" rx="150" ry="16" fill="#14233d" opacity="0.18" />
+            <g class="w-rig">
+              <g class="w-breath">
+                <rect x="-75" y="-125" width="46" height="128" rx="23" fill="#1d6662" stroke="#14233d" stroke-width="3" />
+                <rect x="29" y="-125" width="46" height="128" rx="23" fill="#1d6662" stroke="#14233d" stroke-width="3" />
+                <g><g class="w-key">
+                  <rect x="-150" y="-438" width="66" height="16" fill="#b98a3e" stroke="#14233d" stroke-width="2" />
+                  <circle cx="-165" cy="-462" r="24" fill="#b98a3e" stroke="#14233d" stroke-width="2" />
+                  <circle cx="-165" cy="-398" r="24" fill="#b98a3e" stroke="#14233d" stroke-width="2" />
+                  <circle cx="-190" cy="-430" r="24" fill="#e3cc98" stroke="#14233d" stroke-width="2" />
+                </g></g>
+                <g transform="rotate(14 -100 -380)">
+                  <rect x="-122" y="-392" width="44" height="172" rx="22" fill="#1d6662" stroke="#14233d" stroke-width="3" />
+                </g>
+                <rect x="-110" y="-470" width="220" height="374" rx="110" fill="#2a8c86" stroke="#14233d" stroke-width="3" />
+                <rect class="shade" x="-110" y="-470" width="220" height="374" rx="110" fill="url(#hd-teal)" opacity="0.6" mask="url(#m-body)" />
+                <g class="w-arm">
+                  <rect x="78" y="-392" width="44" height="172" rx="22" fill="#1d6662" stroke="#14233d" stroke-width="3" />
+                </g>
+                <g class="w-head">
+                  <circle cy="-545" r="68" fill="#f7f6f1" stroke="#14233d" stroke-width="3" />
+                  <circle class="shade" cy="-545" r="68" fill="url(#hd-kraft)" mask="url(#m-head)" />
+                </g>
+              </g>
+            </g>
+          </g>
+
+          <!-- THE INSPECTOR'S LOUPE over the Winder's arm, world origin -->
+          <g class="loupe" opacity="0">
+            <path class="noline" d="M 950 950 L 1110 1110 L 2900 2900 L 2740 3060 Z" fill="#7d5a22" />
+            <rect x="900" y="-90" width="1900" height="180" rx="90" transform="rotate(45)" fill="#b98a3e" stroke="#14233d" stroke-width="3" />
+            <circle r="1300" fill="#f7f6f1" stroke="#14233d" stroke-width="3" />
+          </g>
+
+          <!-- TISSUE (rung 1) and the ONE CELL (rung 0), clipped to the loupe -->
+          <g class="r-tissue" clip-path="url(#c-loupe)">
+            <g transform="translate(-620 0)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(620 0)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(-310 -540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(310 -540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(-310 540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(310 540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(-930 -540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(930 -540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(-930 540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(930 540)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(0 -1080)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(0 1080)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(-1240 0)"><use href="#lad-cellproto" /></g>
+            <g transform="translate(1240 0)"><use href="#lad-cellproto" /></g>
+            <!-- the hero cell: its nucleus is the one red thing -->
+            <g class="hero-cell">
+              <circle r="300" fill="#d3e2d5" stroke="#14233d" stroke-width="3" />
+              <circle class="shade" r="300" fill="url(#hd-sage)" opacity="0.55" mask="url(#m-cell)" />
+              <path d="M -190 40 C -150 110 -90 60 -40 120 M 60 -190 C 120 -150 170 -180 210 -120 M -60 190 C 0 230 60 180 120 230" stroke="#8a93a3" stroke-width="1.5" fill="none" />
+              <g class="mito">
+                <rect x="-230" y="-120" width="90" height="38" rx="19" fill="#b98a3e" stroke="#14233d" stroke-width="2" transform="rotate(-25 -185 -101)" />
+                <rect x="140" y="60" width="90" height="38" rx="19" fill="#b98a3e" stroke="#14233d" stroke-width="2" transform="rotate(35 185 79)" />
+                <rect x="-60" y="170" width="80" height="34" rx="17" fill="#b98a3e" stroke="#14233d" stroke-width="2" />
+              </g>
+              <circle class="nucleus" r="88" fill="#e0241b" stroke="#14233d" stroke-width="3" />
+              <circle r="52" fill="none" stroke="#f4b3ad" stroke-width="3" class="noline" />
+            </g>
+          </g>
+          <!-- loupe rim on top of the tissue -->
+          <g class="loupe" opacity="0">
+            <path d="M 0 -1420 A 1420 1420 0 1 1 0 1420 A 1420 1420 0 1 1 0 -1420 Z M 0 -1300 A 1300 1300 0 1 0 0 1300 A 1300 1300 0 1 0 0 -1300 Z" fill="#b98a3e" fill-rule="evenodd" stroke="#14233d" stroke-width="3" />
+          </g>
+
+          <!-- the red pin: "you are here" on the planet -->
+          <g class="r-pin" opacity="0" transform="scale(1296) translate(-2.7778 7.7778)">
+            <circle r="16" fill="none" stroke="#e0241b" stroke-width="6" class="noline" />
+            <circle r="6" fill="#e0241b" class="noline" />
+          </g>
+        </g>
+      </g>
+      <g id="lad-lines"></g>
+
+      <!-- tissue cell prototype (not rendered on its own) -->
+      <defs>
+        <g id="lad-cellproto">
+          <circle r="300" fill="#ebe8de" stroke="#14233d" stroke-width="3" vector-effect="non-scaling-stroke" />
+          <circle r="300" fill="url(#hd-sage)" opacity="0.45" mask="url(#m-cell)" />
+          <circle r="80" fill="#a9c5ae" stroke="#14233d" stroke-width="2" vector-effect="non-scaling-stroke" />
+        </g>
+      </defs>
+    </svg>
+
+    <h1 id="lad-title" class="clip" data-start="0.3" data-duration="2.3" data-track-index="3">
+      <span>How</span><span>small</span><span>is</span><span>the</span><span>smallest</span><span>part</span><span>of</span><span>you?</span>
+    </h1>
+    <div id="lad-tag" class="clip" data-start="4.15" data-duration="1.5" data-track-index="4">
+      <div id="lad-tag-in">ONE CELL</div>
+    </div>
+    <div id="lad-readout" class="clip" data-start="2.6" data-duration="5.55" data-track-index="5">
+      <div id="lad-readout-in">
+        <div id="lad-name">YOU · 1.7 M</div>
+        <div class="big">≈ 10<sup id="lad-exp">0</sup> m</div>
+        <div id="lad-jump">ZOOM NOT TO SCALE</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // ---- the line pass is a clone of the art (built once, before the timeline) ----
+      const fills = document.querySelector("#lad-fills");
+      const lines = document.querySelector("#lad-lines");
+      const proto = document.querySelector("#lad-cellproto");
+      fills.querySelectorAll("use").forEach((u) => {
+        const g = proto.cloneNode(true);
+        g.removeAttribute("id");
+        u.replaceWith(g);
+      });
+      lines.appendChild(fills.querySelector(".art").cloneNode(true));
+
+      // ---- camera: zoom z (camera scale 6^-z) and focus blend; a pure function of scene time ----
+      const E = (n) => gsap.parseEase(n);
+      const lerp = (a, b, p) => a + (b - a) * p;
+      const clamp01 = (x) => Math.max(0, Math.min(1, x));
+      const seg = (t, t0, t1, ease) => E(ease)(clamp01((t - t0) / (t1 - t0)));
+      function zAt(t) {
+        if (t < 2.6) return 2;
+        if (t < 4.1) return lerp(2, 0, seg(t, 2.6, 4.1, "expo.inOut"));
+        if (t < 4.8) return 0;
+        if (t < 6.4) return lerp(0, 3, seg(t, 4.8, 6.4, "power2.inOut"));
+        if (t < 7.0) return lerp(3, 3.08, seg(t, 6.4, 7.0, "sine.inOut"));
+        if (t < 7.55) return lerp(3.08, 4, seg(t, 7.0, 7.55, "power2.inOut"));
+        if (t < 7.75) return 4;
+        return lerp(4, 5.62, seg(t, 7.75, 8.15, "power3.in"));
+      }
+      const WC = [-3600, -720 - 130 * 36], PC = [-3600, 502560];
+      const ramp = (z, a, b) => clamp01((z - a) / (b - a));
+      const NAMES = ["ONE CELL · 0.01 MM", "TISSUE · 1 MM", "YOU · 1.7 M", "A CITY · 10 KM", "EARTH · 12,742 KM"];
+      const SHORT = ["CELL", "TISSUE", "YOU", "CITY", "EARTH"];
+      // the drawing steps x6 per rung; the real jumps are much bigger, so we say so on screen
+      const JUMP = ["REAL JUMP ×100", "REAL JUMP ×1,700", "REAL JUMP ×6,000", "REAL JUMP ×1,300"];
+      const EXP = [-5, -3, 0, 4, 7];
+      const all = (sel) => document.querySelectorAll("#lad-svg " + sel);
+      const groups = {
+        tissue: all(".r-tissue"), winder: all(".r-winder"), city: all(".r-city"), planet: all(".r-planet"),
+      };
+      const setOp = (list, v) => list.forEach((el) => el.setAttribute("opacity", v.toFixed(3)));
+      const expEl = document.querySelector("#lad-exp");
+      const nameEl = document.querySelector("#lad-name");
+      const jumpEl = document.querySelector("#lad-jump");
+
+      function draw(t) {
+        const z = zAt(t);
+        const a = 1 - seg(t, 2.6, 4.1, "expo.inOut");
+        const b = seg(t, 7.0, 7.55, "power2.inOut");
+        const s = Math.pow(6, -z);
+        const fx = WC[0] * a + PC[0] * b, fy = WC[1] * a + PC[1] * b;
+        const tr = `translate(960 540) scale(${s}) translate(${-fx} ${-fy})`;
+        lines.setAttribute("transform", tr);
+        fills.setAttribute("transform", "translate(4 3) " + tr);
+        setOp(groups.tissue, 1 - ramp(z, 1.6, 2.0));
+        setOp(groups.winder, ramp(z, 0.9, 1.4) * (1 - ramp(z, 3.3, 3.7)));
+        setOp(groups.city, ramp(z, 2.2, 2.6));
+        setOp(groups.planet, ramp(z, 2.3, 2.7));
+        // kinetic readout: the exponent rolls with the zoom
+        const zi = Math.max(0, Math.min(3.999, z));
+        const k = Math.floor(zi);
+        let e2 = Math.round(lerp(EXP[k], EXP[k + 1], zi - k));
+        const zc = Math.max(0, Math.min(4, z)), kn = Math.round(zc);
+        if (Math.abs(zc - kn) < 0.15) { nameEl.textContent = NAMES[kn]; e2 = EXP[kn]; }
+        else { const k0 = Math.floor(zc); nameEl.textContent = SHORT[k0] + " → " + SHORT[k0 + 1]; }
+        expEl.textContent = e2 < 0 ? "−" + Math.abs(e2) : String(e2);
+        const kj = Math.max(0, Math.min(3, Math.floor(zc - 0.15 < 0 ? 0 : zc - 0.15)));
+        jumpEl.textContent = "ZOOM NOT TO SCALE · " + JUMP[kj];
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const clock = { t: 0 };
+      tl.fromTo(clock, { t: 0 }, { t: 8.2, duration: 8.2, ease: "none", onUpdate: () => draw(clock.t) }, 0);
+
+      // ---- character acting, sampled on twos (15 fps) ----
+      const twos = (name, dur) => {
+        const f = E(name), n = Math.max(1, Math.round(dur * 15));
+        return (p) => f(Math.min(1, Math.floor(p * n + 1e-6) / n));
+      };
+      const rig = all(".w-rig"), breath = all(".w-breath"), head = all(".w-head"), arm = all(".w-arm");
+      const key = all(".w-key"), shadow = all(".w-shadow");
+      const O = { svgOrigin: "0 0" };
+      // breathing idle (a character's breath is acting)
+      tl.fromTo(breath, { scaleY: 1, ...O }, { scaleY: 1.015, ...O, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 7 }, 0);
+      // hop: anticipation, stretch, fall, squash, settle (8% squash budget)
+      tl.fromTo(rig, { scaleX: 1, scaleY: 1, y: 0, ...O }, { scaleX: 1.08, scaleY: 0.92, ...O, duration: 0.12, ease: twos("power2.out", 0.12) }, 0.7);
+      tl.fromTo(rig, { scaleX: 1.08, scaleY: 0.92, y: 0, ...O }, { scaleX: 0.95, scaleY: 1.06, y: -90, ...O, duration: 0.26, ease: twos("power2.out", 0.26) }, 0.82);
+      tl.fromTo(rig, { scaleX: 0.95, scaleY: 1.06, y: -90, ...O }, { scaleX: 1, scaleY: 1, y: 0, ...O, duration: 0.2, ease: twos("power2.in", 0.2) }, 1.08);
+      tl.fromTo(rig, { scaleX: 1, scaleY: 1, ...O }, { scaleX: 1.07, scaleY: 0.93, ...O, duration: 0.07, ease: "none" }, 1.28);
+      tl.fromTo(rig, { scaleX: 1.07, scaleY: 0.93, ...O }, { scaleX: 1, scaleY: 1, ...O, duration: 0.2, ease: "back.out(2)" }, 1.35);
+      tl.fromTo(shadow, { scaleX: 1, svgOrigin: "0 2" }, { scaleX: 0.7, svgOrigin: "0 2", duration: 0.26, ease: "power2.out" }, 0.82);
+      tl.fromTo(shadow, { scaleX: 0.7, svgOrigin: "0 2" }, { scaleX: 1, svgOrigin: "0 2", duration: 0.2, ease: "power2.in" }, 1.08);
+      // looks up at the question, points at it (head leads, arm follows 3 frames later)
+      tl.fromTo(head, { rotation: 0, svgOrigin: "0 -470" }, { rotation: -10, svgOrigin: "0 -470", duration: 0.27, ease: twos("power2.inOut", 0.27) }, 1.5);
+      tl.fromTo(arm, { rotation: 0, svgOrigin: "100 -380" }, { rotation: -150, svgOrigin: "100 -380", duration: 0.33, ease: twos("back.out(1.4)", 0.33) }, 1.55);
+      tl.fromTo(head, { rotation: -10, svgOrigin: "0 -470" }, { rotation: 4, svgOrigin: "0 -470", duration: 0.27, ease: twos("power2.inOut", 0.27) }, 2.12);
+      tl.fromTo(arm, { rotation: -150, svgOrigin: "100 -380" }, { rotation: 0, svgOrigin: "100 -380", duration: 0.27, ease: twos("power2.in", 0.27) }, 2.15);
+      // the key ticks while it thinks: 45 degree steps every 0.1 s with a micro-overshoot (on ones)
+      // a wind-up key turns about its own shaft: seen side-on that is a stepped flip, scaleY = cos(angle)
+      for (let i = 0; i < 78; i++) {
+        const c0 = Math.cos((i * Math.PI) / 4), c1 = Math.cos(((i + 1) * Math.PI) / 4);
+        tl.fromTo(key, { scaleY: c0, svgOrigin: "-110 -430" }, { scaleY: c1, svgOrigin: "-110 -430", duration: 0.08, ease: "back.out(3)", immediateRender: i === 0 }, 0.1 + i * 0.1);
+      }
+      // mitochondria idle in the hero cell (something always ticks)
+      tl.fromTo(all(".mito"), { rotation: 0, svgOrigin: "0 0" }, { rotation: 8, svgOrigin: "0 0", duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 3 }, 4.1);
+
+      // ---- the loupe arrives on the arm, then leaves on the pull-out ----
+      tl.fromTo(all(".loupe"), { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power2.out" }, 2.42);
+      tl.fromTo(all(".loupe"), { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "power2.in" }, 6.0);
+      tl.fromTo(all(".r-pin"), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, 7.45);
+
+      // ---- type: per-word blur-in, no translate; exit blur-out ----
+      const words = document.querySelectorAll("#lad-title span");
+      words.forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out" }, 0.35 + i * 0.067);
+        tl.fromTo(w, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in", immediateRender: false }, 2.3 + i * 0.02);
+      });
+      tl.fromTo("#lad-tag-in", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "expo.out" }, 4.15);
+      tl.fromTo("#lad-tag-in", { opacity: 1 }, { opacity: 0, duration: 0.13, ease: "power2.in", immediateRender: false }, 5.5);
+      tl.fromTo("#lad-readout-in", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" }, 2.7);
+      tl.fromTo("#lad-readout-in", { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "power2.in", immediateRender: false }, 7.7);
+
+      // seek baseline: render to the end and back once, so every element rests on its EARLIEST from-state
+      tl.progress(1).progress(0);
+      draw(0);
+      window.__timelines["ladder"] = tl;
+    })();
+  </script>
+</template>

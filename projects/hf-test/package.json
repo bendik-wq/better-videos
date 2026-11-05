@@ -1,0 +1,9 @@
+{
+  "name": "hf-test",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.9.17 check",
+    "render": "npx --yes hyperframes@0.9.17 render --workers 4 -o out/hf-test.mp4"
+  }
+}

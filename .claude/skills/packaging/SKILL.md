@@ -78,6 +78,17 @@ different thumbnails, kill or reframe the idea now, before research money is spe
 | Accurate: the video can deliver it in full | 2 (gate) |
 | Clear to casual and new viewers with no jargon | 1 |
 
+**Then score each title with `bencivenga-copy`** (`.claude/skills/bencivenga-copy/references/checklist.md`
+§2: itch, unique promise, built-in proof, specificity, ease). This table is the *selection*
+score (P); Bencivenga's is the *believability* score (B). Both run and neither replaces the other:
+keep a title only if **P ≥ 7 and B ≥ 7**, rank the survivors by **P + B**, break ties on B's
+built-in-proof sub-score, and apply both rubrics' gates (`checklist.md` §0). Before Step 1, run the
+peg check (`bencivenga-copy/references/youtube-mechanics.md` §1: news first, else a famous event),
+and score the angle with the Persuasion Equation (`checklist.md` §6: 25 per part, minus 25 for any
+part not as strong as it can be; under 100 means fix the weak part first). Also run the shape test
+(`checklist.md` §9) and the mobile front-load check (`youtube-mechanics.md` §2). Worked example of
+the whole flow: `bencivenga-copy/references/worked-example.md`.
+
 ### Title formula bank
 
 Use these as starting shapes for the 25–50 titles. They come from the top 25 videos of each of 20
@@ -259,6 +270,8 @@ A concept that fails any gate is redrawn, not scored.
 ## Output format
 
 Write `projects/<name>/packaging.md` containing:
+
+- the peg check and the Persuasion Equation table (`bencivenga-copy` format);
 
 - the angle;
 - the C/C/N check;

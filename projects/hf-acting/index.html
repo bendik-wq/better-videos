@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- Character-acting stress test (npx hyperframes render --workers 4 -o out/acting.mp4).
+     Three rigs + a 240-figure crowd, all solved per frame from one clock: 2-bone IK legs with foot plants (walk),
+     2-bone IK arm reaching a moving target, dial-head gaze (our faceless "expression"), squash on a surprise take. -->
+<html lang="en" data-resolution="landscape">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-500.woff2"); font-weight: 500; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f7f6f1; }
+  #root { position: relative; width: 100%; height: 100%; }
+  #note { position: absolute; left: 80px; top: 60px; font-family: "IBM Plex Mono"; font-weight: 500; font-size: 28px; letter-spacing: 0.16em; color: #3d4a60; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="4" data-fps="30" data-width="1920" data-height="1080">
+  <svg id="st" width="1920" height="1080" viewBox="0 0 1920 1080" style="position:absolute;inset:0">
+    <rect y="760" width="1920" height="320" fill="#ebe8de" />
+    <line x1="0" y1="760" x2="1920" y2="760" stroke="#14233d" stroke-width="3" />
+    <g id="crowd"></g><g id="cast"></g>
+    <circle id="ball" r="22" fill="#e0241b" stroke="#14233d" stroke-width="3" />
+  </svg>
+  <div id="note">ACTING STRESS · IK WALK · IK REACH · GAZE · CROWD 240</div>
+</div>
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  const pill = (parent, fill, w) => mk("line", { stroke: "#14233d", "stroke-width": w + 6, "stroke-linecap": "round" }, parent) && mk("line", { stroke: fill, "stroke-width": w, "stroke-linecap": "round" }, parent);
+  // a limb = outline line + fill line drawn between two points
+  function limb(parent, fill, w) { const o = mk("line", { stroke: "#14233d", "stroke-width": w + 6, "stroke-linecap": "round" }, parent); const f = mk("line", { stroke: fill, "stroke-width": w, "stroke-linecap": "round" }, parent);
+    return (a, b) => { for (const e of [o, f]) { e.setAttribute("x1", a[0]); e.setAttribute("y1", a[1]); e.setAttribute("x2", b[0]); e.setAttribute("y2", b[1]); } }; }
+  // 2-bone IK: root, target, bone lengths, bend sign -> joint
+  function ik(r, t, l1, l2, bend) {
+    const dx = t[0] - r[0], dy = t[1] - r[1], d = Math.min(Math.hypot(dx, dy), l1 + l2 - 0.01);
+    const a = Math.atan2(dy, dx), c = Math.acos(Math.max(-1, Math.min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d))));
+    return [r[0] + Math.cos(a + bend * c) * l1, r[1] + Math.sin(a + bend * c) * l1];
+  }
+  const reach = (r, t, len) => { const dx = t[0] - r[0], dy = t[1] - r[1], d = Math.hypot(dx, dy); return d <= len - 0.5 ? t : [r[0] + dx / d * (len - 0.5), r[1] + dy / d * (len - 0.5)]; };
+  function rig(col, colD, sc) {
+    const g = mk("g", {}, document.getElementById("cast"));
+    const legB = [limb(g, colD, 26 * sc), limb(g, colD, 24 * sc)], armB = [limb(g, colD, 22 * sc), limb(g, colD, 20 * sc)];
+    const body = mk("rect", { width: 120 * sc, height: 200 * sc, rx: 60 * sc, fill: col, stroke: "#14233d", "stroke-width": 3 }, g);
+    const head = mk("circle", { r: 40 * sc, fill: "#ebe8de", stroke: "#14233d", "stroke-width": 3 }, g);
+    const hand = mk("line", { stroke: "#14233d", "stroke-width": 6, "stroke-linecap": "round" }, g);
+    const legF = [limb(g, col, 26 * sc), limb(g, col, 24 * sc)], armF = [limb(g, col, 22 * sc), limb(g, col, 20 * sc)];
+    return { sc, pose({ hip, lean = 0, sq = 1, footB, footF, handB, handF, gaze }) {
+      const s = sc, bh = 200 * s * sq, bw = 120 * s / Math.sqrt(sq);
+      const top = [hip[0] + Math.sin(lean) * bh, hip[1] - Math.cos(lean) * bh];
+      body.setAttribute("x", -bw / 2); body.setAttribute("y", -bh); body.setAttribute("width", bw); body.setAttribute("height", bh); body.setAttribute("rx", bw / 2);
+      body.setAttribute("transform", `translate(${hip[0]} ${hip[1] + 10 * s}) rotate(${lean * 57.3})`);
+      const hc = [top[0] + Math.sin(lean) * 40 * s, top[1] - 34 * s];
+      head.setAttribute("cx", hc[0]); head.setAttribute("cy", hc[1]);
+      hand.setAttribute("x1", hc[0]); hand.setAttribute("y1", hc[1]); hand.setAttribute("x2", hc[0] + Math.cos(gaze) * 28 * s); hand.setAttribute("y2", hc[1] + Math.sin(gaze) * 28 * s);
+      const L = 62 * s, sh = [hip[0] + Math.sin(lean) * bh * 0.78, hip[1] - Math.cos(lean) * bh * 0.78];
+      for (const [bones, foot, off] of [[legB, footB, -18], [legF, footF, 18]]) { const r = [hip[0] + off * s, hip[1]]; const f = reach(r, foot, 128 * s), k = ik(r, f, 64 * s, 64 * s, -1); bones[0](r, k); bones[1](k, f); }
+      for (const [bones, hnd] of [[armB, handB], [armF, handF]]) { const h = reach(sh, hnd, 2 * L), k = ik(sh, h, L, L, 1); bones[0](sh, k); bones[1](k, h); }
+    } };
+  }
+  const A = rig("#2a8c86", "#1d6662", 1), B = rig("#b98a3e", "#7d5a22", 1.1), C = rig("#a9c5ae", "#6f9a7a", 0.95);
+  // crowd: 240 tallies in 3 rows, each a body + head that walk-bob with their own phase
+  const crowd = document.getElementById("crowd"), people = [];
+  for (let i = 0; i < 240; i++) { const row = i % 3, g = mk("g", {}, crowd), sc = 0.55 + row * 0.15;
+    mk("rect", { x: -7 * sc, y: -40 * sc, width: 14 * sc, height: 40 * sc, rx: 7 * sc, fill: ["#a9c5ae", "#8cc5bf", "#dcd7c8"][i % 3], stroke: "#14233d", "stroke-width": 1.6 }, g);
+    mk("circle", { cy: -48 * sc, r: 6 * sc, fill: "#ebe8de", stroke: "#14233d", "stroke-width": 1.4 }, g);
+    people.push({ g, x0: (i * 97) % 2100 - 90, y: 640 + row * 40, v: 40 + (i * 37) % 60, ph: (i * 0.37) % 6.28, sc }); }
+  const ball = document.getElementById("ball");
+  function draw(t) {
+    // A walks right: feet plant on a stride grid; hip bobs twice per cycle
+    const cyc = 1.0, stride = 150, ax = 260 + t * stride * 2 / cyc, ph = (t / cyc) * Math.PI * 2;
+    // stance: the foot is planted in the world (moves back at walking speed relative to the hip); swing: it lifts and passes
+    const S = stride * 2 * cyc / 2, foot = (o) => { const p = (t / cyc + o) % 1;
+      return p < 0.5 ? [ax + S / 2 - S * (p / 0.5), 900] : [ax - S / 2 + S * ((p - 0.5) / 0.5), 900 - Math.sin(((p - 0.5) / 0.5) * Math.PI) * 30]; };
+    A.pose({ hip: [ax, 786 - Math.abs(Math.cos(ph)) * 8], lean: 0.08, footB: foot(0), footF: foot(0.5),
+      handB: [ax - 40 + Math.sin(ph) * 50, 700], handF: [ax + 40 - Math.sin(ph) * 50, 700], gaze: 0 });
+    // the ball arcs over; B reaches for it with IK and its gaze follows it
+    const bt = Math.min(1, t / 2.6), bx = 900 + bt * 700, by = 500 - Math.sin(bt * Math.PI) * 300 + (t > 2.6 ? (t - 2.6) * 0 : 0);
+    const caught = t > 2.6, bp = caught ? [1480, 560] : [bx, by];
+    ball.setAttribute("cx", bp[0]); ball.setAttribute("cy", bp[1]);
+    const reach = Math.min(1, Math.max(0, (t - 1.2) / 1.2)), hb = [1420, 800];
+    const handF = [hb[0] + (bp[0] - hb[0]) * reach + (1 - reach) * 60, 640 + (bp[1] - 640) * reach];
+    B.pose({ hip: [1420, 810], lean: -0.15 * reach, sq: caught ? 1 - 0.06 * Math.exp(-(t - 2.6) * 6) * Math.cos((t - 2.6) * 18) : 1,
+      footB: [1380, 900], footF: [1480, 900], handB: [1350, 700], handF, gaze: Math.atan2(bp[1] - 600, bp[0] - 1420) });
+    // C: a surprise take at 2.0 s (anticipation squash, stretch, settle) and the gaze snaps to A
+    const k = t - 2.0, sq = k < 0 ? 1 : k < 0.12 ? 1 - 0.08 * (k / 0.12) : 1 + 0.07 * Math.exp(-(k - 0.12) * 5) * Math.cos((k - 0.12) * 14);
+    C.pose({ hip: [700, 815], sq, lean: k > 0 ? -0.1 : 0, footB: [660, 900], footF: [745, 900],
+      handB: k > 0.1 ? [610, 560] : [640, 720], handF: k > 0.1 ? [790, 560] : [760, 720], gaze: k > 0.05 ? Math.atan2(0, ax - 700) * 0 + (ax > 700 ? 0 : Math.PI) : -1.2 });
+    for (const p of people) { const x = ((p.x0 + p.v * t) % 2100) - 90, bob = Math.abs(Math.sin(p.ph + t * 7)) * 5 * p.sc;
+      p.g.setAttribute("transform", `translate(${x.toFixed(1)} ${(p.y - bob).toFixed(1)}) rotate(${(Math.sin(p.ph + t * 7) * 4).toFixed(1)})`); }
+  }
+  const tl = gsap.timeline({ paused: true }), clock = { t: 0 };
+  tl.fromTo(clock, { t: 0 }, { t: 4, duration: 4, ease: "none", onUpdate: () => draw(clock.t) }, 0);
+  draw(0);
+  window.__timelines["main"] = tl;
+})();
+</script>
+</body>
+</html>

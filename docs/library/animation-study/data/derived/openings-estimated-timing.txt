@@ -1,0 +1,240 @@
+# Openings with ESTIMATED timestamps: time = words before line / (total words / runtime). Source text: rosetta.to caption transcripts. Error ~±10% plus any music-only intro. Runtime from our yt-dlp pull.
+
+## kurzgesagt_south-korea-is-over: 2418 words, runtime 887s -> 164 wpm of runtime
+  ~ 0.0s  South Korea is over.
+  ~ 1.5s  This sounds brutal, but South Korea will soon start melting on all fronts, demographically, economically, socially, culturally, and militarily.
+  ~ 8.4s  Because for decades, the country has been experiencing a fertility crisis unprecedented in human history.
+  ~13.9s  And we've probably reached a point of no return.
+  ~17.2s  By60, the South Korea we know and love today will no longer exist.
+  ~22.0s  What will the collapse look like?
+  ~24.2s  And why is it now almost impossible to stop?
+  ~27.5s  The real population bomb.
+  ~29.0s  To have a stable population, you need a fertility rate of about 2.1 children per woman.
+  ~34.8s  In the 1950s, South Koreans used to have six children on average.
+  ~39.3s  In the 1980s, the rate fell below two.
+  ~42.2s  And in 2023, it was 0.72 kids per woman, the lowest ever recorded in history.
+  ~47.7s  In Soul, fertility is even lower, around 0.55.
+  ~50.6s  On average, about half of the women here won't have any kids and the other half just one.
+  ~57.2s  What do these numbers actually mean in the real world?
+  ~60.9s  If fertility stays as it is, then 100 South Koreans will have 36 kids.
+  ~66.0s  When they grow up, they will have 13 kids who will then have five.
+  ~71.2s  Within four generations, 100 South Koreans will turn into five.
+  ~74.8s  If we look at today's South Korean population pyramid, we see this is pretty real.
+
+## kurzgesagt_the-most-insane-weapon-you-never-heard-about: 2329 words, runtime 836s -> 167 wpm of runtime
+  ~ 0.0s  in the 1950s the US began the top secret project sundal most of it
+  ~ 5.0s  is still classified the goal a single nuclear bomb so powerful it would destroy
+  ~10.1s  all of human civilization conceived in cold logic from the mind of a genius
+  ~15.1s  scientist Sundi had the energy equivalent of 10 billion tons of TNT a pyramid
+  ~20.1s  of explosives 13 times taller than the actual Great Pyramid 3,000 more than all
+  ~25.1s  the bombs dropped during World War II if you dropped the bomb that destroyed
+  ~30.2s  Hiroshima every minute it would take you over 15 months to match sundal how
+  ~35.2s  was it even possible for us to achieve this insane level of Madness everything
+  ~40.2s  is different forever let's set the stage if you were 40 in 1945 that
+  ~45.2s  means you were born in 1905 back then monarchs ruled over much of the
+  ~50.3s  world only 3% of homes in the US had electricity cities were dominated by
+  ~55.3s  horses the first experiment Al planes had just flown less than 100,000 soldiers died
+  ~60.3s  in war each year imagine growing up in this world and seeing change almost
+  ~65.3s  too fast to keep up with by 1945 24 million soldiers and 50 million
+  ~70.4s  civilians had died in two world wars and suddenly there were TVs microwaves jet
+
+## kurzgesagt_why-does-fentanyl-feel-so-good: 2406 words, runtime 898s -> 161 wpm of runtime
+  ~ 0.0s  Fentinel must be amazing.
+  ~ 1.5s  Loads of people give up on everything that makes life good for it.
+  ~ 6.3s  Their loved ones, any other possessions or pursuits, homes, their dignity, and even their lives.
+  ~11.9s  But actually, fentinyl is garbage heroin, inferior in every single way but one.
+  ~16.8s  It's the perfect drug for dealers.
+  ~19.0s  And while we hear a lot about how deadly fentinyl is, many people it kills are not even fentinyl addicts.
+  ~26.5s  It's truly the dumbest drug to ruin your life for.
+  ~30.2s  Let's learn what fentinyl does to you, what it feels like, and why it's so much lamer than heroin.
+  ~37.3s  Pain and pleasure.
+  ~38.4s  Maybe the two most important forces that guide our survival are pain and pleasure.
+  ~43.7s  Pain may be the most visceral physical experience.
+  ~46.7s  A claw ripping your flesh, a bone cracking, rejection eating your soul.
+  ~51.1s  Pain can be scary and unbearable.
+  ~53.4s  It's the strongest signal our bodies have to make us avoid harm.
+  ~57.9s  Pleasure is what makes life good because it feels well amazing.
+  ~62.0s  Eating things that are sweet or highfat, having sex, or opening another booster pack with your friends.
+  ~68.3s  Anything that makes you feel pleasure makes you want to do it again.
+  ~73.2s  These two opposing forces guide you through life.
+
+## kurzgesagt_ai-slop-is-destroying-the-internet: 1573 words, runtime 592s -> 159 wpm of runtime
+  ~ 0.0s  Our 12,26 human era calendar just dropped and this year is extra special.
+  ~ 4.9s  Stay tuned until the end for the reveal or head straight to the shop to get yours.
+  ~11.3s  AI slop is saturating the internet and things are becoming dramatic pretty quickly.
+  ~16.2s  In an online world where money is made with attention, fake users spread their slop in review sections, generate fake traffic or poison discourse.
+  ~25.2s  AI has supercharged this and made slop much harder to spot.
+  ~29.4s  Today, about half of internet traffic is bots.
+  ~32.4s  The majority of them are used for destructive purposes.
+  ~35.8s  It's never been easier to make mediocre content.
+  ~38.8s  From the black hole of meaninglessness that is LinkedIn, loweffort short videos just engaging enough to hypnotize kids and fry their attention spans to endless, soullessly rewritten books on Amazon.
+  ~50.1s  AI music is invading streaming platforms.
+  ~52.3s  Google AI is summarizing websites instead of sending traffic to them.
+  ~56.5s  On YouTube, new channels publish long- form videos multiple times a week with AI generated thumbnails, voices, and scripts.
+  ~63.6s  True crime, video essays, science, no space is safe.
+  ~67.0s  We're in the golden era of soulless slob.
+  ~70.0s  And sadly, actual creative human work is used to train these AI models.
+  ~74.9s  Every Reddit comment, original YouTube video, or human drawing on Deviant Art has been sold out to the AI companies or straight up stolen by them without attribution or payment to the actual creators.
+
+## minutephysics_why-do-wind-turbines-have-three-blades: 913 words, runtime 244s -> 225 wpm of runtime
+  ~ 0.0s  It's possible to build a wind turbine with two blades or five blades or even one blade, but the vast majority of modern windmills have three blades.
+  ~ 7.2s  And there are three good reasons for that.
+  ~ 9.4s  The first reason for three blades comes from physics.
+  ~11.8s  All else being equal, the more blades a windmill has, the more torque it can generate.
+  ~16.0s  But also, the more drag it has, because each additional blade has to cut through the wind, and drag grows quickly the faster the windmill is spinning.
+  ~23.3s  So, in general, many bladed windmills work better at lower rotational speeds relative to wind speed.
+  ~27.5s  On the other hand, a windmill with fewer blades generates less torque, but also experiences less drag.
+  ~32.1s  So, fewerb bladed windmills tend to work better at higher rotational speeds.
+  ~35.3s  Here's a graph showing the efficiencies of turbines with different numbers of blades, where the x-axis shows how fast they're spinning relative to the wind, and the y-axis shows the efficiency of the turbine.
+  ~44.4s  The efficiency for a five blade turbine is highest at low speeds, while a oneb blade turbine works better at high rotational speeds.
+  ~50.5s  You can see that the highest possible efficiency of any turbine comes at intermediate speeds on this curve here, which corresponds to, you guessed it, three blades.
+  ~57.7s  But there's more to a turbine than efficiency.
+  ~59.9s  A super high efficiency windmill is no use if it falls apart after just a little while.
+  ~64.4s  So the second reason why windmills have three blades comes from engineering.
+  ~67.6s  The problem is that windmills have to be strong enough to withstand the many different bending and rotational and vibrational forces necessary for their operation.
+  ~74.3s  For example, when the blades of a two-blade wind turbine are aligned with or opposite the pole, it can create an unbalanced twisting force under the wrong wind conditions.
+
+## minutephysics_common-moon-mistakes: 1231 words, runtime 308s -> 240 wpm of runtime
+  ~ 0.0s  [Music] Warning, there are ideas in this video that you may not be able to unsee.
+  ~ 4.0s  There are many ways to draw the moon incorrectly, but this video isn't just about pedantically correcting children's books and animated movies, though it at least partially is.
+  ~11.0s  Here's the thing.
+  ~11.8s  The moon is up there for any of us to look at, basically as much as we want.
+  ~16.3s  And yet, the proliferation of incorrect illustrations of the moon suggests that very few of us actually do.
+  ~20.8s  I shouldn't need to make this video, but I guess here it is.
+  ~24.0s  Mistake number one is showing the outside of the crescent moon as anything other than half of a circle.
+  ~28.8s  This isn't a realistic moon.
+  ~30.0s  I kind of get this one.
+  ~31.5s  When I think of a crescent moon, I kind of just imagine taking an arbitrary arc and drawing another arc either outside or inside of it.
+  ~38.0s  But the moon is a sphere and half of it is illuminated by the sun.
+  ~41.8s  And when you look at a half illuminated sphere from different angles, the opposite points of the crescent are always on opposite points of the sphere.
+  ~48.3s  And the same thing applies for gibbus moons where you can instead think of the dark part as the crescent.
+  ~53.3s  Okay, technically speaking, the points are only exactly opposite if you're infinitely far away from the sphere.
+  ~57.5s  And if you're somewhat closer, then the crescent won't quite reach the poles.
+  ~60.8s  And non- halfcircle moon related shapes can form, but only during an eclipse.
+  ~64.1s  A shortened crescent moon can appear during a lunar eclipse when the dark part is the Earth's shadow covering the moon.
+  ~69.3s  And an elongated crescent sun can appear during a solar eclipse where the moon is the dark part.
+  ~73.8s  The ultimate point is in any realistic moon illustration, the outer unobstructed portion of the moon will always be half a circle so that the points of the crescent are opposite each other.
+
+## minuteearth_how-do-fish-get-into-isolated-mountain-lakes: 753 words, runtime 238s -> 190 wpm of runtime
+  ~ 0.0s  on a recent hike I came across a beautiful little Lake and I saw
+  ~ 4.4s  something that totally surprised me a fish which okay okay on its own isn't
+  ~ 8.8s  particularly weird but this Lake an Alpine Lake high in the Rocky Mountains was
+  ~13.3s  miles away from any other bodies of water how in the world does a
+  ~17.7s  fish get somewhere like this in the first place hi I'm David and this
+  ~22.1s  is minute Earth the fish was a boring old trout not one of those
+  ~26.5s  weird aquatic species that can survive and move around on land so I'm pretty
+  ~31.0s  sure this fish didn't walk there and they couldn't have evolved there either trout
+  ~35.4s  evolved 20 million years ago and this Lake didn't form until way more recently
+  ~39.8s  than that it turns out that other than those options there are three main
+  ~44.2s  ways that fish can get into seemingly isolated Lakes first when it rains a
+  ~48.7s  lot lakes that are normally isolated can overflow and get connected by temporary streams
+  ~53.1s  this allows all sorts of stuff including fish to get from one Lake into
+  ~57.5s  another but the lake I was visiting was the highest around even the strongest
+  ~61.9s  trout couldn't have swam Upstream to it so what about the second option maybe
+  ~66.4s  it parachuted in which sounds absurd but many Wildlife agencies in the US and
+  ~70.8s  around the world literally dump fish out of plains into Mountain Lakes to provide
+
+## minuteearth_the-ancestor-paradox: 829 words, runtime 254s -> 196 wpm of runtime
+  ~ 0.0s  this video is sponsored by my Heritage more about them at the end of
+  ~ 4.3s  the episode because you have two parents and each of those parents has two
+  ~ 8.6s  parents and so on your ancestors parents grandparents great-grandparents and on should add up
+  ~12.9s  pretty fast in fact by the time you get just 37 Generations back you
+  ~17.2s  would have 137 billion ancestors just in that 37th generation alone that's more than
+  ~21.4s  the 117 billion or so people that have ever lived on earth which is
+  ~25.7s  impossible so you must have a lot fewer ancestors than you might think hi
+  ~30.0s  I'm Cameron and this is minute Earth to make sense of this let's say
+  ~34.3s  for example that I I don't know your parents are first cousins I know
+  ~38.6s  bear with me for a second that would mean that two of your grandparents
+  ~42.9s  are siblings and since siblings have the same parents and therefore the same ancestry
+  ~47.2s  a bunch of these ancestors are duplicates we can really just count them once
+  ~51.5s  going back to our 37 Generations think that's more than 34 billion ancestors we
+  ~55.8s  would no longer be counting that might sound like an extreme example but more
+  ~60.1s  distant relationships like fourth cousins which we don't even consider to be that closely
+  ~64.3s  related still hollow out your pyramid and our family histories are full of lots
+  ~68.6s  and lots of inbreeding that might sound pretty gross to you and me but
+  ~72.9s  mating with relatives hasn't always been frowned upon heck Albert Einstein married his first
+
+## minuteearth_all-the-cats-explained: 2649 words, runtime 762s -> 209 wpm of runtime
+  ~ 0.0s  When we made our video about the canine family tree and the accompanying doggone gorgeous poster, you all liked it a lot.
+  ~ 6.3s  But one comment kept coming up over and over and over again.
+  ~ 9.8s  When are we going to make a feline one?
+  ~12.4s  Well, your wish is our command because unlike cats, we actually respond to commands.
+  ~16.4s  Hi, I'm David and this is feline earth.
+  ~18.7s  This is a feline and so is this and so is this and so are all of these kitties.
+  ~24.2s  Wild felines come in all shapes and sizes and live all over the world.
+  ~28.2s  Plus, there are more than half a billion domestic cats.
+  ~31.1s  In this video, I'm going to take you on a tour of the amazing feline family, both wild and domestic, and show off the poster we made to celebrate them.
+  ~39.7s  Okay, let's start off with a few of our favorite extinct kitties.
+  ~43.1s  The largest cat to ever exist was likely Smileon Populator, a saber-tooth tiger who weighed roughly half a ton and had canine teeth up to 11 in long.
+  ~51.2s  Its massive teeth allowed it to take down big prey, including bison and giant ground sloths, likely with just one bite to the throat.
+  ~58.1s  One of my favorite extinct felines is the American cheetah, which used to live all over the US until it died out soon after humans arrived.
+  ~65.6s  It wasn't closely related to the modern cheetah, and it was a lot bigger,
+  ~69.6s  but it was probably almost as fast, which helps explain why its favorite meal,
+  ~73.6s  the pong horn, is still the second fastest mammal in the world today.
+
+## cgpgrey_tumbleweeds-aren-t-from-here: 1185 words, runtime 402s -> 177 wpm of runtime
+  ~ 0.0s  bouncing across a scene tumbleweed established the Wild West as Western but more than
+  ~ 4.7s  just prompts tumbleweed are real and tumbleweed are alive well they were alive each
+  ~ 9.5s  tumbleweed starts as a tiny seed on the craggy landscape putting down roots up
+  ~14.2s  branches opening flowers and through the miracle of life birthing seeds itty-bitty baby tumbles
+  ~19.0s  to be now dropping these seeds straight down won't give the tumble tots their
+  ~23.7s  best Head Start so what's the parent plant to do but sacrifice their life
+  ~28.5s  for their children to intentionally starve themselves to die and to dry to catch
+  ~33.2s  the wind to shuffle off this mortal coil to bounce across the land to
+  ~38.0s  chance their children to find fertile ground to root two sprouts to grow two
+  ~42.7s  flower to continue the circle of life it's beautiful really these humble tumble rolling
+  ~47.5s  across the West in search of empty land to colonize are as iconic Lee
+  ~52.2s  West as Westerners west earning because neither are natives before the 1800s there were
+  ~57.0s  no homesteaders and no tumbleweed in the West tumbleweed are an invasive species and
+  ~61.7s  a deeply unwelcome one it's time to get real about the trouble with tumbles
+  ~66.5s  now you might be thinking if the West is mostly empty and tumbleweed arrived
+  ~71.2s  and survived what's the big deal they're kind of nice and you know what
+
+## cgpgrey_how-to-be-a-pirate-captain: 760 words, runtime 441s -> 103 wpm of runtime
+  ~ 0.0s  hello so you want to be a pirate Malad well let me tell you
+  ~ 8.1s  being a pirate be all about branding yar it's a business but branding be
+  ~16.2s  bringing in the booty and if ye be shipping with our jolly crew you
+  ~24.4s  need love this Jolly Roger question isn't waving a pirate flag like waving of
+  ~32.5s  we are thieves flag it seems not helpful this skull and crossbones be more
+  ~40.6s  than just a bit of Arg look at us it's plumage prerequisite for plundering
+  ~48.7s  as pirates we be wanting booty booty delicious but parties protect their booty preferring
+  ~56.9s  it's unplugged er so we must plunder asunder which tis a lot of work
+  ~65.0s  and risk who needs that see we want free booty when we ask for
+  ~73.1s  booty booty to be granted and bounce but why would a ship just give
+
+## primerblobs_simulating-the-evolution-of-aggression: 2381 words, runtime 797s -> 179 wpm of runtime
+  ~ 0.0s  in this video we're going to start exploring conflict between creatures to try to
+  ~ 4.7s  build some understanding here we're going to use some simulations and some ideas from
+  ~ 9.4s  a field of math called Game Theory okay so in our simulation food will
+  ~14.1s  appear each day and then blobs will appear and go out to eat the
+  ~18.7s  food we'll use the same survival and reproduction rules as in previous videos eating
+  ~23.4s  one piece of food lets a creature survive to the next day and eating
+  ~28.1s  two pieces of food allows a creature to both both survive and reproduce what's
+  ~32.8s  different in this simulation though is that food will come in pairs each creature
+  ~37.5s  randomly picks a pair of food to walk to so it might get the
+  ~42.2s  pair all to itself and get to go home with two food and then
+  ~46.9s  reproduce or another creature might find the pair at the same time and when
+  ~51.5s  this happens they have to somehow figure out how to split things up we'll
+  ~56.2s  start out by having only one possible strategy for creatures who run into each
+  ~60.9s  other they'll just share each taking a piece of food and going home to
+  ~65.6s  survive to the next day and because this strategy is so nice we'll give
+  ~70.3s  it the name Dove all right let's let things run for a [Music] bit
+  ~75.0s  all right now let's add had a new strategy called the hawk strategy Hawks
+
+## primerblobs_simulating-natural-selection: 1719 words, runtime 600s -> 172 wpm of runtime
+  ~ 0.0s  this video is about natural selection if you've watched the previous videos in this
+  ~ 4.9s  series you've seen these blog creatures live die and replicate but it's been a
+  ~ 9.8s  little bit artificial we just gave each type of creature a replication chance and
+  ~14.7s  a death chance and we saw what happened with natural selection though we usually
+  ~19.5s  can't know precise replication and death chances instead selection comes from interactions between a
+  ~24.4s  creatures traits and its environment so in this video we're going to make a
+  ~29.3s  real evolving system by putting our blob creatures into a simple environment and giving
+  ~34.2s  them traits let's see what we can learn by watching some actual natural selection
+  ~39.1s  happen alright so what does our environment look like creatures will live on this
+  ~44.0s  plane and each morning food appears on the plane and the blobs emerge from
+  ~48.9s  their homes around the edge to go out and eat the food here are
+  ~53.8s  the rules if a blob fails to find any food before running out of
+  ~58.6s  energy it will die if a blob gets one piece of food and manages
+  ~63.5s  to get back home to the edge it will live on to the next
+  ~68.4s  day and if a blob gets to pieces and gets home it will survive
+  ~73.3s  to the next day and also replicate adding another creature to the next day

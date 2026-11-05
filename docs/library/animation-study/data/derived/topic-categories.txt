@@ -1,0 +1,22 @@
+
+history
+| space/universe | 16 | 1.12x | 6% |
+| famous person | 181 | 1.02x | 12% |
+| war/battle/military | 1435 | 1.01x | 11% |
+| what-if/hypothetical | 190 | 1.00x | 6% |
+| (none of these) | 1634 | 0.98x | 10% |
+| body/health/drugs | 17 | 0.97x | 6% |
+| disaster/accident | 52 | 0.96x | 8% |
+| how it works/engineering | 148 | 0.86x | 7% |
+| money/brand/company | 11 | 0.65x | 0% |
+
+all long-form
+| body/health/drugs | 496 | 1.18x | 23% |
+| famous person | 364 | 1.09x | 17% |
+| how it works/engineering | 907 | 1.09x | 18% |
+| war/battle/military | 2466 | 1.03x | 15% |
+| what-if/hypothetical | 1320 | 1.02x | 18% |
+| disaster/accident | 272 | 1.00x | 18% |
+| space/universe | 672 | 1.00x | 16% |
+| (none of these) | 9299 | 0.98x | 16% |
+| money/brand/company | 360 | 0.83x | 12% |

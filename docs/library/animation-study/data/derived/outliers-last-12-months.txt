@@ -1,0 +1,137 @@
+
+## AlternateHistoryHub: 6 uploads strictly <12 months old (N months or weeks ago) ; window median 1.1M ; median len 36:46
+
+## Animagraffs: 3 uploads strictly <12 months old (N months or weeks ago) ; window median 1.2M ; median len 46:47
+
+## AsapSCIENCE: 15 uploads strictly <12 months old (N months or weeks ago) ; window median 620K ; median len 6:48
+| 8.6M | 13.9x | 4:58 | ~2026-10 | Nobody has EVER seen an El Niño like this |
+| 3.1M | 5.0x | 7:10 | ~2025-12 | What your ball size says about you |
+| 2.1M | 3.4x | 5:55 | ~2026-04 | The Pi Song 4.0 (Memorize 400 Digits Of π) |
+
+## CGPGrey: 0 uploads in window (newest 2025-11-06)
+
+## EpicHistoryTV: 20 uploads strictly <12 months old (N months or weeks ago) ; window median 654K ; median len 29:35
+| 4.2M | 6.4x | 8:54 | ~2026-09 | Alexander’s Speech That Crushed a Mutiny |
+| 1.9M | 2.9x | 129:36 | ~2026-07 | American Revolution: Road to Independence |
+| 1.9M | 2.9x | 179:22 | ~2026-03 | Rise of China - All Parts |
+| 1.4M | 2.1x | 20:56 | ~2026-05 | Battle of Verdun 3D |
+
+## HistoryMatters: 18 uploads strictly <12 months old (N months or weeks ago) ; window median 767K ; median len 8:43
+
+## JaredOwen: 3 uploads strictly <12 months old (N months or weeks ago) ; window median 1.2M ; median len 16:09
+
+## JohnnyHarris: 22 uploads strictly <12 months old (N months or weeks ago) ; window median 3.1M ; median len 43:08
+| 7.9M | 2.5x | 186:18 | ~2026-04 | The Modern Middle East, Explained |
+| 7.9M | 2.5x | 60:15 | ~2026-03 | Is Fascism Back? |
+| 6.5M | 2.1x | 39:31 | ~2026-08 | The REAL reason the US can’t beat Iran |
+
+## KingsandGenerals: 60 uploads strictly <12 months old (N months or weeks ago) ; window median 243K ; median len 20:27
+| 1.0M | 4.1x | 290:13 | ~2026-10 | War of the Spanish Succession: All Battles and Events - FULL DOCUMENTARY |
+| 877K | 3.6x | 55:57 | ~2026-09 | Sudan’s Three Civil Wars Explained |
+| 710K | 2.9x | 16:05 | ~2026-10 | Largest Land Battle Before WWI Caused the First Russian Revolution |
+| 665K | 2.7x | 16:37 | ~2026-10 | Operation Vivaldi: Ukraine’s Secret Counteroffensive |
+| 612K | 2.5x | 20:03 | ~2026-10 | The Greatest Peasant Uprising in English History |
+| 589K | 2.4x | 20:04 | ~2026-10 | Why the British Empire Fell Apart - Won Two Wars, Then Lost Its Empire |
+| 520K | 2.1x | 341:00 | ~2026-10 | Alexander the Great - All Battles and Conquests EXPLAINED in 6 Hours |
+| 486K | 2.0x | 22:08 | ~2026-10 | Ukraine Hits Putin Where It Hurts - CIA in Moscow |
+
+## MinuteEarth: 26 uploads strictly <12 months old (N months or weeks ago) ; window median 371K ; median len 3:44
+| 3.0M | 8.1x | 3:13 | ~2026-09 | Why Are Some People Mosquito Magnets? |
+| 2.5M | 6.7x | 12:42 | ~2025-12 | ALL THE CATS, EXPLAINED |
+| 1.1M | 3.0x | 3:20 | ~2026-03 | When Does It Make Sense To Kill Your Sibling? |
+
+## NotJustBikes: 18 uploads strictly <12 months old (N months or weeks ago) ; window median 636K ; median len 24:19
+| 1.9M | 3.0x | 29:00 | ~2026-10 | They Finally Built Good Transit!? |
+
+## OverSimplified: 0 uploads in window (newest 2025-11-06)
+
+## PrimerBlobs: 1 uploads strictly <12 months old (N months or weeks ago) ; window median 487K ; median len 62:22
+
+## Ridddle: 60 uploads strictly <12 months old (N months or weeks ago) ; window median 98K ; median len 20:21
+| 897K | 9.1x | 21:09 | ~2025-12 | Що NASA насправді виявила на Місяці після „Аполлона-11“ |
+| 539K | 5.5x | 20:00 | ~2026-10 | Супер Ель-Ніньйо вже почався. До чого готуватися світу? |
+| 478K | 4.9x | 20:11 | ~2026-01 | Історія Землі: Чому зникли гігантські комахи? |
+| 430K | 4.4x | 17:50 | ~2026-09 | "Вояджер-1" за 15 мільярдів миль від Землі: ось що він знайшов |
+| 424K | 4.3x | 20:12 | ~2026-02 | Що це? Страшні знахідки на Марсі, які лякають вчених |
+| 423K | 4.3x | 22:35 | ~2026-09 | We Were Lied To In School: What the Solar System ACTUALLY Looks Like |
+| 330K | 3.4x | 21:01 | ~2026-03 | Що було до динозаврів? Жахливі монстри палеозою |
+| 258K | 2.6x | 25:28 | ~2026-09 | ONE-WAY Ticket: Why the first humans will never return from Mars? |
+| 220K | 2.2x | 20:09 | ~2026-03 | Хто насправді створив людство? Засекречена історія Аннунаків |
+
+## SamONellaAcademy: 4 uploads strictly <12 months old (N months or weeks ago) ; window median 1.4M ; median len 6:57
+| 3.5M | 2.5x | 22:57 | ~2026-09 | Pliny Explains it All 2: MAN (The Historia Naturalis Abridged) |
+
+## SciencephiletheAI: 16 uploads strictly <12 months old (N months or weeks ago) ; window median 238K ; median len 13:49
+| 502K | 2.1x | 12:47 | ~2026-09 | Scariest Depictions of FTL Travel |
+| 489K | 2.1x | 13:38 | ~2026-04 | What's Beyond the Planck Scale? |
+
+## SimpleHistory: 60 uploads strictly <12 months old (N months or weeks ago) ; window median 200K ; median len 9:41
+| 3.0M | 15.0x | 9:28 | ~2026-02 | Why the Americans were so feared by The Japanese |
+| 1.5M | 7.5x | 8:02 | ~2026-02 | Clever Tank Crew Tactics |
+| 1.3M | 6.5x | 11:11 | ~2026-03 | Why all the F-14 Tomcats were Shredded |
+| 1.2M | 6.0x | 34:30 | ~2026-10 | Gun Tricks that can give you an Advantage in Combat |
+| 1.1M | 5.5x | 8:02 | ~2026-05 | The Iraqi Reload |
+| 1.0M | 5.0x | 9:12 | ~2026-10 | This Gas Mask Has a Rhino Horn, and Changed Everything |
+| 931K | 4.7x | 20:02 | ~2026-09 | Every use for a bullet ever |
+| 723K | 3.6x | 9:28 | ~2026-08 | Military habits in civilian life |
+| 637K | 3.2x | 11:08 | ~2026-01 | Dirty Bullet Tricks |
+| 496K | 2.5x | 8:54 | ~2026-03 | Clever Gun Tape Tricks |
+| 451K | 2.3x | 9:38 | ~2026-07 | Army Medic Tricks |
+| 450K | 2.2x | 9:01 | ~2026-10 | What Really Happened on the Highway of Death |
+| 416K | 2.1x | 10:42 | ~2026-09 | Why does every AK come with this |
+| 403K | 2.0x | 8:51 | ~2026-02 | Why Japan's Emperor was not executed after WW2 |
+| 400K | 2.0x | 8:57 | ~2026-09 | Silly String Marines |
+
+## TEDEd: 60 uploads strictly <12 months old (N months or weeks ago) ; window median 377K ; median len 5:52
+| 4.5M | 11.9x | 5:26 | ~2026-10 | 4 ways to fix your attention span - Shannon Odell |
+| 3.4M | 9.0x | 5:22 | ~2026-06 | What toys have kids played with throughout history? |
+| 2.2M | 5.8x | 5:24 | ~2026-05 | Why kids need to take more risks |
+| 1.7M | 4.5x | 5:37 | ~2026-04 | What happens if you eat a silica gel packet? - Vivian Jiang |
+| 1.5M | 4.0x | 5:15 | ~2026-05 | Do imaginary friends make you smarter? |
+| 1.4M | 3.7x | 5:29 | ~2026-05 | The fascinating reason you loved peek-a-boo |
+| 1.1M | 2.9x | 5:30 | ~2026-10 | What if you didn’t brush your teeth for a year? - Justin Merritt |
+| 1.1M | 2.9x | 5:58 | ~2026-10 | 3 things to never do with a credit card |
+| 1.0M | 2.7x | 6:04 | ~2026-06 | Why is getting bitten by a rabid animal so dangerous? - Charles Rupprecht |
+| 1.0M | 2.7x | 5:50 | ~2026-06 | The missing ingredient in how we learn |
+| 932K | 2.5x | 5:45 | ~2026-10 | Ever walk into a room and forget what you were doing? - Gabriel Radvansky |
+| 799K | 2.1x | 5:04 | ~2026-04 | How long can hair grow? - Maksim Plikus |
+| 784K | 2.1x | 5:40 | ~2026-09 | What are tariffs, and how do they work? |
+| 769K | 2.0x | 6:04 | ~2026-10 | Which is better: Buying or renting a home? - Ella Feldman |
+
+## TheArmchairHistorian: 21 uploads strictly <12 months old (N months or weeks ago) ; window median 411K ; median len 18:14
+
+## TheInfographicsShow: 60 uploads strictly <12 months old (N months or weeks ago) ; window median 495K ; median len 17:33
+| 4.3M | 8.7x | 20:02 | ~2026-10 | The AI bubble is about to pop... |
+| 2.7M | 5.5x | 18:08 | ~2026-10 | What Lethal Radiation Does to Your Body (Hour by Hour) |
+| 2.1M | 4.2x | 16:27 | ~2026-11 | Holy sh*t spacetime is fake... |
+| 1.4M | 2.8x | 18:15 | ~2026-11 | Wall Street is freaking out over OpenAI now... |
+| 1.4M | 2.8x | 19:47 | ~2026-10 | An Ozempic Overdose Hour by Hour: The Biology of a 7-Day Gastric Freeze |
+| 1.0M | 2.0x | 12:57 | ~2026-11 | MIT looked at what AI actually killed and holy sh*t... |
+| 1.0M | 2.0x | 17:31 | ~2026-10 | How Are Americans Buying $80,000 Trucks on a $70,000 Salary? |
+| 1.0M | 2.0x | 23:08 | ~2026-10 | World War 3 - Hour by Hour at 35,000 Feet |
+| 998K | 2.0x | 14:00 | ~2026-10 | Why the US Bond Market Sold Off: The Crisis Facing Mortgages and Auto Loans |
+
+## WhatIfScienceShow: 49 uploads strictly <12 months old (N months or weeks ago) ; window median 495K ; median len 23:28
+| 2.6M | 5.3x | 25:12 | ~2026-07 | If All Humans Vanished, How Long Until Earth Erased Every Trace Of Us? |
+| 2.0M | 4.0x | 18:53 | ~2025-12 | What If You Lived on Mars 1 Billion Years Ago? |
+| 1.6M | 3.2x | 24:46 | ~2026-10 | You Are Alive to Watch the Space Station Fall From the Sky |
+| 1.6M | 3.2x | 22:12 | ~2026-05 | What If Earth Became a Type III Civilization? |
+| 1.6M | 3.2x | 24:58 | ~2026-05 | What If You Shrank the Universe Until Earth Was 12 cm Wide? |
+| 1.5M | 3.0x | 21:31 | ~2026-05 | What If You Grew 1cm Every Second? |
+| 1.3M | 2.6x | 17:12 | ~2026-07 | You Are Alive to Watch the Solar System's Greatest Storm Die |
+| 1.1M | 2.2x | 27:01 | ~2026-03 | The Entire History of Earth Condensed into 27 Minutes |
+| 1.1M | 2.2x | 20:46 | ~2026-02 | What If You Visited the Universe's Deadliest Environments? |
+| 1.0M | 2.0x | 21:49 | ~2026-10 | What If all Glaciers Melted, INSTANTLY (Hour by Hour) |
+| 1.0M | 2.0x | 20:43 | ~2025-12 | What If a Black Hole Flew By Earth at the Speed of Light? |
+
+## kurzgesagt: 23 uploads strictly <12 months old (N months or weeks ago) ; window median 5.7M ; median len 12:54
+| 23.0M | 4.0x | 21:44 | ~2026-10 | AI Just Crossed the Terrifying Line - Now What? |
+| 21.0M | 3.7x | 15:14 | ~2026-10 | This Woman Cured Her Cancer with an Insane Method |
+
+## melodysheep: 4 uploads strictly <12 months old (N months or weeks ago) ; window median 1.8M ; median len 9:54
+
+## minutephysics: 12 uploads strictly <12 months old (N months or weeks ago) ; window median 405K ; median len 5:20
+| 1.3M | 3.2x | 4:44 | ~2026-08 | Strings Don't Vibrate The Way You Think |
+| 1.0M | 2.5x | 11:36 | ~2026-04 | Do *you* understand ISO? |
+
+## zackdfilms: 4 uploads strictly <12 months old (N months or weeks ago) ; window median 6.8M ; median len 12:06

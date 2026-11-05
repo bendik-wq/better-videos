@@ -1,0 +1,131 @@
+<template>
+  <style>
+    @font-face { font-family: "Archivo Narrow"; src: url("assets/fonts/ArchivoNarrow.woff2"); font-weight: 400 700; }
+    @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-500.woff2"); font-weight: 500; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif.woff2"); font-weight: 400; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #cnt-label {
+      position: absolute; left: 0; right: 0; top: 250px; text-align: center;
+      font-family: "IBM Plex Mono"; font-weight: 500; font-size: 36px; letter-spacing: 0.16em; color: #14233d;
+    }
+    #cnt-label span { display: inline-block; margin: 0 0.3em; }
+    #cnt-housing {
+      position: absolute; left: 100px; top: 370px; width: 1720px; height: 300px;
+      background: #b98a3e; border: 4px solid #14233d; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .drum {
+      width: 92px; height: 220px; overflow: hidden; background: #f7f6f1;
+      border: 3px solid #14233d; border-radius: 6px; position: relative;
+    }
+    .strip { position: absolute; left: 0; top: 0; width: 100%; }
+    .strip div {
+      height: 214px; line-height: 214px; text-align: center;
+      font-family: "Archivo Narrow", sans-serif; font-weight: 700; font-size: 190px; color: #14233d;
+      font-variant-numeric: tabular-nums;
+    }
+    .comma { font-family: "Archivo Narrow", sans-serif; font-weight: 700; font-size: 150px; color: #14233d; width: 24px; line-height: 220px; margin-top: 60px; }
+    #cnt-under { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #cnt-source {
+      position: absolute; left: 0; right: 0; top: 760px; text-align: center;
+      font-family: "IBM Plex Mono"; font-weight: 500; font-size: 28px; letter-spacing: 0.12em; color: #3d4a60;
+    }
+    #cnt-night { position: absolute; inset: 0; background: #14233d; }
+    #cnt-mark {
+      position: absolute; left: 0; right: 0; top: 420px; text-align: center;
+      font-family: "Archivo Narrow", sans-serif; font-weight: 700; font-size: 220px; letter-spacing: 0.02em; color: #f7f6f1;
+    }
+    #cnt-mark span { display: inline-block; }
+    #cnt-strap {
+      position: absolute; left: 0; right: 0; top: 660px; text-align: center;
+      font-family: "IBM Plex Mono"; font-weight: 500; font-size: 32px; letter-spacing: 0.2em; color: #8cc5bf;
+    }
+  </style>
+
+  <div id="root" data-composition-id="count" data-width="1920" data-height="1080">
+    <div id="cnt-label" class="clip" data-start="0.4" data-duration="2.1" data-track-index="1">
+      <span>CELLS</span><span>IN</span><span>ONE</span><span>HUMAN</span><span>BODY</span>
+    </div>
+    <div id="cnt-housing" class="clip" data-start="0" data-duration="3.9" data-track-index="2" data-layout-allow-overflow></div>
+    <svg id="cnt-under" class="clip" data-start="1.7" data-duration="2.2" data-track-index="3" viewBox="0 0 1920 1080" data-layout-ignore>
+      <path id="cnt-line" d="M 250 712 C 700 700 1220 724 1670 708" pathLength="100" stroke="#e0241b" stroke-width="12" stroke-linecap="round" fill="none" stroke-dasharray="100 120" stroke-dashoffset="110" />
+    </svg>
+    <div id="cnt-source" class="clip" data-start="0.6" data-duration="1.9" data-track-index="4">
+      <div id="cnt-source-in">SOURCE · BIANCONI 2013 (EST.)</div>
+    </div>
+    <div id="cnt-end" class="clip" data-start="2.5" data-duration="1.4" data-track-index="5" style="position:absolute;inset:0;z-index:10">
+      <div id="cnt-night"></div>
+      <div id="cnt-mark"><span>M</span><span>A</span><span>I</span><span>N</span><span>S</span><span>P</span><span>R</span><span>I</span><span>N</span><span>G</span></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Build the drums once at load (static markup; the timed clip is the housing)
+      const VALUE = "37,200,000,000,000";
+      const housing = document.querySelector("#cnt-housing");
+      const digits = [];
+      const commas = [];
+      for (const ch of VALUE) {
+        if (ch === ",") {
+          const c = document.createElement("div");
+          c.className = "comma";
+          c.textContent = ",";
+          housing.appendChild(c);
+          commas.push(c);
+          continue;
+        }
+        const drum = document.createElement("div");
+        drum.className = "drum";
+        const strip = document.createElement("div");
+        strip.className = "strip";
+        for (let r = 0; r < 40; r++) {
+          const d = document.createElement("div");
+          d.textContent = String(r % 10);
+          strip.appendChild(d);
+        }
+        drum.appendChild(strip);
+        housing.appendChild(drum);
+        digits.push({ strip, drum, d: Number(ch) });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const H = 214;
+      // 1) the planet's dot morphs into the counter housing (teal circle -> brass slot), 0.5 s power3.out
+      tl.fromTo(
+        housing,
+        { clipPath: "inset(128px 838px round 22px)", backgroundColor: "#2a8c86" },
+        { clipPath: "inset(0px 0px round 18px)", backgroundColor: "#b98a3e", duration: 0.5, ease: "power3.out" },
+        0,
+      );
+      // 2) drums pop in left to right (4-frame stagger at 60 fps), then roll; low digits spin more, the lead digit lands last
+      const n = digits.length;
+      digits.forEach((g, j) => {
+        tl.fromTo(g.drum, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.13, ease: "back.out(1.6)" }, 0.3 + j * 0.033);
+        const fromRight = n - 1 - j;
+        const target = 10 * (1 + Math.min(2, Math.floor(fromRight / 5))) + g.d;
+        tl.fromTo(g.strip, { y: 0 }, { y: -target * H, duration: 1.0, ease: "back.out(1.15)" }, 0.4 + fromRight * 0.025);
+      });
+      commas.forEach((c, i) => tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "power2.out" }, 0.4 + i * 0.13));
+      // 3) label words blur in; source line
+      document.querySelectorAll("#cnt-label span").forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out" }, 0.45 + i * 0.07);
+      });
+      tl.fromTo("#cnt-source-in", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "expo.out" }, 0.6);
+      // 4) the red pencil underline draws on once the lead digit has landed
+      tl.fromTo("#cnt-line", { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: 0.35, ease: "power3.out" }, 1.75);
+      // 5) ink wipe (a diagonal sheet slides across), then the mark letters print in
+      tl.fromTo(
+        "#cnt-night",
+        { clipPath: "polygon(0% 0%, 0% 0%, -25% 100%, 0% 100%)" },
+        { clipPath: "polygon(0% 0%, 125% 0%, 100% 100%, 0% 100%)", duration: 0.5, ease: "power3.inOut" },
+        2.5,
+      );
+      document.querySelectorAll("#cnt-mark span").forEach((l, i) => {
+        tl.fromTo(l, { opacity: 0.0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.12, ease: "power3.out" }, 2.72 + i * 0.03);
+      });
+      tl.progress(1).progress(0);
+      window.__timelines["count"] = tl;
+    })();
+  </script>
+</template>

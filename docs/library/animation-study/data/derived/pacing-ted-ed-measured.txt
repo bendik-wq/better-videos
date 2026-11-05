@@ -1,0 +1,7 @@
+video | runtime | cuts/min (scene>0.3, flashes merged <1.0s) | median shot s | longest shot s | integrated LUFS | LRA | voice-free gaps >=0.6s per min | longest gap s
+alex_gendler_can_you_solve_the_bridge_riddle | 3:34 | 6.9 | 6.0 | 32 | -18.5 | 5.2 | 0.6 | 6.8
+alex_gendler_can_you_solve_the_prisoner_hat_riddle | 4:19 | 5.0 | 4.7 | 106 | -22.0 | 3.7 | 2.8 | 3.0
+helen_m_farrell_what_is_depression | 4:14 | 9.0 | 4.1 | 35 | -19.9 | 2.7 | 4.5 | 1.6
+jeff_dekofsky_the_infinite_hotel_paradox | 5:46 | 4.8 | 8.6 | 64 | -22.3 | 3.1 | 4.8 | 2.2
+mia_nacamulli_what_would_happen_if_you_didn_t_drink_water | 4:37 | 2.2 | 9.4 | 140 | -22.1 | 3.1 | 3.7 | 1.6
+noah_zandan_the_language_of_lying | 5:26 | 4.9 | 4.4 | 69 | -20.9 | 3.6 | 4.6 | 1.8

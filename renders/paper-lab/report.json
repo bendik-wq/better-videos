@@ -1,0 +1,227 @@
+{
+ "frame_stats": {
+  "sf-acting": {
+   "meanL": 0.911,
+   "meanS": 0.071,
+   "redPct": 0.0
+  },
+  "sf-case": {
+   "meanL": 0.904,
+   "meanS": 0.086,
+   "redPct": 0.83
+  },
+  "sf-front": {
+   "meanL": 0.846,
+   "meanS": 0.131,
+   "redPct": 0.02
+  },
+  "sf-stress": {
+   "meanL": 0.799,
+   "meanS": 0.194,
+   "redPct": 0.0
+  },
+  "sf-stress-z13": {
+   "meanL": 0.719,
+   "meanS": 0.293,
+   "redPct": 0.0
+  },
+  "sf-thumb-night": {
+   "meanL": 0.324,
+   "meanS": 0.556,
+   "redPct": 1.2
+  },
+  "sf-thumb-paper": {
+   "meanL": 0.864,
+   "meanS": 0.126,
+   "redPct": 1.2
+  },
+  "sf-thumb-teal": {
+   "meanL": 0.463,
+   "meanS": 0.575,
+   "redPct": 1.2
+  },
+  "sf-vertical": {
+   "meanL": 0.49,
+   "meanS": 0.147,
+   "redPct": 0.35
+  }
+ },
+ "feed": {
+  "paper": {
+   "light": {
+    "edge_dL": 0.038
+   },
+   "dark": {
+    "edge_dL": 0.903
+   },
+   "meanL": 0.864,
+   "meanS": 0.123,
+   "rms_contrast_168": 0.191
+  },
+  "teal": {
+   "light": {
+    "edge_dL": 0.665
+   },
+   "dark": {
+    "edge_dL": 0.276
+   },
+   "meanL": 0.463,
+   "meanS": 0.572,
+   "rms_contrast_168": 0.223
+  },
+  "night": {
+   "light": {
+    "edge_dL": 0.869
+   },
+   "dark": {
+    "edge_dL": 0.072
+   },
+   "meanL": 0.324,
+   "meanS": 0.553,
+   "rms_contrast_168": 0.298
+  }
+ },
+ "moire_index_pct": {
+  "p8_d0.35": {
+   "1080": 0.45,
+   "720_lanczos": 0.25,
+   "720_bilinear": 0.21,
+   "720_nearest": 0.57,
+   "480_lanczos": 0.06,
+   "480_bilinear": 0.03,
+   "480_nearest": 0.63,
+   "360_lanczos": 0.08,
+   "360_bilinear": 0.0,
+   "360_nearest": 0.54
+  },
+  "p8_d0.55": {
+   "1080": 0.29,
+   "720_lanczos": 0.12,
+   "720_bilinear": 0.11,
+   "720_nearest": 0.5,
+   "480_lanczos": 0.0,
+   "480_bilinear": 0.0,
+   "480_nearest": 0.38,
+   "360_lanczos": 0.05,
+   "360_bilinear": 0.1,
+   "360_nearest": 0.52
+  },
+  "p11_d0.35": {
+   "1080": 0.3,
+   "720_lanczos": 0.24,
+   "720_bilinear": 0.19,
+   "720_nearest": 0.22,
+   "480_lanczos": 0.23,
+   "480_bilinear": 0.22,
+   "480_nearest": 0.62,
+   "360_lanczos": 0.16,
+   "360_bilinear": 0.1,
+   "360_nearest": 0.17
+  },
+  "p11_d0.55": {
+   "1080": 0.49,
+   "720_lanczos": 0.5,
+   "720_bilinear": 0.48,
+   "720_nearest": 0.45,
+   "480_lanczos": 0.47,
+   "480_bilinear": 0.47,
+   "480_nearest": 0.5,
+   "360_lanczos": 0.49,
+   "360_bilinear": 0.48,
+   "360_nearest": 0.46
+  },
+  "p14_d0.35": {
+   "1080": 0.53,
+   "720_lanczos": 0.43,
+   "720_bilinear": 0.45,
+   "720_nearest": 0.4,
+   "480_lanczos": 0.32,
+   "480_bilinear": 0.44,
+   "480_nearest": 0.62,
+   "360_lanczos": 0.22,
+   "360_bilinear": 0.23,
+   "360_nearest": 0.21
+  },
+  "p14_d0.55": {
+   "1080": 0.51,
+   "720_lanczos": 0.48,
+   "720_bilinear": 0.47,
+   "720_nearest": 0.5,
+   "480_lanczos": 0.4,
+   "480_bilinear": 0.37,
+   "480_nearest": 0.48,
+   "360_lanczos": 0.43,
+   "360_bilinear": 0.41,
+   "360_nearest": 0.43
+  }
+ },
+ "zoom_pitch": {
+  "world_fixed_11px_at_zoom": {
+   "0.5": 5.5,
+   "0.7": 7.7,
+   "1.0": 11.0,
+   "1.3": 14.3,
+   "2.0": 22.0,
+   "3.0": 33.0
+  },
+  "note": "world-fixed dots scale with the camera; outside 0.75-1.6x the pitch leaves the 8-18 px band, so re-screen (see bible)"
+ },
+ "compression_ssim": {
+  "sf-stress": {
+   "vp9_1080_1.2M": {
+    "global": 0.9881,
+    "halftone_p8_world": 0.9707,
+    "halftone_p11_world": 0.9759,
+    "hairlines": 0.9845,
+    "mono22": 0.9957
+   },
+   "vp9_720_0.7M": {
+    "global": 0.9706,
+    "halftone_p8_world": 0.9521,
+    "halftone_p11_world": 0.9617,
+    "hairlines": 0.9487,
+    "mono22": 0.9878
+   },
+   "av1_1080_0.8M": {
+    "global": 0.989,
+    "halftone_p8_world": 0.9761,
+    "halftone_p11_world": 0.9782,
+    "hairlines": 0.9845,
+    "mono22": 0.9944
+   },
+   "vp9_360_0.25M": {
+    "global": 0.8863,
+    "halftone_p8_world": 0.8777,
+    "halftone_p11_world": 0.8801,
+    "hairlines": 0.7829,
+    "mono22": 0.9393
+   }
+  },
+  "sf-case": {
+   "vp9_1080_1.2M": {
+    "global": 0.9954,
+    "case_halftone_rim": 0.9931,
+    "pen_line_tag": 0.9894,
+    "paper_ground": 0.9996
+   },
+   "vp9_720_0.7M": {
+    "global": 0.9866,
+    "case_halftone_rim": 0.9813,
+    "pen_line_tag": 0.9691,
+    "paper_ground": 0.9996
+   },
+   "av1_1080_0.8M": {
+    "global": 0.9958,
+    "case_halftone_rim": 0.9937,
+    "pen_line_tag": 0.9893,
+    "paper_ground": 0.9996
+   },
+   "vp9_360_0.25M": {
+    "global": 0.9492,
+    "case_halftone_rim": 0.9222,
+    "pen_line_tag": 0.8747,
+    "paper_ground": 0.9996
+   }
+  }
+ }
+}
