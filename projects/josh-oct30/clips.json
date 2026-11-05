@@ -1,0 +1,273 @@
+{
+ "clips": {
+  "lf": {
+   "t": [
+    2.62,
+    566.38
+   ]
+  },
+  "c1": {
+   "t": [
+    2.62,
+    137.85
+   ]
+  },
+  "c2": {
+   "t": [
+    109.31,
+    264.31
+   ]
+  },
+  "c3": {
+   "t": [
+    265.99,
+    414.64
+   ]
+  },
+  "c4": {
+   "t": [
+    418.04,
+    566.38
+   ]
+  }
+ },
+ "cuts": {
+  "long": {
+   "title": "Buy from a motivated seller (Josh, 30 Oct)",
+   "layout": "split",
+   "ns": "~lf",
+   "gap": 1.0,
+   "fps": 23.976,
+   "intro": false,
+   "cards": {},
+   "chapters": {
+    "start": "Motivated sellers"
+   },
+   "chapterMarks": [
+    [
+     109.31,
+     "Not a fire sale"
+    ],
+    [
+     139.45,
+     "The silver tsunami"
+    ],
+    [
+     190.51,
+     "Why they sell"
+    ],
+    [
+     230.54,
+     "No money down"
+    ],
+    [
+     266.2,
+     "Sentimental value"
+    ],
+    [
+     363.68,
+     "Private equity"
+    ],
+    [
+     413.48,
+     "Staff walk out"
+    ],
+    [
+     456.54,
+     "Vendor finance"
+    ],
+    [
+     496.79,
+     "The \u201cimpossible\u201d deal"
+    ],
+    [
+     554.4,
+     "Wrapping up"
+    ]
+   ],
+   "base_sequence": [
+    {
+     "chapter": "Motivated sellers"
+    },
+    "lf"
+   ],
+   "sequence": [
+    {
+     "chapter": "Motivated sellers"
+    },
+    "lf~lf#1",
+    "lf~lf#2",
+    "lf~lf#3",
+    "lf~lf#4",
+    "lf~lf#5",
+    "lf~lf#6",
+    "lf~lf#7",
+    "lf~lf#8",
+    "lf~lf#9",
+    "lf~lf#10",
+    "lf~lf#11",
+    "lf~lf#12",
+    "lf~lf#13",
+    "lf~lf#14",
+    "lf~lf#15",
+    "lf~lf#16",
+    "lf~lf#17",
+    "lf~lf#18",
+    "lf~lf#19",
+    "lf~lf#20",
+    "lf~lf#21",
+    "lf~lf#22",
+    "lf~lf#23",
+    "lf~lf#24",
+    "lf~lf#25",
+    "lf~lf#26",
+    "lf~lf#27",
+    "lf~lf#28",
+    "lf~lf#29",
+    "lf~lf#30",
+    "lf~lf#31",
+    "lf~lf#32",
+    "lf~lf#33",
+    "lf~lf#34",
+    "lf~lf#35",
+    "lf~lf#36",
+    "lf~lf#37",
+    "lf~lf#38",
+    "lf~lf#39",
+    "lf~lf#40"
+   ]
+  },
+  "cl-1-motivated-seller": {
+   "layout": "vertical",
+   "ns": "~cl",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Find the owner who <em>needs</em> to sell.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "c1"
+   ],
+   "sequence": [
+    "c1~cl#1",
+    "c1~cl#2",
+    "c1~cl#3",
+    "c1~cl#4",
+    "c1~cl#5",
+    "c1~cl#6",
+    "c1~cl#7",
+    "c1~cl#8",
+    "c1~cl#9",
+    "c1~cl#10",
+    "c1~cl#11"
+   ]
+  },
+  "cl-2-silver-tsunami": {
+   "layout": "vertical",
+   "ns": "~cl",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Great business. <em>Ready to retire.</em>",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "c2"
+   ],
+   "sequence": [
+    "c2~cl#1",
+    "c2~cl#2",
+    "c2~cl#3",
+    "c2~cl#4",
+    "c2~cl#5",
+    "c2~cl#6",
+    "c2~cl#7",
+    "c2~cl#8",
+    "c2~cl#9",
+    "c2~cl#10",
+    "c2~cl#11"
+   ]
+  },
+  "cl-3-sentimental-value": {
+   "layout": "vertical",
+   "ns": "~cl",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "Owners price in <em>sentiment</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "c3"
+   ],
+   "sequence": [
+    "c3~cl#1",
+    "c3~cl#2",
+    "c3~cl#3",
+    "c3~cl#4",
+    "c3~cl#5",
+    "c3~cl#6",
+    "c3~cl#7",
+    "c3~cl#8",
+    "c3~cl#9",
+    "c3~cl#10",
+    "c3~cl#11",
+    "c3~cl#12",
+    "c3~cl#13",
+    "c3~cl#14"
+   ]
+  },
+  "cl-4-100-vendor-finance": {
+   "layout": "vertical",
+   "ns": "~cl",
+   "gap": 0.9,
+   "intro": false,
+   "chapter": "Josh Li",
+   "cards": {
+    "end": {
+     "eyebrow": "Josh's takeaway",
+     "title": "100% vendor finance is <em>possible</em>.",
+     "cta": true,
+     "dur": 4.0,
+     "fine": "G&amp;L M&amp;A Advisory \u00b7 link in bio. Not financial advice; every deal is different."
+    }
+   },
+   "base_sequence": [
+    "c4"
+   ],
+   "sequence": [
+    "c4~cl#1",
+    "c4~cl#2",
+    "c4~cl#3",
+    "c4~cl#4",
+    "c4~cl#5",
+    "c4~cl#6",
+    "c4~cl#7",
+    "c4~cl#8",
+    "c4~cl#9",
+    "c4~cl#10",
+    "c4~cl#11",
+    "c4~cl#12"
+   ]
+  }
+ }
+}
