@@ -1,0 +1,128 @@
+{
+ "sf-bells-50": {
+  "edge_pct": 16.32,
+  "bins": 43,
+  "meanL": 0.461,
+  "meanS": 0.264,
+  "red_pct": 0.19,
+  "red_blobs": 8,
+  "pass_": true
+ },
+ "sf-chain-50": {
+  "edge_pct": 9.39,
+  "bins": 31,
+  "meanL": 0.308,
+  "meanS": 0.381,
+  "red_pct": 0.03,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-clock-50": {
+  "edge_pct": 13.09,
+  "bins": 33,
+  "meanL": 0.831,
+  "meanS": 0.129,
+  "red_pct": 0.76,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-domino-50": {
+  "edge_pct": 15.93,
+  "bins": 34,
+  "meanL": 0.421,
+  "meanS": 0.334,
+  "red_pct": 0.04,
+  "red_blobs": 2,
+  "pass_": true
+ },
+ "sf-facade-day-50": {
+  "edge_pct": 16.51,
+  "bins": 27,
+  "meanL": 0.851,
+  "meanS": 0.081,
+  "red_pct": 0.06,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-fold-dusk-50": {
+  "edge_pct": 19.6,
+  "bins": 33,
+  "meanL": 0.395,
+  "meanS": 0.371,
+  "red_pct": 0.01,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-forest-50": {
+  "edge_pct": 24.54,
+  "bins": 32,
+  "meanL": 0.485,
+  "meanS": 0.348,
+  "red_pct": 0.01,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-forest-late-50": {
+  "edge_pct": 21.49,
+  "bins": 33,
+  "meanL": 0.448,
+  "meanS": 0.374,
+  "red_pct": 0.01,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-hose-50": {
+  "edge_pct": 9.08,
+  "bins": 31,
+  "meanL": 0.303,
+  "meanS": 0.398,
+  "red_pct": 0.02,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-paris-50": {
+  "edge_pct": 21.53,
+  "bins": 23,
+  "meanL": 0.803,
+  "meanS": 0.133,
+  "red_pct": 0.18,
+  "red_blobs": 7,
+  "pass_": true
+ },
+ "sf-side-night-50": {
+  "edge_pct": 17.37,
+  "bins": 39,
+  "meanL": 0.368,
+  "meanS": 0.376,
+  "red_pct": 0.01,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-spire-50": {
+  "edge_pct": 16.43,
+  "bins": 38,
+  "meanL": 0.379,
+  "meanS": 0.39,
+  "red_pct": 0.01,
+  "red_blobs": 1,
+  "pass_": true
+ },
+ "sf-spire-hit-50": {
+  "edge_pct": 17.16,
+  "bins": 40,
+  "meanL": 0.383,
+  "meanS": 0.38,
+  "red_pct": 0.02,
+  "red_blobs": 7,
+  "pass_": true
+ },
+ "sf-stair-50": {
+  "edge_pct": 11.07,
+  "bins": 29,
+  "meanL": 0.373,
+  "meanS": 0.285,
+  "red_pct": 0.01,
+  "red_blobs": 3,
+  "pass_": true
+ }
+}
