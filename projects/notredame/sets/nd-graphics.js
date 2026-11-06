@@ -461,6 +461,7 @@ async function doc(ctx, shot) {
     lines.forEach((ln) => {
       const st = ln.style ?? (kind === 'post' ? 'post' : kind === 'statement' || kind === 'report' ? 'serif' : 'mono'), o = DOC_STYLE[st];
       const wl = wrap(g, ln.t, maxW, o), lh = o.size * (st === 'big' ? 0.95 : 1.22); let off = 0; const y0 = y;
+      if (ln.at != null) tc = Math.max(tc, cue(shot, ln.at, tc)); // additive (ch1): a line types on at its own cue
       wl.forEach((l) => { y += lh * (st === 'big' ? 1 : 0.86); out.push({ l, y, o, t0: tc }); tc += l.length / 60 + 0.08;
         for (const [hi, h] of hls.entries()) { const i0 = ln.t.indexOf(h); if (i0 < 0) continue; const a = Math.max(i0, off), b = Math.min(i0 + h.length, off + l.length);
           if (b > a) hl.push({ hi, x: tx + measure(g, l.slice(0, a - off), o), y: y - o.size * 0.78, w: measure(g, l.slice(a - off, b - off).trim(), o), hh: o.size * 0.95, long: h.length > 22 }); }
@@ -508,7 +509,7 @@ async function doc(ctx, shot) {
     if (kind === 'post') { g.fillStyle = P.ink40; g.fillRect(tx, Y0 + H - 74, maxW, 1.5); txt(g, 'RECREATED · TEXT ONLY · NO LOGO, NO AVATAR', tx, Y0 + H - 38, { size: 20, f: 'mono', weight: 500, color: P.ink70, track: 0.14 }); }
     // highlights: a marker loop round a short phrase, a notched underline under a long or wrapped one (each at its cue)
     const T0 = Math.max(tEnd + 0.2, Math.min(Dd * 0.45, tEnd + 0.6)), multi = new Set(hl.map(h => h.hi).filter((v, i, a) => a.indexOf(v) !== i));
-    hl.forEach((f, i) => { const th = cue(shot, ats[f.hi], T0 + f.hi * 0.9) + (i * 0.2), kk = range(t, th, th + 0.55);
+    hl.forEach((f, i) => { const th = cue(shot, ats[f.hi], T0 + f.hi * 0.9) + (i * 0.2), kk = range(t, th, th + 0.55); const off = [].concat(p.hlOff ?? [])[f.hi]; if (off != null && t >= cue(shot, off, 1e9)) return; // hlOff: additive (ch1)
       if (!f.long && !multi.has(f.hi)) markerLoop(g, f.x, Y0 + f.y, f.w, f.hh, kk, { seed: 7 + i, pad: 9 }); else redUnder(g, f.x, Y0 + f.y + f.hh + 6, f.w, kk, { th: 7 }); });
     g.restore();
     if (kind !== 'ticket') brassClip(g, X0 + 120 + ox, Y0 + 6, 0.85, rot - 3);
@@ -587,6 +588,12 @@ function propIcon(g, kind, t) {
     txt(g, 'LEAD', 0, 40, { size: 20, f: 'mono', weight: 500, color: P.ink70, align: 'center', track: 0.2 }); }
   else if (kind === 'oak') { for (const [x, y, r] of [[-90, -60, 60], [30, -60, 60], [-30, -160, 60], [150, -60, 50]]) { pen(g, circle(x, y, r), { fill: OAK.L, lw: 2.5, shadow: true, breaks: false, highlight: false });
       g.strokeStyle = OAK.D; g.lineWidth = 1.5; for (let rr = r * 0.2; rr < r; rr += r * 0.2) { g.beginPath(); g.arc(x, y, rr, 0, TAU); g.stroke(); } } }
+  else if (kind === 'stairs') { // additive (ch1): a narrow card stair climbing up to the right, a wall behind, nobody on it
+    pen(g, poly([[-150, 0], [150, 0], [150, -330], [110, -330]]), { fill: P.kraft, lw: 2.5, shadow: true, breaks: false, highlight: false, shade: 0.3, shadeColor: P.kraftD, box: [-150, -330, 150, 0] });
+    const n = 12, sw = 300 / n, sh = 330 / n, pts = [[-150, 0]]; for (let i = 0; i < n; i++) { pts.push([-150 + i * sw, -(i + 1) * sh], [-150 + (i + 1) * sw, -(i + 1) * sh]); } pts.push([150, 0]);
+    pen(g, poly(pts), { fill: P.card, lw: 2.5, breaks: false, highlight: false, shade: 0.18, shadeColor: P.kraftD, box: [-150, -330, 150, 0] });
+    g.strokeStyle = P.ink40; g.lineWidth = 1.5; g.beginPath(); for (let i = 0; i < n; i++) { g.moveTo(-150 + i * sw, -(i + 1) * sh + 5); g.lineTo(-150 + i * sw - 12, -(i + 1) * sh + 12); } g.stroke();
+    txt(g, '≈ 300 STEPS', 0, 40, { size: 20, f: 'mono', weight: 500, color: P.ink70, align: 'center', track: 0.2 }); }
   else if (kind === 'bell') { pen(g, rect(-120, -260, 20, 260), { fill: OAK.M, lw: 2.5, breaks: false, highlight: false }); pen(g, rect(100, -260, 20, 260), { fill: OAK.M, lw: 2.5, breaks: false, highlight: false }); beam(g, [-140, -260], [140, -260], 22, { col: OAK.M });
     bell(g, 0, -246, 180, { tilt: Math.sin(t * 1.5) * 3 }); }
 }

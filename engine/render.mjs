@@ -510,7 +510,9 @@ const cues = [...(project.score?.cues ?? []), ...(project.cues ? project.cues(sh
   return { ...c, at: c.word ? wordAt(s, c.word, c.nth) + (c.offset ?? 0) : c.at ?? 0 };
 });
 const bed = path.join(out, 'score.wav');
-fs.writeFileSync(path.join(out, 'score-cfg.json'), JSON.stringify({ ...(project.score ?? {}), cues }));
+// music sections may start on a spoken word too ({ shot, mood, word, nth, offset }), exactly like cues (backward compatible)
+const music = project.score?.music?.map(m => (m.word && byId[m.shot]) ? { ...m, at: wordAt(byId[m.shot], m.word, m.nth) + (m.offset ?? 0) } : m);
+fs.writeFileSync(path.join(out, 'score-cfg.json'), JSON.stringify({ ...(project.score ?? {}), ...(music ? { music } : {}), cues }));
 execFileSync('python3', [path.join(ROOT, 'engine', 'score.py'), tlPath, bed, '@' + path.join(out, 'score-cfg.json')], { stdio: 'inherit' });
 
 // VO: every shot's wav at its exact sample on one track (score.py --vo; no cumulative rounding)
