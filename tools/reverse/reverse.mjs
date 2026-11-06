@@ -120,12 +120,21 @@ const perMin = Array.from({ length: Math.ceil(D / 60) }, (_, i) => ({
   words: words.filter(w => w.start >= i * 60 && w.start < (i + 1) * 60).length,
   onsets: ev.onsets.filter(t => t >= i * 60 && t < (i + 1) * 60).length }));
 const gaps = words.slice(1).map((w, i) => ({ t: words[i].end, s: w.start - words[i].end })).filter(g => g.s >= 0.6);
+// cut placement against speech: share of cuts that fall in a pause between words (vs random moments), and the
+// spread of the nearest sound onset around each cut (a gap around 0 = cuts placed in quiet, a spike at 0 = hits on cuts)
+const inWord = (t) => words.some(w => t >= w.start - 0.05 && t <= w.end + 0.05);
+const cutTimes = cuts.cuts.map(c => c.t);
+const rnd = Array.from({ length: 2000 }, (_, i) => 1 + (D - 2) * ((i * 0.61803398875) % 1));
+const cutsInPause = words.length && cutTimes.length ? { pct: +(100 * cutTimes.filter(t => !inWord(t)).length / cutTimes.length).toFixed(0), chance_pct: +(100 * rnd.filter(t => !inWord(t)).length / rnd.length).toFixed(0) } : null;
+const onsetNearCut = cutTimes.map(c => ev.onsets.reduce((b, o) => Math.abs(o - c) < Math.abs(b) ? o - c : b, Infinity)).filter(x => Math.abs(x) <= 1);
+const onsetSpread = { within_0_25s: onsetNearCut.filter(x => Math.abs(x) <= 0.25).length, within_1s: onsetNearCut.length, cuts: cutTimes.length };
 const B = {
   source: isUrl ? src : path.basename(video), probe: { width: probe.width, height: probe.height, fps, duration: D },
   pacing: { shots: shots.length, cuts_per_min: +(cuts.cuts.length / (D / 60)).toFixed(2), asl: +(D / shots.length).toFixed(2), median: +q(0.5).toFixed(2), p10: +q(0.1).toFixed(2), p90: +q(0.9).toFixed(2), longest: +lens.at(-1).toFixed(2),
     changes_per_min: +(ev.windows.length / (D / 60)).toFixed(1), holds_over_3s: ev.holds.filter(h => h.seconds >= 3).length },
   not_cuts: cuts.not_cuts ?? [], events: ev.counts, per_minute: perMin,
-  sound: { loudness: loud, bpm: ev.bpm ?? null, strong_onsets_per_min: +(ev.onsets.length / (D / 60)).toFixed(1), onset_source: ev.onsetSource ?? 'hyperframes', cuts_with_sound_pct: cutsWithSound, chance_pct: chance },
+  sound: { loudness: loud, bpm: ev.bpm ?? null, strong_onsets_per_min: +(ev.onsets.length / (D / 60)).toFixed(1), onset_source: ev.onsetSource ?? 'hyperframes', cuts_with_sound_pct: cutsWithSound, chance_pct: chance, nearest_onset_to_cut: onsetSpread },
+  cuts_in_speech_pause: cutsInPause,
   narration: words.length ? { words: words.length, wpm: +(words.length / ((words.at(-1).end - words[0].start) / 60)).toFixed(0), pauses_over_0_6s_per_min: +(gaps.length / (D / 60)).toFixed(1), longest_pause: +Math.max(0, ...gaps.map(g => g.s)).toFixed(2), first_word_at: +words[0].start.toFixed(2) } : null,
   look: look.summary ?? look.stats ?? look, palette: pal.overall ?? null,
   shots: shots.map((s, i) => ({ n: i + 1, start: +s.start.toFixed(3), end: +s.end.toFixed(3), seconds: +(s.end - s.start).toFixed(2), colours: pal.shots?.[i] ?? null,
@@ -148,6 +157,7 @@ Measured ${new Date().toISOString().slice(0, 10)} with \`tools/reverse/reverse.m
 | Change inside shots | ${B.pacing.changes_per_min} change windows/min (appears, disappears, moves) · ${B.pacing.holds_over_3s} holds ≥ 3 s |
 | Not cuts | ${B.not_cuts.length} flashes, whips or fast moves |
 | Sound | ${loud ? `${loud.lufs} LUFS integrated, LRA ${loud.lra} LU` : 'no audio'} · ${B.sound.strong_onsets_per_min} strong onsets/min${B.sound.bpm ? ` · ~${B.sound.bpm} bpm` : ''} · **${cutsWithSound ?? '—'}% of cuts land on a sound** (chance ${chance}%) |
+| Cut placement | ${cutsInPause ? `**${cutsInPause.pct}% of cuts fall in a speech pause** (random moments: ${cutsInPause.chance_pct}%)` : '—'} · onsets within ±0.25 s of a cut: ${onsetSpread.within_0_25s} of ${onsetSpread.cuts} (within ±1 s: ${onsetSpread.within_1s}) |
 | Narration | ${B.narration ? `${B.narration.wpm} wpm · first word at ${B.narration.first_word_at} s · ${B.narration.pauses_over_0_6s_per_min} pauses ≥ 0.6 s/min · longest ${B.narration.longest_pause} s` : '—'} |
 | Palette (overall) | ${(B.palette ?? []).map(c => `\`${c.hex}\` ${c.share}%`).join(' · ') || '—'} |
 
