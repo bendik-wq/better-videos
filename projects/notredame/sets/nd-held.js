@@ -417,10 +417,10 @@ function frameView(K, g, t, p, red) {
 }
 // the brass loupe: a ring with a magnified copy (drawn by `draw`) inside, screen space
 function loupe(K, g, t, s, L, draw) {
-  const { P, pen, circle, rect } = K; if (!L) return;
+  const { P, pen, circle, rect } = K; if (!L || !(L.r > 0)) return;
   const { x, y, r, z, fx, fy } = L; g.save(); g.beginPath(); g.arc(x, y, r, 0, TAU); g.clip(); g.fillStyle = P.paper; g.fillRect(x - r, y - r, 2 * r, 2 * r);
   g.translate(x, y); g.scale(z, z); g.translate(-fx, -fy); draw(); g.restore();
-  g.save(); g.strokeStyle = 'rgba(247,246,241,0.55)'; g.lineWidth = 6; g.beginPath(); g.arc(x, y, r - 14, -2.4, -1.6); g.stroke(); g.restore();
+  g.save(); g.strokeStyle = 'rgba(247,246,241,0.55)'; g.lineWidth = 6; g.beginPath(); g.arc(x, y, Math.max(0, r - 14), -2.4, -1.6); g.stroke(); g.restore();
   pen(g, (gg) => { gg.beginPath(); gg.arc(x, y, r + 16, 0, TAU); gg.arc(x, y, r, 0, TAU, true); }, { fill: P.brass, lw: 3, shadow: true, breaks: false, highlight: false, shade: 0.35, shadeColor: P.brassD, box: [x - r - 16, y - r - 16, x + r + 16, y + r + 16] });
   const a = 0.78; pen(g, (gg) => { gg.save(); gg.translate(x + Math.cos(a) * (r + 10), y + Math.sin(a) * (r + 10)); gg.rotate(a); gg.beginPath(); gg.roundRect(0, -16, 210, 32, 10); gg.restore(); }, { fill: OAKH, lw: 2.5, shadow: true, breaks: false, highlight: false });
 }
