@@ -187,7 +187,15 @@ def align(path):
     if _whisper is None:
         from faster_whisper import WhisperModel
         _whisper = WhisperModel("base.en", device="cpu", compute_type="int8")
-    segs, _ = _whisper.transcribe(path, word_timestamps=True, language="en")
+    # decode the wav ourselves (16 kHz mono float32): newer PyAV releases break faster-whisper's own decoder
+    import soundfile as _sf
+    from scipy.signal import resample_poly as _rp
+    a, sr = _sf.read(path, dtype="float32", always_2d=True)
+    a = a.mean(axis=1)
+    if sr != 16000:
+        from math import gcd
+        g = gcd(int(sr), 16000); a = _rp(a, 16000 // g, int(sr) // g).astype("float32")
+    segs, _ = _whisper.transcribe(a, word_timestamps=True, language="en")
     return [{"w": w.word.strip(), "s": round(float(w.start), 3), "e": round(float(w.end), 3)} for s in segs for w in s.words]
 
 
