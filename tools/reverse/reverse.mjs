@@ -79,6 +79,15 @@ for (let a = 0; a < D; a += 60) {
   ev.bpm ??= e.sound?.bpm;
 }
 log('events', JSON.stringify(ev.counts));
+// hyperframes' onset finder returns nothing on some files (seen on 44.1 kHz YouTube audio): use our own spectral flux
+if (probe.audio && ev.onsets.length === 0) {
+  const r = spawnSync('python3', ['-I', path.join(ROOT, 'tools/reverse/onsets.py'), video], { env, encoding: 'utf8', maxBuffer: 1 << 28 });
+  if (r.status === 0) { ev.onsets = JSON.parse(r.stdout); ev.onsetSource = 'tools/reverse/onsets.py'; log(`onsets from our own detector: ${ev.onsets.length}`); }
+}
+// sound on picture change: share of cuts with a strong onset within ±3 frames (a hit, whoosh or music accent on the cut)
+const near = (t) => ev.onsets.some(o => Math.abs(o - t) <= 3 / fps);
+const cutsWithSound = cuts.cuts.length ? +(100 * cuts.cuts.filter(c => near(c.t)).length / cuts.cuts.length).toFixed(0) : null;
+const chance = +(100 * Math.min(1, ev.onsets.length * (6 / fps) / D)).toFixed(0);
 const look = hf(['measure', 'look', '--fps', '0.5', video]);
 
 // 3. pictures: overview sheets (every 5 s) and strips of consecutive frames around the first 40 event windows
@@ -116,7 +125,7 @@ const B = {
   pacing: { shots: shots.length, cuts_per_min: +(cuts.cuts.length / (D / 60)).toFixed(2), asl: +(D / shots.length).toFixed(2), median: +q(0.5).toFixed(2), p10: +q(0.1).toFixed(2), p90: +q(0.9).toFixed(2), longest: +lens.at(-1).toFixed(2),
     changes_per_min: +(ev.windows.length / (D / 60)).toFixed(1), holds_over_3s: ev.holds.filter(h => h.seconds >= 3).length },
   not_cuts: cuts.not_cuts ?? [], events: ev.counts, per_minute: perMin,
-  sound: { loudness: loud, bpm: ev.bpm ?? null, strong_onsets_per_min: +(ev.onsets.length / (D / 60)).toFixed(1) },
+  sound: { loudness: loud, bpm: ev.bpm ?? null, strong_onsets_per_min: +(ev.onsets.length / (D / 60)).toFixed(1), onset_source: ev.onsetSource ?? 'hyperframes', cuts_with_sound_pct: cutsWithSound, chance_pct: chance },
   narration: words.length ? { words: words.length, wpm: +(words.length / ((words.at(-1).end - words[0].start) / 60)).toFixed(0), pauses_over_0_6s_per_min: +(gaps.length / (D / 60)).toFixed(1), longest_pause: +Math.max(0, ...gaps.map(g => g.s)).toFixed(2), first_word_at: +words[0].start.toFixed(2) } : null,
   look: look.summary ?? look.stats ?? look, palette: pal.overall ?? null,
   shots: shots.map((s, i) => ({ n: i + 1, start: +s.start.toFixed(3), end: +s.end.toFixed(3), seconds: +(s.end - s.start).toFixed(2), colours: pal.shots?.[i] ?? null,
@@ -138,7 +147,7 @@ Measured ${new Date().toISOString().slice(0, 10)} with \`tools/reverse/reverse.m
 | Shots | ${B.pacing.shots} · **${B.pacing.cuts_per_min} cuts/min** · average ${B.pacing.asl} s · median ${B.pacing.median} s (10–90 %: ${B.pacing.p10}–${B.pacing.p90} s) · longest ${B.pacing.longest} s |
 | Change inside shots | ${B.pacing.changes_per_min} change windows/min (appears, disappears, moves) · ${B.pacing.holds_over_3s} holds ≥ 3 s |
 | Not cuts | ${B.not_cuts.length} flashes, whips or fast moves |
-| Sound | ${loud ? `${loud.lufs} LUFS integrated, LRA ${loud.lra} LU` : 'no audio'} · ${B.sound.strong_onsets_per_min} strong onsets/min${B.sound.bpm ? ` · ~${B.sound.bpm} bpm` : ''} |
+| Sound | ${loud ? `${loud.lufs} LUFS integrated, LRA ${loud.lra} LU` : 'no audio'} · ${B.sound.strong_onsets_per_min} strong onsets/min${B.sound.bpm ? ` · ~${B.sound.bpm} bpm` : ''} · **${cutsWithSound ?? '—'}% of cuts land on a sound** (chance ${chance}%) |
 | Narration | ${B.narration ? `${B.narration.wpm} wpm · first word at ${B.narration.first_word_at} s · ${B.narration.pauses_over_0_6s_per_min} pauses ≥ 0.6 s/min · longest ${B.narration.longest_pause} s` : '—'} |
 | Palette (overall) | ${(B.palette ?? []).map(c => `\`${c.hex}\` ${c.share}%`).join(' · ') || '—'} |
 
