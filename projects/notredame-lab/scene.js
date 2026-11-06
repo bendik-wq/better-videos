@@ -1,6 +1,8 @@
-// NOTREDAME LAB runtime: shows one 2D canvas set per shot from projects/notredame/sets/nd-sets.js (no GL, no transitions).
+// NOTREDAME LAB runtime: shows one 2D canvas set per shot from projects/notredame/sets/nd-sets.js + nd-graphics.js (no GL, no transitions).
 import * as THREE from 'three';
-import { SETS } from '/projects/notredame/sets/nd-sets.js';
+import { SETS as HERO } from '/projects/notredame/sets/nd-sets.js';
+import { GSETS } from '/projects/notredame/sets/nd-graphics.js';
+const SETS = { ...HERO, ...GSETS };
 
 export default async function create(ctx) {
   const { renderer, shots } = ctx;

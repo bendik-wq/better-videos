@@ -14,7 +14,7 @@ def stats(f):
     a = np.asarray(im.convert('L').resize((960, 540)), dtype=np.float32)
     gx = np.abs(np.diff(a, axis=1))[:-1, :]; gy = np.abs(np.diff(a, axis=0))[:, :-1]
     edge = float((np.hypot(gx, gy) > 24).mean())
-    c = np.asarray(im.resize((480, 270))).reshape(-1, 3) // 32
+    c = (np.asarray(im.resize((480, 270))).reshape(-1, 3) // 32).astype(np.int32)  # int: a uint8 key overflowed (R*64 wrapped) and merged bins
     _, n = np.unique(c[:, 0] * 64 + c[:, 1] * 8 + c[:, 2], return_counts=True)
     bins = int((n > c.shape[0] * 0.002).sum())
     rgb = np.asarray(im, dtype=np.float64) / 255
