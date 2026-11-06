@@ -1,124 +1,131 @@
 # OUTLINE: Notre-Dame Was 30 Minutes From Collapse (episode 10)
 
-**Revision 4**, head writer, 2026-11-06, after four critics (retention 7.8, facts 7.8, climax 7.8, ear 7.8). Fully animated, Paper & Spring (`docs/library/animation-study/STYLE-BIBLE.md`). Written with `retention-script` and `bencivenga-copy` (SKILL, `references/body-copy.md`, `references/checklist.md`), from `packaging.md` and `RESEARCH.md` only. **Line numbers (L#) are `SCRIPT.md` revision 4: rev-3 numbers kept, cut lines leave gaps, new lines 88a, 116a, 117a, 117b (map in §0b).** Times are estimates at 155 wpm, 0.7 s per `|`, 2 s per chapter card and the 3 s guess silence after L73; **runtime about 13:15, 1,910 spoken words, 58 pauses, 114 VO lines** (rev 3: about 14:30, 2,116 words, 125 lines). Per-line pictures: `VISUALS.md`.
+**Revision 6**, head writer, 2026-11-06, after four critics (retention 8.2, facts 7.5, climax 8.1, ear 8.2). Fully animated in the Paper & Spring look (`docs/library/animation-study/STYLE-BIBLE.md`). Written with `retention-script` and `bencivenga-copy` (SKILL, `references/body-copy.md`, `references/checklist.md`), from `packaging.md` and `RESEARCH.md` only.
+
+**Line numbers (L#) are from `SCRIPT.md` revision 6.** Rev-3/4/5 numbers are kept and cut lines leave gaps. 86a and **105a** are the suffixed lines. Three runs play out of number order: 40 → 41 → 39, 93 → 94 → 88a, and 117 → 117b. The map is in §0b.
+
+Times are estimates at 155 wpm, with 0.7 s per `|`, 2 s per chapter card and the 3 s guess silence after L73. **Runtime is about 13:28, with 1,903 spoken words, 80 pauses and 105 VO lines.** Rev 5 was about 13:20, with 1,904 words, 67 pauses and 107 lines. The cuts asked for (≈45 s) were spent back on the facts fixes (the survey's "but", the attributed slow-burn line, the NYT verdict at L105) and on pauses that give the climb and the payoff room, so the word count stays above the 1,900 floor. Per-line pictures are in `VISUALS.md`.
 
 ---
 
-## 0. What revision 4 changed
+## 0. What revision 6 changed
 
 ### 0a. Problem → fix
 
-Blocking items first (every one applied), then the best other fixes. Rev-3 numbers are written "r3 L#"; where a line kept its number, plain "L#". Where critics conflicted, the choice and the reason are given.
+Every blocking item is applied (B = blocking). The best other fixes follow. Where critics conflicted, the choice and the reason are in the last rows.
 
 | # | Critic | Problem | Fix |
 |---|---|---|---|
-| 1 | retention B1, climax B5 | **The hook's only promise was paid at 9:43**, the second clock closed at 9:53, and 4:40 (32%) ran on weak loops | L8 now asks for a **person and a reveal**: "So who climbed into that tower, and what did they find?" It pays across L76 → L81–87. Before L87 closes it, nothing else closes, and **L88a opens a strong new loop at 9:05**: "But was it really fifteen to thirty minutes from collapse? / The evidence was still up there, and surveyors took months to read it." That loop pays at L102–105 (10:17–11:00). The back third is also shorter: the climax now resolves at **8:53 of 13:15**, leaving 4:22 of falling action carried by L88a, L95 and L112 |
-| 2 | retention B2, climax B4 | **49 s of hedging after the climax** (r3 L88–95), five time ideas in 35 s, "he didn't say which minutes he meant" unfollowable by ear | Cut r3 L89–92 from Ch.4. Post-climax is now L88 "It's around ten at night." → L88a (new loop) → L93 → L94 → L95: **about 32 s, one stated time, two open loops**. Nuñez's range is said **once** after the hook, at L105, as "an estimate made that night, not a measurement", with conviction last. "Which minutes: not stated" and the four windows live on the L105 candor strip. The NYT's "became critical" moves to Ch.6 (L117b) as the system's consequence; Gontier's 400 m race is cut |
-| 3 | retention B3, climax B9, ear | **Ch.6 flat 51 s**, Jost at 41 words, three time-jumps in the last 15 s, a button calling back a question never asked | Cut r3 L115 (prosecutor quote → the candor STRIP), merged the cause into L114 + L116, cut r3 L121–123 (they recapped L117 and broke the chronology). The reopening folds into L119 ("weeks before the cathedral reopened"). "The first half hour began in the wrong attic" moves into **L117b**, the synthesis. Jost is two sentences, 32 words, no filler (L118). The ending runs **one way in time**: L119 Oct 2024 → L120 8 Nov 2024 → L124 "This time, nobody had to ask where to look." (calls back L22 "nobody is looking yet" and the two-attic message) → L125. Candor and system now sit over a **moving crane** (STRIPs, not cards) |
-| 4 | retention B4, climax B8, ear | **Hook never said the title word**; "put the margin at" abstract and unlike the card; 87 words; bare dateline; "its zone" undefined at 0:08; "second clock" with no first | L6 "Lose that tower, officials feared, and the cathedral could collapse." (Vaz de Matos "chain-reaction collapse" ✓). L7 "A minister called it a matter of fifteen to thirty critical minutes." (the card's CTIF wording, as reported speech). L3 "But its message pointed to two attics, and the rule said check first." L4 "…about half an hour later. / That's clock one." L5 "Then fire reached the frame holding the north tower's bells. / Clock two." Date moved into L1 with the time, Paris to the flap. **85 words** (counter: every hyphenated word is one), Nuñez card fully up at **0:25–0:26** (§3) |
-| 5 | retention B5, climax B2 | **Ch.1 left real time for 34 s** after its best tension beat; 2:22 to the first peak | r3 L11–12 merged (L11, "a smoke alarm six years in the making: thin tubes that sniff the attic air"; "160+" to a chip). r3 L23 cut to one line, both versions on the card ⚠. **r3 L25–26 (slow-burn plan, the 20-minute sum, no sprinklers) moved to Ch.6** as L117a, where "one plan" needs it; the 20-minute figure is a chip. L22 → L23 → L24 → L27 now plays in continuous time. **The forest is on fire at 2:33** (rev 3: 3:01). Ch.1 is 2:21 (rev 3: 2:51) |
-| 6 | retention B6a, climax F | **58 s sideways in Ch.2** (fireboats, tonnage, spire history, statues) | Cut r3 L36 (fireboats, ≈500 and 70+ to the L33 chip). L40 trimmed ("Saved by a work schedule."). L39 gains a pull: "And now it's on fire." (a 10 s loop to the fall at L43). L34 drops the spoken attribution: "At the top, an unstoppable wall of flame." (chip NYT) |
-| 7 | retention B6b, ear | **The same fear said three times** (r3 L64–67) and "the people in charge feared" three times | Cut r3 L65; Gallet's "bourdons" line rides under L64 as a STRIP. L64 "Here's the chain they feared." L66 "A culture ministry fire expert put it this way." (no "went further" without an antecedent) |
-| 8 | retention B7, ear, facts B5 | **Clock logic broke at the reset**: "half past eight… already on fire" vs "half past nine… approved"; "half past" fused with "half hour"; **no source places Gallet's half hour on our timeline** (Gallet: Macron approved at the briefing; NYT ≈20:30; Culture 21:30 "accepted") | L62 has **no spoken time**: "By then, The New York Times reports, the north tower is already on fire." (chip ≈20:30). L74 "The culture ministry puts the go-ahead at nine-thirty. / Clock two starts: Gallet's half hour." with the ⚠ chip giving Gallet's own account. "Half past" no longer appears anywhere. **The right wheel has no minute ticks** (r3's +6 / +10 removed). L81 carries the only clock cue in the climb, claiming no time: "So the team brings its own water, and Gallet's half hour is running." L88 is only "It's around ten at night." (r3's "Gallet's half hour is nearly up" deleted; the climax critic's "all but gone" was **not** taken, because it asserts a running total no source supports). New **D37** in RESEARCH §9 |
-| 9 | retention B8 | **"Not one of them would die that night" at 5:13 pre-defused the climax's mortal stake** | L57 narrowed to the trapped men: "And the firefighters trapped inside? / They would all come out alive." The no-death fact is held for the release, **L93 "Nobody died. / Not in the tower, not anywhere in the cathedral."**, which now also pays L76's "some of them might not come back out" |
-| 10 | facts B3, B4 | **Climb lines asserted what the NYT doesn't say**: the team under a burning frame (r3 L85), a frame fire put out (VISUALS r3 L86); the post-fire survey told in the present tense as if seen (r3 L84) | Climb follows the NYT's order: L82 "At the top, they cross into the north tower. / They break through a gate." → L83 "Part of a wall is burning. / So is the floor." → **L84 "They climb on, to the height of the bells."** → L85 "Eight bells hang above them, the biggest more than four tonnes. / And the fire is already in the frame that holds them." (**sourced to the T1 21:36 log**, « le beffroi nord est atteint », chip on screen; not the NYT) → L86 "They turn the hoses on the wall. / Then the floor." VISUALS L86: the hoses fold away only the wall and floor flames. **The survey finding moves to L102, past tense**: "Afterwards, the official survey found the flames had reached one corner of it, and burned the stair to the upper bells." The Culture-ministry « éteindre le feu qui a pris dans le beffroi nord » the critic cited was **not** used: it isn't in RESEARCH.md |
-| 11 | facts B1 | VISUALS L54 strip dropped "for" from the Sécurité civile tweet | Exact text, with "[sic]" on "aircrafts" (ear critic): "All means are being used, except for water-bombing aircrafts [sic] which, if used, could lead to the collapse of the entire structure of the cathedral." |
-| 12 | facts B2 | L57 chip credited « aucune victime » to the French government record | "no deaths · « aucune victime » (Belga, 15 Apr 2019) · 3 very slightly hurt (French government record)" (VISUALS L57, L93) |
-| 13 | facts B6 | RESEARCH D34 said the NYT spire time was "About 7:50" | **RESEARCH corrected** (D34 and §11 item 5): the NZH copy gives no spire time; its 7:50 is "a deafening blast" Chudzinski describes. Tags DRAC + Culture ministry only |
-| 14 | climax B3, ear, retention | **Title payoff undercut itself**: "not enough to threaten it" right before the question; "They were the ones who had to decide" had no referent; "beside it" contradicted the climb | L102 the survey (past tense) → L103 "Beams were charred, but the frame stayed stable. / Two of the eight bells were damaged by the heat." → **L104 the question**, with Gallet's hedge restored ("By his own account, the fire commander had warned…", facts) → L105 "The minister put the margin at fifteen to thirty minutes. / It was an estimate made that night, not a measurement. / The people at that table had to decide without one." (calls back the L73 POV table; VISUALS cuts to it, empty). The retention critic's "sound" and the climax critic's "because they got there" ordering were weighed: "stable" is S09's own word; no counterfactual is voiced |
-| 15 | climax B4 (L95), facts F | L95 cliff stated one side of D29 ("the stone was still taking hits… the night wasn't over"); "Above the nave" was wrong | L95 "But saved isn't the same as safe. / Under that roof was a second ceiling, made of stone, and it had been taking hits all along." No timed claim. r3 L96 (which said the same) cut; Ch.5 opens on Heyman (L97). L101 tightened, both versions kept ⚠: "When the crossing vault fell is disputed: with the spire, Gallet remembered; later that night, says the culture ministry." |
-| 16 | climax B6, B8 | Mid-roll edges below 9; decision run 2:08 after the ad | L32 "The first crews are minutes away. / They're about to climb into the forest." (danger now carried: the forest is on fire). L68 return "The roof was lost. / At police headquarters, Gallet now faced a choice: send firefighters into a burning bell tower, or hold back." (a choice opens in the first line after the ad). r3 L75 folded into L76. The decision run (L68–74) is now **1:05** |
-| 17 | climax, facts F | L117 "they cost that first half hour" claimed an untested cause; "Each made sense on its own" editorial | L117b "Together, they help explain that first half hour. / The New York Times called that lost time critical. / And it began in the wrong attic." "Each made sense" cut |
-| 18 | facts F | Small overreaches | L50 "Plenty of people watching had an answer." L20 "A message The New York Times called nearly indecipherable, key words last." L79 "Water is a problem. One of the cathedral's own pipes is leaking, and the pressure is dropping." L104 Gallet hedge. L29 "About five minutes of climbing." with chip "Le Monde, reported by JDD". L61 chip "(Rebâtir; AFP)". L19 roster card retitled `STAFFING PLAN`, "SHIFT: double" removed |
-| 19 | ear | Pronoun piles and unflagged first person (r3 L69, L71, L72) | L69 "…He remembers Gallet's words: soon, he would know if they had lost it." L71 "…Do nothing, he said, and by five in the morning, we won't see the two towers any more." L72 "Or try something he wasn't sure would work: send a team into the north tower, and do it within the half hour." ("manoeuvre" off the TTS list) |
-| 20 | ear | TTS and ear slips | No "Times'" possessive (L79 "a reconstruction by The New York Times"). L52 "wildfires" (not "forest fires"). L13 "one detector finds smoke." L16 "Those last words meant the roof frame of the cathedral itself. / But the zone named before them covered two attics." L17 "One was the cathedral's roof. The other belonged to the sacristy…" L22 "In the other attic…" L33 "The crews drag their hoses into the burning roof." L41 "Other treasures were saved by hand… A human chain carried out the rest." L81 "fire engine". L85 "more than four tonnes". L106 "Every stained-glass window survived. So did the great organ, under a coat of lead dust." (transept roses on the chip). L120 "On the morning of the eighth of November, 2024, they rang." (≈10:30 on the flap only). L19 "The screen was staffed by one person, a few days into the job. A second person, a guard, did the checking by radio." |
-| 21 | ear (VISUALS) | **Red on fire** (r3 L9, L80, L83, L86) against the STYLE-BIBLE fire spec | Global lock: flame is brass-light, always; red on fire = marker loop only. L9 RED → the sacristy door notch (plants L17); L80 → the ring around the hose's hole; L22, L30, L34, L62, L83, L86, L102 → marker loops |
-| 22 | ear (VISUALS) | Hook overload: Nuñez card on the wrong line, three cards stacked at 0:20–0:27 | L5 no card; L6 domino only; the Nuñez card slides up as L6 ends and is fully up at 0:25–0:26, "15–30" large. AP strip → L88a only; NYT headline → L104 only |
-| 23 | ear (VISUALS) | Brass ration broken (r3 L34 full-frame flame; L77 brass fill); lid lifted three times; "cutaway" and a camera through the vault (L10, L22); briefing table ≈45 s; stairs three times in 70 s; sorting board six times in Ch.1; two full cards 27 s apart; digital silence at L43; uncited "18 hose icons"; French survey quote untranslated | L34 through a door opening; L77 ink hatching with a brass outline; lid: lifts L10, ajar L22/L38, removed once L68, L95 looks into the open model; "cutaway" struck; L72 cuts to the closed model's teal route, L76 to the S-tower strip foot, L105 to the empty table; L26 gone, L35 through a door; L21 a plan MAP; L93–94 a STRIP; L43 room tone kept; L78 icons cut; L100 English under the French |
-| 24 | ear | Packaging thumbnail ("RED bell slipping off its pin", "orange glow") contradicts the bell lock and the no-glow rule | Flagged to the packaging owner (sign-off flag 11); VISUALS L1 drops "glow drains" and draws the bell on its pin |
-| 25 | retention | Re-hook ledger counted candor beats and records as pulls | §8 rebuilt with **events, reveals, stakes and questions only**. Candor (L23, L101, L114) and records (L77–78) are listed as connective. Largest pull gap 36 s (§8) |
-| — | climax (not taken) | 41a "the cathedral's most famous relic is still in its case" | Not used: "most famous" isn't checked against D17, and the line would add 4 s to Ch.2. L41 is a two-sentence group line |
-| — | climax (not taken) | Move r3 L91–92 into Ch.6 whole | L91's NYT words are in L117b (one clause); Gontier's 400 m race is cut (Ch.6 was the flat zone) |
-| — | retention (partly taken) | Fold the reopening into L119 and cut L121–123 | Taken. The climax critic's alternative order (reopen → 2019 recap → peal) was not: it keeps two time-jumps |
-| — | climax (not taken) | L85a "Down below, Gallet's half hour is running." | The cue sits once, at L81 (retention's place), so the climb carries the clock without a second line claiming time |
-| — | facts (noted) | Cause status re-checked 2026-11-06: nothing newer than a 25 Sep 2026 feature | L114 stands; the April 2025 prosecutor extension goes on the STRIP ⚑ (VISUALS L114) |
+| 1 | facts B1 | **The title's footing was misattributed.** The L7 card printed "It was a matter of 15–30 critical minutes", credited "as reported by the BBC (via CTIF)". That sentence is CTIF's own paraphrase. The BBC printed "We now know it all came down to 15-30 minutes", the same as the Guardian | Card: **"We now know it all came down to 15–30 minutes." · Laurent Nuñez, deputy interior minister, 16 Apr 2019 (the day after) · BBC News; the Guardian.** L7 VO: "A minister said saving it had all come down to fifteen to thirty minutes." CTIF and "matter of… critical minutes" are removed from SCRIPT, OUTLINE and VISUALS. **RESEARCH corrected** in READ FIRST 11, the quote table and §7, citing the critic's opened sources (CTIF page; BBC text in a full repost; Guardian S69) |
+| 2 | retention B1, climax F (hook trim), ear F (L4, L5) | **Three thirties in 16 s, and the first number heard was the delay**, so by ear the title's "30" attached to the alarm delay. "Collapse" arrived late | **No number is spoken for clock one in the hook.** L3: "The alarm worked. \| But its message pointed to two attics." (the check-first rule is first voiced at L18). L4: "The fire brigade was called late. \| Clock one: the lost time." (no "they lost": facts' blame note). The left wheel still spins to a small ≈+30 on screen. L5: "Then fire reached the north tower's bell frame. \| Clock two: the fire chief's half hour to save the tower." (the window is Gallet's own, climax F; "the tower", not "it", ear F; chip "Gallet's own words"). So the first spoken half hour is clock two, and the only other number is Nuñez's range. The hook is **88 words**; "collapse" at 0:22, the card fully up at 0:24, voiced 0:26, contract 0:31 |
+| 3 | climax B3 | **The title's exact claim had no on-screen source before 9:20** | A ✓ **NYT headline STRIP under L6 (0:22):** "Notre-Dame Came Far Closer to Collapsing Than People Knew · NYT, 16 Jul 2019". The VISUALS "once, at L104" lock now allows the L6 strip plus the L105 card. The 0:24 frame carries two proof cues |
+| 4 | retention B2, climax B4, ear F (L69, L76, L79) | **Flat run-in after the only mid-roll** (6:08–7:40): five memory attributions, two records, a byline before any action; L77 duplicated L85 | **L77 cut from the VO**; its 21:36 tag drops silently on the wheel at L78. **One memory frame** at L69: "Two men in that briefing room later told the story: the district mayor, Ariel Weil, and Gallet himself. \| Weil remembers Gallet telling the room he would soon know whether the cathedral was lost." L70 drops "Weil said later". L71: "By his own account, Gallet put two options to President Macron." L76: "About twenty go in. \| It was clear, Weil said later, that some might not come back out." (closer to S45's "without knowing if they would come back out" than retention's wording). L78: "Nine-forty. The deputy interior minister, Laurent Nuñez, tells the cameras the fire is not contained, \| and saving the cathedral is not certain." **L79 opens on action:** "First problem: water. \| One of the cathedral's own pipes was leaking, and the pressure was dropping." The NYT byline moves to the **end of L80**: "The New York Times later traced what came next." (and to the L79 chip). L68 (sponsor return): "…whether to send a team up into a burning tower, under eight bells." (climax: a person, a choice and a physical stake in the first line back) |
+| 5 | retention B3, climax B1, ear F (L85, L86a) | **Citations inside the apex** (L85, L86a, L88) | **L85 puts the source last and short:** "Eight bells hang above them, the biggest more than four tonnes. \| The fire has reached the frame that holds them, the government's timeline says." **L86a has no spoken source:** "Then more water, at the very top of the towers, \| aimed at the fire in the frame itself." (Culture S05 ✓ on the strip). **Sound:** a slow brass escapement tick under L81–87, stopping dead on "She is saved", so clock two is felt without a count |
+| 6 | facts B2 (over retention B3 and climax B1's L88) | **L88 "it took the whole half hour" claimed a precision S05 doesn't have.** S05's « 21h30 » and « 22 heures » are paragraph lead-ins, and the NYT has the flames under control by ≈21:45 | L88: **"It's about ten at night. \| By the culture ministry's account, about half an hour since the go-ahead."** Not "the whole half hour" and not "They needed all of it". Tags print `≈ 21:30` / `≈ 22:00`; the ½ h mark fills with a dashed edge, chip "approximate times, one source". The emotional release stays on L87 (tick stops on "She is saved"); L88 is the quiet read. RESEARCH D37 updated |
+| 7 | facts B3 | **The title payoff dropped the survey's key "but"** | L103: "Some beams were charred, \| but not enough, the survey found, to threaten the frame. \| Two of the eight bells were scarred by the heat. \| The fire had reached the frame, \| and the frame had held." VISUALS L103 chip prints the full sentence « Quelques poutres ont été calcinées, mais… pas… au point de menacer la stabilité de la charpente » (bilan à 6 mois ✓) |
+| 8 | climax B2, retention B4 (L105), ear B (L105) | **The title payoff opened on a concession**, and L105's last "they" pointed at Nuñez, who decided nothing | Conviction first, candor last. L104: "So was Notre-Dame thirty minutes from collapse? \| The people in charge believed it was that close, and said so." L105: "Gallet says he had warned that, left alone, both towers would be gone by morning. \| The next day, Laurent Nuñez said it had all come down to fifteen to thirty minutes. \| Three months later, The New York Times concluded it came far closer to collapsing than people knew." **New L105a:** "Nobody can measure a margin that was never used up. \| Because nobody waited to find out." ("critical minutes" in climax's draft replaced by the BBC wording; "nobody waited" from ear) |
+| 9 | facts B4 | **L117 voiced the ⚑ slow-burn assumption unattributed, under "the record"**, and L117b said all three "help explain the lost half hour" | L117: "…And an old oak roof with no sprinklers, which, The New York Times reported, the plan expected to burn slowly." L117b: "The first two help explain the lost half hour. \| The third is why the plan thought there was time to spare. \| The search had begun in the wrong attic." Each factor explains only what it can |
+| 10 | retention B4 | **Post-climax exit ramp:** an optional mid-roll 53 s after "She is saved", Ch.5 opening on an academic citation, L101's disputed timing, and two near-identical impact pictures | **The 9:42 mid-roll is deleted.** L97 + L98 merged into two short lines: "That vault had a second job, the engineer Jacques Heyman wrote: \| a fire barrier between the roof and the church." / "When the burning timbers came down, they were largely caught by the vaults." **L101 cut** to a ⚠ two-version chip over L100. VISUALS: L95 shows ONE piece and holds on the dust; L98 gets the full rain, on a separate demonstration shell. The title verdict (L104) now lands at **10:41** (rev 5: 10:44, and its conviction at 11:09 now lands at 10:49) |
+| 11 | retention B5 | **Ch.6 recap sag** (two candor lines plus a fourth retelling of the system) | L114 + L116 merged: "The investigation is still open. \| More than seven years on, no cause has been proved, and no one has been charged. \| The leading theories are accidents: a cigarette, or an electrical fault." The bells keep moving in the workshop under it, and the bare-frame tags appear in the same line. L117 is now a reveal (the slow-burn plan, #9), not only a recap. The longest stretch without a pull in Ch.6 is under 15 s (§8) |
+| 12 | ear B (L41), retention F | **L41 "carried out the sacrament"** sounded like a rite; "passed out" like fainting | "The brigade's chaplain took the Blessed Sacrament himself, and a human chain handed the rest to safety." (S83 ⚑ "I took the holy sacrament") |
+| 13 | ear B (L88a) | **"How close had they come?"** read as the firefighters nearly dying | "But how close had Notre-Dame come? \| The answer was still up in that tower, and surveyors took months to read it." |
+| 14 | ear B (VISUALS L105, L117) | **On-screen numbers nobody says**, in 40–50-word strips | The L105 candor strip is gone (Weil's 20 min and de Sinety's 1 h 30 go to the description / pinned comment); the L117 chip is cut to "no sprinklers, no fire walls · NYT" plus the slow-burn source |
+| 15 | ear B (VISUALS L74) | Research code "D37" on screen | Chip: "⚠ Gallet gives no time · NYT puts his briefing ≈ 20:30" |
+| 16 | ear B (VISUALS L117b) | **Blame gate:** the guard token's route lit on "The search had begun in the wrong attic" | The system's routing glows instead: the ticket's forked pen line on the sorting board lights the SACRISTY slot, then jumps to NAVE. No guard token in the shot |
+| 17 | ear B (VISUALS L97–98) | **A sectioned real building** ("the vault as a curved card shell under the matchstick roof") | A separate tabletop demonstration toy: a lone card vault shell, `stone vault (demonstration)`, matchsticks dropped from a brass tweezer arm |
+| 18 | ear B (VISUALS L93–94) | **Casualty beats broke STYLE-BIBLE §20.5** (wheel tick under "0 deaths", a push-in under the injured count) | No tick, no foley, no camera move but a slow 4% lean-out; L93 holds 60 frames after the number; the brass tell is a hinge clip |
+| 19 | facts F (L18), ear F (L18) | **"A few days into the job"** invited "the rookie got it wrong" (G6) | L18: "And by design, the system didn't call the fire brigade itself. \| The plan put one person at the screen, and that person's job was to radio a guard to check first." No tenure on the VISUALS roster card |
+| 20 | retention F, ear F (L20) | The check-first rule was said three times in 90 s; "A message The New York Times called…" misparsed | L20: "Now put yourself on that radio. \| Four strings of jargon, the key words last. \| The New York Times called it nearly indecipherable." |
+| 21 | climax B5 (#5) | **The first fire the viewer saw was at 2:19** | L22: "In the other attic, nobody is looking yet. \| And the smoke is becoming a fire." (S42/S43 ✓ "burning out of control" by the climb). VISUALS: the band grows in three visible steps under L22, L24 and L27, so the 2:23 reveal pays a fire we watched grow |
+| 22 | retention F, climax F (L47–49) | "Here's what most people watching didn't know" was an unsourced claim, and the Trump post that followed was something everyone did see | L47: "The cameras were all on the spire." L48: "But the spire was not the danger…" L49: "And the fix so many people were calling for, officials warned, could have brought the whole thing down." (the planes segment is now the first half of the promise). **Ch.3 card renamed "The Wrong Fix"** ("No Planes" gave away L54) |
+| 23 | retention F (L57) | The trapped loop was paid by one flat line | 1.0 s held silence before "They would all come out alive"; the ink tallies' walk-out carries the release. No words added (no route is sourced) |
+| 24 | facts F | Source labels and small overreaches | L85: "the government's timeline" (the Élysée record is dated 17 Apr; never "that night's record"). L88: "the culture ministry's account" (S05 is a narrative page). L55: "damage the buildings around it" (« bâtiments à proximité »). VISUALS: roster card now L18; de Sinety is "second-hand", not "third-hand" (and off screen, #14). Flag 4 closed: S05's sentence confirmed as one sentence with a comma; RESEARCH §7 and the L86a strip updated |
+| 25 | ear F | Ear fixes | L31: "Half an hour after the screen first said fire." ("Feu" spoken only at L2 and L14). L37: "about four hundred and sixty tonnes, roof and spire together" (the 210 + 250 split on the scale card). L42: "President Macron's office postpones the televised address he has already recorded." (names him early; RESEARCH timeline ≈19:40). L95: "Below where the roof had been was a second ceiling: a stone vault." L99: "Where the arms of the cross meet, in one bay of the nave, and at the end of the north arm." (L107 also says "north arm"). L109: "…under all twenty-eight buttresses. \| Each weighs more than eight tonnes." L120: "One November morning in 2024, all eight rang together." TTS: Nuñez → "noo-NYEZ"; first test batch L2, L31, L78, L85, L87 |
+| 26 | climax F (L112) | A weak Ch.5 cliff payload | L112: "The tower they saved was still standing. \| But its bells would stay silent for more than five years." L113: "In July 2023, the eight bells came down from the north tower. \| The frame that had held them through the fire had to be restored, and the bells cleaned of lead dust." (S17 ✓ "restored", not climax's "rebuilt") |
+| 27 | ear F (VISUALS) | Continuity | Daylight to L58, dusk from L62, night L68–95, day at L102 (sunset ≈20:43). L5 opens on the bell-frame toy, no spire fall. L30 is a wide side elevation, L34 the door POV. L42 TV in the foreground, the burning spire behind. L68 lid laid aside, hard cut to a separate briefing set. L71 a card telephone plated PRESIDENT MACRON, not an empty chair. L72 route on the flat stair strip. One label set: SEND THEM IN / HOLD BACK. Grey → ink-40 `#8a93a3`. Brass hinge knuckles standard on H1 and H10. L113 craftsman = a §6.4 forearm. L125 cuts to night-shade `#0b1426`, never #000 |
+| — | climax B1 (L88 "They needed all of it") vs facts B2 | Make L88 a release | **Facts wins.** No source supports "all of it". The release moves to L87 (the tick stops on "She is saved"); L88 is a short, attributed read |
+| — | climax F (L84 "past the burning wall") | Escalate L84 | **Not taken.** The NYT order has the team put out the wall at L86; "past the burning wall" would reorder it |
+| — | retention F (hook B, stake first) | Test a second hook | **Kept as the Test & Compare alternative only** (§3 B), pending fact sign-off on "an hour and a half earlier" |
+| — | retention (runtime ≈12:50) vs the 1,900-word floor | Cut ≈45 s | The cuts were made, and the room was spent on facts fixes #7–#9 and the climb's pauses. **13:28, 1,903 words**, in band |
+| — | climax F (the "≈20 min even at best" candor chip at L117) vs ear B (no unvoiced numbers) | Show the 20-minute floor | **Ear wins.** The figure moves to the description, beside the windows list |
 
-**Runtime:** about 14:30 (rev 3, 2,116 words) → **about 13:15** (rev 4, 1,910 words). The climax ("She is saved") now lands at 67% of the runtime (rev 3: 67% at 9:42 of 14:30, but with 49 s of hedging after it; rev 4's post-climax window is 32 s with two loops open).
+**Runtime:** about 13:20 (rev 5) → **about 13:28** (rev 6, 1,903 words, 80 pauses). "She is saved" lands at **8:50 (66%)**, "Nobody died" at 9:08, the title verdict at 10:41.
 
-### 0b. Rev-3 → rev-4 line map
+### 0b. Rev-5 → rev-6 line map
 
-| r3 | r4 | | r3 | r4 | | r3 | r4 |
+| r5 | r6 | | r5 | r6 | | r5 | r6 |
 |---|---|---|---|---|---|---|---|
-| 1–8 | 1–8 (rewritten) | | 65 | cut (STRIP under 64) | | 89–92 | cut (89–90 → 105 strip; 91 → 117b) |
-| 11–12 | 11 (merged) | | 66–67 | 66–67 | | 93–95 | 93–95 (95 rewritten) |
-| 13–24 | 13–24 (23 shortened) | | 68–74 | 68–74 | | 96 | cut (said in 95) |
-| 25–26 | moved → 117a (20 min to a chip) | | 75 | folded into 76 | | 97–101 | 97–101 |
-| 27–35 | 27–35 | | 76–83 | 76–83 | | 102–103 | 102–103 (survey moved in from 84) |
-| 36 | cut (chip on 33) | | 84 | 84 new text; survey → 102 | | 104–114 | 104–114 |
-| 37–64 | 37–64 | | 85–88 | 85–88 | | 115 | cut (STRIP on 114) |
-| | | | — | **88a new** | | 116–118 | 116, **116a new**, 117, **117a** (from r3 25–26), **117b new**, 118 |
-| | | | | | | 119–120, 121–125 | 119–120; 121–123 cut; 124–125 |
+| 1–8 | 1–8 (3, 4, 5, 7 rewritten) | | 68–76 | 68–76 (68, 69, 70, 71, 76 rewritten) | | 101 | **cut** (⚠ chip on 100) |
+| 18, 20, 22 | rewritten | | 77 | **cut** (silent tag at 78) | | 103–105 | rewritten; **105a new** |
+| 31, 37, 41, 42 | rewritten | | 78–80 | rewritten | | 112–113 | rewritten |
+| 47, 49, 55 | rewritten | | 85, 86a, 88, 88a | rewritten | | 114 + 116 | **114 (merged)** |
+| — | — | | 95, 97–99 | rewritten (97 + 98 split as two short lines) | | 117, 117b, 120 | rewritten |
+
+All other lines keep their wording. Light edits: 107 ("north arm"), 109.
 
 ---
 
 ## 1. Sign-off flags (decide before VO-lock)
 
-1. **⚑ Title footing.** Transcribe Nuñez (BFMTV `evYPczDCnpA` or INA, 16 Apr 2019). Until then the L7 card uses CTIF's published English ✓ in straight quotes; AP's narration line (L88a) is labelled as reporter's summary; the NYT headline card (L104) carries the title ✓. Never "a crucial 15- to 30-minute window", never "from collapse" in quote marks. Open churchtimes.co.uk (403 on 6 Nov) before adding PA's wording.
-2. **⚑ Single-source NYT beats, attributed:** L20 ("nearly indecipherable"), L34 (chip), L62, L79–83, L86 (one VO attribution at L79, chips after), L117a–117b. L85's frame fire is T1 (21:36 log); L102 is T1 (bilan à 6 mois) and labelled "post-fire survey".
-3. **⚠ D6** (what reached the guard): L23 says "disputed", both versions on the card; the firm is never named. **⚠ D29** (crossing vault): L101 both sides, hole untimed. **⚠ D22** (belfry beams): chip both ways (L103). **⚠ D37** (when the plan was approved): L74 gives the ministry's time as the ministry's; chip gives Gallet's account; no running total voiced anywhere.
-4. **⚑ Reopening 7 Dec 2024 (L119, "weeks before the cathedral reopened")** rests on S108. Verify before lock.
-5. **⏱ Re-check** L114–116, L118 and L119 on VO-lock day and publish day.
-6. **Blame gate (G6).** L3, L19–23, L117–117b: no name, no face, no verb of fault; the hook names two system factors; staffing is a `STAFFING PLAN` card. The guess (L73) aims at the commander's decision. L117b "help explain", never "caused".
-7. **Tone.** No levity near the injured or the trapped. The single levity beat is L40 (statues saved by a work schedule), on a prop.
-8. **TTS dictionary** in the SCRIPT header. Render L2, L4–5, L14, L15, L31, L70, L74, L87, L120 first.
-9. **Pathé film collision.** No named firefighters, no climbing POV of a named person, no fictional dialogue. The L85 POV is from the strip top, faceless.
-10. **Political comment risk.** The Trump post (L50–51) is quoted as text and answered by the civil-protection record that named no one. No guess beat on it.
-11. **Packaging owner:** redraw the lead thumbnail with the bell on its pin and the beam burning (no "RED bell slipping off its pin", no orange glow), as VISUALS L1 does.
+1. **⚑ Title footing.** The card now carries the BBC/Guardian wording ("We now know it all came down to 15–30 minutes"), read by the facts critic in a full repost of the BBC article. **Still open the BBC page on a machine that reaches bbc.com, or transcribe the BFMTV/INA video.** If the French is confirmed, set « s'est joué à un quart d'heure, une demi-heure près » above the English. Never "a crucial 15- to 30-minute window", never CTIF's "matter of… critical minutes", and never "from collapse" in quote marks.
+2. **⚑ Single-source NYT beats, attributed:** L20, L34 (chip), L62, L79–84 (one VO attribution at the end of L80, plus the L79 chip), L86, L105 (headline ✓), L117 (slow burn, voiced "The New York Times reported", via Il Post ⚑). L85 is T1 (21:36 timeline). L86a is T1 (Culture S05, on the strip). L102–103 are T1 (bilan à 6 mois).
+3. **⚠ D6** (what reached the guard): a STRIP over L21, both versions, firm never named. **⚠ D29** (crossing vault): the L100 chip gives both versions. **⚠ D22** (belfry beams): a chip, both ways (L103). **⚠ D37**: L74 is Gallet's memory; the tag is the ministry's ≈21:30. L88 says only "about half an hour since the go-ahead", attributed. Nothing claims the half hour was used up.
+4. ~~L86a wording~~ **Closed** (facts critic opened S05: one sentence, with a comma).
+5. **⚑ Reopening 7 Dec 2024 (L119)** rests on S108. Verify before lock.
+6. **⏱ Re-check** L114, L118 and L119 on VO-lock day and publish day.
+7. **Blame gate (G6).** L3, L18–22 and L117–117b: no name, no face, no tenure, no verb of fault. L18's subject is "the plan". L117b's "The search had begun in the wrong attic" plays over the sorting board's routing, never a guard token.
+8. **Tone.** No levity near the injured or the trapped. The single levity beat is L40.
+9. **TTS dictionary** is in the SCRIPT header (Nuñez → "noo-NYEZ"). First batch: L2, L31, L78, L85, L87.
+10. **Pathé film collision.** No named firefighters in the climb, no climbing POV of a named person, no fictional dialogue.
+11. **HARD GATE: packaging thumbnail.** `packaging.md` Thumbnail 1 still specifies a "red bell slipping off its pin", an orange glow and a leaning south tower, which shows a near-event that never happened. Respec before any Test & Compare: bell ON its pin with a dashed ring, lower beam burning as brass-light paper card, no glow, no lean, keep "IF THEY FALL"; re-run `projects/paper-lab/check.py`. VISUALS L1 draws it this way.
+12. **Packaging title C (facts F, for the owner).** "Notre-Dame's Alarm Worked. They Went to the Wrong Attic" makes people the subject of the error. Prefer "Notre-Dame's Alarm Worked. It Named the Wrong Attic", or keep C out of Test & Compare. (`packaging.md` is outside this revision.)
+13. **Political comment risk.** The Trump post (L50–51) is quoted as text and answered by the civil-protection record, which named no one. L42 and L71 name President Macron.
+14. **Description must carry** what moved off screen: the windows list (Gallet ½ h own words; Weil's "In 20 minutes, I'll know if we've lost it", as remembered, NYT; de Sinety 1 h 30, second-hand, 2020; Nuñez ¼–½ h, next day), the NYT's "≈20 minutes even at best" (2.16), Fournier's own account (S83 ⚑) and Heitz's « Rien ne va dans le sens d'un acte volontaire ».
 
 ---
 
 ## 2. Structure
 
-**Spine: countdown (two clocks), with an explainer-with-twist inside chapter 1.** A brass counter wheel is on screen at least once per chapter (L4–5, L13, L28–31, L74, L78, L81, L87, L105, L117b). The hook names them "clock one" and "clock two"; the body calls them "the lost half hour" and "Gallet's half hour", never swapped.
+**Spine: a countdown on two clocks, with an explainer-with-twist inside Ch.1.** A brass counter wheel is on screen at least once per chapter (L4–5, L13, L28–31, L74, L78, L81, L87–88, L105–105a, L117b). The hook names the clocks by meaning and voices a number only for clock two. The body uses "the lost half hour" and "Gallet's half hour" and never swaps them.
 
 **The two clocks**
 
-| | Clock one: DELAY, "the lost half hour" | Clock two: DEADLINE, "Gallet's half hour" |
+| | Clock one: DELAY, "the lost time" / "the lost half hour" | Clock two: DEADLINE, "the fire chief's half hour" / "Gallet's half hour" |
 |---|---|---|
-| Object | Left brass counter wheel, red FEU start flap, tag `CLOCK ONE · DELAY` | Right brass counter wheel, brass mainspring, tag `CLOCK TWO · DEADLINE · ½ h · Gallet's own words`; **no minute numbers** |
-| Named | L4, 0:13 "That's clock one." | L5, 0:18 "Clock two." |
-| Starts | L13, 0:57: 18:18 (card "sources give 18:18 or 18:20") | L74, 7:22: "The culture ministry puts the go-ahead at nine-thirty" (S05 ✓), right after the guess. ⚠ D37 chip: Gallet's own account has the president approving at the briefing (no time; NYT ≈20:30) |
-| Ticks | L28 18:43 (+25, the second alert), L30 ≈ +30 as the guard reaches the top | L81 "Gallet's half hour is running" (index turns, nothing counts) |
-| Stops | L31, 2:36: two tags, 18:48 (NYT) · 18:51 (French government record); "≈ +30" | L87, 8:53: "She is saved"; tags ≈21:45 (NYT) · 22:00 (Culture ministry). L88 "It's around ten at night." No total voiced |
-| What it is | A measured delay, from two named records | A deadline Gallet set himself (« il faut la réaliser dans la demi-heure »), not a measured interval |
-| Pay | L31 "The lost half hour." L117b "Together, they help explain that first half hour. The New York Times called that lost time critical." (left wheel lit alone, gears turn it) | L87; L105 Nuñez's bracket on **this wheel only**, chip "which minutes: not stated" |
+| Object | Left brass wheel, red FEU start flap, tag `CLOCK ONE · DELAY` | Right brass wheel, brass mainspring, tag `CLOCK TWO · DEADLINE · Gallet's own words`. **Record tags only, never minute numbers** |
+| Named | L4, 0:09 (no number spoken; small ≈+30 on screen) | L5, 0:14 |
+| Starts | L13, 0:57: 18:18 (card "sources give 18:18 or 18:20") | L74, 7:17: the president's answer as Gallet remembers it; start tag ≈21:30 Culture; ⚠ chip |
+| Ticks | L28 18:43 (+25, "twenty-five minutes"), L30 ≈ +30 | Silent tags 21:36 timeline and 21:40 Nuñez (L78); L81 "Gallet's half hour is running"; **escapement tick under L81–87** |
+| Stops | L31, 2:26: "at about ten to seven"; tags 18:48 NYT · 18:51 government | L87, 8:50: "She is saved"; the tick stops dead; stop tags ≈21:45 NYT · ≈22:00 Culture |
+| Read | L31 "The lost half hour." | **L88, 9:01:** "By the culture ministry's account, about half an hour since the go-ahead." Dashed ½ h mark, "approximate times, one source" |
+| Pay | L117b "The first two help explain the lost half hour." (gears turn the left wheel) | L105–105a: Nuñez's ¼–½ h bracket on **this wheel only**, then the empty bracket, "never used up" |
 
-**Governing metaphor:** the cathedral is a folded-card model; the roof forest is matchsticks; the alarm message is a punched-card ticket with four printed strings fed into a sorting board with two attic slots; the north tower's bell frame is a separate brass-and-card toy; the officials' fear is a four-card domino; the climb is a flat card stair-strip toy beside the closed model.
+**Governing metaphor:** the cathedral is a folded-card model; the nave interior is a separate toy theatre; the roof forest is matchsticks; the alarm message is a punched-card ticket fed into a sorting board with two attic slots; the north tower's bell frame is a brass-and-card toy; the officials' fear is a four-card domino; the climb is a flat card stair-strip toy beside the roofless model; the stone vault is a separate demonstration shell.
 
 ---
 
 ## 3. Hook: three variants, scored
 
-**A. Rev-4 hook (WINNER)** (L1–8, **85 words**, 0:00–0:36; title word "collapse" by ear at 0:26; Nuñez card fully up 0:25–0:26; contract 0:31).
-"Six-eighteen, a Monday evening, April 2019. / Beside Notre-Dame, a screen flashes: Feu. Fire. / The alarm worked. But its message pointed to two attics, and the rule said check first. / Firefighters were called about half an hour later. That's clock one. / Then fire reached the frame holding the north tower's bells. Clock two. / Lose that tower, officials feared, and the cathedral could collapse. / A minister called it a matter of fifteen to thirty critical minutes. / So who climbed into that tower, and what did they find?"
+**A. Rev-6 hook (WINNER)** (L1–8, **88 words**, 0:00–0:36). Clock one named at 0:09 with no spoken number; clock two at 0:14; "collapse" at ≈0:25 (end of L6), with the NYT strip under it; the Nuñez card slides up at 0:22, fully up 0:24, voiced 0:26; the contract runs 0:31–0:36.
+"Six-eighteen, April 2019. / Beside Notre-Dame, a screen flashes: Feu. Fire. / The alarm worked. But its message pointed to two attics. / The fire brigade was called late. Clock one: the lost time. / Then fire reached the north tower's bell frame. Clock two: the fire chief's half hour to save the tower. / Lose that tower, officials feared, and the cathedral could collapse. / A minister said saving it had all come down to fifteen to thirty minutes. / So who climbed into that burning tower, and what was waiting at the top?"
 
-**B. Retention critic's draft** (≈90 words): keeps rev 3's structure with the critic's three line changes ("Lose that tower… the whole cathedral could collapse", "A French minister called it…", "So who climbed into that tower, and what was waiting at the top?"). Strong, but keeps the "second clock with no first" problem the ear critic flagged and runs 0:38.
+**B. Retention's stake-first hook (Test & Compare alternative, ≈75 words)**: "Everyone watching Notre-Dame burn saw the spire fall. / The people in charge were watching something else: a burning oak frame in the north tower, holding eight bells. / Lose that tower, they feared, and the cathedral could collapse. / A minister said it had all come down to fifteen to thirty minutes. / It had started hours earlier, with one word on a screen: Feu. / So who climbed into that burning tower, and what was waiting at the top?" ("hours earlier" replaces "an hour and a half earlier" until the fact team signs off 18:18 → ≈20:30; "collapse" at ≈0:12; it drops the two-clock spine from the hook, so it is the test arm, not the default.)
 
-**C. Rev-3 hook** (87 words; no title word by ear; "put the margin at"; three stacked cards).
+**C. Rev-5 hook** (93 words): three thirties in 16 s; replaced.
 
 | Variant | `hooks.md` /25 (image, lean, turn, loop, stakes) | Bencivenga §3 /10 (A conf · B proof · C objection · D twist · E contract · F economy) | Gate | Verdict |
 |---|---|---|---|---|
-| A | 25 (5·5·5·5·5) | 9 (2·3·1·2·1·0) | G1–G6 ✓; frame 1 = bell on its pin; CTIF ✓ on screen by 0:26; title word by ear 0:26 | **Ship.** F = 0 only because 85 > 80. The five spare words are "That's clock one" and "Clock two", which the ear critic needs |
-| B | 24 (5·5·5·5·4) | 9 (2·3·1·2·1·0) | ear ✗ (no first clock) | Lines 6–8 adopted, in shorter form |
-| C | 23 | 8 (2·3·1·1·1·0) | ear ✗, retention ✗ | Replaced |
+| A | 25 (5·5·5·5·5) | 10 (2·3·1·2·1·1) | G1–G6 ✓; one spoken number per clock meaning; BBC/Guardian wording + NYT headline on screen by 0:24 | **Ship** |
+| B | 24 (5·5·4·5·5) | 9 (2·3·0·2·1·1) | needs fact sign-off on the elapsed time; no clocks | Test arm |
+| C | 25 | 9 (F = 0) | facts ✗ (CTIF wording) | Replaced |
 
 | Slot | Time | Line | Proof on screen |
 |---|---|---|---|
-| 1 Confirm the click | 0:00–0:06 | frame 1 = thumbnail (burning façade, bell on its pin, beam burning) 1.5 s under L1; L2 | Date flap 15 APR 2019 · 18:18 · PARIS; panel FEU |
-| 2 Objection | 0:06 | "The alarm worked." | — |
-| 3 Twist | 0:07–0:18 | L3 two attics + check first (sorting board fork, CHECK FIRST stamp); L4 clock one to ≈ +30 | Ticket chip "NYT, 16 Jul 2019" |
-| 4 Stake + proof | 0:18–0:31 | L5 clock two, bell frame; L6 domino "officials' fear" → "collapse" 0:26; L7 Nuñez card fully up 0:25–0:26 | CTIF ✓ ("15–30" large) |
-| 5 Contract | 0:31 | L8 a person and a reveal | Title 0:35 |
+| 1 Confirm the click | 0:00–0:04 | frame 1 = thumbnail composition (bell on its pin) under L1; L2 | Date flap 15 APR 2019 · 18:18 · PARIS; panel FEU |
+| 2 Objection | 0:04 | "The alarm worked." | — |
+| 3 Twist + clock one | 0:04–0:14 | L3 two attics; L4 "called late… the lost time" (wheel to a small ≈+30) | Ticket chip "NYT, 16 Jul 2019" |
+| 4 Stake + clock two + proof | 0:14–0:31 | L5 "the fire chief's half hour to save the tower"; L6 domino → "collapse"; Nuñez card up 0:22 → fully up 0:24; NYT strip; L7 0:26 | BBC/Guardian wording, "15–30" large; NYT headline ✓ |
+| 5 Contract | 0:31 | L8: a person ("who climbed") and a reveal ("what was waiting at the top") | Title 0:36 |
 
 ---
 
@@ -126,182 +133,175 @@ Blocking items first (every one applied), then the best other fixes. Rev-3 numbe
 
 | # | Card | Lines | Time | Words | Clock | Ends on (cliffhanger, §4 /10) |
 |---|---|---|---|---|---|---|
-| 0 | Cold open | 1–8 | 0:00–0:36 | 85 | both named | "So who climbed into that tower, and what did they find?" |
-| 1 | **Two Attics, One Message** | 9–32 | 0:36–2:57 | 349 | one runs, stops | L32 "They're about to climb into the forest." (9: the forest is on fire, crews about to enter) |
-| 2 | **A Wall of Flame** | 33–46 | 2:57–4:20 | 206 | one stopped | L46 "Their way back out is full of flames." (9) |
-| 3 | **No Planes** | 47–67 | 4:20–6:20 | 299 | — | L67 "The only way to find out was to climb into it." (9) |
-| 4 | **The Second Clock** | 68–95 | 6:20–9:36 | 453 | two runs, stops | L95 "…a second ceiling, made of stone, and it had been taking hits all along." (8; with L88a open, the viewer carries two loops into Ch.5) |
-| 5 | **What Held** | 96–112 | 9:36–11:48 | 326 | right wheel (L105) | L112 "the bells in the tower they saved would stay silent for more than five years." (8) |
-| 6 | **The Bells Come Home** | 113–125 | 11:48–13:15 | 211 | gears turn the left wheel | Button L125 "The north tower. The one they climbed into." |
+| 0 | Cold open | 1–8 | 0:00–0:36 | 88 | both named | L8 "…and what was waiting at the top?" (9) |
+| 1 | **Two Attics, One Message** | 9–32 | 0:36–2:42 | 300 | one runs, stops | L32 "They're about to climb into the forest." (8) |
+| 2 | **A Wall of Flame** | 33–46 | 2:42–4:10 | 211 | one stopped | L46 "Their way back out is full of flames." (8) |
+| 3 | **The Wrong Fix** | 47–67 | 4:10–6:13 | 309 | — | L67 "The only way to find out was to climb into it." (8) |
+| 4 | **The Second Clock** | 68–95 | 6:13–9:40 | 459 | two runs, stops, read | L95 "Burning pieces of the roof had been falling onto it." (7; L88a also open across the card) |
+| 5 | **What Held** | 97–112 | 9:40–11:57 | 323 | right wheel (L105–105a) | L112 "But its bells would stay silent for more than five years." (8) |
+| 6 | **The Bells Come Home** | 113–125 | 11:57–13:27 | 213 | gears turn the left wheel | Button L125 "The one they climbed into." |
 
-**Mid-roll slots:** **2:57** (Ch.2 card, after the L32 cliff) and **6:20** (Ch.4 card, after the L67 climb cliff). The guess is at 7:06–7:22, **46 s** after the 6:20 slot, so no ad sits within 40 s of it. Optional third at **9:36** (Ch.5 card, two loops open). No slot in the last 90 s. The L46 → L47 handoff is a hard cut, no ad.
+**Mid-roll slots:** **6:13** (Ch.4 card, after the L67 climb cliff) is the **only** slot. The guess is at 7:02, 49 s after it. **No ad at 2:42 and none after 6:13** (rev 6 deletes the optional 9:42 slot: it sat 50 s after "She is saved", the natural "I'm done" moment). No slot in the last 90 s.
 
-**Sponsor:** none supplied. If one is added, the read goes at the **6:20** card; the return line L68 "The roof was lost. At police headquarters, Gallet now faced a choice…" restates the stake and opens a choice in its first two sentences.
+**Sponsor:** none supplied. If one is added, the read goes at the 6:13 card. The return line L68, "The roof was gone. Now Gallet had to decide whether to send a team up into a burning tower, under eight bells.", carries a person, a choice and a physical stake in its first six seconds (§4 score 9).
 
 **Description chapters:**
 ```
 00:00 One word on a screen
 00:36 Two attics, one message
-02:12 6:43: the other attic
-02:57 A wall of flame
-03:59 The spire falls
-04:20 Why no water planes?
-05:24 Eight bells in a burning frame
-06:20 "He meant Notre-Dame could collapse"
-07:06 Your call
-07:52 The climb into the north tower
-08:53 "She is saved"
-09:36 What held
-10:36 Was it really 30 minutes?
-11:48 The bells come home
+02:02 6:43: the other attic
+02:42 A wall of flame
+03:48 The spire falls
+04:10 The wrong fix
+05:17 Eight bells in a burning frame
+06:13 "He meant Notre-Dame could collapse"
+07:02 Your call
+07:41 The climb into the north tower
+08:50 "She is saved"
+09:40 What held
+10:41 How close was it?
+11:57 The bells come home
 ```
-First line of the description: "Notre-Dame fire, 15 April 2019: the alarm's message pointed to two attics, the spire fell, and a burning bell frame threatened the north tower. Sources: NYT 16 Jul 2019, French government record, Culture ministry, post-fire survey, Paris prosecutor."
+First line of the description: "Notre-Dame fire, 15 April 2019: the alarm's message pointed to two attics, the spire fell, and a burning bell frame threatened the north tower. Sources: NYT 16 Jul 2019, French government record, Culture ministry, post-fire survey, Paris prosecutor." Then the windows list and off-screen items (§1 flag 14).
 
 ---
 
 ## 5. Beat sheet (minute marks)
 
-★ peak (★★★ major, ★★ climax, ★ mini). ↺ re-hook (pull: event, reveal, stake or question). P = proof beat. C = candor/connective.
+★ peak (★★★ major, ★★ climax, ★ mini). ↺ re-hook (a pull: event, reveal, stake or question). P = proof beat. C = candor/connective.
 
 ### COLD OPEN 0:00–0:36 (L1–8)
-- **0:00 ★★ ↺** Frame 1: thumbnail composition (bell on its pin, beam burning, no glow) 1.5 s; date flap spins back to 15 APR 2019 · 18:18 · PARIS. L1.
-- **0:02 L2 ↺** Presbytery card; FEU lamp on the pause. Buzzer.
-- **0:06 L3 ↺ P** "The alarm worked." → ticket into the sorting board; fork to two attic slots; CHECK FIRST stamp.
-- **0:13 L4 ↺** Left wheel spins to ≈ +30; "That's clock one."; brigade phone rings.
-- **0:18 L5 ★ ↺** Spire silhouette falls → bell-frame toy, beam burning → "Clock two": right wheel slides in.
-- **0:23 L6 ★ ↺** Domino trembles ("officials' fear"); CATHEDRAL tilts on "collapse" (0:26); Nuñez card rises.
-- **0:27 L7 P** Nuñez card fully up, "15–30" large (CTIF ✓).
-- **0:31 L8 ↺** One question (a person, a reveal); title 0:35.
+- **0:00 ★★ ↺** Frame 1: thumbnail composition (bell on its pin, beam burning, no glow) under L1; daylight; date flap 15 APR 2019 · 18:18 · PARIS.
+- **0:01 L2 ↺** Presbytery card; FEU lamp on the pause.
+- **0:04 L3 ↺ P** "The alarm worked." → ticket into the sorting board; fork to two attic slots.
+- **0:09 L4 ↺** "called late"; left wheel spins to a small ≈ +30; "Clock one: the lost time" (no number spoken).
+- **0:14 L5 ★ ↺** Bell-frame toy, beam burning → the right wheel slides in: "the fire chief's half hour to save the tower" (chip "Gallet's own words").
+- **0:22 L6 ★ ↺ P** Domino; the Nuñez card slides up; CATHEDRAL tilts on "collapse"; NYT headline strip along the bottom. **Card fully up 0:24.**
+- **0:26 L7 P** "saving it had all come down to fifteen to thirty minutes" (BBC; the Guardian; 16 Apr 2019, the day after).
+- **0:31 L8 ↺** One question (a person, a reveal); title 0:36.
 
-### CH.1 TWO ATTICS, ONE MESSAGE 0:36–2:57 (L9–32)
-- **0:38 L9–10** Card nave at Mass (sacristy door notch) → the lid lifts on the matchstick forest, "≈ 40 m".
-- **0:50 L11** Brass tubes breathing through the matchsticks; chips "6 years", "160+".
+### CH.1 TWO ATTICS, ONE MESSAGE 0:36–2:42 (L9–32)
+- **0:38 L9–10** Nave toy theatre at Mass (sacristy door notch) → the lid lifts on the matchstick forest, "≈ 40 m".
+- **0:50 L11** Brass tubes breathing; chips "6 years", "160+".
 - **0:57 L13 ↺** Left wheel starts, red FEU flap.
-- **0:59 L14–15 P** Panel strings; the code flicks past silent; "aspirating framework" last.
-- **1:10 L16 ↺** Last words → nave roof; the zone forks. *Device:* counter-intuitive pair.
-- **1:18 L17** Plan: nave roof and the sacristy annexe.
-- **1:25 L18 ↺** CHECK FIRST stamp on the brigade phone.
-- **1:32 L19** `STAFFING PLAN` roster card (G6).
-- **1:41 L20 ↺ P** POV at the radio: *you*; chip "nearly indecipherable".
-- **1:52 L21** Plan MAP: guard token to the sacristy attic; "OK".
-- **1:58 L22 ★ ↺** Lid ajar: a smoulder band grows over the other attic.
-- **2:01 L23 C ⚠** Two-sided card (one VO line).
-- **2:08 L24** Tallies file out.
-- **2:13 L27 ★ ↺** Phone rings; pen line jumps to the nave slot (Heitz chip).
-- **2:19 L28 ↺** Left wheel +25; phone still silent.
-- **2:27 L29** Card spiral; "about five minutes of climbing" (chip).
-- **2:33 L30 ★★★ PEAK** The forest on fire; wheel rolls to ≈ +30.
-- **2:36 L31 ★ ↺ P** Wheel stops; tags 18:48 NYT · 18:51 government. "The lost half hour."
-- **2:51 L32 ↺** Engine tokens; arrow into the burning roof band. Card 2:55–2:57 (mid-roll).
+- **1:00 L14 P** Panel strings.
+- **1:06 L15 ↺** "aspirating framework" → nave roof → the zone forks to two attics.
+- **1:15 L17** Plan: nave roof and the sacristy annexe.
+- **1:22 L18 ↺** "by design": CHECK FIRST stamp → `STAFFING PLAN` card, no tenure (G6).
+- **1:35 L20 ↺ P** POV at the radio, *you*; four ticks on the tape; chip "nearly indecipherable".
+- **1:45 L21** Plan MAP: guard token to the sacristy attic, "OK"; **D6 two-sided STRIP** (C, on screen only).
+- **1:51 L22 ★ ↺** Lid ajar: smoke band over the other attic; "becoming a fire": the first small flame (step 1).
+- **1:57 L24** Tallies file out of the toy theatre; inset: band four bays (step 2).
+- **2:02 L27 ★ ↺** Phone rings; the pen line jumps to the nave slot (Heitz chip); inset: band six bays (step 3).
+- **2:09 L28 ↺** Left wheel at +25, "twenty-five minutes"; phone still silent.
+- **2:17 L29** Card spiral; "about five minutes of climbing".
+- **2:23 L30 ★★★ PEAK** Wide side elevation: the forest catches like a fuse; wheel rolls to ≈ +30.
+- **2:26 L31 ★ ↺ P** "about ten to seven"; the wheel stops; two tags; "The lost half hour."
+- **2:36 L32 ↺** Engine tokens; an arrow into the burning roof band. Card 2:40–2:42 (no ad).
 
-### CH.2 A WALL OF FLAME 2:57–4:20 (L33–46)
-- **2:59 L33 ↺** Tokens park; hose reel; chip ≈500 · 70+ · 2 fireboats.
-- **3:06 L34–35 ★★ PEAK ↺** Through the attic door: three parallax flame layers; tallies back out.
-- **3:10 L37 P** Lead blocks on a scale.
-- **3:19 L38 ★ PEAK** Lid ajar: lead runs over the stone shell.
-- **3:27 L39 ↺** Spire on its 96 m ruler → "And now it's on fire."
-- **3:36 L40** Levity: statues craned away.
-- **3:45 L41 ★★ PEAK ↺** The human chain; the Crown of Thorns ring tag goes out first.
-- **3:56 L42** TV card "allocution reportée ≈ 19:40".
-- **4:00 L43–44 ★★★ PEAK ↺** The spire falls (1 s, room tone only, impact). No vault hole.
-- **4:09 L45–46 ★★★ PEAK ↺** Trapped box (ink tallies), red ring; exit arrow fills with flame. Hard cut, no ad.
+### CH.2 A WALL OF FLAME 2:42–4:10 (L33–46)
+- **2:44 L33 ↺** Daylight. Tokens park; hose reel; then the ≈500 · 70+ · 2 fireboats · over 7 hours chip.
+- **2:51 L34–35 ★★ PEAK ↺** "Up there": through the attic door, three parallax flame layers; tallies back out.
+- **2:55 L37 P** Lead blocks on a scale, ≈460 t → 210 + 250.
+- **3:02 L38 ★ PEAK** Lid ajar: lead runs over the stone shell.
+- **3:10 L40** Levity: statues craned off the spire.
+- **3:18 L41 ★★ ↺** The human chain; the Crown of Thorns tag goes out first; the chaplain with the Blessed Sacrament.
+- **3:33 L39 ↺** Spire on its 96 m ruler, copper rooster → "And now it's on fire."
+- **3:43 L42** TV card in the foreground, burning spire behind: Macron's recorded address postponed.
+- **3:48 L43–44 ★★★ PEAK ↺** The spire falls against a bright sky (1 s room tone, then impact). No vault hole.
+- **3:57 L45–46 ★★★ PEAK ↺** Trapped box (ink tallies), red ring; "as he later recalled it"; the exit arrow fills with flame. Hard cut, no ad.
 
-### CH.3 NO PLANES 4:20–6:20 (L47–67)
-- **4:22 L47–49 ↺** "Here's what most people watching didn't know." The spire gap → north tower → the plane's shadow.
-- **4:34 L50–51** Parvis speech tabs; post card, text only (full card).
-- **4:45 L52 ↺** "You've seen those planes…": water-bomber over sage hills.
-- **4:48 L53–55 ★ P** Civil-protection stamp; exact English strip; demonstration: the vault card flexes. *Wow beat: mechanism made simple.*
-- **5:09 L56** One hose line on the ground.
-- **5:14 L57 ★ ↺** Trapped box opens, ink tallies walk out ("They would all come out alive").
-- **5:19 L58 ↺** The hose line turns toward the towers. Cliff.
-- **5:24 L59–61 P** Twin towers, 69 m; bell-frame toy rises; range chip.
-- **5:38 L62 ★★ PEAK** North tower on fire (NYT, chip ≈20:30); the toy's beam catches.
-- **5:43 L63 ↺** Red pencil loop moves from the bell to the beam (misconception beat).
-- **5:49 L64 ↺ P** Domino leans, "officials' fear"; Gallet "bourdons" STRIP.
-- **6:00 L66 P** Vaz de Matos full card.
-- **6:09 L67 ↺** Smoke card; Gallet "On n'est pas sûr…"; "climb into it". Card 6:18–6:20 (mid-roll).
+### CH.3 THE WRONG FIX 4:10–6:13 (L47–67)
+- **4:12 L47–49 ↺** "The cameras were all on the spire." → the north tower → the plane's shadow: "the fix… could have brought the whole thing down."
+- **4:27 L50–51** Parvis speech tabs; post card, text only (full card).
+- **4:38 L52 ↺** "You've seen those planes…": a water-bomber over sage hills.
+- **4:41 L53–55 ★ P** Civil-protection stamp; exact English strip; demonstration: the vault card flexes, neighbouring buildings take spray. *Wow beat: a mechanism made simple.*
+- **5:02 L56** One hose line on the ground.
+- **5:06 L57 ↺** Trapped box; **1 s hold**; ink tallies walk out ("They would all come out alive"). Release, not a peak.
+- **5:11 L58 ↺** The hose line turns toward the towers.
+- **5:17 L59–61 P** Twin towers, 69 m; bell-frame toy; range chip.
+- **5:30 L62 ★★ PEAK** Dusk begins. North tower on fire (NYT, chip ≈20:30); the toy's beam catches.
+- **5:36 L63 ↺** Red pencil loop moves from the bell to the beam (misconception beat).
+- **5:41 L64 ↺ P** Domino leans, "officials' fear"; Gallet "bourdons" STRIP.
+- **5:52 L66 P** Vaz de Matos full card.
+- **6:01 L67 ↺** Smoke card; Gallet « On n'est pas sûr… »; "climb into it". Card 6:11–6:13 (**mid-roll**).
 
-### CH.4 THE SECOND CLOCK 6:20–9:36 (L68–95)
-- **6:22 L68 ↺** Return: the burnt lid laid aside (ROOF · LOST); `SEND THEM` / `HOLD BACK` cards part. A choice in the first line back.
-- **6:32 L69–70 ↺ P** Weil plate; "He meant Notre-Dame could collapse" (NYT). *Title paid in on-record words.*
-- **6:47 L71–72 P** DO NOTHING (towers fade by 05:00) → the closed model, teal route up the north tower, "within the half hour". Gallet, recalled 2020.
-- **7:06 L73 ↺ GUESS** POV between the two option cards: "Send them in… Hold back… Make your call." 3.0 s, bed out, room tone + one paper tick; index frozen mid-tick (§9).
-- **7:22 L74 ★★ ↺** Release: right wheel starts, "Clock two starts: Gallet's half hour" (21:30 tag + D37 chip).
-- **7:28 L76 ★ ↺ P** Twenty tallies turn teal at the S-tower strip foot (T1); Weil "might not come back out".
-- **7:35 L77–78 C P** Map: 21:36, bell frame reached; Nuñez 21:40 "pas acquis".
-- **7:52 L79–80 ★★ PEAK ↺** The one attribution; the pipe leaks, gauge drops; embers hole a hose (*your thumb*).
-- **8:10 L81 ★★★ PEAK ↺** Stair-strip: twenty climb the S-tower strip with two hoses; "Gallet's half hour is running".
-- **8:22 L82 ★★ ↺** Across into the north tower; the gate folds flat.
-- **8:28 L83 ★★★ PEAK** Flame cards stand up on the wall and the floor.
-- **8:32 L84 ★★ ↺** Up to the bell-height mark.
-- **8:36 L85 ★★★ PEAK ↺** POV up into the frame: eight bells overhead, fire in the frame (21:36 chip).
-- **8:45 L86 ★★★ PEAK** Wall, then floor: flame cards fold away.
-- **8:53 L87 ★★★ PEAK ↺** Gontier figure comes down the strip; right wheel stops on "Elle est sauvée".
-- **9:03 L88** Wide dusk façade, ≈ 22:00 tag.
-- **9:05 L88a ↺ P** Full TYPE card "15–30 minutes from collapse?" + AP strip → loupes on the vault and the tower top, OCT 2019. *New loop.*
-- **9:15 L93–94 ★ ↺** "Nobody died. Not in the tower…" (pays L76) — STRIP over the façade.
-- **9:25 L95 ↺** Looking into the open model: a burning stick strikes the shell. Card 9:34–9:36.
+### CH.4 THE SECOND CLOCK 6:13–9:40 (L68–95)
+- **6:15 L68 ↺** Return: the burnt lid laid aside (ROOF · GONE) → briefing set; `SEND THEM IN` / `HOLD BACK` part; the burning bell toy beyond the window, "under eight bells".
+- **6:24 L69–70 ↺ P** Two plates light: Weil and Gallet, "told it later"; "He meant Notre-Dame could collapse." (NYT). *Title stakes in on-record words.*
+- **6:42 L71–72 P** HOLD BACK flips to DO NOTHING · 05:00 (towers fade), card telephone plated PRESIDENT MACRON → the flat stair strip, teal route, "within the half hour".
+- **7:02 L73 ↺ GUESS** POV between the two cards: "Send them in… Hold back… Make your call." 3.0 s, bed out, room tone + one paper tick; index frozen mid-tick (§9).
+- **7:17 L74 ★★ ↺ P** "'OK. Go ahead, General.'" → mainspring winds, the right wheel starts; tag ≈21:30 Culture; ⚠ chip.
+- **7:25 L76 ★ ↺ P** "About twenty go in." Twenty tallies step forward and turn teal (T1); Weil, "might not come back out".
+- **7:32 L78 ↺ P** "Nine-forty": Nuñez strip over the burning toy; the 21:36 and 21:40 tags drop silently on the wheel.
+- **7:41 L79–80 ★★ PEAK ↺** "First problem: water": the pipe leaks, the gauge drops; embers hole a hose (*your thumb*); "The New York Times later traced what came next."
+- **7:58 L81 ★★★ PEAK ↺** Twenty climb the S-tower strip with two engine-fed hoses → "Gallet's half hour is running." **Escapement tick starts.**
+- **8:10 L82 ★★ ↺** "High up": across into the north tower; the gate folds flat.
+- **8:16 L83 ★★★ PEAK** Flame cards on the wall and the floor.
+- **8:20 L84 ★★ ↺** Up to the bell-height mark.
+- **8:24 L85 ★★★ PEAK ↺** POV up into the frame: eight bells overhead → "the government's timeline says": the 21:36 chip pins on, and the band appears with it.
+- **8:34 L86 ★★★ PEAK** Wall, then floor: "those flames go out" (the frame band set back a layer).
+- **8:42 L86a ★★★ PEAK ↺** Water curtain at the top of the towers; the frame band shrinks (Culture S05 strip, no spoken source).
+- **8:50 L87 ★★★ PEAK ↺** Gontier goes up (1 s) and comes down; the frame band folds; **the tick stops dead**; the right wheel stops on "She is saved."
+- **9:01 L88 ★ P** The quiet read: ≈ tags light, the ½ h mark fills with a dashed edge; "about half an hour since the go-ahead".
+- **9:08 L93–94 ★ ↺** "Nobody died." Parvis row, held 60 f → tally field, "1 + 2" pills (pays L76 and the guess). No tick.
+- **9:18 L88a ↺ P** Full card "How close?" + AP strip → the roofless model at night, north louvre dark, loupe unused. *New loop.*
+- **9:27 L95 ↺** Looking into the open model: **one** burning piece strikes the shell; hold on the dust. Card 9:38–9:40 (no ad).
 
-### CH.5 WHAT HELD 9:36–11:48 (L96–112)
-- **9:38 L97–98 P** Vault shell; Heyman strip; matchsticks caught.
-- **9:52 L99 ★★ PEAK ↺** One red ring ticks hole to hole.
-- **10:02 L100 ↺ P** "Every hole was punched by falling timber" (French + English).
-- **10:10 L101 ★★ C ⚠** Paper-night plate: the crossing vault folds in, untimed, two tags.
-- **10:17 L102 ★★ ↺ P** "And the bell frame?" Loupe: one corner and the stair charred (survey).
-- **10:29 L103 ↺ P** Frame stable; two bells heat-marked (D22 chip).
-- **10:37 L104–105 ★ ↺ P** "So was Notre-Dame thirty minutes from collapse?" → DO NOTHING card (05:00) → NYT headline → bracket on the right wheel, candor strip → the empty briefing table. *Title paid.*
-- **11:00 L106** Glass and organ, one inventory card.
-- **11:06 L107–108 ★★ PEAK ↺** The gable tips and settles; cracks draw on.
-- **11:18 L109 ↺** Force arrows; 28 arches slide in.
-- **11:30 L110 ↺** Dented rooster on a plinth; relic tag.
-- **11:41 L111–112 ↺** Roofless model standing → the bell swings once and stops: silent. Card 11:46–11:48.
+### CH.5 WHAT HELD 9:40–11:57 (L97–112)
+- **9:42 L97–98 P** Demonstration shell; Heyman strip → the tweezer arm drops the full rain; "largely caught".
+- **9:55 L99 ★★ PEAK ↺** One red ring ticks hole to hole ("where the arms of the cross meet…").
+- **10:07 L100 ↺ P** "Every hole was punched by falling timber" (French + English); ⚠ crossing-vault chip, both versions.
+- **10:15 L102 ★★ ↺ P** Day returns, 14 OCT 2019 flap. "And the bell frame?" The loupe: one corner "attacked", the stair charred.
+- **10:24 L103 ★★ ↺ P** Some beams charred, "but not enough… to threaten the frame"; two bells scarred → "and the frame had held".
+- **10:41 L104 ★ ↺** "So was Notre-Dame thirty minutes from collapse? The people in charge believed it was that close." Three plates.
+- **10:49 L105 ★★ ↺ P** DO NOTHING (05:00) → Nuñez bracket on the right wheel ("the next day") → NYT headline card. *Title paid with conviction.*
+- **11:09 L105a ★ ↺** The empty bracket, "never used up" → the empty table, SEND THEM IN face up: "Because nobody waited to find out."
+- **11:16 L107 ★★ PEAK ↺** The north-arm gable tips and settles; cracks chip.
+- **11:25 L109 ↺** Force arrows; 28 arches slide in.
+- **11:38 L110 ↺** The dented rooster on a plinth (pays L39); relic tag.
+- **11:48 L111–112 ↺** The roofless model standing → the north tower "still standing" → the bell swings once and stops: silent. Card 11:55–11:57.
 
-### CH.6 THE BELLS COME HOME 11:48–13:15 (L113–125)
-- **11:50 L113 ★ ↺** JUL 2023: the bells lift out on a card crane (pays L112 at once).
-- **11:55 L114–116 C P** Candor STRIPs over the crane swinging back empty; AS-OF pill.
-- **12:12 L116a–117a ↺ P** The sorting board returns; ledger lines become gears: ONE MESSAGE, CHECK FIRST, SLOW-BURN PLAN (NYT chips).
-- **12:29 L117b ★ ↺** Gears mesh and turn the left wheel to ≈ 30; "it began in the wrong attic" (callback, L3).
-- **12:39 L118 P** New oak frames, misting nozzles bloom; Jost's hedge.
-- **12:52 L119 ★ ↺** The bells drop back onto their pins.
-- **13:00 L120 ★ ↺ P** 8 NOV 2024: sound lines from the louvres.
-- **13:08 L124–125 Button** Morning façade; sound only from the north tower; red notch; cut to black after "climbed into".
+### CH.6 THE BELLS COME HOME 11:57–13:27 (L113–125)
+- **11:59 L113 ★ ↺ P** JUL 2023: the bells lift out → the workshop (frame re-cut, lead dust wiped off).
+- **12:12 L114 C ↺ P** Candor STRIP over the workshop, the bells moving → "The leading theories": bare frame, two tags, NEVER PROVED stamp. AS-OF pill.
+- **12:26 L117 ↺ P** The sorting board; three ledger lines become gears; "the plan expected to burn slowly" (NYT reported). *Reveal, not recap.*
+- **12:43 L117b ★ ↺** Two gears turn the left wheel to ≈ 30; the third turns a brass hourglass "PLAN: TIME TO SPARE"; "The search had begun in the wrong attic" (the board's routing glows, sacristy then nave; no guard token).
+- **12:55 L118 P** New oak frames, misting nozzles bloom; Jost's hedge.
+- **13:08 L119 ★ ↺** The bells drop back onto their pins.
+- **13:16 L120 ★★ ↺ P** 8 NOV 2024: all eight swing together; sound lines from the louvres.
+- **13:23 L125 Button** Morning façade; sound only from the north tower; red notch; cut to night-shade after "climbed into".
 
 ---
 
-## 6. Climax map: physical peaks, honestly scored
+## 6. Climax map: physical peaks, scored honestly
 
-Paperwork beats (records, tweets, briefings, quotes) are connective unless an object moves. Scores on the climax critic's scale (1–10); rev-4 changes noted.
+Object motion only (the climax critic's rule). Paperwork beats (records, tweets, briefings, quotes) are connective unless an object moves. 1–10 scale.
 
 | # | Time | Lines | Score | Physical peak | Set-up → release |
 |---|---|---|---|---|---|
-| 1 | 1:58 | 22 | 4 | Smoulder band grows over the unwatched attic | L16–17 → L30 |
-| 2 | 2:33 | 29–30 | **8** (was 7) | Five minutes of climbing; the forest is on fire (now in continuous time from L22) | L10, L22 → L30 |
-| 3 | 3:06 | 34–35 | **7** (was 6) | First crews driven back by a wall of flame (seen through the door; no spoken attribution) | L32 "about to climb into the forest" → L35 |
-| 4 | 3:19 | 38 | 5 | Lead melts and runs over the stone vaults | L37 → L38 → L98 |
-| 5 | 3:45 | 41 | 5 | The human chain carries the Crown of Thorns out | L40 "saved by a work schedule" → "saved by hand" |
-| 6 | 4:00 | 43–44 | **9** (was 8) | The spire falls (1 s room tone, impact) | L39 "And now it's on fire." (10 s loop) → L43 |
-| 7 | 4:09 | 45–46 | 7 | Twenty to forty trapped, their way out on fire | → L57 |
-| 8 | 4:48 | 54–55 | 5 | Demonstration: the water slab, the vault card flexes | L50–52 → L55 |
-| 9 | 5:38 | 62–64 | 7 | The north tower on fire; the domino leans | L58 → L64 |
-| 10 | 7:52 | 79–80 | 6 | Water is a problem: a pipe leaks, embers hole the hoses | → L81 |
-| 11 | 8:10 | 81–82 | 9 | Twenty climb the south tower with engine-fed hoses, "Gallet's half hour is running", cross, break a gate | L67 → L73 guess → L81 |
-| 12 | 8:28 | 83–85 | 9 | Wall and floor burning; up to bell height; eight bells overhead, fire in the frame | L77 record → L86 |
-| 13 | 8:45 | 86 | 8 | Wall, then floor: the flames go out | the climb's own release |
-| 14 | 8:53 | 87 | 8 | "She is saved": the right wheel stops | L5 / L74 → L87 |
-| 15 | 9:15 | 93 | 6 (new as peak) | "Nobody died. Not in the tower…" over the façade | L76 "might not come back out" → L93 |
-| 16 | 9:25 | 95 | 5 | A burning stick strikes the stone shell | → L98 |
-| 17 | 9:52 | 99–100 | 6 | The vault catches the roof; three holes punched by impact | L95 → L99 |
-| 18 | 10:10 | 101 | 5 | The crossing vault folds in (untimed, two versions) | candor, not a payoff |
-| 19 | 10:17 | 102–103 | 6 (new) | The loupe finds the one charred corner and the burnt stair; the frame stands | L88a → L102 |
-| 20 | 11:06 | 107–108 | 6 | The north transept gable tips toward the street and settles back | → L109 arches |
-| 21 | 11:50 | 113 | 5 | The eight bells lowered from the tower | L112 "silent" → L113 |
-| 22 | 12:52 | 119–120 | 6 | The bells go back on their pins and ring | L112 → L120 → L124–125 |
+| 1 | 2:23 | 29–30 | **8.5** | Five minutes of climbing; the forest catches like a fuse (a fire we watched grow from 1:51) | L10, L22 → L30 |
+| 2 | 2:51 | 34–35 | 7 | First crews driven back by a wall of flame | L32 → L35 |
+| 3 | 3:48 | 39 → 43–44 | **9.5** | The spire falls (1 s room tone, impact) | L39 → L43 |
+| 4 | 3:57 | 45–46 | 7 | Twenty to forty trapped, their way out on fire | → L57 (a release) |
+| 5 | 5:30 | 62–64 | 7 | The north tower on fire; the domino leans | L58 → L64 |
+| 6 | 7:41 | 79–80 | 6 | A pipe leaks, embers hole the hoses | → L81 |
+| 7 | 7:58 | 81–82 | **9** | Twenty climb the south tower with engine-fed hoses; the tick starts; across; a gate | L67 → L73 guess → L81 |
+| 8 | 8:16 | 83–85 | 8.5 | Wall and floor burning; up to bell height; eight bells overhead, the frame on fire (source said last) | L78 → L86 |
+| 9 | 8:34 | 86–86a | 8 (rev 5: 7.5, citation-voiced) | Wall, then floor: those flames go out; the water curtain closes on the frame, no spoken source | L85 → L86a |
+| 10 | 8:50 | 87 | **9** | "She is saved": the frame band folds, the tick stops dead, the wheel stops | L5 / L74 → L87 |
+| 11 | 9:55 | 99–100 | 6 | The vault caught the roof; three holes, all by impact | L95 → L99 |
+| 12 | 10:15 | 102–103 | 6.5 | The loupe finds the attacked corner and the burnt stair; "the frame had held" | L88a → L103 |
+| 13 | 11:16 | 107 | 6 | The north-arm gable tips toward the street and settles back | → L109 arches |
+| 14 | 13:08 | 119–120 | 7 | The bells go back on their pins, and all eight ring together | L112 → L120 → L125 |
 
-**14 physical peaks at 6 or more** (packaging promised 11); **three at 9** (the spire, the climb, the burning tower top), three at 8. The first peak at 6+ now lands at **2:33** (rev 3: 2:57 after a dead zone). **Longest gap between peaks at 6+ in the body:** 5:38 → 7:52 (2:14), the decision run (L68–78), which is the highest-tension talk in the film: a choice opens at 6:22, "collapse" at 6:44, the guess silence at 7:06 (scored 8, §9), the clock starts at 7:22, twenty turn teal at 7:28. Second-longest: 4:09 → 5:38 (1:29), rescued by the planes demonstration (L55) and the trapped pay (L57).
+Below 6 (not counted): L22 smoulder becoming fire (5.5, up from 5), L38 lead (5), L41 human chain (5), L54–55 water-slab demo (5), L76 twenty step forward (5), L95 one piece strikes the shell (5.5), L113 bells lifted out (5).
 
-**Wow beats:** ~2:40 a primary record (L31 two stop tags, 18:48 vs 18:51); ~4:55 a mechanism made simple (L55 water-bomber demonstration). Held 4 s each.
+**14 physical peaks at 6 or more** (packaging promised 11; rev 5 claimed 16, the climax critic counted 13; rev 6 adds L102–103 back above 6 with the survey's "but" and the held frame). **Three at 9 or more: the spire, the climb entry and "She is saved"** (L86–86a is 8, not 9). **The first fire on screen is at 1:51** (L22, step 1), the first 6+ peak at 2:23. **The longest gap between 6+ peaks is 5:30 → 7:41 (2:11)**, which holds the only ad. It is now a decision run, not a citation run: a physical stake in the first line back (6:15, "a burning tower, under eight bells"), "collapse" (6:38), the guess silence (7:02), a person's release (7:17), twenty tallies stepping forward (7:25), and the wheel's silent tags (7:32). There is no paperwork between 7:32 and the climb.
 
-**Intensity curve (1–10):** 0:00 8 · 0:26 9 · 1:10 6 · 1:58 6 · 2:33 8 · 3:06 8 · 3:45 7 · 4:00 9 · 4:09 9 · 4:48 6 · 5:14 6 · 5:38 8 · 6:44 8 · 7:06 9 (silence) · 7:22 8 · 8:10 9 · 8:28 10 · 8:45 9 · 8:53 10 · 9:05 8 · 9:15 7 · 9:52 7 · 10:17 7 · 10:37 8 · 11:06 7 · 11:41 6 · 11:50 6 · 12:29 7 · 12:52 7 · 13:11 8.
+**Wow beats:** ~2:26 a primary record (L31's two stop tags); ~4:50 a mechanism made simple (L55). Held 4 s each.
+
+**Intensity curve (1–10):** 0:00 8 · 0:14 9 · 0:24 9 · 1:06 6 · 1:51 7 · 2:23 9 · 2:51 8 · 3:18 7 · 3:48 10 · 3:57 9 · 4:41 6 · 5:06 6 · 5:30 8 · 6:15 8 · 6:38 8 · 7:02 9 (silence) · 7:17 9 · 7:58 9 · 8:16 10 · 8:42 10 · 8:50 10 · 9:01 7 · 9:08 8 · 9:18 7 · 9:55 7 · 10:24 7 · 10:49 8 · 11:16 7 · 11:50 7 · 12:26 7 · 12:43 7 · 13:16 8 · 13:23 8.
 
 ---
 
@@ -309,110 +309,117 @@ Paperwork beats (records, tweets, briefings, quotes) are connective unless an ob
 
 | ID | Opened | Question (viewer's words) | Closed | Payoff |
 |---|---|---|---|---|
-| **L1** | 0:31 (L8) | Who climbed into that tower, and what did they find? | 7:28 (L76, who) → 8:28–8:45 (L83–86, what) → final 13:11 (L125) | About twenty; a gate, a burning wall and floor, eight bells over a burning frame; "The one they climbed into." |
-| **L2** | 0:06 (L3) | Two attics? Why half an hour? | 2:36 (L31); system 12:29 (L117b) | The zone, the check-first rule, the second alert; the plan |
-| **L3** | 0:18 (L5) | What's clock two? | 7:22 (L74) starts → 8:53 (L87) stops | Gallet's half hour |
-| **L4** | 0:26 (L6–7) | Fifteen to thirty minutes from collapse, really? | reopened 9:05 (L88a) → 10:37–11:00 (L102–105) | Survey: one corner, frame stable; Gallet's "by morning"; an estimate, made by people who had to decide without one |
-| L5 | 1:58 (L22) | Nobody's looking at the other attic? | 2:33 (L30); echo 13:08 (L124) | The forest is on fire; "This time, nobody had to ask where to look." |
-| L6 | 2:51 (L32) | What happens when the crews climb in? | 3:09 (L35) | Driven back |
-| L7 | 3:27 (L39) | The spire's on fire: will it fall? | 4:00 (L43) | It falls |
-| L8 | 4:09 (L45) | Do the trapped get out? | 5:14 (L57) | They would all come out alive |
-| L9 | 4:22 (L47–49) | What did they fear most, and how could the fix bring it down? | 4:52 (L54) / 5:49 (L64) | Planes could collapse it; the burning frame and the domino |
-| L10 | 6:09 (L67) / 6:22 (L68) | Who climbs into it? Send them or not? | 7:22 (L74), 7:28 (L76) | The go-ahead; about twenty |
-| L11 | 7:06 (L73) | Would you send them? | 7:22 (L74) | The plan goes ahead (16 s) |
-| L12 | 7:28 (L76) | Will they come back out? | 9:15 (L93) | Nobody died |
-| L13 | 9:25 (L95) | What's been hitting the stone? | 9:52–10:10 (L99–101) | Three holes, all by impact; the crossing vault (when: disputed) |
-| L14 | 11:41 (L112) | Silent for five years? | 11:50 (L113) / 13:00 (L120) | Lowered 2023; rang 8 Nov 2024 |
+| **L1** | 0:31 (L8) | Who climbed into that burning tower, and what was waiting at the top? | 7:25 (L76, who) → 8:16–8:42 (L83–86a, what) → final 13:23 (L125) | About twenty; a gate, a burning wall and floor, eight bells over a burning frame; "The one they climbed into." |
+| **L2** | 0:04 (L3) | Two attics? | 2:26 (L31); system 12:26–12:43 (L117–117b) | The zone, the rule, the second alert; "The search had begun in the wrong attic." |
+| **L3** | 0:14 (L5) | The fire chief's half hour: did they save the tower? | 7:17 (L74) starts → 8:50 (L87) stops → 9:01 (L88) read | "She is saved."; "about half an hour since the go-ahead" (approximate, one source) |
+| **L4** | 0:22 (L6–7) | Fifteen to thirty minutes from collapse? | reopened as curiosity 9:18 (L88a) → 10:15–11:09 (L102–105a) | Attacked corner, "not enough to threaten the frame", "the frame had held"; what the people in charge believed; the NYT verdict; "Nobody can measure a margin that was never used up. Because nobody waited to find out." |
+| L5 | 1:51 (L22) | Nobody's looking, and it's becoming a fire? | 2:23 (L30) | The forest is on fire |
+| L6 | 2:36 (L32) | What happens when the crews climb in? | 2:54 (L35) | Driven back |
+| L7 | 3:33 (L39) | The spire's on fire: will it fall? | 3:48 (L43) | It falls |
+| L8 | 3:57 (L45) | Do the trapped get out? | 5:06 (L57) | They would all come out alive |
+| L9 | 4:12 (L47–49) | What did they fear most, and how could the fix bring it down? | 4:45 (L54) / 5:41 (L64) | Planes could collapse it; the burning frame and the domino |
+| L10 | 6:01 (L67) / 6:15 (L68) | Send them or not? | 7:17 (L74), 7:25 (L76) | "Go ahead, General"; about twenty |
+| L11 | 7:02 (L73) | Would you send them? | 7:17 (L74) | The president's answer (15 s) |
+| L12 | 7:25 (L76) | Will they come back out? | 9:08 (L93) | Nobody died |
+| L13 | 9:27 (L95) | What did the falling roof do to the stone? | 9:42–10:07 (L97–100) | Largely caught; three holes, all by impact |
+| L14 | 11:50 (L112) | Silent for five years? | 11:59 (L113) / 13:16 (L120) | Lowered 2023 for the frame; all eight together on 8 Nov 2024 |
 
-Open count: 0:31 → L1–L4 (4). 1:58 L5 opens as L2 nears its pay (L2 and L5 both close by 2:36). 4:09 L8 with L1, L3, L4 (4). 6:22 L10 (L9 closed 5:49). 7:06 L11 micro (16 s). 7:28 L12 opens as L10 closes. 8:53 L1 (what) and L3 close; **9:05 L4 reopens and 9:25 L13 opens**, so the viewer carries L4, L12 → L4, L13 across the Ch.5 card (rev 3 had one weak loop here). 11:00 L4 closes; 11:41 L14 opens; 13:11 L1's last echo. Never more than 4 counted loops open.
+Open count: 0:31 → L1–L4 (4). 1:51 L5 opens as L2 nears its payoff. 3:57 L8 with L1, L3, L4 (4). 6:15 L10. 7:02 L11, a 15 s micro-loop. 7:25 L12 opens as L10 closes. 8:50–9:01 L1 (what) and L3 close; 9:08 L12 closes; 9:18 L4 reopens; 9:27 L13 opens, so the viewer carries L4 + L13 across the Ch.5 card (no ad there now). 11:09 L4 closes; 11:50 L14 opens; 13:23 L1's last echo. Never more than 4 counted loops are open.
 
 ---
 
-## 8. Re-hook ledger (pulls only: events, reveals, stakes, questions; gaps ≤ 36 s)
+## 8. Re-hook ledger (pulls only; gaps ≤ 36 s)
 
-Candor beats (L23, L101, L114–116) and pure records (L77–78) are **not** counted (retention critic): they are listed in §5 as C.
+Candor beats (L21's D6 strip, the first half of L114) are **not** counted.
 
 | Time | L | Group | Line (short) | Interrupt kind |
 |---|---|---|---|---|
 | 0:00 | 1 | Reveal | thumbnail frame | Image confirm |
-| 0:02 | 2 | Reveal | "Feu. Fire." | Light event |
-| 0:06 | 3 | Reversal | "pointed to two attics" | Fork + stamp |
-| 0:13 | 4 | Countdown | "That's clock one." | Counter |
-| 0:18 | 5 | Stakes jump | "Clock two." | Spire fall + toy |
-| 0:23 | 6 | Stakes | "could collapse" | Domino tips |
-| 0:31 | 8 | New question | "who climbed… what did they find?" | Sound drop + type |
-| 0:42 | 10 | Reveal (name) | "the forest" | Lid lift |
+| 0:01 | 2 | Reveal | "Feu. Fire." | Light event |
+| 0:04 | 3 | Reversal | "pointed to two attics" | Fork |
+| 0:09 | 4 | Countdown | "called late… the lost time" | Counter |
+| 0:14 | 5 | Stakes jump | "the fire chief's half hour to save the tower" | Bell toy + wheel |
+| 0:22 | 6 | Stakes | "could collapse" | Domino + card + NYT strip |
+| 0:31 | 8 | New question | "who climbed… what was waiting at the top?" | Sound drop + type |
+| 0:43 | 10 | Reveal (name) | "the forest" | Lid lift |
 | 0:57 | 13 | Countdown | "At six-eighteen" | Counter |
-| 1:10 | 16 | Reversal | "covered two attics" | Split |
-| 1:25 | 18 | Reveal | "By design" | Stamp |
-| 1:41 | 20 | Direct address | "put yourself on that radio" | POV + squelch |
-| 1:58 | 22 | Missing step | "nobody is looking yet" | Moving smoulder |
-| 2:13 | 27 | Gear change | "the other attic" | Pen jump |
-| 2:19 | 28 | Countdown | "twenty-five minutes" | Counter |
-| 2:33 | 30 | Reveal (peak) | "the forest is on fire" | Light event |
-| 2:36 | 31 | Proof | 18:48 / 18:51 | Counter stop |
-| 2:51 | 32 | Person about to enter | "about to climb into the forest" | Map tokens |
-| 3:06 | 34 | Reveal (peak) | "wall of flame" | Door POV parallax |
-| 3:27 | 39 | Stakes | "And now it's on fire." | Flame climbs spire |
-| 3:45 | 41 | Witness (rescue) | "saved by hand" | Tally chain |
-| 4:00 | 43 | Reveal (peak) | spire falls | Silence + impact |
-| 4:09 | 45 | Stakes jump | trapped | Tally box |
-| 4:22 | 47 | Reversal | "most people watching didn't know" | Hard cut |
-| 4:45 | 52 | Direct address | "You've seen those planes" | Paper plane |
-| 4:52 | 54 | Reveal | "collapse of the entire structure" | Stamp + doc |
-| 5:14 | 57 | Callback (pay) | "all come out alive" | Box opens |
-| 5:19 | 58 | Missing step | "the part they feared most" | Tracking shot |
-| 5:38 | 62 | Stakes jump | north tower on fire | Light event |
-| 5:43 | 63 | Reversal | "The bells were never the danger" | Pencil loop |
-| 5:49 | 64 | Mechanism | the chain | Domino |
-| 6:09 | 67 | Person about to enter | "climb into it" | Smoke card |
-| 6:22 | 68 | New question (choice) | "send firefighters… or hold back" | Cards part |
-| 6:41 | 70 | Witness (stakes) | "could collapse" | Quote strip |
-| 6:58 | 72 | New question | "wasn't sure would work" | Teal route |
-| 7:06 | 73 | Direct address (guess) | "Make your call." | 3 s silence |
-| 7:22 | 74 | Countdown | "Clock two starts" | Counter + mainspring |
-| 7:28 | 76 | Stakes (people) | "might not come back out" | Tally field |
-| 7:52 | 79 | Stakes jump | "Water is a problem" | Gauge drop |
-| 8:04 | 80 | Direct (POV scale) | "the size of your thumb" | Macro |
-| 8:10 | 81 | Gear change + countdown | "Gallet's half hour is running" | Stair-strip |
-| 8:22 | 82 | Reveal | "They break through a gate" | Gate folds |
-| 8:28 | 83 | Stakes jump | wall and floor burning | Flame cards |
-| 8:36 | 85 | Reveal (POV) | eight bells, fire in the frame | POV |
-| 8:45 | 86 | Release | "the flames go out" | Cards fold |
-| 8:53 | 87 | Reveal (payoff) | "She is saved." | Counter stop |
-| 9:05 | 88a | New question | "was it really…?" | Type card + loupes |
-| 9:15 | 93 | Release (pay L76) | "Nobody died." | Strip |
-| 9:25 | 95 | Missing step (cliff) | "taking hits all along" | Stick strikes |
-| 9:46 | 98 | Reveal | "largely caught" | Falling sticks |
-| 9:52 | 99 | Stakes (number) | three holes | Map ring |
-| 10:02 | 100 | Reveal | "punched by falling timber" | Doc |
-| 10:17 | 102 | New question | "And the bell frame?" | Loupe |
-| 10:37 | 104 | Title check | "thirty minutes from collapse?" | Option card returns |
-| 11:00 | 106 | Reveal | glass survived | Inventory |
-| 11:06 | 107 | Stakes jump | gable tips | Wobble |
-| 11:18 | 109 | Mechanism | 28 arches | Force arrows |
-| 11:30 | 110 | Reveal (object) | rooster | Plinth |
-| 11:41 | 112 | Missing step (cliff) | "silent for more than five years" | Bell swing |
-| 11:50 | 113 | Gear change (time) | JUL 2023 | Crane |
-| 12:12 | 116a | Reversal | "What the record does show is a system" | Board returns |
-| 12:29 | 117b | Callback | "it began in the wrong attic" | Gears turn the wheel |
-| 12:52 | 119 | Event | bells back on their pins | Toy |
-| 13:00 | 120 | Reveal | first peal | Sound lines |
-| 13:08 | 124 | Callback | "nobody had to ask where to look" | Façade |
-| 13:11 | 125 | Button | "The one they climbed into." | Cut to black |
+| 1:06 | 15 | Reversal | "covered two attics" | Fork |
+| 1:22 | 18 | Reveal | "by design" | Stamp |
+| 1:35 | 20 | Direct address | "put yourself on that radio" | POV + squelch |
+| 1:51 | 22 | Missing step | "nobody is looking yet… becoming a fire" | Moving smoulder → flame |
+| 2:02 | 27 | Gear change | "the other attic" | Pen jump |
+| 2:09 | 28 | Countdown | "twenty-five minutes" | Counter |
+| 2:23 | 30 | Reveal (peak) | "the forest is on fire" | Fuse |
+| 2:26 | 31 | Proof | "about ten to seven" | Counter stop |
+| 2:36 | 32 | Person about to enter | "about to climb into the forest" | Map tokens |
+| 2:51 | 34 | Reveal (peak) | "Up there: … wall of flame" | Door POV |
+| 3:10 | 40 | Levity | "Saved by a work schedule." | Crane |
+| 3:18 | 41 | Witness (rescue) | "saved by hand" | Tally chain |
+| 3:33 | 39 | Stakes | "And now it's on fire." | Flame climbs spire |
+| 3:48 | 43 | Reveal (peak) | spire falls | Silence + impact |
+| 3:57 | 45 | Stakes jump | trapped | Tally box |
+| 4:12 | 47 | Reversal | "The cameras were all on the spire." | Hard cut |
+| 4:20 | 49 | Stakes | "the fix… could have brought the whole thing down" | Plane shadow |
+| 4:38 | 52 | Direct address | "You've seen those planes" | Paper plane |
+| 4:45 | 54 | Reveal | "collapse of the entire structure" | Stamp + doc |
+| 5:06 | 57 | Callback (pay) | "all come out alive" | 1 s hold, box opens |
+| 5:11 | 58 | Missing step | "the part they feared most" | Tracking shot |
+| 5:30 | 62 | Stakes jump | north tower on fire | Light event |
+| 5:36 | 63 | Reversal | "The bells were never the danger" | Pencil loop |
+| 5:41 | 64 | Mechanism | the chain | Domino |
+| 6:01 | 67 | Person about to enter | "climb into it" | Smoke card |
+| 6:15 | 68 | New question (choice) | "a burning tower, under eight bells" | Lid laid aside, cards part |
+| 6:38 | 70 | Witness (stakes) | "could collapse" | Quote strip |
+| 6:53 | 72 | New question | "wasn't sure would work" | Teal route |
+| 7:02 | 73 | Direct address (guess) | "Make your call." | 3 s silence |
+| 7:17 | 74 | Release (person) | "OK. Go ahead, General." | Quote + mainspring |
+| 7:25 | 76 | Stakes (people) | "might not come back out" | Tally field |
+| 7:32 | 78 | Stakes | "saving the cathedral is not certain" | TV camera + tags |
+| 7:41 | 79 | Stakes jump | "First problem: water" | Gauge drop |
+| 7:48 | 80 | Direct (POV scale) | "the size of your thumb" | Macro |
+| 7:58 | 81 | Gear change + countdown | "Gallet's half hour is running" | Stair strip → wheel, tick |
+| 8:10 | 82 | Reveal | "They break through a gate" | Gate folds |
+| 8:16 | 83 | Stakes jump | wall and floor burning | Flame cards |
+| 8:24 | 85 | Reveal (POV) | eight bells, the frame on fire | POV + doc pin |
+| 8:34 | 86 | Release | "those flames go out" | Cards fold |
+| 8:42 | 86a | Event | water at the top of the towers | Water curtain |
+| 8:50 | 87 | Reveal (payoff) | "She is saved." | Tick stops |
+| 9:08 | 93 | Release (pays L76) | "Nobody died." | Parvis row |
+| 9:18 | 88a | New question | "how close had Notre-Dame come?" | Type card |
+| 9:27 | 95 | Missing step (cliff) | "falling onto it" | One piece strikes |
+| 9:50 | 98 | Reveal | "largely caught" | Falling sticks |
+| 9:55 | 99 | Stakes (number) | three places | Map ring |
+| 10:07 | 100 | Reveal | "punched by falling timber" | Doc |
+| 10:15 | 102 | New question | "And the bell frame?" | Loupe |
+| 10:24 | 103 | Reveal | "the frame had held" | Toy lit |
+| 10:41 | 104 | Title check | "thirty minutes from collapse?" | Type + plates |
+| 10:49 | 105 | Conviction | "far closer to collapsing than people knew" | Bracket → headline |
+| 11:09 | 105a | Button (chapter) | "nobody waited to find out" | Empty bracket → table |
+| 11:16 | 107 | Stakes jump | gable tips | Wobble |
+| 11:25 | 109 | Mechanism | 28 arches | Force arrows |
+| 11:38 | 110 | Reveal (object) | rooster | Plinth |
+| 11:50 | 112 | Missing step (cliff) | "silent for more than five years" | Bell swing |
+| 11:59 | 113 | Gear change (time) | JUL 2023, the frame restored | Crane → workshop |
+| 12:20 | 114 | Reversal | "The leading theories… a cigarette, or an electrical fault" | Tags + stamp |
+| 12:26 | 117 | Reveal | "the plan expected to burn slowly" | Board + gears |
+| 12:43 | 117b | Callback | "time to spare… the wrong attic" | Gears turn the wheel |
+| 13:08 | 119 | Event | bells back on their pins | Toy |
+| 13:16 | 120 | Reveal | "all eight rang together" | Sound lines |
+| 13:23 | 125 | Button | "The one they climbed into." | Cut to night-shade |
 
-**Largest pull gaps (candor excluded):** 24 s (7:28 → 7:52, the two records, with the map ring and the Nuñez strip moving), then 23 s three times (4:22 → 4:45, the post card; 10:37 → 11:00, the title payoff; 12:29 → 12:52, Jost over blooming nozzles). Every gap ≤ 24 s. **The two windows the retention critic named:** 9:05–9:36 now holds a new question (L88a), a release (L93) and a physical strike (L95); Ch.6 holds the crane (11:50), the board and gears (12:12–12:29), the bells back on their pins (12:52) and the peal (13:00). Direct-address lines: 4 (L20, L52, L73, L80), never back to back.
+**Largest pull gaps (candor excluded):** 23 s (9:27 → 9:50, across the Ch.5 card, with the demonstration shell moving) and 21 s (3:57 → 4:12 plus card; 11:59 → 12:20). Every other gap is ≤ 20 s. The 7:16 → 7:40 citation gap from rev 5 is gone (L78 is now a person on camera, and L79 opens on the leak). Direct-address lines: 4 (L20, L52, L73, L80), never back to back.
 
 ---
 
-## 9. The commit-to-a-guess silence (L73, 7:06–7:22)
+## 9. The commit-to-a-guess silence (L73, 7:02–7:17)
 
-- **Set-up (L68–72):** the roof is lost and Gallet faces a choice (L68); Weil "He meant Notre-Dame could collapse"; Gallet's two options as he recalled them (do nothing and lose both towers by five in the morning, or something he wasn't sure would work: send a team into the north tower within the half hour).
-- **Ask (L73):** "Now you're the one deciding. / Send them in, and you might lose them. / Hold back, and you might lose both towers by morning. / Make your call." Both halves are sourced (Weil L76; Gallet L71). **The answer has not been given yet**: the go-ahead comes after.
-- **Hold:** POV between the two option cards at the briefing table, the burning toy beyond (bell dormant), the right wheel **unwound**. **Bed out 3.0 s; low room tone and one held paper tick; the wheel's index freezes mid-tick.** No countdown, no "pause the video".
-- **Release (L74):** "The culture ministry puts the go-ahead at nine-thirty. / Clock two starts: Gallet's half hour." The mainspring winds and the wheel starts (⚠ D37 chip).
-- **Second release (L93, 1:53 later):** "Nobody died." pays the "you might lose them" half of the guess.
-- **Why here:** it is the night's real decision, it splits the audience (risk the team vs risk the cathedral), and its release starts both the clock and the climax. Aimed at the commander's call, never at the guard or the screen (G6). The 6:20 ad slot is 46 s before it; none after it.
+- **Set-up (L68–72):** the roof is gone and Gallet has to decide whether to send a team up into a burning tower, under eight bells (L68). Two men later told the story (L69). Weil: "He meant Notre-Dame could collapse." Gallet's two options, by his own account, to President Macron: do nothing and lose both towers by five in the morning, or something he wasn't sure would work, a team into the north tower within the half hour.
+- **Ask (L73):** "Now you're the one deciding. / Send them in, and you might lose them. / Hold back, and you might lose both towers by morning. / Make your call." Both halves are sourced (Weil L76; Gallet L71).
+- **Hold:** POV between the `SEND THEM IN` and `HOLD BACK` cards, the burning toy beyond (bell dormant), the right wheel unwound. **Bed out for 3.0 s; low room tone and one held paper tick; the index freezes mid-tick.**
+- **Release (L74):** a person's voice: "The president's answer, as Gallet remembers it: 'OK. Go ahead, General.' Clock two starts: Gallet's half hour." (S35 ✓; QUOTE strip in French; tag ≈21:30 Culture; ⚠ chip without a research code). Release score 8.
+- **Second release (L93, 1:51 later):** "Nobody died." pays "you might lose them".
+- **Third release (L87–88):** the escapement tick stops dead on "She is saved"; L88's approximate read pays "within the half hour" (L72) without overclaiming.
+- **Why here:** it is the night's real decision and it splits the audience. It aims at the commander's call, never at the guard or the screen (G6). The 6:13 ad is 49 s before it; none after.
 
 ---
 
@@ -420,38 +427,41 @@ Candor beats (L23, L101, L114–116) and pure records (L77–78) are **not** cou
 
 | Time | L | Claim | Proof element | Source on screen | §5 /10 |
 |---|---|---|---|---|---|
-| 0:06 | 3, 14–15 | The alarm worked; the message named the zone and the frame | Document (panel redrawn, four strings) | NYT, 16 Jul 2019; Le Monde, reported by JDD | 10 |
-| 0:26 | 6–7 | Collapse; 15–30 minutes | Named official, dated, wording opened; card matches the VO | Nuñez, 16 Apr 2019, as reported by the BBC (via CTIF) ✓; Vaz de Matos (AP) behind "collapse" | 9 (→ 10 once the French is transcribed) |
-| 1:25 | 18 | No automatic call | Reason why + stamp | NYT, 16 Jul 2019 | 8 |
-| 1:41 | 20 | Nearly indecipherable message | The NYT's own judgement | NYT, 16 Jul 2019 | 8 |
-| 2:01 | 23 | What reached the guard | Candor, both sides on the card | NYT, 16 Jul 2019 ("remains unclear") | 9 |
-| 2:13 | 27–28 | Second alert 18:43 at +25 | Prosecutor | Rémy Heitz, 16 Apr 2019 | 9 |
-| 2:36 | 31 | About half an hour | Two records, both times | NYT · French government record | 10 |
-| 3:10 | 37 | 460 t of lead | Official figure | Culture ministry answer, JO 15 Dec 2020 | 9 |
-| 3:45 | 41 | Crown of Thorns out by a group | Safe group line | Ville de Paris; DRAC (D17) | 8 |
-| 4:09 | 45 | 20–40 trapped | Commander's own words | Gallet, franceinfo 15 Apr 2020 | 8 |
-| 4:52 | 54–55 | No planes | Document (exact text) + demonstration | Sécurité civile, 15 Apr 2019 | 10 |
-| 5:14 | 57 | The trapped all lived | Press record + government injury record | « aucune victime » (Belga); French government record | 8 |
-| 5:49 | 64–67 | The domino fear; "not sure" | Two named officials, "a fear, not a finding" | Gallet (Public Sénat); Vaz de Matos (AP) | 9 |
-| 6:41 | 70–72 | "Could collapse"; both towers by 5 a.m. | Witness + commander's recollection | Weil (NYT); Gallet (franceinfo 2020) | 10 |
-| 7:22 | 74 | Clock two's start | Official timeline + Gallet's own version (⚠ D37) | Culture ministry; franceinfo 2020; NYT | 9 |
-| 7:28 | 76 | About twenty went in | Primary record | French government record, 17 Apr 2019 | 9 |
-| 7:35 | 77–78 | 21:36 bell frame reached; 21:40 "not certain" | Primary record + on-record | French government record; Public Sénat | 9 |
-| 8:36 | 85 | Fire in the frame above the team | Primary record | « le beffroi nord est atteint », 21:36 | 9 |
-| 8:53 | 87 | "Elle est sauvée" ≈22:00 | Two sources, two times | NYT (≈21:45) · Culture ministry (22:00) | 9 |
-| 9:05 | 88a | "Within 30 minutes of collapse" | Reporter's summary, labelled as such | AP, 17 Apr 2019 | 7 |
-| 9:38 | 97–100 | The vault held | Expert + official survey (French + English) | Heyman (IStructE); bilan à 6 mois | 10 |
-| 10:10 | 101 | Crossing vault, when | Both versions | Gallet (franceinfo 2020) · DRAC 2024 | 9 |
-| 10:17 | 102–103 | One corner; stair burnt; frame stable | Post-fire survey | bilan à 6 mois, 14 Oct 2019 (S09 ✓); 2025 city page ⚠ | 10 |
-| 10:37 | 104–105 | "Came far closer to collapsing"; an estimate | Headline + candor strip | NYT, 16 Jul 2019; Nuñez; Gallet; Weil; de Sinety | 10 |
-| 11:55 | 114–116 | Cause undetermined | Candor STRIP with AS-OF | Paris prosecutor, Dec 2024 (via Les Surligneurs); Apr 2025 ⚑; checked 6 Nov 2026 | 9 |
-| 12:20 | 117a–117b | Slow-burn plan; "became critical" | The NYT's own words | NYT, 19 Apr 2019 via Il Post; NYT, 16 Jul 2019 | 8 |
-| 12:39 | 118 | "would no longer be possible" | On-record words with the hedge | Jost, Public Sénat 27 Mar 2024 | 8 |
-| 13:00 | 120 | First peal 8 Nov 2024 | Dated record | AFP via La DH | 8 |
+| 0:04 | 3, 14–15 | The alarm worked; the message named the zone and the frame | Document (panel redrawn, four strings) | NYT, 16 Jul 2019; Le Monde via JDD | 10 |
+| 0:22 | 6 | "Collapse" | Headline + named official | NYT headline strip ✓; Vaz de Matos (AP) | 9 |
+| 0:24 | 7 | 15–30 minutes | Named official, dated (16 Apr, next day), printed wording | "We now know it all came down to 15–30 minutes" · BBC News; the Guardian | 9 (→ 10 when the BBC page is opened directly or the French transcribed, flag 1) |
+| 1:22 | 18 | No automatic call; the plan's design | Reason why + stamp + roster (no tenure) | NYT, 16 Jul 2019 | 8 |
+| 1:35 | 20 | Nearly indecipherable message | The NYT's own judgement | NYT, 16 Jul 2019 | 8 |
+| 1:45 | 21 | What reached the guard | Candor STRIP, both sides | NYT ("remains unclear") | 9 |
+| 2:02 | 27–28 | Second alert 18:43 at +25 | Prosecutor | Rémy Heitz, 16 Apr 2019 | 9 |
+| 2:26 | 31 | About ten to seven | Two records, both times on the tags | NYT · French government record | 10 |
+| 2:55 | 37 | ≈460 t of lead | Official figure | Culture ministry answer, JO 15 Dec 2020 | 9 |
+| 3:18 | 41 | Crown out by a group; the chaplain and the sacrament | Safe group line | Culture ministry (chip); chaplain's own account in the description ⚑ | 8 |
+| 3:57 | 45 | 20–40 trapped | Commander's own later account, attributed in the VO | Gallet, franceinfo 15 Apr 2020 | 8 |
+| 4:45 | 54–55 | No planes | Document (exact text) + demonstration | Sécurité civile, 15 Apr 2019 | 10 |
+| 5:06 | 57 | The trapped all lived | Press + government injury record | « aucune victime » (Belga) | 8 |
+| 5:41 | 64–67 | The domino fear; "not sure" | Two named officials | Gallet (Public Sénat); Vaz de Matos (AP) | 9 |
+| 6:24 | 69–72 | "Could collapse"; both towers by 5 a.m. | Two witnesses named up front | Weil (NYT); Gallet (franceinfo 2020) | 10 |
+| 7:17 | 74 | "Go ahead, General" | On-record recollection + official time + ⚠ | Gallet (franceinfo 2020); Culture ≈21:30 | 9 |
+| 7:25 | 76 | About twenty went in | Primary record | French government record, 17 Apr 2019 | 9 |
+| 7:32 | 78 | 21:40 "not certain"; 21:36 tag | On-record + primary record (silent tag) | Public Sénat; government timeline | 9 |
+| 7:41 | 79–80 | The climb | One reconstruction, named | NYT chip + "The New York Times later traced what came next" | 8 |
+| 8:24 | 85 | The frame on fire, by the record | Primary record, named last in the VO | « le beffroi nord est atteint par l'incendie », 21:36 | 9 |
+| 8:42 | 86a | Water at the top of the towers for the frame fire | Primary record, on the strip | Culture ministry, *Les témoins racontent* ✓ | 9 |
+| 9:01 | 87–88 | "Elle est sauvée"; ≈ half an hour | One source, approximate, labelled | Culture ministry (S05); NYT ≈21:45 on the stop tag | 9 |
+| 9:18 | 88a | "Within 30 minutes of collapse" | Reporter's summary, labelled | AP, 17 Apr 2019 | 7 |
+| 9:42 | 97–100 | The vault held; holes by impact | Expert + official survey (French + English) + ⚠ chip | Heyman (IStructE); bilan à 6 mois; Gallet · DRAC | 10 |
+| 10:15 | 102–103 | Corner attacked; stair burnt; beams charred **but** not enough; two bells scarred | Post-fire survey, full sentence + Rebâtir | bilan à 6 mois (S09 ✓); S17 ✓; 2025 city page ⚠ | 10 |
+| 10:41 | 104–105a | What they believed; the NYT verdict | Three named sources, then candor | Gallet (2020); Nuñez (next day); NYT headline ✓ | 10 |
+| 11:59 | 113 | Why the bells came down | Primary record | Rebâtir, 26 Jul 2023 | 9 |
+| 12:12 | 114 | Cause undetermined, no one charged | Candor STRIP with AS-OF | Paris prosecutor via Les Surligneurs, Dec 2024; checked 6 Nov 2026 | 9 |
+| 12:26 | 117–117b | No sprinklers; slow-burn plan | Attributed in the VO | NYT, 16 Jul 2019; NYT, 19 Apr 2019 via Il Post ⚑ | 8 |
+| 12:55 | 118 | Misting system; "would no longer be possible" | On-record words with the hedge | Jost, Public Sénat 27 Mar 2024 | 8 |
+| 13:16 | 120 | All eight together, 8 Nov 2024 | Dated record + Jost's words | AFP via La DH (S66) | 9 |
 
-**Our method beat:** the 2:36 tags (two sources three minutes apart), the 2:01 two-sided card, the 7:22 ⚠ D37 chip, the 10:10 two-tag night plate and the 10:37 candor strip ("which minutes: not stated") each show "how we know".
+**Our method beat:** the 2:26 tags (two sources, three minutes apart), the 1:45 two-sided strip, the 7:17 ⚠ chip, the 9:01 dashed ½ h mark ("approximate times, one source"), the 10:07 two-version chip and the 10:24 full survey sentence each show how we know.
 
-**Persuasion Equation audit (`checklist.md` §6):** urgent problem 25 (the title word and the range by 0:26); unique promise 25 (two clocks, two attics); **proof 25** (the title rests on the CTIF wording ✓, Weil's "He meant Notre-Dame could collapse" ✓, the NYT headline ✓ and the post-fire survey ✓, never on the Newser phrase); user-friendly proposition 25 (a person and a reveal at 0:31). → **100**, French card still gated on transcription.
+**Persuasion Equation audit (`checklist.md` §6):** urgent problem 25 (the title word with its source, and the range, by 0:26); unique promise 25 (two clocks named by meaning, two attics); **proof 25** (BBC/Guardian wording, the NYT headline at 0:22 and again at 10:49, Weil ✓, the survey's full sentence ✓); user-friendly proposition 25 → **100**, with the direct BBC/French check still gated (flag 1).
 
 ---
 
@@ -459,27 +469,27 @@ Candor beats (L23, L101, L114–116) and pure records (L77–78) are **not** cou
 
 | Trap | Where | What the script does |
 |---|---|---|
-| Blaming a person | L3, L19–23, L73, L117–117b | Two system factors in the hook; `STAFFING PLAN` card; D6 both ways; guess aims at the commander; "help explain" |
-| "The alarm failed" / single cause | L3–4, L14–18, L117–117a | "The alarm worked."; message + rule + plan |
-| "33 minutes", "nobody called" | L4, L28, L31, L117b | "about half an hour"; both times; "The New York Times called that lost time critical" |
-| Clock math | L28, L30, L74, L81, L87–88 | +25 at the 18:43 alert, ≈ +30 at the top; clock two: no minutes counted, no total voiced (D37) |
-| Team inside at 21:36 | L77–85 | Records before the climb; no arrival time; L85's frame fire cites the 21:36 log, not a sighting |
-| Team put out the frame fire | L86, VISUALS L86 | Hoses on the wall, then the floor (NYT); the frame band is not shown doused |
-| Survey told as eyewitness | L102 | "Afterwards, the official survey found…" |
-| Hydrant / Seine causality | L33 chip, L79–81 | Fireboats on a chip without cause; "Water is a problem" + leak, attributed once to the NYT |
-| Spire through the vault on live TV | L43–44, L95, L101 | "into the burning roof"; "taking hits all along" (untimed); crossing vault untimed, both versions |
-| NYT as a source for the spire time | L43 | DRAC + Culture only (D34 corrected) |
-| Domino / near-collapse as fact | L6, L48–49, L64, L66 | "officials feared"; "the danger the people in charge feared most"; "officials warned"; "the chain they feared" |
-| Two half-hours conflated | L4–5, L31, L74, L81, L105 | "clock one" / "clock two"; fixed names; no "half past"; Nuñez's range only on the right wheel, "which minutes: not stated" |
-| "Measured 30 minutes" | L105 | "an estimate made that night, not a measurement" |
-| Paraphrase as quote | L7 card, L88a strip | CTIF wording ✓ in straight quotes; AP line labelled reporter's summary; Newser phrase struck |
-| No-death fact too wide too early | L57, L93 | L57 is about the trapped only; "Nobody died" held for L93 |
-| Robot saved it | — | robot cut |
-| "She is saved" = Gallet | L87 | Gontier, coming back down |
-| Crown carrier | L41 | group line, D17 |
-| Cause / charges | L114–116 | undetermined; never proved; no one charged; ⏱ |
-| Bells rang at the reopening | L119–124 | reopening only as "weeks before"; the 8 Nov peal; "This time" |
-| "Fire now impossible" | L118 | Jost's hedge inside the quote ("I believe we can say") |
+| Blaming a person | L3, L18–22, L73, L117–117b | System factors; "The plan put one person at the screen…"; no tenure; D6 both ways on a strip; the guess aims at the commander; L117b ties each factor to what it explains; the board's routing lights, never a guard token |
+| "The alarm failed" / single cause | L3–4, L14–18, L117 | "The alarm worked."; message + rule + plan |
+| Fire began in the sacristy (by ear) | L117b | "The search had begun in the wrong attic." |
+| "33 minutes", "nobody called" | L4, L28, L31 | "called late"; "twenty-five minutes" at the alert; "about ten to seven"; both times on the tags |
+| Clock math | L28, L30, L74, L81, L87–88 | +25 at the 18:43 alert, ≈ +30 at the top. Clock two: record tags only; L88 "about half an hour", attributed, approximate; never "the whole half hour" |
+| Team inside at 21:36 | L78, L85 | 21:36 is a silent tag at L78 with no tallies on any plan; L85 says what the timeline says, source last |
+| Team put out the frame fire | L86–86a | "those flames" = wall and floor (NYT); the frame fire is the ministry's water at the top of the towers (strip) |
+| Survey told as eyewitness | L102–103 | "The survey found…" twice, including the "but" |
+| Spire through the vault on live TV | L43–44, L95, L100 | "into the burning roof"; L95 untimed impact; crossing vault untimed, both versions on the L100 chip |
+| Domino / near-collapse as fact | L6, L48–49, L64, L66; thumbnail | "officials feared"; "the chain they feared"; thumbnail gate (flag 11) |
+| Three half-hours confused | L4–5, L7 | No number spoken for clock one in the hook; "the fire chief's half hour"; "15–30" large on the card |
+| Paraphrase as quote | L7 card, L88a strip | BBC/Guardian printed wording in straight quotes; CTIF paraphrase removed; AP labelled as reporter's summary |
+| Nuñez "that night" | L7 card, L105 | "16 Apr 2019 (the day after)"; "The next day" |
+| "Measured 30 minutes" | L104–105a | what they believed, then "Nobody can measure a margin that was never used up" |
+| Slow-burn as record | L117 | "which, The New York Times reported, the plan expected to burn slowly" |
+| "That night's record" | L85 | "the government's timeline" (dated 17 Apr 2019) |
+| Crown carrier | L41 | group line; the chaplain took the Blessed Sacrament (his own account ⚑, in the description) |
+| "First ring since the fire" | L120 | "all eight rang together" (single-bell tests the day before) |
+| Cause / charges | L114 | "no cause has been proved, and no one has been charged"; ⏱ |
+| "Fire now impossible" | L118 | Jost's hedge inside the quote |
+| Bells rang at the reopening | L119–120 | reopening only as "weeks before"; the 8 Nov peal |
 
 ---
 
@@ -487,27 +497,27 @@ Candor beats (L23, L101, L114–116) and pure records (L77–78) are **not** cou
 
 | # | Check | Score | Note |
 |---|---|---|---|
-| 1 | Promises confirmed by 0:30 | 8/8 | Feu 0:02, two attics 0:06, clock one 0:13, clock two 0:18, "collapse" 0:26, range card 0:25–0:26 |
+| 1 | Promises confirmed by 0:30 | 8/8 | Feu 0:01, two attics 0:04, clock one 0:09, clock two 0:14, "collapse" + NYT strip 0:22–0:24, card fully up 0:24, voiced 0:26 |
 | 2 | First frame an image | 4/4 | thumbnail composition, bell on its pin |
-| 3 | Hook from 3 scored variants, winner ≥20 | 8/8 | A 25/25, 9/10 |
+| 3 | Hook from 3 scored variants, winner ≥20 | 8/8 | A 25/25, 10/10 |
 | 4 | Stakes and tease by 1:00 | 4/4 | |
-| 5 | Structure declared, rule present | 5/5 | two clocks named in the hook; a wheel in every chapter |
-| 6 | Wow at ~3:00 and ~6:00, two kinds | 6/7 | record 2:36, mechanism 4:52 (both early by a minute; the decision silence at 7:06 carries the 6–7 min window) |
-| 7 | Re-hooks ≤40 s | 8/8 | pulls only, max 24 s |
+| 5 | Structure declared, rule present | 5/5 | two clocks named by meaning; a wheel in every chapter; clock two felt (tick) and read (L88) |
+| 6 | Wow at ~3:00 and ~6:00, two kinds | 6/7 | record 2:26, mechanism 4:50 (the guess at 7:02 covers the 6–7 min window) |
+| 7 | Re-hooks ≤40 s | 8/8 | pulls only, max 23 s |
 | 8 | Groups/interrupts never back to back | 3/3 | |
 | 9 | but/therefore, no "and then" | 5/5 | |
-| 10 | Stakes stair-step ×3 | 4/4 | roof → spire → trapped → tower → "collapse" → fire above the team |
-| 11 | Loop ledger, ≤4 open | 7/7 | two loops carried across the Ch.5 card |
-| 12 | Back half new information | 5/5 | gate, bell height, the survey's corner and stair, "was it really?", crossing vault both ways, gable, silent bells |
-| 13 | ≥2 callbacks; one misconception beat | 4/4 | DO NOTHING card, trapped box, briefing table, sorting board, "nobody… looking"; L3, L63 |
-| 14 | Ending lands L1, one button, no recap | 4/4 | button pays L8; synthesis once (L117b); one direction in time |
-| 15–16 | Affiliate | n/a | none supplied; slot at 6:20 |
+| 10 | Stakes stair-step ×3 | 4/4 | roof → spire → trapped → tower → "collapse" → the frame on fire above the team |
+| 11 | Loop ledger, ≤4 open | 7/7 | |
+| 12 | Back half new information | 5/5 | water curtain, the survey's "but", the NYT verdict, "never used up", gable, the workshop, the slow-burn plan, all eight together |
+| 13 | ≥2 callbacks; one misconception beat | 4/4 | DO NOTHING card, trapped box, briefing table, sorting board, rooster; L3, L63 |
+| 14 | Ending lands L1, one button, no recap | 4/4 | L125 pays L8; synthesis once (L117–117b), now with a new fact |
+| 15–16 | Affiliate | n/a | none supplied; slot at 6:13 |
 | 17 | 4–6 chapters, cliffhangers, valid 00:00 list | 2/2 | |
-| 18 | Every number sourced | 4/4 | |
+| 18 | Every number sourced | 4/4 | no on-screen number that the VO doesn't say, except record tags |
 | 19 | Fact-safety | 4/4 | §11 |
 | 19b | Persuasion audit | gate: 100 | §10 |
-| 20 | TTS-ready | 3/3 | sentences ≤22 words; no possessive "Times'"; no "half past" |
-| 21 | Word count in budget | 2/2 | 1,910 (floor 1,900: any further cut needs an equal add) |
+| 20 | TTS-ready | 3/3 | sentences ≤22 words; "Feu" only at L2 and L14; Nuñez re-aliased |
+| 21 | Word count in budget | 2/2 | 1,903 (floor 1,900) |
 | | **Total** | **90/91 scored** | |
 
-**Three cheapest remaining fixes:** (1) transcribe Nuñez and put the French on the L7 card; (2) open Church Times (PA) and, if it holds, add "it all came down to 15 to 30 minutes" under the L105 bracket; (3) if the edit tests long, trim L109 (arches, 12 s) and L42 (speech, 3.5 s) first, and add back the same word count elsewhere to stay above 1,900.
+**Three cheapest remaining fixes:** (1) open the BBC page directly or transcribe the BFMTV/INA French, and add the French above the L7 card; (2) respec the packaging thumbnail (flag 11) and title C (flag 12) before any Test & Compare; (3) confirm how Jacques Heyman pronounced his name before VO lock.
