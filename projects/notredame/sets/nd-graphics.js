@@ -44,6 +44,7 @@
 import * as THREE from 'three';
 import * as M from '/engine/motion.js';
 import { KIT } from './nd-sets.js';
+import { TOWER } from './nd-tower.js'; // additive (ch4): briefing, stairStrip, deadlineWheel, riser, tallyField, nightModel (see nd-tower.js)
 
 const { P, MIS, TAU, D, mix, pen, halftone, hatch, deckle, lampShade, poly, rect, rrect, circle, pill, gearPath, archPts, mono, tag, coil, redRing,
   flame, puff, plume, embers, fibre, counterBadge, glowRings, lampPool, facadeCard, sideCard, sideFire, fireSections, canvasLayer, camBreath, smokeFor,
@@ -902,6 +903,6 @@ async function winder(ctx, shot) {
 }
 
 // ================================================================= exports
-export const GSETS = { title, chapter, quote, doc, bignumber, counter: counterSet, timeline, compare, winder };
+export const GSETS = { title, chapter, quote, doc, bignumber, counter: counterSet, timeline, compare, winder, ...TOWER }; // ...TOWER: additive (ch4)
 export const GKIT = { cue, cues, txt, measure, wrap, typed, redUnder, markerLoop, card, brassClip, charDrum, housing, deskGround, deskRuler, plateGround, WINDER, POSES, carCut, PLATE };
 export default function makeNotreDameGraphics() { return { ...GSETS }; }

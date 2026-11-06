@@ -35,6 +35,8 @@
 import * as THREE from 'three';
 import * as M from '/engine/motion.js';
 import { airdrop, bellExtrasWorld, bellExtrasScreen } from './nd-airdrop.js'; // additive (ch3): the water-bomber / parvis set (H8), see nd-airdrop.js
+import { coda } from './nd-coda.js'; // additive (ch6): the `coda` set (tower lift/rehang/peal, workshop, remnant, board, oak, facade), see nd-coda.js
+import { held } from './nd-held.js'; // additive (ch5): the `held` set (vault demo, plan holes, gable, arches, rooster, frame toy, type, table, margin), see nd-held.js
 
 // ================================================================= palette (bible §1.2) + the ep10 ember ramp
 export const P = {
@@ -1094,7 +1096,7 @@ async function cathedral(ctx, shot) {
   if (view === 'thumb') await loadInter();
   return { scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(), layer: L0.layer, canvas: L0.cv, update(t) {
     const { g, s } = L0; smokeFor(p, shot); g.setTransform(s, 0, 0, s, 0, 0); g.clearRect(0, 0, 1920, 1080);
-    const fire = anim(p, 'fire', t, 0), smoke = p.smoke ?? 1, glow = p.glow ?? (sky === 'day' ? 0 : clamp(fire * 1.4));
+    const fire = anim(p, 'fire', t, 0) * (p.fireOutAt == null ? 1 : 1 - M.E.inOutSine(range(t, p.fireOutAt, p.fireOutAt + (p.fireOutDur ?? 1.2)))), smoke = p.smoke ?? 1, glow = p.glow ?? (sky === 'day' ? 0 : clamp(fire * 1.4)); // fireOutAt/fireOutDur: additive (ch5): the last flames fold flat
     let spireU = p.spireU ?? 0; if (p.spireAt != null) spireU = range(t, p.spireAt, p.spireAt + (p.spireDur ?? 3));
     const st = { sky, fireS: fireSections(fire), roofGone: anim(p, 'roofGone', t, 0), spire: p.spire ?? 'standing', spireU, glow, wind: p.wind ?? 0.35, smoke, glowWin: sky !== 'day' && fire > 0.05, spireLean: p.spireLean, spireFire: anim(p, 'spireFire', t, 0) }; // spireFire: additive (ch2)
     const night = sky !== 'day', Lk = looks(sky), k = p.k ?? V.k, yG = p.ground ?? V.ground;
@@ -2241,5 +2243,5 @@ export const KIT = { OAK, figure, bellPath, BELLS, P, MIS, TAU, D, mix, tick, ca
   // additive (round 2): more of the set internals, for nd-graphics.js and other runtimes
   cardTower, bellFrameInside, sourceSlip, backdrop, foreQuay, odoCounter: counter, drum, odo, mainspring, bell, beam, SKY, ND,
   paving, puddle, hoseLine, jet, nozzle, ladderTruck, hydrant, handCart, reliquary, sleeveHand, litPatch, smokeFor, shotSeed, loadInter, thumbComp, thumbBelfry, twos };
-export const SETS = { cathedral, forest, spireFall, bellFrame, clock, paris, firefighters, airdrop }; // airdrop: additive (ch3)
+export const SETS = { cathedral, forest, spireFall, bellFrame, clock, paris, firefighters, airdrop, held, coda }; // airdrop: additive (ch3); held: additive (ch5)
 export default function makeNotreDameSets() { return { ...SETS }; }
