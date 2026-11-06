@@ -19,13 +19,12 @@ The search began in the wrong one. By the time firefighters reached the roof, th
 This animated reconstruction follows both clocks, built from the Paris prosecutor's and government timelines, the fire brigade's own accounts and The New York Times' reconstruction. Nobody is blamed: the cause is still undetermined and no one has been charged.
 
 Chapters
-00:00 Cold open: six-eighteen
-00:49 1. Two attics, one message
-03:12 2. A wall of flame
-04:56 3. The wrong fix
-07:09 4. The second clock
-10:46 5. What held
-13:14 6. The bells come home
+00:00 1. Two attics, one message
+02:09 2. A wall of flame
+03:47 3. The wrong fix
+05:50 4. The second clock
+09:11 5. What held
+11:31 6. The bells come home
 
 Key sources (full list in the pinned comment)
 - Élysée, Conseil des ministres of 17 Apr 2019 (official timeline)
@@ -46,12 +45,12 @@ Every number on screen comes from the source list below (tier 1 = official recor
 [paste SOURCES.md sections A–C]
 
 ## Notes
-- The chapter times above are from the stand-in voice timeline (14:59.6). Re-read them from the render log after the final narration goes in.
+- Final cut: no cold open or title card; the film opens straight on the Mass (13:10, ElevenLabs eleven_v4 narration).
 - Re-push window: the 8th anniversary, 15 Apr 2027.
 - Pathé's "Notre-Dame brûle" (2022) dramatises the same night; we use none of its scenes or framing.
 
 ## Checklist before publishing
-- [ ] Final narration in (ElevenLabs), chapter times refreshed
+- [x] Final narration in (ElevenLabs v4), chapter times refreshed
 - [ ] Title A + thumbnail A live; start Test & Compare on titles A/B/C
 - [ ] Pinned comment with sources
 - [ ] Altered or synthetic content label: ON (animated reconstruction, synthetic voice)
@@ -59,3 +58,8 @@ Every number on screen comes from the source list below (tier 1 = official recor
 ## Delivery (2026-11-06, stand-in voice cut, 15:00)
 - Master 1080p60: https://gofile.io/d/xYTfkT6A (md5 8aec2ad27fff72d742b5bb3b3368fa2f)
 - 720p parts 1–8: 48xAXA1c · Cgti0IIH · Yv7AT6Z7 · RHktdZEQ · iRx6tcbx · fFbwFPRN · 5XNFBiTe · KriqtRnb (gofile.io/d/<id>), md5 verified
+
+## Final delivery (2026-11-06, ElevenLabs v4, 13:10)
+- Master 1080p60: https://gofile.io/d/pKBdMPiW (md5 667549908853de0acbf063b06a27d367)
+- 720p parts 1–8: NmXNx7jj · BEKpdHSD · cXBexWiJ · I32uKLP1 · aOvEG9aY · udk0Rjwd · JkyFAH1r · uElOrAEM (gofile.io/d/<id>), md5 verified
+- Mix: −14.11 LUFS, TP −1.0 dBTP, all audio checks pass. Blackdetect: only the planned 0.5 s ink-dip into the end card.
