@@ -22,3 +22,6 @@ projects/*/renders/
 projects/hf-scale/compositions/
 projects/hf-scale/index.html
 projects/hf-scale/timing.json
+
+# reverse-engineering runs (downloaded videos, frames, transcripts): local only
+/reverse/

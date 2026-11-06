@@ -1,0 +1,1 @@
+{ "name": "reverse-tools", "private": true, "description": "Pinned HyperFrames CLI for the free measure commands (Apache-2.0)", "dependencies": { "hyperframes": "0.9.19" } }
