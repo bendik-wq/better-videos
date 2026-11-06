@@ -300,7 +300,7 @@ All times are Paris local (CEST, UTC+2). "≈" means the source itself rounds.
 - 3.22 The small bells in the spire were lost with it (S122 ⚑; **no number**).
 
 ### 3f. What survived ✓
-- 3.23 The great organ, under its own vault and stone-slab roof between the towers, was spared by fire and water but coated in lead dust. **All the stained glass survived**, including both 13th-century roses (S09). The north transept rose's stones were heat-reddened and flaking (S09).
+- 3.23 The great organ, under its own vault and stone-slab roof between the towers, was spared by fire and water but coated in lead dust. **All the stained glass survived**, including both 13th-century transept roses, north and south (« les deux roses des croisillons nord et sud, du XIIIe siècle », S09; the west rose was protected separately, so never just "both roses"). The north transept rose's stones were heat-reddened and flaking (S09).
 - 3.24 The pre-fire spire scaffold survived because « il avait été exigé qu'il ne prenne pas appui sur la charpente et sur la flèche ». It sagged where the spire fell and from the heat, and got movement sensors (S09 ✓).
 
 ---
@@ -355,6 +355,7 @@ The title's "30 minutes" is an **officials' estimate given in three different wi
 | Nuñez, English as published | "They saved the edifice, but it all came down to 15 to 30 minutes." | PA via Church Times 18 Apr 2019 (S72) | ⚑ snippet. Open before locking the card |
 | Nuñez, English variant | "We now know it all came down to 15-30 minutes" | Guardian 16 Apr 2019 (S69) | ⚑ blocked |
 | Nuñez, English variant | "It was a matter of 15-30 critical minutes." | CTIF 16 Apr 2019 (S70, opened; "according to the BBC") | ✓ as published |
+| AP narration (not a quote) | "It had been within 30 minutes of collapse." | AP 17 Apr 2019, "Minutes that saved Notre Dame" (opened by the rev-3 facts critic, myfox28columbus.com syndication) | ✓ reporter's summary; label it as AP's words, never Nuñez's |
 | Gen. Gallet, his own words (2020) | « il faut la réaliser dans la demi-heure » (the north-tower operation) | franceinfo 15 Apr 2020 (S35) | ✓ T3 |
 | Gallet, as recalled by Ariel Weil | "In 20 minutes, I'll know if we've lost it." | NYT 16 Jul 2019 (S41, S45) | ✓ second-hand |
 | Gallet, as recalled (AFP) | "we have half an hour to know if we can save it" | AFP 10 Oct 2019 (S59) | ⚑ snippet |
@@ -429,7 +430,7 @@ Verbatim from the source given. The French original comes first where it exists,
 - NYT (S41): Gallet "focusing on the northern one, already on fire" (≈20:30 briefing) ✓; Gontier said "She is saved" "as he descended" ✓
 - Gen. Gallet, his own words (franceinfo 2020, S35): « Soit on ne fait rien, et à 5 heures du matin on ne verra plus les deux tours. Soit on tente une manœuvre qu'on n'est pas sûrs de réussir, car il faut la réaliser dans la demi-heure, […] mais on est prêts à la conduire. » / "Either we do nothing, and by five in the morning we won't see the two towers any more. Or we try a manoeuvre we're not sure will work, because it has to be done within the half hour, […] but we're ready to carry it out." ✓ (the two options he put to the president)
 - Culture ministry (S05), 21h30: « Le risque se concentre sur la tour Nord, et sur son beffroi de charpente qui porte les huit cloches fondues en 2013. » / « Le plan d'action présenté par le général Gallet au président de la République et à la préfecture de police est accepté. » ✓; 22h: « "Elle est sauvée" dira simplement le général Gontier au général Gallet. » ✓
-- Laurent Nuñez, 16 Apr 2019, English as published: "a crucial 15- to 30-minute window" (AP via Newser; opened by the rev-2 facts critic, newser.com unreachable from this session ⚑); CTIF "a matter of 15-30 critical minutes" (S70 ✓). The French stays ⚑ until transcribed.
+- Laurent Nuñez, 16 Apr 2019, English as published: CTIF "It was a matter of 15-30 critical minutes" (S70 ✓, "according to the BBC"). **Corrected in rev 3:** "a crucial 15- to 30-minute window" is Newser's headline/summary wording, not Nuñez's. The rev-3 facts critic opened the AP story itself ("Shock, sadness, but no panic: Minutes that saved Notre Dame", AP 17 Apr 2019, syndicated on myfox28columbus.com) and the phrase is not in it. AP's own line is reporter narration, not a quote: "It had been within 30 minutes of collapse." Never print "a crucial 15- to 30-minute window" as Nuñez's words. The French stays ⚑ until transcribed.
 
 **The alarm**
 - NYT narration (S41): "It was 6:18 on a Monday, the week before Easter." / "It was 6:48, 30 minutes after the first red signal lit up the word 'Feu.'" ✓
@@ -554,7 +555,7 @@ These ratios are for silhouette only and are not printed as facts.
 | D26 | Bells back | Fri 4 Oct 2024 (S27, S80) | Mon 7 Oct 2024 (S101) | "early October 2024" |
 | D27 | Rooster relics | not yet verified (17 Apr 2019, S78) | intact (S77, 16 Apr 2019; S25 Diocese 2023) | "later found intact" |
 | D28 | Relics placed | 1935, Cardinal Verdier (S77) | 1860, Viollet-le-Duc (WP) | omit the date |
-| D29 | Crossing vault | spire sections caused all three holes (S33) | the tabouret gave way "dans la nuit", taking the crossing vault (S06) | don't time the hole beyond "in the night, says the culture ministry". The rev-2 facts critic reports Gallet's 2020 account (S35) has « la croisée des transepts… est tombée » at the spire's fall (⚑, not re-opened by the head writer): never say "went last" |
+| D29 | Crossing vault | spire sections caused all three holes (S33) | the tabouret gave way "dans la nuit", taking the crossing vault (S06) | don't time the hole beyond "in the night, says the culture ministry". **Rev 3:** the rev-3 facts critic re-opened S35 (franceinfo, 15 Apr 2020): Gallet's own account places « la croisée du transept… est tombée » right after the spire collapsed. So D29 is a three-way ⚠: with the spire (Gallet S35; Heyman S33 puts all three holes down to spire sections) vs « dans la nuit » (DRAC S06). Script gives both versions; never a single time, never "went last" |
 | D30 | Statue crane | 80 m (S07) | ~90 m (Diocese) | omit |
 | D31 | Donations | €845 M (S16) | €825 M (2020), €843 M (AFP 2025), €846 M (press) | "about €845 million (Rebâtir)" |
 | D32 | Pre-fire visitors | 8–9 M (AFP S91) | ~12 M (observatory) | "about 11 million in year one" only |
