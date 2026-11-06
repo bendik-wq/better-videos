@@ -55,3 +55,7 @@ Every number on screen comes from the source list below (tier 1 = official recor
 - [ ] Title A + thumbnail A live; start Test & Compare on titles A/B/C
 - [ ] Pinned comment with sources
 - [ ] Altered or synthetic content label: ON (animated reconstruction, synthetic voice)
+
+## Delivery (2026-11-06, stand-in voice cut, 15:00)
+- Master 1080p60: https://gofile.io/d/xYTfkT6A (md5 8aec2ad27fff72d742b5bb3b3368fa2f)
+- 720p parts 1–8: 48xAXA1c · Cgti0IIH · Yv7AT6Z7 · RHktdZEQ · iRx6tcbx · fFbwFPRN · 5XNFBiTe · KriqtRnb (gofile.io/d/<id>), md5 verified
