@@ -49,25 +49,29 @@ const on = (t, at, d = 0.4) => (at == null ? 1 : M.E.outCubic(range(t, num(at, 0
 
 // ---------------------------------------------------------------- screen-space paper pieces
 function chipStack(K, g, chips, t) {
-  const { P, pen, rrect, mono } = K; let y = 70;
+  // phone legibility (QA): headline 42 px Archivo, sub 22 px mono. untilAt (or until): the chip leaves on that cue. x, y: dock it
+  // (screen px; y docks this chip and the ones after it). A chip that has left frees its slot.
+  const { P, pen, rrect, mono } = K; let y = 70; const HS = 42, SS = 22;
   for (const c of chips) { const u = range(t, num(c.at, 0), num(c.at, 0) + 0.35); if (u <= 0) continue;
-    if (c.until != null && t > num(c.until, 1e9) + 0.4) continue;
-    const uo = c.until == null ? 1 : 1 - range(t, num(c.until, 1e9), num(c.until, 1e9) + 0.4);
-    g.save(); g.font = '600 30px "Archivo Narrow"'; const w1 = g.measureText(c.text).width; g.font = '500 19px "Plex Mono"'; g.letterSpacing = '3px';
+    const un = c.untilAt ?? c.until; if (un != null && t > num(un, 1e9) + 0.4) continue;
+    const uo = un == null ? 1 : 1 - range(t, num(un, 1e9), num(un, 1e9) + 0.4);
+    if (c.y != null) y = c.y;
+    g.save(); g.font = `600 ${HS}px "Archivo Narrow"`; const w1 = g.measureText(c.text).width; g.font = `500 ${SS}px "Plex Mono"`; g.letterSpacing = '3px';
     const subs = [].concat(c.sub ?? []); const w2 = Math.max(0, ...subs.map(s => g.measureText(String(s).toUpperCase()).width)); g.restore();
-    const W = Math.max(w1, w2) + 56, H = 62 + subs.length * 30, x = (c.x ?? 1920 - 80 - W) + (1 - M.E.outCubic(u) * uo) * 600;
+    const W = Math.max(w1, w2) + 60, H = HS + 36 + subs.length * (SS + 14), off = (1 - M.E.outCubic(u)) * 700, x = (c.x != null ? c.x - off : 1920 - 80 - W + off);
+    g.save(); g.globalAlpha *= uo; // ch5 QA r2: a chip leaves by fading in place, never by sliding past the frame edge
     pen(g, rrect(x, y, W, H, 6), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false });
     pen(g, rrect(x + 12, y - 8, 30, 18, 3), { fill: P.brass, lw: 1.5, breaks: false, highlight: false });
-    g.save(); g.font = '600 30px "Archivo Narrow"'; g.fillStyle = P.ink; g.fillText(c.text, x + 28, y + 44); g.restore();
-    subs.forEach((s, i) => mono(g, s, x + 28, y + 76 + i * 30, 19, P.ink70));
-    y += H + 22; }
+    g.save(); g.font = `600 ${HS}px "Archivo Narrow"`; g.fillStyle = P.ink; g.fillText(c.text, x + 30, y + 18 + HS); g.restore();
+    subs.forEach((s, i) => mono(g, s, x + 30, y + HS + 30 + (i + 1) * (SS + 14) - 12, SS, P.ink70));
+    g.restore(); y += H + 22; }
 }
-function lowerStrip(K, g, lines, t, at = 0, until = null, big = 1, top = false) {
+function lowerStrip(K, g, lines, t, at = 0, until = null, big = 1, top = false, pos = {}) {
   const { P, pen, rect, mono } = K; const ls = [].concat(lines);
   const u = M.E.outCubic(range(t, at, at + 0.45)) * (until == null ? 1 : 1 - M.E.inCubic(range(t, until, until + 0.4))); if (u <= 0) return;
   const sm = (i) => i >= big;
   let w = 0; g.save(); ls.forEach((l, i) => { g.font = sm(i) ? '500 21px "Plex Mono"' : '600 32px "Archivo Narrow"'; g.letterSpacing = sm(i) ? '3px' : '0px'; w = Math.max(w, g.measureText(sm(i) ? String(l).toUpperCase() : l).width); }); g.restore();
-  const W = Math.min(1760, w + 80), H = 34 + ls.length * 40, x0 = 960 - W / 2, y0 = top ? 80 : 1080 - 110 - H;
+  const W = Math.min(1760, w + 80), H = 34 + ls.length * 40, x0 = pos.x ?? 960 - W / 2, y0 = pos.y ?? (top ? 80 : 1080 - 110 - H); // pos {x, y}: additive (ch5 QA)
   g.save(); g.translate((1 - u) * -1900, 0);
   pen(g, rect(x0, y0, W, H), { fill: P.kraft, lw: 2, shadow: true, breaks: false, highlight: false });
   ls.forEach((l, i) => { if (sm(i)) mono(g, l, x0 + 40, y0 + 52 + i * 40, 21, P.ink70); else { g.font = '600 32px "Archivo Narrow"'; g.fillStyle = P.ink; g.fillText(l, x0 + 40, y0 + 52 + i * 40); } });
@@ -75,7 +79,7 @@ function lowerStrip(K, g, lines, t, at = 0, until = null, big = 1, top = false) 
 }
 function flapCard(K, g, t, p) {
   const { P, pen, rrect, mono } = K, x = p.flapX ?? 96, y = p.flapY ?? 64, at = num(p.flapAt, 0.15), to = String(p.flap), from = p.flapFrom ?? null, sw = from ? range(t, at, at + 0.5) : 1;
-  const u = M.E.outCubic(range(t, at - 0.3, at + 0.1)); if (u <= 0) return;
+  const u = M.E.outCubic(range(t, at - 0.3, at + 0.1)) * (p.flapOutAt == null ? 1 : 1 - M.E.inCubic(range(t, num(p.flapOutAt, 1e9), num(p.flapOutAt, 1e9) + 0.4))); if (u <= 0) return; // flapOutAt: additive (ch5 QA)
   const txt0 = sw < 0.5 ? String(from) : to, sq = from ? Math.abs(Math.cos(sw * Math.PI)) : 1;
   g.save(); g.font = '700 60px "Archivo Narrow"'; g.letterSpacing = '4px'; const w = Math.max(g.measureText(to).width, from ? g.measureText(String(from)).width : 0) + 64; g.restore();
   const H = p.flapSub ? 136 : 102;
@@ -91,8 +95,8 @@ function flapCard(K, g, t, p) {
 function labelCard(K, g, x, y, text, { sub = null, red = null, at = 0, t = 0, size = 46, night = false, redOn = true } = {}) {
   const { P, pen, rect, circle, mono } = K; const u = on(t, at, 0.35); if (u <= 0) return;
   g.save(); g.font = `700 ${size}px "Archivo Narrow"`; g.letterSpacing = '3px'; const w = g.measureText(text).width; g.restore();
-  g.save(); g.font = '500 19px "Plex Mono"'; g.letterSpacing = '3px'; const ws = sub ? g.measureText(String(sub).toUpperCase()).width : 0; g.restore();
-  const W = Math.max(w, ws) + 70, H = size + 50 + (sub ? 34 : 0);
+  g.save(); g.font = '500 24px "Plex Mono"'; g.letterSpacing = '3px'; const ws = sub ? g.measureText(String(sub).toUpperCase()).width : 0; g.restore();
+  const W = Math.max(w, ws) + 70, H = size + 50 + (sub ? 40 : 0);
   g.save(); g.globalAlpha *= u; g.translate(0, (1 - u) * -30);
   pen(g, rect(x, y, W, H), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false, shade: 0.12, shadeColor: P.kraftD, box: [x, y, x + W, y + H] });
   pen(g, circle(x + W / 2, y + 12, 8), { fill: P.brass, lw: 2, breaks: false, highlight: false });
@@ -100,7 +104,7 @@ function labelCard(K, g, x, y, text, { sub = null, red = null, at = 0, t = 0, si
   if (red && redOn) { const i0 = text.indexOf(red); if (i0 >= 0) { const x0 = x + 35 + g.measureText(text.slice(0, i0)).width, ww = g.measureText(red).width - 3, v = M.E.outCubic(range(t, num(at, 0) + 0.3, num(at, 0) + 0.8));
     g.fillStyle = P.red; const yy = y + 34 + size; g.fillRect(x0, yy, ww * v, 7); g.beginPath(); g.moveTo(x0 + ww * v, yy - 4); g.lineTo(x0 + ww * v + 12, yy + 3.5); g.lineTo(x0 + ww * v, yy + 11); g.fill(); } }
   g.letterSpacing = '0px';
-  if (sub) mono(g, sub, x + 35, y + size + 72, 19, P.ink70);
+  if (sub) mono(g, sub, x + 35, y + size + 76, 24, P.ink70); // ch5 QA r2: 24 px
   g.restore();
   return [x + W / 2, y + H];
 }
@@ -129,7 +133,7 @@ function vaultView(K, g, t, p, red) {
   const outer = archCurve(cx, yB, half, rise), inner = archCurve(cx, yB, half - th, rise - th);
   // the floor card: "the church" below, clean paper
   pen(g, rect(cx - half - 230, 800, 2 * half + 460, 30), { fill: P.kraft, lw: 2.5, shadow: true, breaks: false, highlight: false });
-  mono(g, 'THE CHURCH BELOW', cx, 760, 22, P.ink40, 'center');
+  mono(g, 'THE CHURCH BELOW', p.belowX ?? cx, p.belowY ?? 760, 22, P.ink40, 'center'); // belowX/belowY: additive (ch5 QA)
   // piers
   for (const x0 of [cx - half - 40, cx + half - 30]) pen(g, rect(x0, yB - 6, 70, 806 - yB), { fill: P.card, lw: 3, shadow: true, shade: lampShade([x0, yB, x0 + 70, 800], 0.05, 0.4, 0.3), shadeColor: P.kraftD, box: [x0, yB, x0 + 70, 800] });
   // the shell (stone card), voussoir joints, halftone underside
@@ -160,10 +164,11 @@ function vaultView(K, g, t, p, red) {
       let x, y, a;
       if (!bk || u < 1) { x = lerp(sx, lx, u); y = lerp(sy, ly, u * u); a = lerp(hash(i + 5) * 3, slopeOn(outer, lx) + (hash(i + 9) - 0.5) * 0.5, u); }
       if (bk && u >= 1) { const v = clamp((t - ti - 0.6) / 0.35); x = bx; y = lerp(ly, 790, v * v); a = lerp(slopeOn(outer, lx), 0.08, v); }
-      g.save(); g.translate(x, y); g.rotate(a); beam(g, [-28, 0], [28, 0], 8, { col: OAK.M, char: 0.6, lw: 1.3 }); g.restore();
+      const redStick = bk && red === 'stick';
+      if (redStick && u >= 1) { const v = clamp((t - ti - 0.6) / 0.35), yo = yOn(outer, bx) + 10; g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); g.beginPath(); g.moveTo(bx, yo); g.lineTo(bx, lerp(yo, 776, v)); g.stroke(); g.restore(); }
+      g.save(); g.translate(x, y); g.rotate(a); beam(g, redStick ? [-40, 0] : [-28, 0], redStick ? [40, 0] : [28, 0], redStick ? 13 : 8, { col: redStick ? P.red : OAK.M, char: redStick ? 0 : 0.6, lw: 1.3 }); g.restore();
       if (i % 3 === 0 && !bk) flame(g, x, y - 4, 22 + 10 * hash(i), 22, t, 40 + i, { lean: 0.1 });
       if (u >= 1 && !bk) { const d = clamp((t - ti - 0.6) / 0.7); if (d < 1) puff(g, x, y - 10 - d * 30, 10 + 14 * d, 500 + i, { fill: mix(P.ink40, P.card, 0.5), shadeCol: P.ink70, line: P.ink40, lw: 1, shade: 0.4 }); }
-      if (bk && u >= 1 && red === 'stick') { const v = clamp((t - ti - 0.95) / 0.3); if (v > 0) redRing(g, bx, 786, 50, P.red, 3.5); }
     }
   }
   if (p.label) { const L = p.label; labelCard(K, g, L.x ?? 150, L.y ?? 170, L.text, { sub: L.sub, red: L.red, at: L.at ?? 0.2, t, size: L.size ?? 44, redOn: red === 'label' }); }
@@ -177,15 +182,15 @@ function planView(K, g, t, p, red) {
   // the survey sheet
   pen(g, rect(150, 110, 1620, 870), { fill: P.paper, lw: 2.5, shadow: true, shadowOff: [14, 16], breaks: false, highlight: false });
   g.save(); g.strokeStyle = rgba(P.teal, 0.18); g.lineWidth = 1; g.beginPath(); for (let x = 190; x < 1760; x += 40) { g.moveTo(x, 120); g.lineTo(x, 970); } for (let y = 130; y < 970; y += 40) { g.moveTo(160, y); g.lineTo(1760, y); } g.stroke(); g.restore();
-  mono(g, 'PLAN · NOTRE-DAME DE PARIS · THE VAULTS', 190, 160, 22, P.ink);
-  // north arrow
-  g.save(); g.translate(1660, 220); pen(g, poly([[0, -44], [16, 18], [0, 8], [-16, 18]]), { fill: P.ink, lw: 2, breaks: false, highlight: false }); g.restore(); mono(g, 'N', 1660, 270, 22, P.ink, 'center', 600);
+  if (p.planTitle !== false) mono(g, 'PLAN · NOTRE-DAME DE PARIS · THE VAULTS', 190, 160, 22, P.ink);
+  // north arrow (bottom-right of the sheet, clear of the pill and the pushes)
+  const NA = p.northAt ?? [1660, 220]; g.save(); g.translate(NA[0], NA[1]); pen(g, poly([[0, -44], [16, 18], [0, 8], [-16, 18]]), { fill: P.ink, lw: 2, breaks: false, highlight: false }); g.restore(); mono(g, 'N', NA[0], NA[1] + 50, 22, P.ink, 'center', 600);
   // the cross: nave (west, left), transept (north up), choir + apse (east)
   const cross = [[300, 450], [930, 450], [930, 300], [1090, 300], [1090, 450], [1400, 450], [1400, 670], [1090, 670], [1090, 820], [930, 820], [930, 670], [300, 670]];
   pen(g, poly(cross), { fill: P.card, lw: 3, shadow: true, shade: lampShade([300, 300, 1530, 820], 0.02, 0.22, 0.5), shadeColor: P.kraftD, box: [300, 300, 1530, 820] });
   pen(g, (gg) => { gg.beginPath(); gg.moveTo(1400, 450); gg.arc(1400, 560, 110, -Math.PI / 2, Math.PI / 2); gg.closePath(); }, { fill: P.card, lw: 3, shadow: true, breaks: false, highlight: false });
   for (const [x, y] of [[230, 430], [230, 580]]) pen(g, rect(x, y, 90, 110), { fill: P.kraft, lw: 2.5, breaks: false, highlight: false, hatched: true, hatchColor: P.ink40, box: [x, y, x + 90, y + 110] });
-  mono(g, 'TOWERS', 275, 418, 16, P.ink70, 'center');
+  mono(g, 'TOWERS', 275, 416, 22, P.ink70, 'center');
   // vault bays: ribs (X) in the central vessel, aisle lines
   const bay = (x0, y0, x1, y1) => { g.moveTo(x0, y0); g.lineTo(x1, y1); g.moveTo(x1, y0); g.lineTo(x0, y1); g.rect(x0, y0, x1 - x0, y1 - y0); };
   g.save(); g.strokeStyle = P.ink70; g.lineWidth = 1.4; g.beginPath();
@@ -227,7 +232,7 @@ function gableView(K, g, t, p, red) {
   const st = (uu, d) => [O[0] + uu * fa[0] - d * sa[0], O[1] + uu * fa[1] - d * sa[1]];
   pen(g, poly([st(-900, 0), st(W + 500, 0), st(W + 500, 900), st(-900, 900)]), { fill: '#4b4f5e', lw: 2.5, breaks: false, highlight: false, hatched: true, hatchColor: '#2c3142', box: [-200, 500, 2100, 1300] });
   pen(g, poly([st(-900, 0), st(W + 500, 0), st(W + 500, 60), st(-900, 60)]), { fill: '#6d6156', lw: 2.5, breaks: false, highlight: false });
-  { const [lx, ly] = st(W * 0.5, 420); g.save(); g.translate(lx, ly); g.rotate(Math.atan2(fa[1], fa[0])); mono(g, 'THE STREET', 0, 0, 24, rgba(P.paper, 0.85), 'center'); g.restore(); }
+  { const [lx, ly] = p.streetAt ?? st(W * 0.5, 420); g.save(); g.translate(lx, ly); g.rotate(Math.atan2(fa[1], fa[0])); mono(g, 'THE STREET', 0, 0, 24, rgba(P.paper, 0.85), 'center'); g.restore(); }
   // the arm's side wall (fixed), receding; buttress strips + lancets
   pen(g, poly([S2(0, 0), S2(SW, 0), S2(SW, Hw), S2(0, Hw)]), { fill: L.stoneD, lw: 2.5, shade: 0.35, shadeColor: L.stoneDD, box: [800, 300, 1700, 900] });
   for (let i = 1; i < 6; i++) { const v = i * SW / 6; pen(g, poly([S2(v - 14, 0), S2(v + 14, 0), S2(v + 14, Hw + 20), S2(v - 14, Hw + 20)]), { fill: L.stone, lw: 2, breaks: false, highlight: false }); }
@@ -252,7 +257,7 @@ function gableView(K, g, t, p, red) {
   for (const uu of [-4, W + 4]) pen(g, poly([G(uu - 18, 0), G(uu - 18, Hw + 70), G(uu, Hw + 150), G(uu + 18, Hw + 70), G(uu + 18, 0)]), { fill: L.stoneD, lw: 2.5, breaks: false, highlight: false });
   // cracks (ink lines draw on): horizontal and vertical
   const ck = an(p, 'cracks', t, 0, 6, M.E.outCubic);
-  if (p.cracksAt != null && ck > 0) { const r = M.rng(77); g.save(); g.strokeStyle = P.ink; g.lineWidth = 2.8; g.lineCap = 'round';
+  if (p.cracksAt != null && ck > 0) { const r = M.rng(77); g.save(); g.strokeStyle = P.ink; g.lineWidth = p.crackW ?? 2.8; g.lineCap = 'round';
     [[[0, 250], 1, 0], [[W * 0.62, 30], 0, 1], [[W * 0.24, 300], 0, 1], [[W, 200], -1, 0]].forEach(([[x, h], dx, dh], j) => { const v = clamp(ck * 1.6 - j * 0.2); if (v <= 0) return; g.beginPath(); let px = x, ph = h; g.moveTo(...G(px, ph));
       for (let q = 0; q < Math.ceil(9 * v); q++) { px += dx * 24 + (r() - 0.5) * 12 * (1 - Math.abs(dx)); ph += dh * 22 + (r() - 0.5) * 10 * (1 - Math.abs(dh)); g.lineTo(...G(px, ph)); } g.stroke(); });
     g.restore(); }
@@ -262,7 +267,7 @@ function gableView(K, g, t, p, red) {
   if (red === 'arc') { const v = on(t, t0 - 0.6, 0.6); if (v > 0) { const pts = []; for (let i = 0; i <= 20; i++) pts.push(G(W / 2, Hw + Hg + 34, mx * 1.5 * (i / 20) * v));
     g.save(); g.strokeStyle = P.red; g.lineWidth = 4.5; g.setLineDash([12, 8]); g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(...q) : g.moveTo(...q))); g.stroke(); g.setLineDash([]);
     const [ex, ey] = pts.at(-1), [px2, py2] = pts.at(-2), a = Math.atan2(ey - py2, ex - px2); g.fillStyle = P.red; g.beginPath(); g.moveTo(ex + Math.cos(a) * 16, ey + Math.sin(a) * 16); g.lineTo(ex + Math.cos(a + 2.4) * 16, ey + Math.sin(a + 2.4) * 16); g.lineTo(ex + Math.cos(a - 2.4) * 16, ey + Math.sin(a - 2.4) * 16); g.fill(); g.restore(); } }
-  if (p.labelOn !== false) { const [ax, ay] = S2(SW * 0.55, Hw * 0.6); tag(g, ax, ay, ax + 130, ay - 210, 'North arm', { size: 30, swing: 2, night: true, sub: 'THE GABLE AT ITS END' }); }
+  if (p.labelOn !== false) { const [ax, ay] = p.armTag?.at ?? S2(SW * 0.55, Hw * 0.6), [tx, ty] = p.armTag?.to ?? [ax + 130, ay - 210]; tag(g, ax, ay, tx, ty, 'North arm', { size: p.armTag?.size ?? 30, swing: 2, night: true, sub: 'THE GABLE AT ITS END' }); } // armTag {at, to, size}: additive (ch5 QA)
 }
 
 // ================================================================= view: arches (flying buttresses, larch centring)
@@ -292,7 +297,7 @@ function flyer(K, g, x0, yB, sc, { arch = 0, arrows = 0, slot = false, redSlot =
     g.beginPath(); g.moveTo(ax0, ay - 46 * sc); g.lineTo(ax1 + push, ay - 6 * sc); g.stroke(); g.beginPath(); g.moveTo(ax1 + push + 6 * sc, ay - 5 * sc); g.lineTo(ax1 + push - 20 * sc, ay - 22 * sc); g.lineTo(ax1 + push - 14 * sc, ay + 8 * sc); g.closePath(); g.fill(); g.restore(); }
   if (slot) { const sx0 = wx + 90 * sc, sy = Y(395), w = 170 * sc, h = 40 * sc; g.save(); g.strokeStyle = redSlot ? P.red : P.ink70; g.lineWidth = redSlot ? 4 : 2.5; g.setLineDash([10, 7]);
     g.beginPath(); g.moveTo(sx0 + w, sy - h / 2); g.lineTo(sx0 + 30 * sc, sy - h / 2); g.lineTo(sx0 + 30 * sc, sy - h); g.lineTo(sx0, sy); g.lineTo(sx0 + 30 * sc, sy + h); g.lineTo(sx0 + 30 * sc, sy + h / 2); g.lineTo(sx0 + w, sy + h / 2); g.closePath(); g.stroke(); g.restore();
-    if (label) mono(g, 'THE ROOF PUSHED BACK HERE · NOW EMPTY', sx0 - 10 * sc, sy + h + 46, 20, P.ink70); }
+    if (label) mono(g, 'THE ROOF PUSHED BACK HERE · NOW EMPTY', sx0 - 10 * sc, sy + h + 50, 24, P.ink70); }
   if (nlab != null && arch > 0.6) { g.save(); g.font = `600 ${Math.round(22 * Math.max(0.8, sc))}px "Plex Mono"`; g.fillStyle = mix(P.ink70, P.paper, tone); g.textAlign = 'center'; g.fillText(String(nlab), px + 150 * sc, Y(180) + 8); g.restore(); }
 }
 function archesView(K, g, t, p, red) {
@@ -303,7 +308,7 @@ function archesView(K, g, t, p, red) {
     flyer(K, g, 470, 900, 1.6, { arch, arrows: arch > 0.5 ? 1 - clamp((arch - 0.5) * 2) * 0.6 : arrows, slot: true, redSlot: red === 'slot', redArch: red === 'arch', t, label: true });
     { const wx = 470 + 300 * 1.6, top = 900 - 470 * 1.6; g.save(); g.strokeStyle = P.ink40; g.lineWidth = 3; g.setLineDash([12, 9]); g.beginPath(); g.moveTo(wx - 30, top + 10); g.lineTo(wx + 330, top - 150); g.lineTo(wx + 690, top + 10); g.stroke(); g.restore();
       mono(g, 'THE ROOF · GONE', wx + 330, top - 40, 22, P.ink40, 'center'); }
-    tag(g, 470, 900 - 300 * 1.6, 120, 210, 'Flying buttress', { size: 30, swing: -2, sub: 'PRESSING ON THE WALL' });
+    tag(g, ...(p.buttressAt ?? [470, 900 - 300 * 1.6]), ...(p.buttressTo ?? [120, 210]), 'Flying buttress', { size: 30, swing: -2, sub: 'PRESSING ON THE WALL' });
     tag(g, 470 + 300 * 1.6 + 30, 900 - 470 * 1.6 + 200, 1250, 640, 'Wall', { size: 30, swing: 2, sub: 'IT DOES NOT MOVE' });
   } else {
     // two rows: the far side (paler, smaller, higher) and the near side; arches slide in one by one across both rows
@@ -314,7 +319,7 @@ function archesView(K, g, t, p, red) {
       g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 7]); g.beginPath(); g.ellipse(x0 + 165 * sc, yB - 295 * sc, 165 * sc + 14, 70 * sc + 16, -0.22, 0, TAU); g.stroke(); g.restore(); }
     PILL = `LARCH ARCHES · ${String(Math.min(28, Math.floor(u * 28 + 0.0001))).padStart(2, '0')} / 28`;
   }
-  if (p.weightAt != null && t >= num(p.weightAt, 0)) tag(g, mode === 'close' ? 470 + 165 * 1.6 : 90 + 13 * 122 + 165 * 0.385, mode === 'close' ? 900 - 220 * 1.6 : 900 - 260 * 0.385, mode === 'close' ? 1150 : 1180, mode === 'close' ? 600 : 420, p.weightText ?? '> 8 t each', { size: 38, swing: -2, sub: p.weightSub ?? 'LARCH · 28 ARCHES · 2019–2020 · REBÂTIR' });
+  if (p.weightAt != null && t >= num(p.weightAt, 0)) tag(g, mode === 'close' ? 470 + 165 * 1.6 : 90 + 13 * 122 + 165 * 0.385, mode === 'close' ? 900 - 220 * 1.6 : 900 - 260 * 0.385, ...(p.weightTo ?? (mode === 'close' ? [1150, 600] : [1180, 420])), p.weightText ?? '> 8 t each', { size: p.weightSize ?? 38, swing: -2, sub: p.weightSub ?? 'LARCH · 28 ARCHES · 2019–2020 · REBÂTIR' });
 }
 
 // ================================================================= view: rooster (dented copper, card plinth, rubble)
@@ -327,7 +332,7 @@ function roosterView(K, g, t, p, red) {
   // plinth
   pen(g, rect(760, 760, 400, 200), { fill: P.card, lw: 3, shadow: true, shadowOff: [16, 18], shade: 0.25, shadeColor: P.kraftD, box: [760, 760, 1160, 960] });
   pen(g, rect(740, 740, 440, 30), { fill: P.kraft, lw: 2.5, breaks: false, highlight: false });
-  mono(g, 'FOUND IN THE RUBBLE · 16 APR 2019', 960, 900, 20, P.ink70, 'center');
+  mono(g, 'FOUND IN THE RUBBLE', 960, 860, 24, P.ink70, 'center'); mono(g, '16 APR 2019', 960, 902, 24, P.ink70, 'center');
   // the rooster: card silhouette in copper, bent tail feathers, a crease (the dent), the vertical rod stub
   g.save(); g.translate(960, 740); const s = 1.25; g.scale(s, s); g.rotate(-4 * D);
   pen(g, rect(-6, -116, 12, 116), { fill: P.ink70, lw: 2, breaks: false, highlight: false });
@@ -363,7 +368,8 @@ function frameToy(K, g, t, p, red, o = {}) {
   const char = p.char ?? 0.25, corner = an(p, 'corner', t, 0), stair = an(p, 'stair', t, 0), lit = p.litAt == null ? 0 : M.E.outCubic(range(t, num(p.litAt, 0), num(p.litAt, 0) + 0.8));
   // card base + shadow
   pen(g, rect(x0 - 70, y1 + 4, W + 140, 36), { fill: P.kraft, lw: 2.5, shadow: true, shadowOff: [18, 16], breaks: false, highlight: false });
-  if (lit > 0) { g.save(); g.globalAlpha *= lit * 0.55; g.fillStyle = P.paper; g.beginPath(); g.ellipse((x0 + x1) / 2, (y0 + y1) / 2, W * 0.8, H * 0.75, 0, 0, TAU); g.fill(); g.restore(); }
+  if (lit > 0) { g.save(); g.globalAlpha *= lit * 0.55; g.fillStyle = P.paper; g.beginPath(); g.ellipse((x0 + x1) / 2, (y0 + y1) / 2, W * 0.8, H * 0.75, 0, 0, TAU); g.fill();
+    g.globalAlpha = lit * 0.5; g.fillStyle = P.brassL; g.beginPath(); g.ellipse((x0 + x1) / 2, (y0 + y1) / 2 + 20, W * 0.66, H * 0.62, 0, 0, TAU); g.fill(); g.restore(); } // ch5 QA r2: a clear warm wash
   const tiers = [[0, 4, y0 + H * 0.52], [4, 8, y0 + H * 0.06]], sill = y1 - H * 0.07, posts = [0.04, 0.27, 0.5, 0.73, 0.96].map(v => x0 + W * v);
   const cc = (x, y) => (x > x0 + W * 0.7 && y > y0 + H * 0.5 ? corner : 0); // the south-east corner chars
   for (const xx of posts) beam(g, [xx, y0 + 4], [xx, sill], 0.35 * px, { col: OAK.M, lw: 1.6, char: xx > x0 + W * 0.9 ? corner * 0.85 : 0 });
@@ -377,19 +383,20 @@ function frameToy(K, g, t, p, red, o = {}) {
   // the stair card to the upper bell level (right side), charred
   { const sx = x1 + 30, sy0 = sill, sy1 = y0 + H * 0.4, n = 8; const pts = [[sx, sy0]]; for (let i = 0; i < n; i++) { const y = lerp(sy0, sy1, (i + 1) / n), x = sx + (i + 1) * 12; pts.push([x - 12, y]); pts.push([x, y]); } pts.push([sx + n * 12 + 40, sy1]); pts.push([sx + n * 12 + 40, sy0]);
     pen(g, poly(pts), { fill: mix(OAK.L, OAK.char, stair * 0.8), lw: 2, breaks: false, highlight: false, hatched: stair > 0.3, hatchColor: rgba(OAK.char, 0.8), box: [sx, sy1, sx + n * 12 + 40, sy0] });
-    if (o.stairLabel) mono(g, 'STAIR · UPPER BELLS', sx + 70, sy0 + 36, 16, P.ink70, 'center'); }
+    if (o.stairLabel) mono(g, 'STAIR · UPPER BELLS', sx + 8, sy1 - 26, 24, P.ink70); } // ch5 QA r2: above the stair, 24 px
   // the bells (brass); scars = ink-40 halftone heat patches; one bell may swing once (never slips off its pin)
   const scars = p.scars ?? [], su = p.scarsAt == null ? 1 : on(t, p.scarsAt, 0.5), centres = [];
   const swingU = p.swingAt == null ? -1 : t - num(p.swingAt, 0);
   BELLS.forEach(([name, kg], i) => {
     const tier = i < 4 ? tiers[0] : tiers[1], j = i % 4, cx = (posts[j] + posts[j + 1]) / 2, d = 1.85 * Math.cbrt(kg / 4162) * px * 1.3, hy = tier[2];
-    const sw = p.swingBell === i && swingU > 0 ? 16 * Math.sin(swingU * 3.2) * Math.exp(-swingU * 0.9) * (swingU < 3.5 ? 1 : 0) : 0;
+    const sw = p.swingBell === i && swingU > 0 ? (p.swingAmp ?? 16) * Math.sin(swingU * 3.2) * Math.exp(-swingU * 0.9) * (swingU < 3.5 ? 1 : 0) : 0; // swingAmp: additive (ch5 QA)
     beam(g, [cx - d * 0.7, hy + 0.35 * px], [cx + d * 0.7, hy + 0.35 * px], 0.4 * px, { col: OAK.D, lw: 1.5 });
     for (const sx of [-1, 1]) pen(g, circle(cx + sx * d * 0.62, hy + 0.35 * px, Math.max(3, 0.12 * px)), { fill: lit > 0.5 ? P.brassL : P.brassL, lw: 1.5, breaks: false, highlight: false });
     bell(g, cx, hy + 0.55 * px, d, { tilt: sw, lw: 2.5 });
     if (scars.includes(i) && su > 0) { g.save(); g.globalAlpha *= su; g.beginPath(); g.ellipse(cx + d * 0.12, hy + 0.55 * px + d * 0.55, d * 0.22, d * 0.14, 0.3, 0, TAU); g.clip(); halftone(g, [cx - d, hy, cx + d, hy + d * 1.2], 0.7, P.ink70, { pitch: 6 }); g.restore(); }
     centres.push([cx, hy + 0.55 * px + d * 0.42, d]);
     if (lit > 0.3) { g.save(); g.globalAlpha *= (lit - 0.3) / 0.7; g.strokeStyle = P.paper; g.lineWidth = 2.5; for (const sx of [-1, 1]) { g.beginPath(); g.arc(cx + sx * d * 0.62, hy + 0.35 * px, Math.max(5, 0.18 * px), -2.2, -0.9); g.stroke(); } g.restore(); }
+    if (p.pinTicks && lit > 0) { const v = clamp((lit - 0.2 - i * 0.07) / 0.3); if (v > 0) { const tx = cx + d * 0.62 + 16, ty = hy - 2; g.save(); g.globalAlpha *= v; pen(g, circle(tx, ty, 15), { fill: P.tealL, lw: 2, breaks: false, highlight: false }); g.strokeStyle = P.tealD; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(tx - 7, ty); g.lineTo(tx - 2, ty + 6); g.lineTo(tx + 8, ty - 6); g.stroke(); g.restore(); } } // pinTicks: ch5 QA r2, every pin holding
   });
   // ghosts: the L85 flame band (brass, faint) and the L86a teal ribbons
   if (p.ghostFlameAt != null) { const v = on(t, p.ghostFlameAt, 0.5) * (p.litAt == null ? 1 : 1 - range(t, num(p.litAt, 0) - 0.2, num(p.litAt, 0) + 0.4)); if (v > 0) { g.save(); g.globalAlpha *= 0.42 * v; for (let i = 0; i < 6; i++) flame(g, x0 + W * (i + 0.5) / 6, sill + 8, (60 + 30 * hash(i)), 70, t, 60 + i, { lean: 0.1 }); g.restore(); } }
@@ -403,8 +410,8 @@ function frameView(K, g, t, p, red) {
   const { P, pen, rect, rrect, poly, circle, mono, tag, mix, OAK, beam } = K;
   // the stair-strip toy folded flat beside it, one teal hose coiled at its foot
   if (p.stripToy) { const sx = 150, sy = 880; pen(g, rect(sx, sy - 40, 330, 54), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false }); pen(g, rect(sx + 330, sy - 30, 60, 34), { fill: P.kraft, lw: 2, breaks: false, highlight: false }); pen(g, rect(sx + 390, sy - 40, 120, 54), { fill: P.card, lw: 2.5, breaks: false, highlight: false });
-    g.save(); g.strokeStyle = P.ink40; g.lineWidth = 1.5; g.beginPath(); for (let x = sx + 14; x < sx + 320; x += 22) { g.moveTo(x, sy - 36); g.lineTo(x, sy + 10); } g.stroke(); g.restore(); mono(g, 'STAIR STRIP · FOLDED', sx + 20, sy + 46, 16, P.ink70);
-    g.save(); g.strokeStyle = P.tealD; g.lineWidth = 13; g.lineCap = 'round'; g.beginPath(); for (let a = 0; a < 3.2 * TAU; a += 0.1) { const r = 22 + a * 5.5; const x = 300 + Math.cos(a) * r * 1.4, y = 960 + Math.sin(a) * r * 0.45; a ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.strokeStyle = P.tealL; g.lineWidth = 6; g.stroke(); g.restore(); }
+    g.save(); g.strokeStyle = P.ink40; g.lineWidth = 1.5; g.beginPath(); for (let x = sx + 14; x < sx + 320; x += 22) { g.moveTo(x, sy - 36); g.lineTo(x, sy + 10); } g.stroke(); g.restore(); mono(g, 'STAIR STRIP · FOLDED', sx + 20, sy + 50, 22, P.ink70);
+    g.save(); g.strokeStyle = P.tealD; g.lineWidth = 13 * (p.coilSc ?? 1); g.lineCap = 'round'; g.beginPath(); for (let a = 0; a < 3.2 * TAU; a += 0.1) { const r = 22 + a * 5.5; const x = (p.coilAt?.[0] ?? 300) + Math.cos(a) * r * 1.4 * (p.coilSc ?? 1), y = (p.coilAt?.[1] ?? 960) + Math.sin(a) * r * 0.45 * (p.coilSc ?? 1); a ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.strokeStyle = P.tealL; g.lineWidth = 6 * (p.coilSc ?? 1); g.stroke(); g.restore(); }
   frameToy(K, g, t, p, red, { stairLabel: !!p.stairLabel });
   if (p.labels) for (const L of p.labels) if (L.inAt == null || t >= num(L.inAt, 0)) tag(g, ...L.at, ...L.to, L.text, { size: L.size ?? 30, swing: L.swing ?? 0, sub: L.sub });
 }
@@ -451,10 +458,12 @@ function typeView(K, g, t, p, red) {
     g.save(); g.globalAlpha *= v; pen(g, rect(x, y, pw, 150), { fill: P.paper, lw: 2.5, shadow: true, breaks: false, highlight: false });
     pen(g, circle(x + 30, y + 30, 8), { fill: P.brass, lw: 1.5, breaks: false, highlight: false }); pen(g, circle(x + pw - 30, y + 30, 8), { fill: P.brass, lw: 1.5, breaks: false, highlight: false });
     g.font = '700 56px "Archivo Narrow"'; g.letterSpacing = '6px'; g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText(pl.text, x + pw / 2, y + 86); g.letterSpacing = '0px';
-    if (pl.sub) mono(g, pl.sub, x + pw / 2, y + 128, 18, P.ink70, 'center'); g.restore(); });
-  if (p.ap) { const v = on(t, p.ap.at ?? 3, 0.4); if (v > 0) { g.save(); g.globalAlpha *= v; g.font = '500 30px "Archivo Narrow"'; const w = Math.max(g.measureText(p.ap.text).width, 300) + 80;
-    pen(g, rect(960 - w / 2, 772 + (1 - v) * 40, w, p.ap.sub ? 106 : 74), { fill: P.kraft, lw: 2, shadow: true, breaks: false, highlight: false });
-    g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText(p.ap.text, 960, 820 + (1 - v) * 40); if (p.ap.sub) mono(g, p.ap.sub, 960, 856 + (1 - v) * 40, 18, P.ink70, 'center'); g.restore(); } }
+    if (pl.sub) mono(g, pl.sub, x + pw / 2, y + 128, 22, P.ink70, 'center'); g.restore(); });
+  if (p.ap) { const v = on(t, p.ap.at ?? 3, 0.4); if (v > 0) { const AS = p.ap.size ?? 46, SB = p.ap.subSize ?? 24, Y = p.ap.y ?? 752, dy = (1 - v) * 40; // ch5 QA r2: phone-size AP plate, full width under the plates
+    g.save(); g.globalAlpha *= v; g.font = `500 ${SB}px "Plex Mono"`; g.letterSpacing = '3px'; const wsub = p.ap.sub ? g.measureText(String(p.ap.sub).toUpperCase()).width : 0; g.letterSpacing = '0px'; g.font = `600 ${AS}px "Archivo Narrow"`; const w = Math.max(g.measureText(p.ap.text).width + 100, wsub + 100, p.ap.w ?? 1400);
+    const H = AS + 56 + (p.ap.sub ? SB + 22 : 0);
+    pen(g, rect(960 - w / 2, Y + dy, w, H), { fill: P.kraft, lw: 2, shadow: true, breaks: false, highlight: false });
+    g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText(p.ap.text, 960, Y + 28 + AS * 0.85 + dy); if (p.ap.sub) mono(g, p.ap.sub, 960, Y + 28 + AS + 18 + SB * 0.85 + dy, SB, P.ink70, 'center'); g.restore(); } }
 }
 
 // ================================================================= view: table (the night briefing table, callbacks)
@@ -468,15 +477,15 @@ function seated(K, g, x, y, sc, { plate = null, plateLit = true, gaze = 0, t = 0
   g.save(); g.strokeStyle = P.ink40; g.lineWidth = 2; for (let i = 0; i < 12; i++) { const a = i / 12 * TAU; g.beginPath(); g.moveTo(Math.cos(a) * 30, -192 + Math.sin(a) * 30); g.lineTo(Math.cos(a) * 36, -192 + Math.sin(a) * 36); g.stroke(); }
   g.strokeStyle = P.ink; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(0, -192); g.lineTo(Math.cos(gaze) * 26, -192 + Math.sin(gaze) * 26); g.stroke(); g.restore();
   g.restore();
-  if (plate) { g.save(); g.font = '600 20px "Plex Mono"'; g.letterSpacing = '3px'; const w = g.measureText(plate.toUpperCase()).width + 36; g.restore();
-    pen(g, rect(x - w / 2, y + 18 * sc, w, 40), { fill: plateLit ? P.paper : '#a99e8b', lw: 2, shadow: true, breaks: false, highlight: false }); mono(g, plate, x, y + 18 * sc + 28, 20, P.ink, 'center', 600); }
+  if (plate) { const PS = 28; g.save(); g.font = `600 ${PS}px "Plex Mono"`; g.letterSpacing = '3px'; const w = g.measureText(plate.toUpperCase()).width + 44; g.restore(); // ch5 QA r2: 28 px plates
+    pen(g, rect(x - w / 2, y + 18 * sc, w, 52), { fill: plateLit ? P.paper : '#a99e8b', lw: 2, shadow: true, breaks: false, highlight: false }); mono(g, plate, x, y + 18 * sc + 36, PS, P.ink, 'center', 600); }
 }
 function tableView(K, g, t, p, red) {
   const { P, pen, rect, rrect, poly, circle, mono, tag, mix, redRing, OAK, halftone } = K;
   // a window card (night beyond), the table top (oak card, seen from above at an angle), figures behind it
   pen(g, rect(1500, 230, 300, 230), { fill: P.nightD, lw: 3, breaks: false, highlight: false }); g.save(); g.strokeStyle = P.ink; g.lineWidth = 5; g.beginPath(); g.moveTo(1650, 230); g.lineTo(1650, 460); g.moveTo(1500, 345); g.lineTo(1800, 345); g.stroke(); g.restore();
   mono(g, 'POLICE HEADQUARTERS · NIGHT OF 15 APR 2019', 96, 140, 22, rgba(P.paper, 0.85));
-  const figs = p.figures ?? [{ x: 520, plate: 'GEN. GALLET · Paris fire brigade', gaze: 0.6 }, { x: 960, plate: 'PRESIDENT MACRON', gaze: 1.6 }, { x: 1380, plate: null, gaze: 2.4 }];
+  const figs = p.figures ?? [{ x: 560, plate: 'GEN. GALLET · FIRE BRIGADE', gaze: 0 }, { x: 1360, plate: 'PRESIDENT MACRON', gaze: Math.PI }]; // ch5 QA r2: Gallet and the president seated opposite, no unlabelled third figure
   for (const f of figs) seated(K, g, f.x, 520, 1.15, { plate: f.plate, t, gaze: f.gaze ?? 1.57 });
   const top = [[160, 600], [1760, 600], [1900, 1000], [20, 1000]];
   pen(g, poly(top), { fill: OAK.M, lw: 3, shadow: true, shade: 0.3, shadeColor: OAK.D, box: [20, 600, 1900, 1000] });
@@ -489,18 +498,18 @@ function tableView(K, g, t, p, red) {
     pen(g, cardBox(560, 250, -2), { fill: P.card, lw: 3, shadow: true, shadowOff: [12, 14], breaks: false, highlight: false });
     g.save(); g.translate(cx, cy); g.rotate(-2 * D);
     g.font = '700 54px "Archivo Narrow"'; g.letterSpacing = '5px'; g.fillStyle = P.ink; g.textAlign = 'left'; g.fillText('DO NOTHING', -250, -40); g.letterSpacing = '0px';
-    g.font = '700 64px "Archivo Narrow"'; g.fillText('05:00', -250, 50); mono(g, 'BOTH TOWERS GONE BY MORNING', -250, 96, 16, P.ink70);
+    g.font = '700 64px "Archivo Narrow"'; g.fillText('05:00', -250, 50); mono(g, 'BOTH TOWERS GONE', -250, 98, 24, P.ink70);
     const fade = 1 - 0.75 * on(t, p.fadeAt ?? 1, 2.0);
     for (const [i, x] of [[0, 120], [1, 205]]) { g.save(); g.globalAlpha *= fade; pen(g, rect(x, -90, 60, 170), { fill: '#d9cdb7', lw: 2.5, breaks: false, highlight: false }); g.restore();
       g.save(); g.strokeStyle = i === 0 && red === 'tower' ? P.red : P.ink70; g.lineWidth = i === 0 && red === 'tower' ? 3.5 : 2; g.setLineDash([8, 6]); g.strokeRect(x - 6, -96, 72, 182); g.restore(); }
-    mono(g, 'N', 150, 110, 16, P.ink70, 'center'); mono(g, 'S', 235, 110, 16, P.ink70, 'center');
+    mono(g, 'N', 150, 112, 24, P.ink70, 'center'); mono(g, 'S', 235, 112, 24, P.ink70, 'center');
     g.restore();
   } else {
     pen(g, cardBox(520, 230, 1.5), { fill: P.card, lw: 3, shadow: true, shadowOff: [12, 14], breaks: false, highlight: false });
     g.save(); g.translate(cx, cy); g.rotate(1.5 * D);
     g.font = '700 64px "Archivo Narrow"'; g.letterSpacing = '6px'; g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText('SEND THEM IN', 0, 12); g.letterSpacing = '0px';
     for (let i = 0; i < 5; i++) { g.save(); g.translate(-90 + i * 45, 72); pen(g, (gg) => { gg.beginPath(); gg.roundRect(-7, -26, 14, 26, 7); }, { fill: P.teal, lw: 1.6, breaks: false, highlight: false }); g.restore(); }
-    if (red === 'card') { g.strokeStyle = P.red; g.lineWidth = 7; g.beginPath(); g.moveTo(-260, 115); g.lineTo(260, 115); g.stroke(); g.lineWidth = 3; g.setLineDash([9, 7]); g.strokeRect(-276, -131, 552, 262); }
+    if (red === 'card') { g.strokeStyle = P.red; g.lineWidth = 7; g.beginPath(); g.moveTo(-260, 115); g.lineTo(260, 115); g.stroke(); }
     g.restore();
     // the other card, face down to the side
     pen(g, (gg) => { gg.save(); gg.translate(420, 860); gg.rotate(8 * D); gg.beginPath(); gg.rect(-170, -80, 340, 160); gg.restore(); }, { fill: P.kraftD, lw: 2.5, shadow: true, breaks: false, highlight: false, hatched: true, hatchColor: P.ink40, box: [230, 760, 610, 960] });
@@ -515,27 +524,48 @@ function marginView(K, g, t, p, red) {
   sideCard(g, 0, 0, kk, { sky: 'night', fireS: fireSections(0), roofGone: 1, glow: 0, glowWin: false, spire: 'gone', smoke: 0, wind: 0 }, t); g.restore();
   pen(g, rect(400, 900, 1120, 28), { fill: '#6d6156', lw: 2.5, breaks: false, highlight: false });
   // the two wheels: left (unlit, dimmed), right (stopped)
-  const disc = (x, y, label, sub, dim) => { g.save(); if (dim) g.globalAlpha *= 0.5;
+  const hide = p.hideAt == null ? 1 : 1 - range(t, num(p.hideAt, 0), num(p.hideAt, 0) + 0.5); // hideAt: ch5 QA r2, both wheels and their tags fade out
+  const disc = (x, y, label, sub, dim) => { if (hide <= 0) return; g.save(); g.globalAlpha *= hide; if (dim) g.globalAlpha *= 0.5;
     pen(g, gearPath(x, y, 118, 18, 0.1), { fill: P.brass, lw: 3, shadow: true, shade: 0.4, shadeColor: P.brassD, box: [x - 118, y - 118, x + 118, y + 118], breaks: false });
     pen(g, circle(x, y, 84), { fill: P.card, lw: 2.5, breaks: false, highlight: false });
     g.strokeStyle = P.ink40; g.lineWidth = 2; for (let i = 0; i < 24; i++) { const a = i / 24 * TAU; g.beginPath(); g.moveTo(x + Math.cos(a) * 70, y + Math.sin(a) * 70); g.lineTo(x + Math.cos(a) * 80, y + Math.sin(a) * 80); g.stroke(); }
     g.strokeStyle = P.ink; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 58, y - 22); g.stroke(); pen(g, circle(x, y, 10), { fill: P.brassD, lw: 2, breaks: false, highlight: false });
-    g.restore(); tag(g, x, y + 118, x - 90, y + 160, label, { size: 28, swing: dim ? -2 : 2, night: true, sub }); };
+    g.restore(); if (p.wheelTags !== false) { g.save(); g.globalAlpha *= hide; tag(g, x, y + 118, x - 90, y + 160, label, { size: 30, swing: dim ? -2 : 2, night: true, sub }); g.restore(); } }; // wheelTags false: ch5 QA r2
   disc(330, 540, 'Clock one', 'DELAY · UNLIT', true); disc(1590, 540, 'Clock two', 'DEADLINE · STOPPED', false);
   // the bracket: drops over the whole model, touching neither wheel
   const u = on(t, p.bracketAt ?? 0.4, 0.55), x0 = 520, x1 = 1400, y = 300 - (1 - u) * 260;
   if (u > 0) { const col = red === 'bracket' ? P.red : P.ink;
     g.save(); g.strokeStyle = col; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0, y + 60); g.lineTo(x0, y); g.lineTo(x1, y); g.lineTo(x1, y + 60); g.stroke();
     g.fillStyle = col; g.beginPath(); g.moveTo(960 - 16, y); g.lineTo(960, y - 22); g.lineTo(960 + 16, y); g.fill(); g.restore();
-    g.save(); g.font = '600 20px "Plex Mono"'; g.letterSpacing = '3px'; const lab = p.bracketText ?? '1/4 H – 1/2 H · MARGIN (ESTIMATE)', w = g.measureText(lab).width + 50; g.restore();
-    pen(g, rect(960 - w / 2, y - 92, w, 52), { fill: P.card, lw: 2, shadow: true, breaks: false, highlight: false }); mono(g, lab, 960, y - 58, 20, P.ink, 'center', 600);
-    if (p.empty) { g.save(); g.strokeStyle = rgba(P.paper, 0.7); g.lineWidth = 2.5; g.setLineDash([10, 9]); g.strokeRect(x0 + 24, y + 22, x1 - x0 - 48, 230); g.restore();
-      mono(g, 'HOW CLOSE: NOT MEASURED', 960, y + 150, 24, rgba(P.paper, 0.9), 'center'); } }
+    g.save(); g.font = '600 26px "Plex Mono"'; g.letterSpacing = '3px'; const lab = p.bracketText ?? '1/4 H – 1/2 H · MARGIN (ESTIMATE)', w = g.measureText(lab).width + 60; g.restore();
+    pen(g, rect(960 - w / 2, y - 100, w, 60), { fill: P.card, lw: 2, shadow: true, breaks: false, highlight: false }); mono(g, lab, 960, y - 60, 26, P.ink, 'center', 600);
+    // the bracket's inside stays empty (VISUALS L105a): a dashed box inset above the tower tops, no text inside
+    if (p.empty) { const bw = x1 - x0 - 48, bh = p.emptyH ?? 120, bx = x0 + 24, by = y + 22;
+      if (p.searchAt == null) { g.save(); g.strokeStyle = rgba(P.paper, 0.7); g.lineWidth = 2.5; g.setLineDash([10, 9]); g.strokeRect(bx, by, bw, bh); g.restore(); }
+      else { // searchAt (ch5 QA r2): a dashed fill scans the inside left to right, then erases: nothing is found; the dashed box stays
+        const s0 = num(p.searchAt, 0.3), sd = num(p.searchDur, 1.6), a = range(t, s0, s0 + sd * 0.55), b = range(t, s0 + sd * 0.55, s0 + sd);
+        g.save(); g.strokeStyle = rgba(P.paper, 0.7); g.lineWidth = 2.5; g.setLineDash([10, 9]); g.strokeRect(bx, by, bw, bh);
+        const xa = bx + bw * M.E.inOutSine(b), xb = bx + bw * M.E.inOutSine(a); if (xb > xa + 1) { g.beginPath(); g.rect(xa, by, xb - xa, bh); g.clip(); g.setLineDash([]); g.strokeStyle = rgba(P.paper, 0.4); g.lineWidth = 2; g.beginPath(); for (let q = bx - bh; q < bx + bw; q += 18) { g.moveTo(q, by + bh); g.lineTo(q + bh, by); } g.stroke(); }
+        g.restore(); } } }
+  // additive (ch5 QA): the NYT headline card slides in tilted from the right over the model (headline {kicker, text[], at, underline, underAt})
+  if (p.headline) { const H = p.headline, v = M.E.outCubic(range(t, num(H.at, 0.3), num(H.at, 0.3) + 0.7)); if (v > 0) {
+    const ls = [].concat(H.text ?? []), fs = H.size ?? 110, cw = H.w ?? 1640, ch = 120 + ls.length * (fs + 18), tl = H.tilt ?? -2.2; // w, tilt: ch5 QA r2
+    g.save(); g.globalAlpha *= clamp(v * 1.6); g.translate(960, (H.y ?? 560) - (1 - v) * 40); g.rotate((tl + (1 - v) * Math.sign(tl || -1) * 2) * D); g.scale(1 + (1 - v) * 0.05, 1 + (1 - v) * 0.05); // ch5 QA r2: drops in place (fade + settle), never slides past the frame edge
+    pen(g, rect(-cw / 2, -ch / 2, cw, ch), { fill: P.card, lw: 2.5, shadow: true, shadowOff: [16, 18], breaks: false, highlight: false, shade: 0.1, shadeColor: P.kraftD, box: [-cw / 2, -ch / 2, cw / 2, ch / 2] });
+    pen(g, rrect(-50, -ch / 2 - 18, 100, 36, 6), { fill: P.brass, lw: 2, breaks: false, highlight: false });
+    if (H.kicker) mono(g, H.kicker, -cw / 2 + 70, -ch / 2 + 62, 24, P.ink70);
+    g.font = `700 ${fs}px "Archivo Narrow"`; g.fillStyle = P.ink; g.textBaseline = 'alphabetic';
+    const ly = (i) => -ch / 2 + 92 + (i + 1) * (fs + 6) - 10;
+    ls.forEach((l, i) => g.fillText(l, -cw / 2 + 70, ly(i)));
+    if (red === 'under' && H.underline) { const li = ls.findIndex(l => l.includes(H.underline)); if (li >= 0) { const l = ls[li], ux = -cw / 2 + 70 + g.measureText(l.slice(0, l.indexOf(H.underline))).width, w = g.measureText(H.underline).width, u = M.E.outCubic(range(t, num(H.underAt, num(H.at, 0.3) + 0.9), num(H.underAt, num(H.at, 0.3) + 0.9) + 0.5)), yy = ly(li) + 18;
+      if (u > 0) { g.fillStyle = P.red; g.fillRect(ux, yy, w * u, 10); g.beginPath(); g.moveTo(ux + w * u, yy - 5); g.lineTo(ux + w * u + 15, yy + 5); g.lineTo(ux + w * u, yy + 15); g.fill(); } } }
+    g.restore(); } }
 }
 
 // ================================================================= the set
 export async function held(ctx, shot) {
-  const K = KIT, { P, canvasLayer, applyCam, camAt, fibre, sourceSlip, tag, mono } = K;
+  const K0 = KIT, K = { ...K0, tag: (g, ax, ay, x, y, text, o = {}) => K0.tag(g, ax, ay, x, y, text, { ...o, subScale: o.subScale ?? Math.max(0.55, 24 / (o.size ?? 30)) }) }; // ch5 QA r2: tag subs >= 24 px
+  const { P, canvasLayer, applyCam, camAt, fibre, sourceSlip, tag, mono } = K;
   const L0 = canvasLayer(ctx); const p = shot.params ?? {};
   const view = p.view ?? 'vault', night = (p.sky ?? 'day') !== 'day';
   return { scene: null, camera: null, layer: L0.layer, canvas: L0.cv, update(t) {
@@ -556,12 +586,12 @@ export async function held(ctx, shot) {
     g.setTransform(s, 0, 0, s, 0, 0);
     if (view === 'frame' && p.loupe) { const L = { ...p.loupe }; if (p.loupeTo) { const v = M.E.inOutSine(range(t, num(p.loupeTo.at, 0), num(p.loupeTo.at, 0) + num(p.loupeTo.dur, 1.2))); for (const k of ['x', 'y', 'r', 'z', 'fx', 'fy']) if (p.loupeTo[k] != null) L[k] = lerp(L[k], p.loupeTo[k], v); }
       const c = camAt(p, t); const toScr = (x, y) => [960 + (x - c.x) * c.z, 540 + (y - c.y) * c.z];
-      const [fx, fy] = toScr(L.fx, L.fy); L.fx = fx; L.fy = fy; L.z = L.z;
-      if (L.r > 8) loupe(K, g, t, s, L, () => { g.save(); g.translate(960, 540); g.scale(c.z, c.z); g.translate(-c.x, -c.y); frameToy(K, g, t, { ...p }, red); g.restore(); }); }
+      const [fx, fy] = toScr(L.fx, L.fy); L.fx = fx; L.fy = fy; L.z = L.z; if (L.track) { L.x = fx; L.y = fy; } // track: ch5 QA r2
+      if (L.r > 8) loupe(K, g, t, s, L, () => { g.save(); g.translate(960, 540); g.scale(c.z, c.z); g.translate(-c.x, -c.y); frameToy(K, g, t, { ...p }, 'none'); g.restore(); }); } // the lens shows the corner without a second red mark
     if (PILL) { g.save(); g.font = '500 22px "Plex Mono"'; g.letterSpacing = '3.5px'; const w = g.measureText(PILL).width + 60; g.restore(); const px = view === 'plan' ? 1920 - 96 - w : 96; K.pen(g, K.rrect(px, 60, w, 58, 29), { fill: P.ink, lw: 2, breaks: false, highlight: false, shadow: true }); mono(g, PILL, px + w / 2, 98, 22, P.paper, 'center'); PILL = null; }
     if (p.kicker && !(view === 'type' && p.headline)) mono(g, p.kicker, 96, 128, 24, night ? 'rgba(247,246,241,0.9)' : P.ink70);
     if (p.flap) flapCard(K, g, t, p);
-    if (p.strip) lowerStrip(K, g, p.strip, t, num(p.stripAt, 0), p.stripUntil == null ? null : num(p.stripUntil, 1e9), p.stripBig ?? 1, p.stripTop === true);
+    if (p.strip) { const su = p.stripUntilAt ?? p.stripUntil; lowerStrip(K, g, p.strip, t, num(p.stripAt, 0), su == null ? null : num(su, 1e9), p.stripBig ?? 1, p.stripTop === true, { x: p.stripX, y: p.stripY }); }
     if (p.chips) chipStack(K, g, p.chips, t);
     fibre(g, night ? 0.06 : 0.09);
     sourceSlip(g, p.source === undefined ? 'ILLUSTRATION · PAPER MODEL' : p.source);

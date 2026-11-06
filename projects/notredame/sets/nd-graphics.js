@@ -21,7 +21,8 @@
 //             stamps), redAt, subAt, fire (0.75), sizes ([..] px per line), source
 //   chapter   num, title, sub, delay ('+30'), deadline ('0:30'), lit ('delay'|'deadline'|'none'), date (split-flap line, e.g.
 //             '15 APR 2019 · 19:50'), red ('clock'|'num'|'none'), labelL/subL/labelR/subR (the wheels' tags), at (numeral
-//             roll), titleAt, subAt, dateAt, source
+//             roll), titleAt, subAt, dateAt, source; numFrom (units drum starts on that numeral, flips once), wheelRoll
+//             (false: the two clock wheels sit at their values, no count-up)
 //   quote     text (English), fr (French original, shown above), by, role, date, highlight (word prefixes, matched in both
 //             lines; the one red), strip (a thinner plain-type strip under the card, no quote marks), cameo ('mic'|'none'),
 //             at, frAt, hlAt, stripAt, size, source
@@ -190,13 +191,13 @@ function deskRuler(g, k, { y = 1028, x = 1200, w = 600 } = {}) {
   k.view(1);
 }
 // the coloured plate (bible §1.4: teal-shade ground, light fills, paper pen line): two posterised steps + halftone + pale gears
-function plateGround(g, t, k, { seed = 2 } = {}) {
+function plateGround(g, t, k, { seed = 2, nudge = null } = {}) { // nudge: additive (ch6), [[dx, dy] per background gear]
   k.view(0.25);
   g.fillStyle = PLATE; g.fillRect(-200, -200, 2320, 1480);
   poly(deckle([[-200, 640], [2120, 520], [2120, 1300], [-200, 1300]], seed + 40, 4, 16))(g); g.fillStyle = PLATE_D; g.fill();
   halftone(g, [-200, -200, 2120, 1300], lampShade([-200, -200, 2120, 1300], 0, 0.3, 0.4), PLATE_D, { pitch: 12 });
   const r0 = M.rng(seed * 13 + 1);
-  for (let i = 0; i < 4; i++) { const gx = [1700, 980, 120, 1880][i], gy = [120, 1040, 980, 760][i], r = 120 + r0() * 120, n = Math.round(r / 9);
+  for (let i = 0; i < 4; i++) { const gx = [1700, 980, 120, 1880][i] + (nudge?.[i]?.[0] ?? 0), gy = [120, 1040, 980, 760][i] + (nudge?.[i]?.[1] ?? 0), r = 120 + r0() * 120, n = Math.round(r / 9);
     pen(g, gearPath(gx, gy, r, n, t * (i % 2 ? -0.06 : 0.07) + i), { fill: mix(PLATE, P.tealL, 0.32), line: null, shade: 0.3, shadeColor: mix(PLATE, P.tealD, 0.5), box: [gx - r, gy - r, gx + r, gy + r] }); }
   k.view(1);
 }
@@ -213,8 +214,13 @@ async function gset(ctx, shot, paint, cam = {}) {
   const camO = { push: 0.035, dx: 16, dy: 6, ...cam, ...(p.cam ?? {}) };
   const k = { D: Dur, shot, p, t: 0 };
   // view(depth): slow lean-in + drift for a layer at that depth (0 locked, 1 the main plane, > 1 nearer), plus the 2D breath
-  k.view = (depth = 1) => { const u = E.inOutSine(clamp(k.t / Dur)), z = (1 + camO.push * u * depth) * (1 + (camBreath(k.t) - 1) * depth), ox = (u - 0.5) * camO.dx * depth, oy = (u - 0.5) * camO.dy * depth;
-    g.setTransform(s * z, 0, 0, s * z, s * (960 - 960 * z - ox), s * (540 - 540 * z - oy)); };
+  // cam.z0 / cam.cx / cam.cy (additive, ch1): a standing crop (zoom z0 on the point cx, cy) under the push; layers nearer than 1 get all of it
+  // cam.to = { z0, cx, cy, at, dur } (additive, ch1 QA): an eased push from the standing crop to a second one on a cue
+  // (cam.to may be an array of such keyframes, applied in order)
+  const cTo = [].concat(camO.to ?? []).map(kf => ({ ...kf, t0: cue(shot, kf.at, 1) })), cAt = (key, def) => cTo.reduce((v, kf) => (kf[key] == null ? v : lerp(v, kf[key], E.inOutCubic(range(k.t, kf.t0, kf.t0 + (kf.dur ?? 1.2))))), camO[key] ?? def);
+  k.view = (depth = 1) => { const u = E.inOutSine(clamp(k.t / Dur)), dz = Math.min(1, depth), zb = 1 + (cAt('z0', 1) - 1) * dz, cx = 960 + (cAt('cx', 960) - 960) * dz, cy = 540 + (cAt('cy', 540) - 540) * dz;
+    const z = zb * (1 + camO.push * u * depth) * (1 + (camBreath(k.t) - 1) * depth), ox = (u - 0.5) * camO.dx * depth, oy = (u - 0.5) * camO.dy * depth;
+    g.setTransform(s * z, 0, 0, s * z, s * (960 - cx * z - ox), s * (540 - cy * z - oy)); };
   k.flat = () => g.setTransform(s, 0, 0, s, 0, 0);
   return { scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(), layer: L0.layer, canvas: L0.cv, k, update(t) {
     k.t = t; smokeFor(p, shot);
@@ -240,29 +246,31 @@ async function title(ctx, shot) {
   const sub = p.sub === undefined ? (end ? 'MAINSPRING · THE HIDDEN MACHINERY' : '15 APRIL 2019 · PARIS') : p.sub;
   return gset(ctx, shot, (g, t, _p, k) => {
     k.night = !end; k.source = p.source === undefined ? 'ILLUSTRATION · PAPER MODEL' : p.source;
-    const CW = end ? 700 : 1300, CX = 960 - CW / 2;
+    const CW = p.cw ?? (end ? 700 : 1300), CX = 960 - CW / 2; // cw / cy: additive (ch0)
     // ---- the world behind the card
     if (!end) {
-      k.view(0.3); backdrop(g, t, { sky: 'dusk', yH: 1012, glow: 0.85, seed: 61 });
+      k.view(0.3);
+      if (p.kraftNight) { g.fillStyle = P.kraft; g.fillRect(-200, -200, 2320, 1480); halftone(g, [-200, -200, 2120, 1240], (x, y) => clamp(0.92 - y / 1500), P.night, { pitch: 10, max: 0.95 }); } // kraftNight: additive (ch0): a paper night, kraft under navy halftone (no glow)
+      else backdrop(g, t, { sky: 'dusk', yH: 1012, glow: p.glow ?? 0.85, seed: 61 });
       k.view(0.7);
       const kk = 6.6, ox = 960 - 64 * kk, oy = 1012, X = (m) => ox + m * kk, Y = (m) => oy - m * kk;
       const fire = (p.fire ?? 0.75) * (0.55 + 0.45 * E.inOutSine(range(t, 0, 3)));
-      const st = { sky: 'dusk', fireS: fireSections(fire), roofGone: 0.35, spire: 'gone', glow: 0.9, wind: 0.45, smoke: 0.8, glowWin: true };
+      const st = { sky: 'dusk', fireS: fireSections(fire), roofGone: 0.35, spire: 'gone', glow: p.glow ?? 0.9, wind: 0.45, smoke: 0.8, glowWin: (p.glow ?? 1) > 0, ringsOff: p.glow === 0 }; // glow: additive (ch0)
       sideFire(g, X, Y, kk, st, t, true); sideCard(g, ox, oy, kk, st, t); sideFire(g, X, Y, kk, st, t, false);
       k.view(1.1); quay(g, oy, 80, { col: '#4b4f5e', line: P.ink, shadeCol: '#2c3142' });
     } else {
       k.view(0.3); backdrop(g, t, { sky: 'day', yH: 1000, glow: 0, seed: 62 });
       k.view(0.7);
-      const kk = 4.9, ox = 960 - 64 * kk, oy = 1000, X = (m) => ox + m * kk, Y = (m) => oy - m * kk;
+      const kk = p.modelK ?? 4.9, ox = (p.modelX ?? 960) - 64 * kk, oy = 1000, X = (m) => ox + m * kk, Y = (m) => oy - m * kk; // modelK / modelX: additive (ch6 end card)
       const st = { sky: 'day', fireS: fireSections(0), roofGone: 0, spire: 'standing', glow: 0 };
       sideCard(g, ox, oy, kk, st, t); spire(g, X(66), Y(43), kk, looks('day'), st, t);
-      KIT.trees(g, oy + 4, 40, ox - 40, { col: P.sage, shadeCol: P.sageD, seed: 5, t, size: 40, line: P.ink }); KIT.trees(g, oy + 4, ox + 128 * kk + 40, 1890, { col: P.sage, shadeCol: P.sageD, seed: 6, t, size: 40, line: P.ink });
+      if (p.trees !== false) KIT.trees(g, oy + 4, 40, ox - 40, { col: P.sage, shadeCol: P.sageD, seed: 5, t, size: 40, line: P.ink }); if (p.trees !== false) KIT.trees(g, oy + 4, ox + 128 * kk + 40, 1890, { col: P.sage, shadeCol: P.sageD, seed: 6, t, size: 40, line: P.ink });
       k.view(1.1); quay(g, oy, 80, { col: P.card, line: P.ink, shadeCol: P.kraftD });
     }
     // ---- the title card hangs from a string on two brass clips (it drops in, settles, sways a little on twos)
     k.view(1);
     const drop = E.decel(range(t, t0, t0 + 0.55)), settle = Math.sin(clamp((t - t0 - 0.55) / 0.5) * Math.PI) * (1 - range(t, t0 + 0.55, t0 + 1.05)) * 6;
-    const lh = sizes.map(sz => sz * 1.0), CH = lh.reduce((a, b) => a + b, 0) + (sub ? 70 : 0) + 96 + (redS ? 30 : 0) + (end ? 70 : 0), CY = end ? 70 : 52;
+    const lh = sizes.map(sz => sz * 1.0), CH = lh.reduce((a, b) => a + b, 0) + (sub ? 70 : 0) + 96 + (redS ? 30 : 0) + (end ? 70 : 0), CY = p.cy ?? (end ? 70 : 52);
     const dy = (1 - drop) * -(CH + 200) + settle, sway = Math.sin(twos(t) * 1.4) * 0.35 - 0.6;
     g.save(); g.strokeStyle = end ? P.ink70 : rgba(P.paper, 0.75); g.lineWidth = 2; g.beginPath(); g.moveTo(-40, CY - 30); g.quadraticCurveTo(960, CY + 6, 1960, CY - 30); g.stroke(); g.restore();
     g.save(); g.translate(0, dy); g.translate(960, CY); g.rotate(sway * D); g.translate(-960, -CY);
@@ -274,11 +282,12 @@ async function title(ctx, shot) {
       const lw = measure(g, l, { size: sz, f: 'inter', weight: 900, track: -0.02 }), scl = Math.min(1, (CW - 110) / lw), x0 = 960 - lw * scl / 2;
       const ws = l.split(/\s+/); let x = x0;
       const red0 = redS && l.includes(redS) ? l.indexOf(redS) : -1;
-      ws.forEach((w, j) => { const tw = tW[wi++], u = range(t, tw, tw + 0.2), sc = 1 + 0.35 * (1 - E.inQuad(u));
+      ws.forEach((w, j) => { const tw = tW[wi++], u = range(t, tw, tw + 0.2), sc = 1 + (p.slam ?? 0.35) * (1 - E.inQuad(u)); // slam: additive (ch6): word stamp overshoot (0 = words land at their final size and place)
         const pre = ws.slice(0, j).join(' ') + (j ? ' ' : ''), inRed = red0 >= 0 && pre.length >= red0 && pre.length < red0 + redS.length;
         const ww = measure(g, w, { size: sz, f: 'inter', weight: 900, track: -0.02 }) * scl, sp = measure(g, ' ', { size: sz, f: 'inter', weight: 900 }) * scl;
-        if (u > 0) { g.save(); g.translate(x + ww / 2, y - sz * 0.35); g.scale(sc * scl, sc); g.globalAlpha *= clamp(u * 3);
-          txt(g, w, 0, sz * 0.35, { size: sz, f: 'inter', weight: 900, track: -0.02, align: 'center', color: inRed ? P.red : P.ink }); g.restore(); }
+        const piv = j > 0 && p.slamLeft ? 0 : ww / 2; // slamLeft: additive (ch0): later words in a line slam from their own left edge (no overlap with the word before)
+        if (u > 0) { g.save(); g.translate(x + piv, y - sz * 0.35); g.scale(sc * scl, sc); g.globalAlpha *= clamp(u * 3);
+          txt(g, w, (ww / 2 - piv) / scl, sz * 0.35, { size: sz, f: 'inter', weight: 900, track: -0.02, align: 'center', color: inRed ? P.red : P.ink }); g.restore(); }
         x += ww + sp; });
       if (red0 >= 0) { const pw = measure(g, l.slice(0, red0), { size: sz, f: 'inter', weight: 900, track: -0.02 }) * scl, rw = measure(g, redS, { size: sz, f: 'inter', weight: 900, track: -0.02 }) * scl;
         redUnder(g, x0 + pw, y + 14, rw, range(t, tRed, tRed + 0.4), { th: 9 }); }
@@ -291,7 +300,7 @@ async function title(ctx, shot) {
     for (const cx of [CX + 120, CX + CW - 120]) brassClip(g, cx, CY + dy + 8, 0.8, sway);
     if (!end) { k.view(1.3); embers(g, 0, 1080, 1920, 600, t, { n: 26, seed: 71, size: 6 }); }
     else { // three small bells hang under the card, swinging home (secondary motion)
-      for (let i = 0; i < 3; i++) { const bx = CX + 170 + i * 180, by0 = CY + dy + CH + 8, L = 70 + i * 26, a = Math.sin(t * 1.8 + i * 1.3) * 7 * D, bx2 = bx + Math.sin(a) * L, by2 = by0 + Math.cos(a) * L;
+      for (let i = 0; i < 3; i++) { const bx = p.bellX?.[i] ?? CX + 170 + i * 180, by0 = CY + dy + CH + 8, L = p.bellLen?.[i] ?? 70 + i * 26, /* bellX / bellLen: additive (ch6) */ a = Math.sin(t * 1.8 + i * 1.3) * 7 * D, bx2 = bx + Math.sin(a) * L, by2 = by0 + Math.cos(a) * L;
         g.save(); g.strokeStyle = P.ink70; g.lineWidth = 2; g.beginPath(); g.moveTo(bx, by0); g.lineTo(bx2, by2); g.stroke(); g.restore(); bell(g, bx2, by2, 56 - i * 6, { tilt: a / D, lw: 2 }); } }
   }, { push: 0.03, dx: 0, dy: 4 });
 }
@@ -318,7 +327,7 @@ async function chapter(ctx, shot) {
   const delay = p.delay === undefined ? '+30' : p.delay, deadline = p.deadline === undefined ? '0:30' : p.deadline;
   return gset(ctx, shot, (g, t, _p, k) => {
     k.night = true; k.source = p.source === undefined ? 'TIMES: NYT, 16 JUL 2019 · ÉLYSÉE RECORD · CULTURE MINISTRY' : p.source;
-    plateGround(g, t, k, { seed: num + 2 });
+    plateGround(g, t, k, { seed: num + 2, nudge: p.gearNudge }); // gearNudge: additive (ch6)
     // the hinge line of the lid (this plate is the inside of a case that will open): dashed paper line + brass knuckles
     k.view(0.8); g.save(); g.strokeStyle = rgba(P.paper, 0.4); g.lineWidth = 2; g.setLineDash([10, 8]); g.beginPath(); g.moveTo(70, 40); g.lineTo(70, 1040); g.stroke(); g.restore();
     for (const v of [0.18, 0.5, 0.82]) pen(g, rrect(63, 40 + 1000 * v - 14, 14, 28, 4), { fill: P.brass, lw: 2, breaks: false, highlight: false });
@@ -327,7 +336,9 @@ async function chapter(ctx, shot) {
     const hx = 150, hy = 170, dwid = 170, dh = 250, kin = E.back(1.6)(range(t, 0.05, 0.4));
     g.save(); g.translate(hx + 200, hy + 160); g.scale(kin, kin); g.translate(-(hx + 200), -(hy + 160));
     housing(g, hx, hy, 2 * dwid + 70, dh + 60, { t });
-    const u = range(t, tNum, tNum + Math.max(0.5, 0.12 * Math.max(1, num % 10))), uT = tick(u, Math.max(1, num % 10), 0.45) * (num % 10), tens = Math.floor(num / 10);
+    // numFrom (additive, ch2+): the units drum starts parked on the previous chapter's numeral and flips only the last step
+    const n0 = num < 10 && p.numFrom != null ? clamp(Math.round(p.numFrom), 0, num) : 0, nSteps = Math.max(1, (num % 10) - n0);
+    const u = range(t, tNum, tNum + Math.max(0.5, 0.12 * nSteps)), uT = n0 + tick(u, nSteps, 0.45) * ((num % 10) - n0), tens = Math.floor(num / 10);
     charDrum(g, hx + 30, hy + 30, dwid, dh, '0123456789'.split(''), tens * E.inOutCubic(u), { sizeK: 0.78 });
     charDrum(g, hx + 40 + dwid, hy + 30, dwid, dh, '0123456789'.split(''), num < 10 ? uT : (num % 10) * E.inOutCubic(u), { stripes: u > 0 && u < 1 ? 0.8 : 0, sizeK: 0.78 });
     g.restore();
@@ -344,8 +355,8 @@ async function chapter(ctx, shot) {
     k.view(1.05);
     const kw = E.decel(range(t, 0.25, 0.9));
     g.save(); g.translate((1 - kw) * 300, 0); g.globalAlpha *= clamp(kw * 2);
-    if (delay != null) miniWheel(g, 1210, 230, delay, { lit: lit === 'delay' ? 1 : 0, t, roll: range(t, 0.6, 1.8), red: red === 'clock' && lit === 'delay', label: p.labelL ?? DELAY.label, sub: p.subL ?? DELAY.sub });
-    if (deadline != null) miniWheel(g, 1210, 520, deadline, { lit: lit === 'deadline' ? 1 : 0, t, roll: range(t, 0.8, 2.0), red: red === 'clock' && lit === 'deadline', label: p.labelR ?? DEADLINE.label, sub: p.subR ?? DEADLINE.sub });
+    if (delay != null) miniWheel(g, 1210, 230, delay, { lit: lit === 'delay' ? 1 : 0, t, roll: p.wheelRoll === false ? 1 : range(t, 0.6, 1.8), red: red === 'clock' && lit === 'delay', label: p.labelL ?? DELAY.label, sub: p.subL ?? DELAY.sub });
+    if (deadline != null) miniWheel(g, 1210, 520, deadline, { lit: lit === 'deadline' ? 1 : 0, t, roll: p.wheelRoll === false ? 1 : range(t, 0.8, 2.0), red: red === 'clock' && lit === 'deadline', label: p.labelR ?? DEADLINE.label, sub: p.subR ?? DEADLINE.sub });
     g.restore();
     // the date flap (split-flap card tiles flipping through letters before they land)
     if (p.date) { const ch = String(p.date).split(''), TWd = Math.min(34, 640 / ch.length - 3), x0 = 1180;
@@ -391,7 +402,7 @@ async function quote(ctx, shot) {
   const tStrip = cue(shot, p.stripAt, Math.min(Dd * 0.6, said.at(-1) + 0.6));
   return gset(ctx, shot, (g, t, _p, k) => {
     k.source = p.source === undefined ? 'SOURCE: PARIS PROSECUTOR, 2019 · AS REPORTED' : p.source;
-    deskGround(g, t, k, { seed: 5 });
+    deskGround(g, t, k, { seed: 5, mat: p.mat !== false }); // mat false: additive (ch1)
     const ki = E.decel(range(t, t0, t0 + 0.6)), oy = (1 - ki) * 900;
     const CX = 140, CW = 1640, tx = p.cameo === 'none' ? CX + 110 : CX + 450, maxW = CX + CW - 90 - tx;
     const size = p.size ?? (en.length > 140 ? 56 : en.length > 80 ? 68 : 88);
@@ -406,7 +417,7 @@ async function quote(ctx, shot) {
     };
     const enQ = enW.map((w, i) => (i === 0 ? '“' : '') + w + (i === enW.length - 1 ? '”' : ''));
     const hFr = fr ? drawWords(frW, frT, 40, P.ink70, 0, true).h + 24 : 0, hEn = drawWords(enQ, said, size, P.ink, 0, true).h;
-    const CH = Math.max(p.cameo === 'none' ? 360 : 480, 100 + hFr + size * 0.6 + hEn + 150), CY = Math.max(110, 470 - CH / 2);
+    const CH = Math.max(p.cameo === 'none' ? 360 : 480, 100 + hFr + size * 0.6 + hEn + 150), CY = Math.max(110, (p.cy ?? 470) - CH / 2); // cy: additive (ch0)
     // an under-sheet (kraft), then the main card (teal spine: the system speaking), clipped at the top-left
     k.view(0.85); g.save(); g.translate(0, oy * 1.05); card(g, CX + 50, CY + 30, CW - 80, CH - 20, { fill: P.kraft, rot: 1.6, seed: 12, thick: 4, shade: 0.2 }); g.restore();
     k.view(1); g.save(); g.translate(0, oy);
@@ -422,11 +433,11 @@ async function quote(ctx, shot) {
     // byline (up from the start: a paused frame always says who is speaking)
     const yb = Math.max(y + 60, CY + CH - 110);
     g.fillStyle = P.brass; g.fillRect(tx, yb - 34, 64 * E.emphasized(range(t, t0 + 0.3, t0 + 0.8)), 5);
-    txt(g, `— ${by}`, tx, yb + 10, { size: 40, f: 'narrow', weight: 700, color: P.ink, alpha: E.outCubic(range(t, t0 + 0.25, t0 + 0.7)) });
-    txt(g, [role, date].filter(Boolean).join(' · '), tx, yb + 52, { size: 22, f: 'mono', weight: 500, color: P.ink70, track: 0.12, upper: true, alpha: E.outCubic(range(t, t0 + 0.35, t0 + 0.8)) });
+    txt(g, `— ${by}`, tx, yb + 10, { size: p.bySize ?? 40, f: 'narrow', weight: 700, color: P.ink, alpha: E.outCubic(range(t, t0 + 0.25, t0 + 0.7)) });
+    txt(g, [role, date].filter(Boolean).join(' · '), tx, yb + 10 + Math.round((p.bySize ?? 40) * 1.05), { size: p.roleSize ?? 22, f: 'mono', weight: 500, color: P.ink70, track: 0.12, upper: true, alpha: E.outCubic(range(t, t0 + 0.35, t0 + 0.8)) });
     g.restore();
     brassClip(g, CX + 140, CY + oy + 6, 1.15, -4);
-    deskProps(g, k, { pencil: [1360, 1000, -4], tape: [1820, 120, 0], divider: [60, 560, -16] });
+    deskProps(g, k, { pencil: [1360, 1000, -4], tape: p.tape === undefined ? [1820, 120, 0] : p.tape, divider: [60, 560, -16] }); // tape: additive (ch0)
     // the strip: a thinner kraft strip under the card, plain type, no quote marks, types on
     if (p.strip) { const ks = E.decel(range(t, tStrip, tStrip + 0.4)), sw = Math.min(1500, measure(g, p.strip, { size: 30, f: 'narrow', weight: 600 }) + 80), sy = Math.min(900, CY + CH + 50);
       g.save(); g.translate((1 - ks) * -1600, 0); card(g, 210, sy, sw, 70, { fill: P.kraft, seed: 44, thick: 4, shade: 0.1, torn: true }); txt(g, typed(p.strip, t, tStrip + 0.3, 70), 250, sy + 46, { size: 30, f: 'narrow', weight: 600, color: P.ink }); g.restore(); }
@@ -445,7 +456,7 @@ const DOC_DEFAULTS = {
     highlight: 'flying water tankers', label: 'RECREATED POST · TEXT ONLY', source: 'SOURCE: POST OF 15 APR 2019 · RECREATED, TEXT ONLY' },
 };
 const DOC_STYLE = { big: { size: 190, f: 'narrow', weight: 700, track: 0.06 }, mono: { size: 54, f: 'mono', weight: 500, track: 0.04 }, tech: { size: 36, f: 'mono', weight: 400, track: 0.08 },
-  serif: { size: 64, f: 'serif', weight: 400 }, small: { size: 26, f: 'mono', weight: 500, track: 0.1 }, post: { size: 72, f: 'narrow', weight: 600 } };
+  serif: { size: 64, f: 'serif', weight: 400 }, ghost: { size: 36, f: 'mono', weight: 400, track: 0.08, ghost: true }, small: { size: 26, f: 'mono', weight: 500, track: 0.1 }, post: { size: 72, f: 'narrow', weight: 600 } };
 async function doc(ctx, shot) {
   const p = shot.params ?? {}, kind = DOC_DEFAULTS[p.kind] ? p.kind : 'ticket', dd = DOC_DEFAULTS[kind];
   const head = p.head ?? dd.head, meta = p.meta ?? dd.meta, lines = (p.lines ?? dd.lines).map(l => (typeof l === 'string' ? { t: l } : l)).map(l => ({ ...l, t: String(l.t).replace(/\s+/g, ' ') }));
@@ -459,15 +470,16 @@ async function doc(ctx, shot) {
   // may wrap: each wrapped piece gets its own rectangle)
   const layout = (g) => {
     const out = [], hl = []; let y = kind === 'post' ? 110 : 160, tc = tType;
-    lines.forEach((ln) => {
+    lines.forEach((ln, li) => {
       const st = ln.style ?? (kind === 'post' ? 'post' : kind === 'statement' || kind === 'report' ? 'serif' : 'mono'), o = DOC_STYLE[st];
-      const wl = wrap(g, ln.t, maxW, o), lh = o.size * (st === 'big' ? 0.95 : 1.22); let off = 0; const y0 = y;
+      const wl = wrap(g, ln.t, maxW, o), lh = o.size * (st === 'big' ? 0.95 : 1.22); let off = 0; if (ln.gap) y += ln.gap; const y0 = y; // gap: additive (ch5 QA), extra air above a line
       if (ln.at != null) tc = Math.max(tc, cue(shot, ln.at, tc)); // additive (ch1): a line types on at its own cue
-      wl.forEach((l) => { y += lh * (st === 'big' ? 1 : 0.86); out.push({ l, y, o, t0: tc }); tc += l.length / 60 + 0.08;
+      const tc0 = tc;
+      wl.forEach((l) => { y += lh * (st === 'big' ? 1 : 0.86); out.push({ l, y, o, t0: tc, li, kl: ln.keyline }); tc += l.length / 60 + 0.08;
         for (const [hi, h] of hls.entries()) { const i0 = ln.t.indexOf(h); if (i0 < 0) continue; const a = Math.max(i0, off), b = Math.min(i0 + h.length, off + l.length);
           if (b > a) hl.push({ hi, x: tx + measure(g, l.slice(0, a - off), o), y: y - o.size * 0.78, w: measure(g, l.slice(a - off, b - off).trim(), o), hh: o.size * 0.95, long: h.length > 22 }); }
         off += l.length + 1; y += lh * (st === 'big' ? 0 : 0.14); });
-      if (ln.box) out.push({ box: [tx - 14, y0 + 6, maxW + 20, y - y0 + 12] });
+      if (ln.box) out.push({ box: [tx - 14, y0 + 6, maxW + 20, y - y0 + 12], bt: ln.at != null ? tc0 : null }); // bt: additive (ch5 QA), a cued line's box appears with it
       y += st === 'big' ? 20 : 12; });
     const H = Math.max(kind === 'post' ? 360 : 460, y + (kind === 'post' ? 110 : 90));
     return { out, hl, H, tEnd: tc, Y0: Math.max(150, Math.min(560 - H / 2, 990 - H - 40)) };
@@ -479,15 +491,27 @@ async function doc(ctx, shot) {
     deskGround(g, t, k, { seed: 9 + kind.length, matBox: [X0 - 90, Y0 - 40, W + 240, H + 120], matRot: 1.4 });
     const ki = E.decel(range(t, t0, t0 + 0.6)), ox = (1 - ki) * 1400, rot = kind === 'ticket' ? -1.2 : kind === 'report' ? 0.8 : -0.5;
     k.view(1); g.save(); g.translate(ox, 0);
+    // fork (additive, ch0 L3): { at, from, a, b, subA, subB, scale, top } on the cue the ticket shrinks up and its zone line forks to two slots
+    const FK = p.fork, fT = FK ? cue(shot, FK.at, 2) : 1e9, fu = FK ? E.inOutCubic(range(t, fT, fT + 0.6)) : 0, fsc = 1 - (1 - (FK?.scale ?? 0.6)) * fu, fdy = ((FK?.top ?? 150) - Y0) * fu;
+    const fMap = (x, y) => [960 + (x - 960) * fsc + ox, Y0 + fdy + (y - Y0) * fsc];
+    if (fu > 0) { g.translate(960, Y0 + fdy); g.scale(fsc, fsc); g.translate(-960, -Y0); }
     g.translate(X0 + W / 2, Y0 + H / 2); g.rotate(rot * D); g.translate(-(X0 + W / 2), -(Y0 + H / 2));
     if (kind === 'ticket') { // a punched card ticket in a brass panel frame: perforations, punched column, corner cut, ledger rules
-      housing(g, X0 - 50, Y0 - 50, W + 100, H + 100, { t, gears: true });
+      if (p.bezel) { // bezel: additive (ch1 QA, L20 POV): the panel screen set in a dark card monitor on a stand, on the desk
+        pen(g, rrect(960 - 110, Y0 + H + 120, 220, 150, 6), { fill: P.ink70, lw: 2.5, breaks: false, highlight: false, shade: 0.3, shadeColor: P.ink, box: [850, Y0 + H + 120, 1070, Y0 + H + 270] });
+        pen(g, rrect(960 - 300, Y0 + H + 250, 600, 44, 10), { fill: P.ink70, lw: 2.5, shadow: true, breaks: false, highlight: false });
+        pen(g, rrect(X0 - 130, Y0 - 130, W + 260, H + 270, 30), { fill: '#2c3442', lw: 3, shadow: true, shadowOff: [16, 18], shade: lampShade([X0 - 130, Y0 - 130, X0 + W + 130, Y0 + H + 140], 0, 0.3, 0.5), shadeColor: '#1b2230', box: [X0 - 130, Y0 - 130, X0 + W + 130, Y0 + H + 140] });
+        pen(g, circle(X0 + W + 80, Y0 + H + 95, 9), { fill: P.brassL, lw: 1.5, breaks: false, highlight: false }); }
+      housing(g, X0 - 50, Y0 - 50, W + 100, H + 100, { t, gears: !p.bezel });
       pen(g, poly([[X0 + 40, Y0], [X0 + W, Y0], [X0 + W, Y0 + H], [X0, Y0 + H], [X0, Y0 + 40]]), { fill: P.card, lw: 3, shadow: true, shadowOff: [12, 14], shade: lampShade([X0, Y0, X0 + W, Y0 + H], 0, 0.14, 0.5), shadeColor: P.kraftD, box: [X0, Y0, X0 + W, Y0 + H] });
       g.fillStyle = P.kraftD; for (let yy = Y0 + 70; yy < Y0 + H - 20; yy += 36) { g.beginPath(); g.arc(X0 + 34, yy, 9, 0, TAU); g.fill(); g.strokeStyle = P.ink40; g.lineWidth = 1.25; g.stroke(); }
       g.strokeStyle = P.ink40; g.lineWidth = 1.5; g.setLineDash([3, 7]); g.beginPath(); g.moveTo(X0 + 64, Y0 + 10); g.lineTo(X0 + 64, Y0 + H - 10); g.stroke(); g.setLineDash([]);
       g.strokeStyle = rgba(P.teal, 0.25); g.lineWidth = 1.5; g.beginPath(); for (let yy = Y0 + 170; yy < Y0 + H; yy += 60) { g.moveTo(X0 + 80, yy); g.lineTo(X0 + W - 20, yy); } g.stroke();
       // the panel lamp (brass bezel, a teal glass): lit while the strings print
       pen(g, circle(X0 + W - 70, Y0 + 70, 30), { fill: P.brass, lw: 2.5, breaks: false, highlight: false }); pen(g, circle(X0 + W - 70, Y0 + 70, 18), { fill: Math.floor(t * 4) % 2 && t < tEnd + 0.5 ? P.tealL : P.teal, lw: 2, breaks: false, highlight: false });
+      if (p.flashAt != null) { const fa = cue(shot, p.flashAt, 1), fl = range(t, fa, fa + 0.9); // additive (ch1): the screen "lights up": dim card until the cue, then a teal flash that settles
+        if (t < fa) { g.fillStyle = 'rgba(20,35,61,0.22)'; g.fillRect(X0, Y0, W, H); }
+        else if (fl < 1) { g.save(); g.globalAlpha *= 1 - fl; g.fillStyle = rgba(P.paper, 0.75); g.fillRect(X0, Y0, W, H); g.strokeStyle = P.tealL; g.lineWidth = 34 * (1 - fl) + 6; g.strokeRect(X0 - 24, Y0 - 24, W + 48, H + 48); g.restore(); } }
     } else if (kind === 'post') {
       card(g, X0, Y0, W, H, { torn: false, r: 26, seed: 3, thick: 6, shade: 0.12 });
       pen(g, circle(X0 + 60, Y0 + 66, 22), { fill: P.kraft, line: P.ink40, lw: 2, breaks: false, highlight: false }); // a blank placeholder disc (no avatar)
@@ -504,17 +528,48 @@ async function doc(ctx, shot) {
     if (meta?.length) txt(g, meta.join(' · '), kind === 'post' ? hx + measure(g, head, hdStyle) + 24 : tx, kind === 'post' ? hy : hy + 40, { size: 22, f: 'mono', weight: 500, color: P.ink70, track: 0.14, upper: true, alpha: E.outCubic(range(t, tType - 0.2, tType + 0.3)) });
     if (kind !== 'post') { g.fillStyle = P.ink; g.fillRect(tx, Y0 + 138, maxW, 3); }
     // the text, typed on line by line (2 characters per frame, a cursor block while typing)
-    for (const it of out) { if (it.box) { g.strokeStyle = P.ink; g.lineWidth = 2.5; g.strokeRect(it.box[0], Y0 + it.box[1], it.box[2], it.box[3]); continue; }
+    for (const it of out) { if (it.box) { if (it.bt != null && t < it.bt) continue; g.strokeStyle = P.ink; g.lineWidth = 2.5; g.strokeRect(it.box[0], Y0 + it.box[1], it.box[2], it.box[3]); continue; }
+      if (it.o.ghost) { const gw = measure(g, it.l, it.o); pen(g, rrect(tx, Y0 + it.y - it.o.size * 0.62, gw, it.o.size * 0.62, 6), { fill: P.ink20, line: null }); continue; } // ghost: additive (ch0): a greyed placeholder bar (text withheld)
       const s2 = typed(it.l, t, it.t0, 60); txt(g, s2, tx, Y0 + it.y, { ...it.o, color: P.ink });
+      if (it.kl && s2.length === it.l.length) { const kw = measure(g, it.l, it.o); g.save(); g.strokeStyle = P.brass; g.lineWidth = 5; rrect(tx - 22, Y0 + it.y - it.o.size * 0.8, kw + 34, it.o.size * 0.92, 10)(g); g.stroke(); g.restore(); } // keyline: additive (ch0 L3): a thin brass keyline, the same FEU flap as L2/L4 without its red
       if (s2.length < it.l.length && s2.length > 0) { g.fillStyle = P.ink70; g.fillRect(tx + measure(g, s2, it.o) + 4, Y0 + it.y - it.o.size * 0.7, it.o.size * 0.45, it.o.size * 0.8); } }
+    let trunk = null;
+    let trunkC = null;
+    if (FK && fu > 0) { const fw = FK.from ?? 'ATTIC', zi = out.find(it => it.l && it.l.includes(fw)); if (zi) { const zw = measure(g, zi.l, zi.o), uy = Y0 + zi.y + 14, xr = tx + zw + 34, v = range(t, fT, fT + 0.4);
+      const wx0 = tx + measure(g, zi.l.slice(0, zi.l.indexOf(fw)), zi.o), ww = measure(g, fw, zi.o), xc = wx0 + ww / 2; // ch0 fix: the leader leaves from under the word itself, not the line end
+      g.save(); g.strokeStyle = P.ink; g.lineWidth = 4; g.globalAlpha *= v; g.beginPath(); g.moveTo(wx0, uy); g.lineTo(wx0 + ww, uy); g.moveTo(xc, uy); g.lineTo(xc, Y0 + H); g.stroke(); g.restore(); trunk = [xc, Y0 + H]; trunkC = xr; } }
+    if (p.check) { const v = E.outBack ? E.outBack(range(t, cue(shot, p.check.at, 0.3), cue(shot, p.check.at, 0.3) + 0.4)) : range(t, cue(shot, p.check.at, 0.3), cue(shot, p.check.at, 0.3) + 0.4); if (v > 0) { // check: additive (ch0 L3): a small teal tick chip
+      const cw = measure(g, p.check.text, { size: 24, f: 'mono', weight: 500, track: 0.1 }) + 110, cx0 = X0 + W - 140 - cw, cy0 = Y0 + 40;
+      g.save(); g.translate(cx0 + cw / 2, cy0 + 30); g.scale(v, v); g.translate(-(cx0 + cw / 2), -(cy0 + 30));
+      pen(g, rrect(cx0, cy0, cw, 60, 30), { fill: P.tealL, lw: 2.5, breaks: false, highlight: false });
+      g.strokeStyle = P.tealD; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx0 + 26, cy0 + 31); g.lineTo(cx0 + 40, cy0 + 45); g.lineTo(cx0 + 64, cy0 + 16); g.stroke();
+      txt(g, p.check.text, cx0 + 84, cy0 + 39, { size: 24, f: 'mono', weight: 500, track: 0.1, color: P.ink, upper: true }); g.restore(); } }
     if (kind === 'post') { g.fillStyle = P.ink40; g.fillRect(tx, Y0 + H - 74, maxW, 1.5); txt(g, 'RECREATED · TEXT ONLY · NO LOGO, NO AVATAR', tx, Y0 + H - 38, { size: 20, f: 'mono', weight: 500, color: P.ink70, track: 0.14 }); }
     // highlights: a marker loop round a short phrase, a notched underline under a long or wrapped one (each at its cue)
     const T0 = Math.max(tEnd + 0.2, Math.min(Dd * 0.45, tEnd + 0.6)), multi = new Set(hl.map(h => h.hi).filter((v, i, a) => a.indexOf(v) !== i));
     hl.forEach((f, i) => { const th = cue(shot, ats[f.hi], T0 + f.hi * 0.9) + (i * 0.2), kk = range(t, th, th + 0.55); const off = [].concat(p.hlOff ?? [])[f.hi]; if (off != null && t >= cue(shot, off, 1e9)) return; // hlOff: additive (ch1)
-      if (!f.long && !multi.has(f.hi)) markerLoop(g, f.x, Y0 + f.y, f.w, f.hh, kk, { seed: 7 + i, pad: 9 }); else redUnder(g, f.x, Y0 + f.y + f.hh + 6, f.w, kk, { th: 7 }); });
+      if (p.hlStyle !== 'underline' && !f.long && !multi.has(f.hi)) markerLoop(g, f.x, Y0 + f.y, f.w, f.hh, kk, { seed: 7 + i, pad: 9 }); else redUnder(g, f.x, Y0 + f.y + f.hh + 6, f.w, kk, { th: 7 }); }); // hlStyle 'underline': additive (ch1)
+    k.insetA = null; if (p.inset) { const hf = hl.filter(h => h.hi === (p.inset.hl ?? hls.length - 1)).at(-1); if (hf) { const q = g.getTransform().transformPoint(new DOMPoint(hf.x + hf.w + 14, Y0 + hf.y + hf.hh * 0.6)); k.insetA = [q.x, q.y]; } } // inset anchor: additive (ch1 QA)
     g.restore();
+    if (trunk) { const [lx, fy0] = fMap(...trunk), fx = fMap(trunkC, 0)[0], F = [fx, fy0 + 90], v1 = range(t, fT + 0.35, fT + 0.75), v2 = E.outCubic(range(t, fT + 0.6, fT + 1.2)), sw = 380, shh = 150, sY = F[1] + 110;
+      const slots = [[fx - 330, FK.a ?? 'NAVE ATTIC', FK.subA], [fx + 330, FK.b ?? 'SACRISTY ATTIC', FK.subB]];
+      g.save(); g.globalAlpha *= v1; pen(g, rect(fx - 600, F[1] - 40, 1200, sY + shh + 40 - (F[1] - 40)), { fill: P.kraft, lw: 2.5, shadow: true, breaks: false, highlight: false, shade: 0.15, shadeColor: P.kraftD, box: [fx - 600, F[1] - 40, fx + 600, sY + shh] });
+      for (const [cx, cy] of [[fx - 578, F[1] - 18], [fx + 578, F[1] - 18]]) pen(g, circle(cx, cy, 8), { fill: P.brass, lw: 2, breaks: false, highlight: false });
+      txt(g, 'SORTING BOARD', fx - 560, F[1] + 20, { size: 18, f: 'mono', weight: 500, track: 0.14, color: P.ink70 });
+      g.strokeStyle = P.ink; g.lineWidth = 4; g.beginPath(); g.moveTo(lx, fy0); g.lineTo(lx, fy0 + 24); g.lineTo(fx, fy0 + 24); g.lineTo(F[0], F[1]); g.stroke(); g.restore();
+      if (v2 > 0) { g.save(); g.globalAlpha *= v2; g.strokeStyle = P.ink; g.lineWidth = 4; g.setLineDash([12, 8]);
+        for (const [cx] of slots) { g.beginPath(); g.moveTo(F[0], F[1]); g.quadraticCurveTo(cx, F[1], cx, sY); g.stroke(); } g.restore();
+        for (const [cx, lab, sub] of slots) { g.save(); g.globalAlpha *= v2; g.translate(0, (1 - v2) * 30);
+          pen(g, rect(cx - sw / 2, sY, sw, shh), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false, shade: 0.15, shadeColor: P.kraftD, box: [cx - sw / 2, sY, cx + sw / 2, sY + shh] });
+          pen(g, rect(cx - sw / 2, sY + shh * 0.6, sw, shh * 0.4), { fill: P.kraftD, lw: 2, breaks: false, highlight: false });
+          txt(g, lab, cx, sY + 66, { size: 46, f: 'narrow', weight: 700, track: 0.04, align: 'center', color: P.ink }); if (sub) txt(g, sub, cx, sY + shh - 20, { size: 18, f: 'mono', weight: 500, track: 0.12, align: 'center', color: P.ink70 }); g.restore(); }
+        pen(g, circle(F[0], F[1], 11), { fill: P.red, line: P.ink, lw: 2.5, breaks: false, highlight: false }); redRing(g, F[0], F[1], 26); } }
+    if (p.ticks) { const ta = cue(shot, p.ticks.at, 1), nT = p.ticks.n ?? 4; g.save(); g.translate(ox, 0); g.translate(X0 + W / 2, Y0 + H / 2); g.rotate(rot * D); g.translate(-(X0 + W / 2), -(Y0 + H / 2)); // additive (ch1): ink ticks count the strings
+      for (let i = 0; i < nT; i++) { const it = out.find(o2 => o2.li === i && o2.l); if (!it) continue; const v = range(t, ta + i * 0.28, ta + i * 0.28 + 0.2); if (v <= 0) continue;
+        const bx = tx - 38, by = Y0 + it.y - it.o.size * 0.32; g.strokeStyle = P.ink; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.moveTo(bx - 14, by - 2); g.lineTo(bx - 14 + 10 * clamp(v * 2), by - 2 + 12 * clamp(v * 2)); if (v > 0.5) g.lineTo(bx - 4 + 22 * clamp((v - 0.5) * 2), by + 10 - 26 * clamp((v - 0.5) * 2)); g.stroke(); }
+      g.restore(); }
     if (kind !== 'ticket') brassClip(g, X0 + 120 + ox, Y0 + 6, 0.85, rot - 3);
-    deskProps(g, k, { pencil: [1380, 1000, -5], tape: [1800, 130, 0] });
+    deskProps(g, k, { pencil: [1380, 1000, -5], tape: p.tape === undefined ? [1800, 130, 0] : p.tape }); // tape: additive (ch0)
     // the stamp: an ink rubber stamp drops (6 f in-quad + 2 f hold) and stays (institutions never bounce)
     if (stamp) { const ts = cue(shot, stamp.at, Math.min(Dd - 1, T0 + 1.0)), u = range(t, ts, ts + 0.2); if (u > 0) {
       const sx = X0 + W - 260 + ox, sy = Y0 + H - 110, sc = 1 + 0.6 * (1 - E.inQuad(u)), sw = measure(g, stamp.text, { size: 34, f: 'mono', weight: 500, track: 0.12 }) + 50;
@@ -522,14 +577,82 @@ async function doc(ctx, shot) {
       g.strokeStyle = P.ink; g.lineWidth = 5; g.strokeRect(-sw / 2, -36, sw, 72); g.lineWidth = 2; g.strokeRect(-sw / 2 + 8, -28, sw - 16, 56);
       txt(g, stamp.text, 0, 12, { size: 34, f: 'mono', weight: 500, track: 0.12, align: 'center', color: P.ink });
       halftone(g, [-sw / 2, -36, sw / 2, 36], (xx, yy) => (hsh(Math.floor(xx / 7) * 13 + Math.floor(yy / 7)) > 0.82 ? 0.35 : 0), P.card, { pitch: 7 }); g.restore(); } }
+    if (p.handset) radioHandset(g, k, t, p.handset); // additive (ch1)
+    if (p.inset) { k.flat(); const sc = g.getTransform().a; docInset(g, t, shot, p.inset, k.insetA ? [k.insetA[0] / sc, k.insetA[1] / sc] : null); } // additive (ch1 QA)
     // the label pill (top-left): what this is
-    k.flat(); const lab = p.label ?? dd.label, lw2 = measure(g, lab, { size: 20, f: 'mono', weight: 500, track: 0.14 }) + 48;
-    pen(g, rrect(96, 60, lw2, 44, 22), { fill: P.ink, lw: 2, breaks: false, highlight: false, shadow: true });
-    pen(g, circle(118, 82, 6), { fill: P.brassL, line: null }); txt(g, lab, 132, 89, { size: 20, f: 'mono', weight: 500, color: P.paper, track: 0.14 });
+    k.flat(); const lab = p.label ?? dd.label, lw2 = measure(g, lab, { size: 20, f: 'mono', weight: 500, track: 0.14 }) + 48, [lpx, lpy] = p.labelXY ?? [96, 60]; // labelXY: additive (ch1 QA)
+    pen(g, rrect(lpx, lpy, lw2, 44, 22), { fill: P.ink, lw: 2, breaks: false, highlight: false, shadow: true });
+    pen(g, circle(lpx + 22, lpy + 22, 6), { fill: P.brassL, line: null }); txt(g, lab, lpx + 36, lpy + 29, { size: 20, f: 'mono', weight: 500, color: P.paper, track: 0.14 });
   }, { push: 0.035, dx: 18 });
 }
 
+// additive (ch1 QA, L15): doc `inset` — a small side-elevation card of the cathedral; on its cue a pen line runs from the
+// highlighted line's end (the last highlight, or inset.hl) down to the nave roof, then the roof attic is outlined (ink).
+// inset { at (card in), lineAt (pen line), x, y, w, h, label, sub, tag [dx, dy] }
+const INSET_ATTIC = [[14, 33], [14, 43], [112, 43], [117, 41.5], [121.5, 37.5], [124, 33]];
+function docInset(g, t, shot, o, A) {
+  const ta = cue(shot, o.at, 0.2), u = E.decel(range(t, ta, ta + 0.5)); if (u <= 0) return;
+  const x = o.x ?? 1060, y = o.y ?? 230, w = o.w ?? 780, h = o.h ?? 640, kk = (w - 90) / 130, ox = x + 46, oy = y + h - 56, Xm = (m) => ox + m * kk, Ym = (m) => oy - m * kk;
+  g.save(); g.translate((1 - u) * 900, 0);
+  card(g, x, y, w, h, { seed: 61, thick: 6, shade: 0.1, torn: false, r: 8 });
+  g.fillStyle = mix(P.tealL, P.paper, 0.55); g.fillRect(x + 14, oy, w - 28, h - (oy - y) - 14); g.strokeStyle = P.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(x + 14, oy); g.lineTo(x + w - 14, oy); g.stroke();
+  { const st = { sky: 'day', fireS: fireSections(0), roofGone: 0, spire: 'standing', spireU: 0, glow: 0, wind: 0.3, smoke: 0, glowWin: false }; sideCard(g, ox, oy, kk, st, t); sideFire(g, Xm, Ym, kk, st, t, false); } // sideFire draws the spire (no fire at 0)
+  txt(g, o.label ?? 'NOTRE-DAME · SOUTH SIDE', x + 26, y + 40, { size: 20, f: 'mono', weight: 500, color: P.ink70, track: 0.14 });
+  g.restore();
+  const la = cue(shot, o.lineAt, ta + 0.6), lu = E.inOutCubic(range(t, la, la + 0.7)), T = [Xm(o.toM?.[0] ?? 46), Ym(o.toM?.[1] ?? 43)];
+  if (A && lu > 0) { const C = [lerp(A[0], T[0], 0.55), Math.min(A[1], T[1]) - 60], N = 40, at3 = (v) => [(1 - v) ** 2 * A[0] + 2 * (1 - v) * v * C[0] + v * v * T[0], (1 - v) ** 2 * A[1] + 2 * (1 - v) * v * C[1] + v * v * T[1]];
+    g.save(); g.strokeStyle = P.ink; g.lineWidth = 4.5; g.lineCap = 'round'; g.beginPath(); for (let i = 0; i <= N * lu; i++) (i ? g.lineTo : g.moveTo).call(g, ...at3(i / N)); g.stroke(); g.restore();
+    pen(g, circle(A[0], A[1], 7), { fill: P.ink, line: null }); if (lu >= 1) pen(g, circle(T[0], T[1], 9), { fill: P.ink, line: P.paper, lw: 2, breaks: false, highlight: false }); }
+  const ou = range(t, la + 0.6, la + 1.1); if (ou > 0) { g.save(); g.globalAlpha *= ou; g.strokeStyle = P.ink; g.lineWidth = 4; g.setLineDash([12, 8]); g.beginPath(); INSET_ATTIC.forEach(([mx, my], i) => (i ? g.lineTo : g.moveTo).call(g, Xm(mx), Ym(my))); g.closePath(); g.stroke(); g.restore();
+    tag(g, Xm(70), Ym(38), Xm(70) + (o.tag?.[0] ?? -160), Ym(38) + (o.tag?.[1] ?? 150), o.tagText ?? 'Framework', { size: o.tagSize ?? 40, swing: 2, sub: o.tagSub ?? 'THE CATHEDRAL’S OWN ROOF' }); }
+}
+// additive (ch1 L20): an idle brass radio handset in the foreground (layer 1.3), "out of focus by layer": drawn, then a 35 %
+// paper overlay on it (never blurred). o = { x, y, rot, s }
+function radioHandset(g, k, t, o = {}) {
+  k.view(1.3); const x = o.x ?? 330, y = o.y ?? 880, sc = o.s ?? 1.6;
+  const parts = (gg) => { gg.beginPath(); gg.roundRect(-70, -210, 140, 420, 34); gg.rect(28, -330, 18, 130); gg.roundRect(-54, 140, 108, 50, 8); };
+  g.save(); g.translate(x, y); g.rotate((o.rot ?? -18) * D); g.scale(sc, sc);
+  pen(g, rect(28, -330, 18, 130), { fill: P.ink70, lw: 2.5, breaks: false, highlight: false }); pen(g, circle(37, -334, 12), { fill: P.ink, lw: 2, breaks: false, highlight: false });
+  pen(g, rrect(-70, -210, 140, 420, 34), { fill: P.brass, lw: 3, shadow: true, shadowOff: [18, 20], shade: 0.35, shadeColor: P.brassD, box: [-70, -210, 70, 210] });
+  pen(g, rrect(-48, -170, 96, 150, 12), { fill: P.brassD, lw: 2, breaks: false, highlight: false }); g.strokeStyle = P.ink; g.lineWidth = 3; g.beginPath(); for (let yy = -150; yy < -30; yy += 18) { g.moveTo(-34, yy); g.lineTo(34, yy); } g.stroke();
+  pen(g, rrect(-30, 10, 60, 90, 8), { fill: P.ink70, lw: 2, breaks: false, highlight: false }); pen(g, circle(0, 150, 20), { fill: P.brassL, lw: 2, breaks: false, highlight: false });
+  g.fillStyle = rgba(P.paper, o.fog ?? 0.35); parts(g); g.fill(); g.restore(); k.view(1); // fog: additive (ch1 QA)
+}
 // ================================================================= SET: bignumber (the brass odometer)
+
+// additive (ch2 L37): bignumber `scale: true` — ink-40 lead plates drop onto a brass platform scale (dropAt), the dial's red
+// pointer swings to the value on `at`, then the plates split into two labelled stacks (splitAt, split [[n, label], [n, label]])
+function leadScale(g, t, p, t0, val) {
+  const tD = p.dropAt ?? 0.3, tS = p.splitAt ?? 1e9, split = p.split ?? [[4, '210 T · ROOF'], [5, '250 T · SPIRE']], N = split[0][0] + split[1][0];
+  const px = 900, py = 840, pw = 780, sU = E.inOutCubic(range(t, tS, tS + 0.8));
+  // the scale: brass platform on a card body, feet; the dial stands at the right end
+  pen(g, rrect(px - pw / 2 + 20, py + 26, pw - 40, 96, 8), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false, shade: 0.2, shadeColor: P.kraftD, box: [px - pw / 2, py, px + pw / 2, py + 122] });
+  for (const fx of [px - pw / 2 + 60, px + pw / 2 - 90]) pen(g, rrect(fx, py + 120, 40, 18, 4), { fill: P.ink70, lw: 2, breaks: false, highlight: false });
+  pen(g, rrect(px - pw / 2, py, pw, 28, 6), { fill: P.brassL, lw: 2.5, breaks: false, highlight: false, shade: 0.35, shadeColor: P.brass, box: [px - pw / 2, py, px + pw / 2, py + 28] });
+  const dx = 1500, dy = 745, R = 120;
+  pen(g, rect(dx - 14, dy + R - 10, 28, py + 122 - dy - R + 10), { fill: P.brass, lw: 2.5, breaks: false, highlight: false });
+  pen(g, rect(px + pw / 2 - 10, py + 60, dx - px - pw / 2 + 10, 20), { fill: P.brass, lw: 2, breaks: false, highlight: false });
+  pen(g, circle(dx, dy, R + 14), { fill: P.brass, lw: 3, shadow: true, breaks: false, highlight: false });
+  pen(g, circle(dx, dy, R), { fill: P.card, lw: 2, breaks: false, highlight: false });
+  const vmax = 500, ang = (v) => (210 - 240 * v / vmax) * D;
+  g.save(); g.strokeStyle = P.ink; for (let v = 0; v <= vmax; v += 20) { const a = ang(v), big = v % 100 === 0; g.lineWidth = big ? 3 : 1.5; g.beginPath(); g.moveTo(dx + Math.cos(a) * R * 0.92, dy - Math.sin(a) * R * 0.92); g.lineTo(dx + Math.cos(a) * R * (big ? 0.76 : 0.84), dy - Math.sin(a) * R * (big ? 0.76 : 0.84)); g.stroke(); } g.restore();
+  for (let v = 0; v <= vmax; v += 100) { const a = ang(v); txt(g, String(v), dx + Math.cos(a) * R * 0.58, dy - Math.sin(a) * R * 0.58 + 8, { size: 20, f: 'mono', weight: 500, color: P.ink70, align: 'center' }); }
+  txt(g, 'TONNES', dx, dy + R * 0.5, { size: 18, f: 'mono', weight: 500, color: P.ink70, align: 'center', track: 0.2 });
+  const landed = clamp((t - tD) / (0.18 * N)), pv = val * E.back(1.3)(range(t, t0, t0 + 1.0)) + 30 * landed * (1 - range(t, t0, t0 + 0.3)) + Math.sin(t * 9) * 3 * landed * (1 - range(t, t0, t0 + 1));
+  { const a = ang(pv); g.save(); g.lineCap = 'round'; g.strokeStyle = P.ink; g.lineWidth = 10; g.beginPath(); g.moveTo(dx - Math.cos(a) * 18, dy + Math.sin(a) * 18); g.lineTo(dx + Math.cos(a) * R * 0.86, dy - Math.sin(a) * R * 0.86); g.stroke();
+    g.strokeStyle = P.red; g.lineWidth = 6; g.stroke(); g.restore(); pen(g, circle(dx, dy, 13), { fill: P.brassD, lw: 2, breaks: false, highlight: false });
+    if (t >= t0 + 0.6) redRing(g, dx + Math.cos(a) * R * 0.86, dy - Math.sin(a) * R * 0.86, 26, P.red, 3); }
+  // the plates: drop one by one, stack, then split into two stacks with tags
+  const plH = 24, plW = 300;
+  for (let i = 0; i < N; i++) { const ti = tD + i * 0.18, fu = range(t, ti, ti + 0.34); if (fu <= 0) continue;
+    const yStack = py - (i + 1) * plH, left = i < split[0][0], j = left ? i : i - split[0][0], ySplit = py - (j + 1) * plH, xS = left ? px - 220 : px + 220;
+    const yFall = lerp(-120, yStack, E.inQuad(fu)) - (fu >= 1 ? Math.sin(Math.PI * range(t, ti + 0.34, ti + 0.5)) * 8 : 0);
+    const x = lerp(px, xS, sU) + Math.sin(i * 2.3) * 6, y = lerp(yFall, ySplit, sU) - Math.sin(Math.PI * sU) * (60 + j * 6);
+    pen(g, poly([[x - plW / 2, y + plH], [x + plW / 2 - 18, y + plH], [x + plW / 2, y], [x - plW / 2 + 18, y]]), { fill: i % 2 ? '#9aa3b3' : '#8a93a3', lw: 2.5, shadow: fu >= 1, breaks: false, highlight: false, shade: 0.35, shadeColor: P.ink70, box: [x - plW / 2, y, x + plW / 2, y + plH] });
+    g.save(); g.strokeStyle = rgba(P.ink, 0.3); g.lineWidth = 1.2; g.beginPath(); for (let xx = x - plW / 2 + 30; xx < x + plW / 2 - 20; xx += 26) { g.moveTo(xx, y + plH - 3); g.lineTo(xx + 9, y + 3); } g.stroke(); g.restore(); }
+  if (sU > 0.6) { const a = clamp((sU - 0.6) / 0.4); g.save(); g.globalAlpha *= a;
+    split.forEach(([n, lab], s) => { const xS = s ? px + 220 : px - 220, yT = py - n * plH - 34; txt(g, lab, xS, yT, { size: p.splitSize ?? 34, f: 'narrow', weight: 700, color: P.ink, align: 'center' }); }); g.restore(); } // splitSize: additive (ch2 QA)
+}
 async function bignumber(ctx, shot) {
   const p = shot.params ?? {}, v = p.value ?? 460, dec = p.decimals ?? (Number.isInteger(v) ? 0 : 1), from = p.from ?? 0;
   const t0 = cue(shot, p.at ?? p.word, 0.5), dur = p.roll ?? 1.6;
@@ -540,14 +663,16 @@ async function bignumber(ctx, shot) {
     k.source = p.source === undefined ? 'SOURCE: CULTURE MINISTRY (210 T ROOF + 250 T SPIRE)' : p.source;
     deskGround(g, t, k, { seed: 4, matBox: [300, 230, 1500, 660], matRot: -0.8 });
     k.view(1);
-    txt(g, typed(p.kicker ?? (p.value == null ? 'LEAD ON THE ROOF AND THE SPIRE' : ''), t, 0.15), 150, 180, { size: 28, f: 'mono', weight: 500, color: P.ink70, track: 0.16, upper: true });
+    { const kt = p.kicker ?? (p.value == null ? 'LEAD ON THE ROOF AND THE SPIRE' : ''), [kx, ky] = p.kickerXY ?? [150, 180]; // kickerXY, kickerPlate: additive (ch2 QA)
+      if (p.kickerPlate && kt) { const kw = measure(g, kt.toUpperCase(), { size: 28, f: 'mono', weight: 500, track: 0.16 }) + 48; pen(g, rrect(kx - 24, ky - 40, kw, 60, 6), { fill: P.card, lw: 2, shadow: true, breaks: false, highlight: false }); }
+      txt(g, typed(kt, t, 0.15), kx, ky, { size: 28, f: 'mono', weight: 500, color: P.ink70, track: 0.16, upper: true }); }
     // odometer geometry
     const dw = slots.length > 6 ? 130 : 170, dh = dw * 1.45, sepW = dw * 0.42, gap = 14;
     const wOf = (c) => (/\d/.test(c) ? dw : sepW);
     const plate = (s2) => (s2 ? measure(g, s2, { size: dh * 0.62, f: 'narrow', weight: 700 }) + 40 : 0);
     const pw = plate(prefix), sw = plate(suffix), inner = slots.reduce((a, c) => a + wOf(c) + gap, -gap), W = inner + pw + sw + 80 + (pw ? gap : 0) + (sw ? gap : 0), H = dh + 70;
-    const X = 960 - W / 2, Y = 300, kin = E.back(1.6)(range(t, 0.05, 0.4));
-    g.save(); g.translate(960, Y + H / 2); g.scale(kin, kin); g.translate(-960, -(Y + H / 2));
+    const CXn = p.cx ?? 960, X = CXn - W / 2, Y = p.y ?? 300, kin = E.back(1.6)(range(t, 0.05, 0.4)); // y: additive (ch2); cx: additive (ch1)
+    g.save(); g.translate(CXn, Y + H / 2); g.scale(kin * (p.odoScale ?? 1), kin * (p.odoScale ?? 1)); g.translate(-CXn, -(Y + H / 2)); // odoScale: additive (ch2 QA)
     housing(g, X, Y, W, H, { t: t * (1 + 6 * Math.sin(Math.PI * range(t, t0, t0 + dur))) });
     const u = range(t, t0, t0 + dur), val = from + (v - from) * E.outCubic(u), scaled = Math.round(val * 10 ** dec * 1000) / 1000 / 10 ** dec;
     let x = X + 40;
@@ -557,6 +682,7 @@ async function bignumber(ctx, shot) {
     const nD = digitIdx.length;
     slots.forEach((c, i) => {
       if (!/\d/.test(c)) { txt(g, c, x + sepW / 2, Y + 35 + dh * 0.78, { size: dh * 0.62, f: 'narrow', weight: 700, align: 'center', color: P.paper }); x += sepW + gap; return; }
+      if (p.blank && t < t0) { charDrum(g, x, Y + 35, dw, dh, ['–'], 0, { color: P.ink40 }); x += dw + gap; return; } // blank: additive (ch2): no dead number before the cue
       const place = nD - 1 - digitIdx.indexOf(i) - dec, unit = 10 ** place, cont = Math.max(0, scaled) / unit;
       const lead = digitIdx.indexOf(i) === 0, settledPos = Math.floor(cont + 1e-6) % 10;
       let pos = lead ? settledPos : cont % 10;
@@ -568,17 +694,46 @@ async function bignumber(ctx, shot) {
     if (sw) { x += 0; pen(g, rrect(x, Y + 35, sw, dh, 6), { fill: P.card, lw: 2.5, breaks: false, highlight: false }); txt(g, suffix, x + sw / 2, Y + 35 + dh * 0.72, { size: dh * 0.62, f: 'narrow', weight: 700, align: 'center', color: P.ink }); }
     g.restore();
     if (red === 'underline') redUnder(g, X + 40, Y + H + 40, W - 80, range(t, t0 + dur + 0.1, t0 + dur + 0.5), { th: 10 });
-    if (icon !== 'none') { const ix = X + W + 230, iy = Y + H + 10, ku = E.back(1.6)(range(t, 0.3, 0.6)); g.save(); g.translate(ix, iy); g.scale(ku, ku); propIcon(g, icon, t); g.restore(); }
+    if (p.scale) leadScale(g, t, { ...p, dropAt: cue(shot, p.dropAt, 0.3), splitAt: cue(shot, p.splitAt, 1e9) }, t0, v); // additive (ch2)
+    if (icon === 'spiral') spiralStair(g, t, p, cue(shot, p.climbAt, 0.4), p.climbDur ?? 3); // additive (ch1)
+    else if (icon !== 'none') { const ix = X + W + 230, iy = Y + H + 10, ku = E.back(1.6)(range(t, 0.3, 0.6)); g.save(); g.translate(ix, iy); g.scale(ku, ku); propIcon(g, icon, t); g.restore(); }
     // the label on a card strip, then the unit / note line
     const label = p.label ?? (p.value == null ? 'tonnes of lead on the roof and the spire' : '');
     if (label) { const ks = E.decel(range(t, t0 + 0.4, t0 + 0.9)), lw2 = Math.min(1500, measure(g, label, { size: 54, f: 'narrow', weight: 600 }) + 100);
-      g.save(); g.translate(0, (1 - ks) * 80); g.globalAlpha *= clamp(ks * 2); card(g, 960 - lw2 / 2, Y + H + 90, lw2, 96, { seed: 18, thick: 5, shade: 0.12 }); txt(g, label, 960, Y + H + 154, { size: 54, f: 'narrow', weight: 600, align: 'center', color: P.ink, maxW: lw2 - 60 }); g.restore(); }
+      g.save(); g.translate(0, (1 - ks) * 80); g.globalAlpha *= clamp(ks * 2); card(g, CXn - lw2 / 2, Y + H + 90, lw2, 96, { seed: 18, thick: 5, shade: 0.12 }); txt(g, label, CXn, Y + H + 154, { size: 54, f: 'narrow', weight: 600, align: 'center', color: P.ink, maxW: lw2 - 60 }); g.restore(); }
     const note = p.note ?? p.unit ?? (p.value == null ? '210 T ROOF + 250 T SPIRE' : '');
-    if (note) txt(g, typed(note, t, t0 + dur + 0.3), 960, Y + H + 250, { size: 24, f: 'mono', weight: 500, color: P.ink70, track: 0.16, align: 'center', upper: true });
-    deskRuler(g, k);
+    if (p.noteChip) { const nc = p.noteChip, na = cue(shot, nc.at, t0 + dur + 0.3), nu = E.back(1.7)(range(t, na, na + 0.45)); if (nu > 0) { // noteChip: additive (ch1 QA): the note as a chip that grows on its cue
+      const cw = Math.max(measure(g, nc.text, { size: 64, f: 'narrow', weight: 700 }), measure(g, nc.sub ?? '', { size: 22, f: 'mono', weight: 500, track: 0.12 })) + 90, ccx = nc.x ?? CXn, ccy = nc.y ?? Y + H + 230;
+      g.save(); g.translate(ccx, ccy); g.scale(nu, nu); pen(g, rrect(-cw / 2, -10, cw, nc.sub ? 130 : 96, 10), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false }); pen(g, rrect(-cw / 2 + 16, -18, 34, 18, 3), { fill: P.brass, lw: 1.5, breaks: false, highlight: false });
+      txt(g, nc.text, 0, 62, { size: 64, f: 'narrow', weight: 700, align: 'center', color: P.ink }); if (nc.sub) txt(g, nc.sub, 0, 104, { size: 22, f: 'mono', weight: 500, align: 'center', color: P.ink70, track: 0.12, upper: true }); g.restore(); } }
+    else if (note) txt(g, typed(note, t, t0 + dur + 0.3), CXn, Y + H + 250, { size: 24, f: 'mono', weight: 500, color: P.ink70, track: 0.16, align: 'center', upper: true });
+    if (p.ruler !== false) deskRuler(g, k); // ruler false: additive (ch2)
   }, { push: 0.035 });
 }
 
+// additive (ch1 L29): icon 'spiral' — a card spiral stair (helix of wedge steps round an oak newel, nobody on it) climbs on
+// from the bottom (climbAt/climbDur); a tally of steps ticks up the right margin (one stroke per 10 steps, gates of five);
+// red 'top' rings the top step once the climb lands. iconXY [x, y] (base of the newel), iconScale
+function spiralStair(g, t, p, ta, td) {
+  const [bx, by] = p.iconXY ?? [1430, 930], sc = p.iconScale ?? 1, n = 44, R = 150 * sc, rise = 15 * sc, u = E.inOutSine(range(t, ta, ta + td)), shown = Math.round(n * u);
+  const st = Array.from({ length: n }, (_, i) => { const a = i * 0.5; return { i, a, x: Math.cos(a), z: Math.sin(a), y: by - 40 * sc - i * rise }; });
+  pen(g, poly([[bx - R * 1.25, by + 8], [bx + R * 1.25, by + 8], [bx + R * 1.1, by - 18], [bx - R * 1.1, by - 18]]), { fill: P.kraft, lw: 2.5, shadow: true, breaks: false, highlight: false });
+  const step = (s, red) => { const a0 = s.a - 0.28, a1 = s.a + 0.28, pt = (a, r, dy = 0) => [bx + Math.cos(a) * r, s.y + Math.sin(a) * r * 0.32 + dy];
+    const top = [pt(a0, 16 * sc), pt(a0, R), pt(a1, R), pt(a1, 16 * sc)];
+    pen(g, poly([pt(a0, R), pt(a1, R), pt(a1, R, 12 * sc), pt(a0, R, 12 * sc)]), { fill: mix(P.kraftD, P.card, 0.3 + 0.4 * (s.z + 1) / 2), lw: 1.8, breaks: false, highlight: false });
+    pen(g, poly(top), { fill: red ? P.red : mix(P.card, P.paper, (s.z + 1) / 4), lw: 1.8, breaks: false, highlight: false }); return top; };
+  const vis = st.slice(0, shown);
+  for (const s of vis) if (s.z < 0) step(s, false);
+  const ny = by - 40 * sc - Math.max(4, shown) * rise - 30 * sc; pen(g, rect(bx - 14 * sc, ny, 28 * sc, by - ny), { fill: OAK.M, lw: 2.5, breaks: false, highlight: false, shade: 0.3, shadeColor: OAK.D, box: [bx - 14 * sc, ny, bx + 14 * sc, by] });
+  let topQ = null; for (const s of vis) if (s.z >= 0) { const q = step(s, false); if (s.i === n - 1) topQ = q; }
+  if (shown >= n) { const s = st[n - 1]; if (s.z < 0) topQ = step(s, false); }
+  if (shown >= n && p.red === 'top' && topQ) { const cx = topQ.reduce((a, q) => a + q[0], 0) / 4, cy = topQ.reduce((a, q) => a + q[1], 0) / 4, v = range(t, ta + td, ta + td + 0.4);
+    g.save(); g.globalAlpha *= v; g.strokeStyle = P.red; g.lineWidth = 4.5; g.setLineDash([11, 8]); g.beginPath(); g.ellipse(cx, cy, 120 * sc, 52 * sc, 0, 0, TAU); g.stroke(); g.restore();
+    if (v > 0) { g.fillStyle = P.red; g.beginPath(); g.moveTo(cx + 118 * sc, cy - 20 * sc); g.lineTo(cx + 150 * sc, cy - 34 * sc); g.lineTo(cx + 134 * sc, cy - 2 * sc); g.closePath(); g.fill(); } }
+  if (p.tally !== false) { const tx = p.tallyX ?? 1830, ty0 = by, ty1 = by - (n * rise + 40 * sc), m = Math.round(30 * u); g.save(); g.strokeStyle = P.ink; g.lineWidth = 4; g.lineCap = 'round';
+    for (let j = 0; j < m; j++) { const grp = Math.floor(j / 5), w = j % 5, yy = ty0 - grp * (ty0 - ty1) / 6 - 30; g.beginPath(); if (w < 4) { g.moveTo(tx - 30 + w * 14, yy - 22); g.lineTo(tx - 30 + w * 14, yy + 22); } else { g.moveTo(tx - 40, yy + 18); g.lineTo(tx + 26, yy - 18); } g.stroke(); }
+    g.restore(); txt(g, String(Math.round(300 * u)).padStart(3, ' '), tx, ty1 - 40, { size: 30, f: 'mono', weight: 500, color: P.ink70, align: 'center' }); }
+}
 // a small paper prop beside a number (bottom-centred at 0, 0): 'lead' (stacked lead roof sheets + a melt drip), 'oak' (a stack
 // of logs, end grain out), 'bell' (one brass bell on a stand)
 function propIcon(g, kind, t) {
@@ -616,7 +771,9 @@ async function counterSet(ctx, shot) {
     deskGround(g, t, k, { seed: 6, matBox: [230, 300, 1460, 650], matRot: 0.9 });
     k.view(0.8);
     txt(g, typed(p.kicker ?? '15 APRIL 2019 · THE FIRST HALF HOUR', t, 0.1), 150, 160, { size: 26, f: 'mono', weight: 500, color: P.ink70, track: 0.16, upper: true });
-    txt(g, p.title ?? 'The clock nobody saw', 150, 238, { size: 72, f: 'serif', weight: 400, color: P.ink, alpha: E.outCubic(range(t, 0.15, 0.7)) });
+    { const t2 = p.title2 ? cue(shot, p.title2At, 1e9) : 1e9, a2 = range(t, t2 + 0.15, t2 + 0.45); // title2 + title2At: additive (ch1): the title swaps on a cue
+      txt(g, p.title ?? 'The clock nobody saw', 150, 238, { size: 72, f: 'serif', weight: 400, color: P.ink, alpha: E.outCubic(range(t, 0.15, 0.7)) * (1 - range(t, t2, t2 + 0.2)) });
+      if (a2 > 0) txt(g, p.title2, 150, 238 + (1 - E.outCubic(a2)) * 14, { size: 72, f: 'serif', weight: 400, color: P.ink, alpha: a2 }); }
     k.view(1);
     let si = 0; for (let i = 0; i < steps.length; i++) if (t >= T[i]) si = i;
     const cur = steps[si], prev = steps[Math.max(0, si - 1)], tc = T[si];
@@ -641,11 +798,13 @@ async function counterSet(ctx, shot) {
       pen(g, rrect(x - 3, y0 + TH / 2 - 7, 6, 14, 2), { fill: P.brassL, lw: 1.2, breaks: false, highlight: false }); pen(g, rrect(x + w - 3, y0 + TH / 2 - 7, 6, 14, 2), { fill: P.brassL, lw: 1.2, breaks: false, highlight: false });
       x += w + gap;
     });
-    if (redNow) { const rx0 = 960 - widthOf(cur) / 2 + widthOf({ text: cur.text.slice(0, redFrom) }) + (redFrom ? gap : 0); redUnder(g, rx0, y0 + TH + 64, widthOf({ text: redS }), range(t, tc + fd + 0.15, tc + fd + 0.55), { th: 9 }); }
+    if (redNow) { const rx0 = 960 - widthOf(cur) / 2 + widthOf({ text: cur.text.slice(0, redFrom) }) + (redFrom ? gap : 0); redUnder(g, rx0, y0 + TH + (p.redUnderY ?? 64), widthOf({ text: redS }), range(t, tc + fd + 0.15, tc + fd + 0.55), { th: 9 }); }
     // the label (a card strip that drops) and the sub (types on)
     const kl = E.decel(range(t, tc + 0.15, tc + fd + 0.4)), lw2 = Math.min(1500, measure(g, cur.label ?? '', { size: 58, f: 'narrow', weight: 700 }) + 110);
     if (cur.label) { g.save(); g.translate(0, (1 - kl) * -40); g.globalAlpha *= clamp(kl * 2); card(g, 960 - lw2 / 2, y0 + TH + 100, lw2, 100, { seed: 30 + si, thick: 5, shade: 0.12 }); txt(g, cur.label, 960, y0 + TH + 168, { size: 58, f: 'narrow', weight: 700, align: 'center', color: P.ink, maxW: lw2 - 60 }); g.restore(); }
-    if (cur.sub) txt(g, typed(cur.sub, t, tc + 0.4), 960, y0 + TH + 250, { size: 24, f: 'mono', weight: 500, color: P.ink70, track: 0.14, align: 'center', upper: true });
+    if (p.phone) { const ph = p.phone, pa = cue(shot, ph.inAt, 0), pu = E.decel(range(t, pa, pa + 0.5)); if (pu > 0) { g.save(); g.translate(0, (1 - pu) * 500); // phone: additive (ch1): the FIRE BRIGADE card phone + an ink stamp
+      KIT.cardPhone(g, ph.x ?? 1500, ph.y ?? 820, t, { ...ph, at: cue(shot, ph.at, -9), dur: ph.dur ?? 0, stampAt: ph.stampAt == null ? null : cue(shot, ph.stampAt, 1e9) }); g.restore(); } }
+    if (cur.sub) txt(g, typed(cur.sub, t, tc + 0.4), 960, y0 + TH + 250, { size: p.subSize ?? 24, f: 'mono', weight: 500, color: P.ink70, track: 0.14, align: 'center', upper: true });
     // step pips: brass rivets that fill as each step lands
     if (steps.length > 1) steps.forEach((s, i) => { const on = t >= T[i], kk = E.back(1.6)(range(t, T[i], T[i] + 0.27)), px = 960 + (i - (steps.length - 1) / 2) * 56, py = y0 - 92;
       pen(g, circle(px, py, 13), { fill: P.kraft, lw: 2, breaks: false, highlight: false }); if (on) pen(g, circle(px, py, 13 * kk), { fill: i === si ? P.brass : P.brassD, lw: 2, breaks: false, highlight: false }); });
@@ -671,11 +830,12 @@ async function timeline(ctx, shot) {
   const T = cues(shot, ev, { from: 0.6, span: Math.min(Dd * 0.8, Math.max(1.1 * (ev.length - 1), Dd - 2.2)) });
   const fIdx = p.focus == null ? null : (typeof p.focus === 'number' ? p.focus : ev.findIndex(e => e.time === p.focus || e.date === p.focus));
   // the tape position (the coordinate under the roller): ticks from event to event (ease-in-out 0.7 s), a tiny overshoot
-  const posAt = (t) => { if (fIdx != null && fIdx >= 0) return X[fIdx]; let x = X[0] - 220 * (1 - E.outCubic(range(t, 0, 0.6)));
+  const posAt = (t) => Math.min(p.posMax ?? 1e9, posAt0(t)); // posMax: additive (ch1 QA): the tape parks so the whole span stays in frame
+  const posAt0 = (t) => { if (fIdx != null && fIdx >= 0) return X[fIdx]; let x = X[0] - 220 * (1 - E.outCubic(range(t, 0, 0.6)));
     for (let i = 1; i < ev.length; i++) x += (X[i] - X[i - 1]) * M.E.back(1.2)(range(t, T[i] - 0.75, T[i] - 0.05)); return x; };
   return gset(ctx, shot, (g, t, _p, k) => {
     k.source = p.source === undefined ? 'SOURCES: NYT 16 JUL 2019 · ÉLYSÉE · CULTURE MINISTRY · DRAC' : p.source;
-    deskGround(g, t, k, { seed: 8, gears: true, matBox: [1120, 640, 900, 520], matRot: -2 });
+    deskGround(g, t, k, { seed: 8, gears: true, matBox: [1120, 640, 900, 520], matRot: -2, mat: p.mat !== false }); // mat false: additive (ch1)
     k.view(0.8); txt(g, typed(p.title ?? '15 APRIL 2019 · THE EVENING', t, 0.1), 150, 160, { size: 26, f: 'mono', weight: 500, color: P.ink70, track: 0.16, upper: true });
     k.view(1);
     const pos = posAt(t), RX = 960, TY = 470, TH = 130, SX = (x) => RX + x - pos;
@@ -691,15 +851,20 @@ async function timeline(ctx, shot) {
     g.strokeStyle = P.ink; g.lineWidth = 1.5; g.beginPath();
     for (let j = first; j < first + 2400 / step; j++) { const xx = SX(j * step), big = timed ? (j % 6 === 0) : j % 4 === 0; g.moveTo(xx, TY + TH); g.lineTo(xx, TY + TH - (big ? 26 : 12)); g.moveTo(xx + step / 2, TY + 8); g.lineTo(xx + step / 2, TY + 18); } g.stroke();
     g.fillStyle = P.kraftD; for (let j = first * 2; j < (first + 2400 / step) * 2; j++) { const xx = SX(j * step / 2); g.beginPath(); g.roundRect(xx - 5, TY + 26, 10, 7, 2); g.fill(); }
-    if (timed) for (let m = Math.floor((hm(ev[0].time) + (pos - 1100) / ppm) / 30) * 30 + 15; m < hm(ev[0].time) + (pos + 1100) / ppm; m += 30) { const xx = SX((m - hm(ev[0].time)) * ppm); txt(g, `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`, xx + 6, TY + TH - 34, { size: 18, f: 'mono', weight: 500, color: P.ink70, track: 0.1 }); }
+    if (timed) for (let m = Math.floor((hm(ev[0].time) + (pos - 1100) / ppm) / 30) * 30 + 15; m < hm(ev[0].time) + (pos + 1100) / ppm; m += 30) { if (p.rulerGap && ev.some(e => e.time && Math.abs(hm(e.time) - m) <= p.rulerGap)) continue; const xx = SX((m - hm(ev[0].time)) * ppm); txt(g, `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`, xx + 6, TY + TH - 34, { size: 18, f: 'mono', weight: 500, color: P.ink70, track: 0.1 }); }
     g.restore();
     // events: punched holes + printed time; tags hang from the current event and its neighbours (<= 3 tags in frame)
     let cur = 0; ev.forEach((e, i) => { if (Math.abs(SX(X[i]) - RX) < Math.abs(SX(X[cur]) - RX)) cur = i; });
     ev.forEach((e, i) => { const xx = SX(X[i]); if (xx < -300 || xx > 2220) return; const punched = t >= T[i] - 0.8 || (fIdx != null && i <= fIdx);
       if (punched) { pen(g, circle(xx, TY + TH * 0.66, 15), { fill: '#3d3a3a', lw: 2.5, breaks: false, highlight: false }); g.fillStyle = P.kraftD; g.beginPath(); g.arc(xx + 4, TY + TH * 0.66 + 4, 9, 0, TAU); g.fill(); }
       txt(g, e.time ?? e.date ?? '', xx, TY + 58, { size: 30, f: 'mono', weight: 500, align: 'center', color: punched ? P.ink : P.ink40, track: 0.04 });
-      if (punched && Math.abs(i - cur) <= 1) { const hi = i % 2 === 0, ty = hi ? TY - 250 : TY - 150, sw = Math.sin(t * 2.2 + i) * 3 * (1 - range(t, T[i], T[i] + 1.2)) - 1.5;
-        tag(g, xx, TY + 4, xx - 40, ty, e.label ?? '', { size: i === cur ? 36 : 30, swing: sw, sub: e.sub }); } });
+      if (punched && Math.abs(i - cur) <= 1) { const hi = i % 2 === 0, below = (p.tagBelow ?? []).includes(i), ty = below ? TY + TH + (p.belowY ?? 150) : hi ? TY - 250 : TY - 150, sw = Math.sin(t * 2.2 + i) * 3 * (1 - range(t, T[i], T[i] + 1.2)) - 1.5; // tagBelow: additive (ch1)
+        tag(g, xx, below ? TY + TH - 4 : TY + 4, xx - 40 + (e.dx ?? 0), e.ty != null ? TY + e.ty : ty, e.label ?? '', { /* e.dx / e.ty: additive (ch1 QA) */ size: p.tagSize ?? (i === cur ? 36 : 30), swing: sw, sub: e.sub }); } });
+    if (p.bracket) { const bk = p.bracket, ba = cue(shot, bk.at, 1), bu = E.outCubic(range(t, ba, ba + 0.7)); if (bu > 0) { // bracket: additive (ch1): the one red thing, a span on the tape
+      const bx0 = SX((hm(bk.from) - hm(ev[0].time)) * ppm), bx1 = SX((hm(bk.to) - hm(ev[0].time)) * ppm), by = TY + TH + 34, bxe = lerp(bx0, bx1, bu);
+      g.save(); g.strokeStyle = P.red; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(bx0, by - 22); g.lineTo(bx0, by); g.lineTo(bxe, by); if (bu >= 1) g.lineTo(bx1, by - 22); g.stroke();
+      g.lineWidth = 3; g.setLineDash([9, 7]); g.beginPath(); g.roundRect(bx0 - 16, by - 36, bx1 - bx0 + 32, 52, 12); if (bu >= 1) g.stroke(); g.restore();
+      if (bk.label) txt(g, bk.label, bx0 + 4, by + 52, { size: 34, f: 'narrow', weight: 700, color: P.red, track: 0.06, alpha: range(t, ba + 0.5, ba + 0.9) }); } }
     // the building at the tape's time (mid layer, lower right): fire grows from the first alarm, the spire goes at 19:50,
     // the fire is down by "she is saved" (a state card, not a clock)
     if (timed && p.building !== false) { const m = hm(ev[0].time) + pos / ppm, kk = 3.6, bx0 = 1220, by0 = 985, X = (q) => bx0 + q * kk, Y = (q) => by0 - q * kk;
@@ -708,10 +873,11 @@ async function timeline(ctx, shot) {
       k.view(0.9); pen(g, rect(bx0 - 70, by0, 128 * kk + 140, 14), { fill: P.kraft, lw: 2, breaks: false, highlight: false });
       sideFire(g, X, Y, kk, st, t, true); sideCard(g, bx0, by0, kk, st, t); sideFire(g, X, Y, kk, st, t, false); k.view(1); }
     // the brass roller housing at the centre + the red pointer under it (the one red thing: notched, dashed ring)
-    k.view(1.05);
+    k.view(1.05); const cOut = p.carriageOutAt == null ? 0 : E.inOutCubic(range(t, cue(shot, p.carriageOutAt, 1e9), cue(shot, p.carriageOutAt, 1e9) + 0.5)); g.save(); g.globalAlpha *= 1 - cOut; // carriageOutAt: additive (ch1 QA): the carriage fades once the tape parks
     pen(g, rrect(RX - 70, TY - 70, 140, 64, 12), { fill: P.brass, lw: 3, shadow: true, shade: 0.35, shadeColor: P.brassD, box: [RX - 70, TY - 70, RX + 70, TY - 6] });
     pen(g, rrect(RX - 70, TY + TH + 6, 140, 64, 12), { fill: P.brass, lw: 3, shadow: true, shade: 0.35, shadeColor: P.brassD, box: [RX - 70, TY + TH + 6, RX + 70, TY + TH + 70] });
     for (const yy of [TY - 6, TY + TH + 6]) { pen(g, gearPath(RX, yy, 34, 12, pos / 34 * (yy < TY ? 1 : -1)), { fill: P.brassL, lw: 2.5, breaks: false, shade: 0.35, shadeColor: P.brass, box: [RX - 34, yy - 34, RX + 34, yy + 34] }); pen(g, circle(RX, yy, 9), { fill: P.brassD, lw: 2, breaks: false, highlight: false }); }
+    g.restore(); if (p.pointer === false) return; // pointer false: additive (ch1): no NOW pointer (the bracket is the red thing)
     const py = TY + TH + 92; pen(g, poly([[RX, TY + TH + 24], [RX + 26, py], [RX + 10, py], [RX, py - 12], [RX - 10, py], [RX - 26, py]]), { fill: P.red, lw: 2.5, breaks: false, highlight: false, shadow: true });
     redRing(g, RX, TY + TH + 64, 46);
     txt(g, 'NOW', RX, py + 40, { size: 20, f: 'mono', weight: 500, color: P.ink70, align: 'center', track: 0.2 });

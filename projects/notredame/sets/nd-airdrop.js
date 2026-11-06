@@ -40,13 +40,14 @@ function redAt(p, t, def) { let r = p.red ?? def; if (p.redSeq) for (const q of 
 // ---------------------------------------------------------------- screen-space paper pieces (copies of the nd-sets look)
 function chipStack(K, g, chips, t) {
   const { P, pen, rrect, mono } = K; let y = 70;
-  for (const c of chips) { const u = range(t, num(c.at, 0), num(c.at, 0) + 0.35); if (u <= 0) continue;
-    g.save(); g.font = '600 30px "Archivo Narrow"'; const w1 = g.measureText(c.text).width; g.font = '500 19px "Plex Mono"'; g.letterSpacing = '3px'; const w2 = c.sub ? g.measureText(String(c.sub).toUpperCase()).width : 0; g.restore();
-    const W = Math.max(w1, w2) + 56, H = c.sub ? 92 : 62, x = 1920 - 80 - W + (1 - M.E.outCubic(u)) * 500;
+  for (const c of chips) { const u = range(t, num(c.at, 0), num(c.at, 0) + 0.35); if (u <= 0) continue; if (c.y != null) y = c.y; // c.x (left edge) / c.y: a chip placed in empty sky
+    const subs = c.sub ? String(c.sub).split('\n') : [];
+    g.save(); g.font = '600 30px "Archivo Narrow"'; const w1 = g.measureText(c.text).width; g.font = '500 19px "Plex Mono"'; g.letterSpacing = '3px'; const w2 = subs.length ? Math.max(...subs.map(s2 => g.measureText(s2.toUpperCase()).width)) : 0; g.restore();
+    const W = Math.max(w1, w2) + 56, H = 62 + subs.length * 30, x = (c.x ?? 1920 - 80 - W) + (1 - M.E.outCubic(u)) * 500;
     pen(g, rrect(x, y, W, H, 6), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false });
     pen(g, rrect(x + 12, y - 8, 30, 18, 3), { fill: P.brass, lw: 1.5, breaks: false, highlight: false });
     g.save(); g.font = '600 30px "Archivo Narrow"'; g.fillStyle = P.ink; g.fillText(c.text, x + 28, y + 44); g.restore();
-    if (c.sub) mono(g, c.sub, x + 28, y + 76, 19, P.ink70);
+    subs.forEach((s2, i) => mono(g, s2, x + 28, y + 76 + i * 30, 19, P.ink70));
     y += H + 22; }
 }
 // lower-third strip: line 0 in Archivo, line 1+ in mono; `redWord` (a substring of line 0) is underlined in red
@@ -88,6 +89,23 @@ function planeShape(K, g, sc, { red = false, shadowOnly = false, col = null } = 
   pen(g, rrect(-60 * sc, 26 * sc, 70 * sc, 12 * sc, 3 * sc), { ...o, fill: P.brassL, lw: 1.5 }); // the water-tank door (brass card)
   if (red) { pen(g, circle(148 * sc, 18 * sc, 7 * sc), { fill: P.red, line: P.ink, lw: 2, breaks: false, highlight: false }); redRing(g, 146 * sc, 18 * sc, 26 * sc, P.red, 3); }
 }
+// the plane seen from above (a crisp cast-shadow silhouette, or the paper toy in the plan view); nose at +x, origin = wing root
+function planeTop(K, g, sc, { shadow = null, red = false } = {}) {
+  const { P, pen, poly, circle, redRing } = K, S = (pts) => pts.map(([x, y]) => [x * sc, y * sc]);
+  const hull = S([[-150, -9], [100, -15], [140, -10], [154, 0], [140, 10], [100, 15], [-150, 9], [-160, 0]]);
+  const wing = S([[-20, -18], [30, -18], [24, -175], [-6, -175]]), wingB = S([[-20, 18], [30, 18], [24, 175], [-6, 175]]);
+  const tail = S([[-150, -8], [-128, -8], [-134, -66], [-150, -66]]), tailB = S([[-150, 8], [-128, 8], [-134, 66], [-150, 66]]);
+  const engs = [-70, 70].map(o => S([[18, o - 9], [64, o - 9], [72, o], [64, o + 9], [18, o + 9]]));
+  if (shadow) { g.save(); g.fillStyle = shadow; g.beginPath(); for (const sh of [hull, wing, wingB, tail, tailB, ...engs]) { sh.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); } g.fill('nonzero'); g.restore(); return; }
+  const o = { lw: 2.5, breaks: false, highlight: false };
+  for (const w of [wing, wingB]) pen(g, poly(w), { ...o, fill: P.kraft, shadow: true, shadowOff: [10, 12] });
+  for (const w of [tail, tailB]) pen(g, poly(w), { ...o, fill: P.kraft });
+  for (const e of engs) pen(g, poly(e), { ...o, fill: P.ink70, lw: 2 });
+  pen(g, poly(hull), { ...o, fill: P.card, shadow: true, shadowOff: [10, 12] });
+  pen(g, poly(S([[96, -8], [128, -6], [128, 6], [96, 8]])), { ...o, fill: P.tealL, lw: 2 });
+  pen(g, poly(S([[-60, -6], [10, -6], [10, 6], [-60, 6]])), { ...o, fill: P.brassL, lw: 1.5 });
+  if (red) { pen(g, circle(150 * sc, 0, 7 * sc + 2), { fill: P.red, line: P.ink, lw: 2, breaks: false, highlight: false }); redRing(g, 150 * sc, 0, 26 * sc + 8, P.red, 3); }
+}
 function drawPlane(K, g, x, y, sc, rot, { red = false, wireTop = -60, winch = null, bank = 0 } = {}) {
   const { P, pen, rrect, circle, gearPath } = K;
   // the wire (2 px ink thread) from the wing root to the top of frame (or the winch drum)
@@ -123,9 +141,12 @@ function tripod(K, g, x, y, h, aim, { night = false } = {}) {
   for (const dx of [-0.42, 0.06, 0.4]) { g.moveTo(x, hy + 10); g.lineTo(x + dx * h, y); } g.stroke(); g.restore();
   g.save(); g.translate(x, hy); g.rotate(a);
   pen(g, rrect(-46, -30, 92, 56, 6), { fill: P.ink70, lw: 2.5, shadow: true, breaks: false, highlight: false });
-  pen(g, rect(46, -20, 40, 36), { fill: P.ink, lw: 2, breaks: false, highlight: false });
-  pen(g, circle(88, -2, 15), { fill: P.brass, lw: 2, breaks: false, highlight: false }); pen(g, circle(88, -2, 7), { fill: P.tealL, lw: 1.5, breaks: false, highlight: false });
+  pen(g, rect(46, -16, 30, 28), { fill: P.ink, lw: 2, breaks: false, highlight: false });                                   // the lens barrel
+  pen(g, poly([[74, -16], [104, -30], [104, 26], [74, 12]]), { fill: P.ink70, lw: 2, breaks: false, highlight: false });       // the flared lens hood (a camera, not a telescope)
+  g.save(); g.strokeStyle = P.tealL; g.lineWidth = 3; g.beginPath(); g.moveTo(101, -24); g.lineTo(101, 20); g.stroke(); g.restore(); // the glass, seen edge-on
+  pen(g, rrect(-62, -12, 18, 22, 3), { fill: P.ink, lw: 1.5, breaks: false, highlight: false });                              // the viewfinder eyepiece
   pen(g, rrect(-36, -46, 40, 16, 3), { fill: P.card, lw: 1.5, breaks: false, highlight: false });
+  pen(g, circle(-20, 8, 6), { fill: P.brassL, lw: 1.2, breaks: false, highlight: false });            // the reel / record knob
   g.restore();
 }
 function tally(K, g, x, y, sc, { col, line, lean = 0 } = {}) {
@@ -165,14 +186,20 @@ function viewFacade(K, g, t, p, red, sky) {
   const X = (m) => ox + m * k, Y = (m) => oy - m * k, fire = an(p, 'fire', t, 0.5), smoke = p.smoke ?? 1;
   backdrop(g, t, { sky, yH: oy, glow: night ? fire * 0.7 : 0 });
   if (night && fire > 0) glowRings(g, cx, oy - 62 * k, 62 * k, clamp(0.4 + fire), t, 2, Lk.sky);
+  const ob = p.oblique; // oblique {a, b}: a 3/4 view of the front card (x scale a, shear b; b < 0 = the north end nearer), the table seen at an angle
+  if (ob) { // the north flank first: the side card, mirrored, receding up-left from the near north-west corner
+    const fx = cx + (ob.a ?? 0.72) * (ox - cx), fy = oy + (ob.b ?? -0.2) * (ox - cx), stS = { sky, fireS: K.fireSections(fire), roofGone: 0, spire: 'gone', spireU: 0, glow: 0, wind: 0.35, smoke: ob.smoke ?? 0.45, glowWin: false };
+    g.save(); g.transform(-(ob.sa ?? 0.5), -(ob.sb ?? 0.2), 0, 1, fx, fy); const Xs = (m) => m * k, Ys = (m) => -m * k;
+    K.sideFire(g, Xs, Ys, k, stS, t, true); K.sideCard(g, 0, 0, k, stS, t); K.sideFire(g, Xs, Ys, k, stS, t, false); g.restore();
+    g.save(); g.translate(cx, oy); g.transform(ob.a ?? 0.72, ob.b ?? -0.2, 0, 1, 0, 0); g.translate(-cx, -oy); }
   if (fire > 0.05) plume(g, cx + 4 * k, oy - 55 * k, t, { H: 75 * k, W: 8 * k, n: 10, drift: p.wind ?? 0.35, seed: 8, depth: 0.3, sky: Lk.sky, base: P.card, shadeCol: P.ink40, lit: P.emberL, amount: fire * smoke, line: P.ink40 });
   // the spire's ghost: a dashed outline where it stood (the spire is gone; we never show a hole)
   const gx = cx, gy0 = oy - 47 * k, gTop = oy - 85 * k;
   if (p.ghost !== false) { g.save(); g.strokeStyle = night ? rgba(P.paper, 0.7) : P.ink70; g.lineWidth = 2.5; g.setLineDash([10, 8]); g.beginPath(); g.moveTo(gx - 2.2 * k, gy0); g.lineTo(gx - 0.9 * k, gy0 - 14 * k); g.lineTo(gx, gTop); g.lineTo(gx + 0.9 * k, gy0 - 14 * k); g.lineTo(gx + 2.2 * k, gy0); g.stroke(); g.restore(); }
   if (fire > 0.05) for (let j = 0; j < 4; j++) flame(g, cx + (-4.2 + j * 2.8) * k, oy - 48.6 * k, (5 + 9 * fire) * (0.7 + 0.4 * hash(j)) * k, 3.4 * k, t, 30 + j, { lean: 0.3 });
   // parvis paving (kraft) + the hard façade shadow
-  pen(g, rect(-40, oy - 6, 2000, 30), { fill: p.square ? P.sageL : P.kraft, lw: 2, breaks: false, highlight: false });
-  g.save(); g.fillStyle = 'rgba(11,20,38,0.12)'; g.beginPath(); g.moveTo(ox + 6, oy); g.lineTo(ox + 41 * k + 6, oy); g.lineTo(ox + 41 * k + 90, oy + 24); g.lineTo(ox + 90, oy + 24); g.fill(); g.restore();
+  if (!ob) pen(g, rect(-40, oy - 6, 2000, 30), { fill: p.square ? P.sageL : P.kraft, lw: 2, breaks: false, highlight: false });
+  if (!ob) g.save(); else g.save(), g.globalAlpha = 0; g.fillStyle = 'rgba(11,20,38,0.12)'; g.beginPath(); g.moveTo(ox + 6, oy); g.lineTo(ox + 41 * k + 6, oy); g.lineTo(ox + 41 * k + 90, oy + 24); g.lineTo(ox + 90, oy + 24); g.fill(); g.restore();
   const st = { sky, fireS: new Array(14).fill(0), roofGone: 0, spire: 'gone', spireU: 0, glow: 0, wind: 0.35, smoke, glowWin: false };
   if (p.parvis) { const col = p.square ? P.sageL : P.kraft; pen(g, rect(-200, oy - 2, 2400, 900), { fill: col, lw: 2, breaks: false, highlight: false });
     g.save(); g.strokeStyle = rgba(p.square ? P.sageD : P.ink40, 0.5); g.lineWidth = 1.4; g.beginPath(); for (let i = -30; i <= 30; i++) { g.moveTo(cx + i * 3.2 * k, oy); g.lineTo(cx + i * 3.2 * k * 6, oy + 900); }
@@ -184,7 +211,7 @@ function viewFacade(K, g, t, p, red, sky) {
   if (p.louvreDark) for (const [lx] of lv) { g.save(); g.fillStyle = 'rgba(20,35,61,0.55)'; g.beginPath(); g.roundRect(X(lx - 1.8), Y(62.5), 3.6 * k, 12 * k, 1.8 * k); g.fill(); g.restore(); }
   if (p.bellPeek) { const bx = X(10.8), by = Y(60.4), d = 3.5 * k; g.save(); g.beginPath(); g.roundRect(X(9), Y(63), 3.6 * k, 12.5 * k, 1.8 * k); g.clip();
     bell(g, bx, by, d, { red: red === 'bell', lw: 2 }); g.strokeStyle = P.ink40; g.lineWidth = Math.max(1.2, k * 0.12); g.beginPath(); for (let yy = 51.2; yy < 64.5; yy += 1.8) { g.moveTo(X(8.8), Y(yy)); g.lineTo(X(12.8), Y(yy + 0.4)); } g.stroke(); g.restore();
-    if (red === 'bell') redRing(g, bx, by + d * 0.42, d * 0.9, P.red, 3); }
+    if (red === 'bell') redRing(g, bx, by + d * 0.42, d * (p.bellRingSc ?? 0.9), P.red, p.bellRingSc ? 4.5 : 3); } // bellRingSc: additive (ch5 QA)
   if (red === 'louvre') { g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); g.beginPath(); g.roundRect(X(1.6), Y(64.5), 11.8 * k, 15.5 * k, 2 * k); g.stroke(); g.restore(); }
   if (red === 'gap') { g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); g.beginPath(); g.ellipse(gx, (gy0 + gTop) / 2, 6.5 * k, (gy0 - gTop) / 2 + 3 * k, 0, 0, Math.PI * 2); g.stroke(); g.restore(); }
   // the trapped box in the central portal: ring opens, ink tallies walk out to a row on the sage square
@@ -196,9 +223,13 @@ function viewFacade(K, g, t, p, red, sky) {
       tally(K, g, x, y - bob, 0.08 * k * (1 + 0.35 * v), { col: P.ink70, line: P.ink, lean: v > 0 && v < 1 ? Math.sin(t * 9 + i) * 6 : 0 }); }
     if (ringA > 0) { g.save(); g.globalAlpha *= ringA; g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); const w = n * 1.0 * k + 2.4 * k, h = 9 * k;
       g.beginPath(); const gapA = open * 0.9; g.ellipse(px, py - 3.5 * k, w / 2 + k, h / 2 + k, 0, -Math.PI / 2 + gapA, -Math.PI / 2 - gapA + Math.PI * 2); g.stroke(); g.restore(); } }
+  if (ob) g.restore(); // close the 3/4 transform
   // trees, the quay + crowd, the drafting rule
   for (const [x0, x1] of [[60, ox - 30], [ox + 41 * k + 30, 1880]]) trees(g, oy + 2, x0, x1, { col: P.sage, shadeCol: P.sageD, seed: 8 + x0, t, size: 46, line: P.ink });
-  if (p.rule69) { const u = M.E.outCubic(range(t, num(p.ruleAt, 0.2), num(p.ruleAt, 0.2) + 0.8)), rx = ox - 70 - 22, h = 69 * k * u;
+  if (p.hedgeCrowd) { const hc = p.hedgeCrowd === true ? {} : p.hedgeCrowd, r = M.rng(hc.seed ?? 23), sc = hc.sc ?? 1.25, y0 = oy + (hc.dy ?? 16); // hedgeCrowd: the crowd, small, all facing the gap
+    for (const [x0, x1] of [[hc.x0 ?? 40, ox - 24], [ox + 41 * k + 24, hc.x1 ?? 1890]]) for (let x = x0 + r() * 12; x < x1; x += (hc.gap ?? 26) + r() * 16) { const towards = Math.sign(cx - x);
+      tally(K, g, x, y0 + r() * 8, sc * (0.9 + r() * 0.2), { col: r() < 0.3 ? P.sageD : P.sage, lean: towards * (5 + r() * 4) + Math.sin(t * 1.4 + x) * 1.5 }); } }
+  if (p.rule69) { const u = M.E.outCubic(range(t, num(p.ruleAt, 0.2), num(p.ruleAt, 0.2) + num(p.ruleDur, 0.8))), rx = ox - 70 - 22, h = 69 * k * u;
     pen(g, rect(rx, oy - h, 22, h), { fill: P.brassL, lw: 2, shadow: true, breaks: false, highlight: false, shade: 0.3, shadeColor: P.brass, box: [rx, oy - h, rx + 22, oy] });
     g.save(); g.strokeStyle = P.ink; g.lineWidth = 1.5; g.beginPath(); for (let m = 0; m <= 69 * u; m += 2) { const yy = oy - m * k; g.moveTo(rx + 22, yy); g.lineTo(rx + 22 - (m % 10 === 0 ? 14 : 7), yy); } g.stroke(); g.restore();
     if (u >= 1) { g.save(); g.strokeStyle = P.ink70; g.lineWidth = 2; g.setLineDash([6, 5]); g.beginPath(); g.moveTo(rx, Y(69)); g.lineTo(X(41), Y(69)); g.stroke(); g.restore();
@@ -207,13 +238,13 @@ function viewFacade(K, g, t, p, red, sky) {
   // the bell-frame toy rising beside the model (a separate paper toy on the table)
   if (p.toy != null) { const u = M.E.outBack(clamp(an(p, 'toy', t, 1))), tw = p.toyW ?? 300, th = tw * 1.45, tx = p.toyX ?? X(41) + 210, ty = oy - th + (1 - u) * (th + 60);
     g.save(); g.beginPath(); g.rect(-200, -400, 2400, oy + 2 + 400); g.clip();
-    cardTower(g, tx, ty, tw, th, { open: 1, belfryTop: 0, belfryBot: 0.62, t, inside: (gg, x0, y0, x1, y1) => bellFrameInside(gg, x0, y0, x1, y1, { char: 0, flame: 0, redBell: red === 'toybell' ? 2 : -1, weights: false, t }) });
+    cardTower(g, tx, ty, tw, th, { open: 1, belfryTop: 0, belfryBot: 0.62, t, glue: p.glue, inside: (gg, x0, y0, x1, y1) => bellFrameInside(gg, x0, y0, x1, y1, { char: 0, flame: 0, redBell: red === 'toybell' ? 2 : -1, weights: false, t, order: p.bellOrder }) });
     g.restore();
     if (u > 0.95) { g.save(); g.strokeStyle = P.ink70; g.lineWidth = 2.5; g.setLineDash([9, 7]); g.beginPath(); g.moveTo(X(12.8), Y(56)); g.quadraticCurveTo((X(13) + tx) / 2, Y(84), tx + 20, ty + 60); g.stroke(); g.restore(); } }
   // the hose line along the parvis (teal paper with brass couplings), drawn on by `hose`
   let nz = null;
   if (p.hose != null) { const u = an(p, 'hose', t, 1), to = p.hoseTo ?? 'portal';
-    const pts = p.parvis ? (to === 'north' ? [[-80, 1180], [300, 1110], [X(-8), oy + 70], [X(1), oy + 30], [X(7.6), oy + 8]] : [[-80, 1180], [420, 1100], [X(4), oy + 70], [X(14), oy + 32], [cx - 2 * k, oy + 10]])
+    const pts = p.hosePts ? p.hosePts : p.parvis ? (to === 'north' ? [[-80, 1180], [300, 1110], [X(-8), oy + 70], [X(1), oy + 30], [X(7.6), oy + 8]] : [[-80, 1180], [420, 1100], [X(4), oy + 70], [X(14), oy + 32], [cx - 2 * k, oy + 10]])
       : to === 'north' ? [[-80, 1060], [260, 1010], [X(-4), oy + 18], [X(3), oy + 8], [X(7.6), oy + 2]] : [[-80, 1070], [360, 1030], [X(4), oy + 22], [X(14), oy + 14], [cx - 2 * k, oy + 6]];
     const L = []; let tot = 0; for (let i = 1; i < pts.length; i++) { tot += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); L.push(tot); }
     const d = tot * clamp(u), part = [pts[0]]; for (let i = 1; i < pts.length; i++) { if (L[i - 1] <= d) part.push(pts[i]); else { const s0 = i > 1 ? L[i - 2] : 0, f = (d - s0) / (L[i - 1] - s0); part.push([lerp(pts[i - 1][0], pts[i][0], f), lerp(pts[i - 1][1], pts[i][1], f)]); break; } }
@@ -222,12 +253,15 @@ function viewFacade(K, g, t, p, red, sky) {
   if (!p.__quayDone && !p.parvis) foreQuay(g, t, oy + 24, { night, glow: 0, crowd: p.crowd !== false }); delete p.__quayDone;
   if (red === 'nozzle' && nz) { pen(g, circle(nz[0], nz[1], 8), { fill: P.red, lw: 2, breaks: false, highlight: false }); redRing(g, nz[0], nz[1], 30, P.red, 3); }
   // camera tripods on the quay, aimed at the gap
-  if (p.tripods) { const aim = p.aim ?? [gx, (gy0 + gTop) / 2]; const xs = p.tripodX ?? [330, 1420, 1690].slice(0, p.tripods);
-    xs.forEach((x, i) => tripod(K, g, x, 1072 + (i % 2) * 6, 150 + (i % 2) * 22, aim)); }
+  if (p.tripods && !(p.tripodOutAt != null && t >= num(p.tripodOutAt, 1e9) && t < num(p.tripodInAt, 1e9))) { const aim = p.aim ?? [gx, (gy0 + gTop) / 2]; const xs = p.tripodX ?? [330, 1420, 1690].slice(0, p.tripods);
+    const tsc = p.tripodSc ?? 1, ty0 = p.tripodY ?? 1072;
+    xs.forEach((x, i) => { const y = ty0 + (i % 2) * 6, fl = aim[0] < x ? -1 : 1; g.save(); g.translate(x, y); g.scale(tsc * fl, tsc); tripod(K, g, 0, 0, 150 + (i % 2) * 22, [(aim[0] - x) * fl / tsc, (aim[1] - y) / tsc]); g.restore(); }); }
   // the plane's shadow sweeping over the façade (clipped to the card)
-  if (p.shadow != null) { const u = an(p, 'shadow', t, 1, 0.5, (x) => x), sc = (p.shadowSc ?? 0.62) * k / 8.5, L2 = 150 * sc, sx = lerp(ox - L2 * 1.2, ox + 41 * k + L2 * 1.2, u), sy = Y(p.shadowY ?? 52) + Math.sin(u * 3) * 6, rr = -4 * Math.PI / 180;
-    g.save(); poly(F.sil)(g); g.clip(); g.translate(sx, sy); g.rotate(rr); planeShape(K, g, sc, { shadowOnly: true, col: 'rgba(20,35,61,0.38)' }); g.restore();
-    const nx = sx + 148 * sc * Math.cos(rr) - 18 * sc * Math.sin(rr), ny = sy + 148 * sc * Math.sin(rr) + 18 * sc * Math.cos(rr);
+  if (p.shadow != null) { const sc = (p.shadowSc ?? 0.62) * k / 8.5, L2 = 150 * sc, sx0 = ox - L2 * 1.2, sx1 = p.shadowStopX ?? ox + 41 * k + L2 * 1.2;
+    const u = p.shadowEndAt != null ? M.E.inOutSine(range(t, num(p.shadowAt, 0.5), num(p.shadowEndAt, 2))) : an(p, 'shadow', t, 1, 0.5, (x) => x), sx = lerp(sx0, sx1, u), sy = Y(p.shadowY ?? 52) + Math.sin(u * 3) * 6, rr = -4 * Math.PI / 180;
+    g.save(); poly(F.sil)(g); g.clip(); g.translate(sx, sy); g.rotate(rr); if (p.shadowStyle === 'side') planeShape(K, g, sc, { shadowOnly: true, col: 'rgba(20,35,61,0.38)' }); else planeTop(K, g, sc * 0.8, { shadow: `rgba(20,35,61,${p.shadowA ?? 0.35})` }); g.restore();
+    const nx = sx + (p.shadowStyle === 'side' ? 148 : 123) * sc * Math.cos(rr) - (p.shadowStyle === 'side' ? 18 : 0) * sc * Math.sin(rr), ny = sy + (p.shadowStyle === 'side' ? 148 : 123) * sc * Math.sin(rr) + (p.shadowStyle === 'side' ? 18 : 0) * sc * Math.cos(rr);
+    p.__shadowNose = [nx, ny];
     if (red === 'shadow' && nx > ox + 4 && nx < ox + 41 * k - 4) { redRing(g, nx, ny, 3.2 * k, P.red, 3.5); pen(g, circle(nx, ny, 0.6 * k), { fill: P.red, lw: 2, breaks: false, highlight: false }); } }
   // the plane hanging on its wire over the roof
   if (p.plane) { const pl0 = p.plane, pt = p.planeTo, u = pt ? M.E.inOutSine(range(t, num(pt.at, 0), num(pt.at, 0) + num(pt.dur, 2))) : 0;
@@ -251,9 +285,9 @@ function viewCrowd(K, g, t, p, red) {
   // the parvis in perspective: kraft paving with converging joints
   pen(g, poly([[-60, oy], [1980, oy], [1980, 1140], [-60, 1140]]), { fill: P.kraft, lw: 2, breaks: false, highlight: false });
   g.save(); g.strokeStyle = rgba(P.ink40, 0.55); g.lineWidth = 1.2; g.beginPath(); for (let i = -14; i <= 14; i++) { g.moveTo(960 + i * 40, oy); g.lineTo(960 + i * 190, 1100); } for (let j = 1; j < 9; j++) { const yy = oy + (1100 - oy) * (j / 9) ** 1.5; g.moveTo(-60, yy); g.lineTo(1980, yy); } g.stroke(); g.restore();
-  const tabs = an(p, 'tabs', t, 1), grow = an(p, 'grow', t, 0), r = M.rng(p.crowdSeed ?? 17), rows = 9; let hero = null; const heroRow = p.heroRow ?? 6, heroCol = p.heroCol ?? 0.62;
+  const tabs = an(p, 'tabs', t, 1), grow = an(p, 'grow', t, 0), r = M.rng(p.crowdSeed ?? 17), rows = p.rows ?? 9; let hero = null; const heroRow = p.heroRow ?? 6, heroCol = p.heroCol ?? 0.62;
   const items = [];
-  for (let j = 0; j < rows; j++) { const v = j / (rows - 1), y = lerp(oy + 40, 1050, v ** 1.25), sc = lerp(0.55, 1.9, v), gap = 40 * sc;
+  for (let j = 0; j < rows; j++) { const v = j / (rows - 1), y = lerp(oy + 40, 1050, v ** 1.25), sc = lerp(0.55, 1.9, v) * (p.crowdSc ?? 1), gap = 40 * sc * (p.crowdGap ?? 1);
     for (let x = -20 + r() * gap; x < 1940; x += gap * (0.8 + r() * 0.5)) items.push({ x, y: y + (r() - 0.5) * 26 * sc, sc, j, ph: r(), tabOn: r(), lean: (r() - 0.5) * 8 }); }
   for (const it of items) if (it.j === heroRow && (!hero || Math.abs(it.x - heroCol * 1920) < Math.abs(hero.x - heroCol * 1920))) hero = it;
   for (const it of items) {
@@ -262,10 +296,13 @@ function viewCrowd(K, g, t, p, red) {
       g.save(); g.translate(tx, ty); g.scale(pop, pop); pen(g, poly([[-w / 2, -h], [w / 2, -h], [w / 2, 0], [-w * 0.05, 0], [-w * 0.25, h * 0.45], [-w * 0.2, 0], [-w / 2, 0]]), { fill: P.card, lw: Math.max(1, 1.3 * s), breaks: false, highlight: false, mis: [1, 1] });
       planeGlyph(g, 0, -h / 2, s * 0.62, P.ink70); g.restore(); } }
   // the hero tab grows into a card
-  if (hero) { const s = hero.sc, u = M.E.inOutCubic(grow), w = lerp(22 * s, 470, u), h = lerp(14 * s, 250, u), tx = lerp(hero.x + 4 * s, 1430, u), ty = lerp(hero.y - 44 * s, 560, u);
+  if (hero) { const s = hero.sc * (p.heroSc ?? 1), u = M.E.inOutCubic(grow), w = lerp(22 * s, 470, u), h = lerp(14 * s, 250, u), tx = lerp(hero.x + 4 * s, 1430, u), ty = lerp(hero.y - 44 * s, 560, u);
     pen(g, poly([[tx - w / 2, ty - h], [tx + w / 2, ty - h], [tx + w / 2, ty], [tx - w * 0.02, ty], [lerp(hero.x, tx - w * 0.2, 0.15), hero.y - 40 * s], [tx - w * 0.2, ty], [tx - w / 2, ty]]), { fill: P.card, lw: lerp(1.3, 3, u), shadow: u > 0.1, breaks: false, highlight: false });
-    planeGlyph(g, tx, ty - h / 2, lerp(s * 0.62, 9, u), P.ink);
-    if (red === 'tab') { g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); g.beginPath(); g.roundRect(tx - w / 2 - 14, ty - h - 14, w + 28, h + 28, 10); g.stroke(); g.restore(); } }
+    const gt = p.growText ? M.E.outCubic(range(t, num(p.growTextAt, 1e9), num(p.growTextAt, 1e9) + 0.5)) : 0;
+    planeGlyph(g, tx, ty - h / 2 - gt * h * 0.16, lerp(s * 0.62, 9, u) * (1 - 0.45 * gt), P.ink);
+    if (gt > 0) { g.save(); g.globalAlpha *= gt; g.strokeStyle = P.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(tx - w / 2 + 34, ty - h * 0.36); g.lineTo(tx + w / 2 - 34, ty - h * 0.36); g.stroke();
+      g.font = '600 40px "Archivo Narrow"'; g.fillStyle = P.ink; g.textAlign = 'center'; g.fillText(p.growText, tx, ty - h * 0.14); g.restore(); mono(g, p.growSub ?? 'RECREATED · TEXT ONLY', tx, ty - 16, 15, P.ink70, 'center'); }
+    if (red === 'tab') { const rw = Math.max(w + 28, p.heroRing?.[0] ?? 120), rh = Math.max(h + 28, p.heroRing?.[1] ?? 92), rcx = tx, rcy = ty - h / 2; g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 8]); g.beginPath(); g.roundRect(rcx - rw / 2, rcy - rh / 2, rw, rh, 10); g.stroke(); g.restore(); } }
 }
 
 // ---------------------------------------------------------------- the hills view (L52): wildfire, the water drop, the bank
@@ -276,23 +313,26 @@ function viewHills(K, g, t, p, red) {
     pen(g, poly(deckle(pts, seed * 9, 2, 16)), { fill: col, lw: 2.5, breaks: false, highlight: false, shade, shadeColor: P.sageD, box: [-100, y0 - amp, 2020, 1200] }); return pts; };
   hill(560, 130, 1.3, P.sageL, 0.15);
   // the small card cathedral on the far right horizon (where the plane banks to)
-  const ck = 2.4, cox = 1640 - 20.5 * ck; facadeCard(g, cox, 592, ck, { sky: 'day', fireS: new Array(14).fill(0), spire: 'gone', glow: 0, smoke: 1 }, t);
-  plume(g, 1650, 470, t, { H: 160, W: 22, n: 7, drift: 0.4, seed: 21, depth: 0.65, sky: P.paper, base: P.card, shadeCol: P.ink40, amount: 0.7, line: P.ink40 });
+  const ck = p.cathK ?? 2.4, cox = (p.cathX ?? 1640) - 20.5 * ck, cTop = 592 - 69 * ck;
+  plume(g, cox + 24.5 * ck, cTop + 20 * ck, t, { H: 70 * ck, W: 9 * ck, n: 7, drift: 0.55, seed: 21, depth: 0.65, sky: P.paper, base: P.card, shadeCol: P.ink40, amount: 0.7, line: P.ink40 }); // behind the card, never over it
+  facadeCard(g, cox, 592, ck, { sky: 'day', fireS: new Array(14).fill(0), spire: 'gone', glow: 0, smoke: 1 }, t);
   const mid = hill(720, 110, 4.1, P.sage, 0.25);
   // the wildfire band along the mid ridge (brass paper flames + halftone smoke), knocked down under the drop
-  const fly = an(p, 'fly', t, 1, 0.5, (x) => x), dropAt = num(p.dropAt, 1.0), hitT = dropAt + 0.75, dous = range(t, hitT, hitT + 1.2);
+  const fly = an(p, 'fly', t, 1, 0.5, (x) => x), dropAt = num(p.dropAt, 1.0), hitT = dropAt + num(p.dropDur, 0.75), dous = range(t, hitT, hitT + 1.2);
   const yR = (x) => { let best = mid[1]; for (const q of mid) if (Math.abs(q[0] - x) < Math.abs(best[0] - x)) best = q; return best[1]; };
-  for (let i = 0; i < 12; i++) { const x = 330 + i * 62 + hash(i) * 20, y = yR(x) + 8, near = Math.abs(x - 720) < 200 ? 1 - 0.75 * dous : 1;
+  for (let i = 0; i < 12; i++) { const x = 330 + i * 62 + hash(i) * 20, y = yR(x) + 8, dR = p.douseR ?? 200, near = Math.abs(x - 720) < dR ? 1 - (p.douse ?? 0.75) * dous * (1 - 0.35 * (Math.abs(x - 720) / dR) ** 2) : 1;
     if (i % 3 === 0) plume(g, x, y - 30, t, { H: 260, W: 26, n: 6, drift: 0.5, seed: 30 + i, depth: 0.65, sky: P.paper, base: P.card, shadeCol: P.ink40, amount: 0.6 * near, line: P.ink40 });
-    flame(g, x, y, (60 + 40 * hash(i * 3)) * near, 46, t, 80 + i, { lean: 0.25 }); }
+    if (near > 0.06) flame(g, x, y, (60 + 40 * hash(i * 3)) * near, 46, t, 80 + i, { lean: 0.25 }); }
+  if (p.steam && dous > 0) for (let i = 0; i < 6; i++) { const a = fract(t * 0.22 + i / 6), x = 720 + (i - 2.5) * 62 + Math.sin(a * 5 + i) * 18, y = yR(x) - 10 - a * 220, r = 30 + 50 * a; // steam off the doused ground: pale halftone wisps
+    g.save(); g.globalAlpha = 0.75 * dous * clamp((1 - a) * 2.2) * clamp(a * 6); K.puff(g, x, y, r, 600 + i, { fill: '#f4f1e8', shadeCol: P.ink20 ?? P.ink40, line: P.ink40, lw: 1.5, shade: 0.25 }); g.restore(); }
   hill(900, 90, 7.7, mix2(P.sage, P.sageD), 0.35);
   // the plane: flies in from the left on its wire, drops, then banks toward the cathedral
   const bankAt = num(p.bankAt, 2.4), bank = M.E.inOutSine(range(t, bankAt, bankAt + num(p.bankDur, 1.6)));
-  const x0 = lerp(-260, 760, M.E.outCubic ? M.E.outCubic(fly) : fly), x = lerp(x0, 1420, bank), y = lerp(330, 400, bank) + Math.sin(t * 1.2) * 6, sc = lerp(1.2, 0.55, bank), rot = lerp(-3, -14, bank);
+  const x0 = lerp(-260, 760, M.E.outCubic ? M.E.outCubic(fly) : fly), x = lerp(x0, 1420, bank), y = lerp(330, p.bankY ?? 400, bank) + Math.sin(t * 1.2) * 6, sc = lerp(1.2, 0.55, bank) * (p.planeSc ?? 1), rot = lerp(-3, p.bankRot ?? -14, bank), ss = p.slabSc ?? 1;
   // the slab: leaves the tank door at dropAt, falls onto the band
-  const fu = range(t, dropAt, hitT); if (t >= dropAt && fu < 1) slab(K, g, 720 + (x - 720) * 0, lerp(y + 60, yR(720) - 30, fu * fu), 190, lerp(40, 70, fu), 7, 1);
-  if (fu >= 1) spray(K, g, 720, yR(720) - 20, 900, yR(900), t, range(t, hitT, hitT + 0.9), 4);
-  drawPlane(K, g, x, y, sc, rot, { red: red === 'nose', bank: bank * 0.6 });
+  const fu = range(t, dropAt, hitT); if (t >= dropAt && fu < 1) slab(K, g, 720, lerp(y + 60 * ss, yR(720) - 30, fu * fu), 190 * ss, lerp(40, 70, fu) * ss, 7, 1);
+  if (fu >= 1) { spray(K, g, 720, yR(720) - 20, 900, yR(900), t, range(t, hitT, hitT + 0.9), 4); if (ss > 1) spray(K, g, 720, yR(720) - 20, 540, yR(540), t, range(t, hitT, hitT + 0.9), 8); }
+  drawPlane(K, g, x, y, sc, rot, { red: red === 'nose', bank: bank * (p.bankRoll ?? 0.6) });
 }
 function mix2(a, b) { const h = (c) => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); const x = h(a), y = h(b); return '#' + x.map((v, i) => Math.round((v + y[i]) / 2).toString(16).padStart(2, '0')).join(''); }
 
@@ -322,15 +362,66 @@ function viewFlex(K, g, t, p, red) {
     // load arrows pressing down, walls pushed outward
     g.save(); g.strokeStyle = P.ink; g.fillStyle = P.ink; g.lineWidth = 4; g.lineCap = 'round';
     for (const dx of [-14, 0, 14]) { const ax = hx + dx * k, ay0 = Y(62), ay1 = Y(49) + sag * (1 - Math.abs(dx) / 30); g.globalAlpha = clamp(flex * 3); g.beginPath(); g.moveTo(ax, ay0); g.lineTo(ax, ay1); g.stroke(); g.beginPath(); g.moveTo(ax - 9, ay1 - 12); g.lineTo(ax, ay1); g.lineTo(ax + 9, ay1 - 12); g.fill(); }
-    for (const sx of [-1, 1]) { const ax = sx < 0 ? X(14) - 1.5 * k : X(116) + 1.5 * k, ay = Y(24), L = 7 * k * flex; g.beginPath(); g.moveTo(ax, ay); g.lineTo(ax + sx * L, ay); g.stroke(); g.beginPath(); g.moveTo(ax + sx * L - sx * 13, ay - 10); g.lineTo(ax + sx * L, ay); g.lineTo(ax + sx * L - sx * 13, ay + 10); g.fill(); } g.restore();
+    for (const sx of [-1, 1]) { const ax = sx < 0 ? X(14) - 1.5 * k : X(116) + 1.5 * k, ay = Y(24), L = (p.arrowLen ?? 7) * k * flex; g.beginPath(); g.moveTo(ax, ay); g.lineTo(ax + sx * L, ay); g.stroke(); g.beginPath(); g.moveTo(ax + sx * L - sx * 13, ay - 10); g.lineTo(ax + sx * L, ay); g.lineTo(ax + sx * L - sx * 13, ay + 10); g.fill(); } g.restore();
     if (flex > 0.5) { g.save(); g.strokeStyle = P.ink; g.lineWidth = 2.5; g.beginPath(); let xx = hx - 2 * k, yy = Y(34); g.moveTo(xx, yy); for (let j = 0; j < 5; j++) { xx += (hash(j) - 0.5) * 22; yy += 14; g.lineTo(xx, yy); } g.stroke(); g.restore(); }
     if (red === 'flex') redRing(g, hx, Y(43) + sag, 26, P.red, 3); }
   // the plane on its wire above the roof, and the slab
   const px = hx - 40, py = 170 + Math.sin(t * 1.2) * 5;
   const fu = range(t, dropAt, hitT); if (t >= dropAt && fu < 1) slab(K, g, hx, lerp(py + 70, Y(43) - 20, fu * fu), 240, lerp(40, 80, fu), 11, 1);
-  if (fu >= 1) { const su = range(t, hitT, hitT + 1.4); spray(K, g, hx, Y(43), houses[1][0] + 60, yG - houses[1][2] - 20, t, su, 3); spray(K, g, hx, Y(43), houses[2][0] + 60, yG - houses[2][2] - 20, t, su, 9);
+  if (p.sprayAt != null) { // sprayAt: on the word, teal arcs leave the roof and land on all four neighbouring houses; wet splats stay
+    const sa = num(p.sprayAt, hitT), su = range(t, sa, sa + 1.3);
+    houses.forEach(([x0, w, h], i) => { const tx = x0 + w / 2, ty = yG - h - 10; for (let j = 0; j < 2; j++) spray(K, g, hx + (j - 0.5) * 40, Y(44), tx + (j - 0.5) * w * 0.4, ty + j * 30, t, su, 21 + i * 7 + j * 3);
+      const wv = clamp((t - sa - 0.7) / 0.5); if (wv > 0) { g.save(); g.globalAlpha = wv; for (let q = 0; q < 7; q++) { const sx = x0 + w * (0.1 + 0.8 * hash(i * 13 + q)), sy = yG - h - 30 + 50 * hash(i * 7 + q * 3), r = 7 + 8 * hash(q + i);
+        K.pen(g, K.circle(sx, sy, r), { fill: q % 2 ? P.teal : P.tealL, lw: 1.5, breaks: false, highlight: false }); } g.restore(); } }); }
+  if (fu >= 1) { const su = range(t, hitT, hitT + 1.4); if (p.sprayAt == null) { spray(K, g, hx, Y(43), houses[1][0] + 60, yG - houses[1][2] - 20, t, su, 3); spray(K, g, hx, Y(43), houses[2][0] + 60, yG - houses[2][2] - 20, t, su, 9); }
     g.save(); g.globalAlpha = 1 - clamp((t - hitT) / 1.2); slab(K, g, hx, Y(43) - 10, 300, 30, 13, 1); g.restore(); }
   drawPlane(K, g, px, py, 0.95, -3, { red: red === 'nose' });
+}
+
+
+// ---------------------------------------------------------------- the plan view (L56): top-down on the parvis, the plane climbs out of the top of frame
+// The roof seen from above (never a section): slate nave + transept intact at the crossing (fact lock: no hole there), the
+// two tower tops at the bottom (west), the sage square below them; the hose runs diagonally from bottom-left to the central
+// portal (hose 0..1 +hoseAt/hoseDur); plane {x, y, sc} climbs off the top (lift 0..1 +liftAt/liftDur), its shadow on the roof.
+function viewPlan(K, g, t, p, red) {
+  const { P, pen, rect, poly, circle, halftone, flame, puff, hoseLine, nozzle, redRing } = K;
+  const CX = p.cx ?? 1060, WF = p.wf ?? 700, fire = an(p, 'fire', t, 0.8);
+  g.fillStyle = P.kraft; g.fillRect(-300, -300, 2520, 1680);                                                       // the island streets
+  pen(g, rect(-300, -300, 520, 1680), { fill: P.tealL, lw: 2.5, breaks: false, highlight: false });                // the Seine (left arm)
+  g.save(); g.strokeStyle = P.teal; g.lineWidth = 2; const rr = M.rng(7); for (let i = 0; i < 26; i++) { const x = -260 + rr() * 440, y = -280 + rr() * 1600, w = 30 + rr() * 60; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + w); g.stroke(); } g.restore();
+  // the square (the same sage paving as the next shot)
+  pen(g, rect(220, WF + 12, 2100, 900), { fill: P.sageL, lw: 2.5, breaks: false, highlight: false });
+  g.save(); g.strokeStyle = rgba(P.sageD, 0.5); g.lineWidth = 1.4; g.beginPath(); for (let x = 220; x < 2320; x += 48) { g.moveTo(x, WF + 12); g.lineTo(x, WF + 912); } for (let y = WF + 12; y < WF + 912; y += 48) { g.moveTo(220, y); g.lineTo(2320, y); } g.stroke(); g.restore();
+  // the cloister gardens + trees beside the nave (top-view sage discs)
+  for (const [x0, x1] of [[CX - 520, CX - 260], [CX + 260, CX + 560]]) pen(g, rect(x0, -300, x1 - x0, WF - 40 + 300), { fill: mix2(P.sageL, P.sage), lw: 2, breaks: false, highlight: false });
+  const tr = M.rng(9); for (let i = 0; i < 22; i++) { const side = i % 2 ? 1 : -1, x = CX + side * (300 + tr() * 200), y = -260 + (i >> 1) * 88 + tr() * 30, r = 34 + tr() * 14;
+    pen(g, circle(x + 8, y + 10, r), { fill: 'rgba(20,35,61,0.14)', line: null, breaks: false, highlight: false }); pen(g, circle(x, y, r), { fill: P.sage, lw: 2, breaks: false, highlight: false, shade: 0.35, shadeColor: P.sageD, box: [x - r, y - r, x + r, y + r] }); }
+  // the roof plan: aisles, nave, transept (intact at the crossing), the two tower tops and the gallery between them
+  const roof = '#9aa3b3', shadeR = (x0, y0, x1, y1) => ({ shade: 0.3, shadeColor: P.ink40, box: [x0, y0, x1, y1] });
+  g.save(); g.fillStyle = 'rgba(11,20,38,0.16)'; g.fillRect(CX - 200 + 22, -300, 400, WF + 300 + 24); g.fillRect(CX - 360 + 22, 120 + 24, 720, 120); g.restore(); // the hard cast shadow
+  for (const sx of [-1, 1]) { const x0 = sx < 0 ? CX - 200 : CX + 120; pen(g, rect(x0, -300, 80, WF - 170 + 300), { fill: mix2(roof, P.card), lw: 2, breaks: false, highlight: false, ...shadeR(x0, -300, x0 + 80, WF - 170) }); }
+  pen(g, rect(CX - 360, 120, 720, 120), { fill: roof, lw: 2.5, breaks: false, highlight: false, ...shadeR(CX - 360, 120, CX + 360, 240) });
+  pen(g, rect(CX - 120, -300, 240, WF - 140 + 300), { fill: roof, lw: 2.5, breaks: false, highlight: false, ...shadeR(CX - 120, -300, CX + 120, WF - 140) });
+  g.save(); g.strokeStyle = P.ink70; g.lineWidth = 2; g.setLineDash([12, 8]); g.beginPath(); g.moveTo(CX, -300); g.lineTo(CX, WF - 140); g.moveTo(CX - 360, 180); g.lineTo(CX + 360, 180); g.stroke(); g.restore(); // ridges
+  for (const sx of [-1, 1]) { const x0 = sx < 0 ? CX - 230 : CX + 50; pen(g, rect(x0, WF - 180, 180, 180), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false, ...shadeR(x0, WF - 180, x0 + 180, WF) });
+    pen(g, rect(x0 + 26, WF - 154, 128, 128), { fill: P.kraft, lw: 2, breaks: false, highlight: false }); for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]]) pen(g, circle(x0 + 12 + a * 156, WF - 168 + b * 156, 7), { fill: P.card, lw: 1.5, breaks: false, highlight: false }); }
+  pen(g, rect(CX - 50, WF - 150, 100, 150), { fill: P.card, lw: 2.5, breaks: false, highlight: false, ...shadeR(CX - 50, WF - 150, CX + 50, WF) });
+  for (const dx of [-140, 0, 140]) pen(g, rect(CX + dx - 22, WF - 4, 44, 10), { fill: P.ink70, lw: 1.5, breaks: false, highlight: false }); // the three portals
+  // the fire on the roof (brass paper flames standing on the nave + transept), smoke drifting east (up the frame)
+  if (fire > 0.05) { for (let i = 0; i < 9; i++) { const y = 500 - i * 70 + hash(i) * 20, x = CX + (hash(i * 3) - 0.5) * 120; flame(g, x, y, (50 + 50 * hash(i * 5)) * fire, 40, t, 120 + i, { lean: 0.2 }); }
+    for (let i = 0; i < 5; i++) { const a = fract(t * 0.08 + i / 5), x = CX + 60 + Math.sin(i * 2 + a * 3) * 80 + a * 160, y = 420 - a * 700, r = 70 + a * 60;
+      g.save(); g.globalAlpha *= 0.85 * fire * clamp((1 - a) * 2.5) * clamp(a * 6); puff(g, x, y, r, 700 + i, { fill: P.card, shadeCol: P.ink40, line: P.ink40, lw: 2, shade: 0.4 }); g.restore(); } }
+  // the hose: one teal line from the bottom-left corner across the square to the central portal
+  let nz = null;
+  if (p.hose != null) { const u = an(p, 'hose', t, 1), pts = p.hosePts ?? [[-60, 1180], [380, 1040], [760, 900], [CX - 60, 780], [CX, WF + 22]];
+    const Ls = []; let tot = 0; for (let i = 1; i < pts.length; i++) { tot += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); Ls.push(tot); }
+    const d = tot * clamp(u), part = [pts[0]]; for (let i = 1; i < pts.length; i++) { if (Ls[i - 1] <= d) part.push(pts[i]); else { const s0 = i > 1 ? Ls[i - 2] : 0, f = (d - s0) / (Ls[i - 1] - s0); part.push([lerp(pts[i - 1][0], pts[i][0], f), lerp(pts[i - 1][1], pts[i][1], f)]); break; } }
+    if (part.length > 1) { hoseLine(g, part, 16, { couplings: part.length > 3 ? [2] : [], flow: 1, t }); const a = part.at(-1), b = part.at(-2), ang = Math.atan2(a[1] - b[1], a[0] - b[0]); nozzle(g, a[0], a[1], ang, 52, 14); nz = [a[0] + Math.cos(ang) * 32, a[1] + Math.sin(ang) * 32]; } }
+  if (red === 'nozzle' && nz) { pen(g, circle(nz[0], nz[1], 8), { fill: P.red, lw: 2, breaks: false, highlight: false }); redRing(g, nz[0], nz[1], 30, P.red, 3); }
+  // the plane, seen from above, climbing out of the top of frame (its shadow stays on the roof and slides off with it)
+  if (p.plane) { const pl = p.plane, lift = an(p, 'lift', t, 0, 0.5, M.E.inCubic ?? ((x) => x * x * x)), x = pl.x ?? CX, y = (pl.y ?? 380) - lift * (pl.liftPx ?? 1100), sc = (pl.sc ?? 1) * (1 + 0.45 * lift), rot = (pl.rot ?? -90) * Math.PI / 180;
+    g.save(); g.translate(x + 70 + lift * 160, y + 110 + lift * 520); g.rotate(rot); planeTop(K, g, sc * 0.9, { shadow: 'rgba(20,35,61,0.3)' }); g.restore();
+    g.save(); g.translate(x, y); g.rotate(rot); planeTop(K, g, sc, { red: red === 'nose' }); g.restore(); pen(g, circle(x, y, 6), { fill: P.brass, lw: 1.5, breaks: false, highlight: false }); }
 }
 
 // ---------------------------------------------------------------- the set
@@ -341,8 +432,8 @@ export async function airdrop(ctx, shot) {
     g.fillStyle = K.P.paper; g.fillRect(0, 0, 1920, 1080);
     const red = redAt(p, t, view === 'crowd' ? 'tab' : view === 'facade' ? 'gap' : 'nose');
     K.applyCam(g, s, K.camAt(p, t), t);
-    if (view === 'crowd') viewCrowd(K, g, t, p, red); else if (view === 'hills') viewHills(K, g, t, p, red); else if (view === 'flex') viewFlex(K, g, t, p, red); else viewFacade(K, g, t, p, red, sky);
-    if (p.tags) for (const tg of p.tags) if ((tg.inAt == null || t >= num(tg.inAt, 0)) && (tg.outAt == null || t < num(tg.outAt, 1e9))) K.tag(g, ...tg.at, ...tg.to, tg.text, { size: tg.size ?? 28, swing: tg.swing ?? 0, sub: tg.sub, night: sky !== 'day' });
+    if (view === 'crowd') viewCrowd(K, g, t, p, red); else if (view === 'hills') viewHills(K, g, t, p, red); else if (view === 'flex') viewFlex(K, g, t, p, red); else if (view === 'plan') viewPlan(K, g, t, p, red); else viewFacade(K, g, t, p, red, sky);
+    if (p.tags) for (const tg of p.tags) if ((tg.inAt == null || t >= num(tg.inAt, 0)) && (tg.outAt == null || t < num(tg.outAt, 1e9))) K.tag(g, ...(tg.anchor === 'shadow' ? (p.__shadowNose ?? [960, 540]) : tg.at), ...tg.to, tg.text, { size: tg.size ?? 28, swing: tg.swing ?? 0, sub: tg.sub, night: sky !== 'day' });
     g.setTransform(s, 0, 0, s, 0, 0);
     if (p.clock) K.counterBadge(g, 96, 72, p.clock, { t, night: sky !== 'day' });
     if (p.kicker) K.mono(g, p.kicker, p.clock ? 380 : 96, 92, 24, K.P.ink70);
@@ -365,23 +456,23 @@ export default airdrop;
 //   tally { at, x }             a single teal tally at the toy's foot, looking up
 //   rangeBar { at, lo, hi }     a brass scale card (screen space): ≈ 0.78 t ... just over 4 t, the red tick at the top end
 //   chips [{text, sub, at}]     paper chips top-right (screen) · lowStrip [line, line2] (+lowStripAt): a lower-third strip
-function bellGeom(box, i) {
+function bellGeom(box, i, order) {
   const { bx0: x0, by0: y0, bx1: x1, by1: y1 } = box, W = x1 - x0, H = y1 - y0, px = W / 13.5;
   const posts = [0.04, 0.27, 0.5, 0.73, 0.96].map(v => x0 + W * v), kg = [4162, 3477, 2502, 1925, 1494, 1309, 1011, 782][i];
-  const hy = i < 4 ? y0 + H * 0.52 : y0 + H * 0.06, j = i % 4, cx = (posts[j] + posts[j + 1]) / 2, d = 1.85 * Math.cbrt(kg / 4162) * px * 1.3, ty = hy + 0.55 * px;
+  const hy = i < 4 ? y0 + H * 0.52 : y0 + H * 0.06, j = order === 'asc' ? 3 - (i % 4) : i % 4, cx = (posts[j] + posts[j + 1]) / 2, d = 1.85 * Math.cbrt(kg / 4162) * px * 1.3, ty = hy + 0.55 * px;
   return { cx, ty, d, cy: ty + d * 0.42, sill: y1 - H * 0.07, x0, x1, y0, y1, W, H, px };
 }
 export function bellExtrasWorld(g, t, p, box, { night = false } = {}) {
   const K = KIT, { P, pen, poly, rect, circle, flame, plume, puff, halftone, bell, deckle } = K; if (!box) return;
-  const bi = p.loopBell ?? 2, B = bellGeom(box, bi);
+  const bi = p.loopBell ?? 2, B = bellGeom(box, bi, p.bellOrder);
   const tf = an(p, 'towerFlame', t, 0), fs = an(p, 'frameSmoke', t, 0);
   if (fs > 0) { // smoke out of the unlit frame: puffs rising from the beams, then a column out of the belfry top
     g.save(); g.beginPath(); g.rect(B.x0, B.y0, B.W, B.H); g.clip();
     // a thin halftone haze under the top beam, and wisps curling off the timbers (behind nothing: drawn over the frame, kept to the top third)
     halftone(g, [B.x0, B.y0, B.x1, B.y0 + B.H * 0.45], (xx, yy) => clamp(0.55 * fs * (1 - (yy - B.y0) / (B.H * 0.45))), P.ink40, { pitch: 10 });
-    for (let i = 0; i < 6; i++) { const a = fract(t * 0.11 + i / 6), x = B.x0 + B.W * (0.1 + 0.8 * (i + 0.5) / 6) + Math.sin(a * 5 + i) * 18, y = B.y0 + B.H * (0.5 - 0.62 * a), r = (16 + 46 * a) * (0.5 + 0.5 * fs);
-      g.save(); g.globalAlpha = 0.85 * clamp((1 - a) * 3) * clamp(a * 6); puff(g, x, y, r, 700 + i * 13 + Math.floor(t * 0.11 + i / 6) * 7, { fill: mix3(P.ink40, P.card, 0.3 + a * 0.3), shadeCol: P.ink70, line: P.ink70, lw: 1.2, shade: 0.5 }); g.restore(); }
     g.restore();
+    if (p.wisps !== false) for (let i = 0; i < 7; i++) { const a = fract(t * 0.16 + i / 7), x = B.x0 + B.W * (0.08 + 0.84 * (i + 0.5) / 7) + Math.sin(a * 4 + i) * 26, y = B.y0 + B.H * 0.12 - a * 340, r = (22 + 60 * a) * (0.5 + 0.5 * fs);
+      g.save(); g.globalAlpha = 0.42 * fs * clamp((1 - a) * 2.5) * clamp(a * 5); halftone(g, [x - r * 1.6, y - r, x + r * 1.6, y + r], (xx, yy) => clamp(1 - Math.hypot((xx - x) / 1.6, yy - y) / r), P.ink40, { pitch: 9 }); g.restore(); }
     plume(g, (B.x0 + B.x1) / 2 + 60, B.y0 - 30, t, { H: 360, W: 60, n: 8, drift: 0.45, seed: 61, depth: 0.25, sky: night ? '#45547a' : P.paper, base: mix3(P.ink40, P.card, 0.4), shadeCol: P.ink70, amount: fs, line: P.ink70 }); }
   if (tf > 0) { // the tower's own wall card below the frame: a louvre section with flame cards standing on its sill
     const wy0 = B.y1 + 24, wy1 = B.y1 + (p.wallH ?? 196), wx0 = B.x0 + 30, wx1 = B.x1 - 30;
@@ -392,44 +483,57 @@ export function bellExtrasWorld(g, t, p, box, { night = false } = {}) {
   const sc = an(p, 'smokeCard', t, 0);
   if (sc > 0) { const off = (1 - M.E.outCubic(sc)) * 1700, r = M.rng(91);
     // the smoke card: one cut-paper bank of overlapping puffs sliding in from the right, printed ink-40 with a halftone
-    g.save(); g.globalAlpha = 0.93;
-    for (let i = 0; i < 16; i++) { const x = box.bx0 - 120 + (i % 4) * 300 + r() * 80 + off, y = box.by0 - 40 + Math.floor(i / 4) * 230 + r() * 60, rr = 150 + r() * 70;
-      puff(g, x, y, rr, 900 + i, { fill: mix3(P.ink40, P.card, 0.18 + 0.12 * (i % 3)), shadeCol: P.ink70, line: P.ink70, lw: 2, shade: 0.55 }); }
-    g.restore();
+    // drawn as ONE merged silhouette on a scratch canvas (outline only around the outside, an even halftone inside), then laid
+    // over the frame at smokeCardA: no per-puff outlines (they read as bubble wrap)
+    const circ = []; for (let i = 0; i < 16; i++) { const x = box.bx0 - 120 + (i % 4) * 300 + r() * 80 + off, y = box.by0 - 40 + Math.floor(i / 4) * 230 + r() * 60, rr = 150 + r() * 70;
+      circ.push([x, y, rr]); const r2 = M.rng(900 + i); for (let j = 0; j < 4; j++) { const a = r2() * Math.PI * 2, d = rr * (0.5 + r2() * 0.35); circ.push([x + Math.cos(a) * d, y + Math.sin(a) * d * 0.7, rr * (0.4 + r2() * 0.3)]); } }
+    const cv = g.canvas, W0 = cv.width, H0 = cv.height; SCR ??= document.createElement('canvas'); if (SCR.width !== W0 || SCR.height !== H0) { SCR.width = W0; SCR.height = H0; }
+    const q = SCR.getContext('2d'); q.setTransform(1, 0, 0, 1, 0, 0); q.clearRect(0, 0, W0, H0); q.setTransform(g.getTransform());
+    // one opaque fill per circle (a single many-subpath fill rasterised with holes on the GPU path): the union grown 3 px in ink-70
+    // (the outline), then the union in smoke grey on top, then the halftone laid on only where the card is (source-atop)
+    const core = [box.bx0 - 100 + off, box.by0 - 20, 980, 720]; // the bank's solid core (no see-through gaps between puffs)
+    const fillAll = (d, col) => { q.fillStyle = col; q.beginPath(); q.rect(core[0] - d, core[1] - d, core[2] + 2 * d, core[3] + 2 * d); q.fill(); for (const [x, y, rr] of circ) { q.beginPath(); q.arc(x, y, rr + d, 0, Math.PI * 2); q.fill(); } };
+    fillAll(3, P.ink70); fillAll(0, mix3(P.ink40, P.card, 0.25));
+    q.save(); q.globalCompositeOperation = 'source-atop'; const bb = [box.bx0 - 500 + off, box.by0 - 400, box.bx1 + 700 + off, box.by1 + 500]; halftone(q, bb, 0.22, P.ink70, { pitch: 12 }); q.restore();
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = p.smokeCardA ?? 0.93; g.drawImage(SCR, 0, 0); g.restore();
     // the frame's beams as silhouettes through it
-    const a = 0.75 * clamp(sc * 2 - 0.8);
+    const a = p.smokeSil === false ? 0 : 0.75 * clamp(sc * 2 - 0.8);
     if (a > 0) { g.save(); g.globalAlpha = a; g.strokeStyle = P.ink70; g.lineCap = 'round'; g.lineWidth = 0.32 * B.px; g.beginPath();
       for (const yy of [B.sill, B.y0 + B.H * 0.52, B.y0 + B.H * 0.06]) { g.moveTo(B.x0, yy); g.lineTo(B.x1, yy); }
       const posts = [0.04, 0.27, 0.5, 0.73, 0.96].map(v => B.x0 + B.W * v); for (const x of posts) { g.moveTo(x, B.y0 + 4); g.lineTo(x, B.sill); }
       g.lineWidth = 0.16 * B.px; for (let i = 0; i < 4; i++) { const a0 = posts[i], b0 = posts[i + 1]; g.moveTo(a0, B.y0 + B.H * 0.47); g.lineTo(b0, B.y0 + B.H * 0.1); g.moveTo(b0, B.y0 + B.H * 0.47); g.lineTo(a0, B.y0 + B.H * 0.1); }
       g.stroke(); g.restore(); } }
-  if (p.tally) { const u = M.E.outCubic(range(t, num(p.tally.at, 0.5), num(p.tally.at, 0.5) + 0.6)), x = p.tally.x ?? 380, y = (p.tally.y ?? 1062) + (1 - u) * 160;
-    pen(g, rect(-300, (p.tally.y ?? 1062), box.bx0 + 300, 400), { fill: night ? '#6d6156' : P.kraft, lw: 2.5, breaks: false, highlight: false }); // the table the toy stands on
-    g.save(); g.translate(x, y); g.scale(p.tally.sc ?? 2.6, p.tally.sc ?? 2.6); pen(g, K.pill(0, -17, 12, 34), { fill: P.card, line: P.teal, lw: 3, breaks: false, highlight: false, mis: [2, 1.5] }); g.fillStyle = P.teal; g.beginPath(); g.arc(2.4, -30, 3.4, 0, Math.PI * 2); g.fill(); g.restore(); }
-  if (p.bellOutline) { g.save(); g.strokeStyle = P.red; g.lineWidth = 3.5; g.setLineDash([10, 7]); K.bellPath(B.cx, B.ty, B.d)(g); g.stroke(); g.restore(); }
+  if (p.tally) { const tl = p.tally, u = M.E.outCubic(range(t, num(tl.at, 0.5), num(tl.at, 0.5) + 0.6)), x = tl.x ?? 380, y0 = tl.ledge ? B.y1 + 22 : (tl.y ?? 1062), y = y0 + (1 - u) * 160;
+    if (tl.ledge) pen(g, rect(B.x0 - 10, B.y1 + 4, B.W + 20, 20), { fill: night ? '#a99e8b' : P.card, lw: 2.5, breaks: false, highlight: false }); // the ledge under the frame
+    else if (tl.table !== false) pen(g, rect(-300, y0, (tl.tableTo ?? box.bx0) + 300, 400), { fill: night ? '#6d6156' : P.kraft, lw: 2.5, breaks: false, highlight: false }); // the table the toy stands on
+    if (tl.ledge) { g.save(); g.beginPath(); g.rect(B.x0 - 400, B.y0 - 400, B.W + 800, B.y1 + 24 - B.y0 + 400); g.clip(); }
+    g.save(); g.translate(x, y); g.rotate((tl.tilt ?? 0) * Math.PI / 180); g.scale(tl.sc ?? 2.6, tl.sc ?? 2.6); pen(g, K.pill(0, -17, 12, 34), { fill: P.card, line: P.teal, lw: 3, breaks: false, highlight: false, mis: [2, 1.5] }); g.fillStyle = P.teal; g.beginPath(); g.arc(2.4, -30, 3.4, 0, Math.PI * 2); g.fill(); g.restore(); if (tl.ledge) g.restore(); }
+  if (p.bellOutline) { const bo = typeof p.bellOutline === 'object' ? p.bellOutline : {}, s2 = bo.sc ?? 1; g.save(); g.strokeStyle = P.red; g.lineWidth = (bo.lw ?? 3.5) / s2; if (!bo.solid) g.setLineDash([10 / s2, 7 / s2]);
+    g.translate(B.cx, B.cy); g.scale(s2, s2); g.translate(-B.cx, -B.cy); K.bellPath(B.cx, B.ty, B.d)(g); g.stroke(); g.restore(); }
   // the red marker loop, sliding between targets
   let to = p.loop ?? null, from = to, t0 = num(p.loopAt, 0); if (p.loopSeq) for (const q of p.loopSeq) if (t >= num(q.at, 0)) { from = to; to = q.to; t0 = num(q.at, 0); }
-  if (to && to !== 'none') { const at = (k) => k === 'bell' ? [B.cx, B.cy, B.d * 0.72, B.d * 0.62] : k === 'beam' ? [(B.x0 + B.x1) / 2, B.sill, B.W * 0.55, 0.9 * B.px] : (p.__flameAt ?? [960, 1000, 400, 120]);
-    const u = M.E.inOutCubic(range(t, t0, t0 + 0.6)), A = at(from && from !== 'none' ? from : to), Bq = at(to), q = A.map((v, i) => lerp(v, Bq[i], u)), draw = from == null || from === 'none' || from === to ? clamp((t - t0) / 0.5) : 1;
+  if (to && to !== 'none') { const at = (k) => k === 'bell' ? [B.cx, B.cy, B.d * 0.72, B.d * 0.62] : k === 'beam' ? [(B.x0 + B.x1) / 2, B.sill, B.W * (p.loopBeamRx ?? 0.55), 0.9 * B.px] : (p.__flameAt ?? [960, 1000, 400, 120]);
+    const u = M.E.inOutCubic(range(t, t0, t0 + (p.loopSlide ?? 0.6))), A = at(from && from !== 'none' ? from : to), Bq = at(to), q = A.map((v, i) => lerp(v, Bq[i], u)), draw = from == null || from === 'none' || from === to ? clamp((t - t0) / 0.5) : 1;
     if (draw > 0) { g.save(); g.strokeStyle = P.red; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); const a0 = -2.2, a1 = a0 + Math.PI * 2.15 * draw; for (let a = a0; a <= a1; a += 0.05) { const wob = 1 + 0.04 * Math.sin(a * 3 + 1), x = q[0] + Math.cos(a) * q[2] * wob, y = q[1] + Math.sin(a) * q[3] * wob; a === a0 ? g.moveTo(x, y) : g.lineTo(x, y); } g.stroke(); g.restore();
-      if (p.pencil !== false && (draw < 1 || u < 1)) { const a = a0 + Math.PI * 2.15 * draw, x = q[0] + Math.cos(a) * q[2], y = q[1] + Math.sin(a) * q[3];
+      if (p.pencil !== false && (draw < 1 || u < 1 || p.pencilHold)) { const a = a0 + Math.PI * 2.15 * draw, x = q[0] + Math.cos(a) * q[2], y = q[1] + Math.sin(a) * q[3];
         g.save(); g.translate(x, y); g.rotate(-0.75); pen(g, poly([[0, 0], [16, -8], [150, -8], [150, 8], [16, 8]]), { fill: P.brassL, lw: 2, shadow: true, breaks: false, highlight: false }); g.fillStyle = P.ink; g.beginPath(); g.moveTo(0, 0); g.lineTo(8, -4); g.lineTo(8, 4); g.fill(); g.restore(); } } }
   delete p.__flameAt;
 }
+let SCR = null; // scratch canvas for the merged smoke card
 function mix3(a, b, u) { const h = (c) => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); const x = h(a), y = h(b); return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * u).toString(16).padStart(2, '0')).join(''); }
 export function bellExtrasScreen(g, t, p) {
   const K = KIT, { P, pen, rect, rrect, mono, bell, redRing } = K;
   if (p.rangeBar) { const rb = p.rangeBar, u = M.E.outCubic(range(t, num(rb.at, 0.5), num(rb.at, 0.5) + 0.5)); if (u > 0) {
-    const W = 1040, H = 190, x = 960 - W / 2, y = (rb.y ?? 790) + (1 - u) * 300;
+    const W = 1040, H = rb.H ?? 190, x = 960 - W / 2, y = (rb.y ?? 790) + (1 - u) * 300, rs = rb.sc ?? 1; g.save(); g.translate(960, y + H); g.scale(rs, rs); g.translate(-960, -(y + H));
     pen(g, rrect(x, y, W, H, 8), { fill: P.card, lw: 2.5, shadow: true, breaks: false, highlight: false });
     pen(g, rect(x + 60, y + 108, W - 120, 16), { fill: P.brassL, lw: 2, breaks: false, highlight: false, shade: 0.3, shadeColor: P.brass, box: [x + 60, y + 108, x + W - 60, y + 124] });
     g.save(); g.strokeStyle = P.ink; g.lineWidth = 1.5; g.beginPath(); for (let i = 0; i <= 40; i++) { const xx = x + 60 + (W - 120) * i / 40; g.moveTo(xx, y + 108); g.lineTo(xx, y + 108 - (i % 5 ? 6 : 12)); } g.stroke(); g.restore();
     const lo = x + 60 + (W - 120) * (0.78 / 4.3), hi = x + 60 + (W - 120) * (4.1 / 4.3);
     bell(g, lo, y + 58, 38, { lw: 2 }); bell(g, hi, y + 40, 60, { lw: 2 });
-    mono(g, rb.lo ?? '≈ 0.78 T', lo, y + 160, 21, P.ink, 'center', 600); mono(g, rb.hi ?? 'JUST OVER 4 T', hi - 70, y + 160, 21, P.ink, 'center', 600);
+    const ly = rb.labelY ?? 160, ls = rb.labelSize ?? 21; mono(g, rb.lo ?? '≈ 0.78 T', lo, y + ly, ls, P.ink, 'center', 600); mono(g, rb.hi ?? 'JUST OVER 4 T', hi - (rb.hiDx ?? 70), y + ly, ls, P.ink, 'center', 600);
     g.save(); g.strokeStyle = P.ink; g.lineWidth = 3; g.beginPath(); g.moveTo(lo, y + 100); g.lineTo(lo, y + 130); g.stroke(); g.restore();
-    const ru = range(t, num(rb.at, 0.5) + 0.6, num(rb.at, 0.5) + 1.0); if (ru > 0 && rb.red !== false) { g.save(); g.strokeStyle = P.red; g.lineWidth = 5; g.beginPath(); g.moveTo(hi, y + 96); g.lineTo(hi, y + 134); g.stroke(); g.restore(); redRing(g, hi, y + 116, 26 * ru + 4, P.red, 3); }
-    mono(g, rb.kicker ?? '8 BELLS · THE NORTH TOWER', x + 30, y + 30, 17, P.ink70); if (rb.note) mono(g, rb.note, x + W - 30, y + 30, 15, P.ink70, 'right'); } }
+    const ru = range(t, num(rb.at, 0.5) + 0.6, num(rb.at, 0.5) + 1.0); if (ru > 0 && rb.red !== false) { g.save(); g.strokeStyle = P.red; g.lineWidth = 5; g.beginPath(); g.moveTo(hi, y + (rb.tick?.[0] ?? 96)); g.lineTo(hi, y + (rb.tick?.[1] ?? 134)); g.stroke(); g.restore(); redRing(g, hi, y + (rb.ringY ?? 116), (rb.ringR ?? 26) * ru + 4, P.red, 3); }
+    mono(g, rb.kicker ?? '8 BELLS · THE NORTH TOWER', x + 30, y + 30, rb.kickerSize ?? 17, P.ink70); if (rb.note) mono(g, rb.note, x + W - 30, y + 30, 15, P.ink70, 'right'); g.restore(); } }
   if (p.lowStrip) lowerStrip(K, g, p.lowStrip, t, num(p.lowStripAt, 0), { big: p.lowStripBig ?? 1, until: p.lowStripOutAt == null ? null : num(p.lowStripOutAt, 1e9) });
   if (p.chips) chipStack(K, g, p.chips, t);
 }

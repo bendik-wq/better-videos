@@ -62,68 +62,68 @@ export const shots = check([
     cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 990, y: 600, z: 1.07, at: 0, dur: 2.2 },
     source: 'ILLUSTRATION · PAPER MODEL · THE ROOF LID LAID ASIDE (THE ONLY TIME)' },
   { mood: M('tension', 'D', [0.3, 0.5], { clock: false, until: 's407', untilAt: -3.1 }),
-    beats: [['Now', 'briefing', { view: 'room', sky: DUSK, plate: false, cards: true, part: 1, partFrom: 0, partAt: 'decide', partDur: 0.8, red: 'gap', redAt: 'decide+0.6',
-      corner: { label: 'Clock two', sub: 'not yet wound', at: 0.3, r: 70 },
-      cam: { x: 960, y: 540, z: 1.0 }, zoomTo: { x: 1250, y: 380, z: 1.3, at: 'under', dur: 1.3 },
+    beats: [['Now', 'briefing', { view: 'room', sky: DUSK, plate: false, cards: true, part: 1, partFrom: 0, partAt: 'decide', partDur: 0.8, red: 'none', redSeq: [{ red: 'gap', at: 'decide+0.6' }, { red: 'window', at: 'under+0.4' }],
+      corner: { label: 'Clock two', sub: 'not yet wound', at: 0.3, r: 96, y: 150 },
+      cam: { x: 960, y: 540, z: 1.0 }, zoomTo: { x: 1430, y: 250, z: 2.3, at: 'under', dur: 1.3 },
       source: 'ILLUSTRATION · A SEPARATE BRIEFING TABLE · THE BELL-FRAME TOY BEYOND THE WINDOW, ITS TOWER BURNING BENEATH IT' }]] }),
 
   // L69 — the briefing at police headquarters; the two men who told it
-  S('briefing', L(69), { view: 'room', sky: DUSK, plateAt: 'briefed', lit: { weilAt: 'Ariel', galletAt: `${GALLET}@1` }, part: 1,
+  S('briefing', L(69), { view: 'room', sky: DUSK, plateAt: 'briefed', lit: { weilAt: 'Ariel', galletAt: `${GALLET}@1` }, part: 1, platesIn: ['gallet'], toldOut: { weilAt: `${GALLET}@1` },
     gaze: { galletAt: [['remembers', 52]], weilAt: [['Weil@1', 250]] }, red: 'window', redAt: 'remembers',
-    chips: [{ text: 'As remembered by Weil', sub: NYT, at: 'remembers' }],
-    cam: { x: 920, y: 520, z: 0.98 }, zoomTo: [{ x: 600, y: 640, z: 1.32, at: 'Two', dur: 1.4 }, { x: 1080, y: 480, z: 1.12, at: 'remembers', dur: 1.6 }],
+    chips: [{ text: 'As remembered by Weil', sub: NYT, at: 'remembers', x: 1380, y: 866 }],
+    cam: { x: 920, y: 520, z: 0.98 }, zoomTo: [{ x: 600, y: 640, z: 1.32, at: 'Two', dur: 1.4 }, { x: 1000, y: 470, z: 1.05, at: 'remembers', dur: 1.6 }],
     source: 'ILLUSTRATION · POLICE HEADQUARTERS ≈ 20:30 (NYT) · AS TOLD LATER BY WEIL AND GALLET' }),
 
   // L70 — Weil's words (his own composition: close, the window beyond)
-  S('briefing', L(70), { view: 'room', sky: DUSK, plate: false, lit: { weilAt: 0, galletAt: 0 }, told: false, part: 1, cards: false, red: 'none',
-    gaze: { weilAt: [[0.2, 200], ['knew', 62]], galletAt: [[0, 52]] },
-    strip: { lines: ['"We knew what he meant. He meant Notre-Dame could collapse."', `Ariel Weil, mayor of the 4th arrondissement · ${NYT}`], at: 'knew', red: 'collapse', redAt: 'collapse', pos: 'top' },
-    cam: { x: 1010, y: 420, z: 1.32 }, zoomTo: { x: 820, y: 470, z: 1.62, at: 0.3, dur: 4.8 },
+  S('briefing', L(70), { view: 'close', sky: DUSK, lit: { weilAt: true }, told: false, red: 'none',
+    gaze: { weilAt: [[0.2, 200], ['knew', 62]] },
+    strip: { lines: ['"We knew what he meant.', 'He meant Notre-Dame could collapse."', `Ariel Weil, mayor of the 4th arr. · ${NYT}`], big: 2, size: 44, at: 'knew', red: 'collapse', redAt: 'collapse', cx: 1380, y: 640 },
+    cam: { x: 960, y: 540, z: 1.0 }, zoomTo: { x: 900, y: 560, z: 1.07, at: 0.3, dur: 4.8 },
     source: 'ILLUSTRATION · AS REMEMBERED BY ARIEL WEIL (NYT, 16 JUL 2019)' }),
 
   // L71 — the two options, by Gallet's own account; the president at the table
   S('briefing', L(71), { view: 'room', sky: DUSK, plate: false, lit: { weilAt: 0, galletAt: 0, presidentAt: 'President' }, told: false, part: 1,
     flip: 1, flipAt: 'nothing', flipDur: 0.5, fade: 1, fadeAt: 'towers', fadeDur: 1.2, red: 'tower', redAt: 'towers',
     gaze: { presidentAt: [[0, 230], ['President', 200]], galletAt: [[0, 80]] },
-    strip: { lines: ['« Soit on ne fait rien, et à 5 heures du matin on ne verra plus les deux tours. »', 'Gen. Gallet, his own account · franceinfo, 15 Apr 2020'], at: 'nothing' },
-    cam: { x: 1150, y: 520, z: 1.5 }, zoomTo: { x: 1230, y: 600, z: 1.95, at: 'nothing', dur: 1.2 },
+    strip: { lines: ['« Soit on ne fait rien, et à 5 heures du matin on ne verra plus les deux tours. »', 'Gen. Gallet · franceinfo, 15 Apr 2020'], at: 'nothing', pos: 'top', subSize: 30 },
+    cam: { x: 1290, y: 540, z: 1.5 }, zoomTo: { x: 1220, y: 560, z: 1.7, at: 'nothing', dur: 1.2 },
     source: 'ILLUSTRATION · GALLET’S OWN ACCOUNT (FRANCEINFO, 15 APR 2020) · THE PRESIDENT WAS IN THE ROOM' }),
 
   // L72 — the other option: the route up the flat stair strip, within the half hour
-  S('stairStrip', L(72), { layout: 'flat', sky: DAY, route: 1, routeAt: 'Send', routeDur: 1.7, spring: 1, springFrom: 0.15, springAt: 'within', springDur: 1.1, red: 'none',
-    note: { text: '« … une manœuvre qu’on n’est pas sûrs de réussir, car il faut la réaliser dans la demi-heure »', sub: ['"… a manoeuvre we’re not sure will work,', 'because it has to be done within the half hour"', 'Gen. Gallet · franceinfo, 15 Apr 2020'], at: 'try', red: 'demi-heure', redAt: 'half', x: 84, y: 170, w: 650, size: 42 },
-    cam: { x: 560, y: 420, z: 0.82, rot: -2 }, zoomTo: { x: 610, y: 400, z: 0.88, at: 0, dur: 7 },
+  S('stairStrip', L(72), { layout: 'flat', sky: DAY, smoke: 0, route: 1, routeAt: 'Send', routeDur: 1.7, spring: 1, springFrom: 0.15, springAt: 'within', springDur: 1.1, red: 'none',
+    note: { text: '« … une manœuvre qu’on n’est pas sûrs de réussir, car il faut la réaliser dans la demi-heure »', sub: ['"… a manoeuvre we’re not sure will work,', 'because it has to be done within the half hour"', 'Gen. Gallet · franceinfo, 15 Apr 2020'], at: 'try', red: 'demi-heure', redAt: 'half', x: 84, y: 150, w: 840, size: 40 },
+    tagPos: [330, 700], routeW: 1.5,
+    cam: { x: 690, y: 470, z: 1.0, rot: -2 }, zoomTo: { x: 720, y: 450, z: 1.06, at: 0, dur: 7 },
     source: 'ILLUSTRATION · THE STAIR STRIPS LAID FLAT BESIDE THE MODEL · ROUTE AFTER THE NYT (16 JUL 2019)' }),
 
   // L73 — you decide (the guess silence: 3.0 s after "Make your call.")
   S('briefing', L(73), { view: 'pov', sky: DUSK, lit: { presidentAt: 0 }, part: 1, red: 'edge', trans: 'fold-away',
     corner: { label: 'Clock two', sub: 'unwound', at: 0, r: 64 },
-    cam: { x: 960, y: 560, z: 1.0 }, zoomTo: [{ x: 700, y: 640, z: 1.28, at: 'Send', dur: 1.2 }, { x: 1220, y: 640, z: 1.28, at: 'Hold', dur: 1.2 }, { x: 960, y: 540, z: 1.06, at: 'Make', dur: 1.4 }],
+    cam: { x: 960, y: 560, z: 1.0 }, zoomTo: [{ x: 820, y: 640, z: 1.18, at: 'Send', dur: 1.2 }, { x: 1100, y: 640, z: 1.18, at: 'Hold', dur: 1.2 }, { x: 960, y: 540, z: 1.06, at: 'Make', dur: 1.4 }],
     source: 'ILLUSTRATION · YOUR CALL' }, { ...HOLDS['73'] }),
 
   // L74 — the answer, as Gallet remembers it; clock two starts
   S('deadlineWheel', L(74), { sky: DUSK, wind: 1, windAt: 'Clock', windDur: 0.9, runAt: 'Clock+0.9', red: 'half', redAt: 'Clock',
     tags: [{ text: '≈ 21:30 · plan accepted', sub: 'culture ministry', at: 'starts' }],
-    strip: { lines: ['« OK, allez-y mon général… »', '"OK. Go ahead, General." · the president’s answer, as Gallet remembers it · franceinfo, 15 Apr 2020'], at: 'OK', serif: true, outAt: 'Clock-0.2' },
-    warn: { lines: ['NYT, 16 Jul 2019: Macron "remained silent, but appeared to give tacit approval"', 'Gallet gives no time · NYT puts his briefing ≈ 20:30'], at: 'half' },
-    cam: { x: 900, y: 500, z: 1.14 }, zoomTo: { x: 1000, y: 520, z: 0.96, at: 'Clock', dur: 1.6 },
+    strip: { lines: ['« OK, allez-y mon général… »', '"OK. Go ahead, General."', 'Gen. Gallet · franceinfo, 15 Apr 2020'], big: 2, at: 'OK', serif: true, outAt: 'Clock-0.2', subSize: 30 }, labelsAt: 'Clock',
+    warn: { lines: ['NYT, 16 Jul 2019:', 'Macron "appeared to give tacit approval"', 'Gallet gives no time · NYT briefing ≈ 20:30'], at: 'starts', pos: 'top', y: 56, x: 1100 },
+    tagsY: 330, cam: { x: 900, y: 500, z: 1.14 }, zoomTo: { x: 900, y: 500, z: 1.0, at: 'Clock', dur: 1.6 },
     source: 'ILLUSTRATION · ≈ 21:30 PLAN ACCEPTED: CULTURE MINISTRY · THE WHEEL CARRIES NO MINUTE COUNT' },
   { mood: M('urgency', 'D', [0.3, 0.5], { word: 'OK', hit: true, clock: false }) }),
 
   // L76 — about twenty go in
-  S('tallyField', L(76), { view: 'foot', sky: NIGHT, step: 1, stepAt: 'firefighters', stepDur: 1.0, red: 'ring',
-    chips: [{ text: '« Une vingtaine de sapeurs-pompiers ont risqué leur vie »', sub: 'French government record, 17 Apr 2019', at: 'go' }],
-    strip: { lines: ['"It was clear that some firefighters were going to go into the cathedral without knowing if they would come back out."', `Ariel Weil · ${NYT}`], at: 'clear' },
-    cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 1120, y: 620, z: 1.22, at: 'clear', dur: 2.0 },
+  S('tallyField', L(76), { view: 'foot', sky: NIGHT, step: 1, stepAt: 'firefighters', stepDur: 1.0, red: 'ring', fieldX0: 380,
+    strip: { lines: ['"It was clear that some firefighters were going to go into the cathedral without knowing if they would come back out."', `Ariel Weil · ${NYT}`], at: 'clear', subSize: 28 },
+    cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 1150, y: 620, z: 1.16, at: 'clear', dur: 2.0 },
     source: 'ILLUSTRATION · GROUPS OF FIVE · NOT A COUNT OF THE NIGHT’S CREWS' }),
 
   // L78 — Nuñez on camera at 21:40: not contained, not certain
-  S('nightModel', L(78), { view: 'tv', sky: NIGHT, smokeSeed: 78,
-    corner: { label: 'Clock two', sub: 'running', at: 0, runAt: 0, r: 62, tags: [{ text: '21:40 · Nuñez', at: 'Nine' }] },
-    strip: { lines: ['« L’incendie n’est pas circonscrit »', '"The fire is not contained" · Laurent Nuñez, 21:40 · Public Sénat, 15 Apr 2019'], at: 'camera', outAt: 'Saving-0.5' },
-    strip2: { lines: ['« … n’est pas acquis »', '"… is not certain" · saving the cathedral · Laurent Nuñez · Public Sénat, 15 Apr 2019'], at: 'Saving', red: 'pas acquis', redAt: 'certain' },
-    cam: { x: 960, y: 520, z: 1.0 }, zoomTo: [{ x: 760, y: 560, z: 1.16, at: 'deputy', dur: 1.6 }, { x: 1180, y: 380, z: 1.32, at: 'Saving', dur: 1.6 }],
-    source: 'ILLUSTRATION · THE FRAME NOT YET BURNING · THE TOWER BELOW IT ON FIRE (NYT ≈ 20:30)' }),
+  S('nightModel', L(78), { view: 'tv', sky: DUSK, smokeSeed: 78, tvTag: [300, 500, 40, 590],
+    corner: { label: false, at: 0, runAt: 0, r: 70, tags: [{ text: '21:40 · Nuñez', at: 'Nine' }] },
+    strip: { lines: ['« L’incendie n’est pas circonscrit »', '"The fire is not contained"', 'Laurent Nuñez · Public Sénat, 15 Apr 2019'], big: 2, at: 'camera', outAt: 'Saving-0.5', subSize: 30 },
+    strip2: { lines: ['« … n’est pas acquis »', '"… is not certain" (saving the cathedral)', 'Laurent Nuñez · Public Sénat, 15 Apr 2019'], big: 2, at: 'Saving', red: 'pas acquis', redAt: 'says@1+0.3', subSize: 30 },
+    cam: { x: 960, y: 520, z: 1.0 }, zoomTo: [{ x: 760, y: 560, z: 1.16, at: 'deputy', dur: 1.6 }, { x: 1180, y: 450, z: 1.28, at: 'Saving', dur: 1.6 }],
+    source: 'ILLUSTRATION · THE TOWER ON FIRE BELOW THE FRAME · SMOKE FROM ITS FRAME (NYT ≈ 20:30)' }),
 
   // L79 — first problem: water
   S('riser', L(79), { view: 'riser', leak: 1, leakAt: 'leaking', needle: 1, needleAt: 'pressure', needleDur: 2.0, red: 'needle',
@@ -133,61 +133,60 @@ export const shots = check([
 
   // L80 — embers the size of your thumb
   S('riser', L(80), { view: 'hose', holesAt: ['Embers+0.5', 'burning', 'holes'], thumbAt: 'thumb', red: 'hole', redAt: 'burning',
-    chips: [NYT_CHIP, { text: 'The team’s answer', sub: 'traced by the NYT', at: 'traced' }],
-    cam: { x: 760, y: 560, z: 1.28 }, zoomTo: { x: 960, y: 540, z: 1.0, at: 'New', dur: 1.6 },
+    hoseY: 560, chips: [{ ...NYT_CHIP, swapAt: 'traced', text2: 'The team’s answer', sub2: 'traced by the NYT · single source' }],
+    cam: { x: 800, y: 480, z: 1.34 }, zoomTo: { x: 940, y: 520, z: 1.12, at: 'New', dur: 1.6 },
     source: 'ILLUSTRATION · EMBER SIZE AS REPORTED · NYT, 16 JUL 2019' }),
 
   // L81 — they bring their own water; the half hour is running (the escapement tick starts)
-  S('stairStrip', L(81), { sky: DUSK, lead: 0.55, leadAt: 'hoses', leadDur: 5.0, red: 'nozzle', smoke: 1, chips: [NYT_CHIP],
-    cam: { x: 900, y: 430, z: 0.86 }, zoomTo: { x: 800, y: 520, z: 1.0, at: 'hoses', dur: 5 } },
+  S('stairStrip', L(81), { sky: DUSK, lead: 0.55, leadAt: 'water', leadDur: 5.5, red: 'nozzle', smoke: 1, chips: [NYT_CHIP], bellTag: false,
+    cam: { x: 900, y: 600, z: 0.9 }, zoomTo: { x: 820, y: 560, z: 1.25, at: 'hoses', dur: 4 } },
   { mood: M('tension', 'D', [0.55, 0.8], { clock: true, riser: true }),
-    beats: [[`${GALLET}'s`, 'deadlineWheel', { sky: DUSK, runAt: 0, red: 'notch', half: true,
-      tags: [{ text: '≈ 21:30 · plan accepted', sub: 'culture ministry', at: 0 }, { text: '21:40 · Nuñez', sub: 'on camera', at: 0 }],
-      cam: { x: 960, y: 430, z: 1.1 }, zoomTo: { x: 960, y: 420, z: 1.18, at: 0, dur: 3 } }]] }),
+    beats: [[`${GALLET}'s`, 'deadlineWheel', { sky: DUSK, runAt: 0, red: 'notch', half: true, tags: [], label: false,
+      cam: { x: 860, y: 250, z: 2.3 }, zoomTo: { x: 870, y: 270, z: 2.15, at: 0, dur: 3 } }]] }),
 
   // L82–84 — one continuous climb: the gate, the wall and floor flames, up toward the bells
-  S('stairStrip', L(82, 84), { sky: NIGHT, leadKeysAt: [[0, 0.56], ['High', 0.66, 2.0], ['break+0.35', 0.8, 2.2], ['climb', 1.0, 2.4]],
+  S('stairStrip', L(82, 84), { sky: NIGHT, leadKeysAt: [[0, 0.56], ['High', 0.66, 2.0], ['break+0.35', 0.76, 2.2], ['climb', 1.0, 2.4]],
     gate: 1, gateAt: 'break', gateDur: 0.35, wallFlame: 1, wallFlameAt: 'wall', floorFlame: 1, floorFlameAt: 'floor', smoke: 1,
     redSeq: [{ red: 'latch', at: 0 }, { red: 'floor', at: 'floor' }, { red: 'mark', at: 'climb' }], chips: [NYT_CHIP],
     cam: { x: 880, y: 380, z: 1.7 }, zoomTo: [{ x: 1200, y: 300, z: 1.7, at: 'Part', dur: 1.1 }, { x: 1150, y: 110, z: 1.45, at: 'climb', dur: 1.6 }],
-    source: 'ILLUSTRATION · NYT, 16 JUL 2019 · THE FRAME NOT YET BURNING' }),
+    source: 'ILLUSTRATION · NYT, 16 JUL 2019 · STAIR STRIPS, NOT A ROUTE INSIDE THE TOWER' }),
 
   // L85 — above them the eight bells; the frame is on fire (the band arrives with the 21:36 log entry)
-  S('bellFrame', L(85), { sky: NIGHT, open: 1, char: 0.5, charAt: 'fire', charDur: 0.9, flame: 0.85, flameAt: 'fire', flameDur: 0.5, redBell: 0, slip: 0,
-    weights: false, labels: false, clock: null, crowd: false, trans: 'loupe', transOpts: { at: [0.6, 0.12] },
-    chips: [{ text: 'The biggest: more than 4 t', sub: '8 bells · 2013 set', at: 'biggest' }, { text: '21:36 · logged', sub: '« … et le beffroi nord est atteint »', at: 'fire' }],
-    cam: { x: 900, y: 470, z: 1.55 }, zoomTo: { x: 960, y: 600, z: 1.12, at: 'And', dur: 1.5 },
+  S('bellFrame', L(85), { sky: NIGHT, open: 1, char: 0.5, charAt: 'fire', charDur: 0.9, flame: 0.85, flameAt: 'fire', flameDur: 0.5, flameUp: 1.8, redBell: 0, redScale: 1.35, slip: 0,
+    weights: false, labels: false, clock: null, crowd: false, glue: false, trans: 'loupe', transOpts: { at: [0.6, 0.12] },
+    chips: [{ text: 'The biggest: more than 4 t', sub: '8 bells · 2013 set', at: 'biggest', y: 64, right: 1800 },
+      { text: '21:36 · logged: « le beffroi nord est atteint »', sub: 'French government timeline, 17 Apr 2019', at: 'fire', y: 172, right: 1800 }],
+    cam: { x: 900, y: 550, z: 1.55, rot: 0 }, zoomTo: { x: 960, y: 680, z: 1.12, at: 'And', dur: 1.5 },
     source: 'PAPER MODEL · 21:36: FRENCH GOVERNMENT TIMELINE (17 APR 2019), A LOG ENTRY · BELLS STAY ON THEIR PINS' }),
 
   // L86 — wall, then floor: those flames go out (the frame band set back, not doused here)
   S('stairStrip', L(86), { sky: NIGHT, lead: 0.9, wallFlame: 1, floorFlame: 1, wallOut: 1, wallOutAt: 'wall+0.7', floorOut: 1, floorOutAt: 'floor+0.8',
-    spray: [{ to: 'wall', at: 'turn', untilAt: 'wall+1.3' }, { to: 'floor', at: 'Then', untilAt: 'floor+1.5' }], band: 1, pale: true, red: 'floor',
+    spray: [{ to: 'wall', at: 'turn', untilAt: 'wall+1.3' }, { to: 'floor', at: 'Then', untilAt: 'floor+1.5' }], band: 1, pale: true, gate: 1, red: 'floor',  toyLabel: false,
     chips: [{ text: 'NYT, 16 Jul 2019', sub: 'single source', at: 0.1, small: true }],
     cam: { x: 1210, y: 250, z: 1.75 }, zoomTo: { x: 1180, y: 200, z: 1.5, at: 'One', dur: 1.6 },
     source: 'ILLUSTRATION · THE TEAM’S HOSES PUT OUT THE WALL AND FLOOR FLAMES (NYT, 16 JUL 2019)' }),
 
   // L86a — more water at the very top of the towers, aimed at the frame
   S('nightModel', L('86a'), { view: 'curtain', sky: NIGHT, band: 1, bandTo: 0.42, bandAt: 'aimed', bandDur: 2.4, waterAt: 'water', red: 'band', smokeSeed: 86,
-    strip: { lines: ['« … et éteindre le feu qui a pris dans le beffroi nord »', '"… and put out the fire that had caught in the north belfry" · culture ministry, « Les témoins racontent »'], at: 'aimed' },
+    strip: { lines: ['« … et éteindre le feu qui a pris dans le beffroi nord »', '"… and put out the fire that had caught in the north belfry"', 'Culture ministry · « Les témoins racontent »'], big: 2, at: 'aimed', subSize: 30 },
     cam: { x: 960, y: 380, z: 1.32 }, zoomTo: { x: 960, y: 470, z: 1.06, at: 0, dur: 5.5 },
     source: 'ILLUSTRATION · CULTURE MINISTRY · NO TEAM SIZE GIVEN' }),
 
   // L87 — Gontier goes up to look; three words; the tick stops dead
-  S('stairStrip', L(87), { sky: NIGHT, lead: 0.9, band: 1, bandOut: 1, bandOutAt: 'words', bandOutDur: 0.5, gonUp: 1, gonUpAt: 'goes', gonUpDur: 1.0, gonDown: 1, gonDownAt: 'comes', gonDownDur: 1.5, red: 'band',
+  S('stairStrip', L(87), { sky: NIGHT, lead: 0.9, gate: 1, band: 0.42, bandOut: 1, bandOutAt: 'words', bandOutDur: 0.5, gonUp: 1, gonUpAt: 'goes', gonUpDur: 1.0, gonDown: 1, gonDownAt: 'comes', gonDownDur: 1.5, red: 'band',
     plates: [{ name: 'GEN. GALLET', role: 'in command', at: 0 }, { name: 'GEN. GONTIER', role: 'brigade general', at: 'Gontier', gaze: 0 }],
-    cam: { x: 1150, y: 170, z: 1.35 }, zoomTo: { x: 920, y: 470, z: 0.92, at: 'comes', dur: 1.3 },
+    cam: { x: 1150, y: 230, z: 1.32 }, zoomTo: { x: 920, y: 470, z: 0.92, at: 'comes', dur: 1.3 },
     source: 'ILLUSTRATION · GONTIER’S WORDS: CULTURE MINISTRY · NO FACES' },
   { mood: M('triumph', 'D', [0.35, 0.5], { word: 'saved' }),
-    beats: [['three', 'deadlineWheel', { sky: NIGHT, runAt: -52, stopAt: 'saved', red: 'notch', half: true,
-      tags: [{ text: '≈ 21:30 · plan accepted', sub: 'culture ministry', at: 0 }, { text: '21:40 · Nuñez', sub: 'on camera', at: 0 },
-        { text: '≈ 21:45 · flames under control', sub: 'NYT', at: 'saved' }, { text: '≈ 22:00 · « Elle est sauvée »', sub: 'culture ministry', at: 'saved+0.35' }],
-      strip: { lines: ['« Elle est sauvée »', '"She is saved." · Gen. Jean-Marie Gontier'], at: 'She', serif: true },
-      cam: { x: 940, y: 450, z: 1.02 }, source: 'ILLUSTRATION · STOP TAGS: NYT (CONTROL) · CULTURE MINISTRY (THE QUOTE) · APPROXIMATE' }]] }),
+    beats: [['three', 'deadlineWheel', { sky: NIGHT, runAt: -52, stopAt: 'saved', red: 'notch', persp: true, wx: 960, wy: 390, R: 300, labels: false,
+      tags: [], label: false, half: false,
+      strip: { lines: ['« Elle est sauvée »', '"She is saved." · Gen. Jean-Marie Gontier'], at: 'She-0.3', serif: true, size: 52, y: 820 },
+      cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 960, y: 520, z: 1.05, at: 0, dur: 3 }, source: 'ILLUSTRATION · GONTIER’S WORDS: CULTURE MINISTRY' }]] }),
 
   // L88 — around ten at night: about half an hour since the go-ahead (approximate, one source)
-  S('nightModel', L(88), { view: 'tags', sky: NIGHT, at: 0.05, red: 'arc',
-    chips: [{ text: 'Approximate times, one source', sub: 'culture ministry, « Les témoins racontent »', at: 0.05 }],
-    cam: { x: 960, y: 430, z: 1.1 }, zoomTo: { x: 960, y: 420, z: 1.18, at: 0, dur: 7 },
+  S('nightModel', L(88), { view: 'tags', hang: 'towers', sky: NIGHT, at: 0.05, arcAt: 'around', nytAt: 'account', red: 'arc', k: 9, ox: 775,
+    chips: [{ text: 'Approximate times', sub: 'culture ministry · NYT', at: 0.05 }],
+    cam: { x: 960, y: 520, z: 1.0 }, zoomTo: { x: 960, y: 500, z: 1.06, at: 0, dur: 7 },
     source: 'ILLUSTRATION · CULTURE MINISTRY · THE ARC IS DASHED: APPROXIMATE' }),
 
   // L93 — nobody died (no tick, no foley; slow 4 % lean-out; the 0 holds)
@@ -205,17 +204,17 @@ export const shots = check([
   // L88a — how close? the answer was in the stone and the oak
   S('nightModel', L('88a'), { view: 'type', sky: DAY, text: 'How close?', at: 0.1, qAt: 'come', source: null },
   { mood: M('mystery', 'D', [0.3, 0.45]),
-    beats: [['answer', 'nightModel', { view: 'survey', sky: NIGHT, sweepAt: 'stone', sweep2At: 'oak', red: 'spot',
-      cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 1000, y: 540, z: 1.1, at: 0, dur: 5 },
+    beats: [['answer', 'nightModel', { view: 'survey', sky: NIGHT, sweepAt: 'stone', sweep2At: 'oak', red: 'spot', toyAtTower: true, ox: 300, vaultY: 500,
+      cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 930, y: 540, z: 1.06, at: 0, dur: 5 },
       source: 'ILLUSTRATION · THE SURVEY TOOK MONTHS (CHAPTER 5)' }]] }),
 
   // L95 — saved isn't safe: the vault, one burning piece, three breaks; the fire burns on until morning
-  S('nightModel', L(95), { view: 'vault', sky: NIGHT, dropAt: 'Burning+0.9', breakAt: 'three', red: 'break', smokeSeed: 95,
-    cam: { x: 960, y: 540, z: 0.98 }, zoomTo: [{ x: 900, y: 560, z: 1.32, at: 'Under', dur: 2.6 }],
+  S('nightModel', L(95), { view: 'vault', sky: NIGHT, lidAt: 'Under', lidDur: 1.4, dropAt: 'Burning+0.9', breakAt: 'three', red: 'break', smokeSeed: 95,
+    cam: { x: 950, y: 540, z: 0.95 }, zoomTo: [{ x: 900, y: 560, z: 1.32, at: 'Under', dur: 2.6 }],
     source: 'ILLUSTRATION · LOOKING DOWN INTO THE OPEN MODEL · SCHEMATIC SHELL, NOT A PLAN' },
   { mood: M('tension', 'D', [0.4, 0.6], { word: 'Under' }),
-    beats: [['fire', 'nightModel', { view: 'vault', sky: NIGHT, breaks: true, dropAt: -10, bands: 1, bandsAt: 0.2, bandsDur: 1.6, rain: 1, red: 'break',
-      cam: { x: 900, y: 560, z: 1.32 }, zoomTo: { x: 960, y: 540, z: 0.86, at: 0, dur: 3.2 },
+    beats: [['fire', 'nightModel', { view: 'burnon', sky: NIGHT, bands: 1, bandsFrom: 0.5, bandsAt: 0, bandsDur: 1.2, dawnAt: 'until', dawnDur: 1.8, red: 'band', smokeSeed: 96,
+      cam: { x: 980, y: 600, z: 1.12 }, zoomTo: { x: 960, y: 560, z: 1.0, at: 0, dur: 3.2 },
       source: 'ILLUSTRATION · THE FIRE BURNED ON UNTIL MORNING (CHAPTER 5 GIVES THE TIME)' }]] }),
 ]);
 export default shots;
