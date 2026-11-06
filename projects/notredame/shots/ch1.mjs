@@ -36,13 +36,12 @@ const DAY = 'day';
 const NYT = 'NYT, 16 JUL 2019';
 
 export const shots = check([
-  CH('Two Attics, One Message', '18:18 · the alarm', { lit: 'none', red: 'num', delay: '+00' }, M('tension', 'A', [0.3, 0.45])),
 
   // L9 — inside the cathedral, Mass: the nave toy theatre (H10), never a section; red = the sacristy door's notch (plants L17)
   S('cathedral', L(9), { view: 'theatre', mass: 1, red: 'sacristy', clock: null, theatreLabel: 'THE NAVE · A PAPER TOY THEATRE', tagSize: 44,
     tags: [{ at: [960, 700], to: [1080, 230], text: 'Evening Mass', sub: 'HOLY WEEK · MON 15 APR 2019', showAt: 'Inside' }],
     cam: { x: 960, y: 560, z: 1.0 }, zoomTo: { x: 900, y: 620, z: 1.22, at: 'Inside', dur: 3.4 },
-    source: 'ILLUSTRATION · PAPER TOY THEATRE, NOT A SECTION · PROSECUTOR: « UNE MESSE AVAIT DÉBUTÉ PEU AVANT »' }),
+    source: 'ILLUSTRATION · PAPER TOY THEATRE, NOT A SECTION · PROSECUTOR: « UNE MESSE AVAIT DÉBUTÉ PEU AVANT »' }, { mood: M('tension', 'A', [0.3, 0.45]) }),
 
   // L10–13 — the roof frame (fold model) → the forest, wide → the sniffer tubes (side angle) → close on one intake hole, 18:18
   S('cathedral', L(10, 13), { view: 'fold', sky: DAY, clock: null, red: 'pin', smokeSeed: 11,

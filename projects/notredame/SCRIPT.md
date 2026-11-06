@@ -37,7 +37,7 @@ Open loops: "two attics" (3 → 15–17 → 27 → 117b) · "the lost time" (4 �
 8. Who climbed into that burning tower, and what waited up there?
 
 ## 1. TWO ATTICS, ONE MESSAGE
-9. It's Holy Week. Inside the cathedral, evening Mass is under way.
+9. Paris, April 2019. It's Holy Week. Inside Notre-Dame, evening Mass is under way.
 10. About forty metres above the congregation sits the roof frame. It has so many oak beams, it's called the forest.
 11. Guarding it is a smoke alarm six years in the making: thin tubes that sniff the attic air.
 13. At six-eighteen, one detector finds smoke.

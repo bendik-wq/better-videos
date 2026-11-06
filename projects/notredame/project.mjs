@@ -7,8 +7,7 @@
 // Each chapter has its own preview project (projects/nd-ch<N>) that renders only that chapter.
 import { scoreTransitions, transitionCues } from './cuts.mjs';
 import { voice } from '../notredame-vo/project.mjs';
-import { ORDER, LINES } from './shots/lib.mjs';
-import ch0 from './shots/ch0.mjs';
+import { ORDER, LINES, CHAPTER_OF } from './shots/lib.mjs';
 import ch1 from './shots/ch1.mjs';
 import ch2 from './shots/ch2.mjs';
 import ch3 from './shots/ch3.mjs';
@@ -17,14 +16,16 @@ import ch5 from './shots/ch5.mjs';
 import ch6 from './shots/ch6.mjs';
 
 // shot objects are copied so the mood strip below never mutates a chapter module another importer shares
-export const CHAPTERS = [ch0, ch1, ch2, ch3, ch4, ch5, ch6];
+// no cold open or title card: the film starts straight on chapter 1's first shot (shots/ch0.mjs kept for reference)
+export const CHAPTERS = [ch1, ch2, ch3, ch4, ch5, ch6];
+const VOICED = ORDER.filter(k => CHAPTER_OF[k] !== 0);
 export function assemble(chapters, { full = true } = {}) {
   const shots = chapters.flat().map(s => ({ ...s, params: { ...(s.params ?? {}) } }));
   for (const s of shots) if (s.beats && !s.beats.length) delete s.beats;
   if (full) { // the whole film voices every SCRIPT line exactly once, in file order
-    const said = shots.filter(s => s.vo).flatMap(s => s.vo.split('\n')), want = ORDER.map(k => LINES[k]);
+    const said = shots.filter(s => s.vo).flatMap(s => s.vo.split('\n')), want = VOICED.map(k => LINES[k]);
     const i = want.findIndex((x, j) => said[j] !== x);
-    if (i >= 0 || said.length !== want.length) throw new Error(`[notredame] narration differs from SCRIPT.md at line ${ORDER[i] ?? '(end)'}`);
+    if (i >= 0 || said.length !== want.length) throw new Error(`[notredame] narration differs from SCRIPT.md at line ${VOICED[i] ?? '(end)'}`);
   }
   const ids = new Set(); for (const s of shots) { if (ids.has(s.id)) throw new Error(`[notredame] duplicate shot id ${s.id}`); ids.add(s.id); }
   const music = [];
