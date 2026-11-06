@@ -15,9 +15,10 @@ it on unread). **Never send** keys, `.env` files or credentials, or anything the
 ## Reverse-engineering videos
 Skill: `.claude/skills/reverse-video/`. Measure: `tools/reverse/reverse.mjs`; read pictures cheaply:
 `tools/reverse/read.mjs`; rebuild study: `tools/reverse/rebuild.mjs`. All local, no HeyGen, no sign-in.
+YouTube downloads go through Monid when yt-dlp is blocked (key `/root/.secrets/monid`, $0.01 per video, 480p).
 
 ## Standing rules
 - Commit and push to the session's branch; no model ids in commits.
-- Never commit API keys (ElevenLabs, DeepSeek). Never sign in to or pay for HyperFrames Pro; never run its
+- Never commit API keys (ElevenLabs, DeepSeek, Monid). Never sign in to or pay for HyperFrames Pro; never run its
   `publish`, `cloud`, `reverse`, `templates` or `media-use generate`.
 - Never use another creator's face, voice, footage, characters, logo or show name.

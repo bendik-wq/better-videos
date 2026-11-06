@@ -40,11 +40,27 @@ if (isUrl) {
   const ya = ['-q', '--no-playlist', '--js-runtimes', 'node', '-f', `bv*[height<=${max}][ext=mp4]+ba[ext=m4a]/b[height<=${max}]`, '--merge-output-format', 'mp4',
     '--write-info-json', '-o', path.join(dl, 'video.%(ext)s'), src];
   if (opt.cookies) ya.unshift('--cookies', path.resolve(opt.cookies));
-  log('downloading', src);
-  const r = spawnSync('yt-dlp', ya, { env, encoding: 'utf8' });
+  const have = fs.existsSync(path.join(dl, 'video.mp4'));
+  if (have) log('reusing', path.join(dl, 'video.mp4')); else log('downloading', src);
+  const r = have ? { status: 0 } : spawnSync('yt-dlp', ya, { env, encoding: 'utf8' });
   if (r.status !== 0) {
-    const why = /confirm you.re not a bot|Sign in/i.test(r.stderr) ? 'YouTube wants a signed-in browser from this machine. Pass --cookies=<cookies.txt exported from your browser>, or download the video yourself and pass the file.' : r.stderr.trim().split('\n').pop();
-    console.error('[reverse] download failed:', why); process.exit(2);
+    // YouTube blocks this datacenter IP: fall back to Monid (paid tool gateway, MrScraper /youtube/video, $0.01 a
+    // call), which returns a hosted 480p MP4. Key: $MONID_API_KEY or /root/.secrets/monid (never in the repo).
+    const mk = process.env.MONID_API_KEY || (fs.existsSync('/root/.secrets/monid') ? fs.readFileSync('/root/.secrets/monid', 'utf8').trim() : '');
+    if (!mk) {
+      const why = /confirm you.re not a bot|Sign in/i.test(r.stderr) ? 'YouTube wants a signed-in browser from this machine. Add a Monid key (/root/.secrets/monid), pass --cookies=<cookies.txt>, or pass the video file.' : r.stderr.trim().split('\n').pop();
+      console.error('[reverse] download failed:', why); process.exit(2);
+    }
+    log('yt-dlp blocked; fetching through Monid (MrScraper, $0.01)…');
+    const res = await fetch('https://api.monid.ai/v1/run', { method: 'POST', headers: { Authorization: `Bearer ${mk}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'mrscraper', endpoint: '/youtube/video', input: { body: { url: src } } }), signal: AbortSignal.timeout(420000) });
+    const j = await res.json().catch(() => ({}));
+    const url = j.output?.download_url;
+    if (!url) { console.error('[reverse] Monid failed:', res.status, JSON.stringify(j).slice(0, 300)); process.exit(2); }
+    fs.writeFileSync(path.join(dl, 'monid.json'), JSON.stringify({ runId: j.runId, title: j.output.title, author: j.output.author, duration: j.output.duration, download_url: url }, null, 1));
+    const v = await fetch(url); if (!v.ok) { console.error('[reverse] download of Monid file failed', v.status); process.exit(2); }
+    fs.writeFileSync(path.join(dl, 'video.mp4'), Buffer.from(await v.arrayBuffer()));
+    log(`got "${j.output.title}" (${j.output.author}) via Monid, ${url.match(/_(\d+p)\./)?.[1] ?? '?'}`);
   }
   video = path.join(dl, 'video.mp4');
 }
