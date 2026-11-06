@@ -28,7 +28,9 @@ Run `npm i` in `tools/reverse/` once per container (pins hyperframes 0.9.19). Ou
 `sheets/events/` (consecutive frames around each change in the first 4 min).
 
 ## 3. Look, then fill in the Reading sections of REVERSE.md
-Numbers say *how often*; only the pictures say *what*. Read the overview sheets end to end, then the event strips.
+Numbers say *how often*; only the pictures say *what*. **First pass goes to DeepSeek** (cheap, reads images):
+`node tools/reverse/read.mjs reverse/<name>` → `READING.md` (devices, transitions, text, camera, style, take/leave).
+Then spot-check 3–5 of its claims against the strips yourself and correct it; never pass it on unread.
 - **Read consecutive frames wherever something changes**: sheets a second apart miss 1–3-frame timing, entry
   direction, blur at cuts and one-frame flashes. For a moment that matters:
   `tools/reverse/node_modules/.bin/hyperframes measure frames --range a,b --width 480 <video>`.
@@ -44,9 +46,16 @@ Put the reference's numbers beside our latest episode's (run `reverse.mjs` on ou
 cuts/min per minute, median shot, change windows/min, holds ≥ 3 s, wpm, pauses/min, loudness, first word time.
 Turn each gap into one concrete rule for `shot-design` or the style bible, not a vague note.
 
-## 5. Optional: rebuild a few seconds to learn a technique
-Rebuild one 5–20 s moment **in our own style** (our engine, or HyperFrames' free local `render`), then check timing
-against the original with `hyperframes diff <original> <ours>` (free). This is a study, not a copy.
+## 5. Rebuild (our own local "reverse", no HeyGen)
+HyperFrames' Pro `reverse start` only asks HeyGen's server for a licence/session; no video goes up and nothing is
+computed there (verified from `packages/cli/src/heygen/reverse.ts`). Everything else is local, so we do it ourselves:
+`node tools/reverse/rebuild.mjs <video> --name=<slug> [--from=a --to=b]` scaffolds `reverse/<slug>/rebuild/`: one
+frame-exact composition per shot on the original's canvas and fps, the original's sound, `refs/` stills per shot,
+`segments.md` and `REBUILD.md` (the per-shot loop). Rebuild shot by shot, score with the free local
+`hyperframes diff <video> . --at t,…` (SSIM, worst 4×4 cell, missing content, cuts; pass = mean ≥ 0.92, p05 ≥ 0.85,
+cell p05 ≥ 0.75), then `render` + `diff --segments segments.md --sbs`. Use it on 5–20 s moments to learn exact
+timing, eases and sizes, then carry the technique into **our own style**. A rebuild of someone else's video is a
+private study: never publish or upload it.
 
 ## Rules
 - Never reproduce the creator's characters, art, footage, voice, music, logo or show name, in a frame, thumbnail or
