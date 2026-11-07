@@ -36,7 +36,7 @@ No other text outside these blocks except an optional first line 'NOTE: <one sen
 let feedback = '';
 for (let r = 1; r <= ROUNDS; r++) {
   const cur = files.map(f => `=== FILE: ${f} ===\n${fs.existsSync(path.join(WT, f)) ? fs.readFileSync(path.join(WT, f), 'utf8') : '(new file)'}\n=== END ===`).join('\n');
-  const cx = ctx.map(f => `--- READ-ONLY: ${f} ---\n${fs.readFileSync(path.join(WT, f), 'utf8')}`).join('\n');
+  const cx = ctx.map(f => `--- READ-ONLY: ${f} ---\n${fs.readFileSync(fs.existsSync(path.join(WT, f)) ? path.join(WT, f) : path.join(ROOT, f), 'utf8')}`).join('\n');
   const prompt = `TASK (round ${r}/${ROUNDS}):\n${task}\n\nTest command (must exit 0): ${opt.test}\n\n${feedback ? 'Result of your previous attempt:\n' + feedback + '\n\n' : ''}Files you may edit (current content):\n${cur}\n\n${cx ? 'Context:\n' + cx : ''}`;
   const out = path.join(ROOT, '.worktrees', `${opt.name}.r${r}.txt`);
   const q = spawnSync('node', [path.join(ROOT, 'tools/deepseek/ask.mjs'), '-', `--system=${SYSTEM}`, `--model=${opt.model ?? 'deepseek-v4-pro'}`, `--out=${out}`, '--max=120000', `--task=worker:${opt.name}`],
