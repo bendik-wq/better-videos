@@ -124,13 +124,28 @@ if (WORKER) {
     T += s.duration;
     return s;
   });
-  // beats: a shot's narration can cut to several visuals, each starting on a spoken word
+  // beats: a shot's narration can cut to several visuals, each starting on a spoken word.
+  // settings.beatCut 'word' (default): 0.08 s before the word. 'gap': in the nearest pause between words (≥ 0.15 s)
+  // within 0.6 s before / 0.35 s after the word, so the cut lands in the narrator's breath (measured on top channels:
+  // ~45 % of cuts in speech pauses vs ~19 % by chance); no pause near enough: falls back to 'word'.
+  const beatCut = (words, i, prev) => {
+    const at = words[i].s - 0.08;
+    if ((settings.beatCut ?? 'word') !== 'gap') return at;
+    let best = null;
+    for (let j = 1; j < words.length; j++) {
+      const g0 = words[j - 1].e, g1 = words[j].s; if (g1 - g0 < 0.15) continue;
+      const m = (g0 + g1) / 2, d = m - words[i].s;
+      if (d < -0.6 || d > 0.35 || m - prev < 0.8) continue;
+      if (!best || Math.abs(d) < Math.abs(best - words[i].s)) best = m;
+    }
+    return best ?? at;
+  };
   shots = shots.flatMap((s) => {
     if (!s.beats?.length) return [s];
     const norm = (w) => w.toLowerCase().replace(/[^a-z0-9$%.]/g, '').replace(/\.$/, '');
     const cuts = [0]; let from = 0;
     for (const [word] of s.beats) { const i = s.words.findIndex((w, j) => j >= from && norm(w.w).startsWith(norm(word)));
-      if (i < 0) throw new Error(`beat word "${word}" not found in ${s.id}: ${s.vo}`); from = i + 1; cuts.push(s.words[i].s - 0.08); }
+      if (i < 0) throw new Error(`beat word "${word}" not found in ${s.id}: ${s.vo}`); from = i + 1; cuts.push(beatCut(s.words, i, cuts.at(-1))); }
     const looks = [[s.set, s.params], ...s.beats.map(([, set, params]) => [set, params ?? {}])];
     return looks.map(([set, params], k) => {
       const a = cuts[k], b = k + 1 < cuts.length ? cuts[k + 1] : s.duration;

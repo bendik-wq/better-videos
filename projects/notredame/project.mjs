@@ -39,10 +39,10 @@ export function projectOf(chapters, { title, full = true } = {}) {
     title,
     fps: 60, width: 1920, height: 1080,
     // 2D canvas sets only: no GL work, so no AA pass; cutGuard keeps chunk cuts clear of the longest move (gear-mesh 1.2 s)
-    settings: { fps: 60, aa: 'none', cutGuard: 1.5, crf: 20, browserArgs: ['--disable-gpu-compositing'] },
+    settings: { fps: 60, aa: 'none', cutGuard: 1.5, crf: 20, browserArgs: ['--disable-gpu-compositing'], beatCut: 'gap' }, // beat cuts in the narrator's breath (docs/library/reverse/kurzgesagt-ai-crossed-the-line.md R3)
     finish: { grain: 3, halation: 0, bloom: 0, vignette: 0.08 },
     voice,
-    timing: { padIn: 0.15, padOut: 0.35 },
+    timing: { padIn: 0.25, padOut: 0.2 }, // cut sits mid-pause between lines (R3), tighter pacing (R5)
     shots,
     score: { key: 'D', transitions: scoreTransitions(shots), music },
     cues: (timeline) => transitionCues(timeline),

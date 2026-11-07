@@ -83,8 +83,12 @@ if (typeof window === 'undefined' && typeof process !== 'undefined') {
 
 // score.transitions for engine/score.py: every planned transition (cuts carry their soft impact) under an engine name
 // whose sfx fits; Paper & Spring moves use their proxy (or none: their sound is all in transitionCues).
+// Plain hard cuts get NO sound (R4, docs/library/reverse/kurzgesagt-ai-crossed-the-line.md): a soft impact on every
+// cut reads as mechanical; top channels keep hits off the cut frame. Only real moves (dissolve, push, the Paper &
+// Spring set) keep their sound, which leaves on-cut hits for chapter turns and reveals (≤ ~15 % of cuts).
 export function scoreTransitions(shots) {
   return planCuts(shots, META).slice(1).flatMap(({ id, name, dur }) => {
+    if (name === 'cut') return [];
     if (!CUSTOM[name]) return [{ shot: id, name, dur }];
     return CUSTOM[name].proxy ? [{ shot: id, name: CUSTOM[name].proxy, dur }] : [];
   });
