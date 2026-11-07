@@ -27,89 +27,81 @@ EASE_MAP = {
 }
 
 
-def is_keyframe_list(value):
-    return (
-        isinstance(value, list)
-        and len(value) > 0
-        and all(isinstance(item, dict) and "frame" in item and "value" in item for item in value)
-    )
-
-
-def find_x_keyframes(obj, depth=0):
-    """Recursively find a list of x keyframes inside a ground-truth object."""
-    if depth > 6:
-        return None
-    if isinstance(obj, dict):
-        if "x" in obj and is_keyframe_list(obj["x"]):
-            return obj["x"]
-        for value in obj.values():
-            found = find_x_keyframes(value, depth + 1)
-            if found is not None:
-                return found
-    elif isinstance(obj, list):
-        for item in obj:
-            found = find_x_keyframes(item, depth + 1)
-            if found is not None:
-                return found
-    return None
-
-
 def to_number(value):
+    if isinstance(value, bool):
+        return None
     if isinstance(value, (int, float)):
         return float(value)
-    if isinstance(value, (list, tuple)) and len(value) > 0:
+    if isinstance(value, str):
         try:
-            return float(value[0])
-        except (TypeError, ValueError):
+            return float(value)
+        except ValueError:
             return None
+    if isinstance(value, (list, tuple)) and len(value) > 0:
+        return to_number(value[0])
     return None
 
 
-def truth_x_moves(element):
-    """Extract ground-truth x moves from an element. A move is a pair of consecutive keyframes
-    with a change of value, plus the ease attached to the destination keyframe."""
-    keyframes = find_x_keyframes(element)
-    if not keyframes:
-        return []
+def ease_family(value):
+    """Return the ease family, ignoring any parenthesised parameters."""
+    return str(value or "").lower().split("(")[0].strip()
 
-    entries = []
-    for item in keyframes:
-        try:
-            frame = int(item["frame"])
-        except (KeyError, TypeError, ValueError):
-            continue
-        value = to_number(item.get("value"))
-        if value is None:
-            continue
-        ease = str(item.get("ease", "") or "").strip()
-        entries.append((frame, value, ease))
 
-    entries.sort(key=lambda entry: entry[0])
+def expected_ease(truth_ease):
+    family = ease_family(truth_ease)
+    return EASE_MAP.get(family, family)
+
+
+def truth_moves_for_element(element):
+    """Extract ground-truth x and scale moves for one element.
+
+    Ground truth keyframes are objects with prop, f0, f1, v0, v1 and easing.
+    A move counts when prop is 'x' or 'scale' and v0 != v1.
+    """
     moves = []
-    prev = None
-    prev_ease = "linear"
-    for frame, value, ease in entries:
-        if prev is not None:
-            prev_frame, prev_value = prev
-            if frame > prev_frame and abs(value - prev_value) > 1e-9:
-                use_ease = ease or prev_ease or "linear"
-                moves.append(
-                    {
-                        "f0": prev_frame,
-                        "f1": frame,
-                        "v0": prev_value,
-                        "v1": value,
-                        "ease": use_ease,
-                    }
-                )
-        prev = (frame, value)
-        if ease:
-            prev_ease = ease
+    if not isinstance(element, dict):
+        return moves
+
+    element_id = element.get("id", element.get("name", "?"))
+    keyframes = element.get("keyframes")
+    if not isinstance(keyframes, list):
+        return moves
+
+    for kf in keyframes:
+        if not isinstance(kf, dict):
+            continue
+
+        prop = kf.get("prop")
+        if prop not in ("x", "scale"):
+            continue
+
+        f0 = to_number(kf.get("f0"))
+        f1 = to_number(kf.get("f1"))
+        v0 = to_number(kf.get("v0"))
+        v1 = to_number(kf.get("v1"))
+        if f0 is None or f1 is None or v0 is None or v1 is None:
+            continue
+        if abs(v1 - v0) <= 1e-9:
+            continue
+
+        ease = kf.get("easing", kf.get("ease", "") or "")
+        moves.append(
+            {
+                "element_id": element_id,
+                "prop": prop,
+                "f0": int(f0),
+                "f1": int(f1),
+                "v0": v0,
+                "v1": v1,
+                "ease": str(ease).strip() or "linear",
+            }
+        )
+
     return moves
 
 
-def collect_fitted_x_tweens(shot):
-    """Collect all x tweens fitted by revid in one shot."""
+def collect_fitted_tweens(shot, prop):
+    """Collect all fitted tweens of a given prop (x or scale) in one shot."""
     if not isinstance(shot, dict):
         return []
     fitted = []
@@ -119,27 +111,24 @@ def collect_fitted_x_tweens(shot):
         fits = layer.get("fits", {})
         if not isinstance(fits, dict):
             continue
-        x_segments = fits.get("x", [])
-        if not isinstance(x_segments, list):
+        segments = fits.get(prop, [])
+        if not isinstance(segments, list):
             continue
-        for segment in x_segments:
+        for segment in segments:
             if isinstance(segment, dict) and segment.get("kind") == "tween":
                 fitted.append(segment)
     return fitted
 
 
-def expected_ease(truth_ease):
-    return EASE_MAP.get(truth_ease.lower(), truth_ease.lower())
-
-
-def match_x_moves(truth_moves, fitted_tweens):
-    """For each ground-truth x move, pick the fitted tween with the closest v1 and report
-    |f0 diff|, |f1 diff| and ease family match."""
+def match_truth_moves(truth_moves, fitted_by_prop):
+    """For each ground-truth move, pick the fitted tween of the same prop with the
+    closest v1 and report |f0 diff|, |f1 diff| and ease-family match."""
     results = []
     for move in truth_moves:
+        segments = fitted_by_prop.get(move["prop"], [])
         best = None
         best_distance = None
-        for segment in fitted_tweens:
+        for segment in segments:
             try:
                 v1 = float(segment.get("v1"))
             except (TypeError, ValueError):
@@ -163,15 +152,15 @@ def match_x_moves(truth_moves, fitted_tweens):
             continue
 
         try:
-            f0_diff = abs(int(best.get("f0", 0)) - move["f0"])
-            f1_diff = abs(int(best.get("f1", 0)) - move["f1"])
+            f0_diff = abs(int(best.get("f0", 0)) - int(move["f0"]))
+            f1_diff = abs(int(best.get("f1", 0)) - int(move["f1"]))
         except (TypeError, ValueError):
             f0_diff = 9999
             f1_diff = 9999
 
-        actual = str(best.get("ease", "")).lower()
+        actual = ease_family(best.get("ease"))
         expected = expected_ease(move["ease"])
-        ease_ok = expected == actual
+        ease_ok = actual == expected
         matched = f0_diff <= 2 and f1_diff <= 4 and ease_ok
 
         results.append(
@@ -267,8 +256,6 @@ def scene_elements(scene):
     for key in ("elements", "layers", "sprites", "shapes", "objects"):
         if key in scene and isinstance(scene[key], list):
             return scene[key]
-    if find_x_keyframes(scene) is not None:
-        return [scene]
     return []
 
 
@@ -279,6 +266,7 @@ def main():
 
     rows = []
     scene_scores = []
+    unmatched_lines = []
 
     for name in names:
         video_path = os.path.join("reverse", "bench", f"{name}.mp4")
@@ -338,23 +326,20 @@ def main():
 
                 truth_moves = []
                 for element in scene_elements(truth_scene):
-                    truth_moves.extend(truth_x_moves(element))
+                    truth_moves.extend(truth_moves_for_element(element))
 
-                fitted_tweens = collect_fitted_x_tweens(shot)
-                matches = match_x_moves(truth_moves, fitted_tweens)
+                fitted_by_prop = {
+                    "x": collect_fitted_tweens(shot, "x"),
+                    "scale": collect_fitted_tweens(shot, "scale"),
+                }
+                matches = match_truth_moves(truth_moves, fitted_by_prop)
                 matched_count = sum(1 for match in matches if match["match"])
                 total_moves = len(truth_moves)
 
                 if total_moves == 0:
                     x_cell = "-"
                 else:
-                    details = []
-                    for match in matches:
-                        ease_text = "ok" if match["ease_match"] else "NO"
-                        details.append(
-                            f"Δf0={match['f0_diff']},Δf1={match['f1_diff']},ease={ease_text}"
-                        )
-                    x_cell = f"{matched_count}/{total_moves} " + "; ".join(details)
+                    x_cell = f"{matched_count}/{total_moves}"
 
                 rows.append(
                     f"| {name}:{scene_index} | {cuts_cell} | "
@@ -362,6 +347,25 @@ def main():
                     f"{understanding_pct:.0f}% | {rebuild_psnr:.2f} dB | "
                     f"{model_psnr:.2f} dB | {x_cell} |"
                 )
+
+                for match in matches:
+                    if match["match"]:
+                        continue
+                    move = match["truth"]
+                    prop = move["prop"]
+                    fitted_segments = fitted_by_prop.get(prop, [])
+                    if fitted_segments:
+                        fitted_text = ", ".join(
+                            f"{segment.get('f0', '?')}-{segment.get('f1', '?')} {segment.get('ease', '')}"
+                            for segment in fitted_segments
+                        )
+                    else:
+                        fitted_text = "(none)"
+                    expected = expected_ease(move["ease"])
+                    unmatched_lines.append(
+                        f"UNMATCHED {name}:{scene_index} element {move['element_id']} {prop} "
+                        f"{move['f0']}-{move['f1']} expected {expected}; fitted: {fitted_text}"
+                    )
 
                 x_fraction = 1.0 if total_moves == 0 else matched_count / max(1, total_moves)
                 scene_score = (
@@ -380,9 +384,15 @@ def main():
     for row in rows:
         print(row)
 
+    if unmatched_lines:
+        print()
+        for line in unmatched_lines:
+            print(line)
+
     overall = sum(scene_scores) / len(scene_scores) if scene_scores else 0.0
     print(f"SCORE {overall:.1f}")
 
 
 if __name__ == "__main__":
     main()
+
