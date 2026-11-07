@@ -15,6 +15,8 @@ import json, math, os, subprocess, sys
 import numpy as np
 import cv2
 
+_OCR_ENGINE = None
+
 # ------------------------------------------------------------------ io
 def probe(path):
     out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
@@ -51,6 +53,19 @@ class Writer:
 # ------------------------------------------------------------------ metrics
 def psnr(a, b):
     mse = np.mean((a.astype(np.float32) - b.astype(np.float32)) ** 2)
+    return 99.0 if mse < 1e-10 else 10 * math.log10(255 ** 2 / mse)
+
+
+def _psnr_weighted(a, b, weight):
+    """Weighted PSNR. `weight` is a 2-D float mask/weight map broadcast over RGB."""
+    weight = np.asarray(weight, np.float32)
+    if weight.ndim == 2:
+        weight = weight[..., None]
+    wsum = float(weight.sum())
+    if wsum < 1e-6:
+        return 1.0
+    diff = a.astype(np.float32) - b.astype(np.float32)
+    mse = float((weight * diff ** 2).sum() / wsum)
     return 99.0 if mse < 1e-10 else 10 * math.log10(255 ** 2 / mse)
 
 
@@ -525,7 +540,7 @@ def _merge_tracks(tracks, max_gap=6):
                     for f in fi & fj:
                         a = ti['frames'][f]['box']
                         b = tj['frames'][f]['box']
-                        if iou(a, b) > 0.0 or _pos_score(ti['frames'][f], tj['frames'][f]) > 0.35:
+                        if iou(a, b) > 0.0 or _pos_score(ti['frames'][f], tj['frames'][f]) > 0.25:
                             close = True
                             break
                     if not close:
@@ -538,7 +553,7 @@ def _merge_tracks(tracks, max_gap=6):
                         ca = tj['frames'][max(fj)]
                         cb = ti['frames'][min(fi)]
                     maxdim = max(ca['box'][2], ca['box'][3], cb['box'][2], cb['box'][3], 20)
-                    if math.hypot(ca['c'][0] - cb['c'][0], ca['c'][1] - cb['c'][1]) > 2.5 * maxdim:
+                    if math.hypot(ca['c'][0] - cb['c'][0], ca['c'][1] - cb['c'][1]) > 3.5 * maxdim:
                         continue
                 new_frames = dict(ti['frames'])
                 for f, c in tj['frames'].items():
@@ -584,9 +599,9 @@ def _merge_tracks(tracks, max_gap=6):
                     # Opacity changes (fades) can move the average colour quite
                     # far.  If the trajectories are extremely close, that is a
                     # stronger signal than the colour average.
-                    if dc > 160.0 and center_dist > 20.0:
+                    if dc > 220.0 and center_dist > 30.0:
                         continue
-                if center_dist > 80.0:
+                if center_dist > 120.0:
                     continue
                 if fi & fj:
                     ds = []
@@ -594,7 +609,7 @@ def _merge_tracks(tracks, max_gap=6):
                         a = ti['frames'][f]['c']
                         b = tj['frames'][f]['c']
                         ds.append(math.hypot(a[0] - b[0], a[1] - b[1]))
-                    if float(np.median(ds)) > 80.0:
+                    if float(np.median(ds)) > 100.0:
                         continue
                 new_frames = dict(ti['frames'])
                 for f, c in tj['frames'].items():
@@ -673,13 +688,77 @@ def refine_plate(F, plate, origin, off, masks, k=3):
 
 
 # ------------------------------------------------------------------ element model
+def _sprite_gray(sprite):
+    """Straight (unpremultiplied) grey image for ECC from an RGBA sprite.
+
+    Sprite files are stored premultiplied so linear resampling is correct for
+    compositing.  ECC templates, however, must match the actual opaque-object
+    luminance, not its alpha-weighted value.
+    """
+    rgb = sprite[..., :3].astype(np.float32)
+    a = sprite[..., 3].astype(np.float32) / 255.0
+    denom = np.maximum(a, 0.02)[..., None]
+    straight = np.clip(rgb / denom, 0, 255).astype(np.uint8)
+    return cv2.cvtColor(straight, cv2.COLOR_BGR2GRAY)
+
+
 def cut_sprite(frame, bg, box, pad=4):
     h, w = frame.shape[:2]; x, y, bw, bh = box
     x0, y0, x1, y1 = max(0, x - pad), max(0, y - pad), min(w, x + bw + pad), min(h, y + bh + pad)
-    f = frame[y0:y1, x0:x1].astype(np.float32); b = bg[y0:y1, x0:x1].astype(np.float32)
-    d = np.max(np.abs(f - b), axis=2)
-    a = np.clip((d - 6) / 18.0, 0, 1)  # opaque once clearly off the plate; a short ramp keeps anti-aliased edges
-    return np.dstack([f, a * 255]).astype(np.uint8), (x0, y0)
+    f = frame[y0:y1, x0:x1].astype(np.float32)
+    b = bg[y0:y1, x0:x1].astype(np.float32)
+    diff = f - b
+    d = np.max(np.abs(diff), axis=2)
+
+    # Start with a per-pixel colour projection where possible.  Cluster the
+    # sure (eroded) foreground colours and estimate alpha for each pixel by
+    # projecting (frame - plate) onto the best (sprite_colour - plate).  This
+    # avoids the old fixed ramp, which made high-contrast anti-aliased edges
+    # fully opaque and baked the old background into the sprite.
+    alpha = None
+    initial_mask = d > 12
+    core = cv2.erode(initial_mask.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+    if core.sum() < 16:
+        vals = d[initial_mask]
+        if vals.size >= 16:
+            core = initial_mask & (d >= max(32.0, float(np.percentile(vals, 60))))
+    if core.sum() >= 16:
+        samples = f[core].astype(np.float32)
+        chosen = _choose_color_clusters(samples, max(24, int(core.sum() * 0.05)))
+        if chosen is not None:
+            centers, _K = chosen
+            centers = np.asarray(centers, np.float32)
+            best_alpha = np.zeros_like(d, np.float32)
+            best_err = np.full_like(d, np.inf, np.float32)
+            for center in centers:
+                u = center[None, None, :] - b
+                denom = (u * u).sum(axis=2) + 1e-6
+                a_c = np.clip((diff * u).sum(axis=2) / denom, 0.0, 1.0)
+                recon = b + a_c[..., None] * u
+                err = ((f - recon) ** 2).sum(axis=2)
+                better = err < best_err
+                best_alpha[better] = a_c[better]
+                best_err[better] = err[better]
+            best_alpha[~initial_mask] = 0.0
+            best_alpha[best_alpha < 0.02] = 0.0
+            alpha = best_alpha
+
+    if alpha is None:
+        alpha = np.clip((d - 6) / 18.0, 0.0, 1.0)
+
+    # Straight unpremultiplied colour.  Unmix the plate for all non-negligible
+    # alpha.  The old threshold left faint anti-aliased edge pixels premultiplied
+    # from the original background, which caused a dark/bright halo that lowered
+    # the fitted PSNR just enough to reject otherwise good sprite poses.
+    s = f.copy()
+    safe = alpha > 0.02
+    denom = np.maximum(alpha, 0.02)[..., None]
+    unmixed = np.clip(b + diff / denom, 0, 255)
+    s[safe] = unmixed[safe]
+
+    premul = np.clip(s * alpha[..., None], 0, 255)
+    out = np.dstack([premul, alpha * 255])
+    return out.astype(np.uint8), (x0, y0)
 
 
 def fit_similarity(sprite, frame, bg, guess, scale0=1.0, motion=cv2.MOTION_AFFINE):
@@ -689,7 +768,7 @@ def fit_similarity(sprite, frame, bg, guess, scale0=1.0, motion=cv2.MOTION_AFFIN
     sh, sw = sprite.shape[:2]; pad = int(0.6 * max(sh, sw) * max(1.0, scale0)) + 8
     H2, W2 = sh + 2 * pad, sw + 2 * pad
     tmpl = np.zeros((H2, W2), np.float32); mask = np.zeros((H2, W2), np.uint8)
-    tmpl[pad:pad + sh, pad:pad + sw] = cv2.cvtColor(sprite[..., :3], cv2.COLOR_BGR2GRAY)
+    tmpl[pad:pad + sh, pad:pad + sw] = _sprite_gray(sprite)
     mask[pad:pad + sh, pad:pad + sw] = (sprite[..., 3] > 128)
     if mask.sum() < 20: return None, 0.0
     cxs, cys = sw / 2, sh / 2  # scale about the sprite centre
@@ -718,7 +797,8 @@ def fit_similarity_from(sprite, frame, M0, motion=cv2.MOTION_AFFINE):
     ox, oy = float(M0[0][2]) - pad, float(M0[1][2]) - pad
     H2, W2 = sh + 2 * pad, sw + 2 * pad
     tmpl = np.zeros((H2, W2), np.float32); mask = np.zeros((H2, W2), np.uint8)
-    tmpl[pad:pad + sh, pad:pad + sw] = cv2.cvtColor(sprite[..., :3], cv2.COLOR_BGR2GRAY); mask[pad:pad + sh, pad:pad + sw] = sprite[..., 3] > 128
+    tmpl[pad:pad + sh, pad:pad + sw] = _sprite_gray(sprite)
+    mask[pad:pad + sh, pad:pad + sw] = sprite[..., 3] > 128
     if mask.sum() < 20: return None, 0.0
     img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32)
     win = cv2.warpAffine(img, np.float32([[1, 0, -ox], [0, 1, -oy]]), (W2, H2), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
@@ -754,34 +834,52 @@ def composite(bg, sprite, M, alpha_scale=1.0):
     h, w = bg.shape[:2]
     rgba = cv2.warpAffine(sprite, M, (w, h), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0)).astype(np.float32)
     a = rgba[..., 3:4] / 255.0 * alpha_scale
-    return (bg.astype(np.float32) * (1 - a) + rgba[..., :3] * a)
+    # Sprite colours are stored premultiplied by their alpha.  After resampling
+    # that is already (colour * alpha); opacity scaling only multiplies both
+    # colour and alpha by the same scalar.
+    rgb = rgba[..., :3] * alpha_scale
+    return (bg.astype(np.float32) * (1 - a) + rgb)
 
 
 def _fit_quality(bg, sprite, M, frame, crop):
-    """Least-squares alpha multiplier and PSNR for a pose over the crop rectangle."""
+    """Least-squares alpha multiplier and PSNR for a pose over the crop rectangle.
+
+    Quality is measured only over the alpha-weighted sprite region. Whole-crop
+    background pixels are excluded so plate reconstruction / interpolation error
+    outside the element cannot veto a good sprite fit.
+
+    The sprite is premultiplied, so the predicted foreground contribution over
+    the plate is sprite_rgba_colour - plate * alpha.
+    """
     x0, y0, x1, y1 = crop
     cw, ch = x1 - x0, y1 - y0
     M_sub = M.copy()
     M_sub[0, 2] -= x0
     M_sub[1, 2] -= y0
     bgc = bg[y0:y1, x0:x1].astype(np.float32)
+    fgc = frame[y0:y1, x0:x1].astype(np.float32)
     rgba = cv2.warpAffine(sprite, M_sub, (cw, ch), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0)).astype(np.float32)
-    alpha = rgba[..., 3:4] / 255.0
-    D = (rgba[..., :3] - bgc) * alpha
-    target = frame[y0:y1, x0:x1].astype(np.float32) - bgc
-    valid = alpha[..., 0] > 0.05
+    alpha2 = rgba[..., 3] / 255.0
+    alpha = alpha2[..., None]
+    D = rgba[..., :3] - bgc * alpha
+    target = fgc - bgc
 
-    if valid.sum() < 20:
-        rendered = np.clip(bgc + D, 0, 255)
-        return 1.0, psnr(rendered, frame[y0:y1, x0:x1])
-    Dc = D
-    tc = target
-    mc = valid[..., None]
-    num = float((Dc * mc * tc).sum())
-    den = float((Dc * mc * Dc).sum())
+    mask = alpha2 > 0.05
+    weight = (alpha2 * mask).astype(np.float32)
+    if weight.sum() < 20.0:
+        if mask.sum() > 0:
+            weight = mask.astype(np.float32)
+        else:
+            return 1.0, 1.0, 1.0
+
+    w3 = weight[..., None]
+    num = float((D * target * w3).sum())
+    den = float((D * D * w3).sum())
     a = float(np.clip(num / max(den, 1e-9), 0.0, 1.5))
     rendered = np.clip(bgc + D * a, 0, 255)
-    return a, psnr(rendered, frame[y0:y1, x0:x1])
+    q = _psnr_weighted(rendered, fgc, weight)
+    plate_q = _psnr_weighted(bgc, fgc, weight)
+    return a, q, plate_q
 
 
 def _translation_search(pz, frame, bg, crop, guesses, radius0=6):
@@ -802,9 +900,24 @@ def _translation_search(pz, frame, bg, crop, guesses, radius0=6):
             for dy in np.arange(-radius, radius + 1, step):
                 for dx in np.arange(-radius, radius + 1, step):
                     M = np.float32([[1.0, 0.0, gx + dx], [0.0, 1.0, gy + dy]])
-                    alpha, q = _fit_quality(bg, pz['img'], M, frame, crop)
+                    alpha, q, plate_q = _fit_quality(bg, pz['img'], M, frame, crop)
                     if best is None or q > best['q']:
-                        best = dict(q=q, M=M, alpha=alpha, cc=1.0)
+                        best = dict(q=q, M=M, alpha=alpha, cc=1.0, plate_q=plate_q)
+    # Half-pixel refinement around the best integer alignment.  The plate and
+    # bird are warped by a sub-pixel camera; an integer-only search can be off
+    # by enough on anti-aliased edges to look like a bad pose.
+    if best is not None:
+        bx, by = float(best['M'][0, 2]), float(best['M'][1, 2])
+        for ddx in (-0.5, 0.0, 0.5):
+            for ddy in (-0.5, 0.0, 0.5):
+                if ddx == 0.0 and ddy == 0.0:
+                    continue
+                M2 = best['M'].copy()
+                M2[0, 2] = bx + ddx
+                M2[1, 2] = by + ddy
+                alpha2, q2, plate_q2 = _fit_quality(bg, pz['img'], M2, frame, crop)
+                if q2 > best['q']:
+                    best = dict(q=q2, M=M2, alpha=alpha2, cc=1.0, plate_q=plate_q2)
     return best
 
 
@@ -832,15 +945,33 @@ def _edge_guess(pz, box, frame_w, frame_h):
 
 def _try_fit_candidate(pz, frame, bg, crop, guess, scale0):
     cands = []
-    for motion in (cv2.MOTION_AFFINE, cv2.MOTION_TRANSLATION):
+    # Prefer the simplest motion model first: the bird-like benchmark sprite
+    # mostly translates, and ECC affine can wander with small masked templates.
+    for motion in (cv2.MOTION_TRANSLATION, cv2.MOTION_AFFINE):
         M, cc = fit_similarity(pz['img'], frame, bg, guess, scale0, motion=motion)
         if M is None:
             continue
-        alpha, q = _fit_quality(bg, pz['img'], M, frame, crop)
-        cands.append(dict(q=q, M=M, alpha=alpha, cc=cc))
+        alpha, q, plate_q = _fit_quality(bg, pz['img'], M, frame, crop)
+        cands.append(dict(q=q, M=M, alpha=alpha, cc=cc, plate_q=plate_q))
     if not cands:
         return None
-    return max(cands, key=lambda d: d['q'])
+    best = max(cands, key=lambda d: d['q'])
+
+    # ECC optimises correlation, but we actually care about the alpha-weighted
+    # reconstruction PSNR.  A half-pixel translation refinement frequently
+    # recovers anti-aliased edge quality and makes the difference between a
+    # reusable pose and a rejected/baked frame.
+    for ddx in (-0.5, 0.0, 0.5):
+        for ddy in (-0.5, 0.0, 0.5):
+            if ddx == 0.0 and ddy == 0.0:
+                continue
+            M2 = best['M'].copy()
+            M2[0, 2] = float(M2[0, 2]) + ddx
+            M2[1, 2] = float(M2[1, 2]) + ddy
+            alpha2, q2, plate_q2 = _fit_quality(bg, pz['img'], M2, frame, crop)
+            if q2 > best['q']:
+                best = dict(q=q2, M=M2, alpha=alpha2, cc=best.get('cc', 0.0), plate_q=plate_q2)
+    return best
 
 
 # ------------------------------------------------------------------ easing fit (after reanimate's easing.ts, MIT)
@@ -858,49 +989,468 @@ for _p, _n in ((2, 'power1'), (3, 'power2'), (4, 'power3'), (5, 'power4')):
     EASINGS[f'{_n}.in'], EASINGS[f'{_n}.out'], EASINGS[f'{_n}.inOut'] = _pin(_p), _pout(_p), _pio(_p)
 
 
-def fit_segments(series, fps, eps_frac=0.002, min_hold=4, min_range=0.75, min_eps=0.05):
-    """Split a per-frame value series into holds and moves, then fit each move with the best named easing.
-    Pauses shorter than min_hold frames inside a move are part of it (whole-pixel rounding makes ease tails stall)."""
-    v = np.asarray(series, np.float64); n = len(v)
-    if n < 3: return []
-    rng = v.max() - v.min()
-    if rng < min_range: return [dict(kind='hold', f0=0, f1=n - 1, v=float(v.mean()))]
-    eps = max(rng * eps_frac, min_eps); moving = list(np.abs(np.diff(v)) > eps)
-    segs, i = [], 0
-    while i < n - 1:
-        j = i
-        while j < n - 1 and moving[j] == moving[i]: j += 1
-        segs.append([i, j, bool(moving[i])]); i = j
-    merged = []  # absorb short holds that sit between two moves
-    for k, sg in enumerate(segs):
-        if not sg[2] and 0 < k < len(segs) - 1 and sg[1] - sg[0] < min_hold and merged and merged[-1][2]:
-            merged[-1][1] = sg[1]; continue
-        if merged and merged[-1][2] and sg[2]: merged[-1][1] = sg[1]; continue
-        merged.append(sg)
-    out = []
-    for f0, f1, mv in merged:
-        if not mv: out.append(dict(kind='hold', f0=f0, f1=f1, v=float(v[f0:f1 + 1].mean()))); continue
-        a, b = v[f0], v[f1]; span = b - a
-        if abs(span) < min_range * 0.66: continue
-        # free start and free duration (after reanimate's easing.ts): ease-ins start too gently to see and ease-out
-        # tails stall on whole pixels, so the true move may begin up to 12 frames earlier and end up to 2x later
-        lo = max(0, f0 - 12); hi = min(n - 1, f1 + (f1 - f0)); idx = np.arange(lo, hi + 1); y = (v[lo:hi + 1] - a) / span
-        best = (1e9, None, f0, f1)
-        for name, fn in EASINGS.items():
-            for st in range(lo, f0 + 1):
-                for k in np.arange(1.0, 2.001, 0.1):
-                    en = st + k * (f1 - st)
-                    tt = np.clip((idx - st) / max(1e-6, en - st), 0, 1)
-                    e = float(np.sqrt(np.mean((np.array([fn(x) for x in tt]) - y) ** 2)))
-                    if e < best[0]: best = (e, name, st, en)
-        rec = dict(kind='tween', f0=int(best[2]), f1=min(n - 1, int(round(best[3]))), v0=float(a), v1=float(b), ease=best[1], rmse=round(best[0], 4))
-        if best[0] > 0.08: rec['note'] = 'no clean ease: keep per-frame values'
-        out.append(rec)
+def _median_filter1d(v, k):
+    if k <= 1 or len(v) < k:
+        return v
+    out = np.empty_like(v)
+    r = k // 2
+    for i in range(len(v)):
+        lo = max(0, i - r)
+        hi = min(len(v), i + r + 1)
+        out[i] = np.median(v[lo:hi])
     return out
 
 
+def _wls_fit_ease(v, xs, w, s, e, fn):
+    if e - s <= 1e-9:
+        return 1e9, 0.0, 0.0, 0
+    mask = (xs >= s - 0.5) & (xs <= e + 0.5)
+    n_used = int(mask.sum())
+    if n_used < 3:
+        return 1e9, 0.0, 0.0, n_used
+    tt = np.clip((xs[mask] - s) / (e - s), 0.0, 1.0)
+    u = np.array([fn(float(t)) for t in tt])
+    y = v[mask]
+    if w is not None:
+        ww = w[mask]
+    else:
+        ww = np.ones(n_used, dtype=np.float64)
+    sw = float(ww.sum())
+    if sw <= 0:
+        return 1e9, 0.0, 0.0, n_used
+    su = float((ww * u).sum())
+    sy = float((ww * y).sum())
+    suu = float((ww * u * u).sum())
+    suy = float((ww * u * y).sum())
+    det = sw * suu - su * su
+    if abs(det) < 1e-12:
+        return 1e9, 0.0, 0.0, n_used
+    b0 = (suu * sy - su * suy) / det
+    b1 = (sw * suy - su * sy) / det
+    resid = y - b0 - b1 * u
+    rmse = math.sqrt(max(0.0, float((ww * resid * resid).sum() / sw)))
+    return rmse, b0, b1, n_used
+
+
+def fit_segments(series, fps, eps_frac=0.002, min_hold=4, min_range=0.75, min_eps=0.05, weights=None, x=None, smooth=None, first_visible=None):
+    """Split a per-frame value series into holds and moves, then fit each move with the best named easing.
+
+    When `x` (actual frame numbers) is supplied, the returned f0/f1 are those frame
+    numbers, not local indices.  `weights` are used for weighted least-squares fits.
+    `smooth` may be a small integer to median-filter the series before segmentation.
+    `first_visible`, when supplied, is the first frame the element was tracked, and
+    broadens the free start so off-screen entries can be recovered from the
+    visible portion of a move.
+    """
+    v = np.asarray(series, np.float64)
+    if x is None:
+        xs0 = np.arange(len(v), dtype=np.float64)
+    else:
+        xs0 = np.asarray(x, np.float64)
+    if weights is None:
+        w0 = np.ones_like(v)
+    else:
+        w0 = np.asarray(weights, np.float64)
+
+    finite = np.isfinite(v) & np.isfinite(xs0)
+    v = v[finite]
+    xs = xs0[finite]
+    w = w0[finite]
+    n = len(v)
+    if n < 3:
+        return []
+
+    if smooth is not None and int(smooth) > 1:
+        v_seg = _median_filter1d(v, int(smooth))
+    else:
+        v_seg = v
+
+    rng = float(v_seg.max() - v_seg.min())
+    if rng < min_range:
+        f0 = int(round(xs[0])) if x is not None else 0
+        f1 = int(round(xs[-1])) if x is not None else n - 1
+        return [dict(kind='hold', f0=f0, f1=f1, v=float(v.mean()))]
+
+    eps = max(rng * eps_frac, min_eps)
+    moving = np.abs(np.diff(v_seg)) > eps
+
+    segs = []
+    i = 0
+    while i < n - 1:
+        j = i
+        while j < n - 1 and moving[j] == moving[i]:
+            j += 1
+        segs.append([i, j, bool(moving[i])])
+        i = j
+
+    merged = []
+    for k, sg in enumerate(segs):
+        if not sg[2] and 0 < k < len(segs) - 1 and sg[1] - sg[0] < min_hold and merged and merged[-1][2]:
+            merged[-1][1] = sg[1]
+            continue
+        if merged and merged[-1][2] and sg[2]:
+            merged[-1][1] = sg[1]
+            continue
+        merged.append(sg)
+
+    # back.out (and similar) overshoot then settle: a small velocity sign
+    # change near the peak should not split the move into two segments.
+    merged2 = []
+    i = 0
+    while i < len(merged):
+        if i + 2 < len(merged) and merged[i][2] and not merged[i + 1][2] and merged[i + 2][2]:
+            m1, h, m2 = merged[i], merged[i + 1], merged[i + 2]
+            hold_len = h[1] - h[0]
+            start_i, end_i = m1[0], m2[1]
+            amp_move = float(v_seg[start_i:end_i + 1].max() - v_seg[start_i:end_i + 1].min())
+            amp_hold = float(abs(v_seg[h[1]] - v_seg[h[0]])) if hold_len > 0 else 0.0
+            dir1 = float(v_seg[m1[1]] - v_seg[m1[0]])
+            dir2 = float(v_seg[m2[1]] - v_seg[m2[0]])
+            overshoot_and_settle = (amp_move > 0 and amp_hold < 0.25 * amp_move and dir1 * dir2 < 0.0)
+            if hold_len < min_hold or overshoot_and_settle:
+                merged2.append([start_i, end_i, True])
+                i += 3
+                continue
+        merged2.append(merged[i])
+        i += 1
+    merged = merged2
+
+    out = []
+    for seg in merged:
+        a, b, mv = seg
+        if not mv:
+            f0 = int(round(xs[a])) if x is not None else a
+            f1 = int(round(xs[b])) if x is not None else b
+            out.append(dict(kind='hold', f0=f0, f1=f1, v=float(v[a:b + 1].mean())))
+            continue
+
+        amp = float(v_seg[a:b + 1].max() - v_seg[a:b + 1].min())
+        if amp < min_range * 0.66:
+            f0 = int(round(xs[a])) if x is not None else a
+            f1 = int(round(xs[b])) if x is not None else b
+            out.append(dict(kind='hold', f0=f0, f1=f1, v=float(v[a:b + 1].mean())))
+            continue
+
+        core_s = float(xs[a])
+        core_e = float(xs[b])
+        dur_core = max(1.0, core_e - core_s)
+        early_span = max(12.0, dur_core * 2.0)
+        late_span = max(12.0, dur_core * 0.75)
+
+        # Candidate start: allow it to have started before the first reliable
+        # moving sample (partly off-screen elements lose the first samples).
+        s_lo = max(0.0, core_s - early_span)
+        if first_visible is not None:
+            # Extend the free start all the way back to
+            # first_visible - move_duration, so an off-screen entry can be
+            # recovered from the visible part alone.
+            s_lo = max(0.0, min(s_lo, float(first_visible) - dur_core))
+        s_hi = min(float(xs[-1]), core_s + 2.0)
+        e_lo = max(core_e - 2.0, core_s + 2.0)
+        e_hi = min(float(xs[-1]) + 12.0, core_e + late_span)
+
+        if s_lo > s_hi or e_lo > e_hi:
+            continue
+
+        s_lo_i = int(math.floor(s_lo))
+        s_hi_i = int(math.ceil(s_hi))
+        e_lo_i = int(math.floor(e_lo))
+        e_hi_i = int(math.ceil(e_hi))
+        if s_hi_i < s_lo_i or e_hi_i < e_lo_i:
+            continue
+
+        grid = 12
+        s_step = max(1, int((s_hi_i - s_lo_i) // grid))
+        e_step = max(1, int((e_hi_i - e_lo_i) // grid))
+        best_global = None
+
+        for name, fn in EASINGS.items():
+            best_ease = None
+            for s_i in range(s_lo_i, s_hi_i + 1, s_step):
+                for e_i in range(e_lo_i, e_hi_i + 1, e_step):
+                    if e_i <= s_i:
+                        continue
+                    rmse, b0, b1, n_used = _wls_fit_ease(v_seg, xs, w, s_i, e_i, fn)
+                    if not np.isfinite(rmse):
+                        continue
+                    if best_ease is None or rmse < best_ease[0]:
+                        best_ease = (rmse, b0, b1, s_i, e_i, n_used)
+            if best_ease is None:
+                continue
+
+            # Refine around the coarse winner for this ease.
+            rs, re = best_ease[3], best_ease[4]
+            ref_s_lo = max(s_lo_i, rs - s_step)
+            ref_s_hi = min(s_hi_i, rs + s_step)
+            ref_e_lo = max(e_lo_i, re - e_step)
+            ref_e_hi = min(e_hi_i, re + e_step)
+            for s_i in range(ref_s_lo, ref_s_hi + 1):
+                for e_i in range(ref_e_lo, ref_e_hi + 1):
+                    if e_i <= s_i:
+                        continue
+                    rmse, b0, b1, n_used = _wls_fit_ease(v_seg, xs, w, s_i, e_i, fn)
+                    if not np.isfinite(rmse):
+                        continue
+                    if rmse < best_ease[0]:
+                        best_ease = (rmse, b0, b1, s_i, e_i, n_used)
+
+            if best_global is None or best_ease[0] < best_global[0]:
+                best_global = (best_ease[0], name, best_ease[1], best_ease[2], best_ease[3], best_ease[4], best_ease[5])
+
+        if best_global is None:
+            continue
+
+        rmse, name, b0, b1, s_i, e_i, n_used = best_global
+        rec = dict(kind='tween', f0=int(round(s_i)), f1=int(round(e_i)),
+                   v0=round(float(b0), 4), v1=round(float(b0 + b1), 4),
+                   ease=name, rmse=round(float(rmse), 4))
+        if rmse > 0.08:
+            rec['note'] = 'no clean ease: keep per-frame values'
+        out.append(rec)
+
+    return out
+
+
+# ------------------------------------------------------------------ text detection
+def _rapid_ocr(img):
+    global _OCR_ENGINE
+    try:
+        if _OCR_ENGINE is None:
+            from rapidocr_onnxruntime import RapidOCR
+            _OCR_ENGINE = RapidOCR()
+        result, _ = _OCR_ENGINE(img)
+        return result if result else []
+    except Exception:
+        return []
+
+
+def _norm_text(s):
+    if s is None:
+        return ''
+    return ' '.join(str(s).split())
+
+
+def _ocr_box_to_xywh(points, w, h):
+    pts = np.asarray(points, dtype=np.float32).reshape(-1, 2)
+    if len(pts) == 0:
+        return None
+    x0 = int(math.floor(pts[:, 0].min()))
+    x1 = int(math.ceil(pts[:, 0].max()))
+    y0 = int(math.floor(pts[:, 1].min()))
+    y1 = int(math.ceil(pts[:, 1].max()))
+    x0 = max(0, x0); y0 = max(0, y0)
+    x1 = min(w, x1); y1 = min(h, y1)
+    if x1 <= x0 or y1 <= y0:
+        return None
+    return x0, y0, x1 - x0, y1 - y0
+
+
+def _merge_items_by_frame(raw_items):
+    by_frame = {}
+    for r in raw_items:
+        by_frame.setdefault(r['f'], []).append(r)
+    candidates = []
+    for f, items in by_frame.items():
+        items = sorted(items, key=lambda d: (d['y_center'], d['x']))
+        groups = []
+        for it in items:
+            placed = False
+            for g in groups:
+                if abs(it['y_center'] - g['cy']) <= max(8.0, 0.5 * max(it['h'], g['h'])):
+                    g['items'].append(it)
+                    placed = True
+                    break
+            if not placed:
+                groups.append(dict(cy=it['y_center'], h=it['h'], items=[it]))
+        for g in groups:
+            xs = sorted(g['items'], key=lambda d: d['x'])
+            text = ' '.join(d['text'] for d in xs)
+            x0 = min(d['x'] for d in xs)
+            y0 = min(d['y'] for d in xs)
+            x1 = max(d['x'] + d['w'] for d in xs)
+            y1 = max(d['y'] + d['h'] for d in xs)
+            score = float(np.mean([d['score'] for d in xs])) if xs else 0.0
+            candidates.append(dict(
+                f=f, x=x0, y=y0, w=x1 - x0, h=y1 - y0,
+                y_center=(y0 + y1) / 2.0, x_center=(x0 + x1) / 2.0,
+                text=text, score=score))
+    return candidates
+
+
+def _cluster_candidates(candidates):
+    clusters = []
+    for cand in candidates:
+        placed = False
+        for cl in clusters:
+            rep = cl['items'][0]
+            if abs(cand['y_center'] - rep['y_center']) <= max(12.0, 0.6 * max(cand['h'], rep['h'])):
+                cl['items'].append(cand)
+                placed = True
+                break
+        if not placed:
+            clusters.append(dict(items=[cand]))
+    out = []
+    for cl in clusters:
+        best = max(cl['items'], key=lambda d: (len(d['text']), d['score']))
+        out.append(dict(string=best['text'], box=[best['x'], best['y'], best['w'], best['h']], conf=best['score']))
+    return out
+
+
+def _ink_mask(frame, bg, box):
+    x, y, bw, bh = box
+    sub_f = frame[y:y + bh, x:x + bw].astype(np.int16)
+    sub_b = bg[y:y + bh, x:x + bw].astype(np.int16)
+    d = np.max(np.abs(sub_f - sub_b), axis=2)
+    return d > 22
+
+
+def _split_cells(box, string, frame, bg):
+    x, y, bw, bh = box
+    mask = _ink_mask(frame, bg, box)
+    profile = mask.sum(axis=0)
+    nonspace = [i for i, ch in enumerate(string) if ch != ' ']
+    if not nonspace:
+        return [None] * len(string)
+
+    segments = []
+    inside = False
+    start = -1
+    for c in range(bw):
+        if profile[c] > 0:
+            if not inside:
+                start = c
+                inside = True
+        else:
+            if inside:
+                segments.append((start, c - 1))
+                inside = False
+    if inside:
+        segments.append((start, bw - 1))
+
+    cells = [None] * len(string)
+    if len(segments) == len(nonspace):
+        for pos, (s, e) in zip(nonspace, segments):
+            cells[pos] = (int(s), int(e))
+    else:
+        edges = np.linspace(0, bw, len(string) + 1).astype(int)
+        for pos in nonspace:
+            s = int(edges[pos])
+            e = int(edges[pos + 1])
+            s = max(0, min(bw - 1, s))
+            e = max(s + 1, min(bw, e))
+            cells[pos] = (s, e)
+    return cells
+
+
+def _first_frames_per_char(F, bgs, box, string):
+    """Return a list of shot-local first-visible frames, -1 for spaces."""
+    L = len(string)
+    ff = [-1] * L
+    nonspace = [i for i, ch in enumerate(string) if ch != ' ']
+    if not nonspace:
+        return ff
+
+    cells = _split_cells(box, string, F[-1], bgs[-1])
+
+    # Count ink in each character cell, for each frame.  This is deliberately
+    # small and sequential; OCR runs dominate the cost by far.
+    final_mask = _ink_mask(F[-1], bgs[-1], box)
+    final_counts = []
+    for pos in nonspace:
+        s, e = cells[pos]
+        final_counts.append(int(final_mask[:, s:e].sum()))
+
+    counts_by_frame = []
+    for i in range(len(F)):
+        mask = _ink_mask(F[i], bgs[i], box)
+        row = []
+        for pos in nonspace:
+            s, e = cells[pos]
+            row.append(int(mask[:, s:e].sum()))
+        counts_by_frame.append(row)
+
+    counts = np.asarray(counts_by_frame, dtype=np.int32)
+    for j, pos in enumerate(nonspace):
+        fc = final_counts[j]
+        if fc <= 0:
+            # Per specification, ink is measured against the plate.  If the
+            # final frame carries no plate difference there, leave -1 (space-
+            # like) rather than inventing a value.
+            continue
+        hits = np.nonzero(counts[:, j] >= 0.5 * fc)[0]
+        if len(hits):
+            ff[pos] = int(hits[0])
+        else:
+            # Numerically, the final frame should always satisfy >= 50 %.  This
+            # is a defensive fallback for tiny pixel/compression differences.
+            ff[pos] = int(np.argmax(counts[:, j]))
+    return ff
+
+
+def _detect_shot_texts(F, bgs, fps, w, h):
+    if not F:
+        return []
+    last = len(F) - 1
+    interval = max(1, int(round(fps * 0.5)))
+    indices = sorted(set([last] + list(range(0, len(F), interval))))
+
+    raw_items = []
+    for idx in indices:
+        if idx >= len(F):
+            continue
+        for item in _rapid_ocr(F[idx]):
+            try:
+                box_pts, text, score = item[0], item[1], item[2]
+            except Exception:
+                continue
+            text = _norm_text(text)
+            if not text:
+                continue
+            bbox = _ocr_box_to_xywh(box_pts, w, h)
+            if not bbox:
+                continue
+            x, y, bw, bh = bbox
+            if bw < 3 or bh < 3:
+                continue
+            raw_items.append(dict(
+                f=int(idx), x=x, y=y, w=bw, h=bh,
+                y_center=y + bh / 2.0, x_center=x + bw / 2.0,
+                score=float(score) if score is not None else 0.0, text=text))
+
+    if not raw_items:
+        return []
+
+    candidates = _merge_items_by_frame(raw_items)
+    clusters = _cluster_candidates(candidates)
+    texts = []
+    for cl in clusters:
+        string = cl['string']
+        box = cl['box']
+        try:
+            ff = _first_frames_per_char(F, bgs, box, string)
+        except Exception:
+            ff = [-1] * len(string)
+        texts.append(dict(
+            string=string,
+            box=[int(v) for v in box],
+            first_frame_per_char=ff,
+            conf=float(cl['conf'])))
+    return texts
+
+
 # ------------------------------------------------------------------ decompose
-REUSE_PSNR = 28.0
+REUSE_PSNR = 26.0
+
+
+def _fit_accept(q, plate_q, plate_bg_q):
+    """Accept a recycled pose only when it clearly beats both plate-only
+    prediction and the plate's own error measured on known background pixels
+    in the same crop. If the plate started blurry from sub-pixel interpolation,
+    don't demand an impossible absolute PSNR: require just a few decibels above
+    that local plate error."""
+    if q < 15.0 or q < plate_q + 3.0:
+        return False
+    return q >= min(REUSE_PSNR, plate_bg_q + 2.0)
 
 
 def decompose(video, out, max_frames=900, verbose=True):
@@ -957,6 +1507,18 @@ def decompose(video, out, max_frames=900, verbose=True):
                 c = comp['c']; x, y, bw, bh = comp['box']; pad = 4
                 x0, y0, x1, y1 = max(0, x - pad), max(0, y - pad), min(w, x + bw + pad), min(h, y + bh + pad)
                 crop = (x0, y0, x1, y1)
+
+                # Plate's own remaining error in this crop, measured on pixels the
+                # current foreground mask considers background. This is the correct
+                # local baseline for accepting a pose: if plate reconstruction is
+                # already soft from sub-pixel camera interpolation, a fitted sprite
+                # cannot be held to an absolute PSNR that the crop itself can't reach.
+                bg_known = (masks[f][y0:y1, x0:x1] == 0).astype(np.float32)
+                if bg_known.sum() >= 20:
+                    plate_bg_q = _psnr_weighted(bgs[f][y0:y1, x0:x1], F[f][y0:y1, x0:x1], bg_known)
+                else:
+                    plate_bg_q = 99.0
+
                 area_scale_key = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, K0['area'])), 0.2, 3.0))
                 # Key-pose motion channel, kept independent of which bank pose is used for rendering.
                 Km, kcc = fit_similarity(K0['img'], F[f], bgs[f],
@@ -970,8 +1532,8 @@ def decompose(video, out, max_frames=900, verbose=True):
                     Kprev = Km
                 # Choose a bank pose.  Directly reusing the previous transform is
                 # cheap and handles fades/still frames.  Otherwise fall back to
-                # ECC, warm-started ECC, edge-aligned guesses, and a sparse
-                # translation-only refinement.
+                # ECC (translation first, then affine), warm-started ECC, edge
+                # aligned guesses, and a sparse integer translation refinement.
                 order = [last] + [k for k in range(len(bank) - 1, -1, -1) if k != last]
                 done = False
                 best_obj = None
@@ -980,11 +1542,11 @@ def decompose(video, out, max_frames=900, verbose=True):
                     cands = []
                     have_excellent_direct = False
                     if pz.get('last_M') is not None:
-                        alpha_direct, q_direct = _fit_quality(bgs[f], pz['img'], pz['last_M'], F[f], crop)
-                        if q_direct >= REUSE_PSNR:
-                            cands.append(dict(q=q_direct, M=pz['last_M'], alpha=alpha_direct, cc=-1.0))
-                            if q_direct >= 36.0:
-                                have_excellent_direct = True
+                        alpha_direct, q_direct, plate_direct = _fit_quality(bgs[f], pz['img'], pz['last_M'], F[f], crop)
+                        cands.append(dict(q=q_direct, M=pz['last_M'], alpha=alpha_direct, cc=-1.0,
+                                          plate_q=plate_direct))
+                        if q_direct >= 36.0 and _fit_accept(q_direct, plate_direct, plate_bg_q):
+                            have_excellent_direct = True
                     if not have_excellent_direct:
                         area_scale = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, pz['area'])), 0.2, 3.0))
                         s_guesses = [1.0]
@@ -997,11 +1559,12 @@ def decompose(video, out, max_frames=900, verbose=True):
                             if cand is not None:
                                 cands.append(cand)
                         if pz.get('last_M') is not None:
-                            Mw, cw = fit_similarity_from(pz['img'], F[f], pz['last_M'])
-                            if Mw is not None:
-                                alpha_w, q_w = _fit_quality(bgs[f], pz['img'], Mw, F[f], crop)
-                                if q_w >= REUSE_PSNR:
-                                    cands.append(dict(q=q_w, M=Mw, alpha=alpha_w, cc=cw))
+                            for motion in (cv2.MOTION_TRANSLATION, cv2.MOTION_AFFINE):
+                                Mw, cw = fit_similarity_from(pz['img'], F[f], pz['last_M'], motion=motion)
+                                if Mw is not None:
+                                    alpha_w, q_w, plate_w = _fit_quality(bgs[f], pz['img'], Mw, F[f], crop)
+                                    cands.append(dict(q=q_w, M=Mw, alpha=alpha_w, cc=cw,
+                                                      plate_q=plate_w))
                         edge_guess = None
                         if x <= 0 or x + bw >= w - 1 or y <= 0 or y + bh >= h - 1:
                             edge_guess = _edge_guess(pz, (x, y, bw, bh), w, h)
@@ -1020,7 +1583,7 @@ def decompose(video, out, max_frames=900, verbose=True):
                             cands.append(cand)
                     if cands:
                         best = max(cands, key=lambda d: d['q'])
-                        if best['q'] >= REUSE_PSNR:
+                        if _fit_accept(best['q'], best.get('plate_q', 1.0), plate_bg_q):
                             best_obj = best
                             done = True
                             break
@@ -1035,20 +1598,66 @@ def decompose(video, out, max_frames=900, verbose=True):
                     bank[k]['last_M'] = best_obj['M']
                 if motion is not None:
                     per[f]['K'] = motion
+                    per[f]['Kcc'] = float(kcc)
+                    per[f]['area'] = int(comp['area'])
             layers_poses = [p_['name'] for p_ in bank]
             # motion fits on the rigid frames
+            LIM = {'x': (0.75, 0.05), 'y': (0.75, 0.05), 'scale': (0.02, 0.004), 'rotate': (1.0, 0.1)}
             fits = {}
             if sum('K' in v for v in per.values()) >= 3:
-                fs = sorted(f for f in per if 'K' in per[f]); P = np.array([per[f]['K'] for f in fs])
+                fs = sorted([int(f) for f in per if 'K' in per[f]])
+                P = np.array([per[f]['K'] for f in fs], dtype=np.float64)
                 # motion of the key pose: position = where its centre lands; scale/rotation relative to the key view
                 bx = np.full(len(fs), K0['bb'][0]); by = np.full(len(fs), K0['bb'][1])
-                tx = P[:, 0, 0] * bx + P[:, 0, 1] * by + P[:, 0, 2]; ty = P[:, 1, 0] * bx + P[:, 1, 1] * by + P[:, 1, 2]; sc = np.sqrt(P[:, 0, 0] ** 2 + P[:, 1, 0] ** 2); rot = np.degrees(np.arctan2(P[:, 1, 0], P[:, 0, 0]))
-                LIM = {'x': (0.75, 0.05), 'y': (0.75, 0.05), 'scale': (0.02, 0.0015), 'rotate': (1.0, 0.1)}
+                tx = P[:, 0, 0] * bx + P[:, 0, 1] * by + P[:, 0, 2]
+                ty = P[:, 1, 0] * bx + P[:, 1, 1] * by + P[:, 1, 2]
+                sc = np.sqrt(P[:, 0, 0] ** 2 + P[:, 1, 0] ** 2)
+                rot = np.degrees(np.arctan2(P[:, 1, 0], P[:, 0, 0]))
+                areas = np.array([per[f].get('area', 1000) for f in fs], dtype=np.float64)
+                confs = np.array([per[f].get('Kcc', 1.0) for f in fs], dtype=np.float64)
+                weights = np.sqrt(np.maximum(areas, 1.0)) * np.clip(confs, 0.0, 1.0)
+                if weights.sum() > 0:
+                    weights = weights / weights.mean()
                 for name, ser in (('x', tx), ('y', ty), ('scale', sc), ('rotate', rot)):
-                    fits[name] = [dict(s, f0=fs[s['f0']], f1=fs[s['f1']]) for s in fit_segments(ser, fps, min_range=LIM[name][0], min_eps=LIM[name][1])]
+                    smooth = 7 if name == 'scale' else None
+                    eps_frac_fit = 0.01 if name == 'scale' else 0.002
+                    fits[name] = fit_segments(ser, fps, min_range=LIM[name][0], min_eps=LIM[name][1],
+                                              eps_frac=eps_frac_fit,
+                                              weights=weights, x=np.array(fs, dtype=np.float64), smooth=smooth,
+                                              first_visible=fids[0])
+
+            # Component-derived fallback/additional fits for x/y/scale. These are
+            # independent of ECC and recover moves for low-texture sprites or
+            # shapes entering from off-screen where a key-pose ECC fit may be
+            # missing or unreliable for many frames.
+            if len(fids) >= 3:
+                fids_arr = np.array(fids, dtype=np.float64)
+                areas_c = np.array([t['frames'][f].get('area', 1) for f in fids], dtype=np.float64)
+                w_c = np.sqrt(np.maximum(areas_c, 1.0))
+                if w_c.sum() > 0:
+                    w_c = w_c / w_c.mean()
+                cx_c = np.array([t['frames'][f]['c'][0] for f in fids], dtype=np.float64)
+                cy_c = np.array([t['frames'][f]['c'][1] for f in fids], dtype=np.float64)
+                scale_c = np.sqrt(np.maximum(areas_c, 1.0))
+                comp_smooth = {'x': 3, 'y': 3, 'scale': 7}
+                for name in ('x', 'y', 'scale'):
+                    ser = {'x': cx_c, 'y': cy_c, 'scale': scale_c}[name]
+                    eps_frac_fit = 0.01 if name == 'scale' else 0.002
+                    segs = fit_segments(ser, fps, min_range=LIM[name][0], min_eps=LIM[name][1],
+                                        eps_frac=eps_frac_fit,
+                                        weights=w_c, x=fids_arr, smooth=comp_smooth[name],
+                                        first_visible=fids[0])
+                    if name not in fits:
+                        fits[name] = segs
+                    else:
+                        for s in segs:
+                            if s['kind'] == 'tween':
+                                fits[name].append(s)
+
             layers.append(dict(id=f'e{t["id"]:03d}', poses=layers_poses, first=fids[0], last=fids[-1],
                                frames={str(k): v for k, v in per.items()}, new_pose_at={str(k): v for k, v in baked.items()}, fits=fits))
-        scene['shots'].append(dict(index=si, start=a, end=b, plate=pid, origin=list(origin), camera=off.tolist(), layers=layers))
+        texts = _detect_shot_texts(F, bgs, fps, w, h)
+        scene['shots'].append(dict(index=si, start=a, end=b, plate=pid, origin=list(origin), camera=off.tolist(), texts=texts, layers=layers))
         if verbose:
             nt = sum(len(L['frames']) for L in layers); nb = sum(len(L['new_pose_at']) for L in layers)
             print(f'[revid] shot {si}: frames {a}-{b - 1}, camera pan {off[-1].round(1).tolist()}, {len(layers)} elements, '
