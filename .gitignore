@@ -25,3 +25,4 @@ projects/hf-scale/timing.json
 
 # reverse-engineering runs (downloaded videos, frames, transcripts): local only
 /reverse/
+.worktrees/
