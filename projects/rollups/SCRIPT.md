@@ -148,7 +148,7 @@ So here's what I wanted to show you. There is no one roll-up playbook.
 
 | | Constellation | TransDigm | Jacobs |
 |---|---|---|---|
-| Sell? | Almost never | Rarely | Builds to sell/spin |
+| Sell? | Almost never | Holds and keeps buying | Builds to sell/spin |
 | After the deal | Leave it alone | Price + cost discipline | Integrate onto one platform |
 | Debt | Barely | 5–7× EBITDA | Big raises per deal |
 | Deal size | Tiny | Mid | Huge platform + bolt-ons |
@@ -195,7 +195,7 @@ to see how a deal like this is actually structured with no money down, watch thi
 
 ## Not to say without a better source
 Exact Constellation acquisition count (sources say 500+ to 1,000+); Constellation CAGR (28.9% vs 37% claims); TransDigm
-"1,000% profit" on parts; United Waste price ($1.9B vs $2.5B; script says "around two billion"); the two-thirds failure
+"1,000% profit" on parts; United Waste price ($1.9B vs $2.5B; script says "billions"); the two-thirds failure
 stat is secondary ("by some estimates").
 
 ---
