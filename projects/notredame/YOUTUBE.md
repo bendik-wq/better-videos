@@ -21,10 +21,10 @@ This animated reconstruction follows both clocks, built from the Paris prosecuto
 Chapters
 00:00 1. Two attics, one message
 02:09 2. A wall of flame
-03:47 3. The wrong fix
-05:50 4. The second clock
-09:11 5. What held
-11:31 6. The bells come home
+03:46 3. The wrong fix
+05:48 4. The second clock
+09:08 5. What held
+11:28 6. The bells come home
 
 Key sources (full list in the pinned comment)
 - Élysée, Conseil des ministres of 17 Apr 2019 (official timeline)
@@ -63,3 +63,7 @@ Every number on screen comes from the source list below (tier 1 = official recor
 - Master 1080p60: https://gofile.io/d/pKBdMPiW (md5 667549908853de0acbf063b06a27d367)
 - 720p parts 1–8: NmXNx7jj · BEKpdHSD · cXBexWiJ · I32uKLP1 · aOvEG9aY · udk0Rjwd · JkyFAH1r · uElOrAEM (gofile.io/d/<id>), md5 verified
 - Mix: −14.11 LUFS, TP −1.0 dBTP, all audio checks pass. Blackdetect: only the planned 0.5 s ink-dip into the end card.
+
+## Re-edit v2 (2026-11-07, 13:06): Kurzgesagt-study rules R3–R5
+Cuts in a speech pause 34 % → 69 % · sound onsets within ±0.25 s of a cut 94 → 8 of 114 · line gaps tightened.
+- Master 1080p60: https://gofile.io/d/6Swk6GxB · 720p parts: x7ERGotf · fG93Uz6T · tVSLbOzt · ZfnOuRxw · jQaFwLfy · mePtWdqj · yMVvm8oZ · 2Pxyg1mW (gofile.io/d/<id>), md5 verified
