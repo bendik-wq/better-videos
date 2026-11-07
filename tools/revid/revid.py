@@ -294,7 +294,7 @@ def plate_from(frames, off):
     xs, ys = -off[:, 0], -off[:, 1]  # where frame i's top-left sits on the canvas
     x0, y0 = int(math.floor(xs.min())), int(math.floor(ys.min()))
     W, H = int(math.ceil(xs.max())) - x0 + w, int(math.ceil(ys.max())) - y0 + h
-    step = max(1, len(frames) // 60)  # median of ≤ ~60 samples
+    step = max(1, len(frames) // 30)  # median of ≤ ~30 samples; static plates settle quickly
     idx = list(range(0, len(frames), step))
     stack = np.full((len(idx), H, W, 3), np.nan, np.float32)
     for k, i in enumerate(idx):
@@ -487,6 +487,16 @@ def _color_score(a, b):
     return float(np.clip(1.0 - d / 70.0, 0, 1))
 
 
+def _pose_rank(pz, comp):
+    """Cheap score for short-listing promising sprite poses for a component."""
+    color = _color_score(comp, pz)
+    a1 = max(1, pz.get('area', 1))
+    a2 = max(1, comp.get('area', 1))
+    ar = max(a1, a2) / max(1e-9, min(a1, a2))
+    area_score = float(np.clip(2.0 - ar, 0.0, 1.0))
+    return 0.7 * color + 0.3 * area_score
+
+
 def _avg_sig(t):
     sigs = [c.get('sig') for c in t['frames'].values() if c.get('sig')]
     if not sigs:
@@ -655,6 +665,14 @@ def track(comps_per_frame, max_gap=5):
     tracks = _merge_tracks(tracks, max_gap=max(max_gap, 6))
     return [t for t in tracks if len(t['frames']) >= 2]
 
+
+def _keep_track(t):
+    """Drop too short/small tracks into the residual instead of modelling them."""
+    if len(t['frames']) < 3:
+        return False
+    return max(c.get('area', 0) for c in t['frames'].values()) >= 60
+
+
 def refine_plate(F, plate, origin, off, masks, k=3):
     """Median plates learn any element that rests for most of the shot. Fix: U = every pixel ever flagged foreground
     (dilated); G = the plate inpainted over U from its surroundings (what the background should look like there);
@@ -761,56 +779,174 @@ def cut_sprite(frame, bg, box, pad=4):
     return out.astype(np.uint8), (x0, y0)
 
 
-def fit_similarity(sprite, frame, bg, guess, scale0=1.0, motion=cv2.MOTION_AFFINE):
+ECC_COARSE_MAX_ITER = 20
+ECC_COARSE_EPS = 5e-4
+ECC_FULL_MAX_ITER = 8
+ECC_FULL_EPS = 5e-4
+ECC_SMALL_MAX_ITER = 20
+ECC_SMALL_EPS = 5e-4
+
+
+def _run_ecc(tmpl, win, M, motion, mask, max_iter=30, eps=1e-4):
+    """Small wrapper around cv2.findTransformECC with a hard iteration cap and looser epsilon."""
+    criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, int(max_iter), float(eps))
+    try:
+        cc, M = cv2.findTransformECC(tmpl, win, M, motion, criteria, mask, 3)
+        return M.astype(np.float32), float(cc)
+    except cv2.error:
+        return None, 0.0
+
+
+def _extract_window(img, x0, y0, w, h):
+    """Fast local window extraction with replication.
+
+    ECC only needs a small window around the guess.  Extracting just that
+    window is far cheaper than warping the whole frame, especially once we
+    have pre-greyed the frame and call this repeatedly from the pose loop.
+    """
+    wi, hi = int(w), int(h)
+    if wi > img.shape[1] or hi > img.shape[0]:
+        M = np.float32([[1, 0, -x0], [0, 1, -y0]])
+        return cv2.warpAffine(img, M, (wi, hi), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    return cv2.getRectSubPix(img, (wi, hi), (float(x0) + w / 2.0, float(y0) + h / 2.0))
+
+
+def fit_similarity(sprite, frame, bg, guess, scale0=1.0, motion=cv2.MOTION_AFFINE,
+                   sprite_gray=None, sprite_mask=None):
     """ECC affine fit of the sprite (RGBA, top-left at sprite coords) onto the frame. ECC needs equal-size images, so
     the sprite is padded onto a larger transparent canvas and a window of the same size is cut from the frame around
     the guess. Returns the 2x3 matrix mapping sprite coords -> frame coords, and the ECC correlation."""
-    sh, sw = sprite.shape[:2]; pad = int(0.6 * max(sh, sw) * max(1.0, scale0)) + 8
+    sh, sw = sprite.shape[:2]
+    if frame.ndim == 2:
+        img = frame.astype(np.float32, copy=False)
+    else:
+        img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32)
+    if sprite_gray is None:
+        sprite_gray = _sprite_gray(sprite)
+    else:
+        sprite_gray = sprite_gray.astype(np.float32, copy=False)
+    if sprite_mask is None:
+        sprite_mask = (sprite[..., 3] > 128).astype(np.uint8)
+    else:
+        sprite_mask = sprite_mask.astype(np.uint8, copy=False)
+
+    pad = int(0.6 * max(sh, sw) * max(1.0, scale0)) + 8
     H2, W2 = sh + 2 * pad, sw + 2 * pad
-    tmpl = np.zeros((H2, W2), np.float32); mask = np.zeros((H2, W2), np.uint8)
-    tmpl[pad:pad + sh, pad:pad + sw] = _sprite_gray(sprite)
-    mask[pad:pad + sh, pad:pad + sw] = (sprite[..., 3] > 128)
-    if mask.sum() < 20: return None, 0.0
+    tmpl = np.zeros((H2, W2), np.float32)
+    mask = np.zeros((H2, W2), np.uint8)
+    tmpl[pad:pad + sh, pad:pad + sw] = sprite_gray
+    mask[pad:pad + sh, pad:pad + sw] = sprite_mask
+    if mask.sum() < 20:
+        return None, 0.0
     cxs, cys = sw / 2, sh / 2  # scale about the sprite centre
     ox, oy = guess[0] - pad, guess[1] - pad
-    img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32)
-    Mw = np.float32([[1, 0, -ox], [0, 1, -oy]])
-    win = cv2.warpAffine(img, Mw, (W2, H2), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    win = _extract_window(img, ox, oy, W2, H2)
     s0 = float(scale0); c = (pad + cxs, pad + cys)
     M = np.float32([[s0, 0, c[0] - s0 * c[0]], [0, s0, c[1] - s0 * c[1]]])  # template -> window
     vis_mask = _visible_mask(mask, M, ox, oy, frame.shape)
-    if vis_mask.sum() < 20: return None, 0.0
-    try:
-        cc, M = cv2.findTransformECC(tmpl, win, M, motion,
-                                     (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 100, 1e-5), vis_mask, 3)
-    except cv2.error:
+    if vis_mask.sum() < 20:
         return None, 0.0
+
+    M_current = M
+    cc = 0.0
+    use_coarse = max(sh, sw) > 80
+    if use_coarse:
+        sc = 0.5
+        W2c = max(1, int(round(W2 * sc)))
+        H2c = max(1, int(round(H2 * sc)))
+        tmpl_c = cv2.resize(tmpl, (W2c, H2c), interpolation=cv2.INTER_AREA)
+        win_c = cv2.resize(win, (W2c, H2c), interpolation=cv2.INTER_AREA)
+        vis_c = cv2.resize(vis_mask, (W2c, H2c), interpolation=cv2.INTER_NEAREST)
+        M_c = M.copy()
+        M_c[0, 2] *= sc
+        M_c[1, 2] *= sc
+        M_c, cc_c = _run_ecc(tmpl_c, win_c, M_c, motion, vis_c, max_iter=ECC_COARSE_MAX_ITER, eps=ECC_COARSE_EPS)
+        if M_c is None:
+            return None, 0.0
+        M_current = M_c.copy()
+        M_current[0, 2] /= sc
+        M_current[1, 2] /= sc
+        M_ref, cc_ref = _run_ecc(tmpl, win, M_current, motion, vis_mask, max_iter=ECC_FULL_MAX_ITER, eps=ECC_FULL_EPS)
+        if M_ref is not None:
+            M_current, cc = M_ref, cc_ref
+        else:
+            cc = cc_c
+    else:
+        M_current, cc = _run_ecc(tmpl, win, M, motion, vis_mask, max_iter=ECC_SMALL_MAX_ITER, eps=ECC_SMALL_EPS)
+        if M_current is None:
+            return None, 0.0
+
     # sprite coords = template coords - pad; frame coords = window coords + (ox, oy)
-    M = M.astype(np.float64)
+    M = M_current.astype(np.float64)
     M[:, 2] = M[:, 2] + M[:, :2] @ np.array([pad, pad]) + np.array([ox, oy])
     return M.astype(np.float32), float(cc)
 
 
-def fit_similarity_from(sprite, frame, M0, motion=cv2.MOTION_AFFINE):
+def fit_similarity_from(sprite, frame, M0, motion=cv2.MOTION_AFFINE,
+                        sprite_gray=None, sprite_mask=None):
     """Same ECC fit, warm-started from a known sprite->frame matrix (the previous frame's)."""
-    sh, sw = sprite.shape[:2]; pad = int(0.6 * max(sh, sw) * max(1.0, abs(float(M0[0][0])) + abs(float(M0[1][0])))) + 8
+    sh, sw = sprite.shape[:2]
+    if frame.ndim == 2:
+        img = frame.astype(np.float32, copy=False)
+    else:
+        img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32)
+    if sprite_gray is None:
+        sprite_gray = _sprite_gray(sprite)
+    else:
+        sprite_gray = sprite_gray.astype(np.float32, copy=False)
+    if sprite_mask is None:
+        sprite_mask = (sprite[..., 3] > 128).astype(np.uint8)
+    else:
+        sprite_mask = sprite_mask.astype(np.uint8, copy=False)
+
+    pad = int(0.6 * max(sh, sw) * max(1.0, abs(float(M0[0][0])) + abs(float(M0[1][0])))) + 8
     ox, oy = float(M0[0][2]) - pad, float(M0[1][2]) - pad
     H2, W2 = sh + 2 * pad, sw + 2 * pad
-    tmpl = np.zeros((H2, W2), np.float32); mask = np.zeros((H2, W2), np.uint8)
-    tmpl[pad:pad + sh, pad:pad + sw] = _sprite_gray(sprite)
-    mask[pad:pad + sh, pad:pad + sw] = sprite[..., 3] > 128
-    if mask.sum() < 20: return None, 0.0
-    img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32)
-    win = cv2.warpAffine(img, np.float32([[1, 0, -ox], [0, 1, -oy]]), (W2, H2), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-    A = np.float64(M0)[:, :2]; T = np.float64(M0)[:, 2] - np.array([ox, oy]) - A @ np.array([pad, pad])
+    tmpl = np.zeros((H2, W2), np.float32)
+    mask = np.zeros((H2, W2), np.uint8)
+    tmpl[pad:pad + sh, pad:pad + sw] = sprite_gray
+    mask[pad:pad + sh, pad:pad + sw] = sprite_mask
+    if mask.sum() < 20:
+        return None, 0.0
+    win = _extract_window(img, ox, oy, W2, H2)
+    A = np.float64(M0)[:, :2]
+    T = np.float64(M0)[:, 2] - np.array([ox, oy]) - A @ np.array([pad, pad])
     M = np.float32(np.hstack([A, T[:, None]]))
     vis_mask = _visible_mask(mask, M, ox, oy, frame.shape)
-    if vis_mask.sum() < 20: return None, 0.0
-    try:
-        cc, M = cv2.findTransformECC(tmpl, win, M, motion, (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 100, 1e-5), vis_mask, 3)
-    except cv2.error:
+    if vis_mask.sum() < 20:
         return None, 0.0
-    M = M.astype(np.float64); M[:, 2] = M[:, 2] + M[:, :2] @ np.array([pad, pad]) + np.array([ox, oy])
+
+    M_current = M
+    cc = 0.0
+    use_coarse = max(sh, sw) > 80
+    if use_coarse:
+        sc = 0.5
+        W2c = max(1, int(round(W2 * sc)))
+        H2c = max(1, int(round(H2 * sc)))
+        tmpl_c = cv2.resize(tmpl, (W2c, H2c), interpolation=cv2.INTER_AREA)
+        win_c = cv2.resize(win, (W2c, H2c), interpolation=cv2.INTER_AREA)
+        vis_c = cv2.resize(vis_mask, (W2c, H2c), interpolation=cv2.INTER_NEAREST)
+        M_c = M.copy()
+        M_c[0, 2] *= sc
+        M_c[1, 2] *= sc
+        M_c, cc_c = _run_ecc(tmpl_c, win_c, M_c, motion, vis_c, max_iter=ECC_COARSE_MAX_ITER, eps=ECC_COARSE_EPS)
+        if M_c is None:
+            return None, 0.0
+        M_current = M_c.copy()
+        M_current[0, 2] /= sc
+        M_current[1, 2] /= sc
+        M_ref, cc_ref = _run_ecc(tmpl, win, M_current, motion, vis_mask, max_iter=ECC_FULL_MAX_ITER, eps=ECC_FULL_EPS)
+        if M_ref is not None:
+            M_current, cc = M_ref, cc_ref
+        else:
+            cc = cc_c
+    else:
+        M_current, cc = _run_ecc(tmpl, win, M, motion, vis_mask, max_iter=ECC_SMALL_MAX_ITER, eps=ECC_SMALL_EPS)
+        if M_current is None:
+            return None, 0.0
+
+    M = M_current.astype(np.float64)
+    M[:, 2] = M[:, 2] + M[:, :2] @ np.array([pad, pad]) + np.array([ox, oy])
     return M.astype(np.float32), float(cc)
 
 
@@ -882,13 +1018,8 @@ def _fit_quality(bg, sprite, M, frame, crop):
     return a, q, plate_q
 
 
-def _translation_search(pz, frame, bg, crop, guesses, radius0=6):
-    """Integer translation search around top-left guesses.
-
-    This is especially useful when an object is partly outside the frame and
-    ECC has very few visible pixels to lock onto.  The least-squares alpha
-    quality is evaluated locally for each candidate, so fades are handled too.
-    """
+def _translation_search_legacy(pz, frame, bg, crop, guesses, radius0=6):
+    """Old per-candidate fallback for translation search."""
     best = None
     current_guesses = [(float(g[0]), float(g[1])) for g in guesses if g is not None]
     if not current_guesses:
@@ -906,6 +1037,119 @@ def _translation_search(pz, frame, bg, crop, guesses, radius0=6):
     # Half-pixel refinement around the best integer alignment.  The plate and
     # bird are warped by a sub-pixel camera; an integer-only search can be off
     # by enough on anti-aliased edges to look like a bad pose.
+    if best is not None:
+        bx, by = float(best['M'][0, 2]), float(best['M'][1, 2])
+        for ddx in (-0.5, 0.0, 0.5):
+            for ddy in (-0.5, 0.0, 0.5):
+                if ddx == 0.0 and ddy == 0.0:
+                    continue
+                M2 = best['M'].copy()
+                M2[0, 2] = bx + ddx
+                M2[1, 2] = by + ddy
+                alpha2, q2, plate_q2 = _fit_quality(bg, pz['img'], M2, frame, crop)
+                if q2 > best['q']:
+                    best = dict(q=q2, M=M2, alpha=alpha2, cc=1.0, plate_q=plate_q2)
+    return best
+
+
+def _translation_search(pz, frame, bg, crop, guesses, radius0=6, grey=None):
+    """TM_SQDIFF translation search, then exact quality scoring for the top matches."""
+    x0, y0, x1, y1 = crop
+    cw, ch = x1 - x0, y1 - y0
+    if cw < 1 or ch < 1:
+        return None
+
+    bbox = pz.get('bbox_local')
+    if not bbox:
+        return _translation_search_legacy(pz, frame, bg, crop, guesses, radius0)
+
+    templ_g = pz.get('trans_templ_g')
+    mask = pz.get('trans_mask')
+    if templ_g is not None:
+        tx0 = int(pz.get('trans_tx0', 0))
+        ty0 = int(pz.get('trans_ty0', 0))
+        th, tw = templ_g.shape[:2]
+        if th < 3 or tw < 3 or mask is None or mask.sum() < 20 or th > ch or tw > cw:
+            return _translation_search_legacy(pz, frame, bg, crop, guesses, radius0)
+    else:
+        pad_t = 2
+        minx, miny, maxx, maxy = bbox
+        tx0 = max(0, int(minx) - pad_t)
+        ty0 = max(0, int(miny) - pad_t)
+        tx1 = min(pz['img'].shape[1] - 1, int(maxx) + pad_t)
+        ty1 = min(pz['img'].shape[0] - 1, int(maxy) + pad_t)
+        if tx0 > tx1 or ty0 > ty1:
+            return _translation_search_legacy(pz, frame, bg, crop, guesses, radius0)
+
+        sub = pz['img'][ty0:ty1 + 1, tx0:tx1 + 1]
+        templ_g = _sprite_gray(sub)
+        mask = (sub[..., 3] > 128).astype(np.uint8)
+        th, tw = templ_g.shape[:2]
+        if th < 3 or tw < 3 or mask.sum() < 20 or th > ch or tw > cw:
+            return _translation_search_legacy(pz, frame, bg, crop, guesses, radius0)
+
+    if grey is None:
+        grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame_crop_g = grey[y0:y1, x0:x1]
+
+    best = None
+    current_guesses = [(float(g[0]), float(g[1])) for g in guesses if g is not None]
+    if not current_guesses:
+        return None
+
+    for step, radius in ((2, radius0), (1, 2)):
+        if best is not None:
+            current_guesses = [(float(best['M'][0, 2]), float(best['M'][1, 2]))]
+        for gx, gy in current_guesses:
+            base_cx = gx + tx0 - x0
+            base_cy = gy + ty0 - y0
+            offsets = np.arange(-radius, radius + 1, step, dtype=np.int32)
+            if offsets.size == 0:
+                continue
+            lo = int(offsets[0])
+            hi = int(offsets[-1])
+
+            cx0 = base_cx + lo
+            cx1 = base_cx + hi
+            cy0 = base_cy + lo
+            cy1 = base_cy + hi
+            if cx1 < cx0 or cy1 < cy0:
+                continue
+
+            img_x0 = int(math.floor(cx0))
+            img_y0 = int(math.floor(cy0))
+            img_x1 = int(math.ceil(cx1)) + tw
+            img_y1 = int(math.ceil(cy1)) + th
+            img_x0 = max(0, img_x0)
+            img_y0 = max(0, img_y0)
+            img_x1 = min(cw, img_x1)
+            img_y1 = min(ch, img_y1)
+            if img_x1 - img_x0 < tw or img_y1 - img_y0 < th:
+                continue
+
+            sub_img_g = frame_crop_g[img_y0:img_y1, img_x0:img_x1].astype(np.uint8)
+            try:
+                res = cv2.matchTemplate(sub_img_g, templ_g, cv2.TM_SQDIFF, mask=mask)
+            except cv2.error:
+                return _translation_search_legacy(pz, frame, bg, crop, guesses, radius0)
+
+            if res.size == 0:
+                continue
+            topk = 1
+            flat = res.ravel()
+            idx = np.argpartition(flat, topk - 1)[:topk]
+            idx = idx[np.argsort(flat[idx])]
+            for j in idx:
+                ly, lx = np.unravel_index(j, res.shape)
+                pos_x = img_x0 + lx
+                pos_y = img_y0 + ly
+                full_tx = pos_x - tx0 + x0
+                full_ty = pos_y - ty0 + y0
+                M = np.float32([[1.0, 0.0, full_tx], [0.0, 1.0, full_ty]])
+                alpha, q, plate_q = _fit_quality(bg, pz['img'], M, frame, crop)
+                if best is None or q > best['q']:
+                    best = dict(q=q, M=M, alpha=alpha, cc=1.0, plate_q=plate_q)
+
     if best is not None:
         bx, by = float(best['M'][0, 2]), float(best['M'][1, 2])
         for ddx in (-0.5, 0.0, 0.5):
@@ -943,12 +1187,11 @@ def _edge_guess(pz, box, frame_w, frame_h):
     return (tx, ty)
 
 
-def _try_fit_candidate(pz, frame, bg, crop, guess, scale0):
+def _try_fit_candidate(pz, frame, grey, bg, crop, guess, scale0):
     cands = []
-    # Prefer the simplest motion model first: the bird-like benchmark sprite
-    # mostly translates, and ECC affine can wander with small masked templates.
     for motion in (cv2.MOTION_TRANSLATION, cv2.MOTION_AFFINE):
-        M, cc = fit_similarity(pz['img'], frame, bg, guess, scale0, motion=motion)
+        M, cc = fit_similarity(pz['img'], grey, bg, guess, scale0, motion=motion,
+                               sprite_gray=pz.get('sprite_gray'), sprite_mask=pz.get('sprite_mask'))
         if M is None:
             continue
         alpha, q, plate_q = _fit_quality(bg, pz['img'], M, frame, crop)
@@ -957,10 +1200,6 @@ def _try_fit_candidate(pz, frame, bg, crop, guess, scale0):
         return None
     best = max(cands, key=lambda d: d['q'])
 
-    # ECC optimises correlation, but we actually care about the alpha-weighted
-    # reconstruction PSNR.  A half-pixel translation refinement frequently
-    # recovers anti-aliased edge quality and makes the difference between a
-    # reusable pose and a rejected/baked frame.
     for ddx in (-0.5, 0.0, 0.5):
         for ddy in (-0.5, 0.0, 0.5):
             if ddx == 0.0 and ddy == 0.0:
@@ -972,6 +1211,87 @@ def _try_fit_candidate(pz, frame, bg, crop, guess, scale0):
             if q2 > best['q']:
                 best = dict(q=q2, M=M2, alpha=alpha2, cc=best.get('cc', 0.0), plate_q=plate_q2)
     return best
+
+
+def _eval_pose(pz, frame, grey, bg, crop, comp, frame_shape, plate_bg_q):
+    """Try one sprite pose on a frame. Cheap translation reuse is tried before
+    more expensive affine ECC, so the common slow-moving case skips ECC."""
+    w, h = frame_shape
+    best = None
+
+    def accept(c):
+        return c is not None and _fit_accept(c['q'], c.get('plate_q', 1.0), plate_bg_q)
+
+    # Direct reuse of this pose's last transform is extremely cheap and often
+    # already good enough for consecutive frames.
+    if pz.get('last_M') is not None:
+        M = pz['last_M']
+        alpha, q, plate_q = _fit_quality(bg, pz['img'], M, frame, crop)
+        cand = dict(q=q, M=M, alpha=alpha, cc=-1.0, plate_q=plate_q)
+        if q >= 36.0 and accept(cand):
+            return cand, True
+        if q >= REUSE_PSNR and accept(cand):
+            # A very cheap local translation polish is worthwhile before
+            # accepting the previous frame's transform directly.
+            refined = _translation_search(pz, frame, bg, crop, [(M[0, 2], M[1, 2])], 3, grey=grey)
+            if refined is not None and refined['q'] > q and accept(refined):
+                return refined, True
+            return cand, True
+        if best is None or q > best['q']:
+            best = cand
+
+    x, y, bw, bh = comp['box']
+    c = comp['c']
+    center_guess = (pz['x'] + c[0] - pz['c'][0], pz['y'] + c[1] - pz['c'][1])
+    trans_guesses = [center_guess]
+    edge_guess = None
+    if x <= 0 or x + bw >= w - 1 or y <= 0 or y + bh >= h - 1:
+        edge_guess = _edge_guess(pz, (x, y, bw, bh), w, h)
+        if edge_guess is not None:
+            trans_guesses.append(edge_guess)
+
+    candT = _translation_search(pz, frame, bg, crop, trans_guesses, 8, grey=grey)
+    if candT is not None:
+        if best is None or candT['q'] > best['q']:
+            best = candT
+        if candT['q'] >= REUSE_PSNR and accept(candT):
+            return candT, True
+
+    area_scale = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, pz['area'])), 0.2, 3.0))
+    s_guesses = [1.0]
+    if abs(area_scale - 1.0) > 0.05:
+        s_guesses.append(area_scale)
+    for s0 in s_guesses:
+        cand = _try_fit_candidate(pz, frame, grey, bg, crop, center_guess, s0)
+        if cand is not None:
+            if best is None or cand['q'] > best['q']:
+                best = cand
+            if cand['q'] >= REUSE_PSNR and accept(cand):
+                return cand, True
+
+    if pz.get('last_M') is not None:
+        Mw, cw = fit_similarity_from(pz['img'], grey, pz['last_M'],
+                                     sprite_gray=pz.get('sprite_gray'),
+                                     sprite_mask=pz.get('sprite_mask'))
+        if Mw is not None:
+            alpha_w, q_w, plate_w = _fit_quality(bg, pz['img'], Mw, frame, crop)
+            cand = dict(q=q_w, M=Mw, alpha=alpha_w, cc=cw, plate_q=plate_w)
+            if best is None or cand['q'] > best['q']:
+                best = cand
+            if cand['q'] >= REUSE_PSNR and accept(cand):
+                return cand, True
+
+    if edge_guess is not None:
+        cand = _try_fit_candidate(pz, frame, grey, bg, crop, edge_guess, 1.0)
+        if cand is not None:
+            if best is None or cand['q'] > best['q']:
+                best = cand
+            if cand['q'] >= REUSE_PSNR and accept(cand):
+                return cand, True
+
+    if best is not None and accept(best):
+        return best, True
+    return best, False
 
 
 # ------------------------------------------------------------------ easing fit (after reanimate's easing.ts, MIT)
@@ -1439,7 +1759,7 @@ def _detect_shot_texts(F, bgs, fps, w, h):
 
 
 # ------------------------------------------------------------------ decompose
-REUSE_PSNR = 26.0
+REUSE_PSNR = 18.0
 
 
 def _fit_accept(q, plate_q, plate_bg_q):
@@ -1448,7 +1768,7 @@ def _fit_accept(q, plate_q, plate_bg_q):
     in the same crop. If the plate started blurry from sub-pixel interpolation,
     don't demand an impossible absolute PSNR: require just a few decibels above
     that local plate error."""
-    if q < 15.0 or q < plate_q + 3.0:
+    if q < 15.0 or q < plate_q + 2.0:
         return False
     return q >= min(REUSE_PSNR, plate_bg_q + 2.0)
 
@@ -1469,10 +1789,11 @@ def decompose(video, out, max_frames=900, verbose=True):
         plate, origin = plate_from(F, off)
         pid = f'plate_{si:02d}.png'; cv2.imwrite(os.path.join(out, 'assets', pid), plate)
         bgs = [plate_view(plate, origin, off[i], w, h) for i in range(len(F))]
+        grey_frames = [cv2.cvtColor(f, cv2.COLOR_BGR2GRAY).astype(np.float32) for f in F]
         masks, comps = [], []
         for i, f in enumerate(F):
             m, d = fg_mask(f, bgs[i]); masks.append(m); comps.append(components(m, frame=f, bg=bgs[i], diff=d))
-        tracks = track(comps)
+        tracks = [t for t in track(comps) if _keep_track(t)]
         plate, nfix = refine_plate(F, plate, origin, off, masks)
         if nfix:  # second pass on the repaired plate
             cv2.imwrite(os.path.join(out, 'assets', pid), plate)
@@ -1480,24 +1801,39 @@ def decompose(video, out, max_frames=900, verbose=True):
             masks, comps = [], []
             for i, f in enumerate(F):
                 m, d = fg_mask(f, bgs[i]); masks.append(m); comps.append(components(m, frame=f, bg=bgs[i], diff=d))
-            tracks = track(comps)
+            tracks = [t for t in track(comps) if _keep_track(t)]
         layers = []
         for t in tracks:
             fids = sorted(t['frames'])
             # a bank of poses: start from the largest view; a frame no pose explains adds a new pose cut from it
             bank = []  # [dict(img, name, x, y, c, area)]
             def add_pose(f):
-                spr, (px, py) = cut_sprite(F[f], bgs[f], t['frames'][f]['box'])
+                comp_f = t['frames'][f]
+                spr, (px, py) = cut_sprite(F[f], bgs[f], comp_f['box'])
                 name = f's{si:02d}_e{t["id"]:03d}_p{len(bank):02d}.png'; cv2.imwrite(os.path.join(out, 'assets', name), spr)
                 ys_, xs_ = np.nonzero(spr[..., 3] > 128)
                 if len(xs_):
                     bbox_local = (int(xs_.min()), int(ys_.min()), int(xs_.max()), int(ys_.max()))
-                    bb = ((float(xs_.min() + xs_.max()) / 2.0), (float(ys_.min() + ys_.max()) / 2.0))
+                    bb = (float(xs_.min() + xs_.max()) / 2.0, float(ys_.min() + ys_.max()) / 2.0)
+                    tx0 = max(0, int(xs_.min()) - 2)
+                    ty0 = max(0, int(ys_.min()) - 2)
+                    tx1 = min(spr.shape[1] - 1, int(xs_.max()) + 2)
+                    ty1 = min(spr.shape[0] - 1, int(ys_.max()) + 2)
                 else:
                     bbox_local = (0, 0, spr.shape[1] - 1, spr.shape[0] - 1)
                     bb = (spr.shape[1] / 2.0, spr.shape[0] / 2.0)
-                bank.append(dict(img=spr, name=name, x=px, y=py, c=t['frames'][f]['c'], area=t['frames'][f]['area'],
-                                 bb=bb, bbox_local=bbox_local, last_M=np.float32([[1, 0, px], [0, 1, py]])))
+                    tx0, ty0, tx1, ty1 = 0, 0, spr.shape[1] - 1, spr.shape[0] - 1
+                trans_sub = spr[ty0:ty1 + 1, tx0:tx1 + 1]
+                trans_templ_g = _sprite_gray(trans_sub)
+                trans_mask = (trans_sub[..., 3] > 128).astype(np.uint8)
+                spr_gray = _sprite_gray(spr).astype(np.float32)
+                spr_mask = (spr[..., 3] > 128).astype(np.uint8)
+                bank.append(dict(img=spr, name=name, x=px, y=py, c=comp_f['c'], area=comp_f['area'],
+                                 sig=comp_f.get('sig'), bb=bb, bbox_local=bbox_local,
+                                 last_M=np.float32([[1, 0, px], [0, 1, py]]),
+                                 sprite_gray=spr_gray, sprite_mask=spr_mask,
+                                 trans_templ_g=trans_templ_g, trans_mask=trans_mask,
+                                 trans_tx0=tx0, trans_ty0=ty0))
                 return len(bank) - 1
             key = max(fids, key=lambda f: t['frames'][f]['area']); add_pose(key)
             per, baked, last = {}, {}, 0
@@ -1519,75 +1855,29 @@ def decompose(video, out, max_frames=900, verbose=True):
                 else:
                     plate_bg_q = 99.0
 
-                area_scale_key = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, K0['area'])), 0.2, 3.0))
-                # Key-pose motion channel, kept independent of which bank pose is used for rendering.
-                Km, kcc = fit_similarity(K0['img'], F[f], bgs[f],
-                                         (K0['x'] + c[0] - K0['c'][0], K0['y'] + c[1] - K0['c'][1]),
-                                         area_scale_key)
-                if Kprev is not None:
-                    Kp, pcc = fit_similarity_from(K0['img'], F[f], Kprev)
-                    if Kp is not None and (Km is None or pcc > kcc):
-                        Km, kcc = Kp, pcc
-                if Km is not None and kcc > 0.6:
-                    Kprev = Km
-                # Choose a bank pose.  Directly reusing the previous transform is
-                # cheap and handles fades/still frames.  Otherwise fall back to
-                # ECC (translation first, then affine), warm-started ECC, edge
-                # aligned guesses, and a sparse integer translation refinement.
-                order = [last] + [k for k in range(len(bank) - 1, -1, -1) if k != last]
+                # Try the last used pose first, then a short list of recent and
+                # colour/size-matched past poses.  This keeps the search broad
+                # enough to understand returning poses without paying for every
+                # pose in the bank.
+                order = [last]
+                if len(bank) > 1:
+                    recent = [k for k in range(len(bank) - 1, -1, -1) if k != last][:2]
+                    order += recent
+                if len(order) < 5:
+                    ranked = sorted((k for k in range(len(bank)) if k not in order),
+                                    key=lambda k: _pose_rank(bank[k], comp), reverse=True)
+                    order += ranked[:5 - len(order)]
+
                 done = False
                 best_obj = None
                 for k in order:
                     pz = bank[k]
-                    cands = []
-                    have_excellent_direct = False
-                    if pz.get('last_M') is not None:
-                        alpha_direct, q_direct, plate_direct = _fit_quality(bgs[f], pz['img'], pz['last_M'], F[f], crop)
-                        cands.append(dict(q=q_direct, M=pz['last_M'], alpha=alpha_direct, cc=-1.0,
-                                          plate_q=plate_direct))
-                        if q_direct >= 36.0 and _fit_accept(q_direct, plate_direct, plate_bg_q):
-                            have_excellent_direct = True
-                    if not have_excellent_direct:
-                        area_scale = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, pz['area'])), 0.2, 3.0))
-                        s_guesses = [1.0]
-                        if abs(area_scale - 1.0) > 0.05:
-                            s_guesses.append(area_scale)
-                        for s0 in s_guesses:
-                            cand = _try_fit_candidate(pz, F[f], bgs[f], crop,
-                                                      (pz['x'] + c[0] - pz['c'][0], pz['y'] + c[1] - pz['c'][1]),
-                                                      s0)
-                            if cand is not None:
-                                cands.append(cand)
-                        if pz.get('last_M') is not None:
-                            for motion in (cv2.MOTION_TRANSLATION, cv2.MOTION_AFFINE):
-                                Mw, cw = fit_similarity_from(pz['img'], F[f], pz['last_M'], motion=motion)
-                                if Mw is not None:
-                                    alpha_w, q_w, plate_w = _fit_quality(bgs[f], pz['img'], Mw, F[f], crop)
-                                    cands.append(dict(q=q_w, M=Mw, alpha=alpha_w, cc=cw,
-                                                      plate_q=plate_w))
-                        edge_guess = None
-                        if x <= 0 or x + bw >= w - 1 or y <= 0 or y + bh >= h - 1:
-                            edge_guess = _edge_guess(pz, (x, y, bw, bh), w, h)
-                            if edge_guess is not None:
-                                cand = _try_fit_candidate(pz, F[f], bgs[f], crop, edge_guess, 1.0)
-                                if cand is not None:
-                                    cands.append(cand)
-                        # Translation-only integer search copes with clipped
-                        # solid-colour shapes better than ECC does when only a
-                        # sliver of the sprite is visible.
-                        trans_guesses = [(pz['x'] + c[0] - pz['c'][0], pz['y'] + c[1] - pz['c'][1])]
-                        if edge_guess is not None:
-                            trans_guesses.append(edge_guess)
-                        cand = _translation_search(pz, F[f], bgs[f], crop, trans_guesses, 8)
-                        if cand is not None:
-                            cands.append(cand)
-                    if cands:
-                        best = max(cands, key=lambda d: d['q'])
-                        if _fit_accept(best['q'], best.get('plate_q', 1.0), plate_bg_q):
-                            best_obj = best
-                            done = True
-                            break
-                motion = Km.tolist() if (Km is not None and kcc > 0.6) else None
+                    cand, ok = _eval_pose(pz, F[f], grey_frames[f], bgs[f], crop, comp, (w, h), plate_bg_q)
+                    if ok and cand is not None:
+                        best_obj = cand
+                        done = True
+                        break
+
                 if not done:  # new pose: identity placement of a sprite cut from this very frame (exact)
                     k = add_pose(f); last = k
                     baked[f] = k
@@ -1596,6 +1886,32 @@ def decompose(video, out, max_frames=900, verbose=True):
                     last = k
                     per[f] = dict(pose=k, M=best_obj['M'].tolist(), opacity=round(float(best_obj['alpha']), 4))
                     bank[k]['last_M'] = best_obj['M']
+
+                # Motion channel for easing metadata.  When the render already
+                # used the key pose, that very fit is the key-pose motion, so
+                # skip the extra ECC call.  Otherwise (new pose or another bank
+                # pose) fit the key pose against the frame as before.
+                if done and k == 0:
+                    Km = best_obj['M']
+                    kcc = float(best_obj.get('cc', 1.0))
+                    if kcc is None or kcc < -0.5:
+                        kcc = 1.0
+                else:
+                    area_scale_key = float(np.clip(math.sqrt(max(1, comp['area']) / max(1, K0['area'])), 0.2, 3.0))
+                    Km, kcc = fit_similarity(K0['img'], grey_frames[f], bgs[f],
+                                             (K0['x'] + c[0] - K0['c'][0], K0['y'] + c[1] - K0['c'][1]),
+                                             area_scale_key,
+                                             sprite_gray=K0.get('sprite_gray'), sprite_mask=K0.get('sprite_mask'))
+                    if Kprev is not None:
+                        Kp, pcc = fit_similarity_from(K0['img'], grey_frames[f], Kprev,
+                                                      sprite_gray=K0.get('sprite_gray'),
+                                                      sprite_mask=K0.get('sprite_mask'))
+                        if Kp is not None and (Km is None or pcc > kcc):
+                            Km, kcc = Kp, pcc
+                if Km is not None and kcc > 0.6:
+                    Kprev = Km
+
+                motion = Km.tolist() if (Km is not None and kcc > 0.6) else None
                 if motion is not None:
                     per[f]['K'] = motion
                     per[f]['Kcc'] = float(kcc)
@@ -1749,3 +2065,4 @@ if __name__ == '__main__':
     elif a[0] == 'render': render(a[1], residual='--no-residual' not in a)
     elif a[0] == 'run': run(a[1], a[2])
     else: print(__doc__); sys.exit(1)
+
