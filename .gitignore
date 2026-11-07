@@ -26,3 +26,8 @@ projects/hf-scale/timing.json
 # reverse-engineering runs (downloaded videos, frames, transcripts): local only
 /reverse/
 .worktrees/
+
+# third-party transcripts and scraped pages: local only
+projects/rollups/research/transcripts/
+projects/rollups/research/web/
+projects/rollups/research/*.log
