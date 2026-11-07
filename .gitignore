@@ -31,3 +31,5 @@ projects/hf-scale/timing.json
 projects/rollups/research/transcripts/
 projects/rollups/research/web/
 projects/rollups/research/*.log
+projects/rollups/research/trim/
+projects/rollups/research/web2/
