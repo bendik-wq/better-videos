@@ -15,7 +15,7 @@ const argv = process.argv.slice(2), files = [], opt = {};
 let prompt = null;
 for (const a of argv) {
   if (a.startsWith('--file=')) files.push(a.slice(7));
-  else if (a.startsWith('--')) { const [k, v = 'true'] = a.slice(2).split('='); opt[k] = v; }
+  else if (a.startsWith('--')) { const i = a.indexOf('='); if (i < 0) opt[a.slice(2)] = 'true'; else opt[a.slice(2, i)] = a.slice(i + 1); }
   else prompt = a;
 }
 if (prompt === '-' || prompt === null) prompt = fs.readFileSync(0, 'utf8');
