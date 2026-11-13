@@ -1,0 +1,10 @@
+/* "Phosphor" variant of the launch style (render.mjs --full --launch --phosphor): the inserts go dark so the green CRT
+   finish (josh-industry/tools/phosphor.sh) keeps the whole film low-key; ink that was dark on paper turns light. */
+.panel { background: #070807 !important; }
+.panel.grid { background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px) !important; }
+.ty.dark { color: #f2f2f2 !important; }
+.mono.dark, .dark .mono { color: rgba(255,255,255,.7) !important; }
+.obox.dark .ob { border-color: rgba(255,255,255,.9) !important; }
+.dark svg.ln path, svg.ln.dark path { stroke: rgba(255,255,255,.85) !important; }
+#cap.onpaper .line, #cap.onpaper .w { color: rgba(255,255,255,.9) !important; text-shadow: 0 1px 10px rgba(0,0,0,.7) !important; }
+.shade.l, .shade.r { opacity: .6; }
