@@ -27,4 +27,4 @@ F="[0:v]scale=${W}:${H}:flags=lanczos,format=yuv444p,
  noise=c0s=9:c0f=t,
  vignette=angle=${VIG:-PI/3.8}:mode=forward,
  format=yuv420p[v]"
-ffmpeg -nostdin -v error -y -i "$in" -filter_complex "$(echo $F | tr -d '\n')" -map "[v]" -map 0:a? -c:v libx264 -preset medium -crf 17 -profile:v high -c:a copy -movflags +faststart "$out"
+ffmpeg -nostdin -v error -y -i "$in" -filter_complex "$(echo $F | tr -d '\n')" -map "[v]" -map 0:a? -c:v libx264 -preset medium -crf ${CRF:-21} -profile:v high -c:a copy -movflags +faststart "$out"
